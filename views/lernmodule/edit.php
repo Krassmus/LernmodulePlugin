@@ -4,7 +4,7 @@
       enctype="multipart/form-data">
 
     <label class="file-upload">
-        <input type="file" name="modulefile" accept="application/zip">
+        <input type="file" name="modulefile" accept=".zip,.h5p">
         <?= _("Lernmodul auswählen (ZIP)") ?>
     </label>
 
@@ -27,6 +27,18 @@
             </select>
         <? endif ?>
     </label>
+
+    <? if (!$module->isNew()) : ?>
+        <label>
+            <?= _("Bild auswählen") ?>
+            <select name="module[image]" onChange="jQuery('#image_preview').css('background-image', 'url(' + jQuery('#image_preview').data('url_base') + '/' + this.value + ')'); ">
+                <? foreach ($module->scanForImages() as $image) : ?>
+                    <option value="<?= htmlReady($image) ?>"><?= htmlReady($image) ?></option>
+                <? endforeach ?>
+            </select>
+        </label>
+        <div id="image_preview" data-url_base="<?= htmlReady($module->getURL()) ?>" style="margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady($module->getURL()."/".$module['image'])."');" : "" ?>"></div>
+    <? endif ?>
 
     <div data-dialog-button>
         <?= \Studip\Button::create(_("Speichern")) ?>

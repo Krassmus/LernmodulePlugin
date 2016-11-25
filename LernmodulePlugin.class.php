@@ -21,4 +21,10 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
         return null;
     }
 
+    public function perform($unconsumed_path)
+    {
+        $this->addStylesheet("assets/lernmodule.less");
+        parent::perform($unconsumed_path);
+    }
+
 }

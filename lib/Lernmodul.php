@@ -30,8 +30,49 @@ class Lernmodul extends SimpleORMap {
                 $this->getPath()
             );
             rmdirr($this->getPath() . "/" . $this->getId());
+            if (!$this['start_file'] || !file_exists($this->getPath()."/".$this['start_file'])) {
+                foreach (scandir($this->getPath()) as $file) {
+                    if ((substr(strtolower($file), -5) === ".html") || (substr(strtolower($file), -4) === ".htm")) {
+                        $this['start_file'] = $file;
+                        break;
+                    }
+                }
+            }
+            if (!$this['image'] || !file_exists($this->getPath()."/".$this['image'])) {
+                $images = $this->scanForImages();
+            }
+            $this['type'] = file_exists($this->getPath() . "/h5p.json") ? "h5p" : "html";
+            $this->store();
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Entzippen des Lernmoduls hat nicht geklappt.")));
         }
         return $success;
+    }
+
+    public function scanForImages($path = null)
+    {
+        if (!$path) {
+            $path = $this->getPath();
+            $reduce = strlen($path) + 1;
+        }
+        $images = array();
+        foreach (scandir($path) as $file) {
+            if (!in_array($file, array(".", ".."))) {
+                if (is_dir($path."/".$file)) {
+                    foreach ($this->scanForImages($path."/".$file) as $image) {
+                        $images[] = $image;
+                    }
+                } elseif(in_array(substr($file, -4), array(".png", ".jpg"))) {
+                    $images[] = $path."/".$file;
+                }
+            }
+        }
+        if ($reduce) {
+            foreach ($images as $key => $image) {
+                $images[$key] = substr($image, $reduce);
+            }
+        }
+        return $images;
     }
 
     protected function copyr($source, $dest) {

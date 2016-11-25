@@ -2,17 +2,20 @@
 
 class LernmoduleController extends PluginController
 {
-    public function overview_action()
-    {
+
+    public function before_filter(&$action, &$args) {
+        parent::before_filter($action, $args);
         Navigation::activateItem("/course/lernmodule");
         Navigation::getItem("/course/lernmodule")->setImage(Icon::create("learnmodule", "info"));
+    }
+
+    public function overview_action()
+    {
         $this->module = Lernmodul::findBySeminar_id($_SESSION['SessionSeminar']);
     }
 
     public function view_action($module_id)
     {
-        Navigation::activateItem("/course/lernmodule");
-        Navigation::getItem("/course/lernmodule")->setImage(Icon::create("learnmodule", "info"));
         $this->mod = new Lernmodul($module_id);
     }
 
