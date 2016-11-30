@@ -13,11 +13,9 @@
         <input type="text" name="module[name]" required value="<?= htmlReady($module['name']) ?>">
     </label>
 
-    <label>
-        <?= _("Startdatei (.html)") ?>
-        <? if ($module->isNew()) : ?>
-        <input type="text" name="module[start_file]" value="<?= htmlReady($module['start_file']) ?>">
-        <? else : ?>
+    <? if (!$module->isNew()) : ?>
+        <label>
+            <?= _("Startdatei (.html)") ?>
             <select name="module[start_file]">
                 <? foreach (@scandir($module->getPath()) as $file) : ?>
                 <? if (!is_dir($module->getPath()."/".$file)) : ?>
@@ -25,8 +23,8 @@
                 <? endif ?>
                 <? endforeach ?>
             </select>
-        <? endif ?>
-    </label>
+        </label>
+    <? endif ?>
 
     <div data-dialog-button>
         <?= \Studip\Button::create(_("Speichern")) ?>
