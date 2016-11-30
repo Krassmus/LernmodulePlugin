@@ -4,7 +4,7 @@
       enctype="multipart/form-data">
 
     <label class="file-upload">
-        <input type="file" name="modulefile" accept="application/zip">
+        <input type="file" name="modulefile" accept=".zip,.h5p">
         <?= _("Lernmodul auswählen (ZIP)") ?>
     </label>
 
@@ -13,17 +13,45 @@
         <input type="text" name="module[name]" required value="<?= htmlReady($module['name']) ?>">
     </label>
 
-    <? if (!$module->isNew()) : ?>
+    <? if ($module['type'] === "html" && !$module->isNew()) : ?>
         <label>
             <?= _("Startdatei (.html)") ?>
-            <select name="module[start_file]">
-                <? foreach (@scandir($module->getPath()) as $file) : ?>
-                <? if (!is_dir($module->getPath()."/".$file)) : ?>
-                <option value="<?= htmlReady($file) ?>"<?= $file === $module['start_file'] ? " selected" : "" ?>><?= htmlReady($file) ?></option>
-                <? endif ?>
-                <? endforeach ?>
-            </select>
+            <? if ($module->isNew()) : ?>
+            <input type="text" name="module[start_file]" value="<?= htmlReady($module['start_file']) ?>">
+            <? else : ?>
+                <select name="module[start_file]">
+                    <? $files = $module->scanForFiletypes(array("html", "htm")) ?>
+                    <? foreach ($files as $file) : ?>
+                        <? if (!is_dir($module->getPath()."/".$file)) : ?>
+                        <option value="<?= htmlReady($file) ?>"<?= $file === $module['start_file'] ? " selected" : "" ?>><?= htmlReady($file) ?></option>
+                        <? endif ?>
+                    <? endforeach ?>
+                </select>
+            <? endif ?>
         </label>
+    <? endif ?>
+
+    <? if (!$module->isNew()) : ?>
+        <? $images = $module->scanForImages() ?>
+        <? if (count($images)) : ?>
+            <label>
+                <?= _("Bild auswählen") ?>
+                <select id="select_image" name="module[image]" onChange="jQuery('#image_preview').css('background-image', 'url(' + jQuery('#image_preview').data('url_base') + '/' + this.value + ')'); ">
+                    <? foreach ($images as $image) : ?>
+                        <option value="<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>><?= htmlReady($image) ?></option>
+                    <? endforeach ?>
+                </select>
+            </label>
+            <div>
+                <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').prev().attr('selected', 'selected').trigger('change'); return false;">
+                <?= Icon::create("arr_1left", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
+                </a>
+                <div id="image_preview" data-url_base="<?= htmlReady($module->getURL()) ?>" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady($module->getURL()."/".$module['image'])."');" : "" ?>"></div>
+                <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').next().attr('selected', 'selected').trigger('change'); return false;">
+                    <?= Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
+                </a>
+            </div>
+        <? endif ?>
     <? endif ?>
 
     <div data-dialog-button>

@@ -1,0 +1,34 @@
+#moduleoverview {
+    display: flex;
+    flex-wrap: wrap;
+    > .module {
+        height: 100px;
+        width: 300px;
+        min-height: 100px;
+        min-width: 300px;
+        max-height: 100px;
+        max-width: 300px;
+        margin: 10px;
+        border: white solid 4px;
+        box-shadow: rgba(0,0,0,0.3) 0px 0px 7px;
+        background-color: @content-color;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        font-size: 1.2em;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+        background-position: center center;
+        .shadow {
+            padding: 10px;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+            a:link, a:hover, a:visited {
+                color: white;
+                text-align: right;
+                display: block;
+                text-shadow: black 0px 0px 10px;
+            }
+        }
+    }
+}

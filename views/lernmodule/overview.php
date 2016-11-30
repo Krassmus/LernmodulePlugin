@@ -1,37 +1,23 @@
-<table class="default">
-    <thead>
-        <tr>
-            <th><?= _("Name") ?></th>
-            <th><?= _("Hochgeladen") ?></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <? if (count($module)) : ?>
-        <? foreach ($module as $mod) : ?>
-            <tr>
-                <td>
-                    <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/view/".$mod->getId()) ?>">
-                        <?= htmlReady($mod['name']) ?>
+<? if (!count($module)) : ?>
+    <?= MessageBox::info(_("Es sind noch keine Lernmodule vorhanden.")) ?>
+<? endif ?>
+<div id="moduleoverview">
+    <? foreach ($module as $mod) : ?>
+        <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');\"" : "" ?>>
+            <div class="shadow">
+                <a href="<?= PluginEngine::getLink($plugin, array(), ($mod['type'] === "html" ? "lernmodule" : $mod['type'])."/view/".$mod->getId()) ?>">
+                    <?= Icon::create("learnmodule", "info_alt")->asImg(27, array('style' => "vertical-align: middle;")) ?>
+                    <?= htmlReady($mod['name']) ?>
+                </a>
+                <? if ($GLOBALS['perm']->have_studip_perm("tutor", $mod['seminar_id'])) : ?>
+                    <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
+                        <?= Icon::create("edit", "info_alt")->asImg(20) ?>
                     </a>
-                </td>
-                <td><?= htmlReady(get_fullname($mod['user_id'])) ?></td>
-                <td>
-                    <? if ($GLOBALS['perm']->have_studip_perm("tutor", $mod['seminar_id'])) : ?>
-                        <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
-                            <?= Icon::create("edit", "clickable")->asImg(20) ?>
-                        </a>
-                    <? endif ?>
-                </td>
-            </tr>
-        <? endforeach ?>
-        <? else : ?>
-            <tr>
-                <td colspan="100"><?= _("Noch keine Lernmodule vorhanden") ?></td>
-            </tr>
-        <? endif ?>
-    </tbody>
-</table>
+                <? endif ?>
+            </div>
+        </div>
+    <? endforeach ?>
+</div>
 
 <?
 Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
