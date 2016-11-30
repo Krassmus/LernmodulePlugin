@@ -31,6 +31,13 @@
         </label>
     <? endif ?>
 
+    <? if (LernmodulePlugin::mayEditSandbox()) : ?>
+        <label>
+            <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?>>
+            <?= _("Im abgesicherten Modus abspielen") ?>
+        </label>
+    <? endif ?>
+
     <? if (!$module->isNew()) : ?>
         <? $images = $module->scanForImages() ?>
         <? if (count($images)) : ?>

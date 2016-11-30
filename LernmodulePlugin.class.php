@@ -31,4 +31,10 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
         parent::perform($unconsumed_path);
     }
 
+    static public function mayEditSandbox()
+    {
+        return $GLOBALS['perm']->have_perm("admin")
+                    || RolePersistence::isAssignedRole($GLOBALS['user']->id, "Lernmodule-Admins");
+    }
+
 }

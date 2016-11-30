@@ -24,7 +24,13 @@ class LernmoduleController extends PluginController
         $this->module = new Lernmodul($module_id);
         PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
         if (Request::isPost()) {
-            $this->module->setData(Request::getArray("module"));
+            $data = Request::getArray("module");
+            if (LernmodulePlugin::mayEditSandbox()) {
+                $data['sandbox'] = (int) $data['sandbox'];
+            } else {
+                unset($data['sandbox']);
+            }
+            $this->module->setData($data);
             $this->module['seminar_id'] = $_SESSION['SessionSeminar'];
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module->store();
