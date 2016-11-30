@@ -30,6 +30,14 @@ class Lernmodul extends SimpleORMap {
                 $this->getPath()
             );
             rmdirr($this->getPath() . "/" . $this->getId());
+            if (!$this['start_file'] || !file_exists($this->getPath()."/".$this['start_file'])) {
+                if (file_exists($this->getPath()."/index.html")) {
+                    $this['start_file'] = "index.html";
+                } else {
+                    $files = $this->scanForFiletypes(array("html", "htm"));
+                    $this['start_file'] = $files[0];
+                }
+            }
             if (!$this['image'] || !file_exists($this->getPath()."/".$this['image'])) {
                 $images = $this->scanForImages();
                 $this['image'] = $images[0];
@@ -44,7 +52,7 @@ class Lernmodul extends SimpleORMap {
 
     public function scanForImages()
     {
-        return studip_utf8decode($this->scanForFiletypes(array("png", "jpg", "jpeg")));
+        return $this->scanForFiletypes(array("png", "jpg", "jpeg"));
     }
 
     public function scanForFiletypes($filetypes = array(), $path = null)
@@ -53,27 +61,36 @@ class Lernmodul extends SimpleORMap {
             $path = $this->getPath();
             $reduce = strlen($path) + 1;
         }
-        $images = array();
+        $files = array();
+        foreach (scandir($path) as $file) {
+            if (!in_array($file, array(".", ".."))) {
+                if (!is_dir($path."/".$file)) {
+                    $file_part = array_pop(explode(".", $file));
+                    if (in_array(strtolower($file_part), $filetypes)) {
+                        $files[] = $path."/".$file;
+                    }
+                }
+            }
+        }
+        sort($files);
         foreach (scandir($path) as $file) {
             if (!in_array($file, array(".", ".."))) {
                 if (is_dir($path."/".$file)) {
                     foreach ($this->scanForFiletypes($filetypes, $path."/".$file) as $image) {
-                        $images[] = $image;
-                    }
-                } else {
-                    $file_part = array_pop(explode(".", $file));
-                    if (in_array(strtolower($file_part), $filetypes)) {
-                        $images[] = $path."/".$file;
+                        $files[] = $image;
                     }
                 }
             }
         }
         if ($reduce) {
-            foreach ($images as $key => $image) {
-                $images[$key] = substr($image, $reduce);
+            foreach ($files as $key => $file) {
+                $files[$key] = substr($file, $reduce);
             }
         }
-        return $images;
+        if ($GLOBALS['FILESYSTEM_UTF8']) {
+            $files = studip_utf8decode($files);
+        }
+        return $files;
     }
 
     protected function copyr($source, $dest) {

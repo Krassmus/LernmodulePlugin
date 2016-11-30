@@ -2,6 +2,10 @@
 
 require_once __DIR__."/lib/Lernmodul.php";
 
+if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
+    $GLOBALS['FILESYSTEM_UTF8'] = true;
+}
+
 class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
 
     public function getTabNavigation($course_id)
