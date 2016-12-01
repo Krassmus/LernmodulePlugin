@@ -17,7 +17,14 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
 
     public function getIconNavigation($course_id, $last_visit, $user_id)
     {
-        // TODO: Implement getIconNavigation() method.
+        $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $new = Lernmodul::countBySQL("seminar_id = :course_id AND chdate >= :last_visit", compact('course_id', 'last_visit'));
+        if ($new > 0) {
+            $tab->setImage(Icon::create("learnmodule", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new))));
+        } else {
+            $tab->setImage(Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule"))));
+        }
+        return $tab;
     }
 
     public function getInfoTemplate($course_id)
@@ -34,7 +41,12 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
     static public function mayEditSandbox()
     {
         return $GLOBALS['perm']->have_perm("admin")
-                    || RolePersistence::isAssignedRole($GLOBALS['user']->id, "Lernmodule-Admins");
+                    || RolePersistence::isAssignedRole($GLOBALS['user']->id, "Lernmodule-Admin");
+    }
+
+    public function getDisplayTitle()
+    {
+        return _("Lernmodule");
     }
 
 }

@@ -23,11 +23,12 @@
 Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
 
 $actions = new ActionsWidget();
-$actions->addLink(
-    _("Lernmodul hinzufügen"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/edit"),
-    Icon::create("learnmodule+add", "info"),
-    array('data-dialog' => 1)
-);
-
+if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+    $actions->addLink(
+        _("Lernmodul hinzufügen"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/edit"),
+        Icon::create("learnmodule+add", "info"),
+        array('data-dialog' => 1)
+    );
+}
 Sidebar::Get()->addWidget($actions);

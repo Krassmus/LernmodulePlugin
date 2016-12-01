@@ -20,6 +20,11 @@ class InitPlugin extends Migration {
                 KEY `seminar_id` (`seminar_id`)
             ) ENGINE=InnoDB
         ");
+        DBManager::get()->exec("
+            INSERT IGNORE INTO `roles` (`rolename`, `system`)
+            VALUES
+                ('Lernmodule-Admin', 'n');
+        ");
     }
 
     function down() {
