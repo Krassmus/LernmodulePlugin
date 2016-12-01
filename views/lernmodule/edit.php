@@ -51,11 +51,17 @@
             </label>
             <div>
                 <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').prev().attr('selected', 'selected').trigger('change'); return false;">
-                <?= Icon::create("arr_1left", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
+                    <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                            ? Icon::create("arr_1left", "clickable")->asImg(20, array('style' => "vertical-align: middle;"))
+                            : Assets::img("icons/blue/20/arr_1left", array('style' => "vertical-align: middle;"))
+                    ?>
                 </a>
                 <div id="image_preview" data-url_base="<?= htmlReady($module->getURL()) ?>" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady($module->getURL()."/".$module['image'])."');" : "" ?>"></div>
                 <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').next().attr('selected', 'selected').trigger('change'); return false;">
-                    <?= Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
+                    <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                        ? Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;"))
+                        : Assets::img("icons/blue/20/arr_1right", array('style' => "vertical-align: middle;"))
+                    ?>
                 </a>
             </div>
         <? endif ?>

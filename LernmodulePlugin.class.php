@@ -20,9 +20,17 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
         $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $new = Lernmodul::countBySQL("seminar_id = :course_id AND chdate >= :last_visit", compact('course_id', 'last_visit'));
         if ($new > 0) {
-            $tab->setImage(Icon::create("learnmodule", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new))));
+            $tab->setImage(
+                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                    ? Icon::create("learnmodule", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+                    : Assets::image_path("icons/red/20/learnmodule", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+            );
         } else {
-            $tab->setImage(Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule"))));
+            $tab->setImage(
+                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                    ? Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
+                    : Assets::image_path("icons/grey/20/learnmodule", array('title' => _("Lernmodule")))
+            );
         }
         return $tab;
     }

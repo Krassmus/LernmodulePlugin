@@ -6,7 +6,11 @@ class LernmoduleController extends PluginController
     public function before_filter(&$action, &$args) {
         parent::before_filter($action, $args);
         Navigation::activateItem("/course/lernmodule");
-        Navigation::getItem("/course/lernmodule")->setImage(Icon::create("learnmodule", "info"));
+        Navigation::getItem("/course/lernmodule")->setImage(
+            version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                ? Icon::create("learnmodule", "info")
+                : Assets::image_path("icons/black/20/learnmodule")
+        );
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
     }
 
