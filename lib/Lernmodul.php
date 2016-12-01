@@ -5,6 +5,7 @@ class Lernmodul extends SimpleORMap {
     static protected function configure($config = array())
     {
         $config['db_table'] = 'lernmodule_module';
+        $config['registered_callbacks']['after_delete'][] = 'cbDeleteModuleData';
         parent::configure($config);
     }
 
@@ -48,6 +49,11 @@ class Lernmodul extends SimpleORMap {
             PageLayout::postMessage(MessageBox::error(_("Entzippen des Lernmoduls hat nicht geklappt.")));
         }
         return $success;
+    }
+
+    public function cbDeleteModuleData()
+    {
+        rmdirr($this->getPath());
     }
 
     public function scanForImages()

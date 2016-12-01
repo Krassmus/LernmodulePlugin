@@ -63,6 +63,10 @@
 
     <div data-dialog-button>
         <?= \Studip\Button::create(_("Speichern")) ?>
+        <?= \Studip\Button::create(_("Löschen"), "delete", array(
+            'formaction' => PluginEngine::getLink($plugin, array(), "lernmodule/delete/".$module->getId()),
+            'onClick' => "return window.confirm('"._("Wirklich löschen?")."');"
+        )) ?>
     </div>
 
 </form>

@@ -41,4 +41,14 @@ class LernmoduleController extends PluginController
             $this->redirect("lernmodule/overview");
         }
     }
+
+    public function delete_action($module_id)
+    {
+        $this->module = new Lernmodul($module_id);
+        if (Request::isPost()) {
+            $this->module->delete();
+            PageLayout::postMessage(MessageBox::success(_("Lernmodul gelöscht.")));
+        }
+        $this->redirect("lernmodule/overview");
+    }
 }
