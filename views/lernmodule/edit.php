@@ -16,7 +16,7 @@
     <? if (count($lernmodule)) : ?>
         <?= _("Abhängig von") ?>
         <ul class="clean">
-            <? $dependencies = $module->dependencies->pluck("depends_from_module_id") ?>
+            <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies($_SESSION['SessionSeminar'])) ?>
             <? foreach ($lernmodule as $lernmodul) : ?>
                 <li>
                     <label>
