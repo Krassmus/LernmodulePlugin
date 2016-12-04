@@ -14,6 +14,8 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
     {
         $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $tab->setImage(Icon::create("learnmodule", "info_alt"));
+        $tab->addSubNavigation("overview", new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
+        $tab->addSubNavigation("ranking", new Navigation(_("Teilnehmer"), PluginEngine::getURL($this, array(), "lernmodule/ranking")));
         return array('lernmodule' => $tab);
     }
 

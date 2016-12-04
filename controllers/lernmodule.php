@@ -5,7 +5,6 @@ class LernmoduleController extends PluginController
 
     public function before_filter(&$action, &$args) {
         parent::before_filter($action, $args);
-        Navigation::activateItem("/course/lernmodule");
         Navigation::getItem("/course/lernmodule")->setImage(
             version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                 ? Icon::create("learnmodule", "info")
@@ -16,12 +15,14 @@ class LernmoduleController extends PluginController
 
     public function overview_action()
     {
+        Navigation::activateItem("/course/lernmodule/overview");
         LernmodulVersuch::cleanUpDatabase();
         $this->module = Lernmodul::findBySQL("seminar_id = ? ORDER BY name ASC", array($_SESSION['SessionSeminar']));
     }
 
     public function view_action($module_id)
     {
+        Navigation::activateItem("/course/lernmodule/overview");
         $this->attempt = new LernmodulVersuch();
         $this->attempt->setData(array(
             'user_id' => $GLOBALS['user']->id,
@@ -34,6 +35,7 @@ class LernmoduleController extends PluginController
 
     public function edit_action($module_id = null)
     {
+        Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id);
         $this->lernmodule = Lernmodul::findBySQL("seminar_id = ? AND module_id != ? ORDER BY name ASC" , array(
             $_SESSION['SessionSeminar'],
@@ -62,6 +64,7 @@ class LernmoduleController extends PluginController
 
     public function delete_action($module_id)
     {
+        Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {
             $this->module->delete();
@@ -72,6 +75,7 @@ class LernmoduleController extends PluginController
 
     public function update_attempt_action($attempt_id)
     {
+        Navigation::activateItem("/course/lernmodule/overview");
         $this->attempt = new LernmodulVersuch($attempt_id);
         if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException();
@@ -84,5 +88,12 @@ class LernmoduleController extends PluginController
             $this->attempt->store();
         }
         $this->render_nothing();
+    }
+
+    public function ranking_action()
+    {
+        Navigation::activateItem("/course/lernmodule/ranking");
+        $this->module = Lernmodul::findBySQL("seminar_id = ? ORDER BY name ASC", array($_SESSION['SessionSeminar']));
+        $this->students = Course::findCurrent()->members->filter(function ($student) { return $student['status'] === "autor"; });
     }
 }
