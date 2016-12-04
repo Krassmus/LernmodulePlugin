@@ -13,6 +13,25 @@
         <input type="text" name="module[name]" required value="<?= htmlReady($module['name']) ?>">
     </label>
 
+    <? if (count($lernmodule)) : ?>
+        <?= _("Abhängig von") ?>
+        <ul class="clean">
+            <? $dependencies = $module->dependencies->pluck("depends_from_module_id") ?>
+            <? foreach ($lernmodule as $lernmodul) : ?>
+                <li>
+                    <label>
+                        <input type="checkbox" name="dependencies[]" value="<?= htmlReady($lernmodul->getId()) ?>"<?= in_array($lernmodul->getId(), $dependencies) ? " checked" : "" ?>>
+                        <?= htmlReady($lernmodul['name']) ?>
+                    </label>
+                </li>
+            <? endforeach ?>
+        </ul>
+        <select name="module[depends_from_module_id]">
+            <option value=""><?= _("keine") ?></option>
+
+        </select>
+    <? endif ?>
+
     <? if ($module['type'] === "html" && !$module->isNew()) : ?>
         <label>
             <?= _("Startdatei (.html)") ?>

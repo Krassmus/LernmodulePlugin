@@ -37,3 +37,9 @@
         src="<?= htmlReady($plugin->getPluginURL()."/moduledata/".$mod->getId()."/".($mod['start_file'] ?: "index.html")) ?>"
         style="width: 100%; height: 90vh; border: none;"
 ></iframe>
+
+<script>
+    window.setTimeout(function () {
+        jQuery.post(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>");
+    }, 1000 * 30);
+</script>

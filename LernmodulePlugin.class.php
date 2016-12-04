@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__."/lib/Lernmodul.php";
+require_once __DIR__."/lib/LernmodulVersuch.php";
+require_once __DIR__."/lib/LernmodulDependency.php";
 
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
     $GLOBALS['FILESYSTEM_UTF8'] = true;

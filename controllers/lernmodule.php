@@ -16,17 +16,29 @@ class LernmoduleController extends PluginController
 
     public function overview_action()
     {
-        $this->module = Lernmodul::findBySeminar_id($_SESSION['SessionSeminar']);
+        LernmodulVersuch::cleanUpDatabase();
+        $this->module = Lernmodul::findBySQL("seminar_id = ? ORDER BY name ASC", array($_SESSION['SessionSeminar']));
     }
 
     public function view_action($module_id)
     {
+        $this->attempt = new LernmodulVersuch();
+        $this->attempt->setData(array(
+            'user_id' => $GLOBALS['user']->id,
+            'module_id' => $module_id
+        ));
+        $this->attempt->store();
+        LernmodulVersuch::cleanUpDatabase();
         $this->mod = new Lernmodul($module_id);
     }
 
     public function edit_action($module_id = null)
     {
         $this->module = new Lernmodul($module_id);
+        $this->lernmodule = Lernmodul::findBySQL("seminar_id = ? AND module_id != ? ORDER BY name ASC" , array(
+            $_SESSION['SessionSeminar'],
+            $module_id
+        ));
         PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
         if (Request::isPost()) {
             $data = Request::getArray("module");
@@ -39,6 +51,7 @@ class LernmoduleController extends PluginController
             $this->module['seminar_id'] = $_SESSION['SessionSeminar'];
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module->store();
+            $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);
             if ($_FILES['modulefile']['size'] > 0) {
                 $this->module->copyModule($_FILES['modulefile']['tmp_name']);
             }
@@ -55,5 +68,21 @@ class LernmoduleController extends PluginController
             PageLayout::postMessage(MessageBox::success(_("Lernmodul gelöscht.")));
         }
         $this->redirect("lernmodule/overview");
+    }
+
+    public function update_attempt_action($attempt_id)
+    {
+        $this->attempt = new LernmodulVersuch($attempt_id);
+        if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
+            throw new AccessDeniedException();
+        }
+        if (Request::isPost()) {
+            $this->attempt['chdate'] = time();
+            if ($this->attempt['chdate'] > $this->attempt['mkdate'] + 29) {
+                $this->attempt['successful'] = 1;
+            }
+            $this->attempt->store();
+        }
+        $this->render_nothing();
     }
 }
