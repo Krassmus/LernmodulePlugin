@@ -44,7 +44,10 @@ class InitPlugin extends Migration {
                 `seminar_id` varchar(32) NOT NULL,
                 `module_id` varchar(32) NOT NULL,
                 `depends_from_module_id` varchar(32) NOT NULL,
-                PRIMARY KEY (`dependency_id`)
+                PRIMARY KEY (`dependency_id`),
+                KEY `seminar_id` (`seminar_id`),
+                KEY `module_id` (`module_id`),
+                KEY `depends_from_module_id` (`depends_from_module_id`)
             ) ENGINE=InnoDB
         ");
     }
