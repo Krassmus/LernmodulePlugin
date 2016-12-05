@@ -17,7 +17,7 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         LernmodulVersuch::cleanUpDatabase();
-        $this->module = Lernmodul::findBySQL("seminar_id = ? ORDER BY name ASC", array($_SESSION['SessionSeminar']));
+        $this->module = Lernmodul::findByCourse($_SESSION['SessionSeminar']);
     }
 
     public function view_action($module_id)
@@ -50,9 +50,10 @@ class LernmoduleController extends PluginController
                 unset($data['sandbox']);
             }
             $this->module->setData($data);
-            $this->module['seminar_id'] = $_SESSION['SessionSeminar'];
+            //$this->module['seminar_id'] = $_SESSION['SessionSeminar'];
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module->store();
+            $this->module->addToCourse($_SESSION['SessionSeminar']);
             $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);
             if ($_FILES['modulefile']['size'] > 0) {
                 $this->module->copyModule($_FILES['modulefile']['tmp_name']);

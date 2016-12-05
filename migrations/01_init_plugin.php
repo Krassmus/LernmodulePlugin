@@ -50,11 +50,27 @@ class InitPlugin extends Migration {
                 KEY `depends_from_module_id` (`depends_from_module_id`)
             ) ENGINE=InnoDB
         ");
+        DBManager::get()->exec("
+            CREATE TABLE `lernmodule_courses` (
+                `seminar_id` varchar(32) NOT NULL DEFAULT '',
+                `module_id` varchar(32) NOT NULL DEFAULT '',
+                UNIQUE KEY `seminar_id` (`seminar_id`,`module_id`)
+            ) ENGINE=InnoDB
+        ");
     }
 
     function down() {
         DBManager::get()->exec("
             DROP TABLE IF EXISTS `lernmodule_module`;
+        ");
+        DBManager::get()->exec("
+            DROP TABLE IF EXISTS `lernmodule_attempts`;
+        ");
+        DBManager::get()->exec("
+            DROP TABLE IF EXISTS `lernmodule_dependencies`;
+        ");
+        DBManager::get()->exec("
+            DROP TABLE IF EXISTS `lernmodule_courses`;
         ");
     }
 }

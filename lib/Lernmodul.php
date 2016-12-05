@@ -2,6 +2,23 @@
 
 class Lernmodul extends SimpleORMap {
 
+    static public function findByCourse($course_id)
+    {
+        $statement = DBManager::get()->prepare("
+            SELECT lernmodule_module.*
+            FROM lernmodule_module
+                INNER JOIN lernmodule_courses ON (lernmodule_module.module_id = lernmodule_courses.module_id)
+            WHERE lernmodule_courses.seminar_id = :course_id
+            ORDER BY lernmodule_module.name ASC
+        ");
+        $statement->execute(array('course_id' => $course_id));
+        $module = array();
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $data) {
+            $module[] = Lernmodul::buildExisting($data);
+        }
+        return $module;
+    }
+
     static protected function configure($config = array())
     {
         $config['db_table'] = 'lernmodule_module';
@@ -165,5 +182,42 @@ class Lernmodul extends SimpleORMap {
             $seminar_id
         ));
     }
+
+    public function addToCourse($course_id)
+    {
+        if (!$this->getId()) {
+            $this->setId($this->getNewId());
+        }
+        $statement = DBManager::get()->prepare("
+            INSERT IGNORE INTO lernmodule_courses
+            SET seminar_id = :course_id,
+                module_id = :module_id
+        ");
+        $statement->execute(array(
+            'course_id' => $course_id,
+            'module_id' => $this->getId()
+        ));
+    }
+
+    public function isWritable()
+    {
+        if ($GLOBALS['perm']->have_perm("admin")) {
+            return true;
+        }
+        $statement = DBManager::get()->prepare("
+            SELECT 1
+            FROM lernmodule_courses
+                INNER JOIN seminar_user ON (lernmodule_courses.seminar_id = seminar_user.Seminar_id AND (seminar_user.status IN ('tutor', 'dozent')))
+            WHERE seminar_user.user_id = :user_id
+                AND lernmodule_courses.module_id = :module_id
+            LIMIT 1
+        ");
+        $statement->execute(array(
+            'module_id' => $this->getId(),
+            'user_id' => $GLOBALS['user']->id
+        ));
+        return (bool) $statement->fetch();
+    }
+
 
 }
