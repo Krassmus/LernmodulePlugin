@@ -8,7 +8,7 @@ class LernmoduleController extends PluginController
         Navigation::getItem("/course/lernmodule")->setImage(
             version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                 ? Icon::create("learnmodule", "info")
-                : Assets::image_path("icons/black/20/learnmodule")
+                : Assets::image_path("icons/black/16/learnmodule")
         );
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
     }
@@ -44,6 +44,11 @@ class LernmoduleController extends PluginController
         PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
         if (Request::isPost()) {
             $data = Request::getArray("module");
+            if (!$data['name']) {
+                PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu groß.")));
+                $this->redirect("lernmodule/overview");
+                return;
+            }
             if (LernmodulePlugin::mayEditSandbox()) {
                 $data['sandbox'] = (int) $data['sandbox'];
             } else {

@@ -14,7 +14,11 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
     public function getTabNavigation($course_id)
     {
         $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
-        $tab->setImage(Icon::create("learnmodule", "info_alt"));
+        $tab->setImage(
+            version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                ? Icon::create("learnmodule", "info_alt")
+                : Assets::image_path("icons/white/16/learnmodule")
+        );
         $tab->addSubNavigation("overview", new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
         $tab->addSubNavigation("ranking", new Navigation(_("Teilnehmer"), PluginEngine::getURL($this, array(), "lernmodule/ranking")));
         return array('lernmodule' => $tab);
@@ -69,6 +73,41 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
     public function getDisplayTitle()
     {
         return _("Lernmodule");
+    }
+
+    static public function bytesFromPHPIniValue($val) {
+        $val = trim($val);
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        return $val;
+    }
+
+    static public function extract_zip($file_name, $dir_name = '', $testonly = false) {
+        $ret = false;
+        if ($GLOBALS['ZIP_USE_INTERNAL']) {
+            if ($testonly) {
+                return Studip\ZipArchive::test($file_name);
+            }
+
+            return Studip\ZipArchive::extractToPath($file_name, $dir_name);
+        } else if (@file_exists($GLOBALS['UNZIP_PATH']) || ini_get('safe_mode')){
+            if ($testonly){
+                exec($GLOBALS['UNZIP_PATH'] . " -t -qq $file_name ", $output, $ret);
+            } else {
+                exec($GLOBALS['UNZIP_PATH'] . " -qq $file_name " . ($dir_name ? "-d $dir_name" : ""), $output, $ret);
+            }
+            $ret = $ret === 0;
+        }
+        return $ret;
     }
 
 }

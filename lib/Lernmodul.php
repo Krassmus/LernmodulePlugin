@@ -35,7 +35,7 @@ class Lernmodul extends SimpleORMap {
         if (!$success) {
             PageLayout::postMessage(MessageBox::error(_("Konnte im Dateisystem keinen Ordner für das Lernmodul anlegen.")));
         }
-        $success = extract_zip($path, $this->getPath());
+        $success = LernmodulePlugin::extract_zip($path, $this->getPath());
         if ($success) {
             foreach (scandir($this->getPath()) as $folder) {
                 if (!in_array($folder, array(".", ".."))) {
