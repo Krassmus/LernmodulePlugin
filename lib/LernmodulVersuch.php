@@ -10,6 +10,11 @@ class LernmodulVersuch extends SimpleORMap {
     static protected function configure($config = array())
     {
         $config['db_table'] = 'lernmodule_attempts';
+        $config['belongs_to']['modul'] = array(
+            'class_name' => 'Lernmodul',
+            'foreign_key' => 'modul_id',
+            'assoc_func' => 'find',
+        );
         parent::configure($config);
     }
 }

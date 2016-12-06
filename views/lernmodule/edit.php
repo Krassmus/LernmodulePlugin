@@ -55,6 +55,22 @@
             <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?>>
             <?= _("Im abgesicherten Modus abspielen") ?>
         </label>
+
+        <label>
+            <?= _("Enddatei (.html)") ?>
+            <? if ($module->isNew()) : ?>
+                <input type="text" name="module[start_file]" value="<?= htmlReady($module['start_file']) ?>">
+            <? else : ?>
+                <select name="module[end_file]">
+                    <? $files = $module->scanForFiletypes(array("html", "htm")) ?>
+                    <? foreach ($files as $file) : ?>
+                        <? if (!is_dir($module->getPath()."/".$file)) : ?>
+                            <option value="<?= htmlReady($file) ?>"<?= $file === $module['end_file'] ? " selected" : "" ?>><?= htmlReady($file) ?></option>
+                        <? endif ?>
+                    <? endforeach ?>
+                </select>
+            <? endif ?>
+        </label>
     <? endif ?>
 
     <? if (!$module->isNew()) : ?>

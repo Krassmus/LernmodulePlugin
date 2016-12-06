@@ -65,7 +65,12 @@ class Lernmodul extends SimpleORMap {
                 $this['image'] = $images[0];
             }
             $this['type'] = file_exists($this->getPath() . "/h5p.json") ? "h5p" : "html";
-            $this->store();
+            if (file_exists($this->getPath())) {
+                $this->store();
+            } else {
+                PageLayout::postMessage(MessageBox::error(_("Verzeichnis konnte nicht angelegt werden.")));
+                $this->delete();
+            }
         } else {
             PageLayout::postMessage(MessageBox::error(_("Entzippen des Lernmoduls hat nicht geklappt.")));
         }

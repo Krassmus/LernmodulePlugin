@@ -2,4 +2,4 @@ pluginname=LernmodulePlugin
 pluginclassname=LernmodulePlugin
 version=1.0
 origin=RasmusFuhse
-studipMinVersion=3.4
+studipMinVersion=3.2

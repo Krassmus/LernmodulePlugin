@@ -37,7 +37,7 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id);
-        $this->lernmodule = Lernmodul::findBySQL("seminar_id = ? AND module_id != ? ORDER BY name ASC" , array(
+        $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = ? AND module_id != ? ORDER BY name ASC" , array(
             $_SESSION['SessionSeminar'],
             $module_id
         ));
@@ -50,7 +50,6 @@ class LernmoduleController extends PluginController
                 unset($data['sandbox']);
             }
             $this->module->setData($data);
-            //$this->module['seminar_id'] = $_SESSION['SessionSeminar'];
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module->store();
             $this->module->addToCourse($_SESSION['SessionSeminar']);
@@ -83,9 +82,7 @@ class LernmoduleController extends PluginController
         }
         if (Request::isPost()) {
             $this->attempt['chdate'] = time();
-            if ($this->attempt['chdate'] > $this->attempt['mkdate'] + 29) {
-                $this->attempt['successful'] = 1;
-            }
+            $this->attempt['successful'] = 1;
             $this->attempt->store();
         }
         $this->render_nothing();
@@ -94,7 +91,7 @@ class LernmoduleController extends PluginController
     public function ranking_action()
     {
         Navigation::activateItem("/course/lernmodule/ranking");
-        $this->module = Lernmodul::findBySQL("seminar_id = ? ORDER BY name ASC", array($_SESSION['SessionSeminar']));
+        $this->module = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = ? ORDER BY name ASC", array($_SESSION['SessionSeminar']));
         $this->students = Course::findCurrent()->members->filter(function ($student) { return $student['status'] === "autor"; });
     }
 }
