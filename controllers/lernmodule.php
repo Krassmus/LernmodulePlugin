@@ -31,6 +31,9 @@ class LernmoduleController extends PluginController
         $this->attempt->store();
         LernmodulVersuch::cleanUpDatabase();
         $this->mod = new Lernmodul($module_id);
+        if (!file_exists($this->mod->getPath())) {
+            PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
+        }
     }
 
     public function edit_action($module_id = null)
