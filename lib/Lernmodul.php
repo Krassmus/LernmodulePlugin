@@ -152,12 +152,16 @@ class Lernmodul extends SimpleORMap {
 
     public function getPath()
     {
-        return __DIR__."/../moduledata/".$this->getId();
+        $datafolder = __DIR__."/../../LernmodulePluginData/moduledata";
+        if (!file_exists($datafolder)) {
+            mkdir($datafolder);
+        }
+        return $datafolder."/".$this->getId();
     }
 
     public function getURL()
     {
-        return $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePlugin/moduledata/".$this->getId();
+        return $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->getId();
     }
 
     public function getStartURL()
