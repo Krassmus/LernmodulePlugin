@@ -152,7 +152,11 @@ class Lernmodul extends SimpleORMap {
 
     public function getPath()
     {
-        $datafolder = __DIR__."/../../LernmodulePluginData/moduledata";
+        $datafolder = __DIR__."/../../LernmodulePluginData";
+        if (!file_exists($datafolder)) {
+            mkdir($datafolder);
+        }
+        $datafolder .= "/moduledata";
         if (!file_exists($datafolder)) {
             mkdir($datafolder);
         }
