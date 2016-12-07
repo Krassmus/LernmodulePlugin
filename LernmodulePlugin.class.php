@@ -17,7 +17,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
         $tab->setImage(
             version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                 ? Icon::create("learnmodule", "info_alt")
-                : Assets::image_path("icons/white/20/learnmodule")
+                : Assets::image_path("icons/white/16/learnmodule")
         );
         $tab->addSubNavigation("overview", new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
         $tab->addSubNavigation("ranking", new Navigation(_("Teilnehmer"), PluginEngine::getURL($this, array(), "lernmodule/ranking")));
