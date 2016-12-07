@@ -33,7 +33,7 @@ usort($student_data, function ($data1, $data2) {
                 <td><div style="width: 50px; height: 50px; background-size: 100% auto; background-image: url('<?= Avatar::getAvatar($student['user_id'])->getURL(Avatar::MEDIUM) ?>'); background-position:  center center; background-repeat: no-repeat;"></div></td>
                 <td><?= htmlReady($student['vorname']." ".$student['nachname']) ?></td>
                 <td>
-                    <? if ($student['solved'] >= count($module)) : ?>
+                    <? if ($student['solved'] > 0 && $student['solved'] >= count($module)) : ?>
                     <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                         ? Icon::create("crown", "status-yellow")->asImg(20, array('class' => "text-bottom", 'title' => _("Besser geht es nicht!")))
                         : Assets::img("icons/yellow/20/crown", array('class' => "text-bottom", 'title' => _("Besser geht es nicht!")))

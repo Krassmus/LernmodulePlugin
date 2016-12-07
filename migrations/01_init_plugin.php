@@ -7,7 +7,6 @@ class InitPlugin extends Migration {
             CREATE TABLE `lernmodule_module` (
                 `module_id` varchar(32) NOT NULL,
                 `user_id` varchar(32) NOT NULL,
-                `seminar_id` varchar(32) NOT NULL,
                 `name` varchar(64) NOT NULL,
                 `type` varchar(16) NOT NULL DEFAULT 'html',
                 `start_file` varchar(64) DEFAULT NULL,
