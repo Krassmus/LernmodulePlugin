@@ -32,14 +32,7 @@
                     <? if ($active) : ?>
                         <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');\"" : "" ?>>
                             <div class="shadow">
-                                <? if ($mod->isWritable()) : ?>
-                                    <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
-                                        <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                            ? Icon::create("edit", "info_alt")->asImg(20)
-                                            : Assets::img("icons/white/20/edit")
-                                        ?>
-                                    </a>
-                                <? else : ?>
+                                <? if (!$mod->isWritable()) : ?>
                                     <? if (LernmodulVersuch::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
                                         <span style="background: white; border-radius: 20px; display: inline-block; height: 30px; width: 30px; text-align: center; line-height: 27px;">
                                         <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
@@ -51,11 +44,19 @@
                                 <? endif ?>
                                 <a href="<?= PluginEngine::getLink($plugin, array(), ($mod['type'] === "html" ? "lernmodule" : $mod['type'])."/view/".$mod->getId()) ?>">
                                     <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                        ? Icon::create("learnmodule", "info_alt")->asImg(27, array('style' => "vertical-align: middle;"))
+                                        ? Icon::create("learnmodule", "info_alt")->asImg(20, array('style' => "vertical-align: middle;"))
                                         : Assets::img("icons/white/20/learnmodule", array('style' => "vertical-align: middle;"))
                                     ?>
                                     <?= htmlReady($mod['name']) ?>
                                 </a>
+                                <? if ($mod->isWritable()) : ?>
+                                    <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
+                                        <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                                            ? Icon::create("edit", "info_alt")->asImg(20, array('class' => "text-bottom"))
+                                            : Assets::img("icons/white/20/edit", array('class' => "text-bottom"))
+                                        ?>
+                                    </a>
+                                <? endif ?>
                             </div>
                         </div>
                     <? else : ?>
