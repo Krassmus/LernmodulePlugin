@@ -1,6 +1,10 @@
 <?php
 
+require_once __DIR__."/lib/CustomLernmodul.interface.php";
 require_once __DIR__."/lib/Lernmodul.php";
+require_once __DIR__."/lib/HtmlLernmodul.php";
+require_once __DIR__."/lib/ScormLernmodul.php";
+require_once __DIR__."/lib/H5pLernmodul.php";
 require_once __DIR__."/lib/LernmodulVersuch.php";
 require_once __DIR__."/lib/LernmodulDependency.php";
 require_once 'app/controllers/plugin_controller.php';
@@ -9,7 +13,7 @@ if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
     $GLOBALS['FILESYSTEM_UTF8'] = true;
 }
 
-class LernmodulePlugin extends StudIPPlugin implements StandardPlugin {
+class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 
     public function getTabNavigation($course_id)
     {

@@ -22,6 +22,7 @@ class Lernmodul extends SimpleORMap {
     static protected function configure($config = array())
     {
         $config['db_table'] = 'lernmodule_module';
+        $config['serialized_fields']['customdata'] = 'JSONArrayObject';
         $config['registered_callbacks']['after_delete'][] = 'cbDeleteModuleData';
         parent::configure($config);
     }
@@ -52,21 +53,26 @@ class Lernmodul extends SimpleORMap {
                 //remove all PHP-files
                 @unlink($php_file);
             }
-            if (!$this['start_file'] || !file_exists($this->getPath()."/".$this['start_file'])) {
-                if (file_exists($this->getPath()."/index.html")) {
-                    $this['start_file'] = "index.html";
-                } else {
-                    $files = $this->scanForFiletypes(array("html", "htm"));
-                    $this['start_file'] = $files[0];
-                }
-            }
+
             if (!$this['image'] || !file_exists($this->getPath()."/".$this['image'])) {
                 $images = $this->scanForImages();
                 $this['image'] = $images[0];
             }
-            $this['type'] = file_exists($this->getPath() . "/h5p.json") ? "h5p" : "html";
+
+            if (file_exists($this->getPath() . "/h5p.json")) {
+                $this['type'] = "h5p";
+            } elseif(file_exists($this->getPath() . "/imsmanifest.xml")) {
+                $this['type'] = "scorm";
+            } else {
+                $this['type'] = "html";
+            }
+
             if (file_exists($this->getPath())) {
                 $this->store();
+
+                $class = ucfirst($this['type'])."Lernmodul";
+                $module = new $class($this->getId());
+                $module->afterInstall();
             } else {
                 PageLayout::postMessage(MessageBox::error(_("Verzeichnis konnte nicht angelegt werden.")));
                 $this->delete();
@@ -166,11 +172,6 @@ class Lernmodul extends SimpleORMap {
     public function getURL()
     {
         return $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->getId();
-    }
-
-    public function getStartURL()
-    {
-        return $this->getURL()."/".($this['start_file'] ?: "index.html");
     }
 
     public function setDependencies($module_ids, $seminar_id)

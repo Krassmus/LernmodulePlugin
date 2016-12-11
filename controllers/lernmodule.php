@@ -30,7 +30,7 @@ class LernmoduleController extends PluginController
         ));
         $this->attempt->store();
         LernmodulVersuch::cleanUpDatabase();
-        $this->mod = new Lernmodul($module_id);
+        $this->mod = new HtmlLernmodul($module_id);
         if (!file_exists($this->mod->getPath())) {
             PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
         }
@@ -40,6 +40,10 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id);
+        if ($this->module['type']) {
+            $class = ucfirst($this->module['type'])."Lernmodul";
+            $this->module = $class::buildExisting($this->module->toRawArray());
+        }
         $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = ? AND module_id != ? ORDER BY name ASC" , array(
             $_SESSION['SessionSeminar'],
             $module_id

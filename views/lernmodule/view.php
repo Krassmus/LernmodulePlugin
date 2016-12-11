@@ -34,7 +34,7 @@
 
 <iframe
         <?= $mod['sandbox'] ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
-        src="<?= htmlReady($plugin->getPluginURL()."/moduledata/".$mod->getId()."/".($mod['start_file'] ?: "index.html")) ?>"
+        src="<?= htmlReady($mod->getStartURL()) ?>"
         style="width: 100%; height: 90vh; border: none;"
         id="lernmodule_iframe"
 ></iframe>

@@ -31,46 +31,6 @@
             </ul>
         <? endif ?>
 
-        <? if ($module['type'] === "html" && !$module->isNew()) : ?>
-            <label>
-                <?= _("Startdatei (.html)") ?>
-                <? if ($module->isNew()) : ?>
-                <input type="text" name="module[start_file]" value="<?= htmlReady($module['start_file']) ?>">
-                <? else : ?>
-                    <select name="module[start_file]">
-                        <? $files = $module->scanForFiletypes(array("html", "htm")) ?>
-                        <? foreach ($files as $file) : ?>
-                            <? if (!is_dir($module->getPath()."/".$file)) : ?>
-                            <option value="<?= htmlReady($file) ?>"<?= $file === $module['start_file'] ? " selected" : "" ?>><?= htmlReady($file) ?></option>
-                            <? endif ?>
-                        <? endforeach ?>
-                    </select>
-                <? endif ?>
-            </label>
-        <? endif ?>
-
-        <? if (LernmodulePlugin::mayEditSandbox()) : ?>
-            <? if (!$module->isNew()) : ?>
-                <label>
-                    <?= _("Enddatei (.html)") ?>
-                    <select name="module[end_file]">
-                        <option value=""><?= _("Keine") ?></option>
-                        <? $files = $module->scanForFiletypes(array("html", "htm")) ?>
-                        <? foreach ($files as $file) : ?>
-                            <? if (!is_dir($module->getPath()."/".$file)) : ?>
-                                <option value="<?= htmlReady($file) ?>"<?= $file === $module['end_file'] ? " selected" : "" ?>><?= htmlReady($file) ?></option>
-                            <? endif ?>
-                        <? endforeach ?>
-                    </select>
-                </label>
-            <? endif ?>
-
-            <label>
-                <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?>>
-                <?= _("Im abgesicherten Modus abspielen") ?>
-            </label>
-        <? endif ?>
-
         <? if (!$module->isNew()) : ?>
             <? $images = $module->scanForImages() ?>
             <? if (count($images)) : ?>
@@ -97,6 +57,20 @@
                         ?>
                     </a>
                 </div>
+            <? endif ?>
+        <? endif ?>
+
+        <? if (LernmodulePlugin::mayEditSandbox()) : ?>
+            <label>
+                <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?>>
+                <?= _("Im abgesicherten Modus abspielen") ?>
+            </label>
+        <? endif ?>
+
+        <? if (!$module->isNew() && is_a($module, "CustomLernmodul")) : ?>
+            <? $template = $module->getEditTemplate() ?>
+            <? if ($template) : ?>
+                <?= $template->render() ?>
             <? endif ?>
         <? endif ?>
 
