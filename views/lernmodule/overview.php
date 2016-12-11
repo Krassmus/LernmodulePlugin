@@ -52,8 +52,8 @@
                                 <? if ($mod->isWritable()) : ?>
                                     <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
                                         <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                            ? Icon::create("edit", "info_alt")->asImg(20, array('class' => "text-bottom"))
-                                            : Assets::img("icons/white/20/edit", array('class' => "text-bottom"))
+                                            ? Icon::create("edit", "info_alt")->asImg(16, array('class' => "text-bottom"))
+                                            : Assets::img("icons/white/16/edit", array('class' => "text-bottom"))
                                         ?>
                                     </a>
                                 <? endif ?>
@@ -86,8 +86,8 @@
                     <? if ($mod->isWritable()) : ?>
                         <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
                             <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                ? Icon::create("edit", "info_alt")->asImg(20)
-                                : Assets::img("icons/white/20/edit")
+                                ? Icon::create("edit", "info_alt")->asImg(16)
+                                : Assets::img("icons/white/16/edit")
                             ?>
                         </a>
                     <? endif ?>
