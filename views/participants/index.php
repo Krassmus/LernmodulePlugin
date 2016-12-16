@@ -30,8 +30,19 @@ usort($student_data, function ($data1, $data2) {
     <tbody>
         <? foreach ($student_data as $student) : ?>
             <tr>
-                <td><div style="width: 50px; height: 50px; background-size: 100% auto; background-image: url('<?= Avatar::getAvatar($student['user_id'])->getURL(Avatar::MEDIUM) ?>'); background-position:  center center; background-repeat: no-repeat;"></div></td>
-                <td><?= htmlReady($student['vorname']." ".$student['nachname']) ?></td>
+                <td>
+                    <? $link = Config::get()->LERNMODUL_PARTICIPANT_EVALUATION && $GLOBALS['perm']->have_studip_perm(Config::get()->LERNMODUL_PARTICIPANT_EVALUATION, $_SESSION['SessionSeminar'])
+                        ? PluginEngine::getLink($plugin, array(), "participants/evaluation/".$student['username'])
+                        : URLHelper::getLink("dispatch.php/profile", array('username' => $student['username'])) ?>
+                    <a href="<?= $link ?>">
+                    <div style="width: 50px; height: 50px; background-size: 100% auto; background-image: url('<?= Avatar::getAvatar($student['user_id'])->getURL(Avatar::MEDIUM) ?>'); background-position:  center center; background-repeat: no-repeat;"></div>
+                    </a>
+                </td>
+                <td>
+                    <a href="<?= $link ?>">
+                    <?= htmlReady($student['vorname']." ".$student['nachname']) ?>
+                    </a>
+                </td>
                 <td>
                     <? if ($student['solved'] > 0 && $student['solved'] >= count($module)) : ?>
                     <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
