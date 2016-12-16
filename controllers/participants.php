@@ -27,6 +27,7 @@ class ParticipantsController extends PluginController
             throw new AccessDeniedException();
         }
         $this->user_id = get_userid($username);
+        $this->attempts = LernmodulVersuch::findByUserAndCourse($this->user_id, $_SESSION['SessionSeminar']);
     }
 
 
