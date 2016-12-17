@@ -15,5 +15,11 @@ interface CustomLernmodul
      */
     public function afterInstall();
 
+    /**
+     * A Flexi_Template showing some input fields for the learning-module.
+     * Input fields should have names like name="module[customdata][start_file]" to get stored
+     * properly.
+     * @return null|Flexi_Template
+     */
     public function getEditTemplate();
 }

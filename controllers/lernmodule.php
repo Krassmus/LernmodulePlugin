@@ -23,14 +23,15 @@ class LernmoduleController extends PluginController
     public function view_action($module_id)
     {
         Navigation::activateItem("/course/lernmodule/overview");
+        $this->mod = new HtmlLernmodul($module_id);
+        $course_connection = $this->mod->courseConnection($_SESSION['SessionSeminar']);
         $this->attempt = new LernmodulVersuch();
         $this->attempt->setData(array(
-            'user_id' => $GLOBALS['user']->id,
+            'user_id' => $course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
             'module_id' => $module_id
         ));
         $this->attempt->store();
         LernmodulVersuch::cleanUpDatabase();
-        $this->mod = new HtmlLernmodul($module_id);
         if (!file_exists($this->mod->getPath())) {
             PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
         }
@@ -44,10 +45,15 @@ class LernmoduleController extends PluginController
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toRawArray());
         }
-        $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = ? AND module_id != ? ORDER BY name ASC" , array(
+        $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) 
+                WHERE lernmodule_courses.seminar_id = ? 
+                    AND module_id != ? 
+                    AND lernmodule_courses.anonymous_attempts = '0' 
+                ORDER BY name ASC" , array(
             $_SESSION['SessionSeminar'],
             $module_id
         ));
+        $this->modulecourse = new LernmodulCourse(array($module_id, $_SESSION['SessionSeminar']));
         PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
         if (Request::isPost()) {
             $data = Request::getArray("module");
@@ -64,7 +70,14 @@ class LernmoduleController extends PluginController
             $this->module->setData($data);
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module->store();
-            $this->module->addToCourse($_SESSION['SessionSeminar']);
+
+            $this->modulecourse['module_id'] = $this->module->getId();
+            $this->modulecourse['seminar_id'] = $_SESSION['SessionSeminar'];
+            $data = Request::getArray("module");
+            $data['anonymous_attempts'] = (int) $data['anonymous_attempts'];
+            $this->modulecourse->setData($data);
+            $this->modulecourse->store();
+
             $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);
             if ($_FILES['modulefile']['size'] > 0) {
                 $this->module->copyModule($_FILES['modulefile']['tmp_name']);

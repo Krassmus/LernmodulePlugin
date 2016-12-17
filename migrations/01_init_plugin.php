@@ -9,8 +9,6 @@ class InitPlugin extends Migration {
                 `user_id` varchar(32) NOT NULL,
                 `name` varchar(64) NOT NULL,
                 `type` varchar(16) NOT NULL DEFAULT 'html',
-                `start_file` varchar(64) DEFAULT NULL,
-                `end_file` varchar(64) DEFAULT NULL,
                 `customdata` TEXT NULL,
                 `image` varchar(128) DEFAULT NULL,
                 `sandbox` tinyint(4) NOT NULL DEFAULT '0',
@@ -30,7 +28,7 @@ class InitPlugin extends Migration {
             CREATE TABLE `lernmodule_attempts` (
                 `attempt_id` varchar(32) NOT NULL,
                 `module_id` varchar(32) NOT NULL,
-                `user_id` varchar(32) NOT NULL,
+                `user_id` varchar(32) NULL,
                 `successful` tinyint(4) NULL,
                 `mkdate` int(11) NOT NULL,
                 `chdate` int(11) NOT NULL,
@@ -53,9 +51,11 @@ class InitPlugin extends Migration {
         ");
         DBManager::get()->exec("
             CREATE TABLE `lernmodule_courses` (
-                `seminar_id` varchar(32) NOT NULL DEFAULT '',
-                `module_id` varchar(32) NOT NULL DEFAULT '',
-                UNIQUE KEY `seminar_id` (`seminar_id`,`module_id`)
+                `module_id` varchar(32) NOT NULL,
+                `seminar_id` varchar(32) NOT NULL,
+                `anonymous_attempts` tinyint(4) NOT NULL DEFAULT '0',
+                `customdata` TEXT NULL,
+                PRIMARY KEY (`module_id`, `seminar_id`)
             ) ENGINE=InnoDB
         ");
     }

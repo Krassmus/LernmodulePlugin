@@ -27,6 +27,11 @@ class Lernmodul extends SimpleORMap {
         parent::configure($config);
     }
 
+    public function courseConnection($course_id)
+    {
+        return new LernmodulCourse(array($this->getId(), $course_id));
+    }
+
     public function copyModule($path)
     {
         if (file_exists($this->getPath())) {
@@ -197,6 +202,10 @@ class Lernmodul extends SimpleORMap {
         ));
     }
 
+    /**
+     * unused
+     * @param $course_id
+     */
     public function addToCourse($course_id)
     {
         if (!$this->getId()) {

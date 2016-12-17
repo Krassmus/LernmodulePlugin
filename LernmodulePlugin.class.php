@@ -6,6 +6,7 @@ require_once __DIR__."/lib/HtmlLernmodul.php";
 require_once __DIR__."/lib/ScormLernmodul.php";
 require_once __DIR__."/lib/H5pLernmodul.php";
 require_once __DIR__."/lib/LernmodulVersuch.php";
+require_once __DIR__."/lib/LernmodulCourse.php";
 require_once __DIR__."/lib/LernmodulDependency.php";
 require_once 'app/controllers/plugin_controller.php';
 

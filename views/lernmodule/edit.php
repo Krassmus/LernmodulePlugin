@@ -67,6 +67,11 @@
             </label>
         <? endif ?>
 
+        <label>
+            <input type="checkbox" name="modulecourse[anonymous_attempts]" value="1"<?= $modulecourse['anonymous_attempts'] ? " checked" : "" ?>>
+            <?= _("Nutzer sollen anonym teilnehmen") ?>
+        </label>
+
         <? if (!$module->isNew() && is_a($module, "CustomLernmodul")) : ?>
             <? $template = $module->getEditTemplate() ?>
             <? if ($template) : ?>
