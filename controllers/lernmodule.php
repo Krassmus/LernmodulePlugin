@@ -113,10 +113,4 @@ class LernmoduleController extends PluginController
         $this->render_nothing();
     }
 
-    public function ranking_action()
-    {
-        Navigation::activateItem("/course/lernmodule/ranking");
-        $this->module = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = ? ORDER BY name ASC", array($_SESSION['SessionSeminar']));
-        $this->students = Course::findCurrent()->members->filter(function ($student) { return $student['status'] === "autor"; });
-    }
 }

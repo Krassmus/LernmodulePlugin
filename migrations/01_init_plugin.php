@@ -58,6 +58,11 @@ class InitPlugin extends Migration {
                 PRIMARY KEY (`module_id`, `seminar_id`)
             ) ENGINE=InnoDB
         ");
+        DBManager::get()->exec("
+            INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) 
+            VALUES
+                (MD5('LERNMODUL_PARTICIPANT_EVALUATION'), '', 'LERNMODUL_PARTICIPANT_EVALUATION', 'dozent', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Ab welchem Status darf jemand die Nutzerauswertung der Lernmodule sehen (autor, tutor, dozent, admin, root, leer lassen).', '', '')
+        ");
     }
 
     function down() {
