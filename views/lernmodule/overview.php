@@ -31,40 +31,42 @@
                     ?>
                     <? if ($active) : ?>
                         <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');\"" : "" ?>>
-                            <div class="shadow">
-                                <? if (!$mod->isWritable()) : ?>
-                                    <? if (LernmodulVersuch::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
-                                        <span style="background: white; border-radius: 20px; display: inline-block; height: 30px; width: 30px; text-align: center; line-height: 27px;">
+                            <? if (!$mod->isWritable()) : ?>
+                                <? if (LernmodulVersuch::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
+                                    <div class="crown">
                                         <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                                             ? Icon::create("crown", "status-yellow")->asImg(20, array('title' => _("Erfolgreich abgeschlossen"), 'class' => "text-bottom"))
                                             : Assets::img("icons/yellow/20/crown", array('title' => _("Erfolgreich abgeschlossen"), 'class' => "text-bottom"))
                                         ?>
-                                        </span>
-                                    <? endif ?>
+                                        </div>
                                 <? endif ?>
-                                <a href="<?= PluginEngine::getLink($plugin, array(), ($mod['type'] === "html" ? "lernmodule" : $mod['type'])."/view/".$mod->getId()) ?>">
-                                    <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                        ? Icon::create("learnmodule", "info_alt")->asImg(20, array('style' => "vertical-align: middle;"))
-                                        : Assets::img("icons/white/20/learnmodule", array('style' => "vertical-align: middle;"))
-                                    ?>
+                            <? endif ?>
+                            <div class="shadow">
+                                <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/view/".$mod->getId()) ?>">
+                                    <? if (!$mod->isWritable()) : ?>
+                                        <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                                            ? Icon::create("learnmodule", "info_alt")->asImg(20, array('style' => "vertical-align: middle;"))
+                                            : Assets::img("icons/white/20/learnmodule", array('style' => "vertical-align: middle;"))
+                                        ?>
+                                    <? endif ?>
                                     <?= htmlReady($mod['name']) ?>
                                 </a>
                                 <? if ($mod->isWritable()) : ?>
                                     <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
                                         <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                            ? Icon::create("edit", "info_alt")->asImg(16, array('class' => "text-bottom"))
-                                            : Assets::img("icons/white/16/edit", array('class' => "text-bottom"))
+                                            ? Icon::create("edit", "info_alt")->asImg(20, array('class' => "text-bottom"))
+                                            : Assets::img("icons/white/20/edit", array('class' => "text-bottom"))
                                         ?>
                                     </a>
                                 <? endif ?>
                             </div>
                         </div>
                     <? else : ?>
-                        <div class="module" style="opacity: 0.3;<?= $mod['image'] ? " background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');" : "" ?>" title="<?= _("Aktivieren Sie dieses Modul, indem Sie die anderen Module durcharbeiten.") ?>">
-                            <div class="shadow" style="text-align: center;">
+                        <div class="module" style="opacity: 0.3;<?= $mod['image'] ? " background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');" : "" ?>" title="<?= _("Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
+                            <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                    ? Icon::create("question-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle;"))
-                                    : Assets::img("icons/white/80/question-circle", array('style' => "vertical-align: middle;"))
+                                    ? Icon::create("question-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;"))
+                                    : Assets::img("icons/white/80/question-circle", array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;"))
                                 ?>
                             </div>
                         </div>

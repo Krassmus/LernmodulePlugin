@@ -23,7 +23,9 @@ class LernmoduleController extends PluginController
     public function view_action($module_id)
     {
         Navigation::activateItem("/course/lernmodule/overview");
-        $this->mod = new HtmlLernmodul($module_id);
+        $this->mod = new Lernmodul($module_id);
+        $class = ucfirst($this->mod['type'])."Lernmodul";
+        $this->mod = $class::buildExisting($this->mod->toRawArray());
         $course_connection = $this->mod->courseConnection($_SESSION['SessionSeminar']);
         $this->attempt = new LernmodulVersuch();
         $this->attempt->setData(array(

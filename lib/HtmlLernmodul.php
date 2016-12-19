@@ -27,6 +27,23 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         return $template;
     }
 
+    public function getViewerTemplate()
+    {
+        $actions = new ActionsWidget();
+        $actions->addLink(
+            _("Vollbild"),
+            "#",
+            Icon::create("play", "clickable"),
+            array('onClick' => "STUDIP.Lernmodule.requestFullscreen(); return false;")
+        );
+        Sidebar::Get()->addWidget($actions);
+
+        $templatefactory = new Flexi_TemplateFactory(__DIR__."/../views");
+        $template = $templatefactory->open("html/view.php");
+        $template->set_attribute("mod", $this);
+        return $template;
+    }
+
     public function getStartURL()
     {
         return $this->getURL()."/".($this['customdata']['start_file'] ?: "index.html");

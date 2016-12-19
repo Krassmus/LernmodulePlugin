@@ -22,4 +22,10 @@ interface CustomLernmodul
      * @return null|Flexi_Template
      */
     public function getEditTemplate();
+
+    /**
+     * Returns a Flexi_Template object to run the learning-module
+     * @return Flexi_Template|null
+     */
+    public function getViewerTemplate();
 }

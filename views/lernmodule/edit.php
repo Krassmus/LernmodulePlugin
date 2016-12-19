@@ -17,19 +17,27 @@
         </label>
 
         <? if (count($lernmodule)) : ?>
-            <?= _("Abhängig von") ?>
-            <ul class="clean">
-                <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies($_SESSION['SessionSeminar'])) ?>
-                <? foreach ($lernmodule as $lernmodul) : ?>
-                    <li>
-                        <label>
-                            <input type="checkbox" name="dependencies[]" value="<?= htmlReady($lernmodul->getId()) ?>"<?= in_array($lernmodul->getId(), $dependencies) ? " checked" : "" ?>>
-                            <?= htmlReady($lernmodul['name']) ?>
-                        </label>
-                    </li>
-                <? endforeach ?>
-            </ul>
+            <div style="margin-top: 15px;">
+                <?= _("Abhängig von") ?>
+                <ul class="clean">
+                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies($_SESSION['SessionSeminar'])) ?>
+                    <? foreach ($lernmodule as $lernmodul) : ?>
+                        <li>
+                            <label style="font-size: 0.9em;">
+                                <input type="checkbox" name="dependencies[]" value="<?= htmlReady($lernmodul->getId()) ?>"<?= in_array($lernmodul->getId(), $dependencies) ? " checked" : "" ?>>
+                                <?= htmlReady($lernmodul['name']) ?>
+                            </label>
+                        </li>
+                    <? endforeach ?>
+                </ul>
+            </div>
         <? endif ?>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            <?= _("Abspieloptionen") ?>
+        </legend>
 
         <? if (!$module->isNew()) : ?>
             <? $images = $module->scanForImages() ?>
@@ -37,6 +45,7 @@
                 <label>
                     <?= _("Bild auswählen") ?>
                     <select id="select_image" name="module[image]" onChange="jQuery('#image_preview').css('background-image', 'url(' + jQuery('#image_preview').data('url_base') + '/' + this.value + ')'); ">
+                        <option value=""><?= _("Keines") ?></option>
                         <? foreach ($images as $image) : ?>
                             <option value="<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>><?= htmlReady($image) ?></option>
                         <? endforeach ?>
