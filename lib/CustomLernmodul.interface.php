@@ -27,5 +27,5 @@ interface CustomLernmodul
      * Returns a Flexi_Template object to run the learning-module
      * @return Flexi_Template|null
      */
-    public function getViewerTemplate();
+    public function getViewerTemplate($attempt);
 }

@@ -14,7 +14,7 @@ class ScormLernmodul extends Lernmodul implements CustomLernmodul
 
     public function getEditTemplate() {}
 
-    public function getViewerTemplate()
+    public function getViewerTemplate($attempt)
     {
 
     }

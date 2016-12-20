@@ -30,6 +30,7 @@ class InitPlugin extends Migration {
                 `module_id` varchar(32) NOT NULL,
                 `user_id` varchar(32) NULL,
                 `successful` tinyint(4) NULL,
+                `customdata` TEXT NULL,
                 `mkdate` int(11) NOT NULL,
                 `chdate` int(11) NOT NULL,
                 PRIMARY KEY (`attempt_id`),

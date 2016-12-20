@@ -29,16 +29,31 @@
 </script>
 
 <iframe
-        <?= $mod['sandbox'] ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
-        src="<?= htmlReady($mod->getStartURL()) ?>"
+        <?= $module['sandbox'] ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
+        src="<?= htmlReady($module->getStartURL()) ?>"
         style="width: 100%; height: 90vh; border: none;"
         id="lernmodule_iframe"
 ></iframe>
 
-<? if (!$mod['end_file']) : ?>
-    <script>
-        window.setTimeout(function () {
-            jQuery.post(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/" + jQuery("#attempt_id").val());
-        }, 1000 * 30);
-    </script>
-<? endif ?>
+
+<script>
+    <? if ($module['end_file']) : ?>
+    var end_file_found = false;
+    window.setInterval(function () {
+        if (!end_file_found) {
+            //search for iframe-page
+            var page = document.getElementById("lernmodule_iframe").contentWindow.location.href;
+            var end_file = "<?= htmlReady($module['end_file']) ?>";
+            page = page.split("?")[0];
+            if (page.indexOf(end_file) !== -1) {
+                end_file_found = true;
+                jQuery.post(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>");
+            }
+        }
+    }, 500);
+    <? else : ?>
+    window.setInterval(function () {
+        jQuery.post(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>");
+    }, 30 * 1000);
+    <? endif ?>
+</script>

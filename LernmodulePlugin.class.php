@@ -16,6 +16,27 @@ if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
 
 class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 
+    public function __construct()
+    {
+        parent::__construct();
+        if (UpdateInformation::isCollecting()) {
+            $data = Request::getArray("page_info");
+            if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {
+                $data['Lernmodule']['attempt_id'];
+                $attempt = new LernmodulVersuch($data['Lernmodule']['attempt_id']);
+                if ($attempt['user_id'] === $GLOBALS['user']->id) {
+                    if ($data['Lernmodule']['customData']) {
+                        $attempt['customData'] = $data['Lernmodule']['customData'];
+                    }
+                    if (!$attempt['successful']) {
+                        $attempt['chdate'] = time();
+                    }
+                    $attempt->store();
+                }
+            }
+        }
+    }
+
     public function getTabNavigation($course_id)
     {
         $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));

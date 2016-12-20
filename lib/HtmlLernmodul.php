@@ -27,7 +27,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         return $template;
     }
 
-    public function getViewerTemplate()
+    public function getViewerTemplate($attempt)
     {
         $actions = new ActionsWidget();
         $actions->addLink(
@@ -40,7 +40,8 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
 
         $templatefactory = new Flexi_TemplateFactory(__DIR__."/../views");
         $template = $templatefactory->open("html/view.php");
-        $template->set_attribute("mod", $this);
+        $template->set_attribute("module", $this);
+        $template->set_attribute("attempt", $attempt);
         return $template;
     }
 

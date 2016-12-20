@@ -36,6 +36,7 @@ class LernmodulVersuch extends SimpleORMap {
             'foreign_key' => 'module_id',
             'assoc_func' => 'find',
         );
+        $config['serialized_fields']['customdata'] = 'JSONArrayObject';
         parent::configure($config);
     }
 }
