@@ -71,12 +71,14 @@
 
         <? if (LernmodulePlugin::mayEditSandbox()) : ?>
             <label>
+                <input type="hidden" name="module[sandbox]" value="0">
                 <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?>>
                 <?= _("Im abgesicherten Modus abspielen") ?>
             </label>
         <? endif ?>
 
         <label>
+            <input type="hidden" name="modulecourse[anonymous_attempts]" value="0">
             <input type="checkbox" name="modulecourse[anonymous_attempts]" value="1"<?= $modulecourse['anonymous_attempts'] ? " checked" : "" ?>>
             <?= _("Nutzer sollen anonym teilnehmen") ?>
         </label>

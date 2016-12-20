@@ -55,7 +55,7 @@ class LernmoduleController extends PluginController
             $_SESSION['SessionSeminar'],
             $module_id
         ));
-        $this->modulecourse = new LernmodulCourse(array($module_id, $_SESSION['SessionSeminar']));
+        $this->modulecourse = LernmodulCourse::find(array($module_id, $_SESSION['SessionSeminar']));
         PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
         if (Request::isPost()) {
             $data = Request::getArray("module");
@@ -64,20 +64,19 @@ class LernmoduleController extends PluginController
                 $this->redirect("lernmodule/overview");
                 return;
             }
-            if (LernmodulePlugin::mayEditSandbox()) {
-                $data['sandbox'] = (int) $data['sandbox'];
-            } else {
+            if (!LernmodulePlugin::mayEditSandbox()) {
                 unset($data['sandbox']);
             }
             $this->module->setData($data);
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module->store();
 
-            $this->modulecourse['module_id'] = $this->module->getId();
-            $this->modulecourse['seminar_id'] = $_SESSION['SessionSeminar'];
-            $data = Request::getArray("module");
-            $data['anonymous_attempts'] = (int) $data['anonymous_attempts'];
-            $this->modulecourse->setData($data);
+            if (!$this->modulecourse) {
+                $this->modulecourse = new LernmodulCourse();
+                $this->modulecourse['module_id'] = $this->module->getId();
+                $this->modulecourse['seminar_id'] = $_SESSION['SessionSeminar'];
+            }
+            $this->modulecourse->setData(Request::getArray("modulecourse"));
             $this->modulecourse->store();
 
             $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);
