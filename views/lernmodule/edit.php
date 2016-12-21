@@ -7,13 +7,13 @@
         <legend><?= _("Lernmodul hochladen und bearbeiten") ?></legend>
 
         <label class="file-upload">
-            <input type="file" name="modulefile" accept=".zip,.h5p">
+            <input type="file" name="modulefile" accept=".zip,.h5p" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
             <?= sprintf(_("Lernmodul auswählen (ZIP, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
 
         <label>
             <?= _("Name des Moduls") ?>
-            <input type="text" name="module[name]" required value="<?= htmlReady($module['name']) ?>">
+            <input type="text" id="modulename" name="module[name]" required value="<?= htmlReady($module['name']) ?>">
         </label>
 
         <? if (count($lernmodule)) : ?>
