@@ -28,6 +28,8 @@
     };
 </script>
 
+<? $framesecret = md5(uniqid()) ?>
+
 <iframe
         <?= $module['sandbox'] ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
         src="<?= htmlReady($module->getStartURL()) ?>"
@@ -47,13 +49,30 @@
             page = page.split("?")[0];
             if (page.indexOf(end_file) !== -1) {
                 end_file_found = true;
-                jQuery.post(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>");
+                jQuery.post(
+                    STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                    {"success" : 1}
+                );
             }
         }
     }, 500);
     <? else : ?>
     window.setInterval(function () {
-        jQuery.post(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>");
+        jQuery.post(
+            STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+            {"success" : 1}
+        );
     }, 30 * 1000);
     <? endif ?>
+    window.addEventListener("message", function (event) {
+        var origin = event.origin || event.originalEvent.origin;
+        var message = JSON.parse(event.data);
+        if (message.secret === '<?= $framesecret ?>') {
+            //it's from the correct window
+            jQuery.post(
+                STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                message
+            );
+        }
+    }, false);
 </script>
