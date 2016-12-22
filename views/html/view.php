@@ -73,7 +73,7 @@
         var message = JSON.parse(event.data);
         if ((message.secret === '<?= $framesecret ?>') && (origin === myorigin)) {
             STUDIP.Lernmodule.received_message_api_messages = true;
-            //it's from the correct window
+            //it's from the correct window, yay!
             delete message.secret;
             jQuery.post(
                 STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
