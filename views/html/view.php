@@ -32,7 +32,7 @@
 
 <iframe
         <?= $module['sandbox'] ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
-        src="<?= htmlReady($module->getStartURL()) ?>"
+        src="<?= htmlReady($module->getStartURL($framesecret)) ?>"
         style="width: 100%; height: 90vh; border: none;"
         id="lernmodule_iframe"
 ></iframe>
@@ -57,21 +57,27 @@
         }
     }, 500);
     <? else : ?>
-    window.setInterval(function () {
-        jQuery.post(
-            STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
-            {"success" : 1}
-        );
+    window.setTimeout(function () {
+        if (!STUDIP.Lernmodule.received_message_api_messages) {
+            jQuery.post(
+                STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                {"success": 1}
+            );
+        }
     }, 30 * 1000);
+    STUDIP.Lernmodule.received_message_api_messages = false;
     <? endif ?>
     window.addEventListener("message", function (event) {
         var origin = event.origin || event.originalEvent.origin;
+        var myorigin = "<?= htmlReady($myorigin) ?>";
         var message = JSON.parse(event.data);
-        if (message.secret === '<?= $framesecret ?>') {
+        if ((message.secret === '<?= $framesecret ?>') && (origin === myorigin)) {
+            STUDIP.Lernmodule.received_message_api_messages = true;
             //it's from the correct window
+            delete message.secret;
             jQuery.post(
                 STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
-                message
+                { "message": message }
             );
         }
     }, false);

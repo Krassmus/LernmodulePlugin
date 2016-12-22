@@ -108,18 +108,12 @@ class LernmoduleController extends PluginController
         }
         if (Request::isPost()) {
             $this->attempt['chdate'] = time();
-            if (Request::get("success")) {
+            $message = Request::getArray("message");
+            if ($message['success']) {
                 $this->attempt['successful'] = 1;
             }
-            $vars = $_POST;
-            $vars['properties'] = array_merge($this->attempt->customdata['properties'], $vars['properties']);
-            unset($vars['success']);
-            $points = $this->attempt->customdata['points'];
-            foreach ($vars['points'] as $index => $value) {
-                $points[$index] += $value;
-            }
-            $vars['points'] = $points;
-            $this->attempt->customdata = $vars;
+            unset($message['success']);
+            $this->attempt->customdata = $message;
             $this->attempt->store();
         }
         $this->render_nothing();

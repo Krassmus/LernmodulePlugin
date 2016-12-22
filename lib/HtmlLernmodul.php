@@ -38,15 +38,19 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         );
         Sidebar::Get()->addWidget($actions);
 
+        $myorigin = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+        $myorigin .= '://'.$_SERVER['SERVER_NAME'];
+
         $templatefactory = new Flexi_TemplateFactory(__DIR__."/../views");
         $template = $templatefactory->open("html/view.php");
         $template->set_attribute("module", $this);
         $template->set_attribute("attempt", $attempt);
+        $template->set_attribute("myorigin", $myorigin);
         return $template;
     }
 
-    public function getStartURL()
+    public function getStartURL($secret = null)
     {
-        return $this->getURL()."/".($this['customdata']['start_file'] ?: "index.html");
+        return $this->getURL()."/".($this['customdata']['start_file'] ?: "index.html").($secret ? "?secret=".urlencode($secret): "");
     }
 }
