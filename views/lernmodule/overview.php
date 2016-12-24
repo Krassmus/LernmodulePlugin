@@ -52,7 +52,7 @@
                                     <?= htmlReady($mod['name']) ?>
                                 </a>
                                 <? if ($mod->isWritable()) : ?>
-                                    <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
+                                    <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>">
                                         <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                                             ? Icon::create("edit", "info_alt")->asImg(20, array('class' => "text-bottom"))
                                             : Assets::img("icons/white/20/edit", array('class' => "text-bottom"))

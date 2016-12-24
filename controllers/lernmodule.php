@@ -119,4 +119,16 @@ class LernmoduleController extends PluginController
         $this->render_nothing();
     }
 
+    public function download_action($module_id)
+    {
+        $this->module = new Lernmodul($module_id);
+        $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid());
+        create_zip_from_directory($this->module->getPath(), $filename);
+        header("Content-Type: application/zip");
+        header("Content-Disposition: attachement; filename=\"".$this->module['name'].".zip\"");
+        echo file_get_contents($filename);
+        @unlink($filename);
+        $this->render_nothing();
+    }
+
 }
