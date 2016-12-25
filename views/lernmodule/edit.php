@@ -130,7 +130,7 @@
         $max = ceil(max($successful['average'] + $successful['standarddeviation'], $unsuccessful['average'] + $unsuccessful['standarddeviation']));
         $segements = 10;
         $factor = $max / $segements;
-        $range = range(0, $segements);
+        $range = range(0, $segements + 1);
         $result = array();
         foreach ($range as $key => $value) {
             $range[$key] = ceil($value * $factor)."s";
@@ -162,8 +162,8 @@
                             labels: <?= json_encode($range) ?>,
                             // Our series array that contains series objects or in this case series data arrays
                             series: [
-                                <?= json_encode($successful['result']) ?>,
-                                <?= json_encode($unsuccessful['result']) ?>
+                                <?= json_encode($unsuccessful['result']) ?>,
+                                <?= json_encode($successful['result']) ?>
                             ]
                         };
 
@@ -172,9 +172,7 @@
                             height: '200px',
                             // Remove this configuration to see that chart rendered with cardinal spline interpolation
                             // Sometimes, on large jumps in data values, it's better to use simple smoothing.
-                            lineSmooth: Chartist.Interpolation.simple({
-                                divisor: 2
-                            }),
+                            lineSmooth: Chartist.Interpolation.none(),
                             fullWidth: true,
                             chartPadding: {
                                 right: 20
