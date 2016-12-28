@@ -56,6 +56,7 @@ class InitPlugin extends Migration {
                 `seminar_id` varchar(32) NOT NULL,
                 `anonymous_attempts` tinyint(4) NOT NULL DEFAULT '0',
                 `customdata` TEXT NULL,
+                `starttime` bigint(20) DEFAULT NULL,
                 PRIMARY KEY (`module_id`, `seminar_id`)
             ) ENGINE=InnoDB
         ");

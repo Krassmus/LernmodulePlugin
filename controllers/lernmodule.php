@@ -76,7 +76,9 @@ class LernmoduleController extends PluginController
                 $this->modulecourse['module_id'] = $this->module->getId();
                 $this->modulecourse['seminar_id'] = $_SESSION['SessionSeminar'];
             }
-            $this->modulecourse->setData(Request::getArray("modulecourse"));
+            $modulecoursedata = Request::getArray("modulecourse");
+            $modulecoursedata['starttime'] = strtotime($modulecoursedata['starttime']) ?: null;
+            $this->modulecourse->setData($modulecoursedata);
             $this->modulecourse->store();
 
             $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);

@@ -83,6 +83,11 @@
             <?= _("Nutzer sollen anonym teilnehmen") ?>
         </label>
 
+        <label>
+            <?= _("Frühester Startzeitpunkt") ?>
+            <input type="text" id="modulecourse_starttime" name="modulecourse[starttime]" value="<?= $modulecourse['starttime'] ? date("d.m.Y H:i", $modulecourse['starttime']) : "jederzeit" ?>"  data-datetime-picker>
+        </label>
+
         <? if (!$module->isNew() && is_a($module, "CustomLernmodul")) : ?>
             <? $template = $module->getEditTemplate() ?>
             <? if ($template) : ?>
