@@ -31,7 +31,7 @@
                     ?>
                     <? if ($active) : ?>
                         <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($_SESSION['SessionSeminar'], $mod->getId())) ?>
-                        <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time())|| $mod->isWritable()) : ?>
+                        <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
                             <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');\"" : "" ?>>
                                 <? if (!$mod->isWritable()) : ?>
                                     <? if (LernmodulVersuch::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                         <? else : ?>
-                        <div class="module" style="opacity: 0.3;<?= $mod['image'] ? " background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
+                        <div class="module" style="opacity: 0.5;<?= $mod['image'] ? " background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
                             <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                                     ? Icon::create("date", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;"))
