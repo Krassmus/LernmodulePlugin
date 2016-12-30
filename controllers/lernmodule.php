@@ -42,8 +42,8 @@ class LernmoduleController extends PluginController
     public function edit_action($module_id = null)
     {
         Navigation::activateItem("/course/lernmodule/overview");
-        $this->module = new Lernmodul($module_id);
-        if ($this->module['type']) {
+        $this->module = new Lernmodul($module_id ?: null);
+        if ($this->module['type'] && !$this->module->isNew()) {
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toRawArray());
         }
@@ -55,11 +55,13 @@ class LernmoduleController extends PluginController
             $_SESSION['SessionSeminar'],
             $module_id
         ));
-        $this->modulecourse = LernmodulCourse::find(array($module_id, $_SESSION['SessionSeminar']));
+        if ($module_id) {
+            $this->modulecourse = LernmodulCourse::find(array($module_id, $_SESSION['SessionSeminar']));
+        }
         PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
         if (Request::isPost()) {
             $data = Request::getArray("module");
-            if (!$data['name']) {
+            if (!$data['name']) { //die Variable name passte nicht mehr in den Request und fehlt daher
                 PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu groß.")));
                 $this->redirect("lernmodule/overview");
                 return;
@@ -69,7 +71,13 @@ class LernmoduleController extends PluginController
             }
             $this->module->setData($data);
             $this->module['user_id'] = $GLOBALS['user']->id;
-            $this->module->store();
+            $success = $this->module->store();
+
+            if (!$success) {
+                PageLayout::postMessage(MessageBox::error(_("Konnte Lernmodul nicht speichern.")));
+                $this->redirect("lernmodule/overview");
+                return;
+            }
 
             if (!$this->modulecourse) {
                 $this->modulecourse = new LernmodulCourse();
@@ -81,11 +89,15 @@ class LernmoduleController extends PluginController
             $this->modulecourse->setData($modulecoursedata);
             $this->modulecourse->store();
 
+            $success = true;
+
             $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);
             if ($_FILES['modulefile']['size'] > 0) {
-                $this->module->copyModule($_FILES['modulefile']['tmp_name']);
+                $success = $this->module->copyModule($_FILES['modulefile']['tmp_name']);
             }
-            PageLayout::postMessage(MessageBox::success(_("Lernmodul erfolgreich gespeichert.")));
+            if ($success) {
+                PageLayout::postMessage(MessageBox::success(_("Lernmodul erfolgreich gespeichert.")));
+            }
             $this->redirect("lernmodule/overview");
         }
     }

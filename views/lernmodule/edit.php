@@ -132,13 +132,15 @@
         }
         $successful['standarddeviation'] = sqrt($successful['variance']);
         $unsuccessful['standarddeviation'] = sqrt($unsuccessful['variance']);
-        $max = ceil(max($successful['average'] + $successful['standarddeviation'], $unsuccessful['average'] + $unsuccessful['standarddeviation']));
-        $segements = 10;
+        $max = max(round(max($successful['average'] + $successful['standarddeviation'], $unsuccessful['average'] + $unsuccessful['standarddeviation']) / 10) * 10, 60);
+        $segements = 9;
         $factor = $max / $segements;
         $range = range(0, $segements + 1);
         $result = array();
         foreach ($range as $key => $value) {
-            $range[$key] = ceil($value * $factor)."s";
+            $range[$key] = $value * $factor > 120
+                ? round($value * $factor / 60, 1)."m"
+                : ceil($value * $factor)."s";
             $successful['result'][$key] = 0;
             $unsuccessful['result'][$key] = 0;
             foreach ($attempts as $attempt) {
@@ -187,7 +189,7 @@
                         new Chartist.Line('#timeline', data, options);
                     });
                 </script>
-                <p><?= _("Zeit der Durchläufe in Sekunden. Blau sind die erfolgreichen Durchläufe, rot die nicht erfolgreichen.") ?></p>
+                <p><?= _("Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen Durchläufe, orange die nicht erfolgreichen.") ?></p>
         </fieldset>
         <? endif ?>
     <? endif ?>

@@ -40,6 +40,7 @@ class Lernmodul extends SimpleORMap {
         $success = mkdir($this->getPath());
         if (!$success) {
             PageLayout::postMessage(MessageBox::error(_("Konnte im Dateisystem keinen Ordner für das Lernmodul anlegen.")));
+            return false;
         }
         $success = LernmodulePlugin::extract_zip($path, $this->getPath());
         if ($success) {
@@ -81,6 +82,7 @@ class Lernmodul extends SimpleORMap {
             } else {
                 PageLayout::postMessage(MessageBox::error(_("Verzeichnis konnte nicht angelegt werden.")));
                 $this->delete();
+                return false;
             }
         } else {
             PageLayout::postMessage(MessageBox::error(_("Entzippen des Lernmoduls hat nicht geklappt.")));
@@ -165,11 +167,17 @@ class Lernmodul extends SimpleORMap {
     {
         $datafolder = __DIR__."/../../LernmodulePluginData";
         if (!file_exists($datafolder)) {
-            mkdir($datafolder);
+            $success = mkdir($datafolder);
+            if (!$success) {
+                throw new Exception("Konnte Verzeichnis LernmodulePluginData nicht anlegen.");
+            }
         }
         $datafolder .= "/moduledata";
         if (!file_exists($datafolder)) {
-            mkdir($datafolder);
+            $success = mkdir($datafolder);
+            if (!$success) {
+                throw new Exception("Konnte Verzeichnis LernmodulePluginData/moduledata nicht anlegen.");
+            }
         }
         return $datafolder."/".$this->getId();
     }
