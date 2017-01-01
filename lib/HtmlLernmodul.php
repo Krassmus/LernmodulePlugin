@@ -51,6 +51,6 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
 
     public function getStartURL($secret = null)
     {
-        return $this->getURL()."/".($this['customdata']['start_file'] ?: "index.html").($secret ? "?secret=".urlencode($secret): "");
+        return $this->getURL()."/".($this['customdata']['start_file'] ?: "index.html").($secret ? "?vanillalm_secret=".urlencode($secret): "");
     }
 }

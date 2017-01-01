@@ -1,5 +1,20 @@
 VanillaLM = {
     state: {},
+    storage: { //a fake storage to be overwritten by sessionStorage or localStorage if available
+        _data: {},
+        setItem: function (id, val) {
+            return this._data[id] = String(val);
+        },
+        getItem: function (id) {
+            return this._data.hasOwnProperty(id) ? this._data[id] : undefined;
+        },
+        removeItem: function (id) {
+            return delete this._data[id];
+        },
+        clear: function () {
+            return this._data = {};
+        }
+    },
     /**
      * Returns the value of the given attribute. This attribute may be set immediatly before or on another page
      * during the same session.
@@ -43,6 +58,12 @@ VanillaLM = {
         }
         VanillaLM.state.points[pointclass] = VanillaLM.getPoints(pointclass) + number;
     },
+    setPoints: function (pointclass, number) {
+        if (typeof VanillaLM.state.points === "undefined") {
+            VanillaLM.state.points = {};
+        }
+        VanillaLM.state.points[pointclass] = number;
+    },
     /**
      * Gets the amount of points of pointclass the user already has received (combined in this session).
      * @param string pointclass: the type of points.
@@ -52,7 +73,7 @@ VanillaLM = {
         if (typeof VanillaLM.state.points[pointclass] !== "undefined") {
             return VanillaLM.state.points[pointclass];
         } else {
-            var session = JSON.parse(window.sessionStorage.getItem("VanillaLM.sessionStorage"));
+            var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage"));
             if ((typeof session.points !== "undefined") && (typeof session.points[pointclass] !== "undefined")) {
                 return session.points[pointclass];
             } else {
@@ -65,10 +86,10 @@ VanillaLM = {
      */
     send: function () {
         var opener = window.opener || window.parent;
-        var session = JSON.parse(window.sessionStorage.getItem("VanillaLM.sessionStorage"));
+        var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage") || "{}");
         VanillaLM.state = Object.assign(session, VanillaLM.state);
-        window.sessionStorage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
-        if (opener && VanillaLM.state.secret) {
+        VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
+        if (opener) {
             opener.postMessage(JSON.stringify(VanillaLM.state), "*");
         }
     },
@@ -85,7 +106,7 @@ VanillaLM = {
         if (typeof VanillaLM.state[parameter] !== "undefined") {
             return VanillaLM.state[parameter];
         } else {
-            var session = JSON.parse(window.sessionStorage.getItem("VanillaLM.sessionStorage"));
+            var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage"));
             return session[parameter];
         }
     },
@@ -113,9 +134,15 @@ VanillaLM = {
  */
 document.addEventListener("DOMContentLoaded", function(event) {
     //save secret in sessionStorage
-    var secret = VanillaLM.findGetParameter("secret");
+    var secret = VanillaLM.findGetParameter("vanillalm_secret");
+    try {
+        window.sessionStorage;
+        if (typeof window.sessionStorage !== "undefined") {
+            VanillaLM.storage = window.sessionStorage;
+        }
+    } catch(exception) {}
     if (secret) {
         VanillaLM.state.secret = secret;
-        window.sessionStorage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
+        VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
     }
 });
