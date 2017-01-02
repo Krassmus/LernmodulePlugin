@@ -1,5 +1,7 @@
 VanillaLM = {
+    timeoutInSeconds: 5,
     state: {},
+    openRequests: {},
     storage: { //a fake storage to be overwritten by sessionStorage or localStorage if available
         _data: {},
         setItem: function (id, val) {
@@ -82,7 +84,7 @@ VanillaLM = {
         }
     },
     /**
-     * Sends the current state to the opener-window and saves the new state to the sessionStorage.
+     * Sends the current state to the opener-window and saves the new state to the sessionStorage (if available).
      */
     send: function () {
         var opener = window.opener || window.parent;
@@ -92,6 +94,31 @@ VanillaLM = {
         if (opener) {
             opener.postMessage(JSON.stringify(VanillaLM.state), "*");
         }
+    },
+    /**
+     * Returns a promise for delivering actor-information. You can write VanillaLM.getActor().then(function(actor) { ... });
+     * or you could write it with a callback VanillaLM.getActor(function (actor) { if (actor} { .... } );
+     * Note that the callback is called even if the request was timed out. Then the actor variable will be false.
+     * @param callable : Will be called after the response arrives or if the request is timed out. It will get
+     *                   the actor-information on success or a simple false if their is no information about the actor available.
+     */
+    getActor: function (callable) {
+        return new Promise(function (resolve, reject) {
+            var opener = window.opener || window.parent;
+            var request_id = Math.floor(Math.random() * 1000000);
+            opener.postMessage(JSON.stringify({
+                secret: VanillaLM.state.secret,
+                request: "/actor/current",
+                request_id: request_id
+            }), "*");
+            VanillaLM.openRequests[request_id] = {
+                "resolve": resolve,
+                "reject": reject,
+                "callable": callable,
+                "time": new Date()
+            };
+            //Now the request is sent to the LMS and we wait for a response ...
+        });
     },
     /**
      * Sets a property if the current state. Note that this can erase all points, mark the module as successful
@@ -133,6 +160,29 @@ VanillaLM = {
  * Now some startup procedure: If this page has a secret in its URL, we need to save that.
  */
 document.addEventListener("DOMContentLoaded", function(event) {
+    setInterval(function () { //cleanup method for open request which are timed out
+        for (var request_id in VanillaLM.openRequests) {
+            if (new Date() - VanillaLM.openRequests[request_id].time > 1000 * VanillaLM.timeoutInSeconds) { //after 5 seconds
+                VanillaLM.openRequests[request_id].reject();
+                if (typeof VanillaLM.openRequests[request_id].callable === "function") {
+                    VanillaLM.openRequests[request_id].callable(false);
+                }
+                delete VanillaLM.openRequests[request_id];
+            }
+        }
+    }, 500);
+    window.addEventListener("message", function (event) {
+        var message = JSON.parse(event.data);
+        if (message.secret === VanillaLM.state.secret && typeof VanillaLM.openRequests[message.request_id] !== "undefined") {
+            var request_id = message.request_id;
+            delete message.request_id;
+            delete message.secret;
+            VanillaLM.openRequests[request_id].resolve(message);
+            VanillaLM.openRequests[request_id].callable(message);
+            delete VanillaLM.openRequests[request_id];
+        }
+    }, false);
+
     //save secret in sessionStorage
     var secret = VanillaLM.findGetParameter("vanillalm_secret");
     try {
@@ -145,4 +195,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
         VanillaLM.state.secret = secret;
         VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
     }
+
 });

@@ -76,10 +76,32 @@
             STUDIP.Lernmodule.received_message_api_messages = true;
             //it's from the correct window, yay!
             delete message.secret;
+            STUDIP.Lernmodule.lastState = message;
             jQuery.post(
                 STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
                 { "message": message }
             );
+            if (typeof message.request !== "undefined") {
+                if (message.request === "/actor/current") {
+                    document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
+                        "secret": '<?= $framesecret ?>',
+                        "request_id": message.request_id,
+                        "id": '<?= $GLOBALS['user']->id ?>',
+                        "name": '<?= htmlReady(studip_utf8encode($GLOBALS['user']->getFullName())) ?>',
+                        "email": '<?= htmlReady(studip_utf8encode($GLOBALS['user']->email)) ?>',
+                        "avatar": '<?= htmlReady(Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::NORMAL)) ?>'
+                    }), "*");
+                }
+                if (message.request === "/state") {
+                    document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify(jQuery.extend(
+                        STUDIP.Lernmodule.lastState,
+                        {
+                            "secret": '<?= $framesecret ?>',
+                            "request_id": message.request_id
+                        }
+                    )), "*");
+                }
+            }
         }
     }, false);
 </script>
