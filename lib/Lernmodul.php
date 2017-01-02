@@ -74,6 +74,7 @@ class Lernmodul extends SimpleORMap {
             }
 
             if (file_exists($this->getPath())) {
+                $this['url'] = null;
                 $this->store();
 
                 $class = ucfirst($this['type'])."Lernmodul";
@@ -182,7 +183,7 @@ class Lernmodul extends SimpleORMap {
         return $datafolder."/".$this->getId();
     }
 
-    public function getURL()
+    public function getDataURL()
     {
         return $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->getId();
     }

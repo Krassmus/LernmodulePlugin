@@ -9,6 +9,7 @@ class InitPlugin extends Migration {
                 `user_id` varchar(32) NOT NULL,
                 `name` varchar(64) NOT NULL,
                 `type` varchar(16) NOT NULL DEFAULT 'html',
+                `url` varchar(256) NULL,
                 `customdata` TEXT NULL,
                 `image` varchar(128) DEFAULT NULL,
                 `sandbox` tinyint(4) NOT NULL DEFAULT '0',

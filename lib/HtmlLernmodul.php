@@ -22,7 +22,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
     public function getEditTemplate()
     {
         $templatefactory = new Flexi_TemplateFactory(__DIR__."/../views");
-        $template = $templatefactory->open("edittemplates/html.php");
+        $template = $templatefactory->open("html/edit.php");
         $template->set_attribute("module", $this);
         return $template;
     }
@@ -51,6 +51,10 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
 
     public function getStartURL($secret = null)
     {
-        return $this->getURL()."/".($this['customdata']['start_file'] ?: "index.html").($secret ? "?vanillalm_secret=".urlencode($secret): "");
+        if ($this['url']) {
+            return URLHelper::getURL($this['url'], array('vanillalm_secret' => $secret), true);
+        } else {
+            return $this->getDataURL() . "/" . ($this['customdata']['start_file'] ?: "index.html") . ($secret ? "?vanillalm_secret=" . urlencode($secret) : "");
+        }
     }
 }

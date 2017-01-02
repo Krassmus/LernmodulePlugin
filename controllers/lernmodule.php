@@ -26,6 +26,10 @@ class LernmoduleController extends PluginController
         $this->mod = new Lernmodul($module_id);
         $class = ucfirst($this->mod['type'])."Lernmodul";
         $this->mod = $class::buildExisting($this->mod->toRawArray());
+        if (!$this->mod['url'] && !file_exists($this->mod->getPath())) {
+            PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
+        }
+        
         $course_connection = $this->mod->courseConnection($_SESSION['SessionSeminar']);
         $this->attempt = new LernmodulVersuch();
         $this->attempt->setData(array(
@@ -34,9 +38,6 @@ class LernmoduleController extends PluginController
         ));
         $this->attempt->store();
         LernmodulVersuch::cleanUpDatabase();
-        if (!file_exists($this->mod->getPath())) {
-            PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
-        }
     }
 
     public function edit_action($module_id = null)
@@ -71,9 +72,9 @@ class LernmoduleController extends PluginController
             }
             $this->module->setData($data);
             $this->module['user_id'] = $GLOBALS['user']->id;
-            $success = $this->module->store();
+            $this->module->store();
 
-            if (!$success) {
+            if (!$this->module->getId()) {
                 PageLayout::postMessage(MessageBox::error(_("Konnte Lernmodul nicht speichern.")));
                 $this->redirect("lernmodule/overview");
                 return;

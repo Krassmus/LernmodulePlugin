@@ -32,7 +32,7 @@
                     <? if ($active) : ?>
                         <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($_SESSION['SessionSeminar'], $mod->getId())) ?>
                         <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
-                            <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');\"" : "" ?>>
+                            <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');\"" : "" ?>>
                                 <? if (!$mod->isWritable()) : ?>
                                     <? if (LernmodulVersuch::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
                                         <div class="crown">
@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                         <? else : ?>
-                        <div class="module" style="opacity: 0.5;<?= $mod['image'] ? " background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
+                        <div class="module" style="opacity: 0.5;<?= $mod['image'] ? " background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
                             <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                                     ? Icon::create("date", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;"))
@@ -74,7 +74,7 @@
                         </div>
                         <? endif ?>
                     <? else : ?>
-                        <div class="module" style="opacity: 0.3;<?= $mod['image'] ? " background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');" : "" ?>" title="<?= _("Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
+                        <div class="module" style="opacity: 0.3;<?= $mod['image'] ? " background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');" : "" ?>" title="<?= _("Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
                             <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                                     ? Icon::create("question-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;"))
@@ -89,7 +89,7 @@
             <? endforeach ?>
         <? } while (count($module) < $last_mod_number) ?>
         <? foreach ($module as $mod) : ?>
-            <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".$mod->getURL()."/".htmlReady($mod['image'])."');\"" : "" ?>>
+            <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "")."/".htmlReady($mod['image'])."');\"" : "" ?>>
                 <div class="shadow">
                     <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                         ? Icon::create("exclaim-circle", "attention")->asImg(40, array('style' => "vertical-align: middle;", 'title' => _("Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie erreicht werden.")))
