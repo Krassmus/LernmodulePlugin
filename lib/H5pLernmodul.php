@@ -18,4 +18,8 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
     {
 
     }
+
+    public function getEvaluationTemplate($course_id) {
+        return null;
+    }
 }

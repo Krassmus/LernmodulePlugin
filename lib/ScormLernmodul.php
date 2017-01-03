@@ -24,4 +24,8 @@ class ScormLernmodul extends Lernmodul implements CustomLernmodul
         $template->set_attribute("attempt", $attempt);
         return $template;
     }
+
+    public function getEvaluationTemplate($course_id) {
+        return null;
+    }
 }

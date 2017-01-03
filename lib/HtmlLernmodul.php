@@ -49,6 +49,28 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         return $template;
     }
 
+    public function getEvaluationTemplate($course_id) {
+        $attempts = LernmodulVersuch::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->getId());
+        $pointclasses = array();
+        foreach ($attempts as $attempt) {
+            $data = $attempt['customdata']->getArrayCopy();
+            foreach ((array) $data['points'] as $pointclass => $value) {
+                if (!in_array($pointclass, $pointclasses)) {
+                    $pointclasses[] = $pointclass;
+                }
+            }
+        }
+
+
+        $templatefactory = new Flexi_TemplateFactory(__DIR__."/../views");
+        $template = $templatefactory->open("html/evaluation.php");
+        $template->set_attribute("module", $this);
+        $template->set_attribute("course_id", $course_id);
+        $template->set_attribute("pointclasses", $pointclasses);
+        $template->set_attribute("attempts", $attempts);
+        return $template;
+    }
+
     public function getStartURL($secret = null)
     {
         if ($this['url']) {

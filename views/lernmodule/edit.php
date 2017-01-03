@@ -208,6 +208,13 @@
                     });
                 </script>
                 <p><?= _("Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen Durchläufe, orange die nicht erfolgreichen.") ?></p>
+
+            <? if (is_a($module, "CustomLernmodul")) : ?>
+                <? $template = $module->getEvaluationTemplate($_SESSION['SessionSeminar']) ?>
+                <? if ($template) : ?>
+                    <?= $template->render() ?>
+                <? endif ?>
+            <? endif ?>
         </fieldset>
         <? endif ?>
     <? endif ?>

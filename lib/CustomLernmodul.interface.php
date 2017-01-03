@@ -28,4 +28,10 @@ interface CustomLernmodul
      * @return Flexi_Template|null
      */
     public function getViewerTemplate($attempt);
+
+    /**
+     * Returns a Flexi_Template object to display evaluation charts of the module
+     * @return Flexi_Template|null
+     */
+    public function getEvaluationTemplate($course_id);
 }

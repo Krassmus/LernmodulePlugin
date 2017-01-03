@@ -11,7 +11,7 @@ class InitPlugin extends Migration {
                 `type` varchar(16) NOT NULL DEFAULT 'html',
                 `url` varchar(256) NULL,
                 `customdata` TEXT NULL,
-                `image` varchar(128) DEFAULT NULL,
+                `image` varchar(256) DEFAULT NULL,
                 `sandbox` tinyint(4) NOT NULL DEFAULT '0',
                 `chdate` int(11) DEFAULT NULL,
                 `mkdate` int(11) DEFAULT NULL,
