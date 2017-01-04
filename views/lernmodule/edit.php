@@ -193,7 +193,7 @@
                         };
 
                         var options = {
-                            width: '68vw',
+                            width: '100%',
                             height: '200px',
                             // Remove this configuration to see that chart rendered with cardinal spline interpolation
                             // Sometimes, on large jumps in data values, it's better to use simple smoothing.

@@ -38,17 +38,34 @@
             </tr>
             <? if ($maximum) : ?>
                 <tr>
-                    <td></td>
-                    <td colspan="2">
+                    <td colspan="3">
                         <div id="line<?= $i ?>"></div>
                         <script>
+                            <?
+                            $segements = 9;
+                            $factor = ($maximum - $minimum) / $segements;
+                            $range = range(0, $segements + 1);
+                            $result = array();
+                            foreach ($range as $key => $value) {
+                                $range[$key] = ceil($minimum + ($value * $factor));
+                                $result[$key] = 0;
+                                foreach ($attempts as $attempt) {
+                                    if (($attempt['customdata']['points'][$pointclass] <= $minimum + ($value * $factor) + $factor * 0.5)
+                                        && ($attempt['customdata']['points'][$pointclass] > $minimum + ($value * $factor) - $factor * 0.5)) {
+                                        if ($attempt['successful']) {
+                                            $result[$key]++;
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
                             jQuery(function () {
                                 var data = {
                                     // A labels array that can contain any sort of values
-                                    labels: [ <?= htmlReady($minimum ?: 0) ?>, <?= htmlReady($maximum ?: 0) ?> ],
+                                    labels: <?= json_encode($range) ?>,
                                     // Our series array that contains series objects or in this case series data arrays
                                     series: [
-                                        [3, 5]
+                                        <?= json_encode($result) ?>
                                     ]
                                 };
 
@@ -59,10 +76,10 @@
                                     // Sometimes, on large jumps in data values, it's better to use simple smoothing.
                                     lineSmooth: Chartist.Interpolation.none(),
                                     fullWidth: true,
-                                    chartPadding: {
-                                        right: 20
-                                    },
-                                    low: 0
+                                    //low: 0,
+                                    classNames: {
+                                        series: 'ct-series-dominant'
+                                    }
                                 };
                                 new Chartist.Line('#line<?= $i ?>', data, options);
                             });
