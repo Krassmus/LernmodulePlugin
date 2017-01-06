@@ -111,6 +111,13 @@ $actions->addLink(
     PluginEngine::getURL($plugin, array(), "lernmodule/download/".$module->getId()),
     Icon::create("download", "info")
 );
+if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
+    $actions->addLink(
+        _("Bearbeiten"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$module->getId()),
+        Icon::create("edit", "info")
+    );
+}
 
 Sidebar::Get()->addWidget($actions);
 
