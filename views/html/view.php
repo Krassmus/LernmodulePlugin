@@ -106,7 +106,7 @@
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
                         "color": jQuery("body").css("color"),
-                        "background-color": jQuery("body").css("background-color"),
+                        "background-color": jQuery("#layout_content").css("background-color"),
                         "font-family": jQuery("body").css("font-family")
                     }), "*");
                 }

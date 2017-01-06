@@ -15,7 +15,7 @@
 <?
 $views = new ViewsWidget();
 $views->addLink(
-    _("Lernmodul"),
+    $mod['name'],
     PluginEngine::getURL($plugin, array(), "lernmodule/view/".$mod->getId()),
     null,
     array()

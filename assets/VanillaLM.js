@@ -217,9 +217,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     VanillaLM.getStyle().then(function (style) {
         //set styles to CSS custom attributes (CSS variables):
         var root = document.querySelector(':root');
-        root.style["--vanillalm-color"] = style["color"];
-        root.style["--vanillalm-font-family"] = style["font-family"];
-        root.style["--vanillalm-background-color"] = style["background-color"];
+        root.style.setProperty("--vanillalm-color", style["color"]);
+        root.style.setProperty("--vanillalm-background-color", style["background-color"]);
+        root.style.setProperty("--vanillalm-font-family", style["font-family"]);
     });
 
 });

@@ -116,7 +116,7 @@ Sidebar::Get()->addWidget($actions);
 
 $views = new ViewsWidget();
 $views->addLink(
-    _("Lernmodul"),
+    $module['name'],
     PluginEngine::getURL($plugin, array(), "lernmodule/view/".$module->getId()),
     null,
     array()
