@@ -53,10 +53,12 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         $attempts = LernmodulVersuch::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->getId());
         $pointclasses = array();
         foreach ($attempts as $attempt) {
-            $data = $attempt['customdata']->getArrayCopy();
-            foreach ((array) $data['points'] as $pointclass => $value) {
-                if (!in_array($pointclass, $pointclasses)) {
-                    $pointclasses[] = $pointclass;
+            if ($attempt['customdata']) {
+                $data = $attempt['customdata']->getArrayCopy();
+                foreach ((array)$data['points'] as $pointclass => $value) {
+                    if (!in_array($pointclass, $pointclasses)) {
+                        $pointclasses[] = $pointclass;
+                    }
                 }
             }
         }

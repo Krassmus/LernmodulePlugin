@@ -11,3 +11,20 @@
         };
     };
 </script>
+
+<?
+$views = new ViewsWidget();
+$views->addLink(
+    _("Lernmodul"),
+    PluginEngine::getURL($plugin, array(), "lernmodule/view/".$mod->getId()),
+    null,
+    array()
+)->setActive(true);
+$views->addLink(
+    _("Auswertung"),
+    PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$mod->getId()),
+    null,
+    array()
+);
+
+Sidebar::Get()->addWidget($views);

@@ -103,6 +103,16 @@ class LernmoduleController extends PluginController
         }
     }
 
+    public function evaluation_action($module_id = null)
+    {
+        Navigation::activateItem("/course/lernmodule/overview");
+        $this->module = new Lernmodul($module_id ?: null);
+        if ($this->module['type'] && !$this->module->isNew()) {
+            $class = ucfirst($this->module['type'])."Lernmodul";
+            $this->module = $class::buildExisting($this->module->toRawArray());
+        }
+    }
+
     public function delete_action($module_id)
     {
         Navigation::activateItem("/course/lernmodule/overview");

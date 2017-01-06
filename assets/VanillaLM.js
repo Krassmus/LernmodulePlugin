@@ -120,6 +120,24 @@ VanillaLM = {
             //Now the request is sent to the LMS and we wait for a response ...
         });
     },
+    getStyle: function (callable) {
+        return new Promise(function (resolve, reject) {
+            var opener = window.opener || window.parent;
+            var request_id = Math.floor(Math.random() * 1000000);
+            opener.postMessage(JSON.stringify({
+                secret: VanillaLM.state.secret,
+                request: "/style",
+                request_id: request_id
+            }), "*");
+            VanillaLM.openRequests[request_id] = {
+                "resolve": resolve,
+                "reject": reject,
+                "callable": callable,
+                "time": new Date()
+            };
+            //Now the request is sent to the LMS and we wait for a response ...
+        });
+    },
     /**
      * Sets a property if the current state. Note that this can erase all points, mark the module as successful
      * or erase all attributes by accident. Use method setAttribute or addPoints instead if possible.
@@ -195,5 +213,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         VanillaLM.state.secret = secret;
         VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
     }
+
+    VanillaLM.getStyle().then(function (style) {
+        //set styles to CSS custom attributes (CSS variables):
+        var root = document.querySelector(':root');
+        root.style["--vanillalm-color"] = style["color"];
+        root.style["--vanillalm-font-family"] = style["font-family"];
+        root.style["--vanillalm-background-color"] = style["background-color"];
+    });
 
 });
