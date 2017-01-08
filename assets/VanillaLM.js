@@ -103,6 +103,9 @@ VanillaLM = {
      *                   the actor-information on success or a simple false if their is no information about the actor available.
      */
     getActor: function (callable) {
+        var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage") || "{}");
+        VanillaLM.state = Object.assign(session, VanillaLM.state);
+        VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
         return new Promise(function (resolve, reject) {
             var opener = window.opener || window.parent;
             var request_id = Math.floor(Math.random() * 1000000);
@@ -121,6 +124,9 @@ VanillaLM = {
         });
     },
     getStyle: function (callable) {
+        var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage") || "{}");
+        VanillaLM.state = Object.assign(session, VanillaLM.state);
+        VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
         return new Promise(function (resolve, reject) {
             var opener = window.opener || window.parent;
             var request_id = Math.floor(Math.random() * 1000000);
@@ -196,7 +202,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
             delete message.request_id;
             delete message.secret;
             VanillaLM.openRequests[request_id].resolve(message);
-            VanillaLM.openRequests[request_id].callable(message);
+            if (typeof VanillaLM.openRequests[request_id].callable === "function") {
+                VanillaLM.openRequests[request_id].callable(message);
+            }
             delete VanillaLM.openRequests[request_id];
         }
     }, false);

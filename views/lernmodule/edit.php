@@ -51,6 +51,7 @@
                     <input type="text"
                            name="module[image]"
                            onChange="jQuery('#image_preview').css('background-image', 'url(' + this.value + ')');"
+                           value="<?= htmlReady($module['image']) ?>"
                            placeholder="http://...">
                 </label>
 

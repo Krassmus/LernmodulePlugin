@@ -6,7 +6,7 @@
     "allow-popups",
     //"allow-popups-to-escape-sandbox",
     "allow-presentation",
-    //"allow-same-origin",
+    trim(Config::get()->LERNMODUL_DATA_URL) ? "allow-same-origin" : "", //if LERNMODUL_DATA_URL is set we assume that it leads to a subdomain or different domain at all and thus we don't need this flag anymore.
     "allow-scripts",
     //"allow-top-navigation",
 ) ?>
