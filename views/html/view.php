@@ -107,7 +107,9 @@
                         "request_id": message.request_id,
                         "color": jQuery("body").css("color"),
                         "background-color": jQuery("#layout_content").css("background-color"),
-                        "font-family": jQuery("body").css("font-family")
+                        "font-family": jQuery("body").css("font-family"),
+                        "color_a": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)')).getPropertyValue("color"),
+                        //"color_a_hover": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)'), ":hover").getPropertyValue("color")
                     }), "*");
                 }
             }

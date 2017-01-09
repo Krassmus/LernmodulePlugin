@@ -196,7 +196,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
             delete message.request_id;
             delete message.secret;
             VanillaLM.openRequests[request_id].resolve(message);
-            VanillaLM.openRequests[request_id].callable(message);
+            if (typeof VanillaLM.openRequests[request_id].callable !== "undefined") {
+                VanillaLM.openRequests[request_id].callable(message);
+            }
             delete VanillaLM.openRequests[request_id];
         }
     }, false);
@@ -220,6 +222,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         root.style.setProperty("--vanillalm-color", style["color"]);
         root.style.setProperty("--vanillalm-background-color", style["background-color"]);
         root.style.setProperty("--vanillalm-font-family", style["font-family"]);
+        root.style.setProperty("--vanillalm-link-color", style["color_a"]);
+        //root.style.setProperty("--vanillalm-link-color-hover", style["color_a_hover"]); //adly it's not possible to retrieve the hover-color with JS.
     });
 
 });
