@@ -66,6 +66,16 @@ class InitPlugin extends Migration {
             VALUES
                 (MD5('LERNMODUL_PARTICIPANT_EVALUATION'), '', 'LERNMODUL_PARTICIPANT_EVALUATION', 'dozent', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Ab welchem Status darf jemand die Nutzerauswertung der Lernmodule sehen (autor, tutor, dozent, admin, root, leer lassen).', '', '')
         ");
+        DBManager::get()->exec("
+            INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) 
+            VALUES
+                (MD5('LERNMODUL_DATA_PATH'), '', 'LERNMODUL_DATA_PATH', '', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Der absolute Pfad auf der Festplatte, wo die Lernmodule gespeichert werden sollen. Ist der Wert leer, sind sie in einem parallelen Pluginordner. Nur zusammen mit LERNMODUL_DATA_URL angeben.', '', '')
+        ");
+        DBManager::get()->exec("
+            INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) 
+            VALUES
+                (MD5('LERNMODUL_DATA_URL'), '', 'LERNMODUL_DATA_URL', '', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Die URL, unter der die Lernmodule stecken. Es kann sinnvoll sein, diese URL unter einer Subdomain zu haben, damit Lernmodule einen anderen Origin haben.', '', '')
+        ");
     }
 
     function down() {

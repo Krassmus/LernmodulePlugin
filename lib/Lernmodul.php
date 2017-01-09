@@ -166,11 +166,15 @@ class Lernmodul extends SimpleORMap {
 
     public function getPath()
     {
-        $datafolder = __DIR__."/../../LernmodulePluginData";
-        if (!file_exists($datafolder)) {
-            $success = mkdir($datafolder);
-            if (!$success) {
-                throw new Exception("Konnte Verzeichnis LernmodulePluginData nicht anlegen.");
+        if (Config::get()->LERNMODUL_DATA_PATH) {
+            $datafolder = Config::get()->LERNMODUL_DATA_PATH;
+        } else {
+            $datafolder = __DIR__."/../../LernmodulePluginData";
+            if (!file_exists($datafolder)) {
+                $success = mkdir($datafolder);
+                if (!$success) {
+                    throw new Exception("Konnte Verzeichnis LernmodulePluginData nicht anlegen.");
+                }
             }
         }
         $datafolder .= "/moduledata";
@@ -185,7 +189,11 @@ class Lernmodul extends SimpleORMap {
 
     public function getDataURL()
     {
-        return $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->getId();
+        if (Config::get()->LERNMODUL_DATA_URL) {
+            return Config::get()->LERNMODUL_DATA_URL."/moduledata/".$this->getId();
+        } else {
+            return $GLOBALS['ABSOLUTE_URI_STUDIP'] . "plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/" . $this->getId();
+        }
     }
 
     public function setDependencies($module_ids, $seminar_id)

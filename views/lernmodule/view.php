@@ -13,6 +13,17 @@
 </script>
 
 <?
+
+if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
+    $actions = new ActionsWidget();
+    $actions->addLink(
+        _("Bearbeiten"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
+        Icon::create("edit", "info")
+    );
+    Sidebar::Get()->addWidget($actions);
+}
+
 $views = new ViewsWidget();
 $views->addLink(
     $mod['name'],
