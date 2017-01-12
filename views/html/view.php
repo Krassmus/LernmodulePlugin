@@ -112,6 +112,16 @@
                         //"color_a_hover": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)'), ":hover").getPropertyValue("color")
                     }), "*");
                 }
+                if (message.request === "/invite") {
+                    var max = message.max;
+                    var parameter = message.parameter;
+                    var preferred_player_ids = message.preferred_player_ids;
+                    //Ajax request: ...
+                    document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
+                        "secret": '<?= $framesecret ?>',
+                        "request_id": message.request_id
+                    }), "*");
+                }
             }
         }
     }, false);

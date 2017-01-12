@@ -2,7 +2,7 @@ VanillaLM = {
     timeoutInSeconds: 5,
     state: {},
     openRequests: {},
-    storage: { //a fake storage to be overwritten by sessionStorage or localStorage if available
+    storage: { //a fake storage to be overwritten by sessionStorage
         _data: {},
         setItem: function (id, val) {
             return this._data[id] = String(val);
@@ -144,7 +144,7 @@ VanillaLM = {
             //Now the request is sent to the LMS and we wait for a response ...
         });
     },
-    invite: function (max, preferred_player_ids, callable) {
+    invite: function (max, parameter, preferred_player_ids, callable) {
         if (typeof preferred_player_ids === "function") {
             callable = preferred_player_ids;
             preferred_player_ids = null;
@@ -156,11 +156,12 @@ VanillaLM = {
             var opener = window.opener || window.parent;
             var request_id = Math.floor(Math.random() * 1000000);
             opener.postMessage(JSON.stringify({
-                secret: VanillaLM.state.secret,
-                request: "/invite",
-                request_id: request_id,
-                max: max,
-                preferred_player_ids: preferred_player_ids
+                "secret": VanillaLM.state.secret,
+                "request": "/invite",
+                "request_id": request_id,
+                "max": max,
+                "parameter": parameter,
+                "preferred_player_ids": preferred_player_ids
             }), "*");
             VanillaLM.openRequests[request_id] = {
                 "resolve": resolve,
