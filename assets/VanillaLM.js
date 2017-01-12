@@ -144,7 +144,7 @@ VanillaLM = {
             //Now the request is sent to the LMS and we wait for a response ...
         });
     },
-    invite: function (max, preferred_player_ids, callable) {
+    invite: function (max, parameter, preferred_player_ids, callable) {
         if (typeof preferred_player_ids === "function") {
             callable = preferred_player_ids;
             preferred_player_ids = null;
@@ -160,6 +160,7 @@ VanillaLM = {
                 request: "/invite",
                 request_id: request_id,
                 max: max,
+                parameter: parameter,
                 preferred_player_ids: preferred_player_ids
             }), "*");
             VanillaLM.openRequests[request_id] = {

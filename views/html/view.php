@@ -109,7 +109,25 @@
                         "background-color": jQuery("#layout_content").css("background-color"),
                         "font-family": jQuery("body").css("font-family"),
                         "color_a": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)')).getPropertyValue("color"),
+                        "primary-color": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)')).getPropertyValue("color"),
+                        "secondary-color": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)')).getPropertyValue("color")
                         //"color_a_hover": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)'), ":hover").getPropertyValue("color")
+                    }), "*");
+                }
+                if (message.request === "/invite") {
+                    //AJAX call
+                    jQuery.ajax({
+                        "url": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/invitation",
+                        "data": {
+                            "parameter": message.parameter,
+                            "max": message.max,
+                            "preferred_player_ids": message.preferred_player_ids
+                        },
+                        "type": "post"
+                    });
+                    document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
+                        "secret": '<?= $framesecret ?>',
+                        "request_id": message.request_id
                     }), "*");
                 }
             }
