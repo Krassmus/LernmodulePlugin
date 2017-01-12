@@ -28,4 +28,8 @@ class ScormLernmodul extends Lernmodul implements CustomLernmodul
     public function getEvaluationTemplate($course_id) {
         return null;
     }
+
+    public function evaluateAttempt($attempt) {
+        return null;
+    }
 }

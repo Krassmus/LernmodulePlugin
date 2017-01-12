@@ -101,6 +101,60 @@
         </fieldset>
     <? endif ?>
 
+    <? if ($data && count($data)) : ?>
+        <table class="default" id="resulttable">
+            <thead>
+                <tr>
+                    <th width="50px"></th>
+                    <th><?= _("Name") ?></th>
+                    <th><?= _("Dauer") ?></th>
+                    <? foreach ($resultrows as $rowname) : ?>
+                        <th><?= htmlReady($rowname) ?></th>
+                    <? endforeach ?>
+                </tr>
+            </thead>
+            <tbody>
+            <? foreach ($data as $line) : ?>
+                <tr>
+                    <td>
+                        <div style="width: 50px; height: 50px; background-image: url('<?= Avatar::getAvatar($line['studip_user_id'])->getURL(Avatar::MEDIUM) ?>'); background-size: 100% auto; background-position: center center;"></div>
+                    </td>
+                    <td><?= htmlReady($line['studip_user_id'] ? get_fullname() : _("Anonym")) ?></td>
+                    <td data-timestamp="<?= htmlReady($line['studip_duration']) ?>"><?
+                        if ($line['studip_duration'] < 180) {
+                            echo sprintf(_("%s Sekunden"), $line['studip_duration']);
+                        } elseif ($line['studip_duration'] < 60 * 120) {
+                            echo sprintf(_("%s Minuten"), round($line['studip_duration'] / 60));
+                        } else {
+                            echo sprintf(_("%s Stunden"), round($line['studip_duration'] / 360));
+                        }
+                        ?></td>
+                    <? foreach ($resultrows as $rowname) : ?>
+                        <td><?= htmlReady($line[$rowname]) ?></td>
+                    <? endforeach ?>
+                </tr>
+            <? endforeach ?>
+            </tbody>
+        </table>
+        <script>
+            jQuery(function () {
+                jQuery("#resulttable").tablesorter({
+                    textExtraction: function (node) {
+                        var node = jQuery(node);
+                        /*if (node.is("tr > td:last-child")) {
+                         console.log(String(node.data('timestamp') || node.text()).trim());
+                         }*/
+                        return String(node.data('timestamp') || node.text()).trim();
+                    },
+                    cssAsc: 'sortasc',
+                    cssDesc: 'sortdesc'<? if (count($resultrows > 2)) : ?>,
+                    sortList : [[3,0]]
+                    <? endif ?>
+                });
+            });
+        </script>
+    <? endif ?>
+
 </form>
 
 <?

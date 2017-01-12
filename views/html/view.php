@@ -115,8 +115,10 @@
                     }), "*");
                 }
                 if (message.request === "/invite") {
-<<<<<<< HEAD
-                    //AJAX call
+                    var max = message.max;
+                    var parameter = message.parameter;
+                    var preferred_player_ids = message.preferred_player_ids;
+                    //Ajax request: ...
                     jQuery.ajax({
                         "url": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/invitation",
                         "data": {
@@ -126,12 +128,6 @@
                         },
                         "type": "post"
                     });
-=======
-                    var max = message.max;
-                    var parameter = message.parameter;
-                    var preferred_player_ids = message.preferred_player_ids;
-                    //Ajax request: ...
->>>>>>> 2bc5bf7c103be6c5a3c89d874dbce8e974f892a4
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id

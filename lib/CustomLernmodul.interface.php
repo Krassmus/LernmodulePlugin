@@ -34,4 +34,11 @@ interface CustomLernmodul
      * @return Flexi_Template|null
      */
     public function getEvaluationTemplate($course_id);
+
+    /**
+     * Should return an associative array for an attempt like array('Punkte' => 3). That will get displayed in the
+     * evaluation-table and in the CSV-file.
+     * @return array|null
+     */
+    public function evaluateAttempt($attempt);
 }

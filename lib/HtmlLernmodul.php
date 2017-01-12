@@ -73,6 +73,21 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         return $template;
     }
 
+    public function evaluateAttempt($attempt) {
+        $output = array();
+        if ($attempt['customdata']['points']) {
+            $output = $attempt['customdata']['points']->getArrayCopy();
+        }
+        if ($attempt['customdata']['attributes']) {
+            foreach ($attempt['customdata']['attributes'] as $name => $value) {
+                if (!isset($output[$name])) {
+                    $output[$name] = $value;
+                }
+            }
+        }
+        return $output;
+    }
+
     public function getStartURL($secret = null)
     {
         if ($this['url']) {

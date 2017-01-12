@@ -112,11 +112,33 @@ class LernmoduleController extends PluginController
 
     public function evaluation_action($module_id = null)
     {
+        PageLayout::addScript("jquery/jquery.tablesorter-2.22.5.js");
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id ?: null);
         if ($this->module['type'] && !$this->module->isNew()) {
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toRawArray());
+        }
+        $this->attempts = LernmodulVersuch::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->module->getId());
+
+        $this->data = array();
+        $this->resultrows = array();
+        foreach ($this->attempts as $attempt) {
+            if ($attempt['successful']) {
+                $line = array(
+                    'studip_user_id' => $attempt['user_id'],
+                    'studip_duration' => $attempt['chdate'] - $attempt['mkdate']
+                );
+                foreach ((array) $this->module->evaluateAttempt($attempt) as $index => $value) {
+                    if (!isset($line[$index])) {
+                        $line[$index] = $value;
+                    }
+                    if (!in_array($index, $this->resultrows)) {
+                        $this->resultrows[] = $index;
+                    }
+                }
+                $this->data[] = $line;
+            }
         }
     }
 
