@@ -119,7 +119,7 @@
                     <td>
                         <div style="width: 50px; height: 50px; background-image: url('<?= Avatar::getAvatar($line['studip_user_id'])->getURL(Avatar::MEDIUM) ?>'); background-size: 100% auto; background-position: center center;"></div>
                     </td>
-                    <td><?= htmlReady($line['studip_user_id'] ? get_fullname() : _("Anonym")) ?></td>
+                    <td><?= htmlReady($line['studip_user_id'] ? get_fullname($line['studip_user_id']) : _("Anonym")) ?></td>
                     <td data-timestamp="<?= htmlReady($line['studip_duration']) ?>"><?
                         if ($line['studip_duration'] < 180) {
                             echo sprintf(_("%s Sekunden"), $line['studip_duration']);
