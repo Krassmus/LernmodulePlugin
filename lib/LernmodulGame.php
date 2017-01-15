@@ -26,7 +26,7 @@ class LernmodulGame extends SimpleORMap {
     static protected function configure($config = array())
     {
         $config['db_table'] = 'lernmodule_games';
-        $config['belongs_to']['modul'] = array(
+        $config['belongs_to']['module'] = array(
             'class_name' => 'Lernmodul',
             'foreign_key' => 'module_id',
             'assoc_func' => 'find',
