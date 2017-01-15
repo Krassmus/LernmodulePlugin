@@ -31,7 +31,10 @@
 <? $framesecret = md5(uniqid()) ?>
 
 <iframe
-        <? $url = $module->getStartURL($framesecret) ?>
+        <? $url = $module->getStartURL($framesecret);
+        if ($game_attendance) {
+            $url = URLHelper::getURL($url, $game_attendance['parameter']->getArrayCopy());
+        } ?>
         src="<?= htmlReady($url) ?>"
         <?= $module['sandbox'] && (!$module['url'] || (parse_url($url, PHP_URL_HOST) === $_SERVER['SERVER_NAME'])) ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
         style="width: 100%; height: 90vh; border: none;"
@@ -120,11 +123,14 @@
                     var preferred_player_ids = message.preferred_player_ids;
                     //Ajax request: ...
                     jQuery.ajax({
-                        "url": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/invitation",
+                        "url": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/gameinvitation",
                         "data": {
+                            "attempt_id": '<?= htmlReady($attempt->getId()) ?>',
+                            "module_id": '<?= htmlReady($module->getId()) ?>',
+                            "module_game_id": message.parameter.vanillalm_game_id,
                             "parameter": message.parameter,
                             "max": message.max,
-                            "preferred_player_ids": message.preferred_player_ids
+                            "seminar_id": '<?= htmlReady($_SESSION['SessionSeminar']) ?>'
                         },
                         "type": "post"
                     });
@@ -133,6 +139,11 @@
                         "request_id": message.request_id
                     }), "*");
                 }
+                <? if (class_exists("Blubber")) : ?>
+                if (message.request === "/postTimelineMessage") {
+                    //show dialog that asks if user wants to share the message
+                }
+                <? endif ?>
             }
         }
     }, false);

@@ -14,7 +14,7 @@ class ScormLernmodul extends Lernmodul implements CustomLernmodul
 
     public function getEditTemplate() {}
 
-    public function getViewerTemplate($attempt)
+    public function getViewerTemplate($attempt, $game_attendance = null)
     {
         PageLayout::postMessage(MessageBox::info(_("Dies ist ein SCORM-Modul, das noch nicht unterstützt wird.")));
 

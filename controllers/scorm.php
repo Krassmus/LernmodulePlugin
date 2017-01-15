@@ -20,7 +20,7 @@ class ScormController extends PluginController
         $this->mod = new Lernmodul($module_id);
         $this->xml = new DOMDocument();
         $this->xml->load($this->mod->getPath()."/imsmanifest.xml");
-        $this->attempt = new LernmodulVersuch();
+        $this->attempt = new LernmodulAttempt();
         $this->attempt->setData(array(
             'user_id' => $GLOBALS['user']->id,
             'module_id' => $module_id

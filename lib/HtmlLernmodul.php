@@ -27,7 +27,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         return $template;
     }
 
-    public function getViewerTemplate($attempt)
+    public function getViewerTemplate($attempt, $game_attendance = null)
     {
         $actions = new ActionsWidget();
         $actions->addLink(
@@ -45,12 +45,13 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         $template = $templatefactory->open("html/view.php");
         $template->set_attribute("module", $this);
         $template->set_attribute("attempt", $attempt);
+        $template->set_attribute("game_attendance", $game_attendance);
         $template->set_attribute("myorigin", $myorigin);
         return $template;
     }
 
     public function getEvaluationTemplate($course_id) {
-        $attempts = LernmodulVersuch::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->getId());
+        $attempts = LernmodulAttempt::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->getId());
         $pointclasses = array();
         foreach ($attempts as $attempt) {
             if ($attempt['customdata']) {

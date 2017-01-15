@@ -5,9 +5,11 @@ require_once __DIR__."/lib/Lernmodul.php";
 require_once __DIR__."/lib/HtmlLernmodul.php";
 require_once __DIR__."/lib/ScormLernmodul.php";
 require_once __DIR__."/lib/H5pLernmodul.php";
-require_once __DIR__."/lib/LernmodulVersuch.php";
+require_once __DIR__."/lib/LernmodulAttempt.php";
 require_once __DIR__."/lib/LernmodulCourse.php";
 require_once __DIR__."/lib/LernmodulDependency.php";
+require_once __DIR__."/lib/LernmodulGame.php";
+require_once __DIR__."/lib/LernmodulGameAttendance.php";
 require_once 'app/controllers/plugin_controller.php';
 
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
@@ -23,7 +25,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
             $data = Request::getArray("page_info");
             if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {
                 $data['Lernmodule']['attempt_id'];
-                $attempt = new LernmodulVersuch($data['Lernmodule']['attempt_id']);
+                $attempt = new LernmodulAttempt($data['Lernmodule']['attempt_id']);
                 if ($attempt['user_id'] === $GLOBALS['user']->id) {
                     if ($data['Lernmodule']['customData']) {
                         $attempt['customData'] = $data['Lernmodule']['customData'];

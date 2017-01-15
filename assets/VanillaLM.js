@@ -144,11 +144,7 @@ VanillaLM = {
             //Now the request is sent to the LMS and we wait for a response ...
         });
     },
-    invite: function (max, parameter, preferred_player_ids, callable) {
-        if (typeof preferred_player_ids === "function") {
-            callable = preferred_player_ids;
-            preferred_player_ids = null;
-        }
+    invite: function (max, parameter, callable) {
         var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage") || "{}");
         VanillaLM.state = Object.assign(session, VanillaLM.state);
         VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
@@ -160,8 +156,7 @@ VanillaLM = {
                 "request": "/invite",
                 "request_id": request_id,
                 "max": max,
-                "parameter": parameter,
-                "preferred_player_ids": preferred_player_ids
+                "parameter": parameter
             }), "*");
             VanillaLM.openRequests[request_id] = {
                 "resolve": resolve,
@@ -171,6 +166,14 @@ VanillaLM = {
             };
             //Now the request is sent to the LMS and we wait for a response ...
         });
+    },
+    postTimelineMessage: function (message) {
+        var opener = window.opener || window.parent;
+        opener.postMessage(JSON.stringify({
+            "secret": VanillaLM.state.secret,
+            "request": "/postTimelineMessage",
+            "message": message
+        }), "*");
     },
     /**
      * Sets a property if the current state. Note that this can erase all points, mark the module as successful

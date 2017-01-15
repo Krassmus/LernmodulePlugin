@@ -19,7 +19,7 @@
                     $active = true;
                     if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
                         foreach ($mod->getDependencies($_SESSION['SessionSeminar']) as $dependency) {
-                            if (!LernmodulVersuch::countBySql("module_id = ? AND user_id = ? AND successful = '1'", array(
+                            if (!LernmodulAttempt::countBySql("module_id = ? AND user_id = ? AND successful = '1'", array(
                                 $dependency['depends_from_module_id'],
                                 $GLOBALS['user']->id
                             ))) {
@@ -34,7 +34,7 @@
                         <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
                             <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');\"" : "" ?>>
                                 <? if (!$mod->isWritable()) : ?>
-                                    <? if (LernmodulVersuch::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
+                                    <? if (LernmodulAttempt::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
                                         <div class="crown">
                                             <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                                                 ? Icon::create("crown", "status-yellow")->asImg(20, array('title' => _("Erfolgreich abgeschlossen"), 'class' => "text-bottom"))

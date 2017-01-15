@@ -16,8 +16,22 @@ class LernmoduleController extends PluginController
     public function overview_action()
     {
         Navigation::activateItem("/course/lernmodule/overview");
-        LernmodulVersuch::cleanUpDatabase();
+        LernmodulAttempt::cleanUpDatabase();
         $this->module = Lernmodul::findByCourse($_SESSION['SessionSeminar']);
+        foreach (LernmodulGame::findOpenGames($_SESSION['SessionSeminar']) as $opengame) {
+            PageLayout::postMessage(
+                MessageBox::info(
+                    sprintf(
+                        _("%s sucht noch weitere Teilnehmer für '%s'."),
+                        get_fullname($opengame['user_id']),
+                        htmlReady($opengame->module['name'])
+                    ),
+                    array(
+                        '<a href="'.PluginEngine::getLink($this->plugin, array(), "lernmodule/gameparticipation/".$opengame->getId()).'">'._("Einladung annehmen").'</a>'
+                    )
+                )
+            );
+        }
     }
 
     public function view_action($module_id)
@@ -31,13 +45,19 @@ class LernmoduleController extends PluginController
         }
         
         $course_connection = $this->mod->courseConnection($_SESSION['SessionSeminar']);
-        $this->attempt = new LernmodulVersuch();
+        $this->attempt = new LernmodulAttempt();
         $this->attempt->setData(array(
             'user_id' => $course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
             'module_id' => $module_id
         ));
         $this->attempt->store();
-        LernmodulVersuch::cleanUpDatabase();
+        if (Request::option("attendance")) {
+            $this->game_attendence = new LernmodulGameAttendance(Request::option("attendance"));
+            if ($GLOBALS['user']->id !== $this->game_attendance['user_id']) {
+                $this->redirect("lernmodule/overview");
+            }
+        }
+        LernmodulAttempt::cleanUpDatabase();
     }
 
     public function edit_action($module_id = null)
@@ -119,7 +139,7 @@ class LernmoduleController extends PluginController
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toRawArray());
         }
-        $this->attempts = LernmodulVersuch::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->module->getId());
+        $this->attempts = LernmodulAttempt::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->module->getId());
 
         $this->data = array();
         $this->resultrows = array();
@@ -156,7 +176,7 @@ class LernmoduleController extends PluginController
     public function update_attempt_action($attempt_id)
     {
         Navigation::activateItem("/course/lernmodule/overview");
-        $this->attempt = new LernmodulVersuch($attempt_id);
+        $this->attempt = new LernmodulAttempt($attempt_id);
         if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException();
         }
@@ -183,6 +203,40 @@ class LernmoduleController extends PluginController
         echo file_get_contents($filename);
         @unlink($filename);
         $this->render_nothing();
+    }
+
+    public function gameinvitation_action()
+    {
+        if (Request::isPost()) {
+            $game = new LernmodulGame();
+            $game['user_id'] = $GLOBALS['user']->id;
+            $game['seminar_id'] = Request::option("seminar_id");
+            $game['module_id'] = Request::option("module_id");
+            $game['max_players'] = Request::int("max") + 1;
+            $game['parameter'] = Request::getArray("parameter");
+            $game['closed'] = 0;
+            $game->store();
+
+            $game_attendence = new LernmodulGameAttendance();
+            $game_attendence['game_id'] = $game->getId();
+            $game_attendence['user_id'] = $GLOBALS['user']->id;
+            $game_attendence->store();
+        }
+        $this->render_text("ok");
+    }
+
+    public function gameparticipation_action($game_id)
+    {
+        $game = new LernmodulGame($game_id);
+        if (!$GLOBALS['perm']->have_studip_perm("autor", $game['seminar_id'])) {
+            throw new AccessDeniedException();
+        }
+        $game_attendence = new LernmodulGameAttendance();
+        $game_attendence['game_id'] = $game->getId();
+        $game_attendence['user_id'] = $GLOBALS['user']->id;
+        $game_attendence->store();
+
+        $this->redirect("lernmodule/view/".$game['module_id']."?cid=".$game['seminar_id']."&attendance=".$game_attendence->getId());
     }
 
 }

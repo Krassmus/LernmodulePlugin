@@ -27,7 +27,7 @@ interface CustomLernmodul
      * Returns a Flexi_Template object to run the learning-module
      * @return Flexi_Template|null
      */
-    public function getViewerTemplate($attempt);
+    public function getViewerTemplate($attempt, $game_attendance = null);
 
     /**
      * Returns a Flexi_Template object to display evaluation charts of the module

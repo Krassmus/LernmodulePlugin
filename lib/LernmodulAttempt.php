@@ -1,6 +1,6 @@
 <?php
 
-class LernmodulVersuch extends SimpleORMap {
+class LernmodulAttempt extends SimpleORMap {
 
     static public function cleanUpDatabase()
     {

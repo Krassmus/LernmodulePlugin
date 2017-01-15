@@ -1,6 +1,6 @@
 <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
-<? $template = $mod->getViewerTemplate($attempt) ?>
+<? $template = $mod->getViewerTemplate($attempt, $game_attendence) ?>
 <?= $template ? $template->render() : "" ?>
 
 <script>

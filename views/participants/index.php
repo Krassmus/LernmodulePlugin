@@ -4,7 +4,7 @@ foreach ($students as $student) {
     $data = $student->toArray();
     $solved = 0;
     foreach ($module as $mod) {
-        if (LernmodulVersuch::countBySql("user_id = ? AND module_id = ? AND successful = '1'", array($student['user_id'], $mod->getId()))) {
+        if (LernmodulAttempt::countBySql("user_id = ? AND module_id = ? AND successful = '1'", array($student['user_id'], $mod->getId()))) {
             $solved++;
         }
     }

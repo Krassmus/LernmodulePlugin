@@ -12,7 +12,7 @@
             'variance' => 0,
             'standarddeviation' => 0
         );
-        $attempts = LernmodulVersuch::findbyCourseAndModule($_SESSION['SessionSeminar'], $module->getId());
+        $attempts = LernmodulAttempt::findbyCourseAndModule($_SESSION['SessionSeminar'], $module->getId());
         foreach ($attempts as $attempt) {
             if ($attempt['successful']) {
                 $successful['count']++;
