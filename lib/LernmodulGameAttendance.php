@@ -10,7 +10,6 @@ class LernmodulGameAttendance extends SimpleORMap {
             'foreign_key' => 'game_id',
             'assoc_func' => 'find',
         );
-        $config['serialized_fields']['parameter'] = 'JSONArrayObject';
         parent::configure($config);
     }
 }

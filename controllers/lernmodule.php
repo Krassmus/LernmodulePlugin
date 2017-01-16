@@ -53,7 +53,7 @@ class LernmoduleController extends PluginController
         $this->attempt->store();
         if (Request::option("attendance")) {
             $this->game_attendence = new LernmodulGameAttendance(Request::option("attendance"));
-            if ($GLOBALS['user']->id !== $this->game_attendance['user_id']) {
+            if ($GLOBALS['user']->id !== $this->game_attendence['user_id']) {
                 $this->redirect("lernmodule/overview");
             }
         }
@@ -231,11 +231,16 @@ class LernmoduleController extends PluginController
         if (!$GLOBALS['perm']->have_studip_perm("autor", $game['seminar_id'])) {
             throw new AccessDeniedException();
         }
-        $game_attendence = new LernmodulGameAttendance();
-        $game_attendence['game_id'] = $game->getId();
-        $game_attendence['user_id'] = $GLOBALS['user']->id;
-        $game_attendence->store();
-
+        $game_attendence = LernmodulGameAttendance::findOneBySQL("game_id = ? AND user_id = ?", array(
+            $game->getId(),
+            $GLOBALS['user']->id
+        ));
+        if (!$game_attendence) {
+            $game_attendence = new LernmodulGameAttendance();
+            $game_attendence['game_id'] = $game->getId();
+            $game_attendence['user_id'] = $GLOBALS['user']->id;
+            $game_attendence->store();
+        }
         $this->redirect("lernmodule/view/".$game['module_id']."?cid=".$game['seminar_id']."&attendance=".$game_attendence->getId());
     }
 

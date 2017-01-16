@@ -34,6 +34,7 @@ class LernmodulGame extends SimpleORMap {
         $config['has_many']['attendances'] = array(
             'class_name' => 'LernmodulGameAttendance'
         );
+        $config['serialized_fields']['parameter'] = 'JSONArrayObject';
         parent::configure($config);
     }
 

@@ -33,7 +33,7 @@
 <iframe
         <? $url = $module->getStartURL($framesecret);
         if ($game_attendance) {
-            $url = URLHelper::getURL($url, $game_attendance['parameter']->getArrayCopy());
+            $url = URLHelper::getURL($url, $game_attendance->game['parameter']->getArrayCopy(), true);
         } ?>
         src="<?= htmlReady($url) ?>"
         <?= $module['sandbox'] && (!$module['url'] || (parse_url($url, PHP_URL_HOST) === $_SERVER['SERVER_NAME'])) ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>

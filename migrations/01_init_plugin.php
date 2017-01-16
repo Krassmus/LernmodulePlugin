@@ -62,6 +62,30 @@ class InitPlugin extends Migration {
             ) ENGINE=InnoDB
         ");
         DBManager::get()->exec("
+            CREATE TABLE `lernmodule_games` (
+                `game_id` varchar(32) NOT NULL DEFAULT '',
+                `seminar_id` varchar(32) NOT NULL DEFAULT '',
+                `user_id` varchar(32) DEFAULT NULL,
+                `module_id` varchar(32) NOT NULL,
+                `parameter` text,
+                `max_players` int(11) DEFAULT NULL,
+                `closed` tinyint(11) NOT NULL DEFAULT '0',
+                `chdate` bigint(20) DEFAULT NULL,
+                `mkdate` bigint(20) DEFAULT NULL,
+                PRIMARY KEY (`game_id`)
+            ) ENGINE=InnoDB
+        ");
+        DBManager::get()->exec("
+            CREATE TABLE `lernmodule_game_attendances` (
+                `attendance_id` varchar(11) NOT NULL DEFAULT '',
+                `game_id` varchar(32) DEFAULT NULL,
+                `user_id` varchar(32) DEFAULT NULL,
+                `chdate` bigint(20) DEFAULT NULL,
+                `mkdate` bigint(20) DEFAULT NULL,
+                PRIMARY KEY (`attendance_id`)
+            ) ENGINE=InnoDB
+        ");
+        DBManager::get()->exec("
             INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) 
             VALUES
                 (MD5('LERNMODUL_PARTICIPANT_EVALUATION'), '', 'LERNMODUL_PARTICIPANT_EVALUATION', 'dozent', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Ab welchem Status darf jemand die Nutzerauswertung der Lernmodule sehen (autor, tutor, dozent, admin, root, leer lassen).', '', '')
