@@ -77,7 +77,7 @@ class InitPlugin extends Migration {
         ");
         DBManager::get()->exec("
             CREATE TABLE `lernmodule_game_attendances` (
-                `attendance_id` varchar(11) NOT NULL DEFAULT '',
+                `attendance_id` varchar(32) NOT NULL DEFAULT '',
                 `game_id` varchar(32) DEFAULT NULL,
                 `user_id` varchar(32) DEFAULT NULL,
                 `chdate` bigint(20) DEFAULT NULL,

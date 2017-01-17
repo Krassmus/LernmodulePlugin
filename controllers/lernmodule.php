@@ -54,6 +54,11 @@ class LernmoduleController extends PluginController
         if (Request::option("attendance")) {
             $this->game_attendence = new LernmodulGameAttendance(Request::option("attendance"));
             if ($GLOBALS['user']->id !== $this->game_attendence['user_id']) {
+                var_dump($GLOBALS['user']->id);
+                var_dump($this->game_attendence['user_id']);
+                var_dump($GLOBALS['user']->id !== $this->game_attendence['user_id']);
+                die();
+
                 $this->redirect("lernmodule/overview");
             }
         }
