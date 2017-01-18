@@ -95,7 +95,8 @@
                         "email": '<?= htmlReady(studip_utf8encode(get_visible_email($GLOBALS['user']->id))) ?>',
                         "avatar": '<?= htmlReady(Visibility::verify('picture', $GLOBALS['user']->id, "nobody")
                             ? Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::NORMAL)
-                            : null) ?>'
+                            : null) ?>',
+                        "language": '<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>'
                     }), "*");
                 }
                 if (message.request === "/state") {
