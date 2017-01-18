@@ -92,7 +92,8 @@
                         "id": '<?= $GLOBALS['user']->id ?>',
                         "name": '<?= htmlReady(studip_utf8encode($GLOBALS['user']->getFullName())) ?>',
                         "email": '<?= htmlReady(studip_utf8encode($GLOBALS['user']->email)) ?>',
-                        "avatar": '<?= htmlReady(Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::NORMAL)) ?>'
+                        "avatar": '<?= htmlReady(Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::NORMAL)) ?>',
+                        "language": '<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>'
                     }), "*");
                 }
                 if (message.request === "/state") {
