@@ -11,6 +11,7 @@ class LernmoduleController extends PluginController
                 : Assets::image_path("icons/black/16/learnmodule")
         );
         PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
+        $this->utf8decode_xhr = false;
     }
 
     public function overview_action()
@@ -18,19 +19,57 @@ class LernmoduleController extends PluginController
         Navigation::activateItem("/course/lernmodule/overview");
         LernmodulAttempt::cleanUpDatabase();
         $this->module = Lernmodul::findByCourse($_SESSION['SessionSeminar']);
-        foreach (LernmodulGame::findOpenGames($_SESSION['SessionSeminar']) as $opengame) {
+
+        if (Request::option("quit")) {
+            $attendance = new LernmodulGameAttendance(Request::option("quit"));
+            if ($attendance['user_id'] === $GLOBALS['user']->id) {
+                $attendance->delete();
+                $this->redirect("lernmodule/overview");
+            }
+        }
+
+        $statement = DBManager::get()->prepare("
+            SELECT lernmodule_game_attendances.*
+            FROM lernmodule_game_attendances
+                INNER JOIN lernmodule_games ON (lernmodule_game_attendances.game_id = lernmodule_games.game_id)
+                INNER JOIN lernmodule_courses ON (lernmodule_games.module_id = lernmodule_courses.module_id)
+            WHERE lernmodule_courses.seminar_id = :course_id
+                AND lernmodule_game_attendances.user_id = :user_id
+        ");
+        $statement->execute(array(
+            'course_id' => $_SESSION['SessionSeminar'],
+            'user_id' => $GLOBALS['user']->id
+        ));
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $data) {
+            $attendance = LernmodulGameAttendance::buildExisting($data);
             PageLayout::postMessage(
                 MessageBox::info(
                     sprintf(
-                        _("%s sucht noch weitere Teilnehmer für '%s'."),
-                        get_fullname($opengame['user_id']),
-                        htmlReady($opengame->module['name'])
+                        _("Sie haben zuletzt an '%s' teilgenommen."),
+                        htmlReady($attendance->game->module['name'])
                     ),
                     array(
-                        '<a href="'.PluginEngine::getLink($this->plugin, array(), "lernmodule/gameparticipation/".$opengame->getId()).'">'._("Einladung annehmen").'</a>'
+                        '<a href="' . PluginEngine::getLink($this->plugin, array(), "lernmodule/gameparticipation/" . $attendance->game->getId()) . '">' . _("Wieder einsteigen") . '</a>',
+                        '<a href="'. PluginEngine::getLink($this->plugin, array('quit' => $attendance->getId()), "lernmodule/overview") .'">'._("Teilnahme beenden").'</a>'
                     )
                 )
             );
+        }
+        foreach (LernmodulGame::findOpenGames($_SESSION['SessionSeminar']) as $opengame) {
+            if (!$opengame->participates()) {
+                PageLayout::postMessage(
+                    MessageBox::info(
+                        sprintf(
+                            _("%s sucht noch weitere Teilnehmer für '%s'."),
+                            get_fullname($opengame['user_id']),
+                            htmlReady($opengame->module['name'])
+                        ),
+                        array(
+                            '<a href="' . PluginEngine::getLink($this->plugin, array(), "lernmodule/gameparticipation/" . $opengame->getId()) . '">' . _("Einladung annehmen") . '</a>'
+                        )
+                    )
+                );
+            }
         }
     }
 
@@ -187,7 +226,7 @@ class LernmoduleController extends PluginController
         }
         if (Request::isPost()) {
             $this->attempt['chdate'] = time();
-            $message = Request::getArray("message");
+            $message = studip_utf8decode(Request::getArray("message"));
             if ($message['success']) {
                 $this->attempt['successful'] = 1;
             }

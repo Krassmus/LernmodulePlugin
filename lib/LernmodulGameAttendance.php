@@ -12,4 +12,13 @@ class LernmodulGameAttendance extends SimpleORMap {
         );
         parent::configure($config);
     }
+
+    public function delete()
+    {
+        $game = $this->game;
+        $output = parent::delete();
+        if (!count($game->attendances)) {
+            $game->delete();
+        }
+    }
 }

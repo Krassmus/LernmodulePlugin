@@ -11,6 +11,7 @@ class LernmodulGame extends SimpleORMap {
                 FROM lernmodule_games
                     INNER JOIN lernmodule_game_attendances ON (lernmodule_games.game_id = lernmodule_game_attendances.game_id)
                 WHERE lernmodule_games.seminar_id = :course_id
+                    AND lernmodule_games.chdate > UNIX_TIMESTAMP() - (60 * 60 * 12)
                 GROUP BY lernmodule_games.game_id
                 ) as grouped_games
             WHERE players < max_players
@@ -41,5 +42,16 @@ class LernmodulGame extends SimpleORMap {
     public function isOpen()
     {
         return $this->max_players > count($this->attendances);
+    }
+
+    public function participates($user_id = null)
+    {
+        $user_id || $user_id = $GLOBALS['user']->id;
+        foreach ($this->attendances as $attendance) {
+            if ($attendance['user_id'] === $user_id) {
+                return $attendance;
+            }
+        }
+        return false;
     }
 }
