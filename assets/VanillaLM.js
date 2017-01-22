@@ -167,6 +167,28 @@ VanillaLM = {
             //Now the request is sent to the LMS and we wait for a response ...
         });
     },
+    terminateInvitation: function (vanillalm_game_id, callable) {
+        var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage") || "{}");
+        VanillaLM.state = Object.assign(session, VanillaLM.state);
+        VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
+        return new Promise(function (resolve, reject) {
+            var opener = window.opener || window.parent;
+            var request_id = Math.floor(Math.random() * 1000000);
+            opener.postMessage(JSON.stringify({
+                "secret": VanillaLM.state.secret,
+                "request": "/terminateInvitation",
+                "request_id": request_id,
+                "vanillalm_game_id": vanillalm_game_id
+            }), "*");
+            VanillaLM.openRequests[request_id] = {
+                "resolve": resolve,
+                "reject": reject,
+                "callable": callable,
+                "time": new Date()
+            };
+            //Now the request is sent to the LMS and we wait for a response ...
+        });
+    },
     postTimelineMessage: function (message) {
         var opener = window.opener || window.parent;
         opener.postMessage(JSON.stringify({

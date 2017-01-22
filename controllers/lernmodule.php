@@ -288,4 +288,11 @@ class LernmoduleController extends PluginController
         $this->redirect("lernmodule/view/".$game['module_id']."?cid=".$game['seminar_id']."&attendance=".$game_attendence->getId());
     }
 
+    public function blubber_action()
+    {
+        if (Request::submitted("save") && Request::isPost()) {
+
+        }
+    }
+
 }

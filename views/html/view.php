@@ -70,6 +70,7 @@
         }
     }, 30 * 1000);
     STUDIP.Lernmodule.received_message_api_messages = false;
+    STUDIP.Lernmodule.dont_blubber = false;
     <? endif ?>
     window.addEventListener("message", function (event) {
         var origin = event.origin || event.originalEvent.origin;
@@ -91,8 +92,10 @@
                         "request_id": message.request_id,
                         "id": '<?= $GLOBALS['user']->id ?>',
                         "name": '<?= htmlReady(studip_utf8encode($GLOBALS['user']->getFullName())) ?>',
-                        "email": '<?= htmlReady(studip_utf8encode($GLOBALS['user']->email)) ?>',
-                        "avatar": '<?= htmlReady(Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::NORMAL)) ?>',
+                        "email": '<?= htmlReady(studip_utf8encode(get_visible_email($GLOBALS['user']->id))) ?>',
+                        "avatar": '<?= htmlReady(Visibility::verify('picture', $GLOBALS['user']->id, "nobody")
+                            ? Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::NORMAL)
+                            : null) ?>',
                         "language": '<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>'
                     }), "*");
                 }
@@ -112,17 +115,12 @@
                         "color": jQuery("body").css("color"),
                         "background-color": jQuery("#layout_content").css("background-color"),
                         "font-family": jQuery("body").css("font-family"),
-                        "color_a": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)')).getPropertyValue("color"),
-                        "primary-color": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)')).getPropertyValue("color"),
-                        "secondary-color": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)')).getPropertyValue("color")
-                        //"color_a_hover": window.getComputedStyle(document.querySelector('.sidebar-widget-content a:not(.active)'), ":hover").getPropertyValue("color")
+                        "primary-color": jQuery("body").css("background-color"),
+                        "secondary-color": jQuery("#barBottomContainer").css("background-color")
                     }), "*");
                 }
                 if (message.request === "/invite") {
-                    var max = message.max;
-                    var parameter = message.parameter;
-                    var preferred_player_ids = message.preferred_player_ids;
-                    //Ajax request: ...
+                    //Ajax request:
                     jQuery.ajax({
                         "url": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/gameinvitation",
                         "data": {
@@ -143,6 +141,15 @@
                 <? if (class_exists("Blubber")) : ?>
                 if (message.request === "/postTimelineMessage") {
                     //show dialog that asks if user wants to share the message
+                    if (STUDIP.Lernmodule.dont_blubber) {
+                        STUDIP.Dialog.fromURL(
+                            STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/blubber",
+                            {
+                                "method": "POST",
+                                "data": { "message": message.message }
+                            }
+                        );
+                    }
                 }
                 <? endif ?>
             }
