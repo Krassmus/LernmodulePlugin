@@ -2,6 +2,8 @@ VanillaLM = {
     timeoutInSeconds: 5,
     state: {},
     openRequests: {},
+    defaultConfigs: {},
+    configs: {},
     storage: { //a fake storage to be overwritten by sessionStorage
         _data: {},
         setItem: function (id, val) {
@@ -41,6 +43,15 @@ VanillaLM = {
             VanillaLM.state.properties = {};
         }
         VanillaLM.state.properties[parameter] = value;
+    },
+    setDefaultConfig: function (parameter, value) {
+        VanillaLM.defaultConfigs[parameter] = value;
+        if (typeof VanillaLM.configs[parameter] === "undefined") {
+            VanillaLM.configs[parameter] = value;
+        }
+    },
+    getConfig: function (parameter) {
+        return VanillaLM.configs[parameter];
     },
     /**
      * Marks the module as successfully finished. Don't forget to trigger the method send as well.
@@ -133,6 +144,27 @@ VanillaLM = {
             opener.postMessage(JSON.stringify({
                 secret: VanillaLM.state.secret,
                 request: "/style",
+                request_id: request_id
+            }), "*");
+            VanillaLM.openRequests[request_id] = {
+                "resolve": resolve,
+                "reject": reject,
+                "callable": callable,
+                "time": new Date()
+            };
+            //Now the request is sent to the LMS and we wait for a response ...
+        });
+    },
+    getConfigs: function (callable) {
+        var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage") || "{}");
+        VanillaLM.state = Object.assign(session, VanillaLM.state);
+        VanillaLM.storage.setItem("VanillaLM.sessionStorage", JSON.stringify(VanillaLM.state));
+        return new Promise(function (resolve, reject) {
+            var opener = window.opener || window.parent;
+            var request_id = Math.floor(Math.random() * 1000000);
+            opener.postMessage(JSON.stringify({
+                secret: VanillaLM.state.secret,
+                request: "/configs",
                 request_id: request_id
             }), "*");
             VanillaLM.openRequests[request_id] = {
@@ -260,6 +292,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }
             delete VanillaLM.openRequests[request_id];
         }
+
+        if (message.secret === VanillaLM.state.secret && message.request === "configs") {
+            var opener = window.opener || window.parent;
+            opener.postMessage(JSON.stringify({
+                "secret": VanillaLM.state.secret,
+                "request": "/config",
+                "configs": VanillaLM.defaultConfigs
+            }), "*");
+        }
     }, false);
 
     //save secret in sessionStorage
@@ -283,6 +324,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
         root.style.setProperty("--vanillalm-font-family", style["font-family"]);
         root.style.setProperty("--vanillalm-link-color", style["color_a"]);
         //root.style.setProperty("--vanillalm-link-color-hover", style["color_a_hover"]); //adly it's not possible to retrieve the hover-color with JS.
+    });
+    VanillaLM.getConfigs().then(function (output) {
+        for (var i in output.configs) {
+            VanillaLM.configs[i] = output.configs[i];
+        }
     });
 
 });

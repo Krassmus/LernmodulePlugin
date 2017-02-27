@@ -11,6 +11,8 @@
     //"allow-top-navigation",
 ) ?>
 
+<? $framesecret = md5(uniqid()) ?>
+
 <script>
     STUDIP.Lernmodule = {
         requestFullscreen: function () {
@@ -24,17 +26,25 @@
             } else if (module.webkitRequestFullscreen) {
                 module.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
             }
+        },
+        requestConfigs: function () {
+            document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
+                "secret": '<?= $framesecret ?>',
+                "request": "configs"
+            }), "*");
         }
     };
 </script>
-
-<? $framesecret = md5(uniqid()) ?>
 
 <iframe
         <? $url = $module->getStartURL($framesecret);
         if ($game_attendance) {
             $url = URLHelper::getURL($url, $game_attendance->game['parameter']->getArrayCopy(), true);
-        } ?>
+        }
+        if ($lernmodulcourse['customdata']['configs']) {
+            $url = URLHelper::getURL($url, $lernmodulcourse['customdata']['configs']->getArrayCopy(), true);
+        }
+        ?>
         src="<?= htmlReady($url) ?>"
         <?= $module['sandbox'] && (!$module['url'] || (parse_url($url, PHP_URL_HOST) === $_SERVER['SERVER_NAME'])) ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
         style="width: 100%; height: 90vh; border: none;"
@@ -77,6 +87,7 @@
         var myorigin = "<?= htmlReady($myorigin) ?>";
         var message = JSON.parse(event.data);
         if (message.secret === '<?= $framesecret ?>') {
+            jQuery(".widget-links a.configure").show();
             STUDIP.Lernmodule.received_message_api_messages = true;
             //it's from the correct window, yay!
             delete message.secret;
@@ -138,7 +149,35 @@
                         "request_id": message.request_id
                     }), "*");
                 }
-                <? if (class_exists("Blubber")) : ?>
+                <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
+                if (message.request === "/config") {
+                    STUDIP.Dialog.fromURL(
+                        STUDIP.URLHelper.getURL(
+                            STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/html/set_configs",
+                            {
+                                "module_id": '<?= htmlReady($module->getId()) ?>',
+                                "cid": '<?= htmlReady($_SESSION['SessionSeminar']) ?>',
+                                "configs": message.configs
+                            }
+                        )
+                    );
+
+                    //Ajax request:
+                    document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
+                        "secret": '<?= $framesecret ?>',
+                        "request_id": message.request_id
+                    }), "*");
+                }
+                <? endif ?>
+                if (message.request === "/configs") {
+                    document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
+                        "secret": '<?= $framesecret ?>',
+                        "request_id": message.request_id,
+                        "configs": <?= json_encode(studip_utf8encode($coursemodule['customdata'] ? $coursemodule['customdata']['configs']->getArrayCopy() : array())) ?>
+                    }), "*");
+                }
+
+            <? if (class_exists("Blubber")) : ?>
                 if (message.request === "/postTimelineMessage") {
                     //show dialog that asks if user wants to share the message
                     if (STUDIP.Lernmodule.dont_blubber) {
@@ -156,3 +195,8 @@
         }
     }, false);
 </script>
+<style>
+    .widget-links a.configure {
+        display: none;
+    }
+</style>

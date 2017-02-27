@@ -41,10 +41,25 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         $myorigin = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
         $myorigin .= '://'.$_SERVER['SERVER_NAME'];
 
+        if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+            $actions = Sidebar::Get()->getWidget("actions");
+            $actions->addLink(
+                _("Konfigurieren"),
+                URLHelper::getURL("plugins.php/lernmoduleplugin/html/set_configs"),
+                Icon::create("admin", "clickable"),
+                array(
+                    'data-dialog' => 1,
+                    'class' => "configure",
+                    'onClick' => "STUDIP.Lernmodule.requestConfigs(); return false;"
+                )
+            );
+        }
+
         $templatefactory = new Flexi_TemplateFactory(__DIR__."/../views");
         $template = $templatefactory->open("html/view.php");
         $template->set_attribute("module", $this);
         $template->set_attribute("attempt", $attempt);
+        $template->set_attribute("coursemodule", LernmodulCourse::findOneBySQL("module_id = ? AND seminar_id = ?", array($this->getId(), $_SESSION['SessionSeminar'])));
         $template->set_attribute("game_attendance", $game_attendance);
         $template->set_attribute("myorigin", $myorigin);
         return $template;
