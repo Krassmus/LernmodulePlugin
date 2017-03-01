@@ -27,32 +27,20 @@
                 module.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
             }
         },
-        requestConfigs: function () {
-            document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
-                "secret": '<?= $framesecret ?>',
-                "request": "configs"
-            }), "*");
+        editConfigs: function () {
+            STUDIP.Dialog.fromURL(
+                STUDIP.URLHelper.getURL(
+                    STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/html/set_configs",
+                    {
+                        "module_id": '<?= htmlReady($module->getId()) ?>',
+                        "cid": '<?= htmlReady($_SESSION['SessionSeminar']) ?>',
+                        "configs": STUDIP.Lernmodule.default_configs
+                    }
+                )
+            );
         }
     };
-</script>
-
-<iframe
-        <? $url = $module->getStartURL($framesecret);
-        if ($game_attendance) {
-            $url = URLHelper::getURL($url, $game_attendance->game['parameter']->getArrayCopy(), true);
-        }
-        if ($lernmodulcourse['customdata']['configs']) {
-            $url = URLHelper::getURL($url, $lernmodulcourse['customdata']['configs']->getArrayCopy(), true);
-        }
-        ?>
-        src="<?= htmlReady($url) ?>"
-        <?= $module['sandbox'] && (!$module['url'] || (parse_url($url, PHP_URL_HOST) === $_SERVER['SERVER_NAME'])) ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
-        style="width: 100%; height: 90vh; border: none;"
-        id="lernmodule_iframe"
-></iframe>
-
-
-<script>
+    
     <? if ($module['end_file']) : ?>
     var end_file_found = false;
     window.setInterval(function () {
@@ -87,7 +75,6 @@
         var myorigin = "<?= htmlReady($myorigin) ?>";
         var message = JSON.parse(event.data);
         if (message.secret === '<?= $framesecret ?>') {
-            jQuery(".widget-links a.configure").show();
             STUDIP.Lernmodule.received_message_api_messages = true;
             //it's from the correct window, yay!
             delete message.secret;
@@ -150,32 +137,20 @@
                     }), "*");
                 }
                 <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
-                if (message.request === "/config") {
-                    STUDIP.Dialog.fromURL(
-                        STUDIP.URLHelper.getURL(
-                            STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/html/set_configs",
-                            {
-                                "module_id": '<?= htmlReady($module->getId()) ?>',
-                                "cid": '<?= htmlReady($_SESSION['SessionSeminar']) ?>',
-                                "configs": message.configs
-                            }
-                        )
-                    );
-
-                    //Ajax request:
-                    document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
-                        "secret": '<?= $framesecret ?>',
-                        "request_id": message.request_id
-                    }), "*");
-                }
-                <? endif ?>
                 if (message.request === "/configs") {
+                    STUDIP.Lernmodule.default_configs = message.default_configs;
+                    if (!jQuery.isEmptyObject(STUDIP.Lernmodule.default_configs)) {
+                        jQuery(".widget-links a.configure").show();
+                    } else {
+                        jQuery(".widget-links a.configure").hide();
+                    }
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
                         "configs": <?= json_encode(studip_utf8encode($coursemodule['customdata'] ? $coursemodule['customdata']['configs']->getArrayCopy() : array())) ?>
                     }), "*");
                 }
+                <? endif ?>
 
             <? if (class_exists("Blubber")) : ?>
                 if (message.request === "/postTimelineMessage") {
@@ -200,3 +175,18 @@
         display: none;
     }
 </style>
+
+<iframe
+    <? $url = $module->getStartURL($framesecret);
+    if ($game_attendance) {
+        $url = URLHelper::getURL($url, $game_attendance->game['parameter']->getArrayCopy(), true);
+    }
+    if ($lernmodulcourse['customdata']['configs']) {
+        $url = URLHelper::getURL($url, $lernmodulcourse['customdata']['configs']->getArrayCopy(), true);
+    }
+    ?>
+        src="<?= htmlReady($url) ?>"
+    <?= $module['sandbox'] && (!$module['url'] || (parse_url($url, PHP_URL_HOST) === $_SERVER['SERVER_NAME'])) ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
+        style="width: 100%; height: 90vh; border: none;"
+        id="lernmodule_iframe"
+></iframe>

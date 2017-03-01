@@ -50,7 +50,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
                 array(
                     'data-dialog' => 1,
                     'class' => "configure",
-                    'onClick' => "STUDIP.Lernmodule.requestConfigs(); return false;"
+                    'onClick' => "STUDIP.Lernmodule.editConfigs(); return false;"
                 )
             );
         }
