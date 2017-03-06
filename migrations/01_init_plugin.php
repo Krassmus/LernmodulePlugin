@@ -10,14 +10,15 @@ class InitPlugin extends Migration {
                 `name` varchar(64) NOT NULL,
                 `type` varchar(16) NOT NULL DEFAULT 'html',
                 `url` varchar(256) NULL,
+                `start_file` varchar(64) DEFAULT NULL,
+                `end_file` varchar(64) DEFAULT '',
                 `customdata` TEXT NULL,
                 `image` varchar(256) DEFAULT NULL,
                 `sandbox` tinyint(4) NOT NULL DEFAULT '0',
                 `chdate` int(11) DEFAULT NULL,
                 `mkdate` int(11) DEFAULT NULL,
                 PRIMARY KEY (`module_id`),
-                KEY `user_id` (`user_id`),
-                KEY `seminar_id` (`seminar_id`)
+                KEY `user_id` (`user_id`)
             ) ENGINE=InnoDB
         ");
         DBManager::get()->exec("
@@ -25,6 +26,7 @@ class InitPlugin extends Migration {
             VALUES
                 ('Lernmodule-Admin', 'n');
         ");
+        //TODO refresh cache
         DBManager::get()->exec("
             CREATE TABLE `lernmodule_attempts` (
                 `attempt_id` varchar(32) NOT NULL,

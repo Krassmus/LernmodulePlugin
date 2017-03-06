@@ -37,6 +37,13 @@
                 </ul>
             </div>
         <? endif ?>
+
+        <? if (class_exists("LernmarktplatzMaterial")) : ?>
+            <label>
+                <input type="checkbox" name="module[material_id]" value="<?= htmlReady($module['material_id'] ?: 1) ?>">
+                <?= _("Auf Lernmarktplatz veröffentlichen (unter CC-BY-SA für alle zum freien Download)") ?>
+            </label>
+        <? endif ?>
     </fieldset>
 
     <fieldset>

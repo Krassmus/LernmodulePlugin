@@ -40,7 +40,7 @@
             );
         }
     };
-    
+
     <? if ($module['end_file']) : ?>
     var end_file_found = false;
     window.setInterval(function () {

@@ -44,17 +44,21 @@ class Lernmodul extends SimpleORMap {
         }
         $success = LernmodulePlugin::extract_zip($path, $this->getPath());
         if ($success) {
-            foreach (scandir($this->getPath()) as $folder) {
-                if (!in_array($folder, array(".", ".."))) {
-                    break;
+            //Falls nur der Ordner auf oberster Ebene liegt:
+            if (count(scandir($this->getPath())) < 4) {
+                foreach (scandir($this->getPath()) as $folder) {
+                    if (!in_array($folder, array(".", ".."))) {
+                        break;
+                    }
                 }
+                $tmp_folder = $this->getPath() . "/" . $this->getId();
+                rename($this->getPath() . "/" . $folder, $tmp_folder);
+                $this->copyr(
+                    $tmp_folder,
+                    $this->getPath()
+                );
+                rmdirr($tmp_folder);
             }
-            rename($this->getPath()."/".$folder, $this->getPath()."/".$this->getId());
-            $this->copyr(
-                $this->getPath() . "/" . $this->getId(),
-                $this->getPath()
-            );
-            rmdirr($this->getPath() . "/" . $this->getId());
             foreach ($this->scanForFiletypes(array("php", "php3", "php1", "php2", "phtml", "asp"), null, true) as $php_file) {
                 //remove all PHP-files
                 @unlink($php_file);
