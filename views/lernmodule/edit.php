@@ -39,7 +39,11 @@
 
         <label id="lernmodul_url">
             <?= _("URL des Lernmoduls") ?>
-            <input type="text" name="module[url]" placeholder="http://..." value="<?= htmlReady($module['url']) ?>">
+            <input type="text"
+                   name="module[url]"
+                   placeholder="http://..."
+                   value="<?= htmlReady($module['url']) ?>"
+                   onChange="jQuery('#lernmarktplatz_publish').toggle(!this.value);">
         </label>
 
         <label>
@@ -48,13 +52,13 @@
         </label>
 
         <? if (count($lernmodule)) : ?>
-            <div style="margin-top: 15px;">
+            <div style="margin-top: 15px; margin-bottom: 15px;">
                 <?= _("Abhängig von") ?>
-                <ul class="clean">
+                <ul class="clean" style="font-size: 0.8em;">
                     <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies($_SESSION['SessionSeminar'])) ?>
                     <? foreach ($lernmodule as $lernmodul) : ?>
                         <li>
-                            <label style="font-size: 0.9em;">
+                            <label>
                                 <input type="checkbox" name="dependencies[]" value="<?= htmlReady($lernmodul->getId()) ?>"<?= in_array($lernmodul->getId(), $dependencies) ? " checked" : "" ?>>
                                 <?= htmlReady($lernmodul['name']) ?>
                             </label>
@@ -65,7 +69,7 @@
         <? endif ?>
 
         <? if (class_exists("LernmarktplatzMaterial")) : ?>
-            <label>
+            <label id="lernmarktplatz_publish" style="<?= $module['url'] ? 'display: none; ' : '' ?>">
                 <input type="checkbox" name="module[material_id]" value="<?= htmlReady($module['material_id'] ?: 1) ?>">
                 <?= _("Auf Lernmarktplatz veröffentlichen (unter CC-BY-SA für alle zum freien Download)") ?>
             </label>

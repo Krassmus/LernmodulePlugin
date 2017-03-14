@@ -166,6 +166,25 @@ class LernmoduleController extends PluginController
             $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);
             if ($_FILES['modulefile']['size'] > 0) {
                 $success = $this->module->copyModule($_FILES['modulefile']['tmp_name']);
+                if ($this->module['material_id'] && !$this->module['url']) {
+                    $material = new LernmarktplatzMaterial($this->module['material_id'] != 1 ? $this->module['material_id'] : null);
+
+                    $material['name'] = $this->module['name'];
+                    $material['filename'] = $this->module['name'].".zip";
+                    $material['short_description'] = $this->module['name'];
+                    $material['description'] = $this->module['name'];
+                    $material['content_type'] = "application/zip";
+                    $material['front_image_content_type'] = "application/zip";
+                    $material['user_id'] = $GLOBALS['user']->id;
+                    copy($_FILES['modulefile']['tmp_name'], $material->getFilePath());
+                    $material->store();
+                    //$topics = $material->getTopics();
+                    $material->addTag("Lernmodul");
+                    $material->pushDataToIndexServers();
+
+                    $this->module['material_id'] = $material->getId();
+                    $this->module->store();
+                }
             }
             if ($success) {
                 PageLayout::postMessage(MessageBox::success(_("Lernmodul erfolgreich gespeichert.")));
