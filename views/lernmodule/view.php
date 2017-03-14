@@ -21,6 +21,11 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
         Icon::create("edit", "info")
     );
+    $actions->addLink(
+        _("Lernmodul herunterladen"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/download/".$mod->getId()),
+        Icon::create("download", "info")
+    );
     Sidebar::Get()->addWidget($actions);
 }
 

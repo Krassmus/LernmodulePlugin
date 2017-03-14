@@ -240,13 +240,18 @@ class LernmoduleController extends PluginController
     public function download_action($module_id)
     {
         $this->module = new Lernmodul($module_id);
-        $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid());
+        $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid()).".zip";
         create_zip_from_directory($this->module->getPath(), $filename);
-        header("Content-Type: application/zip");
-        header("Content-Disposition: attachement; filename=\"".$this->module['name'].".zip\"");
-        echo file_get_contents($filename);
-        @unlink($filename);
+
+        header('Content-Type: application/zip');
+        header("Content-Disposition: attachment; filename=\"".$this->module['name'].".zip\"");
+        header('Content-Length: ' . filesize($filename));
+        header('Pragma: public');
+
         $this->render_nothing();
+
+        readfile($filename);
+        unlink($filename);
     }
 
     public function gameinvitation_action()

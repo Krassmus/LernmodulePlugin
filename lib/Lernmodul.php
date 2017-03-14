@@ -173,7 +173,7 @@ class Lernmodul extends SimpleORMap {
         if (Config::get()->LERNMODUL_DATA_PATH) {
             $datafolder = Config::get()->LERNMODUL_DATA_PATH;
         } else {
-            $datafolder = __DIR__."/../../LernmodulePluginData";
+            $datafolder = realpath(__DIR__."/../../LernmodulePluginData");
             if (!file_exists($datafolder)) {
                 $success = mkdir($datafolder);
                 if (!$success) {
