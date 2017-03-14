@@ -19,7 +19,10 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
     $actions->addLink(
         _("Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
-        Icon::create("edit", "info")
+        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+            ? Icon::create("edit", "clickable")
+            : Assets::image_path("icons/black/16/blue/edit")
+
     );
     Sidebar::Get()->addWidget($actions);
 }
