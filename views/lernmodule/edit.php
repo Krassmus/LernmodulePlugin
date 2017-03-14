@@ -1,7 +1,8 @@
 <form action="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$module->getId()) ?>"
       method="post"
       class="default studip_form"
-      enctype="multipart/form-data">
+      enctype="multipart/form-data"
+        <?= Request::isDialog() ? " data-dialog" : "" ?>>
 
     <fieldset>
         <legend><?= _("Lernmodul hochladen und bearbeiten") ?></legend>
@@ -10,6 +11,31 @@
             <input type="file" name="modulefile" accept=".zip,.h5p" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
             <?= sprintf(_("Lernmodul auswählen (ZIP, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
+
+        <script>
+            jQuery(function () {
+                jQuery("#file_upload").on('dragover dragleave', function (event) {
+                    jQuery(this).toggleClass('hovered', event.type === 'dragover');
+                    return false;
+                });
+                jQuery("#file_upload").on('drop', function (event) {
+                    jQuery(this).removeClass('hovered');
+                    var file = event.originalEvent.dataTransfer.files[0]
+                    jQuery("#file_upload input[name=modulefile]")[0].file = file;
+                    if (jQuery(this).closest('label').find('.filename').length) {
+                        filename = $(this).closest('label').find('.filename');
+                    } else {
+                        filename = $('<span class="filename"/>');
+                        jQuery(this).closest('label').append(filename);
+                    }
+                    jQuery("#file_upload .filename").text(file.name + ' ' + Math.ceil(file.size / 1024) + 'KB');
+                    //jQuery("#file_upload input[name=modulefile]").trigger("change"); why do I get a download with this??
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return false;
+                });
+            });
+        </script>
 
         <label id="lernmodul_url">
             <?= _("URL des Lernmoduls") ?>
@@ -95,14 +121,6 @@
             <? endif ?>
         <? endif ?>
 
-        <? if (LernmodulePlugin::mayEditSandbox() && !$module['url']) : ?>
-            <label>
-                <input type="hidden" name="module[sandbox]" value="0">
-                <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?>>
-                <?= _("Im abgesicherten Modus abspielen") ?>
-            </label>
-        <? endif ?>
-
         <label>
             <input type="hidden" name="modulecourse[anonymous_attempts]" value="0">
             <input type="checkbox" name="modulecourse[anonymous_attempts]" value="1"<?= $modulecourse['anonymous_attempts'] ? " checked" : "" ?>>
@@ -129,7 +147,9 @@
             'formaction' => PluginEngine::getLink($plugin, array(), "lernmodule/delete/".$module->getId()),
             'onClick' => "return window.confirm('"._("Wirklich löschen?")."');"
         )) ?>
-        <?= \Studip\LinkButton::create(_("Abbrechen"), PluginEngine::getURL($plugin, array(), "lernmodule/overview")) ?>
+        <? if (!Request::isDialog()) : ?>
+            <?= \Studip\LinkButton::create(_("Abbrechen"), PluginEngine::getURL($plugin, array(), "lernmodule/overview")) ?>
+        <? endif ?>
     </div>
 
 </form>
@@ -140,7 +160,9 @@ $actions = new ActionsWidget();
 $actions->addLink(
     _("Lernmodul herunterladen"),
     PluginEngine::getURL($plugin, array(), "lernmodule/download/".$module->getId()),
-    Icon::create("download", "info")
+    version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+        ? Icon::create("download", "clickable")
+        : Assets::image_path("icons/black/16/blue/download")
 );
 
 Sidebar::Get()->addWidget($actions);

@@ -163,13 +163,17 @@ $actions = new ActionsWidget();
 $actions->addLink(
     _("Lernmodul herunterladen"),
     PluginEngine::getURL($plugin, array(), "lernmodule/download/".$module->getId()),
-    Icon::create("download", "info")
+    version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+        ? Icon::create("download", "clickable")
+        : Assets::image_path("icons/black/16/blue/download")
 );
 if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
     $actions->addLink(
         _("Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$module->getId()),
-        Icon::create("edit", "info")
+        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+            ? Icon::create("edit", "clickable")
+            : Assets::image_path("icons/black/16/blue/edit")
     );
 }
 
