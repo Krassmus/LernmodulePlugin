@@ -67,8 +67,8 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         if ($new > 0) {
             $tab->setImage(
                 version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule+add", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
-                    : Assets::image_path("icons/red/20/learnmodule_new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+                    ? Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+                    : Assets::image_path("icons/red/20/new/learnmodule", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
             );
         } else {
             $tab->setImage(

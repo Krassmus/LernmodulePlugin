@@ -126,8 +126,7 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
         PluginEngine::getURL($plugin, array(), "lernmodule/edit"),
         version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
             ? Icon::create("learnmodule+add", "clickable")
-            : Assets::image_path("icons/black/16/blue/learnmodule"),
-        array('data-dialog' => 1)
+            : Assets::image_path("icons/black/16/blue/learnmodule")
     );
 }
 Sidebar::Get()->addWidget($actions);

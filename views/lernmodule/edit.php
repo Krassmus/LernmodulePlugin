@@ -1,8 +1,7 @@
 <form action="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$module->getId()) ?>"
       method="post"
       class="default studip_form"
-      enctype="multipart/form-data"
-        <?= Request::isDialog() ? " data-dialog" : "" ?>>
+      enctype="multipart/form-data">
 
     <fieldset>
         <legend><?= _("Lernmodul hochladen und bearbeiten") ?></legend>
@@ -151,7 +150,7 @@
             'formaction' => PluginEngine::getLink($plugin, array(), "lernmodule/delete/".$module->getId()),
             'onClick' => "return window.confirm('"._("Wirklich löschen?")."');"
         )) ?>
-        <? if (!Request::isDialog()) : ?>
+        <? if (!Request::isAjax()) : ?>
             <?= \Studip\LinkButton::create(_("Abbrechen"), PluginEngine::getURL($plugin, array(), "lernmodule/overview")) ?>
         <? endif ?>
     </div>
