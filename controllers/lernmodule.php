@@ -165,7 +165,7 @@ class LernmoduleController extends PluginController
 
             $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);
             if ($_FILES['modulefile']['size'] > 0) {
-                $success = $this->module->copyModule($_FILES['modulefile']['tmp_name']);
+                $success = $this->module->copyModule($_FILES['modulefile']['tmp_name'], $_FILES['modulefile']['name']);
                 if ($this->module['material_id'] && !$this->module['url']) {
                     $material = new LernmarktplatzMaterial($this->module['material_id'] != 1 ? $this->module['material_id'] : null);
 
