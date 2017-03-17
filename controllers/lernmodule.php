@@ -78,7 +78,7 @@ class LernmoduleController extends PluginController
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = new Lernmodul($module_id);
         $class = ucfirst($this->mod['type'])."Lernmodul";
-        $this->mod = $class::buildExisting($this->mod->toRawArray());
+        $this->mod = $class::buildExisting($this->mod->toArray());
         if (!$this->mod['url'] && !file_exists($this->mod->getPath())) {
             PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
         }

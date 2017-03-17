@@ -147,7 +147,7 @@
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
-                        "configs": <?= json_encode(studip_utf8encode($coursemodule['customdata'] ? $coursemodule['customdata']['configs']->getArrayCopy() : array())) ?>
+                        "configs": <?= json_encode(studip_utf8encode(($coursemodule['customdata'] && $coursemodule['customdata']['configs']) ? $coursemodule['customdata']['configs']->getArrayCopy() : array())) ?>
                     }), "*");
                 }
                 <? endif ?>

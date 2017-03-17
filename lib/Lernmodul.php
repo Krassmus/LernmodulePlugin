@@ -112,25 +112,27 @@ class Lernmodul extends SimpleORMap {
             $reduce = strlen($path) + 1;
         }
         $files = array();
-        foreach (scandir($path) as $file) {
-            if (!in_array($file, array(".", ".."))) {
-                if (!is_dir($path."/".$file)) {
-                    if ($all || ($file[0] !== ".")) {
-                        $file_part = array_pop(explode(".", $file));
-                        if (in_array(strtolower($file_part), $filetypes)) {
-                            $files[] = $path . "/" . $file;
+        if (file_exists($path)) {
+            foreach (scandir($path) as $file) {
+                if (!in_array($file, array(".", ".."))) {
+                    if (!is_dir($path . "/" . $file)) {
+                        if ($all || ($file[0] !== ".")) {
+                            $file_part = array_pop(explode(".", $file));
+                            if (in_array(strtolower($file_part), $filetypes)) {
+                                $files[] = $path . "/" . $file;
+                            }
                         }
                     }
                 }
             }
-        }
-        sort($files);
-        foreach (scandir($path) as $file) {
-            if (!in_array($file, array(".", ".."))) {
-                if (is_dir($path."/".$file)) {
-                    if ($all || ($file[0] !== ".")) {
-                        foreach ($this->scanForFiletypes($filetypes, $path . "/" . $file, $all) as $image) {
-                            $files[] = $image;
+            sort($files);
+            foreach (scandir($path) as $file) {
+                if (!in_array($file, array(".", ".."))) {
+                    if (is_dir($path . "/" . $file)) {
+                        if ($all || ($file[0] !== ".")) {
+                            foreach ($this->scanForFiletypes($filetypes, $path . "/" . $file, $all) as $image) {
+                                $files[] = $image;
+                            }
                         }
                     }
                 }
@@ -173,7 +175,7 @@ class Lernmodul extends SimpleORMap {
         if (Config::get()->LERNMODUL_DATA_PATH) {
             $datafolder = Config::get()->LERNMODUL_DATA_PATH;
         } else {
-            $datafolder = realpath(__DIR__."/../../LernmodulePluginData");
+            $datafolder = realpath(__DIR__."/../..")."/LernmodulePluginData";
             if (!file_exists($datafolder)) {
                 $success = mkdir($datafolder);
                 if (!$success) {
