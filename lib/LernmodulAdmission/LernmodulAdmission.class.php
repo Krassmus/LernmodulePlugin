@@ -15,6 +15,7 @@
  * @category    Stud.IP
  */
 
+
 class LernmodulAdmission extends AdmissionRule
 {
     public function __construct($ruleId='', $courseSetId = '')

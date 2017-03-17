@@ -110,7 +110,7 @@ class LernmoduleController extends PluginController
         $this->module = new Lernmodul($module_id ?: null);
         if ($this->module['type'] && !$this->module->isNew()) {
             $class = ucfirst($this->module['type'])."Lernmodul";
-            $this->module = $class::buildExisting($this->module->toRawArray());
+            $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
         }
         $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) 
                 WHERE lernmodule_courses.seminar_id = ? 
