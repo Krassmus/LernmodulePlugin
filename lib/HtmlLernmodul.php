@@ -9,7 +9,9 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
 
     public function afterInstall()
     {
-        $data = $this['customdata']->getArrayCopy();
+        if ($this['customdata']) {
+            $data = $this['customdata']->getArrayCopy();
+        }
         if (!$data || !file_exists($this->getPath()."/".$data['start_file'])) {
             if (file_exists($this->getPath()."/index.html")) {
                 $data['start_file'] = "index.html";
