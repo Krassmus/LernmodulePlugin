@@ -9,7 +9,7 @@
 <label>
     <?= _("Startdatei (.html)") ?>
     <? if ($module->isNew()) : ?>
-        <input type="text" name="module[customdata][start_file]" value="<?= htmlReady($module['start_file']) ?>">
+        <input type="text" name="module[customdata][start_file]" value="<?= htmlReady($module['customdata']['start_file']) ?>">
     <? else : ?>
         <select name="module[customdata][start_file]">
             <? $files = $module->scanForFiletypes(array("html", "htm")) ?>
