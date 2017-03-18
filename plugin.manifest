@@ -10,3 +10,4 @@ icon=../../../assets/images/icons/black/add/learnmodule.svg
 screenshots = assets/screenshots
 screenshots.screenshot1.png = In einer schicken Übersicht sieht man die Lernmodule, die einem bereit stehen (hier die Studierendenansicht). Die Module mit einer kleinen Krone sind die Lernmodule, die man schon durchgearbeitet hat. Die ausgegrauten Module mit dem dicken Fragezeichen müssen erst noch freigeschaltet werden.
 screenshots.screenshot2.png = So sieht es aus, wenn man das konkrete Lernmodul durcharbeitet. Es wird direkt in Stud.IP angezeigt. Man kann mit dem Button "Vollbild", das Modul auf den ganzen Bildschirm ausweiten.
+category = Inhalte und Aufgabenstellungen

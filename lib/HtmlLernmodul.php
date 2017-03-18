@@ -9,14 +9,25 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
 
     public function afterInstall()
     {
-        if (!$this['customdata']['start_file'] || !file_exists($this->getPath()."/".$this['customdata']['start_file'])) {
+        if ($this['customdata']) {
+            $data = $this['customdata']->getArrayCopy();
+        }
+        if (!$data || !file_exists($this->getPath()."/".$data['start_file'])) {
             if (file_exists($this->getPath()."/index.html")) {
-                $this['customdata']['start_file'] = "index.html";
+                $data['start_file'] = "index.html";
             } else {
                 $files = $this->scanForFiletypes(array("html", "htm"));
-                $this['customdata']['start_file'] = $files[0];
+                if (count($files)) {
+                    $data['start_file'] = $files[0];
+                }
             }
         }
+        if (!$this['customdata']['start_file']) {
+            $files = $this->scanForFiletypes(array("pdf"));
+            $data['start_file'] = $files[0];
+        }
+        $this['customdata'] = $data;
+        $this->store();
     }
 
     public function getEditTemplate()

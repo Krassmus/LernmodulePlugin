@@ -41,13 +41,13 @@
         }
     };
 
-    <? if ($module['end_file']) : ?>
+    <? if ($module['customdata']['end_file']) : ?>
     var end_file_found = false;
     window.setInterval(function () {
         if (!end_file_found) {
             //search for iframe-page
             var page = document.getElementById("lernmodule_iframe").contentWindow.location.href;
-            var end_file = "<?= htmlReady($module['end_file']) ?>";
+            var end_file = "<?= htmlReady($module['customdata']['end_file']) ?>";
             page = page.split("?")[0];
             if (page.indexOf(end_file) !== -1) {
                 end_file_found = true;
@@ -147,7 +147,7 @@
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
-                        "configs": <?= json_encode(studip_utf8encode($coursemodule['customdata'] ? $coursemodule['customdata']['configs']->getArrayCopy() : array())) ?>
+                        "configs": <?= json_encode(studip_utf8encode(($coursemodule['customdata'] && $coursemodule['customdata']['configs']) ? $coursemodule['customdata']['configs']->getArrayCopy() : array())) ?>
                     }), "*");
                 }
                 <? endif ?>
@@ -175,7 +175,6 @@
         display: none;
     }
 </style>
-
 <iframe
     <? $url = $module->getStartURL($framesecret);
     if ($game_attendance) {

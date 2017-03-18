@@ -32,7 +32,7 @@ class Lernmodul extends SimpleORMap {
         return new LernmodulCourse(array($this->getId(), $course_id));
     }
 
-    public function copyModule($path)
+    public function copyModule($path, $filename = null)
     {
         if (file_exists($this->getPath())) {
             $success = rmdirr($this->getPath());
@@ -59,38 +59,39 @@ class Lernmodul extends SimpleORMap {
                 );
                 rmdirr($tmp_folder);
             }
-            foreach ($this->scanForFiletypes(array("php", "php3", "php1", "php2", "phtml", "asp"), null, true) as $php_file) {
-                //remove all PHP-files
-                @unlink($php_file);
-            }
-
-            if (!$this['image'] || !file_exists($this->getPath()."/".$this['image'])) {
-                $images = $this->scanForImages();
-                $this['image'] = $images[0];
-            }
-
-            if (file_exists($this->getPath() . "/h5p.json")) {
-                $this['type'] = "h5p";
-            } elseif(file_exists($this->getPath() . "/imsmanifest.xml")) {
-                $this['type'] = "scorm";
-            } else {
-                $this['type'] = "html";
-            }
-
-            if (file_exists($this->getPath())) {
-                $this['url'] = null;
-                $this->store();
-
-                $class = ucfirst($this['type'])."Lernmodul";
-                $module = new $class($this->getId());
-                $module->afterInstall();
-            } else {
-                PageLayout::postMessage(MessageBox::error(_("Verzeichnis konnte nicht angelegt werden.")));
-                $this->delete();
-                return false;
-            }
         } else {
-            PageLayout::postMessage(MessageBox::error(_("Entzippen des Lernmoduls hat nicht geklappt.")));
+            rename($path, $this->getPath() . "/" . ($filename ?: "index.html"));
+        }
+
+        foreach ($this->scanForFiletypes(array("php", "php3", "php1", "php2", "phtml", "asp"), null, true) as $php_file) {
+            //remove all PHP-files
+            @unlink($php_file);
+        }
+
+        if (!$this['image'] || !file_exists($this->getPath()."/".$this['image'])) {
+            $images = $this->scanForImages();
+            $this['image'] = $images[0];
+        }
+
+        if (file_exists($this->getPath() . "/h5p.json")) {
+            $this['type'] = "h5p";
+        } elseif(file_exists($this->getPath() . "/imsmanifest.xml")) {
+            $this['type'] = "scorm";
+        } else {
+            $this['type'] = "html";
+        }
+
+        if (file_exists($this->getPath())) {
+            $this['url'] = null;
+            $this->store();
+
+            $class = ucfirst($this['type'])."Lernmodul";
+            $module = new $class($this->getId());
+            $module->afterInstall();
+        } else {
+            PageLayout::postMessage(MessageBox::error(_("Verzeichnis konnte nicht angelegt werden.")));
+            $this->delete();
+            return false;
         }
         return $success;
     }
@@ -112,25 +113,27 @@ class Lernmodul extends SimpleORMap {
             $reduce = strlen($path) + 1;
         }
         $files = array();
-        foreach (scandir($path) as $file) {
-            if (!in_array($file, array(".", ".."))) {
-                if (!is_dir($path."/".$file)) {
-                    if ($all || ($file[0] !== ".")) {
-                        $file_part = array_pop(explode(".", $file));
-                        if (in_array(strtolower($file_part), $filetypes)) {
-                            $files[] = $path . "/" . $file;
+        if (file_exists($path)) {
+            foreach (scandir($path) as $file) {
+                if (!in_array($file, array(".", ".."))) {
+                    if (!is_dir($path . "/" . $file)) {
+                        if ($all || ($file[0] !== ".")) {
+                            $file_part = array_pop(explode(".", $file));
+                            if (in_array(strtolower($file_part), $filetypes)) {
+                                $files[] = $path . "/" . $file;
+                            }
                         }
                     }
                 }
             }
-        }
-        sort($files);
-        foreach (scandir($path) as $file) {
-            if (!in_array($file, array(".", ".."))) {
-                if (is_dir($path."/".$file)) {
-                    if ($all || ($file[0] !== ".")) {
-                        foreach ($this->scanForFiletypes($filetypes, $path . "/" . $file, $all) as $image) {
-                            $files[] = $image;
+            sort($files);
+            foreach (scandir($path) as $file) {
+                if (!in_array($file, array(".", ".."))) {
+                    if (is_dir($path . "/" . $file)) {
+                        if ($all || ($file[0] !== ".")) {
+                            foreach ($this->scanForFiletypes($filetypes, $path . "/" . $file, $all) as $image) {
+                                $files[] = $image;
+                            }
                         }
                     }
                 }
@@ -173,7 +176,7 @@ class Lernmodul extends SimpleORMap {
         if (Config::get()->LERNMODUL_DATA_PATH) {
             $datafolder = Config::get()->LERNMODUL_DATA_PATH;
         } else {
-            $datafolder = realpath(__DIR__."/../../LernmodulePluginData");
+            $datafolder = realpath(__DIR__."/../..")."/LernmodulePluginData";
             if (!file_exists($datafolder)) {
                 $success = mkdir($datafolder);
                 if (!$success) {

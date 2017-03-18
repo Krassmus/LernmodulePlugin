@@ -10,8 +10,6 @@ class InitPlugin extends Migration {
                 `name` varchar(64) NOT NULL,
                 `type` varchar(16) NOT NULL DEFAULT 'html',
                 `url` varchar(256) NULL,
-                `start_file` varchar(64) DEFAULT NULL,
-                `end_file` varchar(64) DEFAULT '',
                 `customdata` TEXT NULL,
                 `image` varchar(256) DEFAULT NULL,
                 `sandbox` tinyint(4) NOT NULL DEFAULT '0',

@@ -12,7 +12,7 @@
         <input type="text" name="module[customdata][start_file]" value="<?= htmlReady($module['customdata']['start_file']) ?>">
     <? else : ?>
         <select name="module[customdata][start_file]">
-            <? $files = $module->scanForFiletypes(array("html", "htm")) ?>
+            <? $files = $module->scanForFiletypes(array("html", "htm", "pdf")) ?>
             <? foreach ($files as $file) : ?>
                 <? if (!is_dir($module->getPath()."/".$file)) : ?>
                     <option value="<?= htmlReady($file) ?>"<?= $file === $module['customdata']['start_file'] ? " selected" : "" ?>><?= htmlReady($file) ?></option>
