@@ -10,7 +10,7 @@ require_once __DIR__."/lib/LernmodulCourse.php";
 require_once __DIR__."/lib/LernmodulDependency.php";
 require_once __DIR__."/lib/LernmodulGame.php";
 require_once __DIR__."/lib/LernmodulGameAttendance.php";
-//require_once __DIR__."/lib/LernmodulAdmission/LernmodulAdmission.class.php";
+require_once __DIR__."/lib/LernmodulAdmission/LernmodulAdmission.class.php";
 require_once 'app/controllers/plugin_controller.php';
 
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {

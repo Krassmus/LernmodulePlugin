@@ -1,7 +1,14 @@
 <?php
 
+require_once 'lib/classes/admission/AdmissionRule.class.php';
+require_once __DIR__."/../Lernmodul.php";
+require_once __DIR__."/../LernmodulAttempt.php";
+
 class LernmodulAdmission extends AdmissionRule
 {
+    public $module_id = null;
+    public $seminar_id = null;
+
     public function __construct($ruleId='', $courseSetId = '')
     {
         parent::__construct($ruleId, $courseSetId);
@@ -13,21 +20,16 @@ class LernmodulAdmission extends AdmissionRule
         }
     }
 
-    /**
-     * Deletes the admission rule and all associated data.
-     */
     public function delete() {
         parent::delete();
         // Delete rule data.
-        $stmt = DBManager::get()->prepare("DELETE FROM `timedadmissions`
-            WHERE `rule_id`=?");
+        $stmt = DBManager::get()->prepare("
+            DELETE FROM `lernmodule_admissionrules`
+            WHERE `rule_id` = ?
+        ");
         $stmt->execute(array($this->id));
     }
 
-    /**
-     * Gets some text that describes what this AdmissionRule (or respective
-     * subclass) does.
-     */
     public static function getDescription() {
         return _("Anmelderegeln dieses Typs legen ein Lernmodul fest, das erfolgreich besucht sein muss, um zu der Veranstaltung zugelassen zu werden.");
     }
@@ -36,125 +38,80 @@ class LernmodulAdmission extends AdmissionRule
         return _("Lernmodul als Voraussetzung");
     }
 
-    /**
-     * Gets the template that provides a configuration GUI for this rule.
-     *
-     * @return String
-     */
     public function getTemplate() {
         $factory = new Flexi_TemplateFactory(__DIR__.'/../../views');
         // Open specific template for this rule and insert base template.
-        $tpl = $factory->open('configure');
-        $tpl->set_attribute('rule', $this);
-        return $tpl->render();
+        $template = $factory->open('admission/configure');
+        $template->set_attribute("search", new SQLSearch("
+            SELECT CONCAT(seminare.Seminar_id, '-', lernmodule_module.module_id), CONCAT(seminare.name, ': ', lernmodule_module.name)
+            FROM lernmodule_module
+                INNER JOIN lernmodule_courses ON (lernmodule_courses.module_id = lernmodule_module.module_id)
+                INNER JOIN seminare ON (lernmodule_courses.seminar_id = seminare.Seminar_id)
+            WHERE CONCAT(seminare.name, ': ', lernmodule_module.name) LIKE :input
+            ", _("Lernmodul")));
+        $template->set_attribute('rule', $this);
+        return $template->render();
     }
 
-    /**
-     * Helper function for loading rule definition from database.
-     */
     public function load() {
         // Load data.
-        $stmt = DBManager::get()->prepare("SELECT *
-            FROM `timedadmissions` WHERE `rule_id`=? LIMIT 1");
+        $stmt = DBManager::get()->prepare("
+            SELECT *
+            FROM `lernmodule_admissionrules` 
+            WHERE `rule_id` = ? LIMIT 1
+        ");
         $stmt->execute(array($this->id));
         if ($current = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $this->message = $current['message'];
-            $this->startTime = $current['start_time'];
-            $this->endTime = $current['end_time'];
+            $this->module_id = $current['module_id'];
+            $this->seminar_id = $current['seminar_id'];
         }
     }
 
-    /**
-     * Is admission allowed according to the defined time frame?
-     *
-     * @param  String userId
-     * @param  String courseId
-     * @return Array
-     */
-    public function ruleApplies($userId, $courseId) {
+    public function ruleApplies($user_id, $course_id) {
         $errors = array();
-        if (!$this->checkTimeFrame()) {
-            $errors[] = $this->getMessage();
+
+        if (!LernmodulAttempt::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($this->module_id, $user_id))) {
+            $errors[] = sprintf(_("Sie haben das Lernmodul '%s' noch nicht absolviert"), Lernmodul::find($this->module_id)->name);
         }
         return $errors;
     }
 
-    /**
-     * Uses the given data to fill the object values. This can be used
-     * as a generic function for storing data if the concrete rule type
-     * isn't known in advance.
-     *
-     * @param Array $data
-     * @return AdmissionRule This object.
-     */
     public function setAllData($data) {
         parent::setAllData($data);
-        if ($data['startdate']) {
-            $sdate = $data['startdate'];
-            $stime = $data['starttime'];
-            $parsed = date_parse($sdate.' '.$stime);
-            $timestamp = mktime($parsed['hour'], $parsed['minute'], 0, $parsed['month'], $parsed['day'], $parsed['year']);
-            $this->setStartTime($timestamp);
-        }
-        if ($data['enddate']) {
-            $edate = $data['enddate'];
-            $etime = $data['endtime'];
-            if (!$etime) {
-                $etime = '23:59';
-            }
-            $parsed = date_parse($edate.' '.$etime);
-            $timestamp = mktime($parsed['hour'], $parsed['minute'], 0, $parsed['month'], $parsed['day'], $parsed['year']);
-            $this->setEndTime($timestamp);
-        }
+        list($this->seminar_id, $this->module_id) = explode("-", $data['seminar_id-module_id']);
         return $this;
     }
 
-    /**
-     * Store rule definition to database.
-     */
     public function store() {
-        // Store data.
-        $stmt = DBManager::get()->prepare("INSERT INTO `timedadmissions`
-            (`rule_id`, `message`, `start_time`,
-            `end_time`, `mkdate`, `chdate`) VALUES (?, ?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE `start_time`=VALUES(`start_time`),
-            `end_time`=VALUES(`end_time`),message=VALUES(message), `chdate`=VALUES(`chdate`)");
-        $stmt->execute(array($this->id, $this->message, (int)$this->startTime,
-            (int)$this->endTime, time(), time()));
+        $stmt = DBManager::get()->prepare("
+            INSERT INTO `lernmodule_admissionrules`
+            SET `rule_id` = :rule_id,
+                `seminar_id` = :seminar_id,
+                `module_id` = :module_id
+            ON DUPLICATE KEY UPDATE `module_id` = :module_id
+        ");
+        $stmt->execute(array(
+            'rule_id' => $this->id,
+            'module_id' => $this->module_id,
+            'seminar_id' => $this->seminar_id
+        ));
     }
 
-    /**
-     * A textual description of the current rule.
-     *
-     * @return String
-     */
     public function toString()
     {
-        $factory = new Flexi_TemplateFactory(dirname(__FILE__).'/templates/');
-        $tpl = $factory->open('info');
-        $tpl->set_attribute('rule', $this);
-        return $tpl->render();
+        return sprintf(
+            _("Um zu der Veranstaltung zugelassen zu werden, müssen Sie an dem Lernmodul '%s' erfolgreich teilgenommen haben."),
+            Lernmodul::find($this->module_id)->name
+        );
     }
 
-    /**
-     * Validates if the given request data is sufficient to configure this rule
-     * (e.g. if required values are present).
-     *
-     * @param  Array Request data
-     * @return Array Error messages.
-     */
     public function validate($data)
     {
         $errors = parent::validate($data);
-        if (!$data['startdate'] && !$data['enddate']) {
-            $errors[] = _('Bitte geben Sie entweder ein Start- oder Enddatum an.');
-        }
-        if ($data['startdate'] && $data['enddate'] && strtotime($data['enddate'] . ' ' . $data['endtime']) < strtotime($data['startdate']. ' ' . $data['starttime'])) {
-            $errors[] = _('Das Enddatum darf nicht vor dem Startdatum liegen.');
+        if (!$data['seminar_id-module_id']) {
+            $errors[] = _("Bitte geben Sie das Modul ein.");
         }
         return $errors;
     }
 
-} /* end of class TimedAdmission */
-
-?>
+}
