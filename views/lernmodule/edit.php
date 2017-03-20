@@ -1,6 +1,6 @@
 <form action="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$module->getId()) ?>"
       method="post"
-      class="default studip_form"
+      class="<?= LernmodulePlugin::getCSSFormClass() ?>"
       enctype="multipart/form-data">
 
     <fieldset>

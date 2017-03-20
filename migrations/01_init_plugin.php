@@ -24,7 +24,6 @@ class InitPlugin extends Migration {
             VALUES
                 ('Lernmodule-Admin', 'n');
         ");
-        //TODO refresh cache
         DBManager::get()->exec("
             CREATE TABLE `lernmodule_attempts` (
                 `attempt_id` varchar(32) NOT NULL,
@@ -100,6 +99,7 @@ class InitPlugin extends Migration {
             VALUES
                 (MD5('LERNMODUL_DATA_URL'), '', 'LERNMODUL_DATA_URL', '', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Die URL, unter der die Lernmodule stecken. Es kann sinnvoll sein, diese URL unter einer Subdomain zu haben, damit Lernmodule einen anderen Origin haben.', '', '')
         ");
+        StudipCacheFactory::getCache()->expire(RolePersistence::ROLES_CACHE_KEY);
     }
 
     function down() {
@@ -115,5 +115,15 @@ class InitPlugin extends Migration {
         DBManager::get()->exec("
             DROP TABLE IF EXISTS `lernmodule_courses`;
         ");
+        DBManager::get()->exec("
+            DROP TABLE IF EXISTS `lernmodule_games`;
+        ");
+        DBManager::get()->exec("
+            DROP TABLE IF EXISTS `lernmodule_game_attendances`;
+        ");
+        DBManager::get()->exec("
+            DELETE FROM `roles` WHERE `rolename` = 'Lernmodule-Admin';
+        ");
+        StudipCacheFactory::getCache()->expire(RolePersistence::ROLES_CACHE_KEY);
     }
 }

@@ -19,6 +19,13 @@ if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
 
 class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 
+    static public function getCSSFormClass()
+    {
+        return version_compare("3.4", $GLOBALS['SOFTWARE_VERSION'], ">")
+            ? "studip_form"
+            : "default";
+    }
+
     public function __construct()
     {
         parent::__construct();

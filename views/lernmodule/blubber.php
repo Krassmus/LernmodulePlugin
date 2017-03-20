@@ -1,4 +1,6 @@
-<form action="<?= PluginEngine::getLink($plugin, array(), "lernmodule/blubber") ?>" method="post" class="default">
+<form action="<?= PluginEngine::getLink($plugin, array(), "lernmodule/blubber") ?>"
+      method="post"
+      class="<?= LernmodulePlugin::getCSSFormClass() ?>">
     <label>
         <?= _("Wollen Sie folgendes Blubbern?") ?>
         <textarea name="message"><?= htmlReady(Request::get("message")) ?></textarea>
