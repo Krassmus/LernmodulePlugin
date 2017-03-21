@@ -44,8 +44,8 @@ class Lernmodul extends SimpleORMap {
         }
         $success = LernmodulePlugin::extract_zip($path, $this->getPath());
         if ($success) {
-            //Falls nur der Ordner auf oberster Ebene liegt:
             if (count(scandir($this->getPath())) < 4) {
+                //Falls nur der Ordner auf oberster Ebene liegt:
                 foreach (scandir($this->getPath()) as $folder) {
                     if (!in_array($folder, array(".", ".."))) {
                         break;
@@ -60,6 +60,7 @@ class Lernmodul extends SimpleORMap {
                 rmdirr($tmp_folder);
             }
         } else {
+            //falls ein PDF oder anderes Dokument hochgeladen wurde
             rename($path, $this->getPath() . "/" . ($filename ?: "index.html"));
         }
 
