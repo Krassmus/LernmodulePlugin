@@ -2,6 +2,7 @@
 
 require_once __DIR__."/lib/CustomLernmodul.interface.php";
 require_once __DIR__."/lib/Lernmodul.php";
+require_once __DIR__."/lib/VanillalmLernmodul.php";
 require_once __DIR__."/lib/HtmlLernmodul.php";
 require_once __DIR__."/lib/ScormLernmodul.php";
 require_once __DIR__."/lib/H5pLernmodul.php";
