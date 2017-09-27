@@ -7,7 +7,7 @@
             <? $last_mod_number = count($module) ?>
             <? foreach ($module as $key => $mod) : ?>
                 <? $allowed = true;
-                foreach ($mod->getDependencies($_SESSION['SessionSeminar']) as $dependency) {
+                foreach ($mod->getDependencies($course_id) as $dependency) {
                     if (!in_array($dependency['depends_from_module_id'], $already_displayed_mods)) {
                         $allowed = false;
                         break;
@@ -17,8 +17,8 @@
                 if ($allowed) :
 
                     $active = true;
-                    if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
-                        foreach ($mod->getDependencies($_SESSION['SessionSeminar']) as $dependency) {
+                    if (!$GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
+                        foreach ($mod->getDependencies($course_id) as $dependency) {
                             if (!LernmodulAttempt::countBySql("module_id = ? AND user_id = ? AND successful = '1'", array(
                                 $dependency['depends_from_module_id'],
                                 $GLOBALS['user']->id
@@ -30,7 +30,7 @@
                     }
                     ?>
                     <? if ($active) : ?>
-                        <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($_SESSION['SessionSeminar'], $mod->getId())) ?>
+                        <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($course_id, $mod->getId())) ?>
                         <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
                             <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');\"" : "" ?>>
                                 <? if (!$mod->isWritable()) : ?>
@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                         <? else : ?>
-                        <div class="module" style="opacity: 0.5;<?= $mod['image'] ? " background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
+                        <div class="module" style="opacity: 0.5;<?= $mod['image'] ? " background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfÃ¼gbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
                             <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
                                     ? Icon::create("date", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;"))
@@ -92,8 +92,8 @@
             <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "")."/".htmlReady($mod['image'])."');\"" : "" ?>>
                 <div class="shadow">
                     <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                        ? Icon::create("exclaim-circle", "attention")->asImg(40, array('style' => "vertical-align: middle;", 'title' => _("Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie erreicht werden.")))
-                        : Assets::img("icons/red/40/exclaim-circle", array('style' => "vertical-align: middle;", 'title' => _("Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie erreicht werden.")))
+                        ? Icon::create("exclaim-circle", "attention")->asImg(40, array('style' => "vertical-align: middle;", 'title' => _("Dieses Modul hat Kreis-AbhÃ¤ngigkeiten und kann von neuen Teilnehmern nie erreicht werden.")))
+                        : Assets::img("icons/red/40/exclaim-circle", array('style' => "vertical-align: middle;", 'title' => _("Dieses Modul hat Kreis-AbhÃ¤ngigkeiten und kann von neuen Teilnehmern nie erreicht werden.")))
                     ?>
                     <? if ($mod->isWritable()) : ?>
                         <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
@@ -120,9 +120,9 @@
 Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
 
 $actions = new ActionsWidget();
-if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
     $actions->addLink(
-        _("Lernmodul hinzufügen"),
+        _("Lernmodul hinzufÃ¼gen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit"),
         version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
             ? Icon::create("learnmodule+add", "clickable")

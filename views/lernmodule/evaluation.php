@@ -90,7 +90,7 @@
                         new Chartist.Line('#timeline', data, options);
                     });
                 </script>
-                <p><?= _("Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen Durchläufe, orange die nicht erfolgreichen.") ?></p>
+                <p><?= _("Zeit der DurchlÃ¤ufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen DurchlÃ¤ufe, orange die nicht erfolgreichen.") ?></p>
 
             <? if (is_a($module, "CustomLernmodul")) : ?>
                 <? $template = $module->getEvaluationTemplate($_SESSION['SessionSeminar']) ?>

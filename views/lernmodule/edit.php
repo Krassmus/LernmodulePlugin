@@ -8,7 +8,7 @@
 
         <label class="file-upload" id="file_upload">
             <input type="file" name="modulefile" accept=".zip,.h5p,.pdf" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
-            <?= sprintf(_("Lernmodul auswählen (Gezipptes HTML oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
+            <?= sprintf(_("Lernmodul auswÃ¤hlen (Gezipptes HTML oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
 
         <script>
@@ -52,7 +52,7 @@
 
         <? if (count($lernmodule)) : ?>
             <div style="margin-top: 15px; margin-bottom: 15px;">
-                <?= _("Abhängig von") ?>
+                <?= _("AbhÃ¤ngig von") ?>
                 <ul class="clean" style="font-size: 0.8em;">
                     <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies($_SESSION['SessionSeminar'])) ?>
                     <? foreach ($lernmodule as $lernmodul) : ?>
@@ -70,7 +70,7 @@
         <? if (class_exists("LernmarktplatzMaterial")) : ?>
             <label id="lernmarktplatz_publish" style="<?= $module['url'] ? 'display: none; ' : '' ?>">
                 <input type="checkbox" name="module[material_id]" value="<?= htmlReady($module['material_id'] ?: 1) ?>">
-                <?= _("Auf Lernmarktplatz veröffentlichen (unter CC-BY-SA für alle zum freien Download)") ?>
+                <?= _("Auf Lernmarktplatz verÃ¶ffentlichen (unter CC-BY-SA fÃ¼r alle zum freien Download)") ?>
             </label>
         <? endif ?>
     </fieldset>
@@ -97,7 +97,7 @@
                 <? $images = $module->scanForImages() ?>
                 <? if (count($images)) : ?>
                     <label>
-                        <?= _("Bild auswählen") ?>
+                        <?= _("Bild auswÃ¤hlen") ?>
                         <select id="select_image" name="module[image]" onChange="jQuery('#image_preview').css('background-image', 'url(' + jQuery('#image_preview').data('url_base') + '/' + this.value + ')'); ">
                             <option value=""><?= _("Keines") ?></option>
                             <? foreach ($images as $image) : ?>
@@ -131,7 +131,7 @@
         </label>
 
         <label>
-            <?= _("Frühester Startzeitpunkt") ?>
+            <?= _("FrÃ¼hester Startzeitpunkt") ?>
             <input type="text" id="modulecourse_starttime" name="modulecourse[starttime]" value="<?= $modulecourse['starttime'] ? date("d.m.Y H:i", $modulecourse['starttime']) : "jederzeit" ?>"  data-datetime-picker>
         </label>
 
@@ -146,9 +146,9 @@
 
     <div data-dialog-button>
         <?= \Studip\Button::create(_("Speichern")) ?>
-        <?= \Studip\Button::create(_("Löschen"), "delete", array(
+        <?= \Studip\Button::create(_("LÃ¶schen"), "delete", array(
             'formaction' => PluginEngine::getLink($plugin, array(), "lernmodule/delete/".$module->getId()),
-            'onClick' => "return window.confirm('"._("Wirklich löschen?")."');"
+            'onClick' => "return window.confirm('"._("Wirklich lÃ¶schen?")."');"
         )) ?>
         <? if (!Request::isAjax()) : ?>
             <?= \Studip\LinkButton::create(_("Abbrechen"), PluginEngine::getURL($plugin, array(), "lernmodule/overview")) ?>

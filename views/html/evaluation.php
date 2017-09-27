@@ -3,7 +3,7 @@
         <thead>
             <th><?= _("Auswertung") ?></th>
             <th><?= _("Minimalwert") ?></th>
-            <th><?= _("Höchstwert") ?></th>
+            <th><?= _("HÃ¶chstwert") ?></th>
         </thead>
         <tbody>
         <? $i = 1 ?>

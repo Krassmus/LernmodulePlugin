@@ -1,4 +1,4 @@
 <label>
-    <?= _("Studierende müssen folgendes Lernmodul absolviert haben:") ?>
+    <?= _("Studierende mÃ¼ssen folgendes Lernmodul absolviert haben:") ?>
     <?= QuickSearch::get("seminar_id-module_id", $search)->render() ?>
 </label>

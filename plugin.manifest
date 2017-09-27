@@ -1,13 +1,13 @@
 pluginname=LernmodulePlugin
 pluginclassname=LernmodulePlugin
-version=1.0
+version=1.1
 origin=RasmusFuhse
-studipMinVersion=3.2
+studipMinVersion=3.99
 summary=HTML-Lernmodule
-descriptionlong=Ein Ort, um HTML-Lernmodule hochzuladen. Es können Abhängigkeiten zwischen Lernmodulen definiert werden, sodass Lernmodul B erst ausgeführt werden kann, wenn Lernmodul A absolviert worden ist.
+descriptionlong=Ein Ort, um HTML-Lernmodule hochzuladen. Es kÃ¶nnen AbhÃ¤ngigkeiten zwischen Lernmodulen definiert werden, sodass Lernmodul B erst ausgefÃ¼hrt werden kann, wenn Lernmodul A absolviert worden ist.
 homepage=https://github.com/Krassmus/LernmodulePlugin
 icon=../../../assets/images/icons/black/add/learnmodule.svg
 screenshots = assets/screenshots
-screenshots.screenshot1.png = In einer schicken Übersicht sieht man die Lernmodule, die einem bereit stehen (hier die Studierendenansicht). Die Module mit einer kleinen Krone sind die Lernmodule, die man schon durchgearbeitet hat. Die ausgegrauten Module mit dem dicken Fragezeichen müssen erst noch freigeschaltet werden.
+screenshots.screenshot1.png = In einer schicken Ãœbersicht sieht man die Lernmodule, die einem bereit stehen (hier die Studierendenansicht). Die Module mit einer kleinen Krone sind die Lernmodule, die man schon durchgearbeitet hat. Die ausgegrauten Module mit dem dicken Fragezeichen mÃ¼ssen erst noch freigeschaltet werden.
 screenshots.screenshot2.png = So sieht es aus, wenn man das konkrete Lernmodul durcharbeitet. Es wird direkt in Stud.IP angezeigt. Man kann mit dem Button "Vollbild", das Modul auf den ganzen Bildschirm ausweiten.
 category = Inhalte und Aufgabenstellungen

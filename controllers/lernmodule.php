@@ -5,20 +5,23 @@ class LernmoduleController extends PluginController
 
     public function before_filter(&$action, &$args) {
         parent::before_filter($action, $args);
-        Navigation::getItem("/course/lernmodule")->setImage(
-            version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                ? Icon::create("learnmodule", "info")
-                : Assets::image_path("icons/black/16/learnmodule")
-        );
-        PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]." - ".$this->plugin->getDisplayTitle());
+        if (Navigation::hasItem("/course/lernmodule")) {
+            Navigation::getItem("/course/lernmodule")->setImage(
+                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+                    ? Icon::create("learnmodule", "info")
+                    : Assets::image_path("icons/black/16/learnmodule")
+            );
+        }
+        PageLayout::setTitle((class_exists("Context") ? Context::getHeaderLine() : $GLOBALS['SessSemName']["header_line"])." - ".$this->plugin->getDisplayTitle());
         $this->utf8decode_xhr = false;
+        $this->course_id = class_exists("Context") ? Context::getId() : $_SESSION['SessionSeminar'];
     }
 
     public function overview_action()
     {
         Navigation::activateItem("/course/lernmodule/overview");
         LernmodulAttempt::cleanUpDatabase();
-        $this->module = Lernmodul::findByCourse($_SESSION['SessionSeminar']);
+        $this->module = Lernmodul::findByCourse($this->course_id);
 
         if (Request::option("quit")) {
             $attendance = new LernmodulGameAttendance(Request::option("quit"));
@@ -37,7 +40,7 @@ class LernmoduleController extends PluginController
                 AND lernmodule_game_attendances.user_id = :user_id
         ");
         $statement->execute(array(
-            'course_id' => $_SESSION['SessionSeminar'],
+            'course_id' => $this->course_id,
             'user_id' => $GLOBALS['user']->id
         ));
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $data) {
@@ -55,7 +58,7 @@ class LernmoduleController extends PluginController
                 )
             );
         }
-        foreach (LernmodulGame::findOpenGames($_SESSION['SessionSeminar']) as $opengame) {
+        foreach (LernmodulGame::findOpenGames($this->course_id) as $opengame) {
             if (!$opengame->participates()) {
                 PageLayout::postMessage(
                     MessageBox::info(
@@ -83,7 +86,7 @@ class LernmoduleController extends PluginController
             PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
         }
         
-        $course_connection = $this->mod->courseConnection($_SESSION['SessionSeminar']);
+        $course_connection = $this->mod->courseConnection($this->course_id);
         $this->attempt = new LernmodulAttempt();
         $this->attempt->setData(array(
             'user_id' => $course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
@@ -117,11 +120,11 @@ class LernmoduleController extends PluginController
                     AND module_id != ? 
                     AND lernmodule_courses.anonymous_attempts = '0' 
                 ORDER BY name ASC" , array(
-            $_SESSION['SessionSeminar'],
+            $this->course_id,
             $module_id
         ));
         if ($module_id) {
-            $this->modulecourse = LernmodulCourse::find(array($module_id, $_SESSION['SessionSeminar']));
+            $this->modulecourse = LernmodulCourse::find(array($module_id, $this->course_id));
         }
         PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
         if (Request::isPost()) {
@@ -136,6 +139,7 @@ class LernmoduleController extends PluginController
             }
             $this->module->setData($data);
             if ($this->module['url'] && !$this->module['image']) {
+                $this->module['type'] = "html";
                 $og = OpenGraphURL::fromURL($this->module['url']);
                 $og->fetch();
                 if ($og['image']) {
@@ -154,7 +158,7 @@ class LernmoduleController extends PluginController
             if (!$this->modulecourse) {
                 $this->modulecourse = new LernmodulCourse();
                 $this->modulecourse['module_id'] = $this->module->getId();
-                $this->modulecourse['seminar_id'] = $_SESSION['SessionSeminar'];
+                $this->modulecourse['seminar_id'] = $this->course_id;
             }
             $modulecoursedata = Request::getArray("modulecourse");
             $modulecoursedata['starttime'] = strtotime($modulecoursedata['starttime']) ?: null;
@@ -163,7 +167,7 @@ class LernmoduleController extends PluginController
 
             $success = true;
 
-            $this->module->setDependencies(Request::getArray("dependencies"), $_SESSION['SessionSeminar']);
+            $this->module->setDependencies(Request::getArray("dependencies"), $this->course_id);
             if ($_FILES['modulefile']['size'] > 0) {
                 $success = $this->module->copyModule($_FILES['modulefile']['tmp_name'], $_FILES['modulefile']['name']);
                 if ($this->module['material_id'] && !$this->module['url']) {
@@ -202,7 +206,7 @@ class LernmoduleController extends PluginController
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toRawArray());
         }
-        $this->attempts = LernmodulAttempt::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->module->getId());
+        $this->attempts = LernmodulAttempt::findbyCourseAndModule($this->course_id, $this->module->getId());
 
         $this->data = array();
         $this->resultrows = array();
