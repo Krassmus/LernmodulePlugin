@@ -33,7 +33,7 @@
                     STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/html/set_configs",
                     {
                         "module_id": '<?= htmlReady($module->getId()) ?>',
-                        "cid": '<?= htmlReady($_SESSION['SessionSeminar']) ?>',
+                        "cid": '<?= htmlReady(Context::get()->id) ?>',
                         "configs": STUDIP.Lernmodule.default_configs
                     }
                 )
@@ -52,7 +52,7 @@
             if (page.indexOf(end_file) !== -1) {
                 end_file_found = true;
                 jQuery.post(
-                    STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                    STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
                     {"success" : 1}
                 );
             }
@@ -62,7 +62,7 @@
     window.setTimeout(function () {
         if (!STUDIP.Lernmodule.received_message_api_messages) {
             jQuery.post(
-                STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
                 {"message": {"success": 1}}
             );
         }
@@ -80,7 +80,7 @@
             delete message.secret;
             STUDIP.Lernmodule.lastState = message;
             jQuery.post(
-                STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
                 { "message": message }
             );
             if (typeof message.request !== "undefined") {
@@ -89,8 +89,8 @@
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
                         "id": '<?= $GLOBALS['user']->id ?>',
-                        "name": '<?= htmlReady(studip_utf8encode($GLOBALS['user']->getFullName())) ?>',
-                        "email": '<?= htmlReady(studip_utf8encode(get_visible_email($GLOBALS['user']->id))) ?>',
+                        "name": '<?= htmlReady($GLOBALS['user']->getFullName()) ?>',
+                        "email": '<?= htmlReady(get_visible_email($GLOBALS['user']->id)) ?>',
                         "avatar": '<?= htmlReady(Visibility::verify('picture', $GLOBALS['user']->id, "nobody")
                             ? Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::NORMAL)
                             : null) ?>',
@@ -120,14 +120,14 @@
                 if (message.request === "/invite") {
                     //Ajax request:
                     jQuery.ajax({
-                        "url": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/gameinvitation",
+                        "url": STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/gameinvitation"),
                         "data": {
                             "attempt_id": '<?= htmlReady($attempt->getId()) ?>',
                             "module_id": '<?= htmlReady($module->getId()) ?>',
                             "module_game_id": message.parameter.vanillalm_game_id,
                             "parameter": message.parameter,
                             "max": message.max,
-                            "seminar_id": '<?= htmlReady($_SESSION['SessionSeminar']) ?>'
+                            "seminar_id": '<?= htmlReady(Context::get()->id) ?>'
                         },
                         "type": "post"
                     });
@@ -136,7 +136,7 @@
                         "request_id": message.request_id
                     }), "*");
                 }
-                <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
+                <? if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) : ?>
                 if (message.request === "/configs") {
                     STUDIP.Lernmodule.default_configs = message.default_configs;
                     if (!jQuery.isEmptyObject(STUDIP.Lernmodule.default_configs)) {
@@ -147,7 +147,7 @@
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
-                        "configs": <?= json_encode(studip_utf8encode(($coursemodule['customdata'] && $coursemodule['customdata']['configs']) ? $coursemodule['customdata']['configs']->getArrayCopy() : array())) ?>
+                        "configs": <?= json_encode(($coursemodule['customdata'] && $coursemodule['customdata']['configs']) ? $coursemodule['customdata']['configs']->getArrayCopy() : array()) ?>
                     }), "*");
                 }
                 <? endif ?>
@@ -157,7 +157,7 @@
                     //show dialog that asks if user wants to share the message
                     if (STUDIP.Lernmodule.dont_blubber) {
                         STUDIP.Dialog.fromURL(
-                            STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/blubber",
+                            STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/blubber"),
                             {
                                 "method": "POST",
                                 "data": { "message": message.message }

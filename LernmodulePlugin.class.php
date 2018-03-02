@@ -52,9 +52,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     {
         $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $tab->setImage(
-            version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                ? Icon::create("learnmodule", "info_alt")
-                : Assets::image_path("icons/white/16/learnmodule")
+            Icon::create("learnmodule", "info_alt")
         );
         $tab->addSubNavigation("overview", new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
         $tab->addSubNavigation("participants", new Navigation(_("Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
@@ -74,15 +72,11 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         }
         if ($new > 0) {
             $tab->setImage(
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
-                    : Assets::image_path("icons/red/20/new/learnmodule", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+                Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
             );
         } else {
             $tab->setImage(
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
-                    : Assets::image_path("icons/grey/20/learnmodule", array('title' => _("Lernmodule")))
+                Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
             );
         }
         return $tab;
@@ -132,33 +126,10 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     }
 
     static public function extract_zip($file_name, $dir_name = '', $testonly = false) {
-        $ret = false;
-        if ($GLOBALS['ZIP_USE_INTERNAL']) {
-            if (!class_exists("PclZip")) {
-                if ($testonly) {
-                    return Studip\ZipArchive::test($file_name);
-                }
-
-                return Studip\ZipArchive::extractToPath($file_name, $dir_name);
-            } else {
-                $archive = new PclZip($file_name);
-                if ($testonly) {
-                    $prop = $archive->properties();
-                    $ret = (!is_array($prop));
-                } else {
-                    $ok = $archive->extract(PCLZIP_OPT_PATH, $dir_name, PCLZIP_CB_PRE_EXTRACT, 'pclzip_convert_filename_cb', PCLZIP_OPT_STOP_ON_ERROR);
-                    $ret = (is_array($ok));
-                }
-            }
-        } else if (@file_exists($GLOBALS['UNZIP_PATH']) || ini_get('safe_mode')){
-            if ($testonly){
-                exec($GLOBALS['UNZIP_PATH'] . " -t -qq $file_name ", $output, $ret);
-            } else {
-                exec($GLOBALS['UNZIP_PATH'] . " -qq $file_name " . ($dir_name ? "-d $dir_name" : ""), $output, $ret);
-            }
-            $ret = $ret === 0;
+        if ($testonly) {
+            return \Studip\ZipArchive::test($file_name);
         }
-        return $ret;
+        return \Studip\ZipArchive::extractToPath($file_name, $dir_name);
     }
 
 }

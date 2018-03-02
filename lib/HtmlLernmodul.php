@@ -54,7 +54,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         $myorigin = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
         $myorigin .= '://'.$_SERVER['SERVER_NAME'];
 
-        if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+        if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             $actions = Sidebar::Get()->getWidget("actions");
             $actions->addLink(
                 _("Konfigurieren"),
@@ -74,14 +74,14 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         $template = $templatefactory->open("html/view.php");
         $template->set_attribute("module", $this);
         $template->set_attribute("attempt", $attempt);
-        $template->set_attribute("coursemodule", LernmodulCourse::findOneBySQL("module_id = ? AND seminar_id = ?", array($this->getId(), $_SESSION['SessionSeminar'])));
+        $template->set_attribute("coursemodule", LernmodulCourse::findOneBySQL("module_id = ? AND seminar_id = ?", array($this->getId(), Context::get()->id)));
         $template->set_attribute("game_attendance", $game_attendance);
         $template->set_attribute("myorigin", $myorigin);
         return $template;
     }
 
     public function getEvaluationTemplate($course_id) {
-        $attempts = LernmodulAttempt::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->getId());
+        $attempts = LernmodulAttempt::findbyCourseAndModule(Context::get()->id, $this->getId());
         $pointclasses = array();
         foreach ($attempts as $attempt) {
             if ($attempt['customdata']) {

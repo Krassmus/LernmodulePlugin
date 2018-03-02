@@ -14,22 +14,17 @@
 
 <?
 
-if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
+if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions = new ActionsWidget();
     $actions->addLink(
         _("Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("edit", "clickable")
-            : Assets::image_path("icons/black/16/blue/edit")
-
+        Icon::create("edit", "clickable")
     );
     $actions->addLink(
         _("Lernmodul herunterladen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/download/".$mod->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("download", "clickable")
-            : Assets::image_path("icons/black/16/blue/download")
+        Icon::create("download", "clickable")
     );
     Sidebar::Get()->addWidget($actions);
 }
@@ -49,3 +44,16 @@ $views->addLink(
 );
 
 Sidebar::Get()->addWidget($views);
+
+if ($course_connection['anonymous_attempts']) {
+    $widget = new SidebarWidget();
+    $widget->setTitle(_("Datenschutz"));
+    $widget->addElement(
+        new WidgetElement(
+            Icon::create("visibility-visible", "info")->asImg(16, array('class' => "text-bottom"))
+            ." "
+            ._("Sie nehmen anonym teil.")
+        )
+    );
+    Sidebar::Get()->addWidget($widget);
+}

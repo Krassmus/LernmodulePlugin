@@ -12,7 +12,6 @@
             'variance' => 0,
             'standarddeviation' => 0
         );
-        $attempts = LernmodulAttempt::findbyCourseAndModule($_SESSION['SessionSeminar'], $module->getId());
         foreach ($attempts as $attempt) {
             if ($attempt['successful']) {
                 $successful['count']++;
@@ -93,13 +92,14 @@
                 <p><?= _("Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen Durchläufe, orange die nicht erfolgreichen.") ?></p>
 
             <? if (is_a($module, "CustomLernmodul")) : ?>
-                <? $template = $module->getEvaluationTemplate($_SESSION['SessionSeminar']) ?>
+                <? $template = $module->getEvaluationTemplate(Context::get()->id) ?>
                 <? if ($template) : ?>
                     <?= $template->render() ?>
                 <? endif ?>
             <? endif ?>
         </fieldset>
     <? endif ?>
+
 
     <? if ($data && count($data)) : ?>
         <table class="default" id="resulttable">
@@ -130,7 +130,7 @@
                         }
                         ?></td>
                     <? foreach ($resultrows as $rowname) : ?>
-                        <td><?= htmlReady($line[$rowname]) ?></td>
+                        <td><?= formatReady($line[$rowname]) ?></td>
                     <? endforeach ?>
                 </tr>
             <? endforeach ?>
@@ -163,17 +163,13 @@ $actions = new ActionsWidget();
 $actions->addLink(
     _("Lernmodul herunterladen"),
     PluginEngine::getURL($plugin, array(), "lernmodule/download/".$module->getId()),
-    version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-        ? Icon::create("download", "clickable")
-        : Assets::image_path("icons/black/16/blue/download")
+    Icon::create("download", "clickable")
 );
-if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
+if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions->addLink(
         _("Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$module->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("edit", "clickable")
-            : Assets::image_path("icons/black/16/blue/edit")
+        Icon::create("edit", "clickable")
     );
 }
 

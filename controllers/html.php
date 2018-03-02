@@ -17,10 +17,10 @@ class HtmlController extends PluginController
     }
 
     public function set_configs_action() {
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
-        $this->lernmodulcourse = new LernmodulCourse(array(Request::option("module_id"), $_SESSION['SessionSeminar']));
+        $this->lernmodulcourse = new LernmodulCourse(array(Request::option("module_id"), Context::get()->id));
         if ($this->lernmodulcourse->isNew()) {
             throw new Exception("Kein gültiges Modul.");
         }

@@ -13,42 +13,50 @@
         box-shadow: rgba(0,0,0,0.3) 0px 0px 7px;
         background-color: @content-color;
         display: flex;
-        justify-content: flex-end;
-        align-items: flex-start;
         flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+        align-content: stretch;
         font-size: 1.2em;
         background-size: 100% auto;
         background-repeat: no-repeat;
         background-position: center center;
-        .crown {
-            background: white;
-            border-radius: 20px;
-            display: inline-block;
-            height: 30px;
-            width: 30px;
-            text-align: center;
-            line-height: 27px;
-            margin-bottom: 20px;
-            margin-left: 8px;
+        > a {
+            min-height: 55px;
+            width: 100%;
+            .crown {
+                background: white;
+                border-radius: 20px;
+                display: inline-block;
+                height: 30px;
+                width: 30px;
+                text-align: center;
+                line-height: 27px;
+                margin-bottom: 20px;
+                margin-left: 8px;
+            }
         }
         .shadow {
             padding-left: 10px;
             padding-right: 10px;
             width: calc(100% - 20px);
             text-align: right;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
             max-height: 45px;
             min-height: 45px;
             overflow: hidden;
             display: flex;
             justify-content: flex-end;
+            align-content: stretch;
             align-items: center;
             a:link, a:hover, a:visited {
                 color: white;
                 text-align: right;
-                //display: block;
                 text-shadow: rgba(0,0,0,0.3) 0px 0px 8px;
                 margin-left: 5px;
+            }
+            a:first-child {
+                width: 100%;
             }
         }
     }

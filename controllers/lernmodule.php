@@ -7,14 +7,12 @@ class LernmoduleController extends PluginController
         parent::before_filter($action, $args);
         if (Navigation::hasItem("/course/lernmodule")) {
             Navigation::getItem("/course/lernmodule")->setImage(
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule", "info")
-                    : Assets::image_path("icons/black/16/learnmodule")
+                Icon::create("learnmodule", "info")
             );
         }
-        PageLayout::setTitle((class_exists("Context") ? Context::getHeaderLine() : $GLOBALS['SessSemName']["header_line"])." - ".$this->plugin->getDisplayTitle());
+        PageLayout::setTitle(Context::getHeaderLine()." - ".$this->plugin->getDisplayTitle());
         $this->utf8decode_xhr = false;
-        $this->course_id = class_exists("Context") ? Context::getId() : $_SESSION['SessionSeminar'];
+        $this->course_id = Context::getId();
     }
 
     public function overview_action()
@@ -63,7 +61,7 @@ class LernmoduleController extends PluginController
                 PageLayout::postMessage(
                     MessageBox::info(
                         sprintf(
-                            _("%s sucht noch weitere Teilnehmer für '%s'."),
+                            _("%s sucht noch weitere Teilnehmer fÃ¼r '%s'."),
                             get_fullname($opengame['user_id']),
                             htmlReady($opengame->module['name'])
                         ),
@@ -86,10 +84,10 @@ class LernmoduleController extends PluginController
             PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
         }
         
-        $course_connection = $this->mod->courseConnection($this->course_id);
+        $this->course_connection = $this->mod->courseConnection($this->course_id);
         $this->attempt = new LernmodulAttempt();
         $this->attempt->setData(array(
-            'user_id' => $course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
+            'user_id' => $this->course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
             'module_id' => $module_id
         ));
         $this->attempt->store();
@@ -130,7 +128,7 @@ class LernmoduleController extends PluginController
         if (Request::isPost()) {
             $data = Request::getArray("module");
             if (!$data['name']) { //die Variable name passte nicht mehr in den Request und fehlt daher
-                PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu groß.")));
+                PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu groÃŸ.")));
                 $this->redirect("lernmodule/overview");
                 return;
             }
@@ -206,15 +204,22 @@ class LernmoduleController extends PluginController
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toRawArray());
         }
-        $this->attempts = LernmodulAttempt::findbyCourseAndModule($this->course_id, $this->module->getId());
+        $course_connection = $this->module->courseConnection($this->course_id);
+        $this->anonymous_attempts = $course_connection['anonymous_attempts'];
+        $this->attempts = LernmodulAttempt::findbyCourseAndModule(
+            $this->course_id,
+            $this->module->getId(),
+            $course_connection['anonymous_attempts'] ? null : array("autor", "tutor", "dozent")
+        );
 
         $this->data = array();
         $this->resultrows = array();
         foreach ($this->attempts as $attempt) {
             if ($attempt['successful']) {
                 $line = array(
-                    'studip_user_id' => $attempt['user_id'],
-                    'studip_duration' => $attempt['chdate'] - $attempt['mkdate']
+                    'studip_user_id' => $this->anonymous_attempts ? null : $attempt['user_id'],
+                    'studip_duration' => $attempt['chdate'] - $attempt['mkdate'],
+                    'attributes' => $attempt['customdata']['attributes']
                 );
                 foreach ((array) $this->module->evaluateAttempt($attempt) as $index => $value) {
                     if (!isset($line[$index])) {
@@ -235,7 +240,7 @@ class LernmoduleController extends PluginController
         $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {
             $this->module->delete();
-            PageLayout::postMessage(MessageBox::success(_("Lernmodul gelöscht.")));
+            PageLayout::postMessage(MessageBox::success(_("Lernmodul gelÃ¶scht.")));
         }
         $this->redirect("lernmodule/overview");
     }
@@ -244,12 +249,12 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         $this->attempt = new LernmodulAttempt($attempt_id);
-        if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
+        if ($this->attempt['user_id'] && ($this->attempt['user_id'] !== $GLOBALS['user']->id)) {
             throw new AccessDeniedException();
         }
         if (Request::isPost()) {
             $this->attempt['chdate'] = time();
-            $message = studip_utf8decode(Request::getArray("message"));
+            $message = Request::getArray("message");
             if ($message['success']) {
                 $this->attempt['successful'] = 1;
             }
@@ -264,7 +269,10 @@ class LernmoduleController extends PluginController
     {
         $this->module = new Lernmodul($module_id);
         $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid()).".zip";
-        create_zip_from_directory($this->module->getPath(), $filename);
+        FileArchiveManager::createArchiveFromPhysicalFolder(
+            $this->module->getPath(),
+            $filename
+        );
 
         header('Content-Type: application/zip');
         header("Content-Disposition: attachment; filename=\"".$this->module['name'].".zip\"");
