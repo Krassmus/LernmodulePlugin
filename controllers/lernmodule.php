@@ -83,10 +83,10 @@ class LernmoduleController extends PluginController
             PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
         }
         
-        $course_connection = $this->mod->courseConnection($_SESSION['SessionSeminar']);
+        $this->course_connection = $this->mod->courseConnection($_SESSION['SessionSeminar']);
         $this->attempt = new LernmodulAttempt();
         $this->attempt->setData(array(
-            'user_id' => $course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
+            'user_id' => $this->course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
             'module_id' => $module_id
         ));
         $this->attempt->store();
@@ -203,6 +203,10 @@ class LernmoduleController extends PluginController
             $this->module = $class::buildExisting($this->module->toRawArray());
         }
         $this->attempts = LernmodulAttempt::findbyCourseAndModule($_SESSION['SessionSeminar'], $this->module->getId());
+        $this->course_connection = $this->module->courseConnection($_SESSION['SessionSeminar']);
+        if (!$this->course_connection['evaluation_for_students'] && !$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+            throw new AccessDeniedException();
+        }
 
         $this->data = array();
         $this->resultrows = array();

@@ -41,11 +41,13 @@ $views->addLink(
     null,
     array()
 )->setActive(true);
-$views->addLink(
-    _("Auswertung"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$mod->getId()),
-    null,
-    array()
-);
+if ($course_connection['evaluation_for_students'] || $GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+    $views->addLink(
+        _("Auswertung"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId()),
+        null,
+        array()
+    );
+}
 
 Sidebar::Get()->addWidget($views);
