@@ -14,7 +14,7 @@
 
 <?
 
-if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
+if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions = new ActionsWidget();
     $actions->addLink(
         _("Bearbeiten"),

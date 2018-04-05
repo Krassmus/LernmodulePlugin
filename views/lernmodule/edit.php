@@ -54,7 +54,7 @@
             <div style="margin-top: 15px; margin-bottom: 15px;">
                 <?= _("Abhängig von") ?>
                 <ul class="clean" style="font-size: 0.8em;">
-                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies($_SESSION['SessionSeminar'])) ?>
+                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies(Context::get()->id)) ?>
                     <? foreach ($lernmodule as $lernmodul) : ?>
                         <li>
                             <label>

@@ -16,18 +16,18 @@ class ParticipantsController extends PluginController
 
     public function index_action()
     {
-        $this->module = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = ? ORDER BY name ASC", array($_SESSION['SessionSeminar']));
+        $this->module = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = ? ORDER BY name ASC", array(Context::get()->id));
         $this->students = Course::findCurrent()->members->filter(function ($student) { return $student['status'] === "autor"; });
     }
 
     public function evaluation_action($username)
     {
         if (!Config::get()->LERNMODUL_PARTICIPANT_EVALUATION
-            || !$GLOBALS['perm']->have_studip_perm(Config::get()->LERNMODUL_PARTICIPANT_EVALUATION, $_SESSION['SessionSeminar'])) {
+            || !$GLOBALS['perm']->have_studip_perm(Config::get()->LERNMODUL_PARTICIPANT_EVALUATION, Context::get()->id)) {
             throw new AccessDeniedException();
         }
         $this->user_id = get_userid($username);
-        $this->attempts = LernmodulAttempt::findByUserAndCourse($this->user_id, $_SESSION['SessionSeminar']);
+        $this->attempts = LernmodulAttempt::findByUserAndCourse($this->user_id, Context::get()->id);
     }
 
 

@@ -33,7 +33,7 @@
                     STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/html/set_configs",
                     {
                         "module_id": '<?= htmlReady($module->getId()) ?>',
-                        "cid": '<?= htmlReady($_SESSION['SessionSeminar']) ?>',
+                        "cid": '<?= htmlReady(Context::get()->id) ?>',
                         "configs": STUDIP.Lernmodule.default_configs
                     }
                 )
@@ -127,7 +127,7 @@
                             "module_game_id": message.parameter.vanillalm_game_id,
                             "parameter": message.parameter,
                             "max": message.max,
-                            "seminar_id": '<?= htmlReady($_SESSION['SessionSeminar']) ?>'
+                            "seminar_id": '<?= htmlReady(Context::get()->id) ?>'
                         },
                         "type": "post"
                     });
@@ -136,7 +136,7 @@
                         "request_id": message.request_id
                     }), "*");
                 }
-                <? if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) : ?>
+                <? if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) : ?>
                 if (message.request === "/configs") {
                     STUDIP.Lernmodule.default_configs = message.default_configs;
                     if (!jQuery.isEmptyObject(STUDIP.Lernmodule.default_configs)) {

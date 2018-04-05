@@ -14,7 +14,7 @@ class LernmoduleController extends PluginController
         }
         PageLayout::setTitle((class_exists("Context") ? Context::getHeaderLine() : $GLOBALS['SessSemName']["header_line"])." - ".$this->plugin->getDisplayTitle());
         $this->utf8decode_xhr = false;
-        $this->course_id = class_exists("Context") ? Context::getId() : $_SESSION['SessionSeminar'];
+        $this->course_id = Context::get()->id;
     }
 
     public function overview_action()
