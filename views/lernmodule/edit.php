@@ -131,7 +131,17 @@
         </label>
 
         <label>
+<<<<<<< HEAD
             <?= _("FrÃ¼hester Startzeitpunkt") ?>
+=======
+            <input type="hidden" name="modulecourse[evaluation_for_students]" value="0">
+            <input type="checkbox" name="modulecourse[evaluation_for_students]" value="1"<?= $modulecourse['evaluation_for_students'] ? " checked" : "" ?>>
+            <?= _("Nutzer dürfen die Auswertung sehen") ?>
+        </label>
+
+        <label>
+            <?= _("Frühester Startzeitpunkt") ?>
+>>>>>>> 756a44f... configure if students are allowed to see the evaluation
             <input type="text" id="modulecourse_starttime" name="modulecourse[starttime]" value="<?= $modulecourse['starttime'] ? date("d.m.Y H:i", $modulecourse['starttime']) : "jederzeit" ?>"  data-datetime-picker>
         </label>
 
@@ -162,7 +172,7 @@
 $actions = new ActionsWidget();
 $actions->addLink(
     _("Lernmodul herunterladen"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/download/".$module->getId()),
+    PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
     version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
         ? Icon::create("download", "clickable")
         : Assets::image_path("icons/black/16/blue/download")

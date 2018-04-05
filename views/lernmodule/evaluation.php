@@ -160,13 +160,15 @@
 <?
 
 $actions = new ActionsWidget();
-$actions->addLink(
-    _("Lernmodul herunterladen"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/download/".$module->getId()),
-    version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-        ? Icon::create("download", "clickable")
-        : Assets::image_path("icons/black/16/blue/download")
-);
+if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
+    $actions->addLink(
+        _("Lernmodul herunterladen"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
+        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
+            ? Icon::create("download", "clickable")
+            : Assets::image_path("icons/black/16/blue/download")
+    );
+}
 if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
     $actions->addLink(
         _("Bearbeiten"),
@@ -188,9 +190,10 @@ $views->addLink(
 );
 $views->addLink(
     _("Auswertung"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$module->getId()),
+    PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $module->getId()),
     null,
     array()
 )->setActive(true);
+
 
 Sidebar::Get()->addWidget($views);
