@@ -63,7 +63,7 @@ class LernmoduleController extends PluginController
                 PageLayout::postMessage(
                     MessageBox::info(
                         sprintf(
-                            _("%s sucht noch weitere Teilnehmer für '%s'."),
+                            _("%s sucht noch weitere Teilnehmer fÃ¼r '%s'."),
                             get_fullname($opengame['user_id']),
                             htmlReady($opengame->module['name'])
                         ),
@@ -129,8 +129,9 @@ class LernmoduleController extends PluginController
         PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
         if (Request::isPost()) {
             $data = Request::getArray("module");
+            
             if (!$data['name']) { //die Variable name passte nicht mehr in den Request und fehlt daher
-                PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu groß.")));
+                PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu groÃŸ.")));
                 $this->redirect("lernmodule/overview");
                 return;
             }
@@ -168,8 +169,10 @@ class LernmoduleController extends PluginController
             $success = true;
 
             $this->module->setDependencies(Request::getArray("dependencies"), $this->course_id);
+            
             if ($_FILES['modulefile']['size'] > 0) {
                 $success = $this->module->copyModule($_FILES['modulefile']['tmp_name'], $_FILES['modulefile']['name']);
+                
                 if ($this->module['material_id'] && !$this->module['url']) {
                     $material = new LernmarktplatzMaterial($this->module['material_id'] != 1 ? $this->module['material_id'] : null);
 
@@ -239,7 +242,7 @@ class LernmoduleController extends PluginController
         $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {
             $this->module->delete();
-            PageLayout::postMessage(MessageBox::success(_("Lernmodul gelöscht.")));
+            PageLayout::postMessage(MessageBox::success(_("Lernmodul gelï¿½scht.")));
         }
         $this->redirect("lernmodule/overview");
     }
@@ -268,7 +271,8 @@ class LernmoduleController extends PluginController
     {
         $this->module = new Lernmodul($module_id);
         $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid()).".zip";
-        create_zip_from_directory($this->module->getPath(), $filename);
+        
+        FileArchiveManager::createArchiveFromPhysicalFolder($this->module->getPath(), $filename);
 
         header('Content-Type: application/zip');
         header("Content-Disposition: attachment; filename=\"".$this->module['name'].".zip\"");

@@ -131,33 +131,9 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     }
 
     static public function extract_zip($file_name, $dir_name = '', $testonly = false) {
-        $ret = false;
-        if ($GLOBALS['ZIP_USE_INTERNAL']) {
-            if (!class_exists("PclZip")) {
-                if ($testonly) {
-                    return Studip\ZipArchive::test($file_name);
-                }
-
-                return Studip\ZipArchive::extractToPath($file_name, $dir_name);
-            } else {
-                $archive = new PclZip($file_name);
-                if ($testonly) {
-                    $prop = $archive->properties();
-                    $ret = (!is_array($prop));
-                } else {
-                    $ok = $archive->extract(PCLZIP_OPT_PATH, $dir_name, PCLZIP_CB_PRE_EXTRACT, 'pclzip_convert_filename_cb', PCLZIP_OPT_STOP_ON_ERROR);
-                    $ret = (is_array($ok));
-                }
-            }
-        } else if (@file_exists($GLOBALS['UNZIP_PATH']) || ini_get('safe_mode')){
-            if ($testonly){
-                exec($GLOBALS['UNZIP_PATH'] . " -t -qq $file_name ", $output, $ret);
-            } else {
-                exec($GLOBALS['UNZIP_PATH'] . " -qq $file_name " . ($dir_name ? "-d $dir_name" : ""), $output, $ret);
-            }
-            $ret = $ret === 0;
-        }
-        return $ret;
+        $archive = new Studip\ZipArchive();
+        $archive->open($file_name);
+        return $archive->extractTo($dir_name);
     }
 
 }
