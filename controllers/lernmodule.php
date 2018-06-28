@@ -249,7 +249,9 @@ class LernmoduleController extends PluginController
 
     public function update_attempt_action($attempt_id)
     {
-        Navigation::activateItem("/course/lernmodule/overview");
+        if (Navigation::hasItem("/course/lernmodule/overview")) {
+            Navigation::activateItem("/course/lernmodule/overview");
+        }
         $this->attempt = new LernmodulAttempt($attempt_id);
         if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException();
