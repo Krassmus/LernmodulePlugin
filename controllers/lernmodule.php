@@ -7,12 +7,10 @@ class LernmoduleController extends PluginController
         parent::before_filter($action, $args);
         if (Navigation::hasItem("/course/lernmodule")) {
             Navigation::getItem("/course/lernmodule")->setImage(
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule", "info")
-                    : Assets::image_path("icons/black/16/learnmodule")
+                Icon::create("learnmodule", "info")
             );
         }
-        PageLayout::setTitle((class_exists("Context") ? Context::getHeaderLine() : $GLOBALS['SessSemName']["header_line"])." - ".$this->plugin->getDisplayTitle());
+        PageLayout::setTitle(Context::getHeaderLine()." - ".$this->plugin->getDisplayTitle());
         $this->utf8decode_xhr = false;
         $this->course_id = Context::get()->id;
     }
@@ -63,7 +61,7 @@ class LernmoduleController extends PluginController
                 PageLayout::postMessage(
                     MessageBox::info(
                         sprintf(
-                            _("%s sucht noch weitere Teilnehmer für '%s'."),
+                            _("%s sucht noch weitere Teilnehmer fÃ¼r '%s'."),
                             get_fullname($opengame['user_id']),
                             htmlReady($opengame->module['name'])
                         ),
@@ -130,7 +128,7 @@ class LernmoduleController extends PluginController
         if (Request::isPost()) {
             $data = Request::getArray("module");
             if (!$data['name']) { //die Variable name passte nicht mehr in den Request und fehlt daher
-                PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu groß.")));
+                PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu groï¿½.")));
                 $this->redirect("lernmodule/overview");
                 return;
             }
@@ -239,7 +237,7 @@ class LernmoduleController extends PluginController
         $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {
             $this->module->delete();
-            PageLayout::postMessage(MessageBox::success(_("Lernmodul gelöscht.")));
+            PageLayout::postMessage(MessageBox::success(_("Lernmodul gelÃ¶scht.")));
         }
         $this->redirect("lernmodule/overview");
     }

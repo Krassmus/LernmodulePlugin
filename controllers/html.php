@@ -22,7 +22,7 @@ class HtmlController extends PluginController
         }
         $this->lernmodulcourse = new LernmodulCourse(array(Request::option("module_id"), Context::get()->id));
         if ($this->lernmodulcourse->isNew()) {
-            throw new Exception("Kein gültiges Modul.");
+            throw new Exception("Kein gÃ¼ltiges Modul.");
         }
         if (Request::isPost()) {
             if ($this->lernmodulcourse['customdata'] !== null) {

@@ -52,7 +52,7 @@
             if (page.indexOf(end_file) !== -1) {
                 end_file_found = true;
                 jQuery.post(
-                    STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                    STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
                     {"success" : 1}
                 );
             }
@@ -62,11 +62,11 @@
     window.setTimeout(function () {
         if (!STUDIP.Lernmodule.received_message_api_messages) {
             jQuery.post(
-                STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
                 {"message": {"success": 1}}
             );
         }
-    }, 30 * 1000);
+    }, <?= (integer) Config::get()->LERNMODUL_SECONDS_TO_SUCCESS ?> * 1000);
     STUDIP.Lernmodule.received_message_api_messages = false;
     STUDIP.Lernmodule.dont_blubber = false;
     <? endif ?>
@@ -80,7 +80,7 @@
             delete message.secret;
             STUDIP.Lernmodule.lastState = message;
             jQuery.post(
-                STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>",
+                STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
                 { "message": message }
             );
             if (typeof message.request !== "undefined") {
@@ -120,7 +120,7 @@
                 if (message.request === "/invite") {
                     //Ajax request:
                     jQuery.ajax({
-                        "url": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/gameinvitation",
+                        "url": STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/gameinvitation"),
                         "data": {
                             "attempt_id": '<?= htmlReady($attempt->getId()) ?>',
                             "module_id": '<?= htmlReady($module->getId()) ?>',
@@ -157,7 +157,7 @@
                     //show dialog that asks if user wants to share the message
                     if (STUDIP.Lernmodule.dont_blubber) {
                         STUDIP.Dialog.fromURL(
-                            STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/blubber",
+                            STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/blubber"),
                             {
                                 "method": "POST",
                                 "data": { "message": message.message }
