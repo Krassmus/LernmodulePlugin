@@ -216,7 +216,8 @@ class LernmoduleController extends PluginController
             if ($attempt['successful']) {
                 $line = array(
                     'studip_user_id' => $attempt['user_id'],
-                    'studip_duration' => $attempt['chdate'] - $attempt['mkdate']
+                    'studip_duration' => $attempt['chdate'] - $attempt['mkdate'],
+                    'studip_mkdate' => $attempt['mkdate']
                 );
                 foreach ((array) $this->module->evaluateAttempt($attempt) as $index => $value) {
                     if (!isset($line[$index])) {
@@ -251,7 +252,7 @@ class LernmoduleController extends PluginController
         }
         if (Request::isPost()) {
             $this->attempt['chdate'] = time();
-            $message = studip_utf8decode(Request::getArray("message"));
+            $message = Request::getArray("message");
             if ($message['success']) {
                 $this->attempt['successful'] = 1;
             }

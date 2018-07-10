@@ -19,17 +19,13 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions->addLink(
         _("Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("edit", "clickable")
-            : Assets::image_path("icons/black/16/blue/edit")
+        Icon::create("edit", "clickable")
 
     );
     $actions->addLink(
         _("Lernmodul herunterladen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/download/".$mod->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("download", "clickable")
-            : Assets::image_path("icons/black/16/blue/download")
+        Icon::create("download", "clickable")
     );
     Sidebar::Get()->addWidget($actions);
 }

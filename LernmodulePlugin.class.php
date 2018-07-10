@@ -19,13 +19,6 @@ if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
 
 class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin {
 
-    static public function getCSSFormClass()
-    {
-        return version_compare("3.4", $GLOBALS['SOFTWARE_VERSION'], ">")
-            ? "studip_form"
-            : "default";
-    }
-
     public function __construct()
     {
         parent::__construct();
@@ -51,9 +44,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     {
         $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $tab->setImage(
-            version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                ? Icon::create("learnmodule", "info_alt")
-                : Assets::image_path("icons/white/16/learnmodule")
+            Icon::create("learnmodule", "info_alt")
         );
         $tab->addSubNavigation("overview", new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
         $tab->addSubNavigation("participants", new Navigation(_("Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
@@ -73,15 +64,11 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         }
         if ($new > 0) {
             $tab->setImage(
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
-                    : Assets::image_path("icons/red/20/new/learnmodule", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+                Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
             );
         } else {
             $tab->setImage(
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
-                    : Assets::image_path("icons/grey/20/learnmodule", array('title' => _("Lernmodule")))
+                Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
             );
         }
         return $tab;

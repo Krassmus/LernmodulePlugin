@@ -108,6 +108,7 @@
                     <th width="50px"></th>
                     <th><?= _("Name") ?></th>
                     <th><?= _("Dauer") ?></th>
+                    <th><?= _("Datum") ?></th>
                     <? foreach ($resultrows as $rowname) : ?>
                         <th><?= htmlReady($rowname) ?></th>
                     <? endforeach ?>
@@ -129,6 +130,9 @@
                             echo sprintf(_("%s Stunden"), round($line['studip_duration'] / 360));
                         }
                         ?></td>
+                    <td>
+                        <?= date("j.n.Y G:i", $line['studip_mkdate'])." "._("Uhr") ?>
+                    </td>
                     <? foreach ($resultrows as $rowname) : ?>
                         <td><?= htmlReady($line[$rowname]) ?></td>
                     <? endforeach ?>
@@ -164,18 +168,14 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions->addLink(
         _("Lernmodul herunterladen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("download", "clickable")
-            : Assets::image_path("icons/black/16/blue/download")
+        Icon::create("download", "clickable")
     );
 }
 if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions->addLink(
         _("Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$module->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("edit", "clickable")
-            : Assets::image_path("icons/black/16/blue/edit")
+        Icon::create("edit", "clickable")
     );
 }
 

@@ -44,9 +44,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         $actions->addLink(
             _("Vollbild"),
             "#",
-            version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                ? Icon::create("play", "clickable")
-                : Assets::image_path("icons/black/16/blue/play"),
+            Icon::create("play", "clickable"),
             array('onClick' => "STUDIP.Lernmodule.requestFullscreen(); return false;")
         );
         Sidebar::Get()->addWidget($actions);
@@ -59,9 +57,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
             $actions->addLink(
                 _("Konfigurieren"),
                 URLHelper::getURL("plugins.php/lernmoduleplugin/html/set_configs"),
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("admin", "clickable")
-                    : Assets::image_path("icons/black/16/blue/admin"),
+                Icon::create("admin", "clickable"),
                 array(
                     'data-dialog' => 1,
                     'class' => "configure",

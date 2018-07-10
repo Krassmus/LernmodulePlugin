@@ -12,7 +12,7 @@ class LernmodulAttempt extends SimpleORMap {
         $statement = DBManager::get()->prepare("
             SELECT lernmodule_attempts.*
             FROM lernmodule_attempts
-                INNER JOIN seminar_user ON (seminar_user.user_id = lernmodule_attempts.user_id AND seminar_user.status = 'autor')
+                INNER JOIN seminar_user ON (seminar_user.user_id = lernmodule_attempts.user_id)
             WHERE seminar_user.Seminar_id = :seminar_id
                 AND lernmodule_attempts.module_id = :module_id
             ORDER BY lernmodule_attempts.mkdate ASC

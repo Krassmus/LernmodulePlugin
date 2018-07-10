@@ -65,6 +65,12 @@
                 STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
                 {"message": {"success": 1}}
             );
+            window.setInterval(function () {
+                jQuery.post(
+                    STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
+                    {"message": {"success": 1}}
+                );
+            }, 10 * 1000);
         }
     }, <?= (integer) Config::get()->LERNMODUL_SECONDS_TO_SUCCESS ?> * 1000);
     STUDIP.Lernmodule.received_message_api_messages = false;
@@ -89,8 +95,8 @@
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
                         "id": '<?= $GLOBALS['user']->id ?>',
-                        "name": '<?= htmlReady(studip_utf8encode($GLOBALS['user']->getFullName())) ?>',
-                        "email": '<?= htmlReady(studip_utf8encode(get_visible_email($GLOBALS['user']->id))) ?>',
+                        "name": '<?= htmlReady($GLOBALS['user']->getFullName()) ?>',
+                        "email": '<?= htmlReady(get_visible_email($GLOBALS['user']->id)) ?>',
                         "avatar": '<?= htmlReady(Visibility::verify('picture', $GLOBALS['user']->id, "nobody")
                             ? Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::NORMAL)
                             : null) ?>',
@@ -147,7 +153,7 @@
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
-                        "configs": <?= json_encode(studip_utf8encode(($coursemodule['customdata'] && $coursemodule['customdata']['configs']) ? $coursemodule['customdata']['configs']->getArrayCopy() : array())) ?>
+                        "configs": <?= json_encode(($coursemodule['customdata'] && $coursemodule['customdata']['configs']) ? $coursemodule['customdata']['configs']->getArrayCopy() : array()) ?>
                     }), "*");
                 }
                 <? endif ?>
