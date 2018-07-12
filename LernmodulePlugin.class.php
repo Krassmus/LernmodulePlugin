@@ -7,6 +7,7 @@ require_once __DIR__."/lib/ScormLernmodul.php";
 require_once __DIR__."/lib/H5pLernmodul.php";
 require_once __DIR__."/lib/LernmodulAttempt.php";
 require_once __DIR__."/lib/LernmodulCourse.php";
+require_once __DIR__."/lib/LernmodulCourseSettings.php";
 require_once __DIR__."/lib/LernmodulDependency.php";
 require_once __DIR__."/lib/LernmodulGame.php";
 require_once __DIR__."/lib/LernmodulGameAttendance.php";
@@ -42,7 +43,8 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
 
     public function getTabNavigation($course_id)
     {
-        $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $this->settings = new LernmodulCourseSettings($course_id);
+        $tab = new Navigation($this->settings['tabname'] ?: _("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $tab->setImage(
             Icon::create("learnmodule", "info_alt")
         );

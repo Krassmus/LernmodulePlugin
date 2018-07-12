@@ -326,4 +326,20 @@ class LernmoduleController extends PluginController
         }
     }
 
+    public function admin_action()
+    {
+        if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            throw new AccessDeniedException();
+        }
+        $this->settings = new LernmodulCourseSettings(Context::get()->id);
+        if ($this->settings->isNew()) {
+            $this->settings->setId(Context::get()->id);
+        }
+        if (Request::isPost()) {
+            $this->settings->setData(Request::getArray("data"));
+            $this->settings->store();
+            PageLayout::postSuccess(_("Einstellungen wurden gespeichert."));
+        }
+    }
+
 }

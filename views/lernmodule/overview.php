@@ -98,6 +98,12 @@ Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
 $actions = new ActionsWidget();
 if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
     $actions->addLink(
+        _("Bereich konfigurieren"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/admin"),
+        Icon::create("admin", "clickable"),
+        array('data-dialog' => 1)
+    );
+    $actions->addLink(
         _("Lernmodul hinzufügen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit"),
         Icon::create("learnmodule+add", "clickable")
