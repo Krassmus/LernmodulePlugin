@@ -39,10 +39,10 @@ class Lernmodul extends SimpleORMap {
         }
         $success = mkdir($this->getPath());
         if (!$success) {
-            PageLayout::postMessage(MessageBox::error(_("Konnte im Dateisystem keinen Ordner für das Lernmodul anlegen.")));
+            PageLayout::postMessage(MessageBox::error(_("Konnte im Dateisystem keinen Ordner fÃ¼r das Lernmodul anlegen.")));
             return false;
         }
-        $success = LernmodulePlugin::extract_zip($path, $this->getPath());
+        $success = Studip\ZipArchive::extractToPath($path, $this->getPath());
         if ($success) {
             if (count(scandir($this->getPath())) < 4) {
                 //Falls nur der Ordner auf oberster Ebene liegt:
