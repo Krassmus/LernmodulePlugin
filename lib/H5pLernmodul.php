@@ -2,6 +2,16 @@
 
 class H5pLernmodul extends Lernmodul implements CustomLernmodul
 {
+    static protected function configure($config = array())
+    {
+        $config['has_and_belongs_to_many']['libs'] = array(
+            'class_name' => 'H5PLib',
+            'thru_table' => 'lernmodule_h5plib_module',
+            'order_by' => 'ORDER BY name ASC'
+        );
+        parent::configure($config);
+    }
+
     static public function detect($path)
     {
         return true;
@@ -9,7 +19,64 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
 
     public function afterInstall()
     {
-        //something with initializing new libraries?
+        //initializing new libraries?
+        $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
+        if ($json) {
+            $libs_data = array();
+            $editor_libs = array();
+            foreach ($json['preloadedDependencies'] as $lib_data) {
+                $dir_name = $lib_data['machineName']."-".$lib_data['majorVersion'].".".$lib_data['minorVersion'];
+                $libs_data[$dir_name] = $lib_data;
+                $lib_path = $this->getPath()."/".$lib_data['machineName']."-".$lib_data['majorVersion'].".".$lib_data['minorVersion'];
+                if (file_exists($lib_path."/library.json")) {
+                    $library_json = json_decode(file_get_contents($lib_path . "/library.json"), true);
+                    foreach ((array) $library_json['preloadedDependencies'] as $lib_data2) {
+                        $dir_name = $lib_data['machineName'] . "-" . $lib_data['majorVersion'] . "." . $lib_data['minorVersion'];
+                        $libs_data[$dir_name] = $lib_data2;
+                    }
+                    //editorDependencies ?
+                    foreach ((array) $library_json['editorDependencies'] as $lib_data2) {
+                        $dir_name = $lib_data['machineName'] . "-" . $lib_data['majorVersion'] . "." . $lib_data['minorVersion'];
+                        $editor_libs[$dir_name] = $lib_data2;
+                    }
+                    if ($library_json['runnable']) {
+                        $libs_data[$dir_name]['runnable'] = 1;
+                    }
+                }
+            }
+
+            foreach ($libs_data as $lib_data) {
+
+                $lib = H5PLib::findVersion($lib_data['machineName'], $lib_data['majorVersion'], $lib_data['minorVersion']);
+                $lib_path = $this->getPath() . "/" . $lib_data['machineName'] . "-" . $lib_data['majorVersion'] . "." . $lib_data['minorVersion'];
+                if (!$lib) {
+                    $lib = new H5PLib();
+                    $lib['name'] = $lib_data['machineName'];
+                    $lib['major_version'] = $lib_data['majorVersion'];
+                    $lib['minor_version'] = $lib_data['minorVersion'];
+                    $lib['allowed'] = $GLOBALS['perm']->have_perm("root") ? 1 : 0;
+                    $lib['runnable'] = $lib_data['runnable'] ? 1 : 0;
+                    $lib->store();
+                }
+                if (file_exists($lib_path)) {
+                    if (!file_exists($lib->getPath())) {
+                        rename($lib_path, $lib->getPath());
+                    } else {
+                        rmdirr($lib_path);
+                    }
+                }
+
+                $statement = DBManager::get()->prepare("
+                    INSERT IGNORE INTO lernmodule_h5plib_module
+                    SET module_id = :module_id,
+                        lib_id = :lib_id
+                ");
+                $statement->execute(array(
+                    'module_id' => $this->getId(),
+                    'lib_id' => $lib->getId()
+                ));
+            }
+        }
     }
 
     public function getEditTemplate() {}
