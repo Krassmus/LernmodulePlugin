@@ -3,11 +3,11 @@
 /* Custom H5P font to use for icons. */
 @font-face {
   font-family: 'h5p';
-  src:    url('../fonts/h5p-core-14.eot?inh2er');
-  src:    url('../fonts/h5p-core-14.eot?inh2er#iefix') format('embedded-opentype'),
-  url('../fonts/h5p-core-14.ttf?inh2er') format('truetype'),
-  url('../fonts/h5p-core-14.woff?inh2er') format('woff'),
-  url('../fonts/h5p-core-14.svg?inh2er#h5p-core-14') format('svg');
+  src:    url('../fonts/h5p-core-19.eot?cb8kvi');
+  src:    url('../fonts/h5p-core-19.eot?cb8kvi#iefix') format('embedded-opentype'),
+  url('../fonts/h5p-core-19.ttf?cb8kvi') format('truetype'),
+  url('../fonts/h5p-core-19.woff?cb8kvi') format('woff'),
+  url('../fonts/h5p-core-19.svg?cb8kvi#h5p') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -29,6 +29,14 @@ html.h5p-iframe, html.h5p-iframe > body {
   border-bottom: none;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
+}
+.h5p-noselect
+{
+  -khtml-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 html.h5p-iframe .h5p-content {
   font-size: 16px;
@@ -98,15 +106,22 @@ body.h5p-semi-fullscreen {
   line-height: 0.975em;
   font-size: 2em;
   width: 1.125em;
-  height: 0.925em;
-  text-indent: -0.0875em;
-  outline: none;
+  height: 1em;
+  text-indent: 0.04em;
 }
 .h5p-disable-fullscreen {
   line-height: 0.925em;
   width: 1.1em;
   height: 0.9em;
 }
+
+.h5p-enable-fullscreen:focus,
+.h5p-disable-fullscreen:focus {
+  outline-style: solid;
+  outline-width: 1px;
+  outline-offset: 0.25em;
+}
+
 .h5p-enable-fullscreen:hover, .h5p-disable-fullscreen:hover {
   background: rgba(0,0,0,0.5);
 }
@@ -147,7 +162,11 @@ div.h5p-fullscreen {
   z-index: 20;
 }
 .h5p-iframe-wrapper iframe.h5p-iframe {
-  width: 100%;
+  /* Hack for IOS landscape / portrait */
+  width: 10px;
+  min-width: 100%;
+  *width: 100%;
+  /* End of hack */
   height: 100%;
   z-index: 10;
   overflow: hidden;
@@ -203,11 +222,10 @@ div.h5p-fullscreen {
 }
 .h5p-actions > .h5p-button:before {
   font-family: 'H5P';
-  font-size: 1em;
+  font-size: 20px;
+  line-height: 20px;
+  vertical-align: top;
   padding-right: 0;
-  font-size: 1.7em;
-  line-height: 1.125em;
-  vertical-align: middle;
 }
 .h5p-actions > .h5p-button.h5p-export:before {
   content: "\e893";
@@ -235,6 +253,7 @@ div.h5p-fullscreen {
 }
 .h5p-actions > li {
   margin: 0;
+  list-style: none;
 }
 .h5p-popup-dialog {
   position: absolute;

@@ -2,7 +2,8 @@
 
 require_once __DIR__."/../vendor/h5p-php-library/h5p.classes.php";
 
-class StudipH5P implements H5PFrameworkInterface {
+class StudipH5P implements H5PFrameworkInterface
+{
 
     /**
      * Returns info for the current platform
@@ -13,7 +14,8 @@ class StudipH5P implements H5PFrameworkInterface {
      *   - version: The version of the platform, for instance "4.0"
      *   - h5pVersion: The version of the H5P plugin/module
      */
-    public function getPlatformInfo() {
+    public function getPlatformInfo()
+    {
         return array(
             'name' => "Stud.IP",
             'version' => $GLOBALS['SOFTWARE_VERSION'],
@@ -29,7 +31,8 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param $data
      * @return string The content (response body). NULL if something went wrong
      */
-    public function fetchExternalData($url, $data) {
+    public function fetchExternalData($url, $data)
+    {
         $output = file_get_contents($url);
         return $output ?: null;
     }
@@ -40,7 +43,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param string $machineName
      * @param string $tutorialUrl
      */
-    public function setLibraryTutorialUrl($machineName, $tutorialUrl) {}
+    public function setLibraryTutorialUrl($machineName, $tutorialUrl)
+    {
+
+    }
 
     /**
      * Show the user an error message
@@ -48,7 +54,8 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param string $message
      *   The error message
      */
-    public function setErrorMessage($message) {
+    public function setErrorMessage($message)
+    {
         PageLayout::postMessage(MessageBox::error($message));
     }
 
@@ -58,7 +65,8 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param string $message
      *  The error message
      */
-    public function setInfoMessage($message) {
+    public function setInfoMessage($message)
+    {
         PageLayout::postMessage(MessageBox::info($message));
     }
 
@@ -78,7 +86,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @return string Translated string
      * Translated string
      */
-    public function t($message, $replacements = array()) {}
+    public function t($message, $replacements = array())
+    {
+        return $message;
+    }
 
     /**
      * Get the Path to the last uploaded h5p
@@ -86,7 +97,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @return string
      *   Path to the folder where the last uploaded h5p for this session is located.
      */
-    public function getUploadedH5pFolderPath() {}
+    public function getUploadedH5pFolderPath()
+    {
+
+    }
 
     /**
      * Get the path to the last uploaded h5p file
@@ -94,7 +108,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @return string
      *   Path to the last uploaded h5p
      */
-    public function getUploadedH5pPath() {}
+    public function getUploadedH5pPath()
+    {
+
+    }
 
     /**
      * Get a list of the current installed libraries
@@ -103,7 +120,24 @@ class StudipH5P implements H5PFrameworkInterface {
      *   Associative array containing one entry per machine name.
      *   For each machineName there is a list of libraries(with different versions)
      */
-    public function loadLibraries() {}
+    public function loadLibraries()
+    {
+        $libs = H5PLib::findBySQL("allowed = '1'");
+        $output = array();
+        foreach ($libs as $lib) {
+            $output[$lib['name']] = array(
+                'id' => $lib->getId(),
+                'name' => $lib['name'],
+                'title' => $lib['name'],
+                'major_version' => $lib['major_version'],
+                'minor_version' => $lib['minor_version'],
+                'patch_version' => $lib['patch_version'],
+                'runnable' => $lib['runnable'],
+                'restricted' => !$lib['allowed']
+            );
+        }
+        return $output;
+    }
 
     /**
      * Returns the URL to the library admin page
@@ -111,7 +145,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @return string
      *   URL to admin page
      */
-    public function getAdminUrl() {}
+    public function getAdminUrl()
+    {
+        return URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/admin_libraries");
+    }
 
     /**
      * Get id to an existing library.
@@ -126,7 +163,26 @@ class StudipH5P implements H5PFrameworkInterface {
      * @return int
      *   The id of the specified library or FALSE
      */
-    public function getLibraryId($machineName, $majorVersion = NULL, $minorVersion = NULL) {}
+    public function getLibraryId($machineName, $majorVersion = NULL, $minorVersion = NULL)
+    {
+        if ($majorVersion !== null && $minorVersion !== null) {
+            $lib = H5PLib::findOneBySQL("major_version = :major AND minor_version = :minor AND name = :name", array(
+                'name' => $machineName,
+                'minor' => $minorVersion,
+                'major' => $majorVersion
+            ));
+            if ($lib) {
+                return $lib->getId();
+            }
+        }
+        $lib = H5PLib::findOneBySQL("name = :name ORDER BY major_version DESC, minor_version DESC LIMIT 1", array(
+            'name' => $machineName
+        ));
+        if ($lib) {
+            return $lib->getId();
+        }
+        return false;
+    }
 
     /**
      * Get file extension whitelist
@@ -141,7 +197,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param string $defaultLibraryWhitelist
      *   A string of file extensions separated by whitespace
      */
-    public function getWhitelist($isLibrary, $defaultContentWhitelist, $defaultLibraryWhitelist) {}
+    public function getWhitelist($isLibrary, $defaultContentWhitelist, $defaultLibraryWhitelist)
+    {
+
+    }
 
     /**
      * Is the library a patched version of an existing library?
@@ -156,7 +215,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *   TRUE if the library is a patched version of an existing library
      *   FALSE otherwise
      */
-    public function isPatchedLibrary($library) {}
+    public function isPatchedLibrary($library)
+    {
+
+    }
 
     /**
      * Is H5P in development mode?
@@ -165,7 +227,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *  TRUE if H5P development mode is active
      *  FALSE otherwise
      */
-    public function isInDevMode() {}
+    public function isInDevMode()
+    {
+        return \Studip\ENV === "development";
+    }
 
     /**
      * Is the current user allowed to update libraries?
@@ -174,7 +239,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *  TRUE if the user is allowed to update libraries
      *  FALSE if the user is not allowed to update libraries
      */
-    public function mayUpdateLibraries() {}
+    public function mayUpdateLibraries()
+    {
+        return $GLOBALS['perm']->have_perm("root");
+    }
 
     /**
      * Store data about a library
@@ -204,7 +272,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param bool $new
      * @return
      */
-    public function saveLibraryData(&$libraryData, $new = TRUE) {}
+    public function saveLibraryData(&$libraryData, $new = TRUE)
+    {
+
+    }
 
     /**
      * Insert new content.
@@ -218,7 +289,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param int $contentMainId
      *   Main id for the content if this is a system that supports versions
      */
-    public function insertContent($content, $contentMainId = NULL) {}
+    public function insertContent($content, $contentMainId = NULL)
+    {
+
+    }
 
     /**
      * Update old content.
@@ -232,14 +306,20 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param int $contentMainId
      *   Main id for the content if this is a system that supports versions
      */
-    public function updateContent($content, $contentMainId = NULL) {}
+    public function updateContent($content, $contentMainId = NULL)
+    {
+
+    }
 
     /**
      * Resets marked user data for the given content.
      *
      * @param int $contentId
      */
-    public function resetContentUserData($contentId) {}
+    public function resetContentUserData($contentId)
+    {
+
+    }
 
     /**
      * Save what libraries a library is depending on
@@ -257,7 +337,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *   - preloaded
      *   - dynamic
      */
-    public function saveLibraryDependencies($libraryId, $dependencies, $dependency_type) {}
+    public function saveLibraryDependencies($libraryId, $dependencies, $dependency_type)
+    {
+
+    }
 
     /**
      * Give an H5P the same library dependencies as a given H5P
@@ -271,7 +354,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *   That supports versions. (In this case the content id will typically be
      *   the version id, and the contentMainId will be the frameworks content id
      */
-    public function copyLibraryUsage($contentId, $copyFromId, $contentMainId = NULL) {}
+    public function copyLibraryUsage($contentId, $copyFromId, $contentMainId = NULL)
+    {
+
+    }
 
     /**
      * Deletes content data
@@ -279,7 +365,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param int $contentId
      *   Id identifying the content
      */
-    public function deleteContentData($contentId) {}
+    public function deleteContentData($contentId)
+    {
+
+    }
 
     /**
      * Delete what libraries a content item is using
@@ -287,7 +376,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param int $contentId
      *   Content Id of the content we'll be deleting library usage for
      */
-    public function deleteLibraryUsage($contentId) {}
+    public function deleteLibraryUsage($contentId)
+    {
+
+    }
 
     /**
      * Saves what libraries the content uses
@@ -305,7 +397,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *     - dynamic
      *     - preloaded
      */
-    public function saveLibraryUsage($contentId, $librariesInUse) {}
+    public function saveLibraryUsage($contentId, $librariesInUse)
+    {
+
+    }
 
     /**
      * Get number of content/nodes using a library, and the number of
@@ -318,7 +413,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *   - content: Number of content using the library
      *   - libraries: Number of libraries depending on the library
      */
-    public function getLibraryUsage($libraryId) {}
+    public function getLibraryUsage($libraryId)
+    {
+
+    }
 
     /**
      * Loads a library
@@ -359,7 +457,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *     - majorVersion: Major version for a library this library is depending on
      *     - minorVersion: Minor for a library this library is depending on
      */
-    public function loadLibrary($machineName, $majorVersion, $minorVersion) {}
+    public function loadLibrary($machineName, $majorVersion, $minorVersion)
+    {
+
+    }
 
     /**
      * Loads library semantics.
@@ -373,7 +474,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @return string
      *   The library's semantics as json
      */
-    public function loadLibrarySemantics($machineName, $majorVersion, $minorVersion) {}
+    public function loadLibrarySemantics($machineName, $majorVersion, $minorVersion)
+    {
+
+    }
 
     /**
      * Makes it possible to alter the semantics, adding custom fields, etc.
@@ -387,7 +491,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param int $minorVersion
      *   The library's minor version
      */
-    public function alterLibrarySemantics(&$semantics, $machineName, $majorVersion, $minorVersion) {}
+    public function alterLibrarySemantics(&$semantics, $machineName, $majorVersion, $minorVersion)
+    {
+
+    }
 
     /**
      * Delete all dependencies belonging to given library
@@ -395,17 +502,26 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param int $libraryId
      *   Library identifier
      */
-    public function deleteLibraryDependencies($libraryId) {}
+    public function deleteLibraryDependencies($libraryId)
+    {
+
+    }
 
     /**
      * Start an atomic operation against the dependency storage
      */
-    public function lockDependencyStorage() {}
+    public function lockDependencyStorage()
+    {
+
+    }
 
     /**
      * Stops an atomic operation against the dependency storage
      */
-    public function unlockDependencyStorage() {}
+    public function unlockDependencyStorage()
+    {
+
+    }
 
 
     /**
@@ -414,7 +530,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param stdClass $library
      *   Library object with id, name, major version and minor version.
      */
-    public function deleteLibrary($library) {}
+    public function deleteLibrary($library)
+    {
+
+    }
 
     /**
      * Load content.
@@ -435,7 +554,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *   - libraryEmbedTypes: CSV of the main library's embed types
      *   - libraryFullscreen: 1 if fullscreen is supported. 0 otherwise.
      */
-    public function loadContent($id) {}
+    public function loadContent($id)
+    {
+
+    }
 
     /**
      * Load dependencies for the given content of the given type.
@@ -458,7 +580,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *   - preloadedCss(optional): comma separated sting with css file paths
      *   - dropCss(optional): csv of machine names
      */
-    public function loadContentDependencies($id, $type = NULL) {}
+    public function loadContentDependencies($id, $type = NULL)
+    {
+
+    }
 
     /**
      * Get stored setting.
@@ -470,7 +595,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @return mixed
      *   Whatever has been stored as the setting
      */
-    public function getOption($name, $default = NULL) {}
+    public function getOption($name, $default = NULL)
+    {
+
+    }
 
     /**
      * Stores the given setting.
@@ -481,7 +609,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param mixed $value Data
      *   Whatever we want to store as the setting
      */
-    public function setOption($name, $value) {}
+    public function setOption($name, $value)
+    {
+
+    }
 
     /**
      * This will update selected fields on the given content.
@@ -489,7 +620,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param int $id Content identifier
      * @param array $fields Content fields, e.g. filtered or slug.
      */
-    public function updateContentFields($id, $fields) {}
+    public function updateContentFields($id, $fields)
+    {
+
+    }
 
     /**
      * Will clear filtered params for all the content that uses the specified
@@ -498,7 +632,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *
      * @param int $library_id
      */
-    public function clearFilteredParameters($library_id) {}
+    public function clearFilteredParameters($library_id)
+    {
+
+    }
 
     /**
      * Get number of contents that has to get their content dependencies rebuilt
@@ -506,7 +643,10 @@ class StudipH5P implements H5PFrameworkInterface {
      *
      * @return int
      */
-    public function getNumNotFiltered() {}
+    public function getNumNotFiltered()
+    {
+
+    }
 
     /**
      * Get number of contents using library as main library.
@@ -514,7 +654,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param int $libraryId
      * @return int
      */
-    public function getNumContent($libraryId) {}
+    public function getNumContent($libraryId)
+    {
+
+    }
 
     /**
      * Determines if content slug is used.
@@ -522,7 +665,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param string $slug
      * @return boolean
      */
-    public function isContentSlugAvailable($slug) {}
+    public function isContentSlugAvailable($slug)
+    {
+
+    }
 
     /**
      * Generates statistics from the event log per library
@@ -530,13 +676,19 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param string $type Type of event to generate stats for
      * @return array Number values indexed by library name and version
      */
-    public function getLibraryStats($type) {}
+    public function getLibraryStats($type)
+    {
+
+    }
 
     /**
      * Aggregate the current number of H5P authors
      * @return int
      */
-    public function getNumAuthors() {}
+    public function getNumAuthors()
+    {
+
+    }
 
     /**
      * Stores hash keys for cached assets, aggregated JavaScripts and
@@ -548,7 +700,10 @@ class StudipH5P implements H5PFrameworkInterface {
      * @param array $libraries
      *  List of dependencies(libraries) used to create the key
      */
-    public function saveCachedAssets($key, $libraries) {}
+    public function saveCachedAssets($key, $libraries)
+    {
+
+    }
 
     /**
      * Locate hash keys for given library and delete them.
@@ -559,16 +714,25 @@ class StudipH5P implements H5PFrameworkInterface {
      * @return array
      *  List of hash keys removed
      */
-    public function deleteCachedAssets($library_id) {}
+    public function deleteCachedAssets($library_id)
+    {
+
+    }
 
     /**
      * Get the amount of content items associated to a library
      * return int
      */
-    public function getLibraryContentCount() {}
+    public function getLibraryContentCount()
+    {
+
+    }
 
     /**
      * Will trigger after the export file is created.
      */
-    public function afterExportCreated() {}
+    public function afterExportCreated()
+    {
+
+    }
 }
