@@ -63,10 +63,10 @@ class H5PLib extends SimpleORMap
                     $dependency['majorVersion'],
                     $dependency['minorVersion']
                 );
-                if (!in_array($sublib->getId(), $not_in_ids)) {
+                if ($sublib && !in_array($sublib->getId(), $not_in_ids)) {
                     $sublibs[] = $sublib;
                     $not_in_ids[] = $sublib->getId();
-                    foreach ($sublib->getSubLibs() as $subsublib) {
+                    foreach ($sublib->getSubLibs($not_in_ids) as $subsublib) {
                         $sublibs[] = $subsublib;
                         $not_in_ids[] = $subsublib->getId();
                     }
@@ -74,5 +74,19 @@ class H5PLib extends SimpleORMap
             }
         }
         return $sublibs;
+    }
+
+    public function getFiles($css_or_jss)
+    {
+        $library_json = $this->getPath()."/library.json";
+        $files = array();
+        if (file_exists($library_json)) {
+            $dir_name = $this['name']."-".$this['major_version'].".".$this['minor_version'];
+            $library_json = json_decode(file_get_contents($library_json), true);
+            foreach ((array) $library_json[$css_or_jss === "js" ? 'preloadedJs' : "preloadedCss"] as $file) {
+                $files[] = $dir_name."/".$file['path'];
+            }
+        }
+        return $files;
     }
 }

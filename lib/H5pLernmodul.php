@@ -25,7 +25,25 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
         if ($json) {
             $libs_data = array();
+            $lib_names = array();
             $editor_libs = array();
+
+            foreach ($json['preloadedDependencies'] as $lib_data) {
+                $lib_name = $lib_data['machineName']."-".$lib_data['majorVersion'].".".$lib_data['minorVersion'];
+                if (!in_array($lib_name, $lib_names)) {
+                    $lib_names[] = $lib_names;
+                    $libs_data[] = $lib_data;
+
+                    foreach ($this->getSubLibsAfterInstall($lib_name, $lib_names) as $sublib_data) {
+                        $lib_name = $sublib_data['machineName']."-".$sublib_data['majorVersion'].".".$sublib_data['minorVersion'];
+                        if (!in_array($lib_name, $lib_names)) {
+                            $lib_names[] = $lib_names;
+                            $libs_data[] = $sublib_data;
+                        }
+                    }
+                }
+            }
+
             foreach ($json['preloadedDependencies'] as $lib_data) {
                 $dir_name = $lib_data['machineName']."-".$lib_data['majorVersion'].".".$lib_data['minorVersion'];
                 $libs_data[$dir_name] = $lib_data;
@@ -62,13 +80,13 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                     $lib['allowed'] = $GLOBALS['perm']->have_perm("root") ? 1 : 0;
                     $lib['runnable'] = $lib_data['runnable'] ? 1 : 0;
                     $lib->store();
+
+                    if (file_exists($lib_path) && !file_exists($lib->getPath())) {
+                        rename($lib_path, $lib->getPath());
+                    }
                 }
                 if (file_exists($lib_path)) {
-                    if (!file_exists($lib->getPath())) {
-                        rename($lib_path, $lib->getPath());
-                    } else {
-                        rmdirr($lib_path);
-                    }
+                    rmdirr($lib_path);
                 }
 
                 $statement = DBManager::get()->prepare("
@@ -81,6 +99,28 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                     'lib_id' => $lib->getId()
                 ));
             }
+        }
+    }
+
+    public function getSubLibsAfterInstall($lib_name, $without_names = array())
+    {
+        $lib_path = $this->getPath() . "/" . $lib_name;
+        $libs = array();
+        if (file_exists($lib_path."/library.json")) {
+            $library_json = json_decode(file_get_contents($lib_path . "/library.json"), true);
+            foreach ((array) $library_json['preloadedDependencies'] as $lib_data2) {
+                $sublib_name = $lib_data2['machineName'] . "-" . $lib_data2['majorVersion'] . "." . $lib_data2['minorVersion'];
+                if (!in_array($sublib_name, $without_names)) {
+                    $libs[] = $lib_data2;
+                    $without_names[] = $sublib_name;
+                    foreach ($this->getSubLibsAfterInstall($lib_name, $without_names) as $sublib) {
+                        $libs[] = $sublib;
+                        $sublib_name2 = $sublib['machineName'] . "-" . $sublib['majorVersion'] . "." . $sublib['minorVersion'];
+                        $without_names[] = $sublib_name2;
+                    }
+                }
+            }
+            //editorDependencies ?
         }
     }
 
@@ -121,7 +161,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         if ($json) {
             foreach ($json['preloadedDependencies'] as $lib_data) {
                 $lib = H5PLib::findVersion($lib_data['machineName'], $lib_data['majorVersion'], $lib_data['minorVersion']);
-                if (!in_array($lib->getId(), $lib_ids)) {
+                if ($lib && !in_array($lib->getId(), $lib_ids)) {
                     $lib_ids[] = $lib->getId();
                     $libs[] = $lib;
                     foreach ($lib->getSubLibs() as $sublib) {
@@ -143,21 +183,9 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
      */
     protected function getFiles($css_or_jss)
     {
-        $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
         $files = array();
-        if ($json) {
-            $libs_data = array();
-            foreach ($json['preloadedDependencies'] as $lib_data) {
-                $dir_name = $lib_data['machineName']."-".$lib_data['majorVersion'].".".$lib_data['minorVersion'];
-                $libs_data[$dir_name] = $lib_data;
-                $lib_path = $this->getPath()."/".$lib_data['machineName']."-".$lib_data['majorVersion'].".".$lib_data['minorVersion'];
-                if (file_exists($lib_path."/library.json")) {
-                    $library_json = json_decode(file_get_contents($lib_path . "/library.json"), true);
-                    foreach ((array) $library_json[$css_or_jss === "js" ? 'preloadedJs' : "preloadedCss"] as $file) {
-                        $files[] = $dir_name."/".$file['path'];
-                    }
-                }
-            }
+        foreach ($this->getLibs() as $lib) {
+            $files = array_merge($files, $lib->getFiles($css_or_jss));
         }
         return $files;
     }
@@ -175,9 +203,9 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
     public function getH5pLibURL()
     {
         if (Config::get()->LERNMODUL_DATA_URL) {
-            return Config::get()->LERNMODUL_DATA_URL."/h5libs";
+            return Config::get()->LERNMODUL_DATA_URL."/h5plibs";
         } else {
-            return $GLOBALS['ABSOLUTE_URI_STUDIP'] . "plugins_packages/RasmusFuhse/LernmodulePluginData/h5libs";
+            return $GLOBALS['ABSOLUTE_URI_STUDIP'] . "plugins_packages/RasmusFuhse/LernmodulePluginData/h5plibs";
         }
     }
 }
