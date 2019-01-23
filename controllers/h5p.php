@@ -118,7 +118,7 @@ class H5pController extends PluginController
             ),
             'hubIsEnabled' => false,
             'reportingIsEnabled' => FALSE,
-            'libraryConfig' => "", //$h5p->getLibraryConfig(),
+            'libraryConfig' => null, //$h5p->getLibraryConfig(),
             'crossorigin' => null,
         );
 
@@ -126,7 +126,33 @@ class H5pController extends PluginController
             'name' => $GLOBALS['user']->getFullName(),
             'mail' => $GLOBALS['user']->email
         );
-        $settings['contents'] = json_decode(file_get_contents($this->mod->getPath()."/content/content.json"), true);
+        $settings['contents'] = array(
+            $this->mod->getId() => array(
+                'library' => $this->mod['name'],
+                'jsonContent' => file_get_contents($this->mod->getPath()."/content/content.json"),
+                'fullscreen' => 0,
+                'exportUrl' => null,
+                'embedCode' => '<iframe src="">',
+                'resizeCode' => null,
+                'url' => "",
+                'title' => $this->mod['name'],
+                'displayOptions' => array(
+                    'frame' => true,
+                    'export' => false,
+                    'embed' => false,
+                    'copyright' => false,
+                    'icon' => true
+                ),
+                'metadata' => array(
+                    'title' => $this->mod['name'],
+                    'license' => "U"
+                ),
+                'contentUserData' => array(
+                    array('state' => "{}")
+                )
+            )
+        );
+        //json_decode(file_get_contents($this->mod->getPath()."/content/content.json"), true);
         return $settings;
     }
 
