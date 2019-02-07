@@ -118,10 +118,22 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                 }
             }
         }
-        foreach ($libs as $lib) {
-            var_dump($lib['name']." ".$lib['major_version'].".".$lib['minor_version']);
-        }
-        die();
+
+        //we need to sort these libs in order of their dependencies: (why don't they just rely on onLoad events?)
+        usort($libs, function ($l1, $l2) {
+            if ($l1->getId() == $l2->getId()) {
+                return 0;
+            }
+            $sublibs1 = array_map(function ($l) { return $l->getId(); }, $l1->getSubLibs());
+            if (in_array($l2->getId(), $sublibs1)) {
+                return 1;
+            }
+            $sublibs2 = array_map(function ($l) { return $l->getId(); }, $l2->getSubLibs());
+            if (in_array($l1->getId(), $sublibs2)) {
+                return -1;
+            }
+            return 0;
+        });
         return $libs;
     }
 
