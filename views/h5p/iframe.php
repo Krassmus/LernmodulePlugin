@@ -9,13 +9,17 @@
     <? foreach ($styles as $style): ?>
         <link rel="stylesheet" href="<?= $style ?>">
     <? endforeach ?>
+    <style>
+        .h5p-actions {
+            display: none;
+        }
+    </style>
     <?php if (!empty($additional_embed_head_tags)): print implode("\n", $additional_embed_head_tags); endif; ?>
 </head>
 <body>
-<div class="h5p-content" data-content-id="<?php print $content['id']; ?>"></div>
+<div class="h5p-content" data-content-id="<?= htmlReady($content['id']) ?>"></div>
 <script>
     H5PIntegration = <?= json_encode($integration) ?>;
 </script>
-<div style="width: 100px; height: 100px; background-color: red;"></div>
 </body>
 </html>

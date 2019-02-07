@@ -102,6 +102,17 @@ class H5pController extends PluginController
 
     public function get_h5p_settings()
     {
+        $libs = $this->mod->getLibs();
+        $library = null;
+        foreach ($libs as $lib) {
+            if ($lib['runnable']) {
+                $library = $lib;
+                break;
+            }
+        }
+        if (!$library) {
+            throw new Exception("Module has no runnable library.");
+        }
         //$h5p = $this->get_h5p_instance('interface');
         $settings = array(
             'baseUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
@@ -126,9 +137,10 @@ class H5pController extends PluginController
             'name' => $GLOBALS['user']->getFullName(),
             'mail' => $GLOBALS['user']->email
         );
+        $libraryname = $library['name']." ".$library['major_version'].".".$library['minor_version'];
         $settings['contents'] = array(
-            $this->mod->getId() => array(
-                'library' => $this->mod['name'],
+            "cid-" . $this->mod->getId() => array(
+                'library' => $libraryname, //name of the runnable library with space instead of minus
                 'jsonContent' => file_get_contents($this->mod->getPath()."/content/content.json"),
                 'fullscreen' => 0,
                 'exportUrl' => null,
@@ -137,11 +149,11 @@ class H5pController extends PluginController
                 'url' => "",
                 'title' => $this->mod['name'],
                 'displayOptions' => array(
-                    'frame' => true,
+                    'frame' => false,
                     'export' => false,
                     'embed' => false,
                     'copyright' => false,
-                    'icon' => true
+                    'icon' => false
                 ),
                 'metadata' => array(
                     'title' => $this->mod['name'],

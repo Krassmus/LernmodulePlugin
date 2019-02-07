@@ -6,7 +6,25 @@
     <fieldset>
         <legend><?= _("Lernmodul hochladen und bearbeiten") ?></legend>
 
-        <label class="file-upload" id="file_upload">
+        <div class="hgroup">
+            <label>
+                <input type="radio"
+                       name="upload_or_url"
+                       onChange="jQuery('#file_upload').toggle(this.checked); jQuery('#lernmodul_url').toggle(!this.checked);"
+                       value="upload"<?= !$module['url'] ? " checked" : "" ?>>
+                <?= _("Hochladen") ?>
+            </label>
+
+            <label>
+                <input type="radio"
+                       name="upload_or_url"
+                       onChange="jQuery('#lernmodul_url').toggle(this.checked); jQuery('#file_upload').toggle(!this.checked);"
+                       value="url"<?= $module['url'] ? " checked" : "" ?>>
+                <?= _("URL") ?>
+            </label>
+        </div>
+
+        <label class="file-upload" id="file_upload"<?= $module['url'] ? ' style="display: none;"' : "" ?>>
             <input type="file" name="modulefile" accept=".zip,.h5p,.pdf" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
             <?= sprintf(_("Lernmodul auswählen (Gezipptes HTML oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
@@ -36,7 +54,7 @@
             });
         </script>
 
-        <label id="lernmodul_url">
+        <label id="lernmodul_url"<?= !$module['url'] ? ' style="display: none;"' : "" ?>>
             <?= _("URL des Lernmoduls") ?>
             <input type="text"
                    name="module[url]"

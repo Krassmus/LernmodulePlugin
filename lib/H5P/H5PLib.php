@@ -56,7 +56,7 @@ class H5PLib extends SimpleORMap
         $library_json = $this->getPath()."/library.json";
         $sublibs = array();
         if (file_exists($library_json)) {
-            $json = json_decode(file_get_contents($this->getPath() . "/library.json"), true);
+            $json = json_decode(file_get_contents($library_json), true);
             foreach ((array) $json['preloadedDependencies'] as $dependency) {
                 $sublib = H5PLib::findVersion(
                     $dependency['machineName'],
@@ -64,16 +64,74 @@ class H5PLib extends SimpleORMap
                     $dependency['minorVersion']
                 );
                 if ($sublib && !in_array($sublib->getId(), $not_in_ids)) {
-                    $sublibs[] = $sublib;
+                    array_unshift($sublibs, $sublib);
                     $not_in_ids[] = $sublib->getId();
                     foreach ($sublib->getSubLibs($not_in_ids) as $subsublib) {
-                        $sublibs[] = $subsublib;
+                        array_unshift($sublibs, $subsublib);
                         $not_in_ids[] = $subsublib->getId();
                     }
                 }
             }
+            $semantics_json = $this->getPath()."/semantics.json";
+
+
+            if ($json['runnable'] && file_exists($semantics_json)) {
+
+                $semantics = json_decode(file_get_contents($semantics_json), true);
+                $more_libs = $this->fetchSematicsLibraries($semantics, $not_in_ids);
+                foreach ($more_libs as $lib) {
+                    //array_unshift($sublibs, $lib);
+                    $sublibs[] = $lib;
+                    $not_in_ids[] = $lib->getId();
+                }
+            }
+
         }
+
         return $sublibs;
+    }
+
+
+    protected function fetchSematicsLibraries($fields, $not_in_ids = array()) {
+        $libs = array();
+
+        foreach ($fields as $semantic) {
+            if ($semantic['type'] === "library") {
+
+                foreach ($semantic['options'] as $lib_name) {
+                    preg_match("/^(.+)\s+(\d+)\.(\d+)$/", $lib_name, $matches);
+                    $sublib = H5PLib::findVersion(
+                        $matches[1],
+                        $matches[2],
+                        $matches[3]
+                    );
+                    if ($sublib && !in_array($sublib->getId(), $not_in_ids)) {
+                        //array_unshift($libs, $sublib);
+                        $libs[] = $sublib;
+                        $not_in_ids[] = $sublib->getId();
+                        foreach ($sublib->getSubLibs($not_in_ids) as $subsublib) {
+                            //array_unshift($libs, $subsublib);
+                            $libs[] = $subsublib;
+                            $not_in_ids[] = $subsublib->getId();
+                        }
+                    }
+                }
+            }
+            if (isset($semantic['fields']) && count($semantic['fields'])) {
+                foreach ($this->fetchSematicsLibraries($semantic['fields'], $not_in_ids) as $lib) {
+                    //array_unshift($libs, $lib);
+                    $libs[] = $lib;
+                    $not_in_ids[] = $lib->getId();
+                }
+            } elseif(isset($semantic['field']) && count($semantic['field'])) {
+                foreach ($this->fetchSematicsLibraries(array($semantic['field']), $not_in_ids) as $lib) {
+                    //array_unshift($libs, $lib);
+                    $libs[] = $lib;
+                    $not_in_ids[] = $lib->getId();
+                }
+            }
+        }
+        return $libs;
     }
 
     public function getFiles($css_or_jss)

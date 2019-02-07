@@ -88,7 +88,7 @@ class StudipH5P implements H5PFrameworkInterface
      */
     public function t($message, $replacements = array())
     {
-        return $message;
+        return gettext($message);
     }
 
     /**
