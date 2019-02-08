@@ -10,26 +10,6 @@ class H5pController extends PluginController
         parent::before_filter($action, $args);
     }
 
-    /**
-     * View some certain h5p-module in a course.
-     * @param $module_id
-     */
-    public function view_action($module_id)
-    {
-        Navigation::activateItem("/course/lernmodule");
-        Navigation::getItem("/course/lernmodule")->setImage(
-            Icon::create("learnmodule", "info")
-        );
-        $this->mod = new Lernmodul($module_id);
-        PageLayout::addScript($this->plugin->getPluginURL()."/assets/h5p/h5p.js");
-        PageLayout::addScript($this->plugin->getPluginURL()."/assets/h5p/jquery.js");
-        PageLayout::addScript($this->plugin->getPluginURL()."/assets/h5p/h5p-event-dispatcher.js");
-        PageLayout::addScript($this->plugin->getPluginURL()."/assets/h5p/h5p-x-api.js");
-        PageLayout::addScript($this->plugin->getPluginURL()."/assets/h5p/h5p-x-api-events.js");
-        PageLayout::addStylesheet($this->plugin->getPluginURL()."/assets/h5p.css");
-        PageLayout::addHeadElement("script", array('src' => PluginEngine::getURL($this->plugin, array(), "h5p/javascript/".$module_id)));
-    }
-
     public function editor_action($module_id = null)
     {
         if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
@@ -69,6 +49,15 @@ class H5pController extends PluginController
     {
         $this->set_layout(null);
         $this->mod = new H5pLernmodul($module_id);
+        if (!$this->mod->isAllowed()) {
+            $libs = array();
+            foreach (H5PLib::findMany($this->mod->findUnallowedLibraries()) as $lib) {
+                $libs[] = $lib['name']." ".$lib['major_version'].".".$lib['minor_version'];
+            }
+            PageLayout::postInfo(_("Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."), $libs);
+            $this->render_nothing();
+            return;
+        }
 
         $this->lang;
         $this->content = array(
@@ -116,10 +105,10 @@ class H5pController extends PluginController
         //$h5p = $this->get_h5p_instance('interface');
         $settings = array(
             'baseUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
-            'url' => URLHelper::getURL("plugins.php/plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId()),
+            'url' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId(),
             'postUserStatistics' => false,
             'ajax' => array(
-                'setFinished' => ('admin-ajax.php?token=' . ('h5p_result') . '&action=h5p_setFinished'),
+                'setFinished' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_finished"),
                 'contentUserData' => ('admin-ajax.php?token=' . ('h5p_contentuserdata') . '&action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId')
             ),
             'saveFreq' => 30,
@@ -147,6 +136,7 @@ class H5pController extends PluginController
                 'embedCode' => '<iframe src="">',
                 'resizeCode' => null,
                 'url' => "",
+                'contentUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId()."/content",
                 'title' => $this->mod['name'],
                 'displayOptions' => array(
                     'frame' => false,
@@ -164,8 +154,19 @@ class H5pController extends PluginController
                 )
             )
         );
-        //json_decode(file_get_contents($this->mod->getPath()."/content/content.json"), true);
         return $settings;
+    }
+
+    public function set_finished_action()
+    {
+        $module_id = Request::option("contentId");
+        $score = Request::get("score");
+        $max_score = Request::get("maxScore");
+        $opened_time = Request::int("opened");
+        $finished_time = Request::int("finished");
+        $time = Request::get("time");
+
+        $this->render_text("");
     }
 
 

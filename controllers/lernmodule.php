@@ -78,6 +78,7 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = new Lernmodul($module_id);
+        PageLayout::setTitle($this->mod['name']);
         $class = ucfirst($this->mod['type'])."Lernmodul";
         $this->mod = $class::buildExisting($this->mod->toArray());
         if (!$this->mod['url'] && !file_exists($this->mod->getPath())) {
