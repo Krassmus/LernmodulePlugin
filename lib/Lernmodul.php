@@ -273,5 +273,9 @@ class Lernmodul extends SimpleORMap {
         return (bool) $statement->fetch();
     }
 
+    public function getDownloadURL() {
+        return URLhelper::getURL( "plugins.php/lernmoduleplugin/lernmodule/download/" . $this->getId());
+    }
+
 
 }

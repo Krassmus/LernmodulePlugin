@@ -92,13 +92,7 @@ class H5pController extends PluginController
     public function get_h5p_settings()
     {
         $libs = $this->mod->getLibs();
-        $library = null;
-        foreach ($libs as $lib) {
-            if ($lib['runnable']) {
-                $library = $lib;
-                break;
-            }
-        }
+        $library = $this->mod->getMainLib();
         if (!$library) {
             throw new Exception("Module has no runnable library.");
         }
@@ -112,9 +106,65 @@ class H5pController extends PluginController
                 'contentUserData' => ('admin-ajax.php?token=' . ('h5p_contentuserdata') . '&action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId')
             ),
             'saveFreq' => 30,
-            'siteUrl' => URLHelper::getURL("plugins.php/plugins.php/lernmoduleplugin/h5p/iframe/".$this->mod->getId()),
+            'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
             'l10n' => array(
-                'H5P' => "", //$core->getLocalization(),
+                'H5P' => array(
+                    'fullscreen' => _("Vollbild"),
+                    'disableFullscreen' => _('Vollbild beenden'),
+                    'download' => _('Download'),
+                    'copyrights' => _('Nutzungsbedingung'),
+                    'embed' => _('Einbetten'),
+                    'size' => _('Größe'),
+                    'showAdvanced' => _('Zeige mehr'),
+                    'hideAdvanced' => _('Zuklappen'),
+                    'advancedHelp' => _('Include this script on your website if you want dynamic sizing of the embedded content:'),
+                    'copyrightInformation' => _('Rights of use'),
+                    'close' => _('Schließen'),
+                    'title' => _('Titel'),
+                    'author' => _('Author'),
+                    'year' => _('Jahr'),
+                    'source' => _('Quelle'),
+                    'license' => _('License'),
+                    'thumbnail' => _('Thumbnail'),
+                    'noCopyrights' => _('No copyright information available for this content.'),
+                    'downloadDescription' => _('Download this content as a H5P file.'),
+                    'copyrightsDescription' => _('View copyright information for this content.'),
+                    'embedDescription' => _('View the embed code for this content.'),
+                    'h5pDescription' => _('Visit H5P.org to check out more cool content.'),
+                    'contentChanged' => _('This content has changed since you last used it.'),
+                    'startingOver' => _("You'll be starting over."),
+                    'by' => _('von'),
+                    'showMore' => _('Mehr anzeigen'),
+                    'showLess' => _('Weniger anzeigen'),
+                    'subLevel' => _('Sublevel'),
+                    'confirmDialogHeader' => _('Aktion bestätigen'),
+                    'confirmDialogBody' => _('Wirklich fortfahren? Änderungen können nicht rückgängig gemacht werden.'),
+                    'cancelLabel' => _('Abbrechen'),
+                    'confirmLabel' => _('Bestätigen'),
+                    'licenseU' => _('Undisclosed'),
+                    'licenseCCBY' => _('Attribution'),
+                    'licenseCCBYSA' => _('Attribution-ShareAlike'),
+                    'licenseCCBYND' => _('Attribution-NoDerivs'),
+                    'licenseCCBYNC' => _('Attribution-NonCommercial'),
+                    'licenseCCBYNCSA' => _('Attribution-NonCommercial-ShareAlike'),
+                    'licenseCCBYNCND' => _('Attribution-NonCommercial-NoDerivs'),
+                    'licenseCC40' => _('4.0 International'),
+                    'licenseCC30' => _('3.0 Unported'),
+                    'licenseCC25' => _('2.5 Generic'),
+                    'licenseCC20' => _('2.0 Generic'),
+                    'licenseCC10' => _('1.0 Generic'),
+                    'licenseGPL' => _('General Public License'),
+                    'licenseV3' => _('Version 3'),
+                    'licenseV2' => _('Version 2'),
+                    'licenseV1' => _('Version 1'),
+                    'licensePD' => _('Public Domain'),
+                    'licenseCC010' => _('CC0 1.0 Universal (CC0 1.0) Public Domain Dedication'),
+                    'licensePDM' => _('Public Domain Mark'),
+                    'licenseC' => _('Copyright'),
+                    'contentType' => _('Inhaltstyp'),
+                    'licenseExtras' => _('License Extras'),
+                    'changes' => _('Changelog'),
+                )
             ),
             'hubIsEnabled' => false,
             'reportingIsEnabled' => FALSE,
@@ -151,6 +201,12 @@ class H5pController extends PluginController
                 ),
                 'contentUserData' => array(
                     array('state' => "{}")
+                ),
+                'scripts' => array(
+                    //"\/wordpress\/wp-content\/uploads\/h5p\/cachedassets\/8665190ede50b21552b3c85999b0bf7930b117fc.js"
+                ),
+                'styles' => array(
+                    //"\/wordpress\/wp-content\/uploads\/h5p\/cachedassets\/8665190ede50b21552b3c85999b0bf7930b117fc.css"
                 )
             )
         );
@@ -167,6 +223,25 @@ class H5pController extends PluginController
         $time = Request::get("time");
 
         $this->render_text("");
+    }
+
+    public function download_action($module_id) {
+        $this->mod = new H5pLernmodul($module_id);
+
+        $archive = $GLOBALS['TMP_PATH']."/h5p_".$module_id.".zip";
+        $zip = \Studip\ZipArchive::create($archive);
+        $zip->addFromPath($this->mod->getPath());
+        foreach ($this->mod->libs as $lib) {
+            $zip->addFromPath($lib->getPath(), $lib['name']."-".$lib['major_version'].".".$lib['minor_version']."/");
+        }
+        $zip->close();
+
+        header("Content-Type: application/h5p");
+        header("Content-Disposition: attachment; filename=\"".$this->mod['name'].".h5p\"");
+        header("Content-Length: ".filesize($archive));
+        echo file_get_contents($archive);
+        unlink($archive);
+        die();
     }
 
 

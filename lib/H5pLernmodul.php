@@ -252,4 +252,25 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         $disallowed = $statement->fetchAll(PDO::FETCH_COLUMN);
         return $disallowed;
     }
+
+    public function getDownloadURL() {
+        return URLhelper::getURL( "plugins.php/lernmoduleplugin/h5p/download/" . $this->getId());
+    }
+
+    public function getMainLib() {
+        $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
+        $main_lib_name = $json['mainLibrary'];
+        foreach ($json['preloadedDependencies'] as $lib_data) {
+            if ($lib_data['machineName'] === $main_lib_name) {
+                $main_lib_major_version = $lib_data['majorVersion'];
+                $main_lib_minor_version = $lib_data['minorVersion'];
+                break;
+            }
+        }
+        if (isset($main_lib_major_version)) {
+            return H5PLib::findVersion($main_lib_name, $main_lib_major_version, $main_lib_minor_version);
+        } else {
+            return H5PLib::findOneBySQL("name = ? ORDER BY major_version DESC, minor_version DESC", array($main_lib_name));
+        }
+    }
 }
