@@ -17,12 +17,6 @@ class H5pController extends PluginController
         }
     }
 
-    public function javascript_action($module_id)
-    {
-        $this->set_layout(null);
-        $this->mod = new Lernmodul($module_id);
-    }
-
     public function admin_libraries_action()
     {
         if (!$GLOBALS['perm']->have_perm("root")) {
@@ -43,6 +37,16 @@ class H5pController extends PluginController
         $lib['allowed'] = Request::int("allowed", 0);
         $lib->store();
         $this->render_text("ok");
+    }
+
+    public function add_library_action()
+    {
+        if (!$GLOBALS['perm']->have_perm("root")) {
+            throw new AccessDeniedException();
+        }
+        if (Request::isPost()) {
+
+        }
     }
 
     public function iframe_action($module_id)
@@ -96,7 +100,6 @@ class H5pController extends PluginController
         if (!$library) {
             throw new Exception("Module has no runnable library.");
         }
-        //$h5p = $this->get_h5p_instance('interface');
         $settings = array(
             'baseUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
             'url' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId(),
@@ -201,12 +204,6 @@ class H5pController extends PluginController
                 ),
                 'contentUserData' => array(
                     array('state' => "{}")
-                ),
-                'scripts' => array(
-                    //"\/wordpress\/wp-content\/uploads\/h5p\/cachedassets\/8665190ede50b21552b3c85999b0bf7930b117fc.js"
-                ),
-                'styles' => array(
-                    //"\/wordpress\/wp-content\/uploads\/h5p\/cachedassets\/8665190ede50b21552b3c85999b0bf7930b117fc.css"
                 )
             )
         );

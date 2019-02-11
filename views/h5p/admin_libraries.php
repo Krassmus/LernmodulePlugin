@@ -27,3 +27,14 @@
         <? endforeach ?>
     </tbody>
 </table>
+
+<?
+
+$actions = new ActionsWidget();
+$actions->addLink(
+    _("Bibliotheken hinzufügen"),
+    PluginEngine::getURL($plugin, array(), "h5p/add_library"),
+    Icon::create("add", "clickable"),
+    array('data-dialog' => 1)
+);
+Sidebar::Get()->addWidget($actions);
