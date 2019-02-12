@@ -45,7 +45,68 @@ class H5pController extends PluginController
             throw new AccessDeniedException();
         }
         if (Request::isPost()) {
+            if ($_FILES['file']['size'] > 0) {
+                $tmp_path = $GLOBALS['TMP_PATH']."/h5p_libs_".uniqid();
+                $success = \Studip\ZipArchive::extractToPath($_FILES['file']['tmp_name'], $tmp_path);
+                if ($success) {
+                    $lib_paths = array();
+                    if (file_exists($tmp_path ."/library.json")) {
+                        //einzelne Bibliothek
+                        $lib_paths[] = $tmp_path;
+                    } else {
+                        foreach (scandir($tmp_path) as $file) {
+                            if (!in_array($file, array(".", ".."))
+                                    && is_dir($tmp_path."/".$file)
+                                    && file_exists($tmp_path."/".$file."/library.json")) {
+                                $lib_paths[] = $tmp_path."/".$file;
+                            }
+                        }
+                    }
+                    $libs_name = array();
+                    foreach ($lib_paths as $lib_path) {
+                        $json = json_decode(file_get_contents($lib_path."/library.json"), true);
+                        $lib_is_new = false;
+                        $lib = H5PLib::findVersion($json['machineName'], $json['majorVersion'], $json['minorVersion']);
+                        if (!$lib) {
+                            $lib = new H5PLib();
+                            $lib['name'] = $json['machineName'];
+                            $lib['major_version'] = $json['majorVersion'];
+                            $lib['minor_version'] = $json['minorVersion'];
+                            $lib['patch_version'] = $json['patchVersion'];
+                            $lib['allowed'] = Request::int("activate", 0);
+                            $lib['runnable'] = $json['runnable'] ? 1 : 0;
+                            $lib->store();
+                            $lib_is_new = true;
+                        }
+                        if ((Request::get("overwrite") === "always")
+                                || $lib_is_new
+                                || ((Request::get("overwrite") === "nonactivated") && !$lib['allowed'])
+                                || ((Request::get("overwrite") === "patch") && ($json['patchVersion'] > $lib['patch_version']))) {
+                            //copy
+                            if (file_exists($lib->getPath())) {
+                                rmdirr($lib->getPath());
+                            }
+                            rename($lib_path, $lib->getPath());
+                            $lib['patch_version'] = $json['patchVersion'];
+                            if (Request::int("activate", 0)) {
+                                $lib['allowed'] = 1;
+                            }
+                            $lib->store();
+                            $libs_name[] = $lib['name']." ".$lib['major_version'].".".$lib['minor_version'];
+                        }
+                    }
 
+                    rmdirr($tmp_path);
+
+                }
+                unlink($_FILES['file']['tmp_name']);
+                if (count($libs_name)) {
+                    PageLayout::postSuccess(_("H5P-Bibliotheken wurden übernommen"), $libs_name);
+                } else {
+                    PageLayout::postError(_("Es konnten leider keine H5P-Bibliotheken in der Datei gefunden werden, die übernommen wurden."));
+                }
+                $this->redirect("h5p/admin_libraries");
+            }
         }
     }
 

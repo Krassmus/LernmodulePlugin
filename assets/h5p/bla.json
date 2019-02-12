@@ -1,0 +1,131 @@
+{
+    "baseUrl": "http:\/\/localhost\/wordpress",
+    "url": "\/wordpress\/wp-content\/uploads\/h5p",
+    "postUserStatistics": true,
+    "ajax": {
+        "setFinished": "http:\/\/localhost\/wordpress\/wp-admin\/admin-ajax.php?token=3d45d42f4e&action=h5p_setFinished",
+        "contentUserData": "http:\/\/localhost\/wordpress\/wp-admin\/admin-ajax.php?token=aa536add7a&action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId"
+    },
+    "saveFreq": false,
+    "siteUrl": "http:\/\/localhost\/wordpress",
+    "l10n": {
+        "H5P": {
+            "fullscreen": "Vollbild",
+            "disableFullscreen": "Disable fullscreen",
+            "download": "Download",
+            "copyrights": "Rights of use",
+            "embed": "Embed",
+            "size": "Size",
+            "showAdvanced": "Show advanced",
+            "hideAdvanced": "Hide advanced",
+            "advancedHelp": "Include this script on your website if you want dynamic sizing of the embedded content:",
+            "copyrightInformation": "Rights of use",
+            "close": "Close",
+            "title": "Titel",
+            "author": "Autor",
+            "year": "Year",
+            "source": "Source",
+            "license": "License",
+            "thumbnail": "Thumbnail",
+            "noCopyrights": "No copyright information available for this content.",
+            "downloadDescription": "Download this content as a H5P file.",
+            "copyrightsDescription": "View copyright information for this content.",
+            "embedDescription": "View the embed code for this content.",
+            "h5pDescription": "Visit H5P.org to check out more cool content.",
+            "contentChanged": "This content has changed since you last used it.",
+            "startingOver": "You'll be starting over.",
+            "by": "by",
+            "showMore": "Show more",
+            "showLess": "Show less",
+            "subLevel": "Sublevel",
+            "confirmDialogHeader": "Confirm action",
+            "confirmDialogBody": "Please confirm that you wish to proceed. This action is not reversible.",
+            "cancelLabel": "Cancel",
+            "confirmLabel": "Confirm",
+            "licenseU": "Undisclosed",
+            "licenseCCBY": "Attribution",
+            "licenseCCBYSA": "Attribution-ShareAlike",
+            "licenseCCBYND": "Attribution-NoDerivs",
+            "licenseCCBYNC": "Attribution-NonCommercial",
+            "licenseCCBYNCSA": "Attribution-NonCommercial-ShareAlike",
+            "licenseCCBYNCND": "Attribution-NonCommercial-NoDerivs",
+            "licenseCC40": "4.0 International",
+            "licenseCC30": "3.0 Unported",
+            "licenseCC25": "2.5 Generic",
+            "licenseCC20": "2.0 Generic",
+            "licenseCC10": "1.0 Generic",
+            "licenseGPL": "General Public License",
+            "licenseV3": "Version 3",
+            "licenseV2": "Version 2",
+            "licenseV1": "Version 1",
+            "licensePD": "Public Domain",
+            "licenseCC010": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+            "licensePDM": "Public Domain Mark",
+            "licenseC": "Copyright",
+            "contentType": "Content Type",
+            "licenseExtras": "License Extras",
+            "changes": "Changelog"
+        }
+    },
+    "hubIsEnabled": false,
+    "reportingIsEnabled": false,
+    "libraryConfig": null,
+    "crossorigin": null,
+    "user": {
+        "name": "Krassmus",
+        "mail": "fuhse@data-quest.de"
+    },
+    "core": {
+        "styles": [
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/styles\/h5p.css?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/styles\/h5p-confirmation-dialog.css?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/styles\/h5p-core-button.css?ver=1.11.3"
+        ],
+        "scripts": [
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/jquery.js?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/h5p.js?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/h5p-event-dispatcher.js?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/h5p-x-api-event.js?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/h5p-x-api.js?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/h5p-content-type.js?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/h5p-confirmation-dialog.js?ver=1.11.3",
+            "\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/h5p-action-bar.js?ver=1.11.3"
+        ]
+    },
+    "loadedJs": [],
+    "loadedCss": [],
+    "contents": {
+        "cid-4": {
+            "library": "H5P.Timeline 1.1",
+            "jsonContent": "{\"timeline\":{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/thumb\\\/5\\\/5e\\\/Half_a_strawberry.jpg\\\/320px-Half_a_strawberry.jpg\",\"credit\":\"Author: Jeff Kubina. License:  Creative Commons Attribution-Share Alike 2.0 Generic. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Half_a_strawberry.jpg\"},\"date\":[{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/5\\\/55\\\/Pomological_Watercolor_POM00004368.jpg\",\"credit\":\"License: Public domain. URL: https:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Pomological_Watercolor_POM00004368.jpg\"},\"headline\":\"Origins\",\"startDate\":\"-234\",\"endDate\":\"-234\",\"text\":\"<p>The history of Strawberries&nbsp;goes&nbsp;back over 2,200 years. The growth of wild strawberries in Italy can be traced back to 234 BC.<\\\/p>\\n\"},{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/c\\\/c1\\\/Aardbei_Karina.jpg\",\"credit\":\"Author: Maksim. License:  Creative Commons Attribution-Share Alike 3.0 Unported. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Aardbei_Karina.jpg\"},\"text\":\"<p>Latin writers such as Apulius had cited the strawberry for its medicative purposes. Other writers such as Virgil and Ovid mentioned strawberry only in association with other wild fruits. Pliny (23-79 A.D.) was the last-known writer to mention this fruit.<\\\/p>\\n\",\"startDate\":\"0023\",\"endDate\":\"0079\",\"headline\":\"Early mentions of Strawberries\"},{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/thumb\\\/f\\\/fd\\\/Bosch%2C_Hieronymus_-_The_Garden_of_Earthly_Delights%2C_central_panel_-_Detail_Strawberry.jpg\\\/319px-Bosch%2C_Hieronymus_-_The_Garden_of_Earthly_Delights%2C_central_panel_-_Detail_Strawberry.jpg\",\"credit\":\"Author: Hieronymus Bosch. License: Public domain. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Bosch,_Hieronymus_-_The_Garden_of_Earthly_Delights,_central_panel_-_Detail_Strawberry.jpg\"},\"text\":\"<p>In the thirteenth century, a famous Greek doctor 'Nicholas Myrepsus' had mentioned Strawberries&nbsp;in his paintings.<\\\/p>\\n\",\"startDate\":\"1200\",\"endDate\":\"1300\",\"headline\":\"Middle ages\"},{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/thumb\\\/e\\\/ed\\\/Strawberries.JPG\\\/320px-Strawberries.JPG\",\"credit\":\"Author: Formulax. License: Creative Commons Attribution-Share Alike 2.0 Generic. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Strawberries.JPG\"},\"text\":\"<p>Strawberries&nbsp;were&nbsp;in cultivation in Europe by the 1300s, as the French began transplanting the wood variety to the garden.<\\\/p>\\n\",\"startDate\":\"1300\",\"endDate\":\"1700\",\"headline\":\"Cultivation in Europe\"},{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/thumb\\\/c\\\/ce\\\/Bowl_of_Strawberries.jpg\\\/320px-Bowl_of_Strawberries.jpg\",\"credit\":\"Author: ShakataGaNai. License: Creative Commons Attribution-Share Alike 3.0 Unported. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Bowl_of_Strawberries.jpg\"},\"text\":\"<p>Many new varieties of the strawberry were developed in the 1700s, in North America. The varieties that developed from the cross breeding of American and European strawberries were known for their sweet taste and perfect size.<\\\/p>\\n\",\"startDate\":\"1700\",\"endDate\":\"1800\",\"headline\":\"New variaties in North America\"},{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/thumb\\\/4\\\/4a\\\/Erdbeeren2.JPG\\\/320px-Erdbeeren2.JPG\",\"credit\":\"Author: Enzyklofant. License: Creative Commons Attribution-Share Alike 3.0 Unported. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Erdbeeren2.JPG\"},\"text\":\"<p>Commercial strawberry production began in 1800. Only selections of the native Fragaria Virginiana were raised till 1840.<\\\/p>\\n\",\"startDate\":\"1800\",\"endDate\":\"1840\",\"headline\":\"Commercial production\"},{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/thumb\\\/d\\\/db\\\/Erdbeere_Senga_Sengana.JPG\\\/320px-Erdbeere_Senga_Sengana.JPG\",\"credit\":\"Author: 3268zauber. License: Creative Commons Attribution-Share Alike 3.0 Unported. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Erdbeere_Senga_Sengana.JPG\"},\"text\":\"<p>In 1858, the native Virginian varieties were being replaced by Wilson (a hard and large-fruited strawberry).&nbsp;This innovation expanded the production to other cities such as Florida, Louisiana, and Oregon.<\\\/p>\\n\",\"startDate\":\"1858\",\"endDate\":\"1858\",\"headline\":\"Virginian strawberries are replaced\"},{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/thumb\\\/4\\\/43\\\/Homemade_strawberry_liqueur.jpg\\\/266px-Homemade_strawberry_liqueur.jpg\",\"credit\":\"Author:  Blue Lotus. License: Creative Commons Attribution 2.0 Generic. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Homemade_strawberry_liqueur.jpg\"},\"text\":\"<p>The 20th century saw the advent of strawberry cosmetics on a large scale. This fruit is widely used in shampoos, moisturizers, cleansers, soaps, etc.<\\\/p>\\n\",\"startDate\":\"1900\",\"endDate\":\"2000\",\"headline\":\"Strawberries in cosmetics\"},{\"asset\":{\"media\":\"https:\\\/\\\/upload.wikimedia.org\\\/wikipedia\\\/commons\\\/thumb\\\/c\\\/c5\\\/Aardbei.jpg\\\/320px-Aardbei.jpg\",\"credit\":\"Author: AutoCCD. License: Creative Commons Attribution-Share Alike 2.5 Generic. URL: http:\\\/\\\/commons.wikimedia.org\\\/wiki\\\/File:Aardbei.jpg\"},\"startDate\":\"2000\",\"endDate\":\"2014\",\"text\":\"<p>This fruit is grown in many parts of the world.&nbsp;The sweet and tasty fruit, strawberry has many qualities which make it a popular and also a nutritious fruit.<\\\/p>\\n\",\"headline\":\"Strawberries worldwide\"}],\"headline\":\"History of strawberries\",\"text\":\"<div>The strawberry plant is a member of the <em>Rosaceae <\\\/em>family and the genus <em>Fragaria<\\\/em>. Against the common belief that strawberry is a fruit, the fleshy red outgrowth is actually the receptacle of the strawberry flower.<\\\/div>\\n\\n<div>&nbsp;<\\\/div>\\n\\n<div>Source: http:\\\/\\\/www.buzzle.com\\\/articles\\\/history-of-strawberries.html<\\\/div>\\n\",\"defaultZoomLevel\":\"0\",\"language\":\"en\",\"era\":[{\"text\":\"\"}],\"height\":600}}",
+            "fullScreen": "1",
+            "exportUrl": "\/wordpress\/wp-content\/uploads\/h5p\/exports\/timeline-4.h5p",
+            "embedCode": "<iframe src=\"http:\/\/localhost\/wordpress\/wp-admin\/admin-ajax.php?action=h5p_embed&id=4\" width=\":w\" height=\":h\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"><\/iframe>",
+            "resizeCode": "<script src=\"http:\/\/localhost\/wordpress\/wp-content\/plugins\/h5p\/h5p-php-library\/js\/h5p-resizer.js\" charset=\"UTF-8\"><\/script>",
+            "url": "http:\/\/localhost\/wordpress\/wp-admin\/admin-ajax.php?action=h5p_embed&id=4",
+            "title": "Timeline",
+            "displayOptions": {
+                "frame": true,
+                "export": true,
+                "embed": true,
+                "copyright": true,
+                "icon": true
+            },
+            "metadata": {
+                "title": "Timeline",
+                "license": "U"
+            },
+            "contentUserData": [
+                {
+                    "state": "{}"
+                }
+            ],
+            "scripts": [
+                "\/wordpress\/wp-content\/uploads\/h5p\/cachedassets\/e4de156d425ca0355d38de0536b9e53cd1c7e824.js"
+            ],
+            "styles": [
+                "\/wordpress\/wp-content\/uploads\/h5p\/cachedassets\/e4de156d425ca0355d38de0536b9e53cd1c7e824.css"
+            ]
+        }
+    }
+};

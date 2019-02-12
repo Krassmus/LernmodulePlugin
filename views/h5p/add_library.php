@@ -26,4 +26,7 @@
             </select>
         </label>
     </fieldset>
+    <div data-dialog-button>
+        <?= \Studip\Button::create(_("Speichern")) ?>
+    </div>
 </form>
