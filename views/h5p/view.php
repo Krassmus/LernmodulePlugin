@@ -1,5 +1,5 @@
 
-<iframe src="<?= URLHelper::getLink("plugins.php/lernmoduleplugin/h5p/iframe/".$module->getId()) ?>"
+<iframe src="<?= URLHelper::getLink("plugins.php/lernmoduleplugin/h5p/iframe/".$module->getId(), array('a' => $attempt->getId())) ?>"
         style="width: 100%; border: none; height: 100vh;"></iframe>
 
 <script>

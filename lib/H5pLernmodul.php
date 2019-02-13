@@ -92,6 +92,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         } else {
             $templatefactory = new Flexi_TemplateFactory(__DIR__ . "/../views");
             $template = $templatefactory->open("h5p/view.php");
+            $template->set_attribute("attempt", $attempt);
             $template->set_attribute("module", $this);
             return $template;
         }

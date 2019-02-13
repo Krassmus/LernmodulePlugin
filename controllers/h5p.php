@@ -10,13 +10,6 @@ class H5pController extends PluginController
         parent::before_filter($action, $args);
     }
 
-    public function editor_action($module_id = null)
-    {
-        if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
-            throw new AccessDeniedException();
-        }
-    }
-
     public function admin_libraries_action()
     {
         if (!$GLOBALS['perm']->have_perm("root")) {
@@ -114,6 +107,7 @@ class H5pController extends PluginController
     {
         $this->set_layout(null);
         $this->mod = new H5pLernmodul($module_id);
+        $this->attempt = new LernmodulAttempt(Request::get("a"));
         if (!$this->mod->isAllowed()) {
             $libs = array();
             foreach (H5PLib::findMany($this->mod->findUnallowedLibraries()) as $lib) {
@@ -165,8 +159,9 @@ class H5pController extends PluginController
             'url' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId(),
             'postUserStatistics' => false,
             'ajax' => array(
-                'setFinished' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_finished"),
-                'contentUserData' => ('admin-ajax.php?token=' . ('h5p_contentuserdata') . '&action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId')
+                'setFinished' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_finished/".$this->attempt->getId()),
+                'contentUserData' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_userdata/".$this->attempt->getId())
+                    //('admin-ajax.php?token=' . ('h5p_contentuserdata') . '&action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId')
             ),
             'saveFreq' => 15,
             'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
@@ -283,6 +278,10 @@ class H5pController extends PluginController
         $this->render_text("");
     }
 
+    public function set_userdata_action() {
+        $this->render_text("ok");
+    }
+
     public function download_action($module_id) {
         $this->mod = new H5pLernmodul($module_id);
 
@@ -300,6 +299,13 @@ class H5pController extends PluginController
         echo file_get_contents($archive);
         unlink($archive);
         die();
+    }
+
+    public function editor_action($module_id = null)
+    {
+        if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            throw new AccessDeniedException();
+        }
     }
 
 

@@ -192,7 +192,7 @@ class LernmoduleController extends PluginController
             if ($success) {
                 PageLayout::postMessage(MessageBox::success(_("Lernmodul erfolgreich gespeichert.")));
             }
-            $this->redirect("lernmodule/overview");
+            $this->redirect("lernmodule/view/".$this->module->getId());
         }
         $statement = DBManager::get()->prepare("
             SELECT file_refs.id
