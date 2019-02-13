@@ -156,7 +156,6 @@ class H5pController extends PluginController
 
     public function get_h5p_settings()
     {
-        $libs = $this->mod->getLibs();
         $library = $this->mod->getMainLib();
         if (!$library) {
             throw new Exception("Module has no runnable library.");
@@ -169,8 +168,9 @@ class H5pController extends PluginController
                 'setFinished' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_finished"),
                 'contentUserData' => ('admin-ajax.php?token=' . ('h5p_contentuserdata') . '&action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId')
             ),
-            'saveFreq' => 30,
+            'saveFreq' => 15,
             'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
+            'libraryUrl' => $this->mod->getH5pLibURL(), //needed to fetch the library.json via ajax-request
             'l10n' => array(
                 'H5P' => array(
                     'fullscreen' => _("Vollbild"),
@@ -245,19 +245,19 @@ class H5pController extends PluginController
             "cid-" . $this->mod->getId() => array(
                 'library' => $libraryname, //name of the runnable library with space instead of minus
                 'jsonContent' => file_get_contents($this->mod->getPath()."/content/content.json"),
-                'fullscreen' => 0,
+                'fullscreen' => 1,
                 'exportUrl' => null,
                 'embedCode' => '<iframe src="">',
-                'resizeCode' => null,
+                'resizeCode' => "<script src=\"".$GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginassets/h5p/h5p-resizer.js\" charset=\"UTF-8\"><\/script>",
                 'url' => "",
                 'contentUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId()."/content",
                 'title' => $this->mod['name'],
                 'displayOptions' => array(
-                    'frame' => false,
-                    'export' => false,
-                    'embed' => false,
-                    'copyright' => false,
-                    'icon' => false
+                    'frame' => true,
+                    'export' => true,
+                    'embed' => true,
+                    'copyright' => true,
+                    'icon' => true
                 ),
                 'metadata' => array(
                     'title' => $this->mod['name'],

@@ -1,18 +1,6 @@
-<? $sandbox = array(
-    "allow-forms",
-    "allow-modals",
-    "allow-orientation-lock",
-    "allow-pointer-lock",
-    "allow-popups",
-    //"allow-popups-to-escape-sandbox",
-    "allow-presentation",
-    "allow-same-origin", //we need this for ajax calls, which is a xss-vulnurability
-    "allow-scripts",
-    //"allow-top-navigation",
-) ?>
 
 <iframe src="<?= URLHelper::getLink("plugins.php/lernmoduleplugin/h5p/iframe/".$module->getId()) ?>"
-        style="width: 100%; border: none; height: 100vh;" sandbox="<?= implode(" ", $sandbox) ?>"></iframe>
+        style="width: 100%; border: none; height: 100vh;"></iframe>
 
 <script>
     STUDIP.Lernmodule = {

@@ -32,7 +32,8 @@
                     <? if ($active) : ?>
                         <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($course_id, $mod->getId())) ?>
                         <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
-                            <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');\"" : "" ?>>
+                            <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                            <div class="module"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>>
                                 <? if (!$mod->isWritable()) : ?>
                                     <? if (LernmodulAttempt::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
                                         <div class="crown">
@@ -55,14 +56,16 @@
                                 </div>
                             </div>
                         <? else : ?>
-                        <div class="module" style="opacity: 0.5;<?= $mod['image'] ? " background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
+                        <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                        <div class="module" style="opacity: 0.5;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
                             <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= Icon::create("date", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
                             </div>
                         </div>
                         <? endif ?>
                     <? else : ?>
-                        <div class="module" style="opacity: 0.3;<?= $mod['image'] ? " background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');" : "" ?>" title="<?= _("Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
+                        <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                        <div class="module" style="opacity: 0.3;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= _("Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
                             <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= Icon::create("question-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
                             </div>
@@ -74,7 +77,8 @@
             <? endforeach ?>
         <? } while (count($module) < $last_mod_number) ?>
         <? foreach ($module as $mod) : ?>
-            <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "")."/".htmlReady($mod['image'])."');\"" : "" ?>>
+            <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+            <div class="module"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>>
                 <div class="shadow">
                     <?= Icon::create("exclaim-circle", "attention")->asImg(40, array('style' => "vertical-align: middle;", 'title' => _("Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie erreicht werden."))) ?>
                     <? if ($mod->isWritable()) : ?>

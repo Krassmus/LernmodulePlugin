@@ -194,6 +194,18 @@ class LernmoduleController extends PluginController
             }
             $this->redirect("lernmodule/overview");
         }
+        $statement = DBManager::get()->prepare("
+            SELECT file_refs.id
+            FROM file_refs
+                INNER JOIN folders ON (folders.id = file_refs.folder_id)
+                INNER JOIN files ON (files.id = file_refs.file_id)
+            WHERE folders.range_id = :seminar_id
+                AND folders.folder_type IN ('StandardFolder', 'RootFolder', 'MaterialFolder')
+                AND folders.range_type = 'course'
+                AND SUBSTRING(files.mime_type, 1, 6) = 'image/'
+        ");
+        $statement->execute(array('seminar_id' => $this->course_id));
+        $this->course_images = FileRef::findMany($statement->fetchAll(PDO::FETCH_COLUMN, 0));
     }
 
     public function evaluation_action($module_id = null)

@@ -112,22 +112,41 @@
                 <div id="image_preview" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady($module['image'])."');" : "" ?>"></div>
 
             <? else : ?>
-                <? $images = $module->scanForImages() ?>
-                <? if (count($images)) : ?>
+                <? $module_images = $module->scanForImages() ?>
+                <? if (count($module_images) + count($course_images) > 0) : ?>
                     <label>
                         <?= _("Bild auswählen") ?>
-                        <select id="select_image" name="module[image]" onChange="jQuery('#image_preview').css('background-image', 'url(' + jQuery('#image_preview').data('url_base') + '/' + this.value + ')'); ">
+                        <select id="select_image" name="module[image]" onChange="jQuery('#image_preview').css('background-image', 'url(' + jQuery(this).find(':selected').data('url') + ')'); ">
                             <option value=""><?= _("Keines") ?></option>
-                            <? foreach ($images as $image) : ?>
-                                <option value="<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>><?= htmlReady($image) ?></option>
-                            <? endforeach ?>
+                            <? if (count($module_images)) : ?>
+                                <optgroup label="<?= _("Bilder aus dem Lernmodul") ?>">
+                                    <? foreach ($module_images as $image) : ?>
+                                        <option value="<?= htmlReady($image) ?>"
+                                                data-url="<?= $module->getDataURL() ?>/<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>>
+                                            <?= htmlReady($image) ?>
+                                        </option>
+                                    <? endforeach ?>
+                                </optgroup>
+                            <? endif ?>
+                            <? if (count($course_images)) : ?>
+                                <optgroup label="<?= _("Bilder der Veranstaltung") ?>">
+                                    <? foreach ($course_images as $fileref) : ?>
+                                        <option value="<?= htmlReady($fileref->getId()) ?>" data-url="<?= htmlReady($fileref->getDownloadURL()) ?>"<?= $module['image'] === $fileref->getId() ? " selected" : "" ?>>
+                                            <?= htmlReady($fileref['name']) ?>
+                                        </option>
+                                    <? endforeach ?>
+                                </optgroup>
+                            <? endif ?>
+
+
                         </select>
                     </label>
                     <div>
                         <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').prev().attr('selected', 'selected').trigger('change'); return false;">
                             <?= Icon::create("arr_1left", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
-                        <div id="image_preview" data-url_base="<?= htmlReady($module->getDataURL()) ?>" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady($module->getDataURL()."/".$module['image'])."');" : "" ?>"></div>
+                        <? $background_image = FileRef::find($module['image']) ?: $module->getDataURL()."/".$module['image'] ?>
+                        <div id="image_preview" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');" : "" ?>"></div>
                         <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').next().attr('selected', 'selected').trigger('change'); return false;">
                             <?= Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
