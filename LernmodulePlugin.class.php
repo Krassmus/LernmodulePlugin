@@ -12,6 +12,7 @@ require_once __DIR__."/lib/LernmodulDependency.php";
 require_once __DIR__."/lib/LernmodulGame.php";
 require_once __DIR__."/lib/LernmodulGameAttendance.php";
 require_once __DIR__."/lib/LernmodulAdmission/LernmodulAdmission.class.php";
+require_once __DIR__."/lib/H5P/H5PLib.php";
 require_once 'app/controllers/plugin_controller.php';
 
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
@@ -38,6 +39,10 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
                     $attempt->store();
                 }
             }
+        }
+        if ($GLOBALS['perm']->have_perm("root")) {
+            $nav = new Navigation(_("H5P-Bibliotheken"), PluginEngine::getURL($this, array(), "h5p/admin_libraries"));
+            Navigation::addItem("/admin/locations/h5p", $nav);
         }
     }
 

@@ -22,11 +22,13 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
         Icon::create("edit", "clickable")
 
     );
-    $actions->addLink(
-        _("Lernmodul herunterladen"),
-        PluginEngine::getURL($plugin, array(), "lernmodule/download/".$mod->getId()),
-        Icon::create("download", "clickable")
-    );
+    if ($mod->getDownloadURL()) {
+        $actions->addLink(
+            _("Lernmodul herunterladen"),
+            $mod->getDownloadURL(),
+            Icon::create("download", "clickable")
+        );
+    }
     Sidebar::Get()->addWidget($actions);
 }
 
