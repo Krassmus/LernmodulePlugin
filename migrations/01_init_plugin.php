@@ -93,14 +93,14 @@ class InitPlugin extends Migration {
         ));
         Config::get()->create("LERNMODUL_DATA_PATH", array(
             'type' => "string",
-            'value' => "dozent",
+            'value' => "",
             'range' => "global",
             'section' => "global",
             'description' => "Der absolute Pfad auf der Festplatte, wo die Lernmodule gespeichert werden sollen. Ist der Wert leer, sind sie in einem parallelen Pluginordner. Nur zusammen mit LERNMODUL_DATA_URL angeben."
         ));
         Config::get()->create("LERNMODUL_DATA_URL", array(
             'type' => "string",
-            'value' => "dozent",
+            'value' => "",
             'range' => "global",
             'section' => "global",
             'description' => "Die URL, unter der die Lernmodule stecken. Es kann sinnvoll sein, diese URL unter einer Subdomain zu haben, damit Lernmodule einen anderen Origin haben."

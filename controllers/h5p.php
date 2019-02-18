@@ -161,9 +161,8 @@ class H5pController extends PluginController
             'ajax' => array(
                 'setFinished' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_finished/".$this->attempt->getId()),
                 'contentUserData' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_userdata/".$this->attempt->getId())
-                    //('admin-ajax.php?token=' . ('h5p_contentuserdata') . '&action=h5p_contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId')
             ),
-            'saveFreq' => 15,
+            'saveFreq' => 2,
             'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
             'libraryUrl' => $this->mod->getH5pLibURL(), //needed to fetch the library.json via ajax-request
             'l10n' => array(
@@ -236,6 +235,9 @@ class H5pController extends PluginController
             'mail' => $GLOBALS['user']->email
         );
         $libraryname = $library['name']." ".$library['major_version'].".".$library['minor_version'];
+        $this->attempt;
+        $userdata = $this->attempt['customdata'] ? $this->attempt['customdata']->getArrayCopy() : array();
+        $userdata = $userdata['h5pstate'] ? json_encode((array) $userdata['h5pstate']) : "{}";
         $settings['contents'] = array(
             "cid-" . $this->mod->getId() => array(
                 'library' => $libraryname, //name of the runnable library with space instead of minus
@@ -259,7 +261,7 @@ class H5pController extends PluginController
                     'license' => "U"
                 ),
                 'contentUserData' => array(
-                    array('state' => "{}")
+                    array('state' => $userdata)
                 )
             )
         );
@@ -268,6 +270,14 @@ class H5pController extends PluginController
 
     public function set_finished_action()
     {
+        $this->attempt = LernmodulAttempt::find($attempt_id);
+        if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
+            throw new AccessDeniedException();
+        }
+        $this->attempt['chdate'] = time();
+        $this->attempt['successful'] = 1;
+        $this->attempt['customdata']['points']['score'] = Request::get("score");
+        $this->attempt->store();
         $module_id = Request::option("contentId");
         $score = Request::get("score");
         $max_score = Request::get("maxScore");
@@ -278,8 +288,28 @@ class H5pController extends PluginController
         $this->render_text("");
     }
 
-    public function set_userdata_action() {
+    public function set_userdata_action($attempt_id) {
+        $this->attempt = LernmodulAttempt::find($attempt_id);
+        if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
+            throw new AccessDeniedException();
+        }
+        $this->attempt['processed'] = 1;
+        $answer = json_decode(Request::get("data"), true);
+        $customdata = $this->attempt['customdata'] ? $this->attempt['customdata']->getArrayCopy() : array();
+        $customdata['h5pstate'] = $answer;
+        if ($answer['finished']) {
+            $this->attempt['successful'] = 1;
+        }
+        $this->attempt['customdata'] = $customdata;
+        $this->attempt['chdate'] = time();
+        $this->attempt->store();
         $this->render_text("ok");
+
+        // {"progress":3,"answers":{"corrects":3,"wrongs":0}}
+        // {"questions: ["1", "2", ""],"progress":2, "version": 1}
+        // {"questions: ["1", "2", "A finish condition"],"progress":2, "version": 1}
+        // {"questions: ["1", "2", "A finish condition"],"progress":2, "finished": true, "version": 1}
+        // {"answers": [ ... ]}
     }
 
     public function download_action($module_id) {

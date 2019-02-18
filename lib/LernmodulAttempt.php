@@ -2,9 +2,20 @@
 
 class LernmodulAttempt extends SimpleORMap {
 
-    static public function cleanUpDatabase()
+    static public function getByModule($module_id, $user_id = null)
     {
-        //self::deleteBySQL("successful IS NULL AND chdate <= mkdate + 20 AND mkdate < UNIX_TIMESTAMP() - 60 * 2");
+        $user_id || $user_id = $GLOBALS['user']->id;
+        $attempt = self::findOneBySQL("user_id = :user_id AND module_id = :module_id", array(
+            'user_id' => $user_id,
+            'module_id' => $module_id
+        ));
+        if (!$attempt) {
+            $attempt = new LernmodulAttempt();
+            $attempt['user_id'] = $user_id;
+            $attempt['module_id'] = $module_id;
+        }
+        $attempt->store();
+        return $attempt;
     }
 
     static public function findbyCourseAndModule($seminar_id, $module_id)

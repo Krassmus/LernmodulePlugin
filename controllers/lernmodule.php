@@ -18,7 +18,6 @@ class LernmoduleController extends PluginController
     public function overview_action()
     {
         Navigation::activateItem("/course/lernmodule/overview");
-        LernmodulAttempt::cleanUpDatabase();
         $this->module = Lernmodul::findByCourse($this->course_id);
 
         if (Request::option("quit")) {
@@ -86,12 +85,7 @@ class LernmoduleController extends PluginController
         }
         
         $this->course_connection = $this->mod->courseConnection($this->course_id);
-        $this->attempt = new LernmodulAttempt();
-        $this->attempt->setData(array(
-            'user_id' => $this->course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
-            'module_id' => $module_id
-        ));
-        $this->attempt->store();
+        $this->attempt = LernmodulAttempt::getByModule($this->mod->getId());
         if (Request::option("attendance")) {
             $this->game_attendence = new LernmodulGameAttendance(Request::option("attendance"));
             if ($GLOBALS['user']->id !== $this->game_attendence['user_id']) {
@@ -103,7 +97,6 @@ class LernmoduleController extends PluginController
                 $this->redirect("lernmodule/overview");
             }
         }
-        LernmodulAttempt::cleanUpDatabase();
     }
 
     public function edit_action($module_id = null)
@@ -270,6 +263,13 @@ class LernmoduleController extends PluginController
                 $this->attempt['successful'] = 1;
             }
             unset($message['success']);
+            $old_message = $this->attempt->customdata->getArrayCopy();
+            $message['properties'] = array_merge((array) $old_message['properties'], (array) $message['properties']);
+            foreach ((array) $old_message['points'] as $class => $value) {
+                if ($message['points'][$class] < $value) {
+                    $message['points'][$class] = $value;
+                }
+            }
             $this->attempt->customdata = $message;
             $this->attempt->store();
         }
