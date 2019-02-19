@@ -40,6 +40,15 @@ class AddH5pSupport extends Migration
             ALTER TABLE lernmodule_attempts
             ADD UNIQUE KEY `unique_userattempts` (`module_id`,`user_id`)
         ");
+        DBManager::get()->exec("
+            ALTER TABLE lernmodule_courses
+            ADD COLUMN `gradebook_definition` int(11) DEFAULT NULL
+        ");
+        DBManager::get()->exec("
+            ALTER TABLE lernmodule_courses
+            ADD COLUMN `gradebook_rewrite` tinyint(1) DEFAULT '0'
+        ");
+        SimpleORMap::expireTableScheme();
     }
 
     function down()
@@ -58,5 +67,14 @@ class AddH5pSupport extends Migration
             ALTER TABLE lernmodule_attempts
             DROP KEY `unique_userattempts`
         ");
+        DBManager::get()->exec("
+            ALTER TABLE lernmodule_courses
+            DROP COLUMN `gradebook_definition`
+        ");
+        DBManager::get()->exec("
+            ALTER TABLE lernmodule_courses
+            DROP COLUMN `gradebook_rewrite`
+        ");
+        SimpleORMap::expireTableScheme();
     }
 }

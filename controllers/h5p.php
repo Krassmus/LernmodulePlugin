@@ -285,6 +285,27 @@ class H5pController extends PluginController
         $finished_time = Request::int("finished");
         $time = Request::get("time");
 
+        if (Context::get()->id) {
+            $course_connection = $this->attempt->modul->courseConnection(Context::get()->id);
+            if ($course_connection['gradebook_definition']) {
+                $instance = \Grading\Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
+                    'user_id' => $GLOBALS['user']->id,
+                    'definition_id' => $course_connection['gradebook_definition']
+                ));
+                if (!$instance) {
+                    $instance = new \Grading\Instance();
+                    $instance['user_id'] = $GLOBALS['user']->id;
+                    $instance['definition_id'] = $course_connection['gradebook_definition'];
+                    $instance['rawgrade'] = $max_score / $score;
+                    $instance->store();
+                } elseif ($course_connection['gradebook_rewrite']) {
+                    $instance['rawgrade'] = $max_score / $score;
+                    $instance->store();
+                }
+
+            }
+        }
+
         $this->render_text("");
     }
 
@@ -299,6 +320,25 @@ class H5pController extends PluginController
         $customdata['h5pstate'] = $answer;
         if ($answer['finished']) {
             $this->attempt['successful'] = 1;
+            if (Context::get()->id) {
+                $course_connection = $this->attempt->modul->courseConnection(Context::get()->id);
+                if ($course_connection['gradebook_definition']) {
+                    $instance = \Grading\Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
+                        'user_id' => $GLOBALS['user']->id,
+                        'definition_id' => $course_connection['gradebook_definition']
+                    ));
+                    if (!$instance) {
+                        $instance = new \Grading\Instance();
+                        $instance['user_id'] = $GLOBALS['user']->id;
+                        $instance['definition_id'] = $course_connection['gradebook_definition'];
+                        $instance['rawgrade'] = 1;
+                        $instance->store();
+                    } elseif ($course_connection['gradebook_rewrite']) {
+                        $instance['rawgrade'] = 1;
+                        $instance->store();
+                    }
+                }
+            }
         }
         $this->attempt['customdata'] = $customdata;
         $this->attempt['chdate'] = time();
