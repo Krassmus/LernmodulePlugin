@@ -167,8 +167,32 @@
             <?= _("Nutzer dürfen die Auswertung sehen") ?>
         </label>
 
+        <label>
+            <?= _("Abspielen ab") ?>
             <input type="text" id="modulecourse_starttime" name="modulecourse[starttime]" value="<?= $modulecourse['starttime'] ? date("d.m.Y H:i", $modulecourse['starttime']) : "jederzeit" ?>"  data-datetime-picker>
         </label>
+
+        <? if (class_exists('\\Grading\\Definition')) : ?>
+            <? $gradebook_definitions = \Grading\Definition::findBySQL("course_id = ? ORDER BY name", array(Context::get()->id)) ?>
+            <? if (count($gradebook_definitions)) : ?>
+                <label>
+                    <?= _("Gradebook-Eintrag bei Erfolg setzen") ?>
+                    <select name="modulecourse[gradebook_definition]">
+                        <option></option>
+                        <? foreach ($gradebook_definitions as $definition) : ?>
+                        <option value="<?= htmlReady($definition->getId()) ?>"<?= $modulecourse['gradebook_definition'] == $definition->getId() ? " selected" : "" ?>>
+                            <?= htmlReady($definition['name']) ?>
+                        </option>
+                        <? endforeach ?>
+                    </select>
+                </label>
+                <label>
+                    <input type="hidden" name="modulecourse[gradebook_rewrite]" value="0">
+                    <input type="checkbox" name="modulecourse[gradebook_rewrite]" value="1"<?= $modulecourse['gradebook_rewrite'] ? " checked" : "" ?>>
+                    <?= _("Kann mehrmals absolviert werden.") ?>
+                </label>
+            <? endif ?>
+        <? endif ?>
 
         <? if (!$module->isNew() && is_a($module, "CustomLernmodul")) : ?>
             <? $template = $module->getEditTemplate() ?>
