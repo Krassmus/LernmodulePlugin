@@ -37,4 +37,9 @@ $actions->addLink(
     Icon::create("add", "clickable"),
     array('data-dialog' => 1)
 );
+$actions->addLink(
+    _("Bibliotheken exportieren"),
+    PluginEngine::getURL($plugin, array(), "h5p/export_libraries"),
+    Icon::create("export", "clickable")
+);
 Sidebar::Get()->addWidget($actions);

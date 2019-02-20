@@ -103,6 +103,29 @@ class H5pController extends PluginController
         }
     }
 
+    public function export_libraries_action() {
+        if (!$GLOBALS['perm']->have_perm("root")) {
+            throw new AccessDeniedException();
+        }
+
+        $archive = $GLOBALS['TMP_PATH']."/h5p_all_libs.zip";
+        $zip = \Studip\ZipArchive::create($archive);
+        $libs = H5PLib::findBySQL("allowed = '1'");
+        foreach ($libs as $lib) {
+            $zip->addFromPath($lib->getPath(), $lib['name']."-".$lib['major_version'].".".$lib['minor_version']."/");
+        }
+        $zip->close();
+
+        header("Content-Type: application/zip");
+        header("Content-Disposition: attachment; filename=\"H5PLibraries.zip\"");
+        header("Content-Length: ".filesize($archive));
+        echo file_get_contents($archive);
+        unlink($archive);
+        die();
+    }
+
+
+
     public function iframe_action($module_id)
     {
         $this->set_layout(null);

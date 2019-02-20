@@ -26,7 +26,7 @@
 
         <label class="file-upload" id="file_upload"<?= $module['url'] ? ' style="display: none;"' : "" ?>>
             <input type="file" name="modulefile" accept=".zip,.h5p,.pdf" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
-            <?= sprintf(_("Lernmodul auswählen (Gezipptes HTML oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
+            <?= sprintf(_("Lernmodul auswählen (Gezipptes HTML, H5P oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
 
         <script>
@@ -40,9 +40,9 @@
                     var file = event.originalEvent.dataTransfer.files[0]
                     jQuery("#file_upload input[name=modulefile]")[0].file = file;
                     if (jQuery(this).closest('label').find('.filename').length) {
-                        filename = $(this).closest('label').find('.filename');
+                        var filename = $(this).closest('label').find('.filename');
                     } else {
-                        filename = $('<span class="filename"/>');
+                        var filename = $('<span class="filename"/>');
                         jQuery(this).closest('label').append(filename);
                     }
                     jQuery("#file_upload .filename").text(file.name + ' ' + Math.ceil(file.size / 1024) + 'KB');
