@@ -116,7 +116,7 @@
                 <? if (count($module_images) + count($course_images) > 0) : ?>
                     <label>
                         <?= _("Bild auswählen") ?>
-                        <select id="select_image" name="module[image]" onChange="jQuery('#image_preview').css('background-image', 'url(' + jQuery(this).find(':selected').data('url') + ')'); ">
+                        <select id="select_image" name="module[image]" onChange="STUDIP.Lernmodule.selectImage.call(this);">
                             <option value=""><?= _("Keines") ?></option>
                             <? if (count($module_images)) : ?>
                                 <optgroup label="<?= _("Bilder aus dem Lernmodul") ?>">
@@ -142,12 +142,12 @@
                         </select>
                     </label>
                     <div>
-                        <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').prev().attr('selected', 'selected').trigger('change'); return false;">
+                        <a href="" onClick="STUDIP.Lernmodule.selectPreviousImage(); return false;">
                             <?= Icon::create("arr_1left", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
                         <? $background_image = FileRef::find($module['image']) ?: $module->getDataURL()."/".$module['image'] ?>
                         <div id="image_preview" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');" : "" ?>"></div>
-                        <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').next().attr('selected', 'selected').trigger('change'); return false;">
+                        <a href="" onClick="STUDIP.Lernmodule.selectNextImage(); return false;">
                             <?= Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
                     </div>
@@ -216,16 +216,55 @@
 
 </form>
 
+<script>
+    STUDIP.Lernmodule = {
+        selectImage: function () {
+            jQuery('#image_preview').css('background-image', 'url(' + jQuery(this).find(':selected').data('url') + ')');
+        },
+        selectNextImage: function () {
+            var selected = jQuery('#select_image option:selected');
+            selected.removeAttr('selected');
+            if (selected.is(":last-of-type")) {
+                var optgroup = selected.closest("optgroup");
+                if ((optgroup.length === 0) || (optgroup.is(":last-of-type"))) {
+                    jQuery('#select_image optgroup').first().find("option:first-of-type").attr('selected', 'selected');
+                } else {
+                    optgroup.next().find("option:first-of-type").attr('selected', 'selected');
+                }
+            } else {
+                selected.next().attr('selected', 'selected');
+            }
+            jQuery('#select_image').trigger("change");
+        },
+        selectPreviousImage: function () {
+            var selected = jQuery('#select_image option:selected');
+            selected.removeAttr('selected');
+            if (selected.is(":first-of-type")) {
+                var optgroup = selected.closest("optgroup");
+                if ((optgroup.length === 0) || (optgroup.is(":first-of-type"))) {
+                    jQuery('#select_image optgroup').last().find("option:last-of-type").attr('selected', 'selected');
+                } else {
+                    optgroup.prev().find("option:last-of-type").attr('selected', 'selected');
+                }
+            } else {
+                selected.prev().attr('selected', 'selected');
+            }
+            jQuery('#select_image').trigger("change");
+        }
+    };
+</script>
+
 <?
 
-$actions = new ActionsWidget();
-$actions->addLink(
-    _("Lernmodul herunterladen"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
-    Icon::create("download", "clickable")
-);
-
-Sidebar::Get()->addWidget($actions);
+if (!$module->isNew()) {
+    $actions = new ActionsWidget();
+    $actions->addLink(
+        _("Lernmodul herunterladen"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
+        Icon::create("download", "clickable")
+    );
+    Sidebar::Get()->addWidget($actions);
+}
 
 $views = new ViewsWidget();
 $views->addLink(
