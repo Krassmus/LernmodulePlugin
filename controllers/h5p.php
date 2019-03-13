@@ -419,6 +419,7 @@ class H5pController extends PluginController
             $this->plugin->getPluginURL().'/assets/h5p/h5peditor-editor.js',
             $this->plugin->getPluginURL().'/assets/h5p/h5peditor.js',
             $this->plugin->getPluginURL().'/assets/h5p/language/de.js',
+            $this->plugin->getPluginURL().'/assets/h5p/h5p-editor.js',
             //'h5p-display-options.js',
             //'h5p-toggle.js'
         );
@@ -548,11 +549,11 @@ class H5pController extends PluginController
                     $this->plugin->getPluginURL()."/assets/h5p/h5p.css",
                     $this->plugin->getPluginURL()."/assets/h5p/h5p-confirmation-dialog.css",
                     $this->plugin->getPluginURL()."/assets/h5p/h5p-core-button.css",
-                    "\/wordpress\/wp-content\/plugins\/h5p\/h5p-editor-php-library\/libs\/darkroom.css",
-                    "\/wordpress\/wp-content\/plugins\/h5p\/h5p-editor-php-library\/styles\/css\/h5p-hub-client.css",
-                    "\/wordpress\/wp-content\/plugins\/h5p\/h5p-editor-php-library\/styles\/css\/fonts.css",
-                    "\/wordpress\/wp-content\/plugins\/h5p\/h5p-editor-php-library\/styles\/css\/application.css",
-                    "\/wordpress\/wp-content\/plugins\/h5p\/h5p-editor-php-library\/styles\/css\/libs\/zebra_datepicker.min.css"
+                    $this->plugin->getPluginURL()."/assets/h5p/darkroom.css",
+                    $this->plugin->getPluginURL()."/assets/h5p/h5p-hub-client.css",
+                    $this->plugin->getPluginURL()."/assets/h5p/fonts.css",
+                    $this->plugin->getPluginURL()."/assets/h5p/application.css",
+                    $this->plugin->getPluginURL()."/assets/h5p/zebra_datepicker.min.css"
                 ),
                 'js' => array(
                     $this->plugin->getPluginURL()."/assets/h5p/jquery.js",
@@ -593,7 +594,7 @@ class H5pController extends PluginController
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-metadata-author-widget.js",
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-metadata-changelog-widget.js",
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-pre-save.js",
-                    "\/wordpress\/wp-content\/plugins\/h5p\/h5p-editor-php-library\/ckeditor\/ckeditor.js"
+                    $this->plugin->getPluginURL()."/vendor/h5p-editor/ckeditor/ckeditor.js"
                 )
             ),
             'deleteMessage' => _("Bist du sicher, dass du diesen Inhalt löschen willst?"),
