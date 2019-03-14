@@ -78,9 +78,8 @@ class H5PLib extends SimpleORMap
             if ($json['runnable'] && file_exists($semantics_json)) {
 
                 $semantics = json_decode(file_get_contents($semantics_json), true);
-                $more_libs = $this->fetchSematicsLibraries($semantics, $not_in_ids);
+                $more_libs = $this->fetchSemanticsLibraries($semantics, $not_in_ids);
                 foreach ($more_libs as $lib) {
-                    //array_unshift($sublibs, $lib);
                     $sublibs[] = $lib;
                     $not_in_ids[] = $lib->getId();
                 }
@@ -92,7 +91,7 @@ class H5PLib extends SimpleORMap
     }
 
 
-    protected function fetchSematicsLibraries($fields, $not_in_ids = array()) {
+    protected function fetchSemanticsLibraries($fields, $not_in_ids = array()) {
         $libs = array();
 
         foreach ($fields as $semantic) {
@@ -118,13 +117,13 @@ class H5PLib extends SimpleORMap
                 }
             }
             if (isset($semantic['fields']) && count($semantic['fields'])) {
-                foreach ($this->fetchSematicsLibraries($semantic['fields'], $not_in_ids) as $lib) {
+                foreach ($this->fetchSemanticsLibraries($semantic['fields'], $not_in_ids) as $lib) {
                     //array_unshift($libs, $lib);
                     $libs[] = $lib;
                     $not_in_ids[] = $lib->getId();
                 }
             } elseif(isset($semantic['field']) && count($semantic['field'])) {
-                foreach ($this->fetchSematicsLibraries(array($semantic['field']), $not_in_ids) as $lib) {
+                foreach ($this->fetchSemanticsLibraries(array($semantic['field']), $not_in_ids) as $lib) {
                     //array_unshift($libs, $lib);
                     $libs[] = $lib;
                     $not_in_ids[] = $lib->getId();
@@ -146,5 +145,10 @@ class H5PLib extends SimpleORMap
             }
         }
         return $files;
+    }
+
+    public function getLibraryData() {
+        $library_json = $this->getPath()."/library.json";
+        return json_decode(file_get_contents($library_json), true);
     }
 }

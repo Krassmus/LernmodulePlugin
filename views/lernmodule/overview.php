@@ -114,7 +114,7 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
     );
     $actions->addLink(
         _("Lernmodul erstellen"),
-        PluginEngine::getURL($plugin, array(), "h5p/editor"),
+        PluginEngine::getURL($plugin, array(), "h5peditor/edit"),
         Icon::create("add", "clickable")
     );
 }
