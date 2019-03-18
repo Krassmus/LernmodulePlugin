@@ -2,9 +2,20 @@
 
 class LernmodulAttempt extends SimpleORMap {
 
-    static public function cleanUpDatabase()
+    static public function getByModule($module_id, $user_id = null)
     {
-        //self::deleteBySQL("successful IS NULL AND chdate <= mkdate + 20 AND mkdate < UNIX_TIMESTAMP() - 60 * 2");
+        $user_id || $user_id = $GLOBALS['user']->id;
+        $attempt = self::findOneBySQL("user_id = :user_id AND module_id = :module_id", array(
+            'user_id' => $user_id,
+            'module_id' => $module_id
+        ));
+        if (!$attempt) {
+            $attempt = new LernmodulAttempt();
+            $attempt['user_id'] = $user_id;
+            $attempt['module_id'] = $module_id;
+        }
+        $attempt->store();
+        return $attempt;
     }
 
     static public function findbyCourseAndModule($seminar_id, $module_id)
@@ -12,7 +23,7 @@ class LernmodulAttempt extends SimpleORMap {
         $statement = DBManager::get()->prepare("
             SELECT lernmodule_attempts.*
             FROM lernmodule_attempts
-                INNER JOIN seminar_user ON (seminar_user.user_id = lernmodule_attempts.user_id AND seminar_user.status = 'autor')
+                INNER JOIN seminar_user ON (seminar_user.user_id = lernmodule_attempts.user_id)
             WHERE seminar_user.Seminar_id = :seminar_id
                 AND lernmodule_attempts.module_id = :module_id
             ORDER BY lernmodule_attempts.mkdate ASC

@@ -9,20 +9,18 @@ class HtmlController extends PluginController
         parent::before_filter($action, $args);
         Navigation::activateItem("/course/lernmodule");
         Navigation::getItem("/course/lernmodule")->setImage(
-            version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                ? Icon::create("learnmodule", "info")
-                : Assets::image_path("icons/black/20/learnmodule")
+            Icon::create("learnmodule", "info")
         );
         $this->utf8decode_xhr = false;
     }
 
     public function set_configs_action() {
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
-        $this->lernmodulcourse = new LernmodulCourse(array(Request::option("module_id"), $_SESSION['SessionSeminar']));
+        $this->lernmodulcourse = new LernmodulCourse(array(Request::option("module_id"), Context::get()->id));
         if ($this->lernmodulcourse->isNew()) {
-            throw new Exception("Kein gültiges Modul.");
+            throw new Exception("Kein gÃ¼ltiges Modul.");
         }
         if (Request::isPost()) {
             if ($this->lernmodulcourse['customdata'] !== null) {

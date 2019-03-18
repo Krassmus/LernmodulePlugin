@@ -84,21 +84,27 @@ class InitPlugin extends Migration {
                 PRIMARY KEY (`attendance_id`)
             ) ENGINE=InnoDB
         ");
-        DBManager::get()->exec("
-            INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) 
-            VALUES
-                (MD5('LERNMODUL_PARTICIPANT_EVALUATION'), '', 'LERNMODUL_PARTICIPANT_EVALUATION', 'dozent', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Ab welchem Status darf jemand die Nutzerauswertung der Lernmodule sehen (autor, tutor, dozent, admin, root, leer lassen).', '', '')
-        ");
-        DBManager::get()->exec("
-            INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) 
-            VALUES
-                (MD5('LERNMODUL_DATA_PATH'), '', 'LERNMODUL_DATA_PATH', '', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Der absolute Pfad auf der Festplatte, wo die Lernmodule gespeichert werden sollen. Ist der Wert leer, sind sie in einem parallelen Pluginordner. Nur zusammen mit LERNMODUL_DATA_URL angeben.', '', '')
-        ");
-        DBManager::get()->exec("
-            INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) 
-            VALUES
-                (MD5('LERNMODUL_DATA_URL'), '', 'LERNMODUL_DATA_URL', '', 0, 'string', 'global', 'global', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), 'Die URL, unter der die Lernmodule stecken. Es kann sinnvoll sein, diese URL unter einer Subdomain zu haben, damit Lernmodule einen anderen Origin haben.', '', '')
-        ");
+        Config::get()->create("LERNMODUL_PARTICIPANT_EVALUATION", array(
+            'type' => "string",
+            'value' => "dozent",
+            'range' => "global",
+            'section' => "global",
+            'description' => "Ab welchem Status darf jemand die Nutzerauswertung der Lernmodule sehen (autor, tutor, dozent, admin, root, leer lassen)."
+        ));
+        Config::get()->create("LERNMODUL_DATA_PATH", array(
+            'type' => "string",
+            'value' => "",
+            'range' => "global",
+            'section' => "global",
+            'description' => "Der absolute Pfad auf der Festplatte, wo die Lernmodule gespeichert werden sollen. Ist der Wert leer, sind sie in einem parallelen Pluginordner. Nur zusammen mit LERNMODUL_DATA_URL angeben."
+        ));
+        Config::get()->create("LERNMODUL_DATA_URL", array(
+            'type' => "string",
+            'value' => "",
+            'range' => "global",
+            'section' => "global",
+            'description' => "Die URL, unter der die Lernmodule stecken. Es kann sinnvoll sein, diese URL unter einer Subdomain zu haben, damit Lernmodule einen anderen Origin haben."
+        ));
         StudipCacheFactory::getCache()->expire(RolePersistence::ROLES_CACHE_KEY);
     }
 
@@ -124,6 +130,9 @@ class InitPlugin extends Migration {
         DBManager::get()->exec("
             DELETE FROM `roles` WHERE `rolename` = 'Lernmodule-Admin';
         ");
+        Config::get()->delete("LERNMODUL_PARTICIPANT_EVALUATION");
+        Config::get()->delete("LERNMODUL_DATA_PATH");
+        Config::get()->delete("LERNMODUL_DATA_URL");
         StudipCacheFactory::getCache()->expire(RolePersistence::ROLES_CACHE_KEY);
     }
 }

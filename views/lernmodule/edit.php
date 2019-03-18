@@ -1,14 +1,32 @@
 <form action="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$module->getId()) ?>"
       method="post"
-      class="<?= LernmodulePlugin::getCSSFormClass() ?>"
+      class="default"
       enctype="multipart/form-data">
 
     <fieldset>
         <legend><?= _("Lernmodul hochladen und bearbeiten") ?></legend>
 
-        <label class="file-upload" id="file_upload">
+        <div class="hgroup">
+            <label>
+                <input type="radio"
+                       name="upload_or_url"
+                       onChange="jQuery('#file_upload').toggle(this.checked); jQuery('#lernmodul_url').toggle(!this.checked);"
+                       value="upload"<?= !$module['url'] ? " checked" : "" ?>>
+                <?= _("Hochladen") ?>
+            </label>
+
+            <label>
+                <input type="radio"
+                       name="upload_or_url"
+                       onChange="jQuery('#lernmodul_url').toggle(this.checked); jQuery('#file_upload').toggle(!this.checked);"
+                       value="url"<?= $module['url'] ? " checked" : "" ?>>
+                <?= _("URL") ?>
+            </label>
+        </div>
+
+        <label class="file-upload" id="file_upload"<?= $module['url'] ? ' style="display: none;"' : "" ?>>
             <input type="file" name="modulefile" accept=".zip,.h5p,.pdf" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
-            <?= sprintf(_("Lernmodul auswählen (Gezipptes HTML oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
+            <?= sprintf(_("Lernmodul auswählen (Gezipptes HTML, H5P oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
 
         <script>
@@ -22,9 +40,9 @@
                     var file = event.originalEvent.dataTransfer.files[0]
                     jQuery("#file_upload input[name=modulefile]")[0].file = file;
                     if (jQuery(this).closest('label').find('.filename').length) {
-                        filename = $(this).closest('label').find('.filename');
+                        var filename = $(this).closest('label').find('.filename');
                     } else {
-                        filename = $('<span class="filename"/>');
+                        var filename = $('<span class="filename"/>');
                         jQuery(this).closest('label').append(filename);
                     }
                     jQuery("#file_upload .filename").text(file.name + ' ' + Math.ceil(file.size / 1024) + 'KB');
@@ -36,7 +54,7 @@
             });
         </script>
 
-        <label id="lernmodul_url">
+        <label id="lernmodul_url"<?= !$module['url'] ? ' style="display: none;"' : "" ?>>
             <?= _("URL des Lernmoduls") ?>
             <input type="text"
                    name="module[url]"
@@ -54,7 +72,7 @@
             <div style="margin-top: 15px; margin-bottom: 15px;">
                 <?= _("Abhängig von") ?>
                 <ul class="clean" style="font-size: 0.8em;">
-                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies($_SESSION['SessionSeminar'])) ?>
+                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies(Context::get()->id)) ?>
                     <? foreach ($lernmodule as $lernmodul) : ?>
                         <li>
                             <label>
@@ -94,30 +112,43 @@
                 <div id="image_preview" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady($module['image'])."');" : "" ?>"></div>
 
             <? else : ?>
-                <? $images = $module->scanForImages() ?>
-                <? if (count($images)) : ?>
+                <? $module_images = $module->scanForImages() ?>
+                <? if (count($module_images) + count($course_images) > 0) : ?>
                     <label>
                         <?= _("Bild auswählen") ?>
-                        <select id="select_image" name="module[image]" onChange="jQuery('#image_preview').css('background-image', 'url(' + jQuery('#image_preview').data('url_base') + '/' + this.value + ')'); ">
+                        <select id="select_image" name="module[image]" onChange="STUDIP.Lernmodule.selectImage.call(this);">
                             <option value=""><?= _("Keines") ?></option>
-                            <? foreach ($images as $image) : ?>
-                                <option value="<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>><?= htmlReady($image) ?></option>
-                            <? endforeach ?>
+                            <? if (count($module_images)) : ?>
+                                <optgroup label="<?= _("Bilder aus dem Lernmodul") ?>">
+                                    <? foreach ($module_images as $image) : ?>
+                                        <option value="<?= htmlReady($image) ?>"
+                                                data-url="<?= $module->getDataURL() ?>/<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>>
+                                            <?= htmlReady($image) ?>
+                                        </option>
+                                    <? endforeach ?>
+                                </optgroup>
+                            <? endif ?>
+                            <? if (count($course_images)) : ?>
+                                <optgroup label="<?= _("Bilder der Veranstaltung") ?>">
+                                    <? foreach ($course_images as $fileref) : ?>
+                                        <option value="<?= htmlReady($fileref->getId()) ?>" data-url="<?= htmlReady($fileref->getDownloadURL()) ?>"<?= $module['image'] === $fileref->getId() ? " selected" : "" ?>>
+                                            <?= htmlReady($fileref['name']) ?>
+                                        </option>
+                                    <? endforeach ?>
+                                </optgroup>
+                            <? endif ?>
+
+
                         </select>
                     </label>
                     <div>
-                        <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').prev().attr('selected', 'selected').trigger('change'); return false;">
-                            <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                    ? Icon::create("arr_1left", "clickable")->asImg(20, array('style' => "vertical-align: middle;"))
-                                    : Assets::img("icons/blue/20/arr_1left", array('style' => "vertical-align: middle;"))
-                            ?>
+                        <a href="" onClick="STUDIP.Lernmodule.selectPreviousImage(); return false;">
+                            <?= Icon::create("arr_1left", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
-                        <div id="image_preview" data-url_base="<?= htmlReady($module->getDataURL()) ?>" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady($module->getDataURL()."/".$module['image'])."');" : "" ?>"></div>
-                        <a href="" onClick="jQuery('#select_image option:selected').removeAttr('selected').next().attr('selected', 'selected').trigger('change'); return false;">
-                            <?= version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                                ? Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;"))
-                                : Assets::img("icons/blue/20/arr_1right", array('style' => "vertical-align: middle;"))
-                            ?>
+                        <? $background_image = FileRef::find($module['image']) ?: $module->getDataURL()."/".$module['image'] ?>
+                        <div id="image_preview" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');" : "" ?>"></div>
+                        <a href="" onClick="STUDIP.Lernmodule.selectNextImage(); return false;">
+                            <?= Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
                     </div>
                 <? endif ?>
@@ -131,9 +162,37 @@
         </label>
 
         <label>
-            <?= _("Frühester Startzeitpunkt") ?>
+            <input type="hidden" name="modulecourse[evaluation_for_students]" value="0">
+            <input type="checkbox" name="modulecourse[evaluation_for_students]" value="1"<?= $modulecourse['evaluation_for_students'] ? " checked" : "" ?>>
+            <?= _("Nutzer dürfen die Auswertung sehen") ?>
+        </label>
+
+        <label>
+            <?= _("Abspielen ab") ?>
             <input type="text" id="modulecourse_starttime" name="modulecourse[starttime]" value="<?= $modulecourse['starttime'] ? date("d.m.Y H:i", $modulecourse['starttime']) : "jederzeit" ?>"  data-datetime-picker>
         </label>
+
+        <? if (class_exists('\\Grading\\Definition')) : ?>
+            <? $gradebook_definitions = \Grading\Definition::findBySQL("course_id = ? ORDER BY name", array(Context::get()->id)) ?>
+            <? if (count($gradebook_definitions)) : ?>
+                <label>
+                    <?= _("Gradebook-Eintrag bei Erfolg setzen") ?>
+                    <select name="modulecourse[gradebook_definition]">
+                        <option></option>
+                        <? foreach ($gradebook_definitions as $definition) : ?>
+                        <option value="<?= htmlReady($definition->getId()) ?>"<?= $modulecourse['gradebook_definition'] == $definition->getId() ? " selected" : "" ?>>
+                            <?= htmlReady($definition['name']) ?>
+                        </option>
+                        <? endforeach ?>
+                    </select>
+                </label>
+                <label>
+                    <input type="hidden" name="modulecourse[gradebook_rewrite]" value="0">
+                    <input type="checkbox" name="modulecourse[gradebook_rewrite]" value="1"<?= $modulecourse['gradebook_rewrite'] ? " checked" : "" ?>>
+                    <?= _("Kann mehrmals absolviert werden.") ?>
+                </label>
+            <? endif ?>
+        <? endif ?>
 
         <? if (!$module->isNew() && is_a($module, "CustomLernmodul")) : ?>
             <? $template = $module->getEditTemplate() ?>
@@ -157,18 +216,55 @@
 
 </form>
 
+<script>
+    STUDIP.Lernmodule = {
+        selectImage: function () {
+            jQuery('#image_preview').css('background-image', 'url(' + jQuery(this).find(':selected').data('url') + ')');
+        },
+        selectNextImage: function () {
+            var selected = jQuery('#select_image option:selected');
+            selected.removeAttr('selected');
+            if (selected.is(":last-of-type")) {
+                var optgroup = selected.closest("optgroup");
+                if ((optgroup.length === 0) || (optgroup.is(":last-of-type"))) {
+                    jQuery('#select_image optgroup').first().find("option:first-of-type").attr('selected', 'selected');
+                } else {
+                    optgroup.next().find("option:first-of-type").attr('selected', 'selected');
+                }
+            } else {
+                selected.next().attr('selected', 'selected');
+            }
+            jQuery('#select_image').trigger("change");
+        },
+        selectPreviousImage: function () {
+            var selected = jQuery('#select_image option:selected');
+            selected.removeAttr('selected');
+            if (selected.is(":first-of-type")) {
+                var optgroup = selected.closest("optgroup");
+                if ((optgroup.length === 0) || (optgroup.is(":first-of-type"))) {
+                    jQuery('#select_image optgroup').last().find("option:last-of-type").attr('selected', 'selected');
+                } else {
+                    optgroup.prev().find("option:last-of-type").attr('selected', 'selected');
+                }
+            } else {
+                selected.prev().attr('selected', 'selected');
+            }
+            jQuery('#select_image').trigger("change");
+        }
+    };
+</script>
+
 <?
 
-$actions = new ActionsWidget();
-$actions->addLink(
-    _("Lernmodul herunterladen"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/download/".$module->getId()),
-    version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-        ? Icon::create("download", "clickable")
-        : Assets::image_path("icons/black/16/blue/download")
-);
-
-Sidebar::Get()->addWidget($actions);
+if (!$module->isNew()) {
+    $actions = new ActionsWidget();
+    $actions->addLink(
+        _("Lernmodul herunterladen"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
+        Icon::create("download", "clickable")
+    );
+    Sidebar::Get()->addWidget($actions);
+}
 
 $views = new ViewsWidget();
 $views->addLink(

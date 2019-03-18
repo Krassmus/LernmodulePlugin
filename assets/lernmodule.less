@@ -68,3 +68,19 @@ label.file-upload.hovered {
     background-color: @activity-color;
 }
 
+.admin_libraries {
+    .allowed {
+        > .unchecked {
+            display: none;
+        }
+        &.notyet {
+            > .unchecked {
+                display: inline-block;
+            }
+            > .checked {
+                display: none;
+            }
+        }
+    }
+}
+

@@ -37,12 +37,16 @@ class Lernmodul extends SimpleORMap {
         if (file_exists($this->getPath())) {
             $success = rmdirr($this->getPath());
         }
+
         $success = mkdir($this->getPath());
         if (!$success) {
-            PageLayout::postMessage(MessageBox::error(_("Konnte im Dateisystem keinen Ordner für das Lernmodul anlegen.")));
+            PageLayout::postMessage(MessageBox::error(_("Konnte im Dateisystem keinen Ordner fÃ¼r das Lernmodul anlegen.")));
             return false;
         }
-        $success = LernmodulePlugin::extract_zip($path, $this->getPath());
+
+
+        $success = Studip\ZipArchive::extractToPath($path, $this->getPath());
+
         if ($success) {
             if (count(scandir($this->getPath())) < 4) {
                 //Falls nur der Ordner auf oberster Ebene liegt:
@@ -64,6 +68,7 @@ class Lernmodul extends SimpleORMap {
             rename($path, $this->getPath() . "/" . ($filename ?: "index.html"));
         }
 
+
         foreach ($this->scanForFiletypes(array("php", "php3", "php1", "php2", "phtml", "asp"), null, true) as $php_file) {
             //remove all PHP-files
             @unlink($php_file);
@@ -81,6 +86,7 @@ class Lernmodul extends SimpleORMap {
         } else {
             $this['type'] = "html";
         }
+
 
         if (file_exists($this->getPath())) {
             $this['url'] = null;
@@ -265,6 +271,10 @@ class Lernmodul extends SimpleORMap {
             'user_id' => $GLOBALS['user']->id
         ));
         return (bool) $statement->fetch();
+    }
+
+    public function getDownloadURL() {
+        return URLhelper::getURL( "plugins.php/lernmoduleplugin/lernmodule/download/" . $this->getId());
     }
 
 

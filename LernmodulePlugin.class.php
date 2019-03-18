@@ -8,10 +8,12 @@ require_once __DIR__."/lib/ScormLernmodul.php";
 require_once __DIR__."/lib/H5pLernmodul.php";
 require_once __DIR__."/lib/LernmodulAttempt.php";
 require_once __DIR__."/lib/LernmodulCourse.php";
+require_once __DIR__."/lib/LernmodulCourseSettings.php";
 require_once __DIR__."/lib/LernmodulDependency.php";
 require_once __DIR__."/lib/LernmodulGame.php";
 require_once __DIR__."/lib/LernmodulGameAttendance.php";
 require_once __DIR__."/lib/LernmodulAdmission/LernmodulAdmission.class.php";
+require_once __DIR__."/lib/H5P/H5PLib.php";
 require_once 'app/controllers/plugin_controller.php';
 
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
@@ -19,13 +21,6 @@ if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
 }
 
 class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin {
-
-    static public function getCSSFormClass()
-    {
-        return version_compare("3.4", $GLOBALS['SOFTWARE_VERSION'], ">")
-            ? "studip_form"
-            : "default";
-    }
 
     public function __construct()
     {
@@ -46,15 +41,18 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
                 }
             }
         }
+        if ($GLOBALS['perm']->have_perm("root")) {
+            $nav = new Navigation(_("H5P-Bibliotheken"), PluginEngine::getURL($this, array(), "h5p/admin_libraries"));
+            Navigation::addItem("/admin/locations/h5p", $nav);
+        }
     }
 
     public function getTabNavigation($course_id)
     {
-        $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $this->settings = new LernmodulCourseSettings($course_id);
+        $tab = new Navigation($this->settings['tabname'] ?: _("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $tab->setImage(
-            version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                ? Icon::create("learnmodule", "info_alt")
-                : Assets::image_path("icons/white/16/learnmodule")
+            Icon::create("learnmodule", "info_alt")
         );
         $tab->addSubNavigation("overview", new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
         $tab->addSubNavigation("participants", new Navigation(_("Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
@@ -74,15 +72,11 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         }
         if ($new > 0) {
             $tab->setImage(
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
-                    : Assets::image_path("icons/red/20/new/learnmodule", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+                Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
             );
         } else {
             $tab->setImage(
-                version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-                    ? Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
-                    : Assets::image_path("icons/grey/20/learnmodule", array('title' => _("Lernmodule")))
+                Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
             );
         }
         return $tab;
@@ -119,7 +113,6 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         $val = trim($val);
         $last = strtolower($val[strlen($val)-1]);
         switch($last) {
-            // The 'G' modifier is available since PHP 5.1.0
             case 'g':
                 $val *= 1024;
             case 'm':
@@ -127,38 +120,6 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
             case 'k':
                 $val *= 1024;
         }
-
         return $val;
     }
-
-    static public function extract_zip($file_name, $dir_name = '', $testonly = false) {
-        $ret = false;
-        if ($GLOBALS['ZIP_USE_INTERNAL']) {
-            if (!class_exists("PclZip")) {
-                if ($testonly) {
-                    return Studip\ZipArchive::test($file_name);
-                }
-
-                return Studip\ZipArchive::extractToPath($file_name, $dir_name);
-            } else {
-                $archive = new PclZip($file_name);
-                if ($testonly) {
-                    $prop = $archive->properties();
-                    $ret = (!is_array($prop));
-                } else {
-                    $ok = $archive->extract(PCLZIP_OPT_PATH, $dir_name, PCLZIP_CB_PRE_EXTRACT, 'pclzip_convert_filename_cb', PCLZIP_OPT_STOP_ON_ERROR);
-                    $ret = (is_array($ok));
-                }
-            }
-        } else if (@file_exists($GLOBALS['UNZIP_PATH']) || ini_get('safe_mode')){
-            if ($testonly){
-                exec($GLOBALS['UNZIP_PATH'] . " -t -qq $file_name ", $output, $ret);
-            } else {
-                exec($GLOBALS['UNZIP_PATH'] . " -qq $file_name " . ($dir_name ? "-d $dir_name" : ""), $output, $ret);
-            }
-            $ret = $ret === 0;
-        }
-        return $ret;
-    }
-
 }

@@ -14,23 +14,21 @@
 
 <?
 
-if ($GLOBALS['perm']->have_studip_perm("tutor", $_SESSION["SessionSeminar"])) {
+if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions = new ActionsWidget();
     $actions->addLink(
         _("Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("edit", "clickable")
-            : Assets::image_path("icons/black/16/blue/edit")
+        Icon::create("edit", "clickable")
 
     );
-    $actions->addLink(
-        _("Lernmodul herunterladen"),
-        PluginEngine::getURL($plugin, array(), "lernmodule/download/".$mod->getId()),
-        version_compare($GLOBALS['SOFTWARE_VERSION'], "3.4", ">=")
-            ? Icon::create("download", "clickable")
-            : Assets::image_path("icons/black/16/blue/download")
-    );
+    if ($mod->getDownloadURL()) {
+        $actions->addLink(
+            _("Lernmodul herunterladen"),
+            $mod->getDownloadURL(),
+            Icon::create("download", "clickable")
+        );
+    }
     Sidebar::Get()->addWidget($actions);
 }
 
@@ -41,11 +39,13 @@ $views->addLink(
     null,
     array()
 )->setActive(true);
-$views->addLink(
-    _("Auswertung"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$mod->getId()),
-    null,
-    array()
-);
+if ($course_connection['evaluation_for_students'] || $GLOBALS['perm']->have_studip_perm("tutor", $course_connection['seminar_id'])) {
+    $views->addLink(
+        _("Auswertung"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId()),
+        null,
+        array()
+    );
+}
 
 Sidebar::Get()->addWidget($views);
