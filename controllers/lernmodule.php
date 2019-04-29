@@ -18,7 +18,6 @@ class LernmoduleController extends PluginController
     public function overview_action()
     {
         Navigation::activateItem("/course/lernmodule/overview");
-        LernmodulAttempt::cleanUpDatabase();
         $this->module = Lernmodul::findByCourse($this->course_id);
 
         if (Request::option("quit")) {
@@ -46,12 +45,12 @@ class LernmoduleController extends PluginController
             PageLayout::postMessage(
                 MessageBox::info(
                     sprintf(
-                        _("Sie haben zuletzt an '%s' teilgenommen."),
+                        dgettext("lernmoduleplugin","Sie haben zuletzt an '%s' teilgenommen."),
                         htmlReady($attendance->game->module['name'])
                     ),
                     array(
-                        '<a href="' . PluginEngine::getLink($this->plugin, array(), "lernmodule/gameparticipation/" . $attendance->game->getId()) . '">' . _("Wieder einsteigen") . '</a>',
-                        '<a href="'. PluginEngine::getLink($this->plugin, array('quit' => $attendance->getId()), "lernmodule/overview") .'">'._("Teilnahme beenden").'</a>'
+                        '<a href="' . PluginEngine::getLink($this->plugin, array(), "lernmodule/gameparticipation/" . $attendance->game->getId()) . '">' . dgettext("lernmoduleplugin","Wieder einsteigen") . '</a>',
+                        '<a href="'. PluginEngine::getLink($this->plugin, array('quit' => $attendance->getId()), "lernmodule/overview") .'">'.dgettext("lernmoduleplugin","Teilnahme beenden").'</a>'
                     )
                 )
             );
@@ -61,12 +60,12 @@ class LernmoduleController extends PluginController
                 PageLayout::postMessage(
                     MessageBox::info(
                         sprintf(
-                            _("%s sucht noch weitere Teilnehmer für '%s'."),
+                            dgettext("lernmoduleplugin","%s sucht noch weitere Teilnehmer für '%s'."),
                             get_fullname($opengame['user_id']),
                             htmlReady($opengame->module['name'])
                         ),
                         array(
-                            '<a href="' . PluginEngine::getLink($this->plugin, array(), "lernmodule/gameparticipation/" . $opengame->getId()) . '">' . _("Einladung annehmen") . '</a>'
+                            '<a href="' . PluginEngine::getLink($this->plugin, array(), "lernmodule/gameparticipation/" . $opengame->getId()) . '">' . dgettext("lernmoduleplugin","Einladung annehmen") . '</a>'
                         )
                     )
                 );
@@ -82,16 +81,11 @@ class LernmoduleController extends PluginController
         $class = ucfirst($this->mod['type'])."Lernmodul";
         $this->mod = $class::buildExisting($this->mod->toArray());
         if (!$this->mod['url'] && !file_exists($this->mod->getPath())) {
-            PageLayout::postMessage(MessageBox::error(_("Kann Lernmodul nicht finden.")));
+            PageLayout::postMessage(MessageBox::error(dgettext("lernmoduleplugin","Kann Lernmodul nicht finden.")));
         }
-        
+
         $this->course_connection = $this->mod->courseConnection($this->course_id);
-        $this->attempt = new LernmodulAttempt();
-        $this->attempt->setData(array(
-            'user_id' => $this->course_connection['anonymous_attempts'] ? null : $GLOBALS['user']->id,
-            'module_id' => $module_id
-        ));
-        $this->attempt->store();
+        $this->attempt = LernmodulAttempt::getByModule($this->mod->getId());
         if (Request::option("attendance")) {
             $this->game_attendence = new LernmodulGameAttendance(Request::option("attendance"));
             if ($GLOBALS['user']->id !== $this->game_attendence['user_id']) {
@@ -103,7 +97,6 @@ class LernmoduleController extends PluginController
                 $this->redirect("lernmodule/overview");
             }
         }
-        LernmodulAttempt::cleanUpDatabase();
     }
 
     public function edit_action($module_id = null)
@@ -114,10 +107,10 @@ class LernmoduleController extends PluginController
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
         }
-        $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) 
-                WHERE lernmodule_courses.seminar_id = ? 
-                    AND module_id != ? 
-                    AND lernmodule_courses.anonymous_attempts = '0' 
+        $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id)
+                WHERE lernmodule_courses.seminar_id = ?
+                    AND module_id != ?
+                    AND lernmodule_courses.anonymous_attempts = '0'
                 ORDER BY name ASC" , array(
             $this->course_id,
             $module_id
@@ -125,11 +118,11 @@ class LernmoduleController extends PluginController
         if ($module_id) {
             $this->modulecourse = LernmodulCourse::find(array($module_id, $this->course_id));
         }
-        PageLayout::setTitle($this->module->isNew() ? _("Lernmodul erstellen") : _("Lernmodul bearbeiten"));
+        PageLayout::setTitle($this->module->isNew() ? dgettext("lernmoduleplugin","Lernmodul erstellen") : dgettext("lernmoduleplugin","Lernmodul bearbeiten"));
         if (Request::isPost()) {
             $data = Request::getArray("module");
             if (!$data['name']) { //die Variable name passte nicht mehr in den Request und fehlt daher
-                PageLayout::postMessage(MessageBox::error(_("Datei ist leider zu gro�.")));
+                PageLayout::postMessage(MessageBox::error(dgettext("lernmoduleplugin","Datei ist leider zu groß.")));
                 $this->redirect("lernmodule/overview");
                 return;
             }
@@ -149,7 +142,7 @@ class LernmoduleController extends PluginController
             $this->module->store();
 
             if (!$this->module->getId()) {
-                PageLayout::postMessage(MessageBox::error(_("Konnte Lernmodul nicht speichern.")));
+                PageLayout::postMessage(MessageBox::error(dgettext("lernmoduleplugin","Konnte Lernmodul nicht speichern.")));
                 $this->redirect("lernmodule/overview");
                 return;
             }
@@ -190,10 +183,22 @@ class LernmoduleController extends PluginController
                 }
             }
             if ($success) {
-                PageLayout::postMessage(MessageBox::success(_("Lernmodul erfolgreich gespeichert.")));
+                PageLayout::postMessage(MessageBox::success(dgettext("lernmoduleplugin","Lernmodul erfolgreich gespeichert.")));
             }
-            $this->redirect("lernmodule/overview");
+            $this->redirect("lernmodule/view/".$this->module->getId());
         }
+        $statement = DBManager::get()->prepare("
+            SELECT file_refs.id
+            FROM file_refs
+                INNER JOIN folders ON (folders.id = file_refs.folder_id)
+                INNER JOIN files ON (files.id = file_refs.file_id)
+            WHERE folders.range_id = :seminar_id
+                AND folders.folder_type IN ('StandardFolder', 'RootFolder', 'MaterialFolder')
+                AND folders.range_type = 'course'
+                AND SUBSTRING(files.mime_type, 1, 6) = 'image/'
+        ");
+        $statement->execute(array('seminar_id' => $this->course_id));
+        $this->course_images = FileRef::findMany($statement->fetchAll(PDO::FETCH_COLUMN, 0));
     }
 
     public function evaluation_action($module_id = null)
@@ -239,7 +244,7 @@ class LernmoduleController extends PluginController
         $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {
             $this->module->delete();
-            PageLayout::postMessage(MessageBox::success(_("Lernmodul gelöscht.")));
+            PageLayout::postMessage(MessageBox::success(dgettext("lernmoduleplugin","Lernmodul gelöscht.")));
         }
         $this->redirect("lernmodule/overview");
     }
@@ -258,6 +263,13 @@ class LernmoduleController extends PluginController
                 $this->attempt['successful'] = 1;
             }
             unset($message['success']);
+            $old_message = $this->attempt->customdata->getArrayCopy();
+            $message['properties'] = array_merge((array) $old_message['properties'], (array) $message['properties']);
+            foreach ((array) $old_message['points'] as $class => $value) {
+                if ($message['points'][$class] < $value) {
+                    $message['points'][$class] = $value;
+                }
+            }
             $this->attempt->customdata = $message;
             $this->attempt->store();
         }
@@ -339,7 +351,7 @@ class LernmoduleController extends PluginController
         if (Request::isPost()) {
             $this->settings->setData(Request::getArray("data"));
             $this->settings->store();
-            PageLayout::postSuccess(_("Einstellungen wurden gespeichert."));
+            PageLayout::postSuccess(dgettext("lernmoduleplugin","Einstellungen wurden gespeichert."));
         }
     }
 

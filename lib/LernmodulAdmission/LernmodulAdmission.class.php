@@ -12,7 +12,7 @@ class LernmodulAdmission extends AdmissionRule
     public function __construct($ruleId='', $courseSetId = '')
     {
         parent::__construct($ruleId, $courseSetId);
-        $this->default_message = _('Sie befinden sich nicht innerhalb des Anmeldezeitraums.');
+        $this->default_message = dgettext('lernmoduleplugin','Sie befinden sich nicht innerhalb des Anmeldezeitraums.');
         if ($ruleId) {
             $this->load();
         } else {
@@ -31,11 +31,11 @@ class LernmodulAdmission extends AdmissionRule
     }
 
     public static function getDescription() {
-        return _("Anmelderegeln dieses Typs legen ein Lernmodul fest, das erfolgreich besucht sein muss, um zu der Veranstaltung zugelassen zu werden.");
+        return dgettext("lernmoduleplugin","Anmelderegeln dieses Typs legen ein Lernmodul fest, das erfolgreich besucht sein muss, um zu der Veranstaltung zugelassen zu werden.");
     }
 
     public static function getName() {
-        return _("Lernmodul als Voraussetzung");
+        return dgettext("lernmoduleplugin","Lernmodul als Voraussetzung");
     }
 
     public function getTemplate() {
@@ -48,7 +48,7 @@ class LernmodulAdmission extends AdmissionRule
                 INNER JOIN lernmodule_courses ON (lernmodule_courses.module_id = lernmodule_module.module_id)
                 INNER JOIN seminare ON (lernmodule_courses.seminar_id = seminare.Seminar_id)
             WHERE CONCAT(seminare.name, ': ', lernmodule_module.name) LIKE :input
-            ", _("Lernmodul")));
+            ", dgettext("lernmoduleplugin","Lernmodul")));
         $template->set_attribute('rule', $this);
         return $template->render();
     }
@@ -57,7 +57,7 @@ class LernmodulAdmission extends AdmissionRule
         // Load data.
         $stmt = DBManager::get()->prepare("
             SELECT *
-            FROM `lernmodule_admissionrules` 
+            FROM `lernmodule_admissionrules`
             WHERE `rule_id` = ? LIMIT 1
         ");
         $stmt->execute(array($this->id));
@@ -71,7 +71,7 @@ class LernmodulAdmission extends AdmissionRule
         $errors = array();
 
         if (!LernmodulAttempt::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($this->module_id, $user_id))) {
-            $errors[] = sprintf(_("Sie haben das Lernmodul '%s' noch nicht absolviert"), Lernmodul::find($this->module_id)->name);
+            $errors[] = sprintf(dgettext("lernmoduleplugin","Sie haben das Lernmodul '%s' noch nicht absolviert"), Lernmodul::find($this->module_id)->name);
         }
         return $errors;
     }
@@ -100,7 +100,7 @@ class LernmodulAdmission extends AdmissionRule
     public function toString()
     {
         return sprintf(
-            _("Um zu der Veranstaltung zugelassen zu werden, müssen Sie an dem Lernmodul '%s' erfolgreich teilgenommen haben."),
+            dgettext("lernmoduleplugin","Um zu der Veranstaltung zugelassen zu werden, mÃ¼ssen Sie an dem Lernmodul '%s' erfolgreich teilgenommen haben."),
             Lernmodul::find($this->module_id)->name
         );
     }
@@ -109,7 +109,7 @@ class LernmodulAdmission extends AdmissionRule
     {
         $errors = parent::validate($data);
         if (!$data['seminar_id-module_id']) {
-            $errors[] = _("Bitte geben Sie das Modul ein.");
+            $errors[] = dgettext("lernmoduleplugin","Bitte geben Sie das Modul ein.");
         }
         return $errors;
     }

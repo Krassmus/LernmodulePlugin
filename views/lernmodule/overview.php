@@ -1,5 +1,5 @@
 <? if (!count($module)) : ?>
-    <?= MessageBox::info(_("Es sind noch keine Lernmodule vorhanden.")) ?>
+    <?= MessageBox::info(dgettext("lernmoduleplugin","Es sind noch keine Lernmodule vorhanden.")) ?>
 <? else : ?>
     <div id="moduleoverview">
         <? $already_displayed_mods = array() ?>
@@ -32,11 +32,12 @@
                     <? if ($active) : ?>
                         <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($course_id, $mod->getId())) ?>
                         <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
-                            <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');\"" : "" ?>>
+                            <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                            <div class="module"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>>
                                 <? if (!$mod->isWritable()) : ?>
                                     <? if (LernmodulAttempt::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
                                         <div class="crown">
-                                            <?= Icon::create("crown", "status-yellow")->asImg(20, array('title' => _("Erfolgreich abgeschlossen"), 'class' => "text-bottom")) ?>
+                                            <?= Icon::create("crown", "status-yellow")->asImg(20, array('title' => dgettext("lernmoduleplugin","Erfolgreich abgeschlossen"), 'class' => "text-bottom")) ?>
                                             </div>
                                     <? endif ?>
                                 <? endif ?>
@@ -55,14 +56,16 @@
                                 </div>
                             </div>
                         <? else : ?>
-                        <div class="module" style="opacity: 0.5;<?= $mod['image'] ? " background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');" : "" ?>" title="<?= sprintf(_("Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
+                        <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                        <div class="module" style="opacity: 0.5;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= sprintf(dgettext("lernmoduleplugin","Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
                             <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= Icon::create("date", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
                             </div>
                         </div>
                         <? endif ?>
                     <? else : ?>
-                        <div class="module" style="opacity: 0.3;<?= $mod['image'] ? " background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "").htmlReady($mod['image'])."');" : "" ?>" title="<?= _("Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
+                        <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                        <div class="module" style="opacity: 0.3;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= dgettext("lernmoduleplugin","Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
                             <div class="shadow" style="max-height: 108px; height: 108px;">
                                 <?= Icon::create("question-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
                             </div>
@@ -74,9 +77,10 @@
             <? endforeach ?>
         <? } while (count($module) < $last_mod_number) ?>
         <? foreach ($module as $mod) : ?>
-            <div class="module"<?= $mod['image'] ? " style=\"background-image: url('".(!$mod['url'] ? $mod->getDataURL()."/" : "")."/".htmlReady($mod['image'])."');\"" : "" ?>>
+            <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+            <div class="module"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>>
                 <div class="shadow">
-                    <?= Icon::create("exclaim-circle", "attention")->asImg(40, array('style' => "vertical-align: middle;", 'title' => _("Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie erreicht werden."))) ?>
+                    <?= Icon::create("exclaim-circle", "attention")->asImg(40, array('style' => "vertical-align: middle;", 'title' => dgettext("lernmoduleplugin","Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie erreicht werden."))) ?>
                     <? if ($mod->isWritable()) : ?>
                         <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
                             <?= Icon::create("edit", "info_alt")->asImg(16) ?>
@@ -98,15 +102,20 @@ Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
 $actions = new ActionsWidget();
 if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
     $actions->addLink(
-        _("Bereich konfigurieren"),
+        dgettext("lernmoduleplugin","Bereich konfigurieren"),
         PluginEngine::getURL($plugin, array(), "lernmodule/admin"),
         Icon::create("admin", "clickable"),
         array('data-dialog' => 1)
     );
     $actions->addLink(
-        _("Lernmodul hinzufügen"),
+        dgettext("lernmoduleplugin","Lernmodul hinzufügen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit"),
         Icon::create("learnmodule+add", "clickable")
+    );
+    $actions->addLink(
+        dgettext("lernmoduleplugin","Lernmodul erstellen"),
+        PluginEngine::getURL($plugin, array(), "h5peditor/edit"),
+        Icon::create("add", "clickable")
     );
 }
 Sidebar::Get()->addWidget($actions);

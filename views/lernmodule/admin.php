@@ -3,14 +3,14 @@
       class="default"
       data-dialog="reload-on-close">
     <fieldset>
-        <legend><?= _("Einstellungen der Veranstaltung") ?></legend>
+        <legend><?= dgettext("lernmoduleplugin","Einstellungen der Veranstaltung") ?></legend>
         <label>
-            <?= _("Name des Reiters") ?>
-            <input type="text" name="data[tabname]" value="<?= htmlReady($settings['tabname']) ?>" placeholder="<?= _("Lernmodule") ?>">
+            <?= dgettext("lernmoduleplugin","Name des Reiters") ?>
+            <input type="text" name="data[tabname]" value="<?= htmlReady($settings['tabname']) ?>" placeholder="<?= dgettext("lernmoduleplugin","Lernmodule") ?>">
         </label>
     </fieldset>
 
     <div data-dialog-button>
-        <?= \Studip\Button::create(_("Speichern")) ?>
+        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Speichern")) ?>
     </div>
 </form>

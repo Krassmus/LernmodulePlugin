@@ -17,14 +17,14 @@
 if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions = new ActionsWidget();
     $actions->addLink(
-        _("Bearbeiten"),
+        dgettext("lernmoduleplugin","Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
         Icon::create("edit", "clickable")
 
     );
     if ($mod->getDownloadURL()) {
         $actions->addLink(
-            _("Lernmodul herunterladen"),
+            dgettext("lernmoduleplugin","Lernmodul herunterladen"),
             $mod->getDownloadURL(),
             Icon::create("download", "clickable")
         );
@@ -41,7 +41,7 @@ $views->addLink(
 )->setActive(true);
 if ($course_connection['evaluation_for_students'] || $GLOBALS['perm']->have_studip_perm("tutor", $course_connection['seminar_id'])) {
     $views->addLink(
-        _("Auswertung"),
+        dgettext("lernmoduleplugin","Auswertung"),
         PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId()),
         null,
         array()
