@@ -94,8 +94,9 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function perform($unconsumed_path)
     {
         $this->addStylesheet("assets/lernmodule.less");
+        bindtextdomain("lernmoduleplugin", $this->getPluginPath()."/locale");
+        bind_textdomain_codeset("lernmoduleplugin", 'UTF-8');
         parent::perform($unconsumed_path);
-        bindtextdomain("lernmoduleplugin", DIR."/locale");
     }
 
     static public function mayEditSandbox()
