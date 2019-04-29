@@ -4,7 +4,7 @@
       enctype="multipart/form-data">
 
     <fieldset>
-        <legend><?= _("Lernmodul hochladen und bearbeiten") ?></legend>
+        <legend><?= dgettext("lernmoduleplugin","Lernmodul hochladen und bearbeiten") ?></legend>
 
         <div class="hgroup">
             <label>
@@ -12,7 +12,7 @@
                        name="upload_or_url"
                        onChange="jQuery('#file_upload').toggle(this.checked); jQuery('#lernmodul_url').toggle(!this.checked);"
                        value="upload"<?= !$module['url'] ? " checked" : "" ?>>
-                <?= _("Hochladen") ?>
+                <?= dgettext("lernmoduleplugin","Hochladen") ?>
             </label>
 
             <label>
@@ -26,7 +26,7 @@
 
         <label class="file-upload" id="file_upload"<?= $module['url'] ? ' style="display: none;"' : "" ?>>
             <input type="file" name="modulefile" accept=".zip,.h5p,.pdf" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
-            <?= sprintf(_("Lernmodul auswählen (Gezipptes HTML, H5P oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
+            <?= sprintf(dgettext("lernmoduleplugin","Lernmodul auswählen (Gezipptes HTML, H5P oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
 
         <script>
@@ -55,7 +55,7 @@
         </script>
 
         <label id="lernmodul_url"<?= !$module['url'] ? ' style="display: none;"' : "" ?>>
-            <?= _("URL des Lernmoduls") ?>
+            <?= dgettext("lernmoduleplugin","URL des Lernmoduls") ?>
             <input type="text"
                    name="module[url]"
                    placeholder="http://..."
@@ -64,13 +64,13 @@
         </label>
 
         <label>
-            <?= _("Name des Moduls") ?>
+            <?= dgettext("lernmoduleplugin","Name des Moduls") ?>
             <input type="text" id="modulename" name="module[name]" required value="<?= htmlReady($module['name']) ?>">
         </label>
 
         <? if (count($lernmodule)) : ?>
             <div style="margin-top: 15px; margin-bottom: 15px;">
-                <?= _("Abhängig von") ?>
+                <?= dgettext("lernmoduleplugin","Abhängig von") ?>
                 <ul class="clean" style="font-size: 0.8em;">
                     <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies(Context::get()->id)) ?>
                     <? foreach ($lernmodule as $lernmodul) : ?>
@@ -88,20 +88,20 @@
         <? if (class_exists("LernmarktplatzMaterial")) : ?>
             <label id="lernmarktplatz_publish" style="<?= $module['url'] ? 'display: none; ' : '' ?>">
                 <input type="checkbox" name="module[material_id]" value="<?= htmlReady($module['material_id'] ?: 1) ?>">
-                <?= _("Auf Lernmarktplatz veröffentlichen (unter CC-BY-SA für alle zum freien Download)") ?>
+                <?= dgettext("lernmoduleplugin","Auf Lernmarktplatz veröffentlichen (unter CC-BY-SA für alle zum freien Download)") ?>
             </label>
         <? endif ?>
     </fieldset>
 
     <fieldset>
         <legend>
-            <?= _("Abspieloptionen") ?>
+            <?= dgettext("lernmoduleplugin","Abspieloptionen") ?>
         </legend>
 
         <? if (!$module->isNew()) : ?>
             <? if ($module['url']) : ?>
                 <label>
-                    <?= _("Adresse des Logos") ?>
+                    <?= dgettext("lernmoduleplugin","Adresse des Logos") ?>
                     <input type="text"
                            name="module[image]"
                            onChange="jQuery('#image_preview').css('background-image', 'url(' + this.value + ')');"
@@ -115,11 +115,11 @@
                 <? $module_images = $module->scanForImages() ?>
                 <? if (count($module_images) + count($course_images) > 0) : ?>
                     <label>
-                        <?= _("Bild auswählen") ?>
+                        <?= dgettext("lernmoduleplugin","Bild auswählen") ?>
                         <select id="select_image" name="module[image]" onChange="STUDIP.Lernmodule.selectImage.call(this);">
-                            <option value=""><?= _("Keines") ?></option>
+                            <option value=""><?= dgettext("lernmoduleplugin","Keines") ?></option>
                             <? if (count($module_images)) : ?>
-                                <optgroup label="<?= _("Bilder aus dem Lernmodul") ?>">
+                                <optgroup label="<?= dgettext("lernmoduleplugin","Bilder aus dem Lernmodul") ?>">
                                     <? foreach ($module_images as $image) : ?>
                                         <option value="<?= htmlReady($image) ?>"
                                                 data-url="<?= $module->getDataURL() ?>/<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>>
@@ -129,7 +129,7 @@
                                 </optgroup>
                             <? endif ?>
                             <? if (count($course_images)) : ?>
-                                <optgroup label="<?= _("Bilder der Veranstaltung") ?>">
+                                <optgroup label="<?= dgettext("lernmoduleplugin","Bilder der Veranstaltung") ?>">
                                     <? foreach ($course_images as $fileref) : ?>
                                         <option value="<?= htmlReady($fileref->getId()) ?>" data-url="<?= htmlReady($fileref->getDownloadURL()) ?>"<?= $module['image'] === $fileref->getId() ? " selected" : "" ?>>
                                             <?= htmlReady($fileref['name']) ?>
@@ -158,17 +158,17 @@
         <label>
             <input type="hidden" name="modulecourse[anonymous_attempts]" value="0">
             <input type="checkbox" name="modulecourse[anonymous_attempts]" value="1"<?= $modulecourse['anonymous_attempts'] ? " checked" : "" ?>>
-            <?= _("Nutzer sollen anonym teilnehmen") ?>
+            <?= dgettext("lernmoduleplugin","Nutzer sollen anonym teilnehmen") ?>
         </label>
 
         <label>
             <input type="hidden" name="modulecourse[evaluation_for_students]" value="0">
             <input type="checkbox" name="modulecourse[evaluation_for_students]" value="1"<?= $modulecourse['evaluation_for_students'] ? " checked" : "" ?>>
-            <?= _("Nutzer dürfen die Auswertung sehen") ?>
+            <?= dgettext("lernmoduleplugin","Nutzer dürfen die Auswertung sehen") ?>
         </label>
 
         <label>
-            <?= _("Abspielen ab") ?>
+            <?= dgettext("lernmoduleplugin","Abspielen ab") ?>
             <input type="text" id="modulecourse_starttime" name="modulecourse[starttime]" value="<?= $modulecourse['starttime'] ? date("d.m.Y H:i", $modulecourse['starttime']) : "jederzeit" ?>"  data-datetime-picker>
         </label>
 
@@ -176,7 +176,7 @@
             <? $gradebook_definitions = \Grading\Definition::findBySQL("course_id = ? ORDER BY name", array(Context::get()->id)) ?>
             <? if (count($gradebook_definitions)) : ?>
                 <label>
-                    <?= _("Gradebook-Eintrag bei Erfolg setzen") ?>
+                    <?= dgettext("lernmoduleplugin","Gradebook-Eintrag bei Erfolg setzen") ?>
                     <select name="modulecourse[gradebook_definition]">
                         <option></option>
                         <? foreach ($gradebook_definitions as $definition) : ?>
@@ -189,7 +189,7 @@
                 <label>
                     <input type="hidden" name="modulecourse[gradebook_rewrite]" value="0">
                     <input type="checkbox" name="modulecourse[gradebook_rewrite]" value="1"<?= $modulecourse['gradebook_rewrite'] ? " checked" : "" ?>>
-                    <?= _("Kann mehrmals absolviert werden.") ?>
+                    <?= dgettext("lernmoduleplugin","Kann mehrmals absolviert werden.") ?>
                 </label>
             <? endif ?>
         <? endif ?>
@@ -204,13 +204,13 @@
     </fieldset>
 
     <div data-dialog-button>
-        <?= \Studip\Button::create(_("Speichern")) ?>
-        <?= \Studip\Button::create(_("Löschen"), "delete", array(
+        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Speichern")) ?>
+        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Löschen"), "delete", array(
             'formaction' => PluginEngine::getLink($plugin, array(), "lernmodule/delete/".$module->getId()),
-            'onClick' => "return window.confirm('"._("Wirklich löschen?")."');"
+            'onClick' => "return window.confirm('".dgettext("lernmoduleplugin","Wirklich löschen?")."');"
         )) ?>
         <? if (!Request::isAjax()) : ?>
-            <?= \Studip\LinkButton::create(_("Abbrechen"), PluginEngine::getURL($plugin, array(), "lernmodule/overview")) ?>
+            <?= \Studip\LinkButton::create(dgettext("lernmoduleplugin","Abbrechen"), PluginEngine::getURL($plugin, array(), "lernmodule/overview")) ?>
         <? endif ?>
     </div>
 
@@ -259,7 +259,7 @@
 if (!$module->isNew()) {
     $actions = new ActionsWidget();
     $actions->addLink(
-        _("Lernmodul herunterladen"),
+        dgettext("lernmoduleplugin","Lernmodul herunterladen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
         Icon::create("download", "clickable")
     );
@@ -274,7 +274,7 @@ $views->addLink(
     array()
 );
 $views->addLink(
-    _("Auswertung"),
+    dgettext("lernmoduleplugin","Auswertung"),
     PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$module->getId()),
     null,
     array()

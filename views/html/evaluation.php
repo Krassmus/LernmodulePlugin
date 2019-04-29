@@ -1,9 +1,9 @@
 <? if (count($pointclasses)) : ?>
     <table class="default nohover">
         <thead>
-            <th><?= _("Auswertung") ?></th>
-            <th><?= _("Minimalwert") ?></th>
-            <th><?= _("Höchstwert") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Auswertung") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Minimalwert") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Höchstwert") ?></th>
         </thead>
         <tbody>
         <? $i = 1 ?>

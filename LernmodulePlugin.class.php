@@ -41,7 +41,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
             }
         }
         if ($GLOBALS['perm']->have_perm("root")) {
-            $nav = new Navigation(_("H5P-Bibliotheken"), PluginEngine::getURL($this, array(), "h5p/admin_libraries"));
+            $nav = new Navigation(dgettext("lernmoduleplugin","H5P-Bibliotheken"), PluginEngine::getURL($this, array(), "h5p/admin_libraries"));
             Navigation::addItem("/admin/locations/h5p", $nav);
         }
     }
@@ -49,18 +49,18 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function getTabNavigation($course_id)
     {
         $this->settings = new LernmodulCourseSettings($course_id);
-        $tab = new Navigation($this->settings['tabname'] ?: _("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $tab = new Navigation($this->settings['tabname'] ?: dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $tab->setImage(
             Icon::create("learnmodule", "info_alt")
         );
-        $tab->addSubNavigation("overview", new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
-        $tab->addSubNavigation("participants", new Navigation(_("Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
+        $tab->addSubNavigation("overview", new Navigation(dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
+        $tab->addSubNavigation("participants", new Navigation(dgettext("lernmoduleplugin","Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
         return array('lernmodule' => $tab);
     }
 
     public function getIconNavigation($course_id, $last_visit, $user_id)
     {
-        $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $tab = new Navigation(dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $new = Lernmodul::countBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = :course_id AND chdate >= :last_visit AND user_id <> :user_id", array(
             'course_id' => $course_id,
             'last_visit' => $last_visit,
@@ -71,11 +71,11 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         }
         if ($new > 0) {
             $tab->setImage(
-                Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+                Icon::create("learnmodule+new", "new", array('title' => sprintf(dgettext("lernmoduleplugin","%s neue Lernmodule"), $new)))
             );
         } else {
             $tab->setImage(
-                Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
+                Icon::create("learnmodule", "inactive", array('title' => dgettext("lernmoduleplugin","Lernmodule")))
             );
         }
         return $tab;
@@ -95,6 +95,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     {
         $this->addStylesheet("assets/lernmodule.less");
         parent::perform($unconsumed_path);
+        bindtextdomain("lernmoduleplugin", DIR."/locale");
     }
 
     static public function mayEditSandbox()
@@ -105,7 +106,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
 
     public function getDisplayTitle()
     {
-        return _("Lernmodule");
+        return dgettext("lernmoduleplugin","Lernmodule");
     }
 
     static public function bytesFromPHPIniValue($val) {

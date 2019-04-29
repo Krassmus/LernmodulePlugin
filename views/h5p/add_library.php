@@ -4,29 +4,29 @@
       class="default">
     <fieldset>
         <legend>
-            <?= _("Bibliotheken hochladen") ?>
+            <?= dgettext("lernmoduleplugin","Bibliotheken hochladen") ?>
         </legend>
 
         <label class="file-upload">
             <input type="file" name="file" accept=".zip,.h5p">
-            <?= sprintf(_("H5P-Lernmodul oder ZIP mit Bibliotheken auswählen (maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
+            <?= sprintf(dgettext("lernmoduleplugin","H5P-Lernmodul oder ZIP mit Bibliotheken auswählen (maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
 
         <label>
             <input type="checkbox" name="activate" value="1" checked>
-            <?= _("Gefundene Bibliotheken gleich aktivieren") ?>
+            <?= dgettext("lernmoduleplugin","Gefundene Bibliotheken gleich aktivieren") ?>
         </label>
 
         <label>
-            <?= _("Bestehende Bibliotheken überschreiben") ?>
+            <?= dgettext("lernmoduleplugin","Bestehende Bibliotheken überschreiben") ?>
             <select name="overwrite">
-                <option value="always"><?= _("Immer") ?></option>
-                <option value="nonactivated"><?= _("Nur die nicht aktivierten") ?></option>
-                <option value="patch"><?= _("Nur, wenn die Patch-Version höher ist") ?></option>
+                <option value="always"><?= dgettext("lernmoduleplugin","Immer") ?></option>
+                <option value="nonactivated"><?= dgettext("lernmoduleplugin","Nur die nicht aktivierten") ?></option>
+                <option value="patch"><?= dgettext("lernmoduleplugin","Nur, wenn die Patch-Version höher ist") ?></option>
             </select>
         </label>
     </fieldset>
     <div data-dialog-button>
-        <?= \Studip\Button::create(_("Speichern")) ?>
+        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Speichern")) ?>
     </div>
 </form>

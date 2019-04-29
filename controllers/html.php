@@ -31,7 +31,7 @@ class HtmlController extends PluginController
                 );
             }
             $this->lernmodulcourse->store();
-            PageLayout::postMessage(MessageBox::success(_("Werte wurden gespeichert.")));
+            PageLayout::postMessage(MessageBox::success(dgettext("lernmoduleplugin","Werte wurden gespeichert.")));
         }
     }
 

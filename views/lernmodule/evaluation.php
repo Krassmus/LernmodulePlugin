@@ -58,9 +58,9 @@
         ?>
         <? if ($successful['count'] + $unsuccessful['count'] > 0) : ?>
         <fieldset>
-            <legend><?= _("Auswertung") ?></legend>
+            <legend><?= dgettext("lernmoduleplugin","Auswertung") ?></legend>
 
-                <h2><?= _("Dauer des Lernmoduls") ?></h2>
+                <h2><?= dgettext("lernmoduleplugin","Dauer des Lernmoduls") ?></h2>
 
                 <div id="timeline"></div>
                 <script>
@@ -90,7 +90,7 @@
                         new Chartist.Line('#timeline', data, options);
                     });
                 </script>
-                <p><?= _("Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen Durchläufe, orange die nicht erfolgreichen.") ?></p>
+                <p><?= dgettext("lernmoduleplugin","Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen Durchläufe, orange die nicht erfolgreichen.") ?></p>
 
             <? if (is_a($module, "CustomLernmodul")) : ?>
                 <? $template = $module->getEvaluationTemplate(Context::get()->id) ?>
@@ -106,9 +106,9 @@
             <thead>
                 <tr>
                     <th width="50px"></th>
-                    <th><?= _("Name") ?></th>
-                    <th><?= _("Dauer") ?></th>
-                    <th><?= _("Datum") ?></th>
+                    <th><?= dgettext("lernmoduleplugin","Name") ?></th>
+                    <th><?= dgettext("lernmoduleplugin","Dauer") ?></th>
+                    <th><?= dgettext("lernmoduleplugin","Datum") ?></th>
                     <? foreach ($resultrows as $rowname) : ?>
                         <th><?= htmlReady($rowname) ?></th>
                     <? endforeach ?>
@@ -120,18 +120,18 @@
                     <td>
                         <div style="width: 50px; height: 50px; background-image: url('<?= Avatar::getAvatar($line['studip_user_id'])->getURL(Avatar::MEDIUM) ?>'); background-size: 100% auto; background-position: center center;"></div>
                     </td>
-                    <td><?= htmlReady($line['studip_user_id'] ? get_fullname($line['studip_user_id']) : _("Anonym")) ?></td>
+                    <td><?= htmlReady($line['studip_user_id'] ? get_fullname($line['studip_user_id']) : dgettext("lernmoduleplugin","Anonym")) ?></td>
                     <td data-timestamp="<?= htmlReady($line['studip_duration']) ?>"><?
                         if ($line['studip_duration'] < 180) {
-                            echo sprintf(_("%s Sekunden"), $line['studip_duration']);
+                            echo sprintf(dgettext("lernmoduleplugin","%s Sekunden"), $line['studip_duration']);
                         } elseif ($line['studip_duration'] < 60 * 120) {
-                            echo sprintf(_("%s Minuten"), round($line['studip_duration'] / 60));
+                            echo sprintf(dgettext("lernmoduleplugin","%s Minuten"), round($line['studip_duration'] / 60));
                         } else {
-                            echo sprintf(_("%s Stunden"), round($line['studip_duration'] / 360));
+                            echo sprintf(dgettext("lernmoduleplugin","%s Stunden"), round($line['studip_duration'] / 360));
                         }
                         ?></td>
                     <td>
-                        <?= date("j.n.Y G:i", $line['studip_mkdate'])." "._("Uhr") ?>
+                        <?= date("j.n.Y G:i", $line['studip_mkdate'])." ".dgettext("lernmoduleplugin","Uhr") ?>
                     </td>
                     <? foreach ($resultrows as $rowname) : ?>
                         <td><?= htmlReady($line[$rowname]) ?></td>
@@ -166,14 +166,14 @@
 $actions = new ActionsWidget();
 if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions->addLink(
-        _("Lernmodul herunterladen"),
+        dgettext("lernmoduleplugin","Lernmodul herunterladen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
         Icon::create("download", "clickable")
     );
 }
 if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions->addLink(
-        _("Bearbeiten"),
+        dgettext("lernmoduleplugin","Bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$module->getId()),
         Icon::create("edit", "clickable")
     );
@@ -189,7 +189,7 @@ $views->addLink(
     array()
 );
 $views->addLink(
-    _("Auswertung"),
+    dgettext("lernmoduleplugin","Auswertung"),
     PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $module->getId()),
     null,
     array()

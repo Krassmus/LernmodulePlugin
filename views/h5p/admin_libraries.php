@@ -1,10 +1,10 @@
 <table class="default admin_libraries">
     <thead>
         <tr>
-            <th><?= _("Bibliothek") ?></th>
-            <th><?= _("Version") ?></th>
-            <th><?= _("Benutzt von") ?></th>
-            <th><?= _("Erlaubt") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Bibliothek") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Version") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Benutzt von") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Erlaubt") ?></th>
         </tr>
     </thead>
     <tbody>
@@ -32,13 +32,13 @@
 
 $actions = new ActionsWidget();
 $actions->addLink(
-    _("Bibliotheken hinzufügen"),
+    dgettext("lernmoduleplugin","Bibliotheken hinzufügen"),
     PluginEngine::getURL($plugin, array(), "h5p/add_library"),
     Icon::create("add", "clickable"),
     array('data-dialog' => 1)
 );
 $actions->addLink(
-    _("Bibliotheken exportieren"),
+    dgettext("lernmoduleplugin","Bibliotheken exportieren"),
     PluginEngine::getURL($plugin, array(), "h5p/export_libraries"),
     Icon::create("export", "clickable")
 );
