@@ -16,7 +16,7 @@ class ScormLernmodul extends Lernmodul implements CustomLernmodul
 
     public function getViewerTemplate($attempt, $game_attendance = null)
     {
-        PageLayout::postMessage(MessageBox::info(_("Dies ist ein SCORM-Modul, das noch nicht unterstützt wird.")));
+        PageLayout::postMessage(MessageBox::info(dgettext("lernmoduleplugin","Dies ist ein SCORM-Modul, das noch nicht unterstÃ¼tzt wird.")));
 
         $templatefactory = new Flexi_TemplateFactory(__DIR__."/../views");
         $template = $templatefactory->open("scorm/view.php");

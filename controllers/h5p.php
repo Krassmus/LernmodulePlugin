@@ -17,7 +17,7 @@ class H5pController extends PluginController
         }
         Navigation::activateItem("/admin/locations/h5p");
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/h5pstudip.js");
-        PageLayout::setTitle(_("H5P-Bibliotheken"));
+        PageLayout::setTitle(dgettext("lernmoduleplugin","H5P-Bibliotheken"));
         $this->libs = H5PLib::findBySQL("1 = 1 ORDER BY name ASC, major_version DESC, minor_version DESC");
     }
 
@@ -94,9 +94,9 @@ class H5pController extends PluginController
                 }
                 unlink($_FILES['file']['tmp_name']);
                 if (count($libs_name)) {
-                    PageLayout::postSuccess(_("H5P-Bibliotheken wurden übernommen"), $libs_name);
+                    PageLayout::postSuccess(dgettext("lernmoduleplugin","H5P-Bibliotheken wurden übernommen"), $libs_name);
                 } else {
-                    PageLayout::postError(_("Es konnten leider keine H5P-Bibliotheken in der Datei gefunden werden, die übernommen wurden."));
+                    PageLayout::postError(dgettext("lernmoduleplugin","Es konnten leider keine H5P-Bibliotheken in der Datei gefunden werden, die übernommen wurden."));
                 }
                 $this->redirect("h5p/admin_libraries");
             }
@@ -136,7 +136,7 @@ class H5pController extends PluginController
             foreach (H5PLib::findMany($this->mod->findUnallowedLibraries()) as $lib) {
                 $libs[] = $lib['name']." ".$lib['major_version'].".".$lib['minor_version'];
             }
-            PageLayout::postInfo(_("Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."), $libs);
+            PageLayout::postInfo(dgettext("lernmoduleplugin","Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."), $libs);
             $this->render_nothing();
             return;
         }
@@ -190,61 +190,61 @@ class H5pController extends PluginController
             'libraryUrl' => $this->mod->getH5pLibURL(), //needed to fetch the library.json via ajax-request
             'l10n' => array(
                 'H5P' => array(
-                    'fullscreen' => _("Vollbild"),
-                    'disableFullscreen' => _('Vollbild beenden'),
-                    'download' => _('Download'),
-                    'copyrights' => _('Nutzungsbedingung'),
-                    'embed' => _('Einbetten'),
-                    'size' => _('Größe'),
-                    'showAdvanced' => _('Zeige mehr'),
-                    'hideAdvanced' => _('Zuklappen'),
-                    'advancedHelp' => _('Include this script on your website if you want dynamic sizing of the embedded content:'),
-                    'copyrightInformation' => _('Rights of use'),
-                    'close' => _('Schließen'),
-                    'title' => _('Titel'),
-                    'author' => _('Author'),
-                    'year' => _('Jahr'),
-                    'source' => _('Quelle'),
-                    'license' => _('License'),
-                    'thumbnail' => _('Thumbnail'),
-                    'noCopyrights' => _('No copyright information available for this content.'),
-                    'downloadDescription' => _('Download this content as a H5P file.'),
-                    'copyrightsDescription' => _('View copyright information for this content.'),
-                    'embedDescription' => _('View the embed code for this content.'),
-                    'h5pDescription' => _('Visit H5P.org to check out more cool content.'),
-                    'contentChanged' => _('This content has changed since you last used it.'),
-                    'startingOver' => _("You'll be starting over."),
-                    'by' => _('von'),
-                    'showMore' => _('Mehr anzeigen'),
-                    'showLess' => _('Weniger anzeigen'),
-                    'subLevel' => _('Sublevel'),
-                    'confirmDialogHeader' => _('Aktion bestätigen'),
-                    'confirmDialogBody' => _('Wirklich fortfahren? Änderungen können nicht rückgängig gemacht werden.'),
-                    'cancelLabel' => _('Abbrechen'),
-                    'confirmLabel' => _('Bestätigen'),
-                    'licenseU' => _('Undisclosed'),
-                    'licenseCCBY' => _('Attribution'),
-                    'licenseCCBYSA' => _('Attribution-ShareAlike'),
-                    'licenseCCBYND' => _('Attribution-NoDerivs'),
-                    'licenseCCBYNC' => _('Attribution-NonCommercial'),
-                    'licenseCCBYNCSA' => _('Attribution-NonCommercial-ShareAlike'),
-                    'licenseCCBYNCND' => _('Attribution-NonCommercial-NoDerivs'),
-                    'licenseCC40' => _('4.0 International'),
-                    'licenseCC30' => _('3.0 Unported'),
-                    'licenseCC25' => _('2.5 Generic'),
-                    'licenseCC20' => _('2.0 Generic'),
-                    'licenseCC10' => _('1.0 Generic'),
-                    'licenseGPL' => _('General Public License'),
-                    'licenseV3' => _('Version 3'),
-                    'licenseV2' => _('Version 2'),
-                    'licenseV1' => _('Version 1'),
-                    'licensePD' => _('Public Domain'),
-                    'licenseCC010' => _('CC0 1.0 Universal (CC0 1.0) Public Domain Dedication'),
-                    'licensePDM' => _('Public Domain Mark'),
-                    'licenseC' => _('Copyright'),
-                    'contentType' => _('Inhaltstyp'),
-                    'licenseExtras' => _('License Extras'),
-                    'changes' => _('Changelog'),
+                    'fullscreen' => dgettext("lernmoduleplugin","Vollbild"),
+                    'disableFullscreen' => dgettext('lernmoduleplugin','Vollbild beenden'),
+                    'download' => dgettext('lernmoduleplugin','Download'),
+                    'copyrights' => dgettext('lernmoduleplugin','Nutzungsbedingung'),
+                    'embed' => dgettext('lernmoduleplugin','Einbetten'),
+                    'size' => dgettext('lernmoduleplugin','Größe'),
+                    'showAdvanced' => dgettext('lernmoduleplugin','Zeige mehr'),
+                    'hideAdvanced' => dgettext('lernmoduleplugin','Zuklappen'),
+                    'advancedHelp' => dgettext('lernmoduleplugin','Include this script on your website if you want dynamic sizing of the embedded content:'),
+                    'copyrightInformation' => dgettext('lernmoduleplugin','Rights of use'),
+                    'close' => dgettext('lernmoduleplugin','Schließen'),
+                    'title' => dgettext('lernmoduleplugin','Titel'),
+                    'author' => dgettext('lernmoduleplugin','Author'),
+                    'year' => dgettext('lernmoduleplugin','Jahr'),
+                    'source' => dgettext('lernmoduleplugin','Quelle'),
+                    'license' => dgettext('lernmoduleplugin','License'),
+                    'thumbnail' => dgettext('lernmoduleplugin','Thumbnail'),
+                    'noCopyrights' => dgettext('lernmoduleplugin','No copyright information available for this content.'),
+                    'downloadDescription' => dgettext('lernmoduleplugin','Download this content as a H5P file.'),
+                    'copyrightsDescription' => dgettext('lernmoduleplugin','View copyright information for this content.'),
+                    'embedDescription' => dgettext('lernmoduleplugin','View the embed code for this content.'),
+                    'h5pDescription' => dgettext('lernmoduleplugin','Visit H5P.org to check out more cool content.'),
+                    'contentChanged' => dgettext('lernmoduleplugin','This content has changed since you last used it.'),
+                    'startingOver' => dgettext("lernmoduleplugin","You'll be starting over."),
+                    'by' => dgettext('lernmoduleplugin','von'),
+                    'showMore' => dgettext('lernmoduleplugin','Mehr anzeigen'),
+                    'showLess' => dgettext('lernmoduleplugin','Weniger anzeigen'),
+                    'subLevel' => dgettext('lernmoduleplugin','Sublevel'),
+                    'confirmDialogHeader' => dgettext('lernmoduleplugin','Aktion bestätigen'),
+                    'confirmDialogBody' => dgettext('lernmoduleplugin','Wirklich fortfahren? Änderungen können nicht rückgängig gemacht werden.'),
+                    'cancelLabel' => dgettext('lernmoduleplugin','Abbrechen'),
+                    'confirmLabel' => dgettext('lernmoduleplugin','Bestätigen'),
+                    'licenseU' => dgettext('lernmoduleplugin','Undisclosed'),
+                    'licenseCCBY' => dgettext('lernmoduleplugin','Attribution'),
+                    'licenseCCBYSA' => dgettext('lernmoduleplugin','Attribution-ShareAlike'),
+                    'licenseCCBYND' => dgettext('lernmoduleplugin','Attribution-NoDerivs'),
+                    'licenseCCBYNC' => dgettext('lernmoduleplugin','Attribution-NonCommercial'),
+                    'licenseCCBYNCSA' => dgettext('lernmoduleplugin','Attribution-NonCommercial-ShareAlike'),
+                    'licenseCCBYNCND' => dgettext('lernmoduleplugin','Attribution-NonCommercial-NoDerivs'),
+                    'licenseCC40' => dgettext('lernmoduleplugin','4.0 International'),
+                    'licenseCC30' => dgettext('lernmoduleplugin','3.0 Unported'),
+                    'licenseCC25' => dgettext('lernmoduleplugin','2.5 Generic'),
+                    'licenseCC20' => dgettext('lernmoduleplugin','2.0 Generic'),
+                    'licenseCC10' => dgettext('lernmoduleplugin','1.0 Generic'),
+                    'licenseGPL' => dgettext('lernmoduleplugin','General Public License'),
+                    'licenseV3' => dgettext('lernmoduleplugin','Version 3'),
+                    'licenseV2' => dgettext('lernmoduleplugin','Version 2'),
+                    'licenseV1' => dgettext('lernmoduleplugin','Version 1'),
+                    'licensePD' => dgettext('lernmoduleplugin','Public Domain'),
+                    'licenseCC010' => dgettext('lernmoduleplugin','CC0 1.0 Universal (CC0 1.0) Public Domain Dedication'),
+                    'licensePDM' => dgettext('lernmoduleplugin','Public Domain Mark'),
+                    'licenseC' => dgettext('lernmoduleplugin','Copyright'),
+                    'contentType' => dgettext('lernmoduleplugin','Inhaltstyp'),
+                    'licenseExtras' => dgettext('lernmoduleplugin','License Extras'),
+                    'changes' => dgettext('lernmoduleplugin','Changelog'),
                 )
             ),
             'hubIsEnabled' => false,

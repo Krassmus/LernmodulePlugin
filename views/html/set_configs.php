@@ -15,6 +15,6 @@
     </table>
 
     <div data-dialog-button>
-        <?= \Studip\Button::create(_("Speichern")) ?>
+        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Speichern")) ?>
     </div>
 </form>

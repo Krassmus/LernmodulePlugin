@@ -19,7 +19,7 @@ $params = array(
     <input type="hidden" name="parameters" value="<?= htmlReady(json_encode($params)) ?>"/>
     <div id="post-body-content">
         <div class="h5p-create">
-            <div class="h5p-editor"><?= _("Warte auf Javascript") ?></div>
+            <div class="h5p-editor"><?= dgettext("lernmoduleplugin","Warte auf Javascript") ?></div>
         </div>
     </div>
 </form>

@@ -75,7 +75,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
     {
         $actions = new ActionsWidget();
         $actions->addLink(
-            _("Vollbild"),
+            dgettext("lernmoduleplugin","Vollbild"),
             "#",
             Icon::create("play", "clickable"),
             array('onClick' => "STUDIP.Lernmodule.requestFullscreen(); return false;")
@@ -87,7 +87,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
             foreach (H5PLib::findMany($this->findUnallowedLibraries()) as $lib) {
                 $libs[] = $lib['name']." ".$lib['major_version'].".".$lib['minor_version'];
             }
-            PageLayout::postInfo(_("Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."), $libs);
+            PageLayout::postInfo(dgettext("lernmoduleplugin","Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."), $libs);
             return "";
         } else {
             $templatefactory = new Flexi_TemplateFactory(__DIR__ . "/../views");
