@@ -206,7 +206,7 @@ class H5peditorController extends PluginController
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-dimensions.js",
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-coordinates.js",
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-none.js",
-                    $this->plugin->getPluginURL()."/assets/h5p/h5peditor-metadata.js",
+                    $this->plugin->getPluginURL()."/assets/h5p/h5peditor-metadata.js?v=1",
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-metadata-author-widget.js",
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-metadata-changelog-widget.js",
                     $this->plugin->getPluginURL()."/assets/h5p/h5peditor-pre-save.js",
