@@ -263,7 +263,9 @@ class LernmoduleController extends PluginController
                 $this->attempt['successful'] = 1;
             }
             unset($message['success']);
-            $old_message = $this->attempt->customdata->getArrayCopy();
+            $old_message = $this->attempt->customdata
+                ? $this->attempt->customdata->getArrayCopy()
+                : array();
             $message['properties'] = array_merge((array) $old_message['properties'], (array) $message['properties']);
             foreach ((array) $old_message['points'] as $class => $value) {
                 if ($message['points'][$class] < $value) {

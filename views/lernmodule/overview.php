@@ -32,7 +32,7 @@
                     <? if ($active) : ?>
                         <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($course_id, $mod->getId())) ?>
                         <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
-                            <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                            <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : $mod->getDataURL()."/".$mod['image']) : "" ?>
                             <div class="module"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>>
                                 <? if (!$mod->isWritable()) : ?>
                                     <? if (LernmodulAttempt::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
@@ -112,10 +112,10 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
         PluginEngine::getURL($plugin, array(), "lernmodule/edit"),
         Icon::create("learnmodule+add", "clickable")
     );
-    $actions->addLink(
+    /*$actions->addLink(
         dgettext("lernmoduleplugin","Lernmodul erstellen"),
         PluginEngine::getURL($plugin, array(), "h5peditor/edit"),
         Icon::create("add", "clickable")
-    );
+    );*/
 }
 Sidebar::Get()->addWidget($actions);
