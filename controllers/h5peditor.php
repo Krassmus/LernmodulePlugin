@@ -258,20 +258,76 @@ class H5peditorController extends PluginController
         $cmd = Request::get("cmd");
         if ($cmd === "libraries" && Request::get("machineName")) {
             //deliver the JSON to display the lib in the editor after it has been selected
-            $lib = H5PLib::findVersion(Request::get("machineName"), Request::get("majorVersion"), Request::get("minorVersion"));
-            if (!$lib['allowed']) {
+            $main_library = H5PLib::findVersion(Request::get("machineName"), Request::get("majorVersion"), Request::get("minorVersion"));
+            if (!$main_library['allowed']) {
                 throw new AccessDeniedException();
             }
             $javascripts = array();
             $css = array();
-            $library = json_decode(file_get_contents($lib->getPath()."/library.json"), true);
-            foreach ((array) $library['editorDependencies'] as $dependency) {
 
+            $library = json_decode(file_get_contents($main_library->getPath()."/library.json"), true);
+            $libs = array();
+            $lib_ids = array();
+            foreach ((array) $library['editorDependencies'] as $dependency) {
+                //TODO
+                $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
+                if ($lib) {
+                    $libs[] = $lib;
+                    $lib_ids[] = $lib->getId();
+                }
             }
+
+
+
+
+            //Once again the topological ordering of libs:
+            $edges = array();
+            foreach ($libs as $lib) {
+                foreach ($lib->getSubLibs() as $sublib) {
+                    if (!in_array($sublib->getId(), $lib_ids)) {
+                        $lib_ids[] = $sublib->getId();
+                        $libs[] = $sublib;
+                    }
+                    $edges[] = array(
+                        $sublib->getId(),
+                        $lib->getId()
+                    );
+                }
+            }
+            $lib_ids = LernmodulePlugin::topologicalSort($lib_ids, $edges);
+            if ($lib_ids === false) {
+                throw new Exception("Could not sort dependencies of H5P module.");
+            }
+            $libs_sorted = array();
+            foreach ($lib_ids as $lib_id) {
+                foreach ($libs as $i => $lib) {
+                    if ($lib->getId() == $lib_id) {
+                        $libs_sorted[] = $lib;
+                        unset($libs[$i]);
+                        break;
+                    }
+                }
+            }
+            $libs = $libs_sorted;
+
+
+            //now fetch the js and css files:
+            foreach ($libs as $lib) {
+                if ($lib) {
+                    foreach ($lib->getFiles("js") as $js) {
+                        $javascripts[] = H5PLernmodul::getH5pLibURL() . "/" . $js;
+                    }
+                    foreach ($lib->getFiles("css") as $style) {
+                        $css[] = H5PLernmodul::getH5pLibURL() . "/" . $style;
+                    }
+                }
+            }
+
+
             $output = array(
-                'semantics' => json_decode(file_get_contents($lib->getPath()."/semantics.json"), true),
-                'language' => file_exists($lib->getPath()."/language/de.json")
-                    ? file_get_contents($lib->getPath()."/language/de.json")
+                'semantics' => json_decode(file_get_contents($main_library->getPath()."/semantics.json"), true),
+                'language' => file_exists($main_library->getPath()."/language/de.json")
+                    ? file_get_contents($main_library->getPath()."/language/de.json")
                     : array(),
                 'javascript' => $javascripts,
                 'css' => $css,
@@ -316,6 +372,8 @@ class H5peditorController extends PluginController
             }
             $this->render_json($output);
             return;
+        } elseif ($cmd === "files") {
+            $this->render_json(array('ok' => "no"));
         }
         $this->render_text("errr .. ok");
     }

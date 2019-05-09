@@ -164,10 +164,10 @@ class H5pController extends PluginController
         $this->integration = $this->get_h5p_settings();
 
         foreach ($this->mod->getCSSFiles() as $css) {
-            $this->styles[] = $this->mod->getH5pLibURL()."/".$css;
+            $this->styles[] = H5PLernmodul::getH5pLibURL()."/".$css;
         }
         foreach ($this->mod->getJSFiles() as $js) {
-            $this->scripts[] = $this->mod->getH5pLibURL()."/".$js;
+            $this->scripts[] = H5PLernmodul::getH5pLibURL()."/".$js;
         }
     }
 

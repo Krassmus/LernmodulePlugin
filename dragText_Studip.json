@@ -1,0 +1,282 @@
+{
+    "semantics": [
+        {
+            "label": "Task description",
+            "importance": "high",
+            "name": "taskDescription",
+            "type": "text",
+            "widget": "html",
+            "description": "Describe how the user should solve the task.",
+            "default": "Drag the words into the correct boxes",
+            "enterMode": "p",
+            "tags": [
+                "strong",
+                "em",
+                "u",
+                "a",
+                "ul",
+                "ol",
+                "h2",
+                "h3",
+                "hr"
+            ]
+        },
+        {
+            "label": "Text",
+            "importance": "high",
+            "name": "textField",
+            "type": "text",
+            "widget": "textarea",
+            "placeholder": "*Oslo* is the capital of Norway, *Stockholm* is the capital of Sweden and *Copenhagen* is the capital of Denmark. All cities are located in the *Scandinavian:Northern Part of Europe* peninsula.",
+            "description": "",
+            "important": {
+                "description": "<ul><li>Droppable words are added with an asterisk (*) in front and behind the correct word\/phrase.<\/li><li>You may add a textual tip, using a colon (:) in front of the tip.<\/li><li>For every empty spot there is only one correct word.<\/li><li>You may add feedback to be displayed when a task is completed. Use '\\+' for correct and '\\-' for incorrect feedback.<\/li><\/ul>",
+                "example": "H5P content may be edited using a *browser:What type of program is Chrome?*. <\/br> H5P content is *interactive\\+Correct! \\-Incorrect, try again!*"
+            }
+        },
+        {
+            "name": "overallFeedback",
+            "type": "group",
+            "label": "Overall Feedback",
+            "importance": "low",
+            "expanded": true,
+            "fields": [
+                {
+                    "name": "overallFeedback",
+                    "type": "list",
+                    "widgets": [
+                        {
+                            "name": "RangeList",
+                            "label": "Default"
+                        }
+                    ],
+                    "importance": "high",
+                    "label": "Define custom feedback for any score range",
+                    "description": "Click the \"Add range\" button to add as many ranges as you need. Example: 0-20% Bad score, 21-91% Average Score, 91-100% Great Score!",
+                    "entity": "range",
+                    "min": 1,
+                    "defaultNum": 1,
+                    "optional": true,
+                    "field": {
+                        "name": "overallFeedback",
+                        "type": "group",
+                        "importance": "low",
+                        "fields": [
+                            {
+                                "name": "from",
+                                "type": "number",
+                                "label": "Score Range",
+                                "min": 0,
+                                "max": 100,
+                                "default": 0,
+                                "unit": "%"
+                            },
+                            {
+                                "name": "to",
+                                "type": "number",
+                                "min": 0,
+                                "max": 100,
+                                "default": 100,
+                                "unit": "%"
+                            },
+                            {
+                                "name": "feedback",
+                                "type": "text",
+                                "label": "Feedback for defined score range",
+                                "importance": "low",
+                                "placeholder": "Fill in the feedback",
+                                "optional": true
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "label": "Text for \"Check\" button",
+            "importance": "low",
+            "name": "checkAnswer",
+            "type": "text",
+            "default": "Check",
+            "common": true
+        },
+        {
+            "label": "Text for \"Retry\" button",
+            "importance": "low",
+            "name": "tryAgain",
+            "type": "text",
+            "default": "Retry",
+            "common": true
+        },
+        {
+            "label": "Text for \"Show Solution\" button",
+            "importance": "low",
+            "name": "showSolution",
+            "type": "text",
+            "default": "Show solution",
+            "common": true
+        },
+        {
+            "label": "Numbered Drop zone label",
+            "importance": "low",
+            "name": "dropZoneIndex",
+            "type": "text",
+            "default": "Drop Zone @index.",
+            "description": "Label used for accessibility, where the Read speaker will read the index of a drop zone. Variable available: @index",
+            "common": true
+        },
+        {
+            "label": "Empty Drop Zone label",
+            "importance": "low",
+            "name": "empty",
+            "type": "text",
+            "default": "Drop Zone @index is empty.",
+            "description": "Label used for accessibility, where the Read speaker will read that the drop zone is empty",
+            "common": true
+        },
+        {
+            "label": "Contains Drop Zone label",
+            "importance": "low",
+            "name": "contains",
+            "type": "text",
+            "default": "Drop Zone @index contains draggable @draggable.",
+            "description": "Label used for accessibility, where the Read speaker will read that the drop zone contains a draggable",
+            "common": true
+        },
+        {
+            "label": "Draggable elements label",
+            "importance": "low",
+            "name": "draggableIndex",
+            "type": "text",
+            "default": "Draggable @text. @index of @count draggables.",
+            "description": "Label used for accessibility, where the Read speaker reads that this is a draggable element. Variable available: @index, @count",
+            "common": true
+        },
+        {
+            "label": "Label for show tip button",
+            "importance": "low",
+            "name": "tipLabel",
+            "type": "text",
+            "default": "Show tip",
+            "description": "Label used for accessibility, where the Read speaker reads it before the tip is read out",
+            "common": true
+        },
+        {
+            "name": "correctText",
+            "type": "text",
+            "label": "Readspeaker text for correct answer",
+            "importance": "low",
+            "default": "Correct!",
+            "common": true
+        },
+        {
+            "name": "incorrectText",
+            "type": "text",
+            "label": "Readspeaker text for incorrect answer",
+            "importance": "low",
+            "default": "Incorrect!",
+            "common": true
+        },
+        {
+            "name": "resetDropTitle",
+            "type": "text",
+            "label": "Confirmation dialog title that user wants to reset a droppable",
+            "importance": "low",
+            "default": "Reset drop",
+            "common": true
+        },
+        {
+            "name": "resetDropDescription",
+            "type": "text",
+            "label": "Confirmation dialog description that user wants to reset a droppable",
+            "importance": "low",
+            "default": "Are you sure you want to reset this drop zone?",
+            "common": true
+        },
+        {
+            "name": "grabbed",
+            "type": "text",
+            "label": "Label used for accessibility, where the read speaker indicates that dragging is initiated",
+            "importance": "low",
+            "default": "Draggable is grabbed.",
+            "common": true
+        },
+        {
+            "name": "cancelledDragging",
+            "type": "text",
+            "label": "Label used for accessibility, where the read speaker indicates that dragging is canceled",
+            "importance": "low",
+            "default": "Cancelled dragging.",
+            "common": true
+        },
+        {
+            "name": "correctAnswer",
+            "type": "text",
+            "label": "Label used for accessibility, where the read speaker indicates that a text is the correct answer",
+            "importance": "low",
+            "default": "Correct answer:",
+            "common": true
+        },
+        {
+            "name": "feedbackHeader",
+            "type": "text",
+            "label": "Header for panel containing feedback for correct\/incorrect answers",
+            "importance": "low",
+            "default": "Feedback",
+            "common": true
+        },
+        {
+            "name": "behaviour",
+            "type": "group",
+            "label": "Behavioural settings.",
+            "importance": "low",
+            "description": "These options will let you control how the task behaves.",
+            "optional": true,
+            "fields": [
+                {
+                    "label": "Enable \"Retry\"",
+                    "importance": "low",
+                    "name": "enableRetry",
+                    "type": "boolean",
+                    "default": true
+                },
+                {
+                    "label": "Enable \"Show Solution\" button",
+                    "importance": "low",
+                    "name": "enableSolutionsButton",
+                    "type": "boolean",
+                    "default": true
+                },
+                {
+                    "name": "enableCheckButton",
+                    "type": "boolean",
+                    "label": "Enable \"Check\" button",
+                    "widget": "none",
+                    "importance": "low",
+                    "default": true,
+                    "optional": true
+                },
+                {
+                    "label": "Instant feedback",
+                    "importance": "low",
+                    "name": "instantFeedback",
+                    "type": "boolean",
+                    "default": false,
+                    "optional": true
+                }
+            ]
+        },
+        {
+            "name": "scoreBarLabel",
+            "type": "text",
+            "label": "Textual representation of the score bar for those using a readspeaker",
+            "default": "You got :num out of :total points",
+            "importance": "low",
+            "common": true
+        }
+    ],
+    "language": "{\n  \"semantics\": [\n    {\n      \"label\": \"Aufgabenbeschreibung\",\n      \"description\": \"Beschreibe, wie der Nutzer die Aufgabe l\u00f6sen kann.\",\n      \"default\": \"Ziehen Sie die W\u00f6rter in die richtigen Felder!\"\n    },\n    {\n      \"label\": \"Text\",\n      \"placeholder\": \"* Oslo * ist die Hauptstadt von Norwegen, * Stockholm * ist die Hauptstadt von Schweden und * Copenhagen * ist die Hauptstadt von D\u00e4nemark. Alle St\u00e4dte befinden sich der * skandinavischen: n\u00f6rdliche Teil von Europa * Halbinsel.\",\n      \"description\": \"\",\n      \"important\": {\n        \"description\": \"<ul><li>Dementsprechende W\u00f6rter sind mit einem Sternchen (*) vor und hinter den richtigen Wort oder Satzteil hinzugef\u00fcgt.<\/li> <li>Du kannst einen Tipp mit einem Doppelpunkt (:) vor der Spitze hinzuf\u00fcgen.<\/li> <li>F\u00fcr jede leere Stelle gibt es nur ein richtiges Wort.<\/li> <li>Du kannst auch eine R\u00fcckmeldung hinzuf\u00fcgen, die angezeigt wird, wenn eine Aufgabe abgeschlossen ist. Verwende \\\"\\\\+\\\" f\u00fcr positive und \\\" \\\\-\\\" f\u00fcr negative R\u00fcckmeldungen.<\/li><\/ul>\",\n        \"example\": \"H5P content may be edited using a *browser:What type of program is Chrome?*. <\/br> H5P content is *interactive\\\\+Correct! \\\\-Incorrect, try again!*\"\n      }\n    },\n    {\n      \"label\": \"Allgemeine R\u00fcckmeldung\",\n      \"fields\": [\n        {\n          \"widgets\": [\n            {\n              \"label\": \"Vorgabe\"\n            }\n          ],\n          \"label\": \"Lege R\u00fcckmeldungen f\u00fcr einzelne Punktebereiche fest\",\n          \"description\": \"Klicke auf den \\\"Bereich hinzuf\u00fcgen\\\"-Button, um so viele Bereiche hinzuzuf\u00fcgen, wie du brauchst. Beispiel: 0-20% Schlechte Punktzahl, 21-91% Durchschnittliche Punktzahl, 91-100% Gro\u00dfartige Punktzahl!\",\n          \"entity\": \"Bereich\",\n          \"field\": {\n            \"fields\": [\n              {\n                \"label\": \"Punktebereich\"\n              },\n              {},\n              {\n                \"label\": \"R\u00fcckmeldung f\u00fcr festgelegte Punktebereiche\",\n                \"placeholder\": \"Trage die R\u00fcckmeldung ein\"\n              }\n            ]\n          }\n        }\n      ]\n    },\n    {\n      \"label\": \"Beschriftung f\u00fcr den \\\"\u00dcberpr\u00fcfen\\\"-Button\",\n      \"default\": \"\u00dcberpr\u00fcfen\"\n    },\n    {\n      \"label\": \"Beschriftung f\u00fcr den \\\"Wiederholen\\\"-Button\",\n      \"default\": \"Wiederholen\"\n    },\n    {\n      \"label\": \"Text f\u00fcr den \\\"L\u00f6sung anzeigen\\\"-Button\",\n      \"default\": \"L\u00f6sung anzeigen\"\n    },\n    {\n      \"label\": \"Beschriftung: Nummer des Ablagefelds\",\n      \"default\": \"Ablagefeld @index.\",\n      \"description\": \"Die Beschriftung wird f\u00fcr Barrierefreiheit genutzt. Ein Readspeaker liest die Nummer des Ablagefeldes vor. Verf\u00fcgbare Variable: @index\"\n    },\n    {\n      \"label\": \"Beschriftung: Leeres Ablagefeld\",\n      \"default\": \"Ablagefeld @index ist leer.\",\n      \"description\": \"Die Beschriftung wird f\u00fcr Barrierefreiheit genutzt. Ein Readspeaker liest vor, dass das Ablagefeld leer ist.\"\n    },\n    {\n      \"label\": \"Beschriftung: Ablagefeld enth\u00e4lt\",\n      \"default\": \"Ablagefeld @index enth\u00e4lt ziehbare @draggable.\",\n      \"description\": \"Die Beschriftung wird f\u00fcr Barrierefreiheit genutzt. Ein Readspeaker liest vor, dass das Ablagefeld ein ziehbares Element enth\u00e4lt.\"\n    },\n    {\n      \"label\": \"Beschriftung: Ziehbare Elements\",\n      \"default\": \"Draggable @text. @index of @count draggables.\",\n      \"description\": \"Die Beschriftung wird f\u00fcr Barrierefreiheit genutzt. Ein Readspeaker liest vor, dass es sich um ein ziehbares Element handelt. Verf\u00fcgbare Variablen: @index, @count\"\n    },\n    {\n      \"label\": \"Beschriftung: Tipp anzeigen\",\n      \"default\": \"Tipp anzeigen\",\n      \"description\": \"Die Beschriftung wird f\u00fcr Barrierefreiheit genutzt. Ein Readspeaker liest dies vor, bevor er einen Hinweis gibt.\"\n    },\n    {\n      \"label\": \"\\\"Readspeaker\\\"-Text f\u00fcr eine richtige Antwort\",\n      \"default\": \"Richtig!\"\n    },\n    {\n      \"label\": \"\\\"Readspeaker\\\"-Text f\u00fcr eine falsche Antwort\",\n      \"default\": \"Falsch!\"\n    },\n    {\n      \"label\": \"Titel f\u00fcr den Best\u00e4tigungsdialog, in dem die Lernenden das Zur\u00fccksetzen best\u00e4tigen\",\n      \"default\": \"Ablagefelder zur\u00fccksetzen\"\n    },\n    {\n      \"label\": \"Beschreibung f\u00fcr den Best\u00e4tigungsdialog\",\n      \"default\": \"Bist du sicher, dass su alle Optionen zur\u00fccksetzen m\u00f6chtest?\"\n    },\n    {\n      \"label\": \"Beschriftung f\u00fcr Barrierefreiheit: Ziehen-Modus hat begonnen\",\n      \"default\": \"Ziehbares Element wurde aufgenommen.\"\n    },\n    {\n      \"label\": \"Beschriftung f\u00fcr Barrierefreiheit: Ziehen-Modus abgebrochen\",\n      \"default\": \"Ziehen abgebrochen.\"\n    },\n    {\n      \"label\": \"Beschriftung f\u00fcr Barrierefreiheit: Korrekte Antwort\",\n      \"default\": \"Korrekte Antwort:\"\n    },\n    {\n      \"label\": \"Kopfzeile f\u00fcr den Abschnitt, der die R\u00fcckmeldungen f\u00fcr richtige\/falsche Antworten enth\u00e4lt\",\n      \"default\": \"R\u00fcckmeldung\"\n    },\n    {\n      \"label\": \"Verhaltenseinstellungen.\",\n      \"description\": \"Diese Optionen legen fest, wie die Aufgabe auf Eingaben reagiert.\",\n      \"fields\": [\n        {\n          \"label\": \"\\\"Wiederholen\\\" zulassen\"\n        },\n        {\n          \"label\": \"\\\"L\u00f6sung zeigen\\\"-Button anzeigen\"\n        },\n        {\n          \"label\": \"\\\"\u00dcberpr\u00fcfen\\\"-Button anzeigen\"\n        },\n        {\n          \"label\": \"Sofortige R\u00fcckmeldung\"\n        }\n      ]\n    },\n    {\n      \"label\": \"Textliche Repr\u00e4sentation der Punkteleiste f\u00fcr diejenigen, die Readspeaker benutzen\",\n      \"default\": \"Du hast :num von :total Punkten erreicht.\"\n    }\n  ]\n}\n",
+    "javascript": [],
+    "css": [],
+    "translations": []
+}

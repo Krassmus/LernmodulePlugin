@@ -123,4 +123,50 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         }
         return $val;
     }
+
+
+    /**
+     * Processes a topological sort. We need this for H5P support.
+     * @param $nodeids : array of ids
+     * @param array $edges : array of arrays like array(node1_id, node2_id)
+     * @return array|bool : either the sorted array of ids or false if the graph has cycles.
+     */
+    static public function topologicalSort($nodeids, $edges) {
+        $L = $S = $nodes = array();
+        foreach($nodeids as $id) {
+            $nodes[$id] = array(
+                'in'=>array(),
+                'out'=>array()
+            );
+            foreach($edges as $e) {
+                if ($id == $e[0]) {
+                    $nodes[$id]['out'][] = $e[1];
+                }
+                if ($id == $e[1]) {
+                    $nodes[$id]['in'][] = $e[0];
+                }
+            }
+        }
+        foreach ($nodes as $id => $n) {
+            if (empty($n['in'])) {
+                $S[] = $id;
+            }
+        }
+        while (!empty($S)) {
+            $L[] = $id = (string) array_shift($S);
+            foreach($nodes[$id]['out'] as $m) {
+                $nodes[$m]['in'] = array_diff($nodes[$m]['in'], array($id));
+                if (empty($nodes[$m]['in'])) {
+                    $S[] = $m;
+                }
+            }
+            $nodes[$id]['out'] = array();
+        }
+        foreach($nodes as $n) {
+            if (!empty($n['in']) or !empty($n['out'])) {
+                return false; // not sortable as graph is cyclic
+            }
+        }
+        return $L;
+    }
 }

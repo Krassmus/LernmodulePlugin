@@ -22,6 +22,7 @@ $params = array(
             <div class="h5p-editor"><?= dgettext("lernmoduleplugin","Warte auf Javascript") ?></div>
         </div>
     </div>
+    <?= \Studip\Button::create(_("Erstellen")) ?>
 </form>
 
 <script>H5PIntegration = <?= json_encode($integration) ?>;</script>

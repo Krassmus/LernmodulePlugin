@@ -112,10 +112,10 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
         PluginEngine::getURL($plugin, array(), "lernmodule/edit"),
         Icon::create("learnmodule+add", "clickable")
     );
-    /*$actions->addLink(
+    $actions->addLink(
         dgettext("lernmoduleplugin","Lernmodul erstellen"),
         PluginEngine::getURL($plugin, array(), "h5peditor/edit"),
         Icon::create("add", "clickable")
-    );*/
+    );
 }
 Sidebar::Get()->addWidget($actions);
