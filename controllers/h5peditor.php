@@ -312,6 +312,8 @@ class H5peditorController extends PluginController
 
 
             //now fetch the js and css files:
+            $language = "de";
+            $translations = array();
             foreach ($libs as $lib) {
                 if ($lib) {
                     foreach ($lib->getFiles("js") as $js) {
@@ -321,7 +323,15 @@ class H5peditorController extends PluginController
                         $css[] = H5PLernmodul::getH5pLibURL() . "/" . $style;
                     }
                 }
+
+                if (file_exists($lib->getPath() . "/language/".$language.".json")) {
+                    $translation = json_decode(file_get_contents($lib->getPath() . "/language/".$language.".json"), true);
+                    if ($translation) {
+                        $translations[$lib['name']] = $translation;
+                    }
+                }
             }
+
 
 
             $output = array(
@@ -331,7 +341,7 @@ class H5peditorController extends PluginController
                     : array(),
                 'javascript' => $javascripts,
                 'css' => $css,
-                'translations' => array()
+                'translations' => $translations
             );
             $this->render_json($output);
             return;
@@ -373,6 +383,7 @@ class H5peditorController extends PluginController
             $this->render_json($output);
             return;
         } elseif ($cmd === "files") {
+
             $this->render_json(array('ok' => "no"));
         }
         $this->render_text("errr .. ok");
