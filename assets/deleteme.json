@@ -1,0 +1,28 @@
+{
+    "params": {
+        "timeline": {
+            "defaultZoomLevel": "0",
+            "height": 600,
+            "asset": {},
+            "date": [
+                {
+                    "asset": {},
+                    "startDate": "1623,09,10",
+                    "endDate": "1640,02,08",
+                    "headline": "Murad IV",
+                    "text": "<p>Brutaler Sultan tötet seine Bürger mit der Arkebuse. Ist halt sein gutes Recht, ne?</p>\n"
+                }
+            ],
+            "language": "en",
+            "headline": "Passierte das wirklich?",
+            "text": ""
+        }
+    },
+    "metadata": {
+        "license": "U",
+        "authors": [],
+        "changes": [],
+        "extraTitle": "Sultan Murad 4.",
+        "title": "Sultan Murad 4."
+    }
+}

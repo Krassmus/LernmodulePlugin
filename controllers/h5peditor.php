@@ -15,6 +15,12 @@ class H5peditorController extends PluginController
         if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
+        if (Request::isPost()) {
+            list($machineName, $version) = explode(" ", Request::get("library"));
+            list($majorVersion, $minorVersion) = explode($version);
+            $lib = H5PLib::findVersion($machineName, $minorVersion, $majorVersion);
+            $mod = $lib->createModWithData(json_decode(Request::get("parameters"), true));
+        }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = new H5pLernmodul($module_id);
 
@@ -265,10 +271,10 @@ class H5peditorController extends PluginController
             $javascripts = array();
             $css = array();
 
-            $library = json_decode(file_get_contents($main_library->getPath()."/library.json"), true);
+            $library = json_decode(file_get_contents($main_library->getPath() . "/library.json"), true);
             $libs = array();
             $lib_ids = array();
-            foreach ((array) $library['editorDependencies'] as $dependency) {
+            foreach ((array)$library['editorDependencies'] as $dependency) {
                 //TODO
                 $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
                 if ($lib) {
@@ -276,8 +282,6 @@ class H5peditorController extends PluginController
                     $lib_ids[] = $lib->getId();
                 }
             }
-
-
 
 
             //Once again the topological ordering of libs:
@@ -312,37 +316,66 @@ class H5peditorController extends PluginController
 
 
             //now fetch the js and css files:
-            $language = "de";
+            $language = getUserLanguage($GLOBALS['user']->id);
             $translations = array();
             foreach ($libs as $lib) {
                 if ($lib) {
-                    foreach ($lib->getFiles("js") as $js) {
+                    foreach ($lib->getFiles("js", true) as $js) {
                         $javascripts[] = H5PLernmodul::getH5pLibURL() . "/" . $js;
                     }
-                    foreach ($lib->getFiles("css") as $style) {
+                    foreach ($lib->getFiles("css", true) as $style) {
                         $css[] = H5PLernmodul::getH5pLibURL() . "/" . $style;
                     }
                 }
 
-                if (file_exists($lib->getPath() . "/language/".$language.".json")) {
-                    $translation = json_decode(file_get_contents($lib->getPath() . "/language/".$language.".json"), true);
+                if (file_exists($lib->getPath() . "/language/" . $language . ".json")) {
+                    $translation = json_decode(file_get_contents($lib->getPath() . "/language/" . $language . ".json"), true);
                     if ($translation) {
                         $translations[$lib['name']] = $translation;
                     }
                 }
             }
 
+            if (file_exists($main_library->getPath()."/presave.js")) {
+                $javascripts[] = H5PLernmodul::getH5pLibURL() ."/" . $main_library['name'] . "-" . $main_library['major_version'] . "." . $main_library['minor_version'] . "/presave.js";
+            }
 
 
             $output = array(
-                'semantics' => json_decode(file_get_contents($main_library->getPath()."/semantics.json"), true),
-                'language' => file_exists($main_library->getPath()."/language/de.json")
-                    ? file_get_contents($main_library->getPath()."/language/de.json")
+                'semantics' => json_decode(file_get_contents($main_library->getPath() . "/semantics.json"), true),
+                'language' => file_exists($main_library->getPath() . "/language/de.json")
+                    ? file_get_contents($main_library->getPath() . "/language/de.json")
                     : array(),
                 'javascript' => $javascripts,
                 'css' => $css,
                 'translations' => $translations
             );
+            $this->render_json($output);
+            return;
+        } elseif(count(Request::getArray("libraries")) > 0) {
+            $libs = array();
+            foreach (Request::getArray("libraries") as $library_name) {
+                list($machineName, $version) = explode(" ", $library_name);
+                list($majorVersion, $minorVersion) = explode(".", $version);
+                $lib = H5PLib::findVersion($machineName, $majorVersion, $minorVersion);
+                if ($lib) {
+                    $libs[] = $lib;
+                }
+            }
+            foreach ($libs as $lib) {
+                $data = $lib->getLibraryData();
+                $output[] = array(
+                    'uberName' => $lib['name']." " .$lib['major_version'].".".$lib['minor_version'],
+                    'name' => $lib['name'],
+                    'title' => $data['title'],
+                    'majorVersion' => $lib['major_version'],
+                    'minorVersion' => $lib['minor_version'],
+                    'tutorialUrl' => "",
+                    'runnable' => $lib['runnable'] ? 1 : 0,
+                    'restricted' => false,
+                    'metadataSettings' => null
+                );
+            }
             $this->render_json($output);
             return;
         } elseif ($cmd === "libraries") {
@@ -383,8 +416,9 @@ class H5peditorController extends PluginController
             $this->render_json($output);
             return;
         } elseif ($cmd === "files") {
-
+            //upload files ...
             $this->render_json(array('ok' => "no"));
+            return;
         }
         $this->render_text("errr .. ok");
     }
