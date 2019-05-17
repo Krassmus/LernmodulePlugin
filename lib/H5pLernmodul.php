@@ -69,7 +69,15 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         }
     }
 
-    public function getEditTemplate() {}
+    public function getEditTemplate() {
+        $actions = new ActionsWidget();
+        $actions->addLink(
+            dgettext("lernmoduleplugin","Im Editor bearbeiten"),
+            URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/edit/".$this->getId()),
+            Icon::create("edit", "clickable")
+        );
+        Sidebar::Get()->addWidget($actions);
+    }
 
     public function getViewerTemplate($attempt, $game_attendance = null)
     {
@@ -80,6 +88,13 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
             Icon::create("play", "clickable"),
             array('onClick' => "STUDIP.Lernmodule.requestFullscreen(); return false;")
         );
+        if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            $actions->addLink(
+                dgettext("lernmoduleplugin", "Im Editor bearbeiten"),
+                URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/edit/" . $this->getId()),
+                Icon::create("edit", "clickable")
+            );
+        }
         Sidebar::Get()->addWidget($actions);
 
         if (!$this->isAllowed()) {

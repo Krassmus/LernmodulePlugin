@@ -20,9 +20,26 @@ class H5peditorController extends PluginController
             list($majorVersion, $minorVersion) = explode($version);
             $lib = H5PLib::findVersion($machineName, $minorVersion, $majorVersion);
             $mod = $lib->createModWithData(json_decode(Request::get("parameters"), true));
+            if ($mod) {
+                PageLayout::postSuccess(_("Lernmodul wurde gespeichert"));
+                $this->redirect(PluginEngine::getURL($this->plugin, array(), "/".$mod->getId()));
+                return;
+            } else {
+                PageLayout::postError(_("Lernmodul konnte nicht gespeichert werden. Daten unvollständig."));
+            }
+
         }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = new H5pLernmodul($module_id);
+
+        if (!$this->mod->isNew()) {
+            $mainlib = $this->mod->getMainLib();
+            $this->library = $mainlib['name']." ".$mainlib['major_version'].".".$mainlib['minor_version'];
+            $this->params = array(
+                "params" => json_decode(file_get_contents($this->mod->getPath()."/content/content.json"), true),
+                "metadata" => array()
+            );
+        }
 
         $this->styles = array(
             $this->plugin->getPluginURL().'/assets/h5p/h5p.css',

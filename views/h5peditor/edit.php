@@ -8,10 +8,6 @@
  * @link      http://joubel.com
  * @copyright 2014 Joubel
  */
-$params = array(
-    'params' => array(),
-    'metadata' => array()
-);
 ?>
 
 <form method="post" enctype="multipart/form-data" id="h5p-content-form">
