@@ -35,9 +35,16 @@ class H5peditorController extends PluginController
         if (!$this->mod->isNew()) {
             $mainlib = $this->mod->getMainLib();
             $this->library = $mainlib['name']." ".$mainlib['major_version'].".".$mainlib['minor_version'];
+            $h5p_json = json_decode(file_get_contents($this->mod->getPath()."/h5p.json"), true);
             $this->params = array(
                 "params" => json_decode(file_get_contents($this->mod->getPath()."/content/content.json"), true),
-                "metadata" => array()
+                "metadata" => array(
+                    'title' => $h5p_json['name'],
+                    'license' => $h5p_json['license'],
+                    'authors' => array(),
+                    'extraTitle' => $h5p_json['name'],
+                    'changes' => array()
+                )
             );
         }
 
@@ -173,7 +180,7 @@ class H5peditorController extends PluginController
             )
         );
         $settings['editor'] = array(
-            'filesPath' => "/wordpress/wp-content/uploads/h5p/editor",
+            'filesPath' => $this->mod->getDataURL()."/content",
             "fileIcon" => array(
                 "path" => "http://localhost/wordpress/wp-content/plugins/h5p/h5p-editor-php-library/images/binary-file.png",
                 "width" => 50,
@@ -181,8 +188,625 @@ class H5peditorController extends PluginController
             ),
             'ajaxPath' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/ajax", array('cid' => Context::get()->id, 'cmd' => ""), true), //path to load libraries
             'libraryUrl' => "http://localhost/wordpress/wp-content/plugins/h5p/h5p-editor-php-library/",
-            'copyrightSemantics' => array(), // TODO
-            'metadataSemantics' => json_decode("[{\"name\":\"title\",\"type\":\"text\",\"label\":\"Titel\",\"placeholder\":\"La Gioconda\"},{\"name\":\"license\",\"type\":\"select\",\"label\":\"License\",\"default\":\"U\",\"options\":[{\"value\":\"U\",\"label\":\"Undisclosed\"},{\"type\":\"optgroup\",\"label\":\"Creative Commons\",\"options\":[{\"value\":\"CC BY\",\"label\":\"Attribution (CC BY)\",\"versions\":[{\"value\":\"4.0\",\"label\":\"4.0 International\"},{\"value\":\"3.0\",\"label\":\"3.0 Unported\"},{\"value\":\"2.5\",\"label\":\"2.5 Generic\"},{\"value\":\"2.0\",\"label\":\"2.0 Generic\"},{\"value\":\"1.0\",\"label\":\"1.0 Generic\"}]},{\"value\":\"CC BY-SA\",\"label\":\"Attribution-ShareAlike (CC BY-SA)\",\"versions\":[{\"value\":\"4.0\",\"label\":\"4.0 International\"},{\"value\":\"3.0\",\"label\":\"3.0 Unported\"},{\"value\":\"2.5\",\"label\":\"2.5 Generic\"},{\"value\":\"2.0\",\"label\":\"2.0 Generic\"},{\"value\":\"1.0\",\"label\":\"1.0 Generic\"}]},{\"value\":\"CC BY-ND\",\"label\":\"Attribution-NoDerivs (CC BY-ND)\",\"versions\":[{\"value\":\"4.0\",\"label\":\"4.0 International\"},{\"value\":\"3.0\",\"label\":\"3.0 Unported\"},{\"value\":\"2.5\",\"label\":\"2.5 Generic\"},{\"value\":\"2.0\",\"label\":\"2.0 Generic\"},{\"value\":\"1.0\",\"label\":\"1.0 Generic\"}]},{\"value\":\"CC BY-NC\",\"label\":\"Attribution-NonCommercial (CC BY-NC)\",\"versions\":[{\"value\":\"4.0\",\"label\":\"4.0 International\"},{\"value\":\"3.0\",\"label\":\"3.0 Unported\"},{\"value\":\"2.5\",\"label\":\"2.5 Generic\"},{\"value\":\"2.0\",\"label\":\"2.0 Generic\"},{\"value\":\"1.0\",\"label\":\"1.0 Generic\"}]},{\"value\":\"CC BY-NC-SA\",\"label\":\"Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)\",\"versions\":[{\"value\":\"4.0\",\"label\":\"4.0 International\"},{\"value\":\"3.0\",\"label\":\"3.0 Unported\"},{\"value\":\"2.5\",\"label\":\"2.5 Generic\"},{\"value\":\"2.0\",\"label\":\"2.0 Generic\"},{\"value\":\"1.0\",\"label\":\"1.0 Generic\"}]},{\"value\":\"CC BY-NC-ND\",\"label\":\"Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)\",\"versions\":[{\"value\":\"4.0\",\"label\":\"4.0 International\"},{\"value\":\"3.0\",\"label\":\"3.0 Unported\"},{\"value\":\"2.5\",\"label\":\"2.5 Generic\"},{\"value\":\"2.0\",\"label\":\"2.0 Generic\"},{\"value\":\"1.0\",\"label\":\"1.0 Generic\"}]},{\"value\":\"CC0 1.0\",\"label\":\"Public Domain Dedication (CC0)\"},{\"value\":\"CC PDM\",\"label\":\"Public Domain Mark (PDM)\"}]},{\"value\":\"GNU GPL\",\"label\":\"General Public License v3\"},{\"value\":\"PD\",\"label\":\"Public Domain\"},{\"value\":\"ODC PDDL\",\"label\":\"Public Domain Dedication and Licence\"},{\"value\":\"C\",\"label\":\"Copyright\"}]},{\"name\":\"licenseVersion\",\"type\":\"select\",\"label\":\"License Version\",\"options\":[{\"value\":\"4.0\",\"label\":\"4.0 International\"},{\"value\":\"3.0\",\"label\":\"3.0 Unported\"},{\"value\":\"2.5\",\"label\":\"2.5 Generic\"},{\"value\":\"2.0\",\"label\":\"2.0 Generic\"},{\"value\":\"1.0\",\"label\":\"1.0 Generic\"}],\"optional\":true},{\"name\":\"yearFrom\",\"type\":\"number\",\"label\":\"Years (from)\",\"placeholder\":\"1991\",\"min\":\"-9999\",\"max\":\"9999\",\"optional\":true},{\"name\":\"yearTo\",\"type\":\"number\",\"label\":\"Years (to)\",\"placeholder\":\"1992\",\"min\":\"-9999\",\"max\":\"9999\",\"optional\":true},{\"name\":\"source\",\"type\":\"text\",\"label\":\"Source\",\"placeholder\":\"https:\/\/\",\"optional\":true},{\"name\":\"authors\",\"type\":\"list\",\"field\":{\"name\":\"author\",\"type\":\"group\",\"fields\":[{\"label\":\"Author's name\",\"name\":\"name\",\"optional\":true,\"type\":\"text\"},{\"name\":\"role\",\"type\":\"select\",\"label\":\"Author's role\",\"default\":\"Author\",\"options\":[{\"value\":\"Author\",\"label\":\"Autor\"},{\"value\":\"Editor\",\"label\":\"Editor\"},{\"value\":\"Licensee\",\"label\":\"Licensee\"},{\"value\":\"Originator\",\"label\":\"Originator\"}]}]}},{\"name\":\"licenseExtras\",\"type\":\"text\",\"widget\":\"textarea\",\"label\":\"License Extras\",\"optional\":true,\"description\":\"Any additional information about the license\"},{\"name\":\"changes\",\"type\":\"list\",\"field\":{\"name\":\"change\",\"type\":\"group\",\"label\":\"Changelog\",\"fields\":[{\"name\":\"date\",\"type\":\"text\",\"label\":\"Date\",\"optional\":true},{\"name\":\"author\",\"type\":\"text\",\"label\":\"Changed by\",\"optional\":true},{\"name\":\"log\",\"type\":\"text\",\"widget\":\"textarea\",\"label\":\"Description of change\",\"placeholder\":\"Photo cropped, text changed, etc.\",\"optional\":true}]}},{\"name\":\"authorComments\",\"type\":\"text\",\"widget\":\"textarea\",\"label\":\"Author comments\",\"description\":\"Comments for the editor of the content (This text will not be published as a part of copyright info)\",\"optional\":true},{\"name\":\"contentType\",\"type\":\"text\",\"widget\":\"none\"}]"), // TODO
+            'copyrightSemantics' => array(
+                'name' => "copyright",
+                'type' => "group",
+                'label' => _("Copyright Informationen"),
+                'fields' => array(
+                    array(
+                        'name' => "title",
+                        'type' => "text",
+                        'label' => _("Titel"),
+                        'placeholder' => _("La Gioconda"),
+                        'optional' => true
+                    ),
+                    array(
+                        'name' => "author",
+                        'type' => "text",
+                        'label' => _("Autor"),
+                        'placeholder' => _("Leonardo da Vinci"),
+                        'optional' => true
+                    ),
+                    array(
+                        'name' => "year",
+                        'type' => "text",
+                        'label' => "Jahr(e)",
+                        'placehholder' => _("1503 - 1517"),
+                        'optional' => true
+                    ),
+                    array(
+                        'name' => "source",
+                        'type' => "text",
+                        'label' => _("Quelle"),
+                        'placeholder' => "http:\/\/en.wikipedia.org\/wiki\/Mona_Lisa",
+                        'optional' => true,
+                        'regexp' => array(
+                            "pattern" => "^http[s]?:\/\/.+",
+                            'modifiers' => "i"
+                        )
+                    ),
+                    array(
+                        'name' => "license",
+                        'type' => "select",
+                        'label' => _("Lizenz"),
+                        'default' => "U",
+                        'options' => array(
+                            array(
+                                'value' => 'U',
+                                'label' => _('Unbestimmt'),
+                            ),
+                            array(
+                                'value' => "CC BY",
+                                'label' => "Attribution",
+                                'versions' => array(
+                                    array(
+                                        'value' => '4.0',
+                                        'label' => _('4.0 International'),
+                                    ),
+                                    array(
+                                        'value' => '3.0',
+                                        'label' => _('3.0 Unported'),
+                                    ),
+                                    array(
+                                        'value' => '2.5',
+                                        'label' => _('2.5 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '2.0',
+                                        'label' => _('2.0 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '1.0',
+                                        'label' => _('1.0 Generic'),
+                                    ),
+                                )
+                            ),
+                            array(
+                                'value' => "CC BY-SA",
+                                'label' => "Attribution-ShareAlike",
+                                'versions' => array(
+                                    array(
+                                        'value' => '4.0',
+                                        'label' => _('4.0 International'),
+                                    ),
+                                    array(
+                                        'value' => '3.0',
+                                        'label' => _('3.0 Unported'),
+                                    ),
+                                    array(
+                                        'value' => '2.5',
+                                        'label' => _('2.5 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '2.0',
+                                        'label' => _('2.0 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '1.0',
+                                        'label' => _('1.0 Generic'),
+                                    ),
+                                )
+                            ),
+                            array(
+                                'value' => "CC BY-ND",
+                                'label' => "Attribution-NoDerivs",
+                                'versions' => array(
+                                    array(
+                                        'value' => '4.0',
+                                        'label' => _('4.0 International'),
+                                    ),
+                                    array(
+                                        'value' => '3.0',
+                                        'label' => _('3.0 Unported'),
+                                    ),
+                                    array(
+                                        'value' => '2.5',
+                                        'label' => _('2.5 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '2.0',
+                                        'label' => _('2.0 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '1.0',
+                                        'label' => _('1.0 Generic'),
+                                    ),
+                                )
+                            ),
+                            array(
+                                'value' => "CC BY-NC",
+                                'label' => "Attribution-NonCommercial",
+                                'versions' => array(
+                                    array(
+                                        'value' => '4.0',
+                                        'label' => _('4.0 International'),
+                                    ),
+                                    array(
+                                        'value' => '3.0',
+                                        'label' => _('3.0 Unported'),
+                                    ),
+                                    array(
+                                        'value' => '2.5',
+                                        'label' => _('2.5 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '2.0',
+                                        'label' => _('2.0 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '1.0',
+                                        'label' => _('1.0 Generic'),
+                                    ),
+                                )
+                            ),
+                            array(
+                                'value' => "CC BY-NC-SA",
+                                'label' => "Attribution-NonCommercial-ShareAlike",
+                                'versions' => array(
+                                    array(
+                                        'value' => '4.0',
+                                        'label' => _('4.0 International'),
+                                    ),
+                                    array(
+                                        'value' => '3.0',
+                                        'label' => _('3.0 Unported'),
+                                    ),
+                                    array(
+                                        'value' => '2.5',
+                                        'label' => _('2.5 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '2.0',
+                                        'label' => _('2.0 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '1.0',
+                                        'label' => _('1.0 Generic'),
+                                    ),
+                                )
+                            ),
+                            array(
+                                'value' => "CC BY-NC-ND",
+                                'label' => "Attribution-NonCommercial-NoDerivs",
+                                'versions' => array(
+                                    array(
+                                        'value' => '4.0',
+                                        'label' => _('4.0 International'),
+                                    ),
+                                    array(
+                                        'value' => '3.0',
+                                        'label' => _('3.0 Unported'),
+                                    ),
+                                    array(
+                                        'value' => '2.5',
+                                        'label' => _('2.5 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '2.0',
+                                        'label' => _('2.0 Generic'),
+                                    ),
+                                    array(
+                                        'value' => '1.0',
+                                        'label' => _('1.0 Generic'),
+                                    ),
+                                )
+                            ),
+                            array(
+                                'value' => "GNU GPL",
+                                'label' => "General Public License",
+                                'versions' => array(
+                                    array(
+                                        'value' => 'v3',
+                                        'label' => _('Version 3'),
+                                    ),
+                                    array(
+                                        'value' => 'v2',
+                                        'label' => _('Version 2'),
+                                    ),
+                                    array(
+                                        'value' => 'v1',
+                                        'label' => _('Version 1'),
+                                    )
+                                )
+                            ),
+                            array(
+                                'value' => "PD",
+                                'label' => "Public Domain",
+                                'versions' => array(
+                                    array(
+                                        'value' => '-',
+                                        'label' => _('-'),
+                                    ),
+                                    array(
+                                        'value' => 'CC0 1.0',
+                                        'label' => _('CC0 1.0 Universal'),
+                                    ),
+                                    array(
+                                        'value' => 'CC PDM',
+                                        'label' => _('Public Domain Mark'),
+                                    )
+                                )
+                            ),
+                            array(
+                                'value' => "C",
+                                'label' => "Copyright"
+                            )
+                        )
+                    ),
+                    array(
+                        'name' => "version",
+                        'type' => "select",
+                        'label' => _("Lizenzversion"),
+                        'options' => array()
+                    )
+                )
+            ),
+            'metadataSemantics' => array(
+                array(
+                    'name' => 'title',
+                    'type' => 'text',
+                    'label' => 'Titel',
+                    'placeholder' => 'La Gioconda',
+                ),
+                array(
+                    'name' => 'license',
+                    'type' => 'select',
+                    'label' => _('Lizenz'),
+                    'default' => 'U',
+                    'options' =>
+                        array(
+                            array(
+                                'value' => 'U',
+                                'label' => _('Unbestimmt'),
+                            ),
+                            array(
+                                'type' => 'optgroup',
+                                'label' => _('Creative Commons'),
+                                'options' =>
+                                    array(
+                                        array(
+                                            'value' => 'CC BY',
+                                            'label' => _('Attribution (CC BY)'),
+                                            'versions' =>
+                                                array(
+                                                    array(
+                                                        'value' => '4.0',
+                                                        'label' => _('4.0 International'),
+                                                    ),
+                                                    array(
+                                                        'value' => '3.0',
+                                                        'label' => _('3.0 Unported'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.5',
+                                                        'label' => _('2.5 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.0',
+                                                        'label' => _('2.0 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '1.0',
+                                                        'label' => _('1.0 Generic'),
+                                                    ),
+                                                ),
+                                        ),
+                                        array(
+                                            'value' => 'CC BY-SA',
+                                            'label' => _('Attribution-ShareAlike (CC BY-SA)'),
+                                            'versions' =>
+                                                array(
+                                                    array(
+                                                        'value' => '4.0',
+                                                        'label' => _('4.0 International'),
+                                                    ),
+                                                    array(
+                                                        'value' => '3.0',
+                                                        'label' => _('3.0 Unported'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.5',
+                                                        'label' => _('2.5 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.0',
+                                                        'label' => _('2.0 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '1.0',
+                                                        'label' => _('1.0 Generic'),
+                                                    ),
+                                                ),
+                                        ),
+                                        array(
+                                            'value' => 'CC BY-ND',
+                                            'label' => _('Attribution-NoDerivs (CC BY-ND)'),
+                                            'versions' =>
+                                                array(
+                                                    array(
+                                                        'value' => '4.0',
+                                                        'label' => _('4.0 International'),
+                                                    ),
+                                                    array(
+                                                        'value' => '3.0',
+                                                        'label' => _('3.0 Unported'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.5',
+                                                        'label' => _('2.5 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.0',
+                                                        'label' => _('2.0 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '1.0',
+                                                        'label' => _('1.0 Generic'),
+                                                    ),
+                                                ),
+                                        ),
+                                        array(
+                                            'value' => 'CC BY-NC',
+                                            'label' => _('Attribution-NonCommercial (CC BY-NC)'),
+                                            'versions' =>
+                                                array(
+                                                    array(
+                                                        'value' => '4.0',
+                                                        'label' => _('4.0 International'),
+                                                    ),
+                                                    array(
+                                                        'value' => '3.0',
+                                                        'label' => _('3.0 Unported'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.5',
+                                                        'label' => _('2.5 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.0',
+                                                        'label' => _('2.0 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '1.0',
+                                                        'label' => _('1.0 Generic'),
+                                                    ),
+                                                ),
+                                        ),
+                                        array(
+                                            'value' => 'CC BY-NC-SA',
+                                            'label' => _('Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)'),
+                                            'versions' =>
+                                                array(
+                                                    array(
+                                                        'value' => '4.0',
+                                                        'label' => _('4.0 International'),
+                                                    ),
+                                                    array(
+                                                        'value' => '3.0',
+                                                        'label' => _('3.0 Unported'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.5',
+                                                        'label' => _('2.5 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.0',
+                                                        'label' => _('2.0 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '1.0',
+                                                        'label' => _('1.0 Generic'),
+                                                    ),
+                                                ),
+                                        ),
+                                        array(
+                                            'value' => 'CC BY-NC-ND',
+                                            'label' => _('Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)'),
+                                            'versions' =>
+                                                array(
+                                                    array(
+                                                        'value' => '4.0',
+                                                        'label' => _('4.0 International'),
+                                                    ),
+                                                    array(
+                                                        'value' => '3.0',
+                                                        'label' => _('3.0 Unported'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.5',
+                                                        'label' => _('2.5 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '2.0',
+                                                        'label' => _('2.0 Generic'),
+                                                    ),
+                                                    array(
+                                                        'value' => '1.0',
+                                                        'label' => _('1.0 Generic'),
+                                                    ),
+                                                ),
+                                        ),
+                                        array(
+                                            'value' => 'CC0 1.0',
+                                            'label' => _('Public Domain Dedication (CC0)'),
+                                        ),
+                                        array(
+                                            'value' => 'CC PDM',
+                                            'label' => _('Public Domain Mark (PDM)'),
+                                        ),
+                                    ),
+                            ),
+                            array(
+                                'value' => 'GNU GPL',
+                                'label' => _('General Public License v3'),
+                            ),
+                            array(
+                                'value' => 'PD',
+                                'label' => _('Gemeinfrei'),
+                            ),
+                            array(
+                                'value' => 'ODC PDDL',
+                                'label' => _('Public Domain Dedication and Licence'),
+                            ),
+                            array(
+                                'value' => 'C',
+                                'label' => _('Copyright'),
+                            ),
+                        ),
+                ),
+                array(
+                    'name' => 'licenseVersion',
+                    'type' => 'select',
+                    'label' => _('Lizenzversion'),
+                    'options' =>
+                        array(
+                            array(
+                                'value' => '4.0',
+                                'label' => _('4.0 International'),
+                            ),
+                            array(
+                                'value' => '3.0',
+                                'label' => _('3.0 Unported'),
+                            ),
+                            array(
+                                'value' => '2.5',
+                                'label' => _('2.5 Generic'),
+                            ),
+                            array(
+                                'value' => '2.0',
+                                'label' => _('2.0 Generic'),
+                            ),
+                            array(
+                                'value' => '1.0',
+                                'label' => _('1.0 Generic'),
+                            ),
+                        ),
+                    'optional' => true,
+                ),
+                array(
+                    'name' => 'yearFrom',
+                    'type' => 'number',
+                    'label' => _('Jahre (ab)'),
+                    'placeholder' => '1991',
+                    'min' => '-9999',
+                    'max' => '9999',
+                    'optional' => true,
+                ),
+                array(
+                    'name' => 'yearTo',
+                    'type' => 'number',
+                    'label' => _('Jahre (bis)'),
+                    'placeholder' => '1992',
+                    'min' => '-9999',
+                    'max' => '9999',
+                    'optional' => true,
+                ),
+                array(
+                    'name' => 'source',
+                    'type' => 'text',
+                    'label' => _('Quelle'),
+                    'placeholder' => 'https://',
+                    'optional' => true,
+                ),
+                array(
+                    'name' => 'authors',
+                    'type' => 'list',
+                    'field' =>
+                        array(
+                            'name' => 'author',
+                            'type' => 'group',
+                            'fields' =>
+                                array(
+                                    0 =>
+                                        array(
+                                            'label' => _("Autorenname"),
+                                            'name' => 'name',
+                                            'optional' => true,
+                                            'type' => 'text',
+                                        ),
+                                    array(
+                                        'name' => 'role',
+                                        'type' => 'select',
+                                        'label' => _("Rolle des Autors"),
+                                        'default' => 'Author',
+                                        'options' =>
+                                            array(
+                                                array(
+                                                    'value' => 'Author',
+                                                    'label' => _('Autor'),
+                                                ),
+                                                array(
+                                                    'value' => 'Editor',
+                                                    'label' => _('Editor'),
+                                                ),
+                                                array(
+                                                    'value' => 'Licensee',
+                                                    'label' => _('Lizenzgeber'),
+                                                ),
+                                                array(
+                                                    'value' => 'Originator',
+                                                    'label' => _('Originator'),
+                                                ),
+                                            ),
+                                    ),
+                                ),
+                        ),
+                ),
+                array(
+                    'name' => 'licenseExtras',
+                    'type' => 'text',
+                    'widget' => 'textarea',
+                    'label' => _('Lizenz-Zusatzinformationen'),
+                    'optional' => true,
+                    'description' => _('Weitere Informationen bezüglich der Lizenz'),
+                ),
+                array(
+                    'name' => 'changes',
+                    'type' => 'list',
+                    'field' =>
+                        array(
+                            'name' => 'change',
+                            'type' => 'group',
+                            'label' => _('Changelog'),
+                            'fields' =>
+                                array(
+                                    array(
+                                        'name' => 'date',
+                                        'type' => 'text',
+                                        'label' => _('Datum'),
+                                        'optional' => true,
+                                    ),
+                                    array(
+                                        'name' => 'author',
+                                        'type' => 'text',
+                                        'label' => _('Verändert durch'),
+                                        'optional' => true,
+                                    ),
+                                    array(
+                                        'name' => 'log',
+                                        'type' => 'text',
+                                        'widget' => 'textarea',
+                                        'label' => _('Beschreibung der Änderung'),
+                                        'placeholder' => _('Foto zugeschnitten, Text geändert, etc.'),
+                                        'optional' => true,
+                                    ),
+                                ),
+                        ),
+                ),
+                array(
+                    'name' => 'authorComments',
+                    'type' => 'text',
+                    'widget' => 'textarea',
+                    'label' => _('Autorenkommentare'),
+                    'description' => _('Kommentare für den Editor (dieser Kommentar wird nicht veröffentlicht)'),
+                    'optional' => true,
+                ),
+                array(
+                    'name' => 'contentType',
+                    'type' => 'text',
+                    'widget' => 'none',
+                ),
+            ),
             'assets' => array(
                 'css' => array(
                     $this->plugin->getPluginURL()."/assets/h5p/h5p.css",
@@ -333,7 +957,7 @@ class H5peditorController extends PluginController
 
 
             //now fetch the js and css files:
-            $language = getUserLanguage($GLOBALS['user']->id);
+            $language = substr(getUserLanguage($GLOBALS['user']->id), 0, 2);
             $translations = array();
             foreach ($libs as $lib) {
                 if ($lib) {
