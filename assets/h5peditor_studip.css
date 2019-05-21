@@ -1,0 +1,3 @@
+.group.importance-high > .title, .h5p-li > .list-item-title-bar.importance-high {
+    background-color: #red;
+}

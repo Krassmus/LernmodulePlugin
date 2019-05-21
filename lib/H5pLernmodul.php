@@ -229,6 +229,9 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
     }
 
     public function getMainLib() {
+        if (!file_exists($this->getPath() . "/h5p.json")) {
+            return null;
+        }
         $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
         $main_lib_name = $json['mainLibrary'];
         foreach ($json['preloadedDependencies'] as $lib_data) {

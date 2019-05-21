@@ -15,24 +15,30 @@ class H5peditorController extends PluginController
         if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
+        if (!$module_id) {
+            $this->mod = new H5pLernmodul();
+            $this->mod['draft'] = 1;
+            $this->mod->store();
+            $this->redirect(PluginEngine::getURL($this->plugin, array(), "h5peditor/edit/".$this->mod->getId()));
+        }
+        Navigation::activateItem("/course/lernmodule/overview");
+        $this->mod = new H5pLernmodul($module_id);
         if (Request::isPost()) {
             list($machineName, $version) = explode(" ", Request::get("library"));
             list($majorVersion, $minorVersion) = explode($version);
             $lib = H5PLib::findVersion($machineName, $minorVersion, $majorVersion);
-            $mod = $lib->createModWithData(json_decode(Request::get("parameters"), true));
-            if ($mod) {
+            $this->mod = $lib->createModWithData(json_decode(Request::get("parameters"), true));
+            if ($this->mod) {
                 PageLayout::postSuccess(_("Lernmodul wurde gespeichert"));
-                $this->redirect(PluginEngine::getURL($this->plugin, array(), "/".$mod->getId()));
+                $this->redirect(PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->mod->getId()));
                 return;
             } else {
                 PageLayout::postError(_("Lernmodul konnte nicht gespeichert werden. Daten unvollständig."));
             }
-
         }
-        Navigation::activateItem("/course/lernmodule/overview");
-        $this->mod = new H5pLernmodul($module_id);
 
-        if (!$this->mod->isNew()) {
+
+        if (!$this->mod['draft']) {
             $mainlib = $this->mod->getMainLib();
             $this->library = $mainlib['name']." ".$mainlib['major_version'].".".$mainlib['minor_version'];
             $h5p_json = json_decode(file_get_contents($this->mod->getPath()."/h5p.json"), true);
@@ -166,7 +172,8 @@ class H5peditorController extends PluginController
             'styles' => array(
                 $this->plugin->getPluginURL()."/assets/h5p/h5p.css",
                 $this->plugin->getPluginURL()."/assets/h5p/h5p-confirmation-dialog.css",
-                $this->plugin->getPluginURL()."/assets/h5p/h5p-core-button.css"
+                $this->plugin->getPluginURL()."/assets/h5p/h5p-core-button.css",
+                $this->plugin->getPluginURL()."/assets/h5peditor_studip.css"
             ),
             'scripts' => array(
                 $this->plugin->getPluginURL()."/assets/h5p/jquery.js",
@@ -816,7 +823,8 @@ class H5peditorController extends PluginController
                     $this->plugin->getPluginURL()."/assets/h5p/h5p-hub-client.css",
                     $this->plugin->getPluginURL()."/assets/h5p/fonts.css",
                     $this->plugin->getPluginURL()."/assets/h5p/application.css",
-                    $this->plugin->getPluginURL()."/assets/h5p/zebra_datepicker.min.css"
+                    $this->plugin->getPluginURL()."/assets/h5p/zebra_datepicker.min.css",
+                    $this->plugin->getPluginURL()."/assets/h5peditor_studip.css"
                 ),
                 'js' => array(
                     $this->plugin->getPluginURL()."/assets/h5p/jquery.js",
@@ -1058,7 +1066,15 @@ class H5peditorController extends PluginController
             return;
         } elseif ($cmd === "files") {
             //upload files ...
-            $this->render_json(array('ok' => "no"));
+            $_FILES['file'];
+
+
+            $this->render_json(array(
+                'width' => 500,
+                'height' => 200,
+                'mime' => "image/png",
+                'path' => "images/collage.png"
+            ));
             return;
         }
         $this->render_text("errr .. ok");

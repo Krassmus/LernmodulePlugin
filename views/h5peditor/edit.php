@@ -18,7 +18,7 @@
             <div class="h5p-editor"><?= dgettext("lernmoduleplugin","Warte auf Javascript") ?></div>
         </div>
     </div>
-    <?= \Studip\Button::create($mod->isNew() ? _("Erstellen") : _("Speichern")) ?>
+    <?= \Studip\Button::create($mod['draft'] ? _("Erstellen") : _("Speichern")) ?>
 </form>
 
 <script>H5PIntegration = <?= json_encode($integration) ?>;</script>

@@ -9,6 +9,7 @@ class Lernmodul extends SimpleORMap {
             FROM lernmodule_module
                 INNER JOIN lernmodule_courses ON (lernmodule_module.module_id = lernmodule_courses.module_id)
             WHERE lernmodule_courses.seminar_id = :course_id
+                AND draft = '0'
             ORDER BY lernmodule_module.name ASC
         ");
         $statement->execute(array('course_id' => $course_id));

@@ -18,7 +18,9 @@ class LernmoduleController extends PluginController
     public function overview_action()
     {
         Navigation::activateItem("/course/lernmodule/overview");
+        Lernmodul::deleteBySQL("draft = '1' AND mkdate < UNIX_TIMESTAMP() - 86400");
         $this->module = Lernmodul::findByCourse($this->course_id);
+
 
         if (Request::option("quit")) {
             $attendance = new LernmodulGameAttendance(Request::option("quit"));
