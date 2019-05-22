@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__."/../vendor/h5p-php-library/h5p.classes.php";
-
 class H5pController extends PluginController
 {
 

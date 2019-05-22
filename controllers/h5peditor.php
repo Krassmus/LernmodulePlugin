@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__."/../vendor/h5p-php-library/h5p.classes.php";
-
 class H5peditorController extends PluginController
 {
 
@@ -22,12 +20,20 @@ class H5peditorController extends PluginController
             $this->redirect(PluginEngine::getURL($this->plugin, array(), "h5peditor/edit/".$this->mod->getId()));
         }
         Navigation::activateItem("/course/lernmodule/overview");
-        $this->mod = new H5pLernmodul($module_id);
+        $this->mod = H5pLernmodul::find($module_id);
         if (Request::isPost()) {
             list($machineName, $version) = explode(" ", Request::get("library"));
-            list($majorVersion, $minorVersion) = explode($version);
-            $lib = H5PLib::findVersion($machineName, $minorVersion, $majorVersion);
-            $this->mod = $lib->createModWithData(json_decode(Request::get("parameters"), true));
+            list($majorVersion, $minorVersion) = explode(".", $version);
+            $lib = H5PLib::findVersion($machineName, $majorVersion, $minorVersion);
+            $this->mod->updateH5PData(json_decode(Request::get("parameters"), true), $lib);
+            $connection = $this->mod->courseConnection(Context::get()->id);
+            if ($connection->isNew()) {
+                $connection->store();
+            }
+            if ($this->mod['draft']) {
+                $this->mod['draft'] = 0;
+                $this->mod->store();
+            }
             if ($this->mod) {
                 PageLayout::postSuccess(_("Lernmodul wurde gespeichert"));
                 $this->redirect(PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->mod->getId()));
@@ -45,10 +51,10 @@ class H5peditorController extends PluginController
             $this->params = array(
                 "params" => json_decode(file_get_contents($this->mod->getPath()."/content/content.json"), true),
                 "metadata" => array(
-                    'title' => $h5p_json['name'],
+                    'title' => $h5p_json['title'],
                     'license' => $h5p_json['license'],
                     'authors' => array(),
-                    'extraTitle' => $h5p_json['name'],
+                    'extraTitle' => $h5p_json['title'],
                     'changes' => array()
                 )
             );
@@ -193,7 +199,7 @@ class H5peditorController extends PluginController
                 "width" => 50,
                 "height" => 50
             ),
-            'ajaxPath' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/ajax", array('cid' => Context::get()->id, 'cmd' => ""), true), //path to load libraries
+            'ajaxPath' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/ajax", array('cid' => Context::get()->id, 'module_id' => $this->mod->getId() ,'cmd' => ""), true), //path to load libraries
             'libraryUrl' => "http://localhost/wordpress/wp-content/plugins/h5p/h5p-editor-php-library/",
             'copyrightSemantics' => array(
                 'name' => "copyright",
@@ -906,6 +912,12 @@ class H5peditorController extends PluginController
                 )
             )
         );*/
+        if (!$this->mod['draft']) {
+            $settings['metadata'] = array(
+                'title' => $this->mod['name'],
+                'license' => "U"
+            );
+        }
         return $settings;
     }
 
@@ -1067,13 +1079,46 @@ class H5peditorController extends PluginController
         } elseif ($cmd === "files") {
             //upload files ...
             $_FILES['file'];
+            $mod = H5PLernmodul::find(Request::get("module_id"));
+            if (!$mod) {
+                throw new Exception(_("Modul existiert nicht. Kann Datei nicht hochladen."));
+            }
+
+            $path = $mod->getPath();
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+
+            if (!file_exists($path."/content")) {
+                mkdir($path."/content");
+            }
+            $path .= "/content";
+            if (!file_exists($path."/assets")) {
+                mkdir($path."/assets");
+            }
+            $path .= "/assets/";
+            $ending = strpos($_FILES['file']['name'], ".") !== false
+                ? substr($_FILES['file']['name'], strrpos($_FILES['file']['name'], ".") + 1)
+                : "";
+            $filename = strpos($_FILES['file']['name'], ".") !== false
+                ? substr($_FILES['file']['name'], 0, strrpos($_FILES['file']['name'], "."))
+                : $_FILES['file']['name'];
+
+            $i = "";
+            while (file_exists($path.$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : ""))) {
+                $i++;
+            }
+            $newfilepath = $path.$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : "");
+            move_uploaded_file($_FILES['file']['tmp_name'], $newfilepath);
+
+            $image_size = getimagesize($newfilepath);
 
 
             $this->render_json(array(
-                'width' => 500,
-                'height' => 200,
-                'mime' => "image/png",
-                'path' => "images/collage.png"
+                'width' => $image_size[0],
+                'height' => $image_size[1],
+                'mime' => $_FILES['file']['type'],
+                'path' => "assets/".$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : "")
             ));
             return;
         }

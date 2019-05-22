@@ -247,4 +247,47 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
             return H5PLib::findOneBySQL("name = ? ORDER BY major_version DESC, minor_version DESC", array($main_lib_name));
         }
     }
+
+    public function updateH5PData($data, $mainlib)
+    {
+        if ($mainlib && $data && $data['params'] && $data['metadata']['title']) {
+            $this['name'] = $data['metadata']['title'];
+            $this['user_id'] = $GLOBALS['user']->id;
+            $this['type'] = "h5p";
+            $this->store();
+
+            $path = $this->getPath();
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+
+            if (!file_exists($path . "/content")) {
+                mkdir($path . "/content");
+            }
+            if (file_exists($path . "/content/content.json")) {
+                unlink($path . "/content/content.json");
+            }
+            file_put_contents($path . "/content/content.json", json_encode($data['params']));
+            $h5p = array(
+                'title' => $data['metadata']['title'],
+                'language' => $data['metadata']['language'],
+                'mainLibrary' => $mainlib['name'],
+                'embedTypes' => array("div"),
+                'license' => $data['metadata']['license'] ?: "U",
+                'preloadedDependencies' => array(
+                    array(
+                        'machineName' => $mainlib['name'],
+                        'majorVersion' => $mainlib['major_version'],
+                        'minorVersion' => $mainlib['minor_version']
+                    )
+                )
+            );
+            if (file_exists($path . "/h5p.json")) {
+                unlink($path . "/h5p.json");
+            }
+            file_put_contents($path . "/h5p.json", json_encode($h5p));
+            return true;
+        }
+        return false;
+    }
 }
