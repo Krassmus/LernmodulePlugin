@@ -51,13 +51,17 @@ class H5PLib extends SimpleORMap
         return $statement->fetch(PDO::FETCH_COLUMN, 0);
     }
 
-    public function getSubLibs($not_in_ids = array())
+    public function getSubLibs($not_in_ids = array(), $editor = false)
     {
         $library_json = $this->getPath()."/library.json";
         $sublibs = array();
         if (file_exists($library_json)) {
             $json = json_decode(file_get_contents($library_json), true);
-            foreach ((array) $json['preloadedDependencies'] as $dependency) {
+            $dependencies = (array) $json['preloadedDependencies'];
+            if ($editor) {
+                $dependencies = array_merge($dependencies, (array) $json['editorDependencies']);
+            }
+            foreach ($dependencies as $dependency) {
                 $sublib = H5PLib::findVersion(
                     $dependency['machineName'],
                     $dependency['majorVersion'],
@@ -66,7 +70,7 @@ class H5PLib extends SimpleORMap
                 if ($sublib && !in_array($sublib->getId(), $not_in_ids)) {
                     array_unshift($sublibs, $sublib);
                     $not_in_ids[] = $sublib->getId();
-                    foreach ($sublib->getSubLibs($not_in_ids) as $subsublib) {
+                    foreach ($sublib->getSubLibs($not_in_ids, $editor) as $subsublib) {
                         array_unshift($sublibs, $subsublib);
                         $not_in_ids[] = $subsublib->getId();
                     }

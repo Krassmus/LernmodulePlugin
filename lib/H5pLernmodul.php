@@ -123,7 +123,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         return null;
     }
 
-    public function getLibs()
+    public function getLibs($editor = false)
     {
         $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
         $libs = array();
@@ -134,7 +134,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                 if ($lib && !in_array($lib->getId(), $lib_ids)) {
                     $lib_ids[] = $lib->getId();
                     $libs[] = $lib;
-                    foreach ($lib->getSubLibs() as $sublib) {
+                    foreach ($lib->getSubLibs($editor) as $sublib) {
                         if (!in_array($sublib->getId(), $lib_ids)) {
                             $lib_ids[] = $sublib->getId();
                             array_unshift($libs, $sublib);
@@ -149,7 +149,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         $lib_ids = array_map(function ($l) { return $l->getId(); }, $libs);
         $edges = array();
         foreach ($libs as $lib) {
-            foreach ($lib->getSubLibs() as $sublib) {
+            foreach ($lib->getSubLibs($editor) as $sublib) {
                 $edges[] = array(
                     $sublib->getId(),
                     $lib->getId()
@@ -267,7 +267,16 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
             if (file_exists($path . "/content/content.json")) {
                 unlink($path . "/content/content.json");
             }
-            file_put_contents($path . "/content/content.json", json_encode($data['params']));
+            $content = json_encode($data['params']);
+            if (file_exists($this->getPath()."/content/assets")) { //delete all old images
+                foreach (scandir($this->getPath()."/content/assets") as $file) {
+                    $file_ecaped = str_replace(array("/", "\""), array("\\/", "\\\""), "assets/".$file); //json_encode-escaping for one string
+                    if ($file !== "." && $file !== ".." && strpos($content, $file_ecaped) === false) {
+                        @unlink($this->getPath()."/content/assets/".$file);
+                    }
+                }
+            }
+            file_put_contents($path . "/content/content.json", $content);
             $h5p = array(
                 'title' => $data['metadata']['title'],
                 'language' => $data['metadata']['language'],

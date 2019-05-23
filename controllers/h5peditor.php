@@ -18,6 +18,7 @@ class H5peditorController extends PluginController
             $this->mod['draft'] = 1;
             $this->mod->store();
             $this->redirect(PluginEngine::getURL($this->plugin, array(), "h5peditor/edit/".$this->mod->getId()));
+            return;
         }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = H5pLernmodul::find($module_id);
@@ -192,6 +193,7 @@ class H5peditorController extends PluginController
                 $this->plugin->getPluginURL()."/assets/h5p/h5p-action-bar.js"
             )
         );
+
         $settings['editor'] = array(
             'filesPath' => $this->mod->getDataURL()."/content",
             "fileIcon" => array(
@@ -932,11 +934,17 @@ class H5peditorController extends PluginController
             $javascripts = array();
             $css = array();
 
-            $library = json_decode(file_get_contents($main_library->getPath() . "/library.json"), true);
             $libs = array();
             $lib_ids = array();
+            $library = json_decode(file_get_contents($main_library->getPath() . "/library.json"), true);
+            foreach ((array)$library['preloadedDependencies'] as $dependency) {
+                $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
+                if ($lib) {
+                    $libs[] = $lib;
+                    $lib_ids[] = $lib->getId();
+                }
+            }
             foreach ((array)$library['editorDependencies'] as $dependency) {
-                //TODO
                 $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
                 if ($lib) {
                     $libs[] = $lib;
@@ -948,7 +956,7 @@ class H5peditorController extends PluginController
             //Once again the topological ordering of libs:
             $edges = array();
             foreach ($libs as $lib) {
-                foreach ($lib->getSubLibs() as $sublib) {
+                foreach ($lib->getSubLibs($lib_ids, true) as $sublib) {
                     if (!in_array($sublib->getId(), $lib_ids)) {
                         $lib_ids[] = $sublib->getId();
                         $libs[] = $sublib;
