@@ -14,3 +14,5 @@
         <?= \Studip\Button::create(dgettext("lernmoduleplugin","Speichern")) ?>
     </div>
 </form>
+<?
+Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));

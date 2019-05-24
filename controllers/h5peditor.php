@@ -937,49 +937,59 @@ class H5peditorController extends PluginController
             $libs = array();
             $lib_ids = array();
             $library = json_decode(file_get_contents($main_library->getPath() . "/library.json"), true);
-            foreach ((array)$library['preloadedDependencies'] as $dependency) {
-                $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
-                if ($lib) {
-                    $libs[] = $lib;
-                    $lib_ids[] = $lib->getId();
-                }
-            }
-            foreach ((array)$library['editorDependencies'] as $dependency) {
-                $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
-                if ($lib) {
-                    $libs[] = $lib;
-                    $lib_ids[] = $lib->getId();
-                }
-            }
 
+            $dependencies = array_merge(
+                (array) $library['editorDependencies'],
+                (array) $library['preloadedDependencies']
+            );
+
+            foreach ($dependencies as $dependency) {
+                $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
+                if ($lib) {
+                    $libs[] = $lib;
+                    $lib_ids[] = $lib->getId();
+                    foreach ($lib->getSubLibs($lib_ids, true) as $sublib) {
+                        if (!in_array($sublib->getId(), $lib_ids)) {
+                            $lib_ids[] = $sublib->getId();
+                            $libs[] = $sublib;
+                        }
+                    }
+                }
+            }
 
             //Once again the topological ordering of libs:
             $edges = array();
+            $ignore = array();
             foreach ($libs as $lib) {
-                foreach ($lib->getSubLibs($lib_ids, true) as $sublib) {
-                    if (!in_array($sublib->getId(), $lib_ids)) {
-                        $lib_ids[] = $sublib->getId();
-                        $libs[] = $sublib;
+                foreach ($lib->getSubLibs(array(), false) as $sublib) {
+                    if ($lib->getId() != $sublib->getId()) {
+                        if (!in_array($sublib->getId(), $ignore)) {
+                            $ignore[] = $sublib->getId();
+                        }
+                        $edges[$sublib->getId() . "_" . $lib->getId()] = array(
+                            $sublib->getId(),
+                            $lib->getId()
+                        );
                     }
-                    $edges[] = array(
-                        $sublib->getId(),
-                        $lib->getId()
-                    );
                 }
             }
+
+            /*foreach ($edges as $edge) {
+                if (in_array(11, $edge)) {
+                    var_dump($edge);
+                }
+            }
+            die();*/
+
             $lib_ids = LernmodulePlugin::topologicalSort($lib_ids, $edges);
+
             if ($lib_ids === false) {
                 throw new Exception("Could not sort dependencies of H5P module.");
             }
             $libs_sorted = array();
-            foreach ($lib_ids as $lib_id) {
-                foreach ($libs as $i => $lib) {
-                    if ($lib->getId() == $lib_id) {
-                        $libs_sorted[] = $lib;
-                        unset($libs[$i]);
-                        break;
-                    }
-                }
+            $lib_ids_flipped = array_flip($lib_ids);
+            foreach ($libs as $lib) {
+                $libs_sorted[$lib_ids_flipped[$lib->getId()]] = $lib;
             }
             $libs = $libs_sorted;
 

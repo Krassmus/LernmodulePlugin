@@ -134,7 +134,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                 if ($lib && !in_array($lib->getId(), $lib_ids)) {
                     $lib_ids[] = $lib->getId();
                     $libs[] = $lib;
-                    foreach ($lib->getSubLibs($editor) as $sublib) {
+                    foreach ($lib->getSubLibs(array(), $editor) as $sublib) {
                         if (!in_array($sublib->getId(), $lib_ids)) {
                             $lib_ids[] = $sublib->getId();
                             array_unshift($libs, $sublib);
@@ -149,7 +149,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         $lib_ids = array_map(function ($l) { return $l->getId(); }, $libs);
         $edges = array();
         foreach ($libs as $lib) {
-            foreach ($lib->getSubLibs($editor) as $sublib) {
+            foreach ($lib->getSubLibs(array(), $editor) as $sublib) {
                 $edges[] = array(
                     $sublib->getId(),
                     $lib->getId()

@@ -13,7 +13,7 @@
 </script>
 
 <?
-
+Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
 if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions = new ActionsWidget();
     $actions->addLink(

@@ -359,4 +359,17 @@ class LernmoduleController extends PluginController
         }
     }
 
+    /**
+     * Dialog to select the way a lernmodule should be added (url, upload or h5p-editor (or OER-marketplace)
+     * @throws AccessDeniedException
+     */
+    public function add_action()
+    {
+        Navigation::activateItem("/course/lernmodule/overview");
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            throw new AccessDeniedException();
+        }
+        PageLayout::setTitle(_("Quelle des Lernmoduls auswählen"));
+    }
+
 }

@@ -22,3 +22,6 @@
 </form>
 
 <script>H5PIntegration = <?= json_encode($integration) ?>;</script>
+
+<?
+Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));

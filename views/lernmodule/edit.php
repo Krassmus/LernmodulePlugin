@@ -6,25 +6,29 @@
     <fieldset>
         <legend><?= dgettext("lernmoduleplugin","Lernmodul hochladen und bearbeiten") ?></legend>
 
-        <div class="hgroup">
-            <label>
-                <input type="radio"
-                       name="upload_or_url"
-                       onChange="jQuery('#file_upload').toggle(this.checked); jQuery('#lernmodul_url').toggle(!this.checked);"
-                       value="upload"<?= !$module['url'] ? " checked" : "" ?>>
-                <?= dgettext("lernmoduleplugin","Hochladen") ?>
-            </label>
+        <? if (Request::get("type")) : ?>
+            <input type="hidden" name="upload_or_url" value="<?= htmlReady(Request::get("type")) ?>">
+        <? else : ?>
+            <div class="hgroup">
+                <label>
+                    <input type="radio"
+                           name="upload_or_url"
+                           onChange="jQuery('#file_upload').toggle(this.checked); jQuery('#lernmodul_url').toggle(!this.checked);"
+                           value="upload"<?= !$module['url'] ? " checked" : "" ?>>
+                    <?= dgettext("lernmoduleplugin","Hochladen") ?>
+                </label>
 
-            <label>
-                <input type="radio"
-                       name="upload_or_url"
-                       onChange="jQuery('#lernmodul_url').toggle(this.checked); jQuery('#file_upload').toggle(!this.checked);"
-                       value="url"<?= $module['url'] ? " checked" : "" ?>>
-                <?= _("URL") ?>
-            </label>
-        </div>
+                <label>
+                    <input type="radio"
+                           name="upload_or_url"
+                           onChange="jQuery('#lernmodul_url').toggle(this.checked); jQuery('#file_upload').toggle(!this.checked);"
+                           value="url"<?= $module['url'] ? " checked" : "" ?>>
+                    <?= _("URL") ?>
+                </label>
+            </div>
+        <? endif ?>
 
-        <label class="file-upload" id="file_upload"<?= $module['url'] ? ' style="display: none;"' : "" ?>>
+        <label class="file-upload" id="file_upload"<?= $module['url'] || Request::get("type") === "url" ? ' style="display: none;"' : "" ?>>
             <input type="file" name="modulefile" accept=".zip,.h5p,.pdf" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
             <?= sprintf(dgettext("lernmoduleplugin","Lernmodul auswählen (Gezipptes HTML, H5P oder PDF, maximal %s MB)"), floor(min(LernmodulePlugin::bytesFromPHPIniValue(ini_get('post_max_size')), LernmodulePlugin::bytesFromPHPIniValue(ini_get('upload_max_filesize'))) / 1024 / 1024)) ?>
         </label>
@@ -54,7 +58,7 @@
             });
         </script>
 
-        <label id="lernmodul_url"<?= !$module['url'] ? ' style="display: none;"' : "" ?>>
+        <label id="lernmodul_url"<?= (!$module->isNew() && !$module['url']) || Request::get("type") === "upload" ? ' style="display: none;"' : "" ?>>
             <?= dgettext("lernmoduleplugin","URL des Lernmoduls") ?>
             <input type="text"
                    name="module[url]"
@@ -85,7 +89,7 @@
             </div>
         <? endif ?>
 
-        <? if (class_exists("LernmarktplatzMaterial")) : ?>
+        <? if (false && class_exists("LernmarktplatzMaterial")) : ?>
             <label id="lernmarktplatz_publish" style="<?= $module['url'] ? 'display: none; ' : '' ?>">
                 <input type="checkbox" name="module[material_id]" value="<?= htmlReady($module['material_id'] ?: 1) ?>">
                 <?= dgettext("lernmoduleplugin","Auf Lernmarktplatz veröffentlichen (unter CC-BY-SA für alle zum freien Download)") ?>

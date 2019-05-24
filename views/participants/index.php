@@ -53,3 +53,5 @@ usort($student_data, function ($data1, $data2) {
         <? endforeach ?>
     </tbody>
 </table>
+<?
+Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
