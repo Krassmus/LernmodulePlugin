@@ -938,10 +938,7 @@ class H5peditorController extends PluginController
             $lib_ids = array();
             $library = json_decode(file_get_contents($main_library->getPath() . "/library.json"), true);
 
-            $dependencies = array_merge(
-                (array) $library['editorDependencies'],
-                (array) $library['preloadedDependencies']
-            );
+            $dependencies = (array) $library['editorDependencies'];
 
             foreach ($dependencies as $dependency) {
                 $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
@@ -974,22 +971,20 @@ class H5peditorController extends PluginController
                 }
             }
 
-            /*foreach ($edges as $edge) {
-                if (in_array(11, $edge)) {
-                    var_dump($edge);
-                }
-            }
-            die();*/
-
             $lib_ids = LernmodulePlugin::topologicalSort($lib_ids, $edges);
 
             if ($lib_ids === false) {
                 throw new Exception("Could not sort dependencies of H5P module.");
             }
             $libs_sorted = array();
-            $lib_ids_flipped = array_flip($lib_ids);
-            foreach ($libs as $lib) {
-                $libs_sorted[$lib_ids_flipped[$lib->getId()]] = $lib;
+            foreach ($lib_ids as $lib_id) {
+                foreach ($libs as $i => $lib) {
+                    if ($lib->getId() == $lib_id) {
+                        $libs_sorted[] = $lib;
+                        unset($libs[$i]);
+                        break;
+                    }
+                }
             }
             $libs = $libs_sorted;
 
@@ -1014,6 +1009,7 @@ class H5peditorController extends PluginController
                     }
                 }
             }
+
 
             if (file_exists($main_library->getPath()."/presave.js")) {
                 $javascripts[] = H5PLernmodul::getH5pLibURL() ."/" . $main_library['name'] . "-" . $main_library['major_version'] . "." . $main_library['minor_version'] . "/presave.js";
