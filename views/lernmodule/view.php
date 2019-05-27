@@ -15,9 +15,14 @@
 <?
 Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
 if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
-    $actions = new ActionsWidget();
+    $actions = Sidebar::Get()->getWidget("actions");
+    $add = false;
+    if (!$actions) {
+        $actions = new ActionsWidget();
+        $add = true;
+    }
     $actions->addLink(
-        dgettext("lernmoduleplugin","Bearbeiten"),
+        dgettext("lernmoduleplugin","Abspieloptionen bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
         Icon::create("edit", "clickable")
 
@@ -29,7 +34,9 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             Icon::create("download", "clickable")
         );
     }
-    Sidebar::Get()->addWidget($actions);
+    if ($add) {
+        Sidebar::Get()->addWidget($actions);
+    }
 }
 
 $views = new ViewsWidget();

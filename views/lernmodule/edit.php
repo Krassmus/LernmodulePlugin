@@ -261,27 +261,36 @@
 <?
 
 if (!$module->isNew()) {
-    $actions = new ActionsWidget();
+    $actions = Sidebar::Get()->getWidget("actions");
+    $add = false;
+    if (!$actions) {
+        $actions = new ActionsWidget();
+        $add = true;
+    }
     $actions->addLink(
         dgettext("lernmoduleplugin","Lernmodul herunterladen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
         Icon::create("download", "clickable")
     );
-    Sidebar::Get()->addWidget($actions);
+    if ($add) {
+        Sidebar::Get()->addWidget($actions);
+    }
 }
 
-$views = new ViewsWidget();
-$views->addLink(
-    $module['name'],
-    PluginEngine::getURL($plugin, array(), "lernmodule/view/".$module->getId()),
-    null,
-    array()
-);
-$views->addLink(
-    dgettext("lernmoduleplugin","Auswertung"),
-    PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$module->getId()),
-    null,
-    array()
-);
+if (!$module->isNew()) {
+    $views = new ViewsWidget();
+    $views->addLink(
+        $module['name'],
+        PluginEngine::getURL($plugin, array(), "lernmodule/view/".$module->getId()),
+        null,
+        array()
+    );
+    $views->addLink(
+        dgettext("lernmoduleplugin","Auswertung"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$module->getId()),
+        null,
+        array()
+    );
 
-Sidebar::Get()->addWidget($views);
+    Sidebar::Get()->addWidget($views);
+}
