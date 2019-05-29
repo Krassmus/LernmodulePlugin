@@ -209,10 +209,12 @@
 
     <div data-dialog-button>
         <?= \Studip\Button::create(dgettext("lernmoduleplugin","Speichern")) ?>
-        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Löschen"), "delete", array(
-            'formaction' => PluginEngine::getLink($plugin, array(), "lernmodule/delete/".$module->getId()),
-            'onClick' => "return window.confirm('".dgettext("lernmoduleplugin","Wirklich löschen?")."');"
-        )) ?>
+        <? if (!$module->isNew()) : ?>
+            <?= \Studip\Button::create(dgettext("lernmoduleplugin","Löschen"), "delete", array(
+                'formaction' => PluginEngine::getLink($plugin, array(), "lernmodule/delete/".$module->getId()),
+                'onClick' => "return window.confirm('".dgettext("lernmoduleplugin","Wirklich löschen?")."');"
+            )) ?>
+        <? endif ?>
         <? if (!Request::isAjax()) : ?>
             <?= \Studip\LinkButton::create(dgettext("lernmoduleplugin","Abbrechen"), PluginEngine::getURL($plugin, array(), "lernmodule/overview")) ?>
         <? endif ?>

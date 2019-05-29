@@ -995,7 +995,7 @@ class H5peditorController extends PluginController
                 'semantics' => json_decode(file_get_contents($main_library->getPath() . "/semantics.json"), true),
                 'language' => file_exists($main_library->getPath() . "/language/de.json")
                     ? file_get_contents($main_library->getPath() . "/language/de.json")
-                    : array(),
+                    : json_encode(array()),
                 'javascript' => $javascripts,
                 'css' => $css,
                 'translations' => $translations

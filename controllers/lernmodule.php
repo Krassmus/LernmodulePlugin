@@ -18,6 +18,7 @@ class LernmoduleController extends PluginController
     public function overview_action()
     {
         Navigation::activateItem("/course/lernmodule/overview");
+        PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         Lernmodul::deleteBySQL("draft = '1' AND mkdate < UNIX_TIMESTAMP() - 86400");
         $this->module = Lernmodul::findByCourse($this->course_id);
 
