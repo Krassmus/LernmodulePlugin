@@ -54,9 +54,9 @@ class H5peditorController extends PluginController
                 "metadata" => array(
                     'title' => $h5p_json['title'],
                     'license' => $h5p_json['license'],
-                    'authors' => array(),
+                    'authors' => $h5p_json['authors'],
                     'extraTitle' => $h5p_json['title'],
-                    'changes' => array()
+                    'changes' => $h5p_json['changes']
                 )
             );
         }
@@ -893,7 +893,30 @@ class H5peditorController extends PluginController
                 'title' => $this->mod['name'],
                 'license' => "U"
             );
-            //TODO
+            $h5p_json = json_decode(file_get_contents($this->mod->getPath()."/h5p.json"), true);
+            if ($h5p_json) {
+                if ($h5p_json['license']) {
+                    $settings['metadata']['license'] = $h5p_json['license'];
+                }
+                if ($h5p_json['authors']) {
+                    $settings['metadata']['authors'] = (array)$h5p_json['authors'];
+                }
+                if ($h5p_json['changes']) {
+                    $settings['metadata']['changes'] = (array)$h5p_json['changes'];
+                }
+                if ($h5p_json['yearFrom']) {
+                    $settings['metadata']['yearFrom'] = $h5p_json['yearFrom'];
+                }
+                if ($h5p_json['yearTo']) {
+                    $settings['metadata']['yearTo'] = $h5p_json['yearTo'];
+                }
+                if ($h5p_json['source']) {
+                    $settings['metadata']['source'] = $h5p_json['source'];
+                }
+                if ($h5p_json['licenseExtras']) {
+                    $settings['metadata']['licenseExtras'] = $h5p_json['licenseExtras'];
+                }
+            }
         }
         return $settings;
     }

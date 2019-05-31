@@ -291,6 +291,24 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                     )
                 )
             );
+            if ($data['metadata']['authors']) {
+                $h5p['authors'] = $data['metadata']['authors'];
+            }
+            if ($data['metadata']['changes']) {
+                $h5p['changes'] = $data['metadata']['changes'];
+            }
+            if ($data['metadata']['yearFrom']) {
+                $h5p['yearFrom'] = $data['metadata']['yearFrom'];
+            }
+            if ($data['metadata']['yearTo']) {
+                $h5p['yearTo'] = $data['metadata']['yearTo'];
+            }
+            if ($data['metadata']['source']) {
+                $h5p['source'] = $data['metadata']['source'];
+            }
+            if ($data['metadata']['licenseExtras']) {
+                $h5p['licenseExtras'] = $data['metadata']['licenseExtras'];
+            }
             if (file_exists($path . "/h5p.json")) {
                 unlink($path . "/h5p.json");
             }
