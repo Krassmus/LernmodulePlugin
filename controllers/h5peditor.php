@@ -466,7 +466,7 @@ class H5peditorController extends PluginController
                 array(
                     'name' => 'title',
                     'type' => 'text',
-                    'label' => 'Titel',
+                    'label' => _('Titel'),
                     'placeholder' => 'La Gioconda',
                 ),
                 array(

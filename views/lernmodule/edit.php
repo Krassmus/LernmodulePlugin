@@ -6,27 +6,7 @@
     <fieldset>
         <legend><?= dgettext("lernmoduleplugin","Lernmodul hochladen und bearbeiten") ?></legend>
 
-        <? if (Request::get("type")) : ?>
-            <input type="hidden" name="upload_or_url" value="<?= htmlReady(Request::get("type")) ?>">
-        <? else : ?>
-            <div class="hgroup">
-                <label>
-                    <input type="radio"
-                           name="upload_or_url"
-                           onChange="jQuery('#file_upload').toggle(this.checked); jQuery('#lernmodul_url').toggle(!this.checked);"
-                           value="upload"<?= !$module['url'] ? " checked" : "" ?>>
-                    <?= dgettext("lernmoduleplugin","Hochladen") ?>
-                </label>
-
-                <label>
-                    <input type="radio"
-                           name="upload_or_url"
-                           onChange="jQuery('#lernmodul_url').toggle(this.checked); jQuery('#file_upload').toggle(!this.checked);"
-                           value="url"<?= $module['url'] ? " checked" : "" ?>>
-                    <?= _("URL") ?>
-                </label>
-            </div>
-        <? endif ?>
+        <input type="hidden" name="upload_or_url" value="<?= htmlReady(Request::get("type") ?: ($module['url'] ? "url" : "upload")) ?>">
 
         <label class="file-upload" id="file_upload"<?= $module['url'] || Request::get("type") === "url" ? ' style="display: none;"' : "" ?>>
             <input type="file" name="modulefile" accept=".zip,.h5p,.pdf" onChange="if (!jQuery('#modulename').val()) { var name = this.files[0].name; jQuery('#modulename').val(name.lastIndexOf('.') === -1 ? name : name.substr(0, name.lastIndexOf('.'))); }">
