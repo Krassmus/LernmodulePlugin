@@ -1009,11 +1009,6 @@ class H5peditorController extends PluginController
             }
 
 
-            if (file_exists($main_library->getPath()."/presave.js")) {
-                $javascripts[] = H5PLernmodul::getH5pLibURL() ."/" . $main_library['name'] . "-" . $main_library['major_version'] . "." . $main_library['minor_version'] . "/presave.js";
-            }
-
-
             $output = array(
                 'semantics' => json_decode(file_get_contents($main_library->getPath() . "/semantics.json"), true),
                 'language' => file_exists($main_library->getPath() . "/language/de.json")

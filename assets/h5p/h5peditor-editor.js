@@ -268,7 +268,7 @@ ns.Editor.prototype.isMainTitleSet = function () {
   // validate() actually doesn't return a boolean, but the trimmed value
   // We know title is a mandatory field, so that's what we are checking here
   var valid = mainTitleField.validate();
-  console.log(mainTitleField); //RASMUS
+  //console.log(mainTitleField); //RASMUS
   if (!valid) {
     mainTitleField.$input.focus();
   }
