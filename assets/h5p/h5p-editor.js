@@ -50,6 +50,7 @@ var ns = H5PEditor;
                     if (!h5peditor.isMainTitleSet()) {
                         return event.preventDefault();
                     }
+                    //return event.preventDefault(); //RASMUS
 
                     // Set main library
                     $library.val(h5peditor.getLibrary());

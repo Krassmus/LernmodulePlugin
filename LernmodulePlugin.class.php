@@ -42,7 +42,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
             }
         }
         if ($GLOBALS['perm']->have_perm("root")) {
-            $nav = new Navigation(_("H5P-Bibliotheken"), PluginEngine::getURL($this, array(), "h5p/admin_libraries"));
+            $nav = new Navigation(dgettext("lernmoduleplugin","H5P-Bibliotheken"), PluginEngine::getURL($this, array(), "h5p/admin_libraries"));
             Navigation::addItem("/admin/locations/h5p", $nav);
         }
     }
@@ -50,18 +50,18 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function getTabNavigation($course_id)
     {
         $this->settings = new LernmodulCourseSettings($course_id);
-        $tab = new Navigation($this->settings['tabname'] ?: _("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $tab = new Navigation($this->settings['tabname'] ?: dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $tab->setImage(
             Icon::create("learnmodule", "info_alt")
         );
-        $tab->addSubNavigation("overview", new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
-        $tab->addSubNavigation("participants", new Navigation(_("Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
+        $tab->addSubNavigation("overview", new Navigation(dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
+        $tab->addSubNavigation("participants", new Navigation(dgettext("lernmoduleplugin","Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
         return array('lernmodule' => $tab);
     }
 
     public function getIconNavigation($course_id, $last_visit, $user_id)
     {
-        $tab = new Navigation(_("Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $tab = new Navigation(dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
         $new = Lernmodul::countBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = :course_id AND chdate >= :last_visit AND user_id <> :user_id", array(
             'course_id' => $course_id,
             'last_visit' => $last_visit,
@@ -72,11 +72,11 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         }
         if ($new > 0) {
             $tab->setImage(
-                Icon::create("learnmodule+new", "new", array('title' => sprintf(_("%s neue Lernmodule"), $new)))
+                Icon::create("learnmodule+new", "new", array('title' => sprintf(dgettext("lernmoduleplugin","%s neue Lernmodule"), $new)))
             );
         } else {
             $tab->setImage(
-                Icon::create("learnmodule", "inactive", array('title' => _("Lernmodule")))
+                Icon::create("learnmodule", "inactive", array('title' => dgettext("lernmoduleplugin","Lernmodule")))
             );
         }
         return $tab;
@@ -95,6 +95,8 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function perform($unconsumed_path)
     {
         $this->addStylesheet("assets/lernmodule.less");
+        bindtextdomain("lernmoduleplugin", $this->getPluginPath()."/locale");
+        bind_textdomain_codeset("lernmoduleplugin", 'UTF-8');
         parent::perform($unconsumed_path);
     }
 
@@ -106,7 +108,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
 
     public function getDisplayTitle()
     {
-        return _("Lernmodule");
+        return dgettext("lernmoduleplugin","Lernmodule");
     }
 
     static public function bytesFromPHPIniValue($val) {
@@ -121,5 +123,51 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
                 $val *= 1024;
         }
         return $val;
+    }
+
+
+    /**
+     * Processes a topological sort. We need this for H5P support.
+     * @param $nodeids : array of ids
+     * @param array $edges : array of arrays like array(node1_id, node2_id)
+     * @return array|bool : either the sorted array of ids or false if the graph has cycles.
+     */
+    static public function topologicalSort($nodeids, $edges) {
+        $L = $S = $nodes = array();
+        foreach($nodeids as $id) {
+            $nodes[$id] = array(
+                'in'=>array(),
+                'out'=>array()
+            );
+            foreach($edges as $e) {
+                if ($id == $e[0]) {
+                    $nodes[$id]['out'][] = $e[1];
+                }
+                if ($id == $e[1]) {
+                    $nodes[$id]['in'][] = $e[0];
+                }
+            }
+        }
+        foreach ($nodes as $id => $n) {
+            if (empty($n['in'])) {
+                $S[] = $id;
+            }
+        }
+        while (!empty($S)) {
+            $L[] = $id = (string) array_shift($S);
+            foreach($nodes[$id]['out'] as $m) {
+                $nodes[$m]['in'] = array_diff($nodes[$m]['in'], array($id));
+                if (empty($nodes[$m]['in'])) {
+                    $S[] = $m;
+                }
+            }
+            $nodes[$id]['out'] = array();
+        }
+        foreach($nodes as $n) {
+            if (!empty($n['in']) or !empty($n['out'])) {
+                return false; // not sortable as graph is cyclic
+            }
+        }
+        return $L;
     }
 }

@@ -1,13 +1,13 @@
 <table class="default">
     <caption>
-        <?= _("Auswertung von ").htmlReady(get_fullname($user_id)) ?>
+        <?= dgettext("lernmoduleplugin","Auswertung von ").htmlReady(get_fullname($user_id)) ?>
     </caption>
     <thead>
         <tr>
-            <th><?= _("Modul") ?></th>
-            <th><?= _("Beginn") ?></th>
-            <th><?= _("Dauer") ?></th>
-            <th><?= _("Erfolg") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Modul") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Beginn") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Dauer") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Erfolg") ?></th>
         </tr>
     </thead>
     <tbody>
@@ -18,17 +18,17 @@
                     <?= htmlReady($attempt->modul['name']) ?>
                 </td>
                 <td data-timestamp="<?= htmlReady($attempt['mkdate']) ?>">
-                    <?= date("j.n.Y G:i", $attempt['mkdate'])." "._("Uhr") ?>
+                    <?= date("j.n.Y G:i", $attempt['mkdate'])." ".dgettext("lernmoduleplugin","Uhr") ?>
                 </td>
                 <td>
                     <?
                         $duration = $attempt['chdate'] - $attempt['mkdate'];
                         if ($duration <= 90) {
-                            echo $duration." "._("Sekunden");
+                            echo $duration." ".dgettext("lernmoduleplugin","Sekunden");
                         } elseif ($duration < 60 * 90) {
-                            echo floor($duration / 60)." "._("Minuten");
+                            echo floor($duration / 60)." ".dgettext("lernmoduleplugin","Minuten");
                         } else {
-                            echo floor($duration / (60 * 60))." "._("Stunden");
+                            echo floor($duration / (60 * 60))." ".dgettext("lernmoduleplugin","Stunden");
                         }
                     ?>
                 </td>
@@ -40,9 +40,11 @@
     <? else : ?>
         <tr>
             <td colspan="100" style="text-align: center;">
-                <?= _("Noch keine Module absolviert.") ?>
+                <?= dgettext("lernmoduleplugin","Noch keine Module absolviert.") ?>
             </td>
         </tr>
     <? endif ?>
     </tbody>
 </table>
+<?
+Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));

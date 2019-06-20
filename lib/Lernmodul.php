@@ -9,6 +9,7 @@ class Lernmodul extends SimpleORMap {
             FROM lernmodule_module
                 INNER JOIN lernmodule_courses ON (lernmodule_module.module_id = lernmodule_courses.module_id)
             WHERE lernmodule_courses.seminar_id = :course_id
+                AND draft = '0'
             ORDER BY lernmodule_module.name ASC
         ");
         $statement->execute(array('course_id' => $course_id));
@@ -40,7 +41,7 @@ class Lernmodul extends SimpleORMap {
 
         $success = mkdir($this->getPath());
         if (!$success) {
-            PageLayout::postMessage(MessageBox::error(_("Konnte im Dateisystem keinen Ordner für das Lernmodul anlegen.")));
+            PageLayout::postMessage(MessageBox::error(dgettext("lernmoduleplugin","Konnte im Dateisystem keinen Ordner für das Lernmodul anlegen.")));
             return false;
         }
 
@@ -96,7 +97,7 @@ class Lernmodul extends SimpleORMap {
             $module = new $class($this->getId());
             $module->afterInstall();
         } else {
-            PageLayout::postMessage(MessageBox::error(_("Verzeichnis konnte nicht angelegt werden.")));
+            PageLayout::postMessage(MessageBox::error(dgettext("lernmoduleplugin","Verzeichnis konnte nicht angelegt werden.")));
             $this->delete();
             return false;
         }

@@ -69,17 +69,32 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         }
     }
 
-    public function getEditTemplate() {}
+    public function getEditTemplate() {
+        $actions = new ActionsWidget();
+        $actions->addLink(
+            dgettext("lernmoduleplugin","Im Editor bearbeiten"),
+            URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/edit/".$this->getId()),
+            Icon::create("edit", "clickable")
+        );
+        Sidebar::Get()->addWidget($actions);
+    }
 
     public function getViewerTemplate($attempt, $game_attendance = null)
     {
         $actions = new ActionsWidget();
         $actions->addLink(
-            _("Vollbild"),
+            dgettext("lernmoduleplugin","Vollbild"),
             "#",
             Icon::create("play", "clickable"),
             array('onClick' => "STUDIP.Lernmodule.requestFullscreen(); return false;")
         );
+        if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            $actions->addLink(
+                dgettext("lernmoduleplugin", "Im Editor bearbeiten"),
+                URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/edit/" . $this->getId()),
+                Icon::create("edit", "clickable")
+            );
+        }
         Sidebar::Get()->addWidget($actions);
 
         if (!$this->isAllowed()) {
@@ -87,7 +102,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
             foreach (H5PLib::findMany($this->findUnallowedLibraries()) as $lib) {
                 $libs[] = $lib['name']." ".$lib['major_version'].".".$lib['minor_version'];
             }
-            PageLayout::postInfo(_("Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."), $libs);
+            PageLayout::postInfo(dgettext("lernmoduleplugin","Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."), $libs);
             return "";
         } else {
             $templatefactory = new Flexi_TemplateFactory(__DIR__ . "/../views");
@@ -108,7 +123,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         return null;
     }
 
-    public function getLibs()
+    public function getLibs($editor = false)
     {
         $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
         $libs = array();
@@ -119,7 +134,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                 if ($lib && !in_array($lib->getId(), $lib_ids)) {
                     $lib_ids[] = $lib->getId();
                     $libs[] = $lib;
-                    foreach ($lib->getSubLibs() as $sublib) {
+                    foreach ($lib->getSubLibs(array(), $editor) as $sublib) {
                         if (!in_array($sublib->getId(), $lib_ids)) {
                             $lib_ids[] = $sublib->getId();
                             array_unshift($libs, $sublib);
@@ -134,14 +149,14 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         $lib_ids = array_map(function ($l) { return $l->getId(); }, $libs);
         $edges = array();
         foreach ($libs as $lib) {
-            foreach ($lib->getSubLibs() as $sublib) {
+            foreach ($lib->getSubLibs(array(), $editor) as $sublib) {
                 $edges[] = array(
                     $sublib->getId(),
                     $lib->getId()
                 );
             }
         }
-        $lib_ids = $this->topologicalSort($lib_ids, $edges);
+        $lib_ids = LernmodulePlugin::topologicalSort($lib_ids, $edges);
         if ($lib_ids === false) {
             throw new Exception("Could not sort dependencies of H5P module.");
         }
@@ -157,51 +172,6 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         }
 
         return $libs_sorted;
-    }
-
-    /**
-     * Processes a topological sort
-     * @param $nodeids : array of ids
-     * @param array $edges : array of arrays like array(node1_id, node2_id)
-     * @return array|bool : either the sorted array of ids or false if the graph has cycles.
-     */
-    protected function topologicalSort($nodeids, $edges) {
-        $L = $S = $nodes = array();
-        foreach($nodeids as $id) {
-            $nodes[$id] = array(
-                'in'=>array(),
-                'out'=>array()
-            );
-            foreach($edges as $e) {
-                if ($id == $e[0]) {
-                    $nodes[$id]['out'][] = $e[1];
-                }
-                if ($id == $e[1]) {
-                    $nodes[$id]['in'][] = $e[0];
-                }
-            }
-        }
-        foreach ($nodes as $id => $n) {
-            if (empty($n['in'])) {
-                $S[] = $id;
-            }
-        }
-        while (!empty($S)) {
-            $L[] = $id = (string) array_shift($S);
-            foreach($nodes[$id]['out'] as $m) {
-                $nodes[$m]['in'] = array_diff($nodes[$m]['in'], array($id));
-                if (empty($nodes[$m]['in'])) {
-                    $S[] = $m;
-                }
-            }
-            $nodes[$id]['out'] = array();
-        }
-        foreach($nodes as $n) {
-            if (!empty($n['in']) or !empty($n['out'])) {
-                return false; // not sortable as graph is cyclic
-            }
-        }
-        return $L;
     }
 
     /**
@@ -228,7 +198,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         return $this->getFiles("css");
     }
 
-    public function getH5pLibURL()
+    static public function getH5pLibURL()
     {
         if (Config::get()->LERNMODUL_DATA_URL) {
             return Config::get()->LERNMODUL_DATA_URL."/h5plibs";
@@ -259,6 +229,9 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
     }
 
     public function getMainLib() {
+        if (!file_exists($this->getPath() . "/h5p.json")) {
+            return null;
+        }
         $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
         $main_lib_name = $json['mainLibrary'];
         foreach ($json['preloadedDependencies'] as $lib_data) {
@@ -273,5 +246,75 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         } else {
             return H5PLib::findOneBySQL("name = ? ORDER BY major_version DESC, minor_version DESC", array($main_lib_name));
         }
+    }
+
+    public function updateH5PData($data, $mainlib)
+    {
+        if ($mainlib && $data && $data['params'] && $data['metadata']['title']) {
+            $this['name'] = $data['metadata']['title'];
+            $this['user_id'] = $GLOBALS['user']->id;
+            $this['type'] = "h5p";
+            $this->store();
+
+            $path = $this->getPath();
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+
+            if (!file_exists($path . "/content")) {
+                mkdir($path . "/content");
+            }
+            if (file_exists($path . "/content/content.json")) {
+                unlink($path . "/content/content.json");
+            }
+            $content = json_encode($data['params']);
+            if (file_exists($this->getPath()."/content/assets")) { //delete all old images
+                foreach (scandir($this->getPath()."/content/assets") as $file) {
+                    $file_ecaped = str_replace(array("/", "\""), array("\\/", "\\\""), "assets/".$file); //json_encode-escaping for one string
+                    if ($file !== "." && $file !== ".." && strpos($content, $file_ecaped) === false) {
+                        @unlink($this->getPath()."/content/assets/".$file);
+                    }
+                }
+            }
+            file_put_contents($path . "/content/content.json", $content);
+            $h5p = array(
+                'title' => $data['metadata']['title'],
+                'language' => $data['metadata']['language'],
+                'mainLibrary' => $mainlib['name'],
+                'embedTypes' => array("div"),
+                'license' => $data['metadata']['license'] ?: "U",
+                'preloadedDependencies' => array(
+                    array(
+                        'machineName' => $mainlib['name'],
+                        'majorVersion' => $mainlib['major_version'],
+                        'minorVersion' => $mainlib['minor_version']
+                    )
+                )
+            );
+            if ($data['metadata']['authors']) {
+                $h5p['authors'] = $data['metadata']['authors'];
+            }
+            if ($data['metadata']['changes']) {
+                $h5p['changes'] = $data['metadata']['changes'];
+            }
+            if ($data['metadata']['yearFrom']) {
+                $h5p['yearFrom'] = $data['metadata']['yearFrom'];
+            }
+            if ($data['metadata']['yearTo']) {
+                $h5p['yearTo'] = $data['metadata']['yearTo'];
+            }
+            if ($data['metadata']['source']) {
+                $h5p['source'] = $data['metadata']['source'];
+            }
+            if ($data['metadata']['licenseExtras']) {
+                $h5p['licenseExtras'] = $data['metadata']['licenseExtras'];
+            }
+            if (file_exists($path . "/h5p.json")) {
+                unlink($path . "/h5p.json");
+            }
+            file_put_contents($path . "/h5p.json", json_encode($h5p));
+            return true;
+        }
+        return false;
     }
 }

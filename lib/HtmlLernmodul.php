@@ -42,7 +42,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
     {
         $actions = new ActionsWidget();
         $actions->addLink(
-            _("Vollbild"),
+            dgettext("lernmoduleplugin","Vollbild"),
             "#",
             Icon::create("play", "clickable"),
             array('onClick' => "STUDIP.Lernmodule.requestFullscreen(); return false;")
@@ -55,7 +55,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             $actions = Sidebar::Get()->getWidget("actions");
             $actions->addLink(
-                _("Konfigurieren"),
+                dgettext("lernmoduleplugin","Konfigurieren"),
                 URLHelper::getURL("plugins.php/lernmoduleplugin/html/set_configs"),
                 Icon::create("admin", "clickable"),
                 array(

@@ -13,23 +13,30 @@
 </script>
 
 <?
-
+Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
 if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
-    $actions = new ActionsWidget();
+    $actions = Sidebar::Get()->getWidget("actions");
+    $add = false;
+    if (!$actions) {
+        $actions = new ActionsWidget();
+        $add = true;
+    }
     $actions->addLink(
-        _("Bearbeiten"),
+        dgettext("lernmoduleplugin","Abspieloptionen bearbeiten"),
         PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
         Icon::create("edit", "clickable")
 
     );
     if ($mod->getDownloadURL()) {
         $actions->addLink(
-            _("Lernmodul herunterladen"),
+            dgettext("lernmoduleplugin","Lernmodul herunterladen"),
             $mod->getDownloadURL(),
             Icon::create("download", "clickable")
         );
     }
-    Sidebar::Get()->addWidget($actions);
+    if ($add) {
+        Sidebar::Get()->addWidget($actions);
+    }
 }
 
 $views = new ViewsWidget();
@@ -41,7 +48,7 @@ $views->addLink(
 )->setActive(true);
 if ($course_connection['evaluation_for_students'] || $GLOBALS['perm']->have_studip_perm("tutor", $course_connection['seminar_id'])) {
     $views->addLink(
-        _("Auswertung"),
+        dgettext("lernmoduleplugin","Auswertung"),
         PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId()),
         null,
         array()

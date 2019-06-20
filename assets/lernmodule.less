@@ -20,6 +20,9 @@
         background-size: 100% auto;
         background-repeat: no-repeat;
         background-position: center center;
+        &[data-url] {
+            cursor: pointer;
+        }
         .crown {
             background: white;
             border-radius: 20px;
@@ -37,6 +40,8 @@
             width: calc(100% - 20px);
             text-align: right;
             background: linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+            -webkit-backdrop-filter: blur(1px);
+            backdrop-filter: blur(1px);
             max-height: 45px;
             min-height: 45px;
             overflow: hidden;

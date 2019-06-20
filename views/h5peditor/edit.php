@@ -8,10 +8,6 @@
  * @link      http://joubel.com
  * @copyright 2014 Joubel
  */
-$params = array(
-    'params' => array(),
-    'metadata' => array()
-);
 ?>
 
 <form method="post" enctype="multipart/form-data" id="h5p-content-form">
@@ -19,9 +15,13 @@ $params = array(
     <input type="hidden" name="parameters" value="<?= htmlReady(json_encode($params)) ?>"/>
     <div id="post-body-content">
         <div class="h5p-create">
-            <div class="h5p-editor"><?= _("Warte auf Javascript") ?></div>
+            <div class="h5p-editor"><?= dgettext("lernmoduleplugin","Warte auf Javascript") ?></div>
         </div>
     </div>
+    <?= \Studip\Button::create($mod['draft'] ? _("Erstellen") : _("Speichern")) ?>
 </form>
 
 <script>H5PIntegration = <?= json_encode($integration) ?>;</script>
+
+<?
+Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));

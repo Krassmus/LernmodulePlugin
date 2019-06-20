@@ -2,12 +2,12 @@
     <label>
         <input type="hidden" name="module[sandbox]" value="0">
         <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?> onChange="jQuery('#edit_end_file').toggle(!this.checked);">
-        <?= _("Im abgesicherten Modus abspielen") ?>
+        <?= dgettext("lernmoduleplugin","Im abgesicherten Modus abspielen") ?>
     </label>
 <? endif ?>
 
 <label>
-    <?= _("Startdatei (.html)") ?>
+    <?= dgettext("lernmoduleplugin","Startdatei (.html)") ?>
     <? if ($module->isNew()) : ?>
         <input type="text" name="module[customdata][start_file]" value="<?= htmlReady($module['customdata']['start_file']) ?>">
     <? else : ?>
@@ -25,9 +25,9 @@
 <? if (LernmodulePlugin::mayEditSandbox()) : ?>
     <? if (!$module->isNew()) : ?>
         <label id="edit_end_file"<?= $module['sandbox'] ? ' style="display: none;"' : "" ?>>
-            <?= _("Enddatei (.html)") ?>
+            <?= dgettext("lernmoduleplugin","Enddatei (.html)") ?>
             <select name="module[customdata][end_file]">
-                <option value=""><?= _("Keine") ?></option>
+                <option value=""><?= dgettext("lernmoduleplugin","Keine") ?></option>
                 <? $files = $module->scanForFiletypes(array("html", "htm")) ?>
                 <? foreach ($files as $file) : ?>
                     <? if (!is_dir($module->getPath()."/".$file)) : ?>

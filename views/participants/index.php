@@ -23,8 +23,8 @@ usort($student_data, function ($data1, $data2) {
     <thead>
         <tr>
             <th></th>
-            <th><?= _("Name") ?></th>
-            <th><?= _("Absolvierte Lernmodule") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Name") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Absolvierte Lernmodule") ?></th>
         </tr>
     </thead>
     <tbody>
@@ -45,7 +45,7 @@ usort($student_data, function ($data1, $data2) {
                 </td>
                 <td>
                     <? if ($student['solved'] > 0 && $student['solved'] >= count($module)) : ?>
-                        <?= Icon::create("crown", "status-yellow")->asImg(20, array('class' => "text-bottom", 'title' => _("Besser geht es nicht!"))) ?>
+                        <?= Icon::create("crown", "status-yellow")->asImg(20, array('class' => "text-bottom", 'title' => dgettext("lernmoduleplugin","Besser geht es nicht!"))) ?>
                     <? endif ?>
                     <?= $student['solved'] ?>
                 </td>
@@ -53,3 +53,5 @@ usort($student_data, function ($data1, $data2) {
         <? endforeach ?>
     </tbody>
 </table>
+<?
+Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));

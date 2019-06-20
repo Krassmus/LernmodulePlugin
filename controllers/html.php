@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__."/../vendor/h5p-php-library/h5p.classes.php";
-
 class HtmlController extends PluginController
 {
 
@@ -31,7 +29,7 @@ class HtmlController extends PluginController
                 );
             }
             $this->lernmodulcourse->store();
-            PageLayout::postMessage(MessageBox::success(_("Werte wurden gespeichert.")));
+            PageLayout::postMessage(MessageBox::success(dgettext("lernmoduleplugin","Werte wurden gespeichert.")));
         }
     }
 

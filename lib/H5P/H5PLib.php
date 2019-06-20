@@ -51,13 +51,17 @@ class H5PLib extends SimpleORMap
         return $statement->fetch(PDO::FETCH_COLUMN, 0);
     }
 
-    public function getSubLibs($not_in_ids = array())
+    public function getSubLibs($not_in_ids = array(), $editor = false)
     {
         $library_json = $this->getPath()."/library.json";
         $sublibs = array();
         if (file_exists($library_json)) {
             $json = json_decode(file_get_contents($library_json), true);
-            foreach ((array) $json['preloadedDependencies'] as $dependency) {
+            $dependencies = (array) $json['preloadedDependencies'];
+            if ($editor) {
+                $dependencies = array_merge($dependencies, (array) $json['editorDependencies']);
+            }
+            foreach ($dependencies as $dependency) {
                 $sublib = H5PLib::findVersion(
                     $dependency['machineName'],
                     $dependency['majorVersion'],
@@ -66,7 +70,7 @@ class H5PLib extends SimpleORMap
                 if ($sublib && !in_array($sublib->getId(), $not_in_ids)) {
                     array_unshift($sublibs, $sublib);
                     $not_in_ids[] = $sublib->getId();
-                    foreach ($sublib->getSubLibs($not_in_ids) as $subsublib) {
+                    foreach ($sublib->getSubLibs($not_in_ids, $editor) as $subsublib) {
                         array_unshift($sublibs, $subsublib);
                         $not_in_ids[] = $subsublib->getId();
                     }
@@ -133,16 +137,25 @@ class H5PLib extends SimpleORMap
         return $libs;
     }
 
-    public function getFiles($css_or_jss)
+    /**
+     * @param $css_or_jss : "js" oder "css"
+     * @param bool $editor : are these files for the editor?
+     * @return array
+     * @throws Exception
+     */
+    public function getFiles($css_or_jss, $editor = false)
     {
         $library_json = $this->getPath()."/library.json";
         $files = array();
+        $dir_name = $this['name'] . "-" . $this['major_version'] . "." . $this['minor_version'];
         if (file_exists($library_json)) {
-            $dir_name = $this['name']."-".$this['major_version'].".".$this['minor_version'];
             $library_json = json_decode(file_get_contents($library_json), true);
             foreach ((array) $library_json[$css_or_jss === "js" ? 'preloadedJs' : "preloadedCss"] as $file) {
-                $files[] = $dir_name."/".$file['path'];
+                $files[] = $dir_name . "/" . $file['path'];
             }
+        }
+        if ($editor && ($css_or_jss === "js") && (file_exists($this->getPath()."/presave.js"))) {
+            $files[] = $dir_name . "/presave.js";
         }
         return $files;
     }
@@ -150,5 +163,41 @@ class H5PLib extends SimpleORMap
     public function getLibraryData() {
         $library_json = $this->getPath()."/library.json";
         return json_decode(file_get_contents($library_json), true);
+    }
+
+    public function createModWithData($data) {
+        //{"params":{"timeline":{"defaultZoomLevel":"0","height":600,"asset":{},"date":[{"asset":{},"startDate":"1623,09,10","endDate":"1640,02,08","headline":"Murad IV","text":"<p>Brutaler Sultan tötet seine Bürger mit der Arkebuse. Ist halt sein gutes Recht, ne?</p>\n"}],"language":"en","headline":"Passierte das wirklich?","text":""}},"metadata":{"license":"U","authors":[],"changes":[],"extraTitle":"Sultan Murad 4.","title":"Sultan Murad 4."}}
+        if ($data && $data['params'] && $data['metadata']['title']) {
+            $mod = new H5PLernmodul();
+            $mod['name'] = $data['metadata']['title'];
+            $mod['user_id'] = $GLOBALS['user']->id;
+            $mod['type'] = "h5p";
+            $mod->store();
+
+            $path = $mod->getPath();
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+
+            mkdir($path . "/content");
+            file_put_contents($path . "/content/content.json", json_encode($data['params']));
+            $h5p = array(
+                'title' => $data['metadata']['title'],
+                'language' => $data['metadata']['language'],
+                'mainLibrary' => $this['name'],
+                'embedTypes' => array("div"),
+                'license' => $data['metadata']['license'] ?: "U",
+                'preloadedDependencies' => array(
+                    array(
+                        'machineName' => $this['name'],
+                        'majorVersion' => $this['major_version'],
+                        'minorVersion' => $this['minor_version']
+                    )
+                )
+            );
+            file_put_contents($path . "/h5p.json", $h5p);
+            return $mod;
+        }
+        return false;
     }
 }

@@ -1,0 +1,140 @@
+#: ../lib/Lernmodul.php:43 ../lib/Lernmodul.php:99 ../lib/H5pLernmodul.php:78
+#: ../lib/H5pLernmodul.php:90
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:34
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:38
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:51
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:74
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:103
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:112
+#: ../lib/HtmlLernmodul.php:45 ../lib/HtmlLernmodul.php:58
+#: ../lib/ScormLernmodul.php:19 ../views/participants/evaluation.php:3
+#: ../views/participants/evaluation.php:7
+#: ../views/participants/evaluation.php:8
+#: ../views/participants/evaluation.php:9
+#: ../views/participants/evaluation.php:10
+#: ../views/participants/evaluation.php:21
+#: ../views/participants/evaluation.php:27
+#: ../views/participants/evaluation.php:29
+#: ../views/participants/evaluation.php:31
+#: ../views/participants/evaluation.php:43 ../views/participants/index.php:26
+#: ../views/participants/index.php:27 ../views/participants/index.php:48
+#: ../views/admission/configure.php:2 ../views/html/evaluation.php:4
+#: ../views/html/evaluation.php:5 ../views/html/evaluation.php:6
+#: ../views/html/set_configs.php:18 ../views/html/edit.php:5
+#: ../views/html/edit.php:10 ../views/html/edit.php:28
+#: ../views/html/edit.php:30 ../views/lernmodule/blubber.php:5
+#: ../views/lernmodule/blubber.php:9 ../views/lernmodule/blubber.php:10
+#: ../views/lernmodule/evaluation.php:61 ../views/lernmodule/evaluation.php:63
+#: ../views/lernmodule/evaluation.php:93 ../views/lernmodule/evaluation.php:109
+#: ../views/lernmodule/evaluation.php:110
+#: ../views/lernmodule/evaluation.php:111
+#: ../views/lernmodule/evaluation.php:123
+#: ../views/lernmodule/evaluation.php:126
+#: ../views/lernmodule/evaluation.php:128
+#: ../views/lernmodule/evaluation.php:130
+#: ../views/lernmodule/evaluation.php:134
+#: ../views/lernmodule/evaluation.php:169
+#: ../views/lernmodule/evaluation.php:176
+#: ../views/lernmodule/evaluation.php:192 ../views/lernmodule/overview.php:2
+#: ../views/lernmodule/overview.php:40 ../views/lernmodule/overview.php:60
+#: ../views/lernmodule/overview.php:68 ../views/lernmodule/overview.php:83
+#: ../views/lernmodule/overview.php:105 ../views/lernmodule/overview.php:111
+#: ../views/lernmodule/overview.php:116 ../views/lernmodule/view.php:20
+#: ../views/lernmodule/view.php:27 ../views/lernmodule/view.php:44
+#: ../views/lernmodule/edit.php:7 ../views/lernmodule/edit.php:15
+#: ../views/lernmodule/edit.php:29 ../views/lernmodule/edit.php:58
+#: ../views/lernmodule/edit.php:67 ../views/lernmodule/edit.php:73
+#: ../views/lernmodule/edit.php:91 ../views/lernmodule/edit.php:98
+#: ../views/lernmodule/edit.php:104 ../views/lernmodule/edit.php:118
+#: ../views/lernmodule/edit.php:120 ../views/lernmodule/edit.php:122
+#: ../views/lernmodule/edit.php:132 ../views/lernmodule/edit.php:161
+#: ../views/lernmodule/edit.php:167 ../views/lernmodule/edit.php:171
+#: ../views/lernmodule/edit.php:179 ../views/lernmodule/edit.php:192
+#: ../views/lernmodule/edit.php:207 ../views/lernmodule/edit.php:208
+#: ../views/lernmodule/edit.php:210 ../views/lernmodule/edit.php:213
+#: ../views/lernmodule/edit.php:262 ../views/lernmodule/edit.php:277
+#: ../views/lernmodule/admin.php:6 ../views/lernmodule/admin.php:8
+#: ../views/lernmodule/admin.php:9 ../views/lernmodule/admin.php:14
+#: ../views/h5p/admin_libraries.php:4 ../views/h5p/admin_libraries.php:5
+#: ../views/h5p/admin_libraries.php:6 ../views/h5p/admin_libraries.php:7
+#: ../views/h5p/admin_libraries.php:35 ../views/h5p/admin_libraries.php:41
+#: ../views/h5p/add_library.php:7 ../views/h5p/add_library.php:12
+#: ../views/h5p/add_library.php:17 ../views/h5p/add_library.php:21
+#: ../views/h5p/add_library.php:23 ../views/h5p/add_library.php:24
+#: ../views/h5p/add_library.php:25 ../views/h5p/add_library.php:30
+#: ../views/h5peditor/edit.php:22 ../controllers/h5peditor.php:68
+#: ../controllers/h5peditor.php:69 ../controllers/h5peditor.php:70
+#: ../controllers/h5peditor.php:71 ../controllers/h5peditor.php:72
+#: ../controllers/h5peditor.php:73 ../controllers/h5peditor.php:74
+#: ../controllers/h5peditor.php:75 ../controllers/h5peditor.php:76
+#: ../controllers/h5peditor.php:77 ../controllers/h5peditor.php:78
+#: ../controllers/h5peditor.php:79 ../controllers/h5peditor.php:80
+#: ../controllers/h5peditor.php:81 ../controllers/h5peditor.php:82
+#: ../controllers/h5peditor.php:83 ../controllers/h5peditor.php:84
+#: ../controllers/h5peditor.php:85 ../controllers/h5peditor.php:86
+#: ../controllers/h5peditor.php:87 ../controllers/h5peditor.php:88
+#: ../controllers/h5peditor.php:89 ../controllers/h5peditor.php:90
+#: ../controllers/h5peditor.php:91 ../controllers/h5peditor.php:92
+#: ../controllers/h5peditor.php:93 ../controllers/h5peditor.php:94
+#: ../controllers/h5peditor.php:95 ../controllers/h5peditor.php:96
+#: ../controllers/h5peditor.php:97 ../controllers/h5peditor.php:98
+#: ../controllers/h5peditor.php:99 ../controllers/h5peditor.php:100
+#: ../controllers/h5peditor.php:101 ../controllers/h5peditor.php:102
+#: ../controllers/h5peditor.php:103 ../controllers/h5peditor.php:104
+#: ../controllers/h5peditor.php:105 ../controllers/h5peditor.php:106
+#: ../controllers/h5peditor.php:107 ../controllers/h5peditor.php:108
+#: ../controllers/h5peditor.php:109 ../controllers/h5peditor.php:110
+#: ../controllers/h5peditor.php:111 ../controllers/h5peditor.php:112
+#: ../controllers/h5peditor.php:113 ../controllers/h5peditor.php:114
+#: ../controllers/h5peditor.php:115 ../controllers/h5peditor.php:116
+#: ../controllers/h5peditor.php:117 ../controllers/h5peditor.php:118
+#: ../controllers/h5peditor.php:119 ../controllers/h5peditor.php:120
+#: ../controllers/h5peditor.php:121 ../controllers/h5peditor.php:122
+#: ../controllers/h5peditor.php:216 ../controllers/html.php:34
+#: ../controllers/lernmodule.php:48 ../controllers/lernmodule.php:52
+#: ../controllers/lernmodule.php:53 ../controllers/lernmodule.php:63
+#: ../controllers/lernmodule.php:68 ../controllers/lernmodule.php:84
+#: ../controllers/lernmodule.php:121 ../controllers/lernmodule.php:125
+#: ../controllers/lernmodule.php:145 ../controllers/lernmodule.php:186
+#: ../controllers/lernmodule.php:247 ../controllers/lernmodule.php:354
+#: ../controllers/h5p.php:20 ../controllers/h5p.php:97
+#: ../controllers/h5p.php:99 ../controllers/h5p.php:139
+#: ../controllers/h5p.php:193 ../controllers/h5p.php:194
+#: ../controllers/h5p.php:195 ../controllers/h5p.php:196
+#: ../controllers/h5p.php:197 ../controllers/h5p.php:198
+#: ../controllers/h5p.php:199 ../controllers/h5p.php:200
+#: ../controllers/h5p.php:201 ../controllers/h5p.php:202
+#: ../controllers/h5p.php:203 ../controllers/h5p.php:204
+#: ../controllers/h5p.php:205 ../controllers/h5p.php:206
+#: ../controllers/h5p.php:207 ../controllers/h5p.php:208
+#: ../controllers/h5p.php:209 ../controllers/h5p.php:210
+#: ../controllers/h5p.php:211 ../controllers/h5p.php:212
+#: ../controllers/h5p.php:213 ../controllers/h5p.php:214
+#: ../controllers/h5p.php:215 ../controllers/h5p.php:216
+#: ../controllers/h5p.php:217 ../controllers/h5p.php:218
+#: ../controllers/h5p.php:219 ../controllers/h5p.php:220
+#: ../controllers/h5p.php:221 ../controllers/h5p.php:222
+#: ../controllers/h5p.php:223 ../controllers/h5p.php:224
+#: ../controllers/h5p.php:225 ../controllers/h5p.php:226
+#: ../controllers/h5p.php:227 ../controllers/h5p.php:228
+#: ../controllers/h5p.php:229 ../controllers/h5p.php:230
+#: ../controllers/h5p.php:231 ../controllers/h5p.php:232
+#: ../controllers/h5p.php:233 ../controllers/h5p.php:234
+#: ../controllers/h5p.php:235 ../controllers/h5p.php:236
+#: ../controllers/h5p.php:237 ../controllers/h5p.php:238
+#: ../controllers/h5p.php:239 ../controllers/h5p.php:240
+#: ../controllers/h5p.php:241 ../controllers/h5p.php:242
+#: ../controllers/h5p.php:243 ../controllers/h5p.php:244
+#: ../controllers/h5p.php:245 ../controllers/h5p.php:246
+#: ../controllers/h5p.php:247 ../LernmodulePlugin.class.php:44
+#: ../LernmodulePlugin.class.php:52 ../LernmodulePlugin.class.php:56
+#: ../LernmodulePlugin.class.php:57 ../LernmodulePlugin.class.php:63
+#: ../LernmodulePlugin.class.php:74 ../LernmodulePlugin.class.php:78
+#: ../LernmodulePlugin.class.php:109
+#, php-format
+msgid "lernmoduleplugin"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:23
+msgid "URL"
+msgstr ""
