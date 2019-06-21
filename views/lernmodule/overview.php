@@ -51,6 +51,26 @@
                                     <?= htmlReady($mod['name']) ?>
                                 </a>
                                 <? if ($mod->isWritable()) : ?>
+                                    <? $menu = ActionMenu::get();
+                                    $menu->addLink(
+                                        PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
+                                        _("Abspieloption bearbeiten"),
+                                        Icon::create("edit", "clickable")
+                                    );
+                                    if ($mod['type'] === "h5p") {
+                                        $menu->addLink(
+                                            PluginEngine::getURL($plugin, array(), "h5peditor/edit/".$mod->getId()),
+                                            _("In Editor bearbeiten"),
+                                            Icon::create("learnmodule", "clickable")
+                                        );
+                                    }
+                                    $menu->addLink(
+                                        PluginEngine::getURL($plugin, array(), "lernmodule/delete/".$mod->getId()),
+                                        _("Löschen"),
+                                        Icon::create("trash", "clickable")
+                                    );
+                                    //echo $menu->render();
+                                    ?>
                                     <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>">
                                         <?= Icon::create("edit", "info_alt")->asImg(20, array('class' => "text-bottom")) ?>
                                     </a>
@@ -85,6 +105,26 @@
             <div class="shadow">
                 <?= Icon::create("exclaim-circle", "attention")->asImg(40, array('style' => "vertical-align: middle;", 'title' => dgettext("lernmoduleplugin","Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie erreicht werden."))) ?>
                 <? if ($mod->isWritable()) : ?>
+                    <? $menu = ActionMenu::get();
+                    $menu->addLink(
+                        PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
+                        _("Abspieloption bearbeiten"),
+                        Icon::create("edit", "clickable")
+                    );
+                    if ($mod['type'] === "h5p") {
+                        $menu->addLink(
+                            PluginEngine::getURL($plugin, array(), "h5peditor/edit/".$mod->getId()),
+                            _("In Editor bearbeiten"),
+                            Icon::create("learningmodule", "clickable")
+                        );
+                    }
+                    $menu->addLink(
+                        PluginEngine::getURL($plugin, array(), "lernmodule/delete/".$mod->getId()),
+                        _("Löschen"),
+                        Icon::create("trash", "clickable")
+                    );
+                    //echo $menu->render();
+                    ?>
                     <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/edit/".$mod->getId()) ?>" data-dialog>
                         <?= Icon::create("edit", "info_alt")->asImg(16) ?>
                     </a>
