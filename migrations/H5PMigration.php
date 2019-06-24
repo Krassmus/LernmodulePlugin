@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__."/../lib/H5P/H5PLib.php";
+
 class H5PMigration extends Migration
 {
     /**
@@ -11,6 +13,23 @@ class H5PMigration extends Migration
      */
     protected function updateH5PLibs()
     {
+        if (Config::get()->LERNMODUL_DATA_PATH) {
+            $dir = Config::get()->LERNMODUL_DATA_PATH;
+        } else {
+            $dir = $GLOBALS['STUDIP_BASE_PATH']."/public/plugins_packages";
+            if (!file_exists($dir."/RasmusFuhse")) {
+                mkdir($dir."/RasmusFuhse");
+            }
+            $dir = $dir."/RasmusFuhse";
+            if (!file_exists($dir."/LernmodulePluginData")) {
+                mkdir($dir."/LernmodulePluginData");
+            }
+            $dir = $dir."/LernmodulePluginData";
+        }
+        if (!file_exists($dir."/h5plibs")) {
+            mkdir($dir."/h5plibs");
+        }
+        $dir = $dir."/h5plibs";
         foreach (scandir(__DIR__."/../h5plibs") as $file) {
             if ($file[0] !== "." && is_dir(__DIR__."/../h5plibs/".$file)
                     && preg_match("/^(.*)\-(\d+)\.(\d+)$/", $file, $matches)) {
@@ -27,7 +46,7 @@ class H5PMigration extends Migration
                 if ($lib_json) {
                     if ($lib && ($lib_json['patchVersion'] > $lib['patch_version'])) {
                         //patch existing lib
-                        $this->rcopy($lib_path, $lib->getPath());
+                        $this->rcopy($lib_path, $dir."/".$lib['name']."-".$lib['major_version'].".".$lib['minor_version']);
                         $lib['patch_version'] = $lib_json['patchVersion'];
                         $lib->store();
                     } else {
@@ -41,11 +60,12 @@ class H5PMigration extends Migration
                         $lib['runnable'] = $lib_json['runnable'] ? 1 : 0;
                         $lib->store();
 
-                        if (file_exists($lib_path) && !file_exists($lib->getPath())) {
-                            $this->rcopy($lib_path, $lib->getPath());
+                        if (file_exists($lib_path) && !file_exists($dir."/".$lib['name']."-".$lib['major_version'].".".$lib['minor_version'])) {
+                            $this->rcopy($lib_path, $dir."/".$lib['name']."-".$lib['major_version'].".".$lib['minor_version']);
                         }
                     }
                 }
+
 
             }
         }
