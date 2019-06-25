@@ -1,6 +1,8 @@
 <?php
 
-class InitPlugin extends Migration {
+require_once __DIR__."/H5PMigration.php";
+
+class InitPlugin extends H5PMigration {
 
     function up() {
         DBManager::get()->exec("
@@ -130,9 +132,17 @@ class InitPlugin extends Migration {
         DBManager::get()->exec("
             DELETE FROM `roles` WHERE `rolename` = 'Lernmodule-Admin';
         ");
+        $path = Config::get()->LERNMODUL_DATA_PATH;
+        if (!$path) {
+            $path = __DIR__."/../../LernmodulePluginData";
+        }
         Config::get()->delete("LERNMODUL_PARTICIPANT_EVALUATION");
         Config::get()->delete("LERNMODUL_DATA_PATH");
         Config::get()->delete("LERNMODUL_DATA_URL");
         StudipCacheFactory::getCache()->expire(RolePersistence::ROLES_CACHE_KEY);
+
+        if (file_exists($path)) {
+            $this->rrmdir($path);
+        }
     }
 }
