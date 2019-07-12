@@ -243,18 +243,22 @@
 <?
 
 if (!$module->isNew()) {
-    $actions = Sidebar::Get()->getWidget("actions");
-    $add = false;
-    if (!$actions) {
-        $actions = new ActionsWidget();
-        $add = true;
-    }
+
+    $actions = Sidebar::Get()->hasWidget("actions") ? Sidebar::Get()->getWidget("actions") : new ActionsWidget();
     $actions->addLink(
         dgettext("lernmoduleplugin","Lernmodul herunterladen"),
         PluginEngine::getURL($plugin, array(), "lernmodule/download/" . $module->getId()),
         Icon::create("download", "clickable")
     );
-    if ($add) {
+    if (class_exists("LernMarktplatz")) {
+        $actions->addLink(
+            dgettext("lernmoduleplugin","Auf Lernmarktplatz veröffentlichen"),
+            PluginEngine::getURL($plugin, array(), "lernmodule/publish/" . $module->getId()),
+            Icon::create("service", "clickable"),
+            array("data-dialog" => 1)
+        );
+    }
+    if (!Sidebar::Get()->hasWidget("actions")) {
         Sidebar::Get()->addWidget($actions);
     }
 }

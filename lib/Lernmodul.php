@@ -1,6 +1,23 @@
 <?php
 
-class Lernmodul extends SimpleORMap {
+use Studip\ZipArchive;
+
+class Lernmodul extends SimpleORMap
+{
+
+    static public function find($module_id)
+    {
+        $module = parent::find($module_id);
+        if (!$module) {
+            return $module;
+        }
+        $class = ucfirst($module['type'])."Lernmodul";
+        if (class_exists($class)) {
+            return $class::buildExisting($module->toRawArray());
+        } else {
+            return $module;
+        }
+    }
 
     static public function findByCourse($course_id)
     {
@@ -276,6 +293,22 @@ class Lernmodul extends SimpleORMap {
 
     public function getDownloadURL() {
         return URLhelper::getURL( "plugins.php/lernmoduleplugin/lernmodule/download/" . $this->getId());
+    }
+
+    public function getExportFile()
+    {
+        $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid()) . ".zip";
+        /**
+        $zip = new Studip\ZipArchive();
+        if (!$zip->open($filename, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
+            throw new FileArchiveManagerException('Error opening new ZIP archive!');
+        }
+        $zip->setOutputEncoding('UTF-8');
+        */
+        $zip = \Studip\ZipArchive::create($filename);
+        $zip->addFromPath($this->getPath());
+        $zip->close();
+        return $filename;
     }
 
 

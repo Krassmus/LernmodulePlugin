@@ -1,5 +1,7 @@
 <?php
 
+use Studip\ZipArchive;
+
 class H5pLernmodul extends Lernmodul implements CustomLernmodul
 {
     static protected function configure($config = array())
@@ -316,5 +318,19 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
             return true;
         }
         return false;
+    }
+
+
+    public function getExportFile()
+    {
+        $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid()) . ".h5p.zip";
+        $zip = \Studip\ZipArchive::create($filename);
+        $zip->addFromPath($this->getPath());
+        foreach ($this->libs as $lib) {
+            $zip->addFromPath($lib->getPath(), $lib['name']."-".$lib['major_version'].".".$lib['minor_version']."/");
+        }
+        $zip->close();
+
+        return $filename;
     }
 }

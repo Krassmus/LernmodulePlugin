@@ -78,9 +78,14 @@ class LernmoduleController extends PluginController
 
     public function view_action($module_id)
     {
-        Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = new Lernmodul($module_id);
         PageLayout::setTitle($this->mod['name']);
+        if (Context::get()->id) {
+            Navigation::activateItem("/course/lernmodule/overview");
+        } elseif ($this->mod['material_id']) {
+            $this->set_layout(null);
+        }
+
         $class = ucfirst($this->mod['type'])."Lernmodul";
         $this->mod = $class::buildExisting($this->mod->toArray());
         if (!$this->mod['url'] && !file_exists($this->mod->getPath())) {
@@ -281,21 +286,20 @@ class LernmoduleController extends PluginController
         $this->render_nothing();
     }
 
+
     public function download_action($module_id)
     {
-        $this->module = new Lernmodul($module_id);
-        $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid()).".zip";
-        create_zip_from_directory($this->module->getPath(), $filename);
+        $this->module = Lernmodul::find($module_id);
+        $filename = $this->module->getExportFile();
 
         header('Content-Type: application/zip');
         header("Content-Disposition: attachment; filename=\"".$this->module['name'].".zip\"");
         header('Content-Length: ' . filesize($filename));
         header('Pragma: public');
 
-        $this->render_nothing();
-
-        readfile($filename);
+        echo file_get_contents($filename);
         unlink($filename);
+        die();
     }
 
     public function gameinvitation_action()
@@ -371,6 +375,48 @@ class LernmoduleController extends PluginController
             throw new AccessDeniedException();
         }
         PageLayout::setTitle(_("Quelle des Lernmoduls auswählen"));
+    }
+
+    public function publish_action($module_id)
+    {
+        $this->module = Lernmodul::find($module_id);
+        if (!class_exists("LernMarktplatz")) {
+            throw Exception("Lernmarktplatz ist nicht aktiviert.");
+        }
+
+        $_SESSION['LernMarktplatz_CREATE_TEMPLATE'] = array(
+            'name' => $this->module['name'],
+            'module_id' => $module_id,
+            'redirect_url' => PluginEngine::getURL($this->plugin, array('module_id' => $module_id), "lernmodule/after_marketplace_deployment")
+        );
+        if (!$this->module['url']) {
+            $filename = $this->module->getExportFile();
+            $_SESSION['LernMarktplatz_CREATE_TEMPLATE']['tmp_file'] = $filename;
+            $_SESSION['LernMarktplatz_CREATE_TEMPLATE']['filename'] = $this->module['name'] . ($this->module['type'] === "h5p" ? ".h5p" : ".zip");
+            $oldbase = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+            $_SESSION['LernMarktplatz_CREATE_TEMPLATE']['player_url'] = PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->module->getId(), true);
+            URLHelper::setBaseURL($oldbase);
+        } else {
+            $_SESSION['LernMarktplatz_CREATE_TEMPLATE']['player_url'] = $this->module['url'];
+        }
+        $this->redirect(URLHelper::getURL("plugins.php/lernmarktplatz/mymaterial/edit"));
+    }
+
+    public function after_marketplace_deployment_action()
+    {
+        $this->module = Lernmodul::find(Request::option("module_id"));
+        if (!class_exists("LernMarktplatz")) {
+            throw Exception("Lernmarktplatz ist nicht aktiviert.");
+        }
+        if (Request::get("material_id")) {
+            $this->module['material_id'] = Request::get("material_id");
+            $this->module->store();
+        }
+        if (Request::get("url")) {
+            $this->redirect(Request::get("url"));
+        } else {
+            $this->redirect(PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->module->getId()));
+        }
     }
 
 }

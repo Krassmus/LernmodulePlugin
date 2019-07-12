@@ -373,16 +373,11 @@ class H5pController extends PluginController
         // {"answers": [ ... ]}
     }
 
+
     public function download_action($module_id) {
         $this->mod = new H5pLernmodul($module_id);
 
-        $archive = $GLOBALS['TMP_PATH']."/h5p_".$module_id.".zip";
-        $zip = \Studip\ZipArchive::create($archive);
-        $zip->addFromPath($this->mod->getPath());
-        foreach ($this->mod->libs as $lib) {
-            $zip->addFromPath($lib->getPath(), $lib['name']."-".$lib['major_version'].".".$lib['minor_version']."/");
-        }
-        $zip->close();
+        $archive = $this->mod->getExportFile();
 
         header("Content-Type: application/h5p");
         header("Content-Disposition: attachment; filename=\"".$this->mod['name'].".h5p\"");
