@@ -34,6 +34,14 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             Icon::create("download", "clickable")
         );
     }
+    if (class_exists("LernMarktplatz")) {
+        $actions->addLink(
+            dgettext("lernmoduleplugin","Auf Lernmarktplatz veröffentlichen"),
+            PluginEngine::getURL($plugin, array(), "lernmodule/publish/" . $mod->getId()),
+            Icon::create("service", "clickable"),
+            array("data-dialog" => 1)
+        );
+    }
     if ($add) {
         Sidebar::Get()->addWidget($actions);
     }

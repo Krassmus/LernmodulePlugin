@@ -384,10 +384,14 @@ class LernmoduleController extends PluginController
             throw Exception("Lernmarktplatz ist nicht aktiviert.");
         }
 
+        $image = $this->module['image']
+            ? (preg_match("/^[a-f0-9]{32}$/", $this->module['image']) ? FileRef::find($this->module['image'])->file->getPath() : $this->module->getPath()."/".$this->module['image'])
+            : "";
         $_SESSION['LernMarktplatz_CREATE_TEMPLATE'] = array(
             'name' => $this->module['name'],
             'module_id' => $module_id,
-            'redirect_url' => PluginEngine::getURL($this->plugin, array('module_id' => $module_id), "lernmodule/after_marketplace_deployment")
+            'redirect_url' => PluginEngine::getURL($this->plugin, array('module_id' => $module_id), "lernmodule/after_marketplace_deployment"),
+            'logo_tmp_file' => $image
         );
         if (!$this->module['url']) {
             $filename = $this->module->getExportFile();
