@@ -16,6 +16,7 @@ class H5peditorController extends PluginController
         if (!$module_id) {
             $this->mod = new H5pLernmodul();
             $this->mod['draft'] = 1;
+            $this->mod['type'] = "h5p";
             $this->mod->store();
             $this->redirect(PluginEngine::getURL($this->plugin, array(), "h5peditor/edit/".$this->mod->getId()));
             return;
@@ -111,7 +112,7 @@ class H5peditorController extends PluginController
             ),
             'saveFreq' => 2,
             'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
-            'libraryUrl' => $this->mod->getH5pLibURL(), //needed to fetch the library.json via ajax-request
+            'libraryUrl' => H5PLernmodul::getH5pLibURL(), //needed to fetch the library.json via ajax-request
             'l10n' => array(
                 'H5P' => array(
                     'fullscreen' => dgettext("lernmoduleplugin","Vollbild"),

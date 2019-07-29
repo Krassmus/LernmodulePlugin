@@ -374,6 +374,25 @@ class LernmoduleController extends PluginController
         if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
+
+        $statement = DBManager::get()->prepare("
+            SELECT lernmodule_h5plibs.*
+            FROM lernmodule_h5plibs
+            WHERE lernmodule_h5plibs.allowed = '1'
+                AND lernmodule_h5plibs.runnable = '1'
+                AND lib_id = (
+                    SELECT l2.lib_id
+                    FROM lernmodule_h5plibs AS l2
+                    WHERE l2.name = lernmodule_h5plibs.name
+                    ORDER BY major_version DESC, minor_version DESC
+                    LIMIT 1
+                )
+            ORDER BY name ASC
+        ");
+        $statement->execute();
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $this->h5plibs = count($data);
+
         PageLayout::setTitle(_("Quelle des Lernmoduls auswählen"));
     }
 

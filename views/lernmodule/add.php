@@ -1,9 +1,11 @@
 <div class="file_select_possibilities">
 
-    <a href="<?= PluginEngine::getLink($plugin, array(), "h5peditor/edit") ?>">
-        <?= Icon::create("learnmodule", "clickable")->asImg(50) ?>
-        <?= _("Editor") ?>
-    </a>
+    <? if ($h5plibs > 0) : ?>
+        <a href="<?= PluginEngine::getLink($plugin, array(), "h5peditor/edit") ?>">
+            <?= Icon::create("learnmodule", "clickable")->asImg(50) ?>
+            <?= _("Editor") ?>
+        </a>
+    <? endif ?>
 
     <a href="<?= PluginEngine::getLink($plugin, array('type' => "url"), "lernmodule/edit") ?>">
         <?= Icon::create("globe", "clickable")->asImg(50) ?>
