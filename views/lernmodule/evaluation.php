@@ -145,9 +145,6 @@
                 jQuery("#resulttable").tablesorter({
                     textExtraction: function (node) {
                         var node = jQuery(node);
-                        /*if (node.is("tr > td:last-child")) {
-                         console.log(String(node.data('timestamp') || node.text()).trim());
-                         }*/
                         return String(node.data('timestamp') || node.text()).trim();
                     },
                     cssAsc: 'sortasc',

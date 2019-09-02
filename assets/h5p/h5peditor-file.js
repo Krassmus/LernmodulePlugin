@@ -174,10 +174,6 @@ ns.File.addCopyright = function (field, $dialog, setCopyright) {
 
   var group = new H5PEditor.widgets.group(field, H5PEditor.copyrightSemantics, field.copyright, setCopyright);
   // TODO: We'll have to do something here with metadataSemantics if we change the widgtets
-  console.log(field);
-  console.log(H5PEditor.copyrightSemantics);
-  console.log(field.copyright);
-  console.log(setCopyright);
   group.appendTo($dialog);
   group.expand();
   group.$group.find('.title').remove();

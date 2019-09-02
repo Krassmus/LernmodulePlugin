@@ -28,6 +28,4 @@ class ParticipantsController extends PluginController
         $this->attempts = LernmodulAttempt::findByUserAndCourse($this->user_id, Context::get()->id);
     }
 
-
-
 }

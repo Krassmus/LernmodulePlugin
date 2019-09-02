@@ -40,7 +40,7 @@ usort($student_data, function ($data1, $data2) {
                 </td>
                 <td>
                     <a href="<?= $link ?>">
-                    <?= htmlReady($student['vorname']." ".$student['nachname']) ?>
+                        <?= htmlReady($student['vorname']." ".$student['nachname']) ?>
                     </a>
                 </td>
                 <td>

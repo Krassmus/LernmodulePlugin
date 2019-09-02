@@ -213,8 +213,6 @@ H5PEditor.MetadataForm = (function (EventDispatcher, $, metadataSemantics) {
      * @return {Object} The extra title field instance
      */
     self.getExtraTitleField = function () {
-      console.log("hasExtraTitleField = " + hasExtraTitleField);
-      console.log(extraTitle);
       return hasExtraTitleField ? extraTitle : undefined;
     };
 
