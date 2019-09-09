@@ -101,37 +101,37 @@
                     <label>
                         <?= dgettext("lernmoduleplugin","Bild auswählen") ?>
                         <select id="select_image" name="module[image]" onChange="STUDIP.Lernmodule.selectImage.call(this);">
-                            <option value=""><?= dgettext("lernmoduleplugin","Keines") ?></option>
+                            <option value="" class="empty"><?= dgettext("lernmoduleplugin","Keines") ?></option>
                             <? if (count($module_images)) : ?>
                                 <optgroup label="<?= dgettext("lernmoduleplugin","Bilder aus dem Lernmodul") ?>">
                                     <? foreach ($module_images as $image) : ?>
                                         <option value="<?= htmlReady($image) ?>"
-                                                data-url="<?= $module->getDataURL() ?>/<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>>
+                                                data-url="<?= URLHelper::getLink($module->getDataURL(), array(), true) ?>/<?= htmlReady($image) ?>"<?= $module['image'] === $image ? " selected" : "" ?>>
                                             <?= htmlReady($image) ?>
                                         </option>
                                     <? endforeach ?>
                                 </optgroup>
                             <? endif ?>
-                            <? if (count($course_images)) : ?>
-                                <optgroup label="<?= dgettext("lernmoduleplugin","Bilder der Veranstaltung") ?>">
+                            <optgroup label="<?= dgettext("lernmoduleplugin","Bilder der Veranstaltung") ?>">
+                                <? if (count($course_images)) : ?>
                                     <? foreach ($course_images as $fileref) : ?>
-                                        <option value="<?= htmlReady($fileref->getId()) ?>" data-url="<?= htmlReady($fileref->getDownloadURL()) ?>"<?= $module['image'] === $fileref->getId() ? " selected" : "" ?>>
+                                        <option value="<?= htmlReady($fileref->getId()) ?>" data-url="<?= URLHelper::getLink($fileref->getDownloadURL(), array(), true) ?>"<?= $module['image'] === $fileref->getId() ? " selected" : "" ?>>
                                             <?= htmlReady($fileref['name']) ?>
                                         </option>
                                     <? endforeach ?>
-                                </optgroup>
-                            <? endif ?>
-
-
+                                <? else : ?>
+                                    <option disabled><?= _("Noch kein Bild im Dateibereich") ?></option>
+                                <? endif ?>
+                            </optgroup>
                         </select>
                     </label>
                     <div>
-                        <a href="" onClick="STUDIP.Lernmodule.selectPreviousImage(); return false;">
+                        <a href="#" onClick="STUDIP.Lernmodule.selectPreviousImage(); return false;">
                             <?= Icon::create("arr_1left", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
                         <? $background_image = FileRef::find($module['image']) ?: $module->getDataURL()."/".$module['image'] ?>
                         <div id="image_preview" style="display: inline-block; vertical-align: middle; margin: 10px; border: white solid 4px; box-shadow: rgba(0,0,0,0.3) 0px 0px 7px; width: 300px; height: 100px; max-width: 300px; max-height: 100px; background-size: 100% auto; background-repeat: no-repeat; background-position: center center;<?= $module['image'] ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');" : "" ?>"></div>
-                        <a href="" onClick="STUDIP.Lernmodule.selectNextImage(); return false;">
+                        <a href="#" onClick="STUDIP.Lernmodule.selectNextImage(); return false;">
                             <?= Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
                     </div>
@@ -202,43 +202,6 @@
 
 </form>
 
-<script>
-    STUDIP.Lernmodule = {
-        selectImage: function () {
-            jQuery('#image_preview').css('background-image', 'url(' + jQuery(this).find(':selected').data('url') + ')');
-        },
-        selectNextImage: function () {
-            var selected = jQuery('#select_image option:selected');
-            selected.removeAttr('selected');
-            if (selected.is(":last-of-type")) {
-                var optgroup = selected.closest("optgroup");
-                if ((optgroup.length === 0) || (optgroup.is(":last-of-type"))) {
-                    jQuery('#select_image optgroup').first().find("option:first-of-type").attr('selected', 'selected');
-                } else {
-                    optgroup.next().find("option:first-of-type").attr('selected', 'selected');
-                }
-            } else {
-                selected.next().attr('selected', 'selected');
-            }
-            jQuery('#select_image').trigger("change");
-        },
-        selectPreviousImage: function () {
-            var selected = jQuery('#select_image option:selected');
-            selected.removeAttr('selected');
-            if (selected.is(":first-of-type")) {
-                var optgroup = selected.closest("optgroup");
-                if ((optgroup.length === 0) || (optgroup.is(":first-of-type"))) {
-                    jQuery('#select_image optgroup').last().find("option:last-of-type").attr('selected', 'selected');
-                } else {
-                    optgroup.prev().find("option:last-of-type").attr('selected', 'selected');
-                }
-            } else {
-                selected.prev().attr('selected', 'selected');
-            }
-            jQuery('#select_image').trigger("change");
-        }
-    };
-</script>
 
 <?
 

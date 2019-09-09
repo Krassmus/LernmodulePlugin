@@ -1,5 +1,5 @@
 
-<div id="h5p_fullscreen_container">
+<div id="fullscreen_container">
     <iframe src="<?= URLHelper::getLink("plugins.php/lernmoduleplugin/h5p/iframe/".$module->getId(), array('a' => $attempt->getId())) ?>"
             style="width: 100%; border: none; height: 100vh;"></iframe>
 </div>
@@ -7,7 +7,7 @@
 <script>
     STUDIP.Lernmodule = {
         requestFullscreen: function () {
-            var module = jQuery("#h5p_fullscreen_container")[0];
+            var module = jQuery("#fullscreen_container")[0];
             if (module.requestFullscreen) {
                 module.requestFullscreen();
             } else if (module.msRequestFullscreen) {

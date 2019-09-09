@@ -107,6 +107,7 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id ?: null);
+        PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         if ($this->module['type'] && !$this->module->isNew()) {
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
