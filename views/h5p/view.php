@@ -19,4 +19,22 @@
             }
         }
     };
+    <? if ($module) : ?>
+        jQuery(function () {
+            window.setTimeout(function () {
+                if (!STUDIP.Lernmodule.received_message_api_messages) {
+                    jQuery.post(
+                        STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
+                        {"message": {"success": 1}}
+                    );
+                    window.setInterval(function () {
+                        jQuery.post(
+                            STUDIP.URLHelper.getURL(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/lernmoduleplugin/lernmodule/update_attempt/<?= htmlReady($attempt->getId()) ?>"),
+                            {"message": {"success": 1}}
+                        );
+                    }, 10 * 1000);
+                }
+            }, <?= (integer) Config::get()->LERNMODUL_SECONDS_TO_SUCCESS ?> * 1000);
+        });
+    <? endif ?>
 </script>

@@ -4,7 +4,8 @@
             <th><?= dgettext("lernmoduleplugin","Bibliothek") ?></th>
             <th><?= dgettext("lernmoduleplugin","Version") ?></th>
             <th><?= dgettext("lernmoduleplugin","Benutzt von") ?></th>
-            <th><?= dgettext("lernmoduleplugin","Erlaubt") ?></th>
+            <th title="<?= dgettext("lernmoduleplugin", "Viele H5P-Module melden leider nicht an Stud.IP, wenn der Nutzer sie erfolgreich absolviert hat. Mit dieser Option an, speichert Stud.IP das selbstständig nach 30 Sekunden.")  ?>"><?= dgettext("lernmoduleplugin","Auto-Rückmeldung") ?></th>
+            <th><?= dgettext("lernmoduleplugin","Aktiv") ?></th>
         </tr>
     </thead>
     <tbody>
@@ -16,6 +17,12 @@
             </td>
             <td>
                 <?= htmlReady($lib->countUsage()) ?>
+            </td>
+            <td>
+                <a href="#" class="simple_view_success<?= !$lib['simple_view_success'] ? " notyet" : "" ?>">
+                    <?= Icon::create("checkbox-unchecked")->asImg(20, array('class' => "text-bottom unchecked")) ?>
+                    <?= Icon::create("checkbox-checked")->asImg(20, array('class' => "text-bottom checked")) ?>
+                </a>
             </td>
             <td>
                 <a href="#" class="allowed<?= !$lib['allowed'] ? " notyet" : "" ?>">

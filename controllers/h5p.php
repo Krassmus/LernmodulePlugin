@@ -30,6 +30,17 @@ class H5pController extends PluginController
         $this->render_text("ok");
     }
 
+    public function simple_view_success_action()
+    {
+        if (!$GLOBALS['perm']->have_perm("root") || !Request::isPost()) {
+            throw new AccessDeniedException();
+        }
+        $lib = H5PLib::find(Request::option("lib_id"));
+        $lib['simple_view_success'] = Request::int("simple_view_success", 0);
+        $lib->store();
+        $this->render_text("ok");
+    }
+
     public function add_library_action()
     {
         if (!$GLOBALS['perm']->have_perm("root")) {
