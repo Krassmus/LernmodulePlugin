@@ -77,7 +77,7 @@ label.file-upload.hovered {
 }
 
 .admin_libraries {
-    .allowed {
+    .allowed, .simple_view_success {
         > .unchecked {
             display: none;
         }
@@ -92,3 +92,12 @@ label.file-upload.hovered {
     }
 }
 
+#fullscreen_container:fullscreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:fullscreen {
+        background-color: @light-gray-color-20;
+    }
+}

@@ -42,7 +42,10 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
             }
         }
         if ($GLOBALS['perm']->have_perm("root")) {
-            $nav = new Navigation(dgettext("lernmoduleplugin","H5P-Bibliotheken"), PluginEngine::getURL($this, array(), "h5p/admin_libraries"));
+            $nav = new Navigation(
+                dgettext("lernmoduleplugin","H5P-Bibliotheken"),
+                PluginEngine::getURL($this, array(), "h5p/admin_libraries")
+            );
             Navigation::addItem("/admin/locations/h5p", $nav);
         }
     }

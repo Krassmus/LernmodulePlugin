@@ -681,3 +681,6 @@ msgstr "Participants"
 #, php-format
 msgid "%s neue Lernmodule"
 msgstr "%s new learning modules"
+
+msgid "IDs passen nicht zusammen. Beitritt verweigert."
+msgstr "IDs don't fit. Access denied."

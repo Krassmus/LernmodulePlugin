@@ -78,9 +78,14 @@ class LernmoduleController extends PluginController
 
     public function view_action($module_id)
     {
-        Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = new Lernmodul($module_id);
         PageLayout::setTitle($this->mod['name']);
+        if (Context::get()->id) {
+            Navigation::activateItem("/course/lernmodule/overview");
+        } elseif ($this->mod['material_id']) {
+            $this->set_layout(null);
+        }
+
         $class = ucfirst($this->mod['type'])."Lernmodul";
         $this->mod = $class::buildExisting($this->mod->toArray());
         if (!$this->mod['url'] && !file_exists($this->mod->getPath())) {
@@ -92,11 +97,7 @@ class LernmoduleController extends PluginController
         if (Request::option("attendance")) {
             $this->game_attendence = new LernmodulGameAttendance(Request::option("attendance"));
             if ($GLOBALS['user']->id !== $this->game_attendence['user_id']) {
-                var_dump($GLOBALS['user']->id);
-                var_dump($this->game_attendence['user_id']);
-                var_dump($GLOBALS['user']->id !== $this->game_attendence['user_id']);
-                die();
-
+                PageLayout::postError(dgettext("lernmoduleplugin","IDs passen nicht zusammen. Beitritt verweigert."));
                 $this->redirect("lernmodule/overview");
             }
         }
@@ -106,6 +107,7 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id ?: null);
+        PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         if ($this->module['type'] && !$this->module->isNew()) {
             $class = ucfirst($this->module['type'])."Lernmodul";
             $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
@@ -281,21 +283,20 @@ class LernmoduleController extends PluginController
         $this->render_nothing();
     }
 
+
     public function download_action($module_id)
     {
-        $this->module = new Lernmodul($module_id);
-        $filename = $GLOBALS['TMP_PATH']."/".md5(uniqid()).".zip";
-        create_zip_from_directory($this->module->getPath(), $filename);
+        $this->module = Lernmodul::find($module_id);
+        $filename = $this->module->getExportFile();
 
         header('Content-Type: application/zip');
         header("Content-Disposition: attachment; filename=\"".$this->module['name'].".zip\"");
         header('Content-Length: ' . filesize($filename));
         header('Pragma: public');
 
-        $this->render_nothing();
-
-        readfile($filename);
+        echo file_get_contents($filename);
         unlink($filename);
+        die();
     }
 
     public function gameinvitation_action()
@@ -370,7 +371,72 @@ class LernmoduleController extends PluginController
         if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
+
+        $statement = DBManager::get()->prepare("
+            SELECT lernmodule_h5plibs.*
+            FROM lernmodule_h5plibs
+            WHERE lernmodule_h5plibs.allowed = '1'
+                AND lernmodule_h5plibs.runnable = '1'
+                AND lib_id = (
+                    SELECT l2.lib_id
+                    FROM lernmodule_h5plibs AS l2
+                    WHERE l2.name = lernmodule_h5plibs.name
+                    ORDER BY major_version DESC, minor_version DESC
+                    LIMIT 1
+                )
+            ORDER BY name ASC
+        ");
+        $statement->execute();
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $this->h5plibs = count($data);
+
         PageLayout::setTitle(_("Quelle des Lernmoduls auswählen"));
+    }
+
+    public function publish_action($module_id)
+    {
+        $this->module = Lernmodul::find($module_id);
+        if (!class_exists("LernMarktplatz")) {
+            throw Exception("Lernmarktplatz ist nicht aktiviert.");
+        }
+
+        $image = $this->module['image']
+            ? (preg_match("/^[a-f0-9]{32}$/", $this->module['image']) ? FileRef::find($this->module['image'])->file->getPath() : $this->module->getPath()."/".$this->module['image'])
+            : "";
+        $_SESSION['LernMarktplatz_CREATE_TEMPLATE'] = array(
+            'name' => $this->module['name'],
+            'module_id' => $module_id,
+            'redirect_url' => PluginEngine::getURL($this->plugin, array('module_id' => $module_id), "lernmodule/after_marketplace_deployment"),
+            'logo_tmp_file' => $image
+        );
+        if (!$this->module['url']) {
+            $filename = $this->module->getExportFile();
+            $_SESSION['LernMarktplatz_CREATE_TEMPLATE']['tmp_file'] = $filename;
+            $_SESSION['LernMarktplatz_CREATE_TEMPLATE']['filename'] = $this->module['name'] . ($this->module['type'] === "h5p" ? ".h5p" : ".zip");
+            $oldbase = URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
+            $_SESSION['LernMarktplatz_CREATE_TEMPLATE']['player_url'] = PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->module->getId(), true);
+            URLHelper::setBaseURL($oldbase);
+        } else {
+            $_SESSION['LernMarktplatz_CREATE_TEMPLATE']['player_url'] = $this->module['url'];
+        }
+        $this->redirect(URLHelper::getURL("plugins.php/lernmarktplatz/mymaterial/edit"));
+    }
+
+    public function after_marketplace_deployment_action()
+    {
+        $this->module = Lernmodul::find(Request::option("module_id"));
+        if (!class_exists("LernMarktplatz")) {
+            throw Exception("Lernmarktplatz ist nicht aktiviert.");
+        }
+        if (Request::get("material_id")) {
+            $this->module['material_id'] = Request::get("material_id");
+            $this->module->store();
+        }
+        if (Request::get("url")) {
+            $this->redirect(Request::get("url"));
+        } else {
+            $this->redirect(PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->module->getId()));
+        }
     }
 
 }

@@ -79,7 +79,7 @@ class H5PLib extends SimpleORMap
             $semantics_json = $this->getPath()."/semantics.json";
 
 
-            if ($json['runnable'] && file_exists($semantics_json)) {
+            if (file_exists($semantics_json)) {
 
                 $semantics = json_decode(file_get_contents($semantics_json), true);
                 $more_libs = $this->fetchSemanticsLibraries($semantics, $not_in_ids);
@@ -166,7 +166,7 @@ class H5PLib extends SimpleORMap
     }
 
     public function createModWithData($data) {
-        //{"params":{"timeline":{"defaultZoomLevel":"0","height":600,"asset":{},"date":[{"asset":{},"startDate":"1623,09,10","endDate":"1640,02,08","headline":"Murad IV","text":"<p>Brutaler Sultan tötet seine Bürger mit der Arkebuse. Ist halt sein gutes Recht, ne?</p>\n"}],"language":"en","headline":"Passierte das wirklich?","text":""}},"metadata":{"license":"U","authors":[],"changes":[],"extraTitle":"Sultan Murad 4.","title":"Sultan Murad 4."}}
+        //{"params":{"timeline":{"defaultZoomLevel":"0","height":600,"asset":{},"date":[{"asset":{},"startDate":"1623,09,10","endDate":"1640,02,08","headline":"Murad IV","text":"<p>Brutaler Sultan tï¿½tet seine Bï¿½rger mit der Arkebuse. Ist halt sein gutes Recht, ne?</p>\n"}],"language":"en","headline":"Passierte das wirklich?","text":""}},"metadata":{"license":"U","authors":[],"changes":[],"extraTitle":"Sultan Murad 4.","title":"Sultan Murad 4."}}
         if ($data && $data['params'] && $data['metadata']['title']) {
             $mod = new H5PLernmodul();
             $mod['name'] = $data['metadata']['title'];

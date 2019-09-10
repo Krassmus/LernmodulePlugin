@@ -30,6 +30,17 @@ class H5pController extends PluginController
         $this->render_text("ok");
     }
 
+    public function simple_view_success_action()
+    {
+        if (!$GLOBALS['perm']->have_perm("root") || !Request::isPost()) {
+            throw new AccessDeniedException();
+        }
+        $lib = H5PLib::find(Request::option("lib_id"));
+        $lib['simple_view_success'] = Request::int("simple_view_success", 0);
+        $lib->store();
+        $this->render_text("ok");
+    }
+
     public function add_library_action()
     {
         if (!$GLOBALS['perm']->have_perm("root")) {
@@ -185,7 +196,7 @@ class H5pController extends PluginController
             ),
             'saveFreq' => 2,
             'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
-            'libraryUrl' => $this->mod->getH5pLibURL(), //needed to fetch the library.json via ajax-request
+            'libraryUrl' => H5PLernmodul::getH5pLibURL(), //needed to fetch the library.json via ajax-request
             'l10n' => array(
                 'H5P' => array(
                     'fullscreen' => dgettext("lernmoduleplugin","Vollbild"),
@@ -373,16 +384,11 @@ class H5pController extends PluginController
         // {"answers": [ ... ]}
     }
 
+
     public function download_action($module_id) {
         $this->mod = new H5pLernmodul($module_id);
 
-        $archive = $GLOBALS['TMP_PATH']."/h5p_".$module_id.".zip";
-        $zip = \Studip\ZipArchive::create($archive);
-        $zip->addFromPath($this->mod->getPath());
-        foreach ($this->mod->libs as $lib) {
-            $zip->addFromPath($lib->getPath(), $lib['name']."-".$lib['major_version'].".".$lib['minor_version']."/");
-        }
-        $zip->close();
+        $archive = $this->mod->getExportFile();
 
         header("Content-Type: application/h5p");
         header("Content-Disposition: attachment; filename=\"".$this->mod['name'].".h5p\"");
