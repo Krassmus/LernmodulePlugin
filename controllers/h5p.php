@@ -88,7 +88,8 @@ class H5pController extends PluginController
                             if (file_exists($lib->getPath())) {
                                 rmdirr($lib->getPath());
                             }
-                            rename($lib_path, $lib->getPath());
+                            exec("mv ".escapeshellarg($lib_path)." ".escapeshellarg($lib->getPath()));
+                            //rename($lib_path, $lib->getPath());
                             $lib['patch_version'] = $json['patchVersion'];
                             if (Request::int("activate", 0)) {
                                 $lib['allowed'] = 1;
@@ -188,7 +189,9 @@ class H5pController extends PluginController
         }
         $settings = array(
             'baseUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
-            'url' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId(),
+            'url' => Config::get()->LERNMODUL_DATA_URL
+                ? Config::get()->LERNMODUL_DATA_URL."/moduledata/".$this->mod->getId()
+                : $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId(),
             'postUserStatistics' => false,
             'ajax' => array(
                 'setFinished' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_finished/".$this->attempt->getId()),
@@ -277,9 +280,11 @@ class H5pController extends PluginController
                 'fullscreen' => 1,
                 'exportUrl' => null,
                 'embedCode' => '<iframe src="">',
-                'resizeCode' => "<script src=\"".$GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginassets/h5p/h5p-resizer.js\" charset=\"UTF-8\"><\/script>",
+                'resizeCode' => "<script src=\"".$GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePlugin/assets/h5p/h5p-resizer.js\" charset=\"UTF-8\"><\/script>",
                 'url' => "",
-                'contentUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId()."/content",
+                'contentUrl' => Config::get()->LERNMODUL_DATA_URL
+                    ? Config::get()->LERNMODUL_DATA_URL."/moduledata/" .$this->mod->getId()."/content"
+                    : $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId()."/content",
                 'title' => $this->mod['name'],
                 'displayOptions' => array(
                     'frame' => true,
