@@ -1,3 +1,63 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('./../../../../assets/fonts/LatoLatin/LatoLatin-Bold.eot'); /* IE9 Compat Modes */
+    src: url('./../../../../assets/fonts/LatoLatin/LatoLatin-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Bold.woff2') format('woff2'), /* Modern Browsers */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Bold.woff') format('woff'), /* Modern Browsers */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Bold.ttf') format('truetype'),
+        url('./../../../../assets/fonts/lato/lato-bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('./../../../../assets/fonts/lato/lato-bold.woff2') format('woff2'), /* Modern Browsers */
+        url('./../../../../assets/fonts/lato/lato-bold.woff') format('woff'), /* Modern Browsers */
+        url('./../../../../assets/fonts/lato/lato-bold.ttf') format('truetype');
+    font-display: auto;
+    font-style: normal;
+    font-weight: 700;
+    text-rendering: optimizeLegibility;
+    unicode-range: U+000-5FF; /* Latin glyphs */
+}
+
+/* Webfont: LatoLatin-Light */
+@font-face {
+    font-family: 'Lato';
+    src: url('./../../../../assets/fonts/LatoLatin/LatoLatin-Light.eot'); /* IE9 Compat Modes */
+    src: url('./../../../../assets/fonts/LatoLatin/LatoLatin-Light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Light.woff2') format('woff2'), /* Modern Browsers */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Light.woff') format('woff'), /* Modern Browsers */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Light.ttf') format('truetype'),
+        url('./../../../../assets/fonts/lato/lato-light.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('./../../../../assets/fonts/lato/lato-light.woff2') format('woff2'), /* Modern Browsers */
+        url('./../../../../assets/fonts/lato/lato-light.woff') format('woff'), /* Modern Browsers */
+        url('./../../../../assets/fonts/lato/lato-light.ttf') format('truetype');
+    font-display: auto;
+    font-style: normal;
+    font-weight: 300;
+    text-rendering: optimizelegibility;
+    unicode-range: U+000-5FF; /* Latin glyphs */
+}
+
+/* Webfont: LatoLatin-Regular */
+@font-face {
+    font-family: 'Lato';
+    src: url('./../../../../assets/fonts/LatoLatin/LatoLatin-Regular.eot'); /* IE9 Compat Modes */
+    src: url('./../../../../assets/fonts/LatoLatin/LatoLatin-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Regular.woff2') format('woff2'), /* Modern Browsers */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Regular.woff') format('woff'), /* Modern Browsers */
+        url('./../../../../assets/fonts/LatoLatin/LatoLatin-Regular.ttf') format('truetype'),
+        url('./../../../../assets/fonts/lato/lato-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('./../../../../assets/fonts/lato/lato-regular.woff2') format('woff2'), /* Modern Browsers */
+        url('./../../../../assets/fonts/lato/lato-regular.woff') format('woff'), /* Modern Browsers */
+        url('./../../../../assets/fonts/lato/lato-regular.ttf') format('truetype');
+    font-display: auto;
+    font-style: normal;
+    font-weight: 400;
+    text-rendering: optimizelegibility;
+    unicode-range: U+000-5FF; /* Latin glyphs */
+}
+
 body, .h5peditor > select, .h5peditor h5peditor-select, .h5peditor .field > select {
     font-family: Lato;
+}
+
+.ckeditor {
+    visibility: visible !important; /* this looks odd but is a bugfix */
 }
