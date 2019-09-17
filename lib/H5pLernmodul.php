@@ -281,7 +281,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
             file_put_contents($path . "/content/content.json", $content);
             $h5p = array(
                 'title' => $data['metadata']['title'],
-                'language' => $data['metadata']['language'],
+                'language' => $data['metadata']['language'] ?: "und",
                 'mainLibrary' => $mainlib['name'],
                 'embedTypes' => array("div"),
                 'license' => $data['metadata']['license'] ?: "U",
