@@ -104,7 +104,9 @@ class H5peditorController extends PluginController
     {
         $settings = array(
             'baseUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
-            'url' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId(),
+            'url' => Config::get()->LERNMODUL_DATA_URL
+                ? Config::get()->LERNMODUL_DATA_URL."/moduledata/". $this->mod->getId()
+                : $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/RasmusFuhse/LernmodulePluginData/moduledata/".$this->mod->getId(),
             'postUserStatistics' => false,
             'ajax' => array(
                 'setFinished' => null, //URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/set_finished/"),
