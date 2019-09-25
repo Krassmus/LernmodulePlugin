@@ -33,7 +33,7 @@
                 <? if ($active) : ?>
                     <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($course_id, $mod->getId())) ?>
                     <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
-                        <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : $mod->getDataURL()."/".$mod['image']) : "" ?>
+                        <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : (filter_var($mod['image'], FILTER_VALIDATE_URL) ? $mod['image'] : $mod->getDataURL()."/".$mod['image'])) : "" ?>
                         <div class="module"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>
                              data-url="<?= PluginEngine::getLink($plugin, array(), "lernmodule/view/".$mod->getId()) ?>">
                             <? if (!$mod->isWritable()) : ?>
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                     <? else : ?>
-                    <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                    <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : (filter_var($mod['image'], FILTER_VALIDATE_URL) ? $mod['image'] : $mod->getDataURL()."/".$mod['image'])) : "" ?>
                     <div class="module" style="opacity: 0.5;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= sprintf(dgettext("lernmoduleplugin","Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
                         <div class="shadow" style="max-height: 108px; height: 108px;">
                             <?= Icon::create("date", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
@@ -86,7 +86,7 @@
                     </div>
                     <? endif ?>
                 <? else : ?>
-                    <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
+                <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : (filter_var($mod['image'], FILTER_VALIDATE_URL) ? $mod['image'] : $mod->getDataURL()."/".$mod['image'])) : "" ?>
                     <div class="module" style="opacity: 0.3;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= dgettext("lernmoduleplugin","Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
                         <div class="shadow" style="max-height: 108px; height: 108px;">
                             <?= Icon::create("question-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
