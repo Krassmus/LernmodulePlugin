@@ -40,7 +40,7 @@
                                 <? if (LernmodulAttempt::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
                                     <div class="crown">
                                         <?= Icon::create("crown", "status-yellow")->asImg(20, array('title' => dgettext("lernmoduleplugin","Erfolgreich abgeschlossen"), 'class' => "text-bottom")) ?>
-                                        </div>
+                                    </div>
                                 <? endif ?>
                             <? endif ?>
                             <div class="shadow">
@@ -86,7 +86,7 @@
                     </div>
                     <? endif ?>
                 <? else : ?>
-                <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : (filter_var($mod['image'], FILTER_VALIDATE_URL) ? $mod['image'] : $mod->getDataURL()."/".$mod['image'])) : "" ?>
+                    <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : (filter_var($mod['image'], FILTER_VALIDATE_URL) ? $mod['image'] : $mod->getDataURL()."/".$mod['image'])) : "" ?>
                     <div class="module" style="opacity: 0.3;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= dgettext("lernmoduleplugin","Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
                         <div class="shadow" style="max-height: 108px; height: 108px;">
                             <?= Icon::create("question-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
