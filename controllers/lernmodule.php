@@ -105,6 +105,9 @@ class LernmoduleController extends PluginController
 
     public function edit_action($module_id = null)
     {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
+            throw new AccessDeniedException();
+        }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id ?: null);
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
@@ -198,12 +201,28 @@ class LernmoduleController extends PluginController
                 INNER JOIN folders ON (folders.id = file_refs.folder_id)
                 INNER JOIN files ON (files.id = file_refs.file_id)
             WHERE folders.range_id = :seminar_id
-                AND folders.folder_type IN ('StandardFolder', 'RootFolder', 'MaterialFolder')
                 AND folders.range_type = 'course'
                 AND SUBSTRING(files.mime_type, 1, 6) = 'image/'
         ");
         $statement->execute(array('seminar_id' => $this->course_id));
         $this->course_images = FileRef::findMany($statement->fetchAll(PDO::FETCH_COLUMN, 0));
+    }
+
+    public function add_logo_action($module_id)
+    {
+        if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            throw new AccessDeniedException();
+        }
+        $this->module = new Lernmodul($module_id);
+        if ($_FILES['logo']) {
+            $relative_path = "logo";
+            $end = substr($_FILES['logo']['name'], strrpos($_FILES['logo']['name'], ".") + 1);
+            $relative_path .= ".".$end;
+            move_uploaded_file($_FILES['logo']['tmp_name'], $this->module->getPath()."/".$relative_path);
+            $this->module['image'] = $relative_path;
+            $this->module->store();
+        }
+        $this->render_text($this->module->getDataURL()."/".$relative_path);
     }
 
     public function evaluation_action($module_id = null)
@@ -245,6 +264,9 @@ class LernmoduleController extends PluginController
 
     public function delete_action($module_id)
     {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
+            throw new AccessDeniedException();
+        }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {

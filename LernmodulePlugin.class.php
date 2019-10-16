@@ -52,11 +52,15 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function getTabNavigation($course_id)
     {
         $this->settings = new LernmodulCourseSettings($course_id);
-        $tab = new Navigation($this->settings['tabname'] ?: dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $tabname = $this->settings['tabname'] ?: (Config::get()->LERNMODUL_GLOBAL_NAME ?: dgettext("lernmoduleplugin","Lernmodule"));
+        $tab = new Navigation(
+            $tabname,
+            PluginEngine::getURL($this, array(), "lernmodule/overview")
+        );
         $tab->setImage(
             Icon::create("learnmodule", "info_alt")
         );
-        $tab->addSubNavigation("overview", new Navigation(dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
+        $tab->addSubNavigation("overview", new Navigation($tabname, PluginEngine::getURL($this, array(), "lernmodule/overview")));
         $tab->addSubNavigation("participants", new Navigation(dgettext("lernmoduleplugin","Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
         return array('lernmodule' => $tab);
     }

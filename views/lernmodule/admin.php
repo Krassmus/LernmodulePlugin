@@ -6,7 +6,10 @@
         <legend><?= dgettext("lernmoduleplugin","Einstellungen der Veranstaltung") ?></legend>
         <label>
             <?= dgettext("lernmoduleplugin","Name des Reiters") ?>
-            <input type="text" name="data[tabname]" value="<?= htmlReady($settings['tabname']) ?>" placeholder="<?= dgettext("lernmoduleplugin","Lernmodule") ?>">
+            <input type="text"
+                   name="data[tabname]"
+                   value="<?= htmlReady($settings['tabname']) ?>"
+                   placeholder="<?= Config::get()->LERNMODUL_GLOBAL_NAME ?: dgettext("lernmoduleplugin","Lernmodule") ?>">
         </label>
     </fieldset>
 

@@ -34,7 +34,8 @@
                     <? $coursemodule = LernmodulCourse::findOneBySQL("seminar_id = ? AND module_id = ?", array($course_id, $mod->getId())) ?>
                     <? if (!$coursemodule || !$coursemodule['starttime'] || ($coursemodule['starttime'] <= time()) || $mod->isWritable()) : ?>
                         <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : (filter_var($mod['image'], FILTER_VALIDATE_URL) ? $mod['image'] : $mod->getDataURL()."/".$mod['image'])) : "" ?>
-                        <div class="module"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>
+                        <div class="module droppable"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>
+                             data-module_id="<?= htmlReady($mod->getId()) ?>"
                              data-url="<?= PluginEngine::getLink($plugin, array(), "lernmodule/view/".$mod->getId()) ?>">
                             <? if (!$mod->isWritable()) : ?>
                                 <? if (LernmodulAttempt::findOneBySQL("successful = '1' AND module_id = ? AND user_id = ?", array($mod->getId(), $GLOBALS['user']->id))) : ?>
@@ -79,7 +80,9 @@
                         </div>
                     <? else : ?>
                     <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : (filter_var($mod['image'], FILTER_VALIDATE_URL) ? $mod['image'] : $mod->getDataURL()."/".$mod['image'])) : "" ?>
-                    <div class="module" style="opacity: 0.5;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= sprintf(dgettext("lernmoduleplugin","Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
+                    <div class="module droppable"
+                         data-module_id="<?= htmlReady($mod->getId()) ?>"
+                         style="opacity: 0.5;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= sprintf(dgettext("lernmoduleplugin","Dieses Modul wird erst ab %s Uhr verfügbar sein."), date("d.m.Y H:i", $coursemodule['starttime'])) ?>">
                         <div class="shadow" style="max-height: 108px; height: 108px;">
                             <?= Icon::create("date", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
                         </div>
@@ -87,7 +90,9 @@
                     <? endif ?>
                 <? else : ?>
                     <? $background_image = $mod['image'] ? (preg_match("/^[a-f0-9]{32}$/", $mod['image']) ? FileRef::find($mod['image']) : (filter_var($mod['image'], FILTER_VALIDATE_URL) ? $mod['image'] : $mod->getDataURL()."/".$mod['image'])) : "" ?>
-                    <div class="module" style="opacity: 0.3;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= dgettext("lernmoduleplugin","Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
+                    <div class="module droppable"
+                         data-module_id="<?= htmlReady($mod->getId()) ?>"
+                         style="opacity: 0.3;<?= $background_image ? " background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>" title="<?= dgettext("lernmoduleplugin","Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module durcharbeiten.") ?>">
                         <div class="shadow" style="max-height: 108px; height: 108px;">
                             <?= Icon::create("question-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
                         </div>
@@ -100,7 +105,8 @@
     <? } while (count($module) < $last_mod_number) ?>
     <? foreach ($module as $mod) : ?>
         <? $background_image = $mod['image'] ? (FileRef::find($mod['image']) ?: $mod->getDataURL()."/".$mod['image']) : "" ?>
-        <div class="module"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>
+        <div class="module droppable"<?= $background_image ? " style=\"background-image: url('".htmlReady(is_a($background_image, "FileRef") ? $background_image->getDownloadURL() : $background_image)."');\"" : "" ?>
+             data-module_id="<?= htmlReady($mod->getId()) ?>"
              data-url="<?= PluginEngine::getLink($plugin, array(), ($mod['type'] === "html" ? "lernmodule" : $mod['type'])."/view/".$mod->getId()) ?>">
             <div class="shadow">
                 <?= Icon::create("exclaim-circle", "attention")->asImg(40, array('style' => "vertical-align: middle;", 'title' => dgettext("lernmoduleplugin","Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie erreicht werden."))) ?>
@@ -137,7 +143,8 @@
         </div>
     <? endforeach ?>
     <? if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) : ?>
-        <div class="module" style="background-image: url('<?= $plugin->getPluginURL() ?>/assets/background_add.png');"
+        <div class="module"
+             style="background-image: url('<?= $plugin->getPluginURL() ?>/assets/background_add.png');"
              title="<?= dgettext("lernmoduleplugin","Erstellen Sie ein neues Lernmodul entweder im Editor, durch ein gezipptes HTML-Dokument, mit einem PDF oder eine Webseite im Internet.") ?>">
             <a href="<?= PluginEngine::getLink($plugin, array(), "lernmodule/add") ?>"
                data-dialog="size=auto"
@@ -148,6 +155,22 @@
         </div>
     <? endif ?>
 </div>
+
+<? if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) : ?>
+    <script>
+        jQuery(function () {
+            jQuery(".module.droppable").on("dragover", function (event) {
+                jQuery(this).addClass("dragover");
+                event.preventDefault();
+            });
+            jQuery(".module.droppable").on("dragleave", function (event) {
+                jQuery(this).removeClass("dragover");
+                event.preventDefault();
+            });
+            jQuery(".module.droppable").on("drop", STUDIP.Lernmodule.uploadNewLogo);
+        });
+    </script>
+<? endif ?>
 
 <?
 Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));

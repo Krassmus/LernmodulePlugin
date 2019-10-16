@@ -292,7 +292,11 @@ class Lernmodul extends SimpleORMap
     }
 
     public function getDownloadURL() {
-        return URLhelper::getURL( "plugins.php/lernmoduleplugin/lernmodule/download/" . $this->getId());
+        if ($this['url']) {
+            return false;
+        } else {
+            return URLhelper::getURL("plugins.php/lernmoduleplugin/lernmodule/download/" . $this->getId());
+        }
     }
 
     public function getExportFile()

@@ -134,6 +134,12 @@
                         <a href="#" onClick="STUDIP.Lernmodule.selectNextImage(); return false;">
                             <?= Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
+                        <label style="vertical-align: inherit; display: inline-block; margin-left: 10px; cursor: pointer;" title="<?= _("Logo hochladen") ?>">
+                            <input accept="image/*"
+                                   type="file"
+                                   style="display: none;" onChange="STUDIP.Lernmodule.uploadNewLogo.call(this, '<?= htmlReady($module->getId()) ?>');">
+                            <?= Icon::create("upload", "clickable")->asImg(40, ['style' => "vertical-align: middle;"]) ?>
+                        </label>
                     </div>
                 <? endif ?>
             <? endif ?>
