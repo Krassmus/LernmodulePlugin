@@ -21,6 +21,7 @@ class LernmoduleController extends PluginController
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         Lernmodul::deleteBySQL("draft = '1' AND mkdate < UNIX_TIMESTAMP() - 86400");
         $this->module = Lernmodul::findByCourse($this->course_id);
+        $this->settings = new LernmodulCourseSettings(Context::get()->id);
 
 
         if (Request::option("quit")) {

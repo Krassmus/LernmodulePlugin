@@ -2,7 +2,7 @@
     <?= MessageBox::info(dgettext("lernmoduleplugin","Es sind noch keine Lernmodule vorhanden.")) ?>
 <? endif ?>
 
-<div id="moduleoverview">
+<div id="moduleoverview"<?= $settings['singlecolumn'] ? 'class="singlecolumn"' : "" ?>>
     <? $already_displayed_mods = array() ?>
     <? do { ?>
         <? $last_mod_number = count($module) ?>

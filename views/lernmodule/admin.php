@@ -11,6 +11,12 @@
                    value="<?= htmlReady($settings['tabname']) ?>"
                    placeholder="<?= Config::get()->LERNMODUL_GLOBAL_NAME ?: dgettext("lernmoduleplugin","Lernmodule") ?>">
         </label>
+
+        <label>
+            <input type="hidden" name="data[singlecolumn]" value="0">
+            <input type="checkbox" name="data[singlecolumn]" value="1"<?= $settings['singlecolumn'] ? " checked" : "" ?>>
+            <?= _("Einspaltiges Layout") ?>
+        </label>
     </fieldset>
 
     <div data-dialog-button>
