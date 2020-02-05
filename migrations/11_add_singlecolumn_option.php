@@ -8,6 +8,7 @@ class AddSinglecolumnOption extends Migration
             ALTER TABLE `lernmodule_course_settings`
             ADD COLUMN `singlecolumn` tinyint(2) DEFAULT '0' AFTER `tabname`
         ");
+        SimpleORMap::expireTableScheme();
     }
 
     function down()
@@ -16,5 +17,6 @@ class AddSinglecolumnOption extends Migration
             ALTER TABLE `lernmodule_course_settings`
             DROP COLUMN `singlecolumn`
         ");
+        SimpleORMap::expireTableScheme();
     }
 }

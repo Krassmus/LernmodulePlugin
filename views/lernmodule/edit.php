@@ -82,6 +82,12 @@
             <?= dgettext("lernmoduleplugin","Abspieloptionen") ?>
         </legend>
 
+        <label>
+            <?= dgettext("lernmoduleplugin","Infotext über dem Lernmodul") ?>
+            <textarea class="add_toolbar wysiwyg"
+                      name="modulecourse[infotext]"><?= formatReady($modulecourse['infotext']) ?></textarea>
+        </label>
+
         <? if (!$module->isNew()) : ?>
             <? if ($module['url']) : ?>
                 <label>

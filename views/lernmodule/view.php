@@ -1,3 +1,7 @@
+<? if (trim($course_connection['infotext'])) : ?>
+    <div class="lernmodule_infotext"><?= formatReady($course_connection['infotext']) ?></div>
+<? endif ?>
+
 <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
 <? $template = $mod->getViewerTemplate($attempt, $game_attendence) ?>
