@@ -11,6 +11,7 @@
 ?>
 
 <form method="post" enctype="multipart/form-data" id="h5p-content-form">
+    <input type="hidden" name="block_id" value="<?= htmlReady(Request::option("block_id")) ?>">
     <input type="hidden" name="library" value="<?= $library ?: 0 ?>"/>
     <input type="hidden" name="parameters" value="<?= htmlReady(json_encode($params)) ?>"/>
     <div id="post-body-content">

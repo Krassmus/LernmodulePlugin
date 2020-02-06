@@ -22,6 +22,13 @@ class LernmoduleController extends PluginController
         Lernmodul::deleteBySQL("draft = '1' AND mkdate < UNIX_TIMESTAMP() - 86400");
         $this->module = Lernmodul::findByCourse($this->course_id);
         $this->settings = new LernmodulCourseSettings(Context::get()->id);
+        $this->blocks = LernmodulBlock::findBySQL("seminar_id = ? ORDER BY position ASC", [$this->course_id]);
+        if (!count($this->blocks)) {
+            $block = new LernmodulBlock();
+            $block['seminar_id'] = $this->course_id;
+            $block->store();
+            $this->blocks[] = $block;
+        }
 
 
         if (Request::option("quit")) {

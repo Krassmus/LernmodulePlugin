@@ -30,6 +30,9 @@ class H5peditorController extends PluginController
             $this->mod->updateH5PData(json_decode(Request::get("parameters"), true), $lib);
             $connection = $this->mod->courseConnection(Context::get()->id);
             if ($connection->isNew()) {
+                $block = LernmodulBlock::find(Request::option("block_id"));
+                $connection['block_id'] = Request::option("block_id");
+                $connection['position'] = count($block->coursemodules) + 1;
                 $connection->store();
             }
             if ($this->mod['draft']) {

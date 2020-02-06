@@ -7,6 +7,7 @@ require_once __DIR__."/lib/ScormLernmodul.php";
 require_once __DIR__."/lib/H5pLernmodul.php";
 require_once __DIR__."/lib/LernmodulAttempt.php";
 require_once __DIR__."/lib/LernmodulCourse.php";
+require_once __DIR__."/lib/LernmodulBlock.php";
 require_once __DIR__."/lib/LernmodulCourseSettings.php";
 require_once __DIR__."/lib/LernmodulDependency.php";
 require_once __DIR__."/lib/LernmodulGame.php";

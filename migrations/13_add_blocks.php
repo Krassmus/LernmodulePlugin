@@ -25,7 +25,8 @@ class AddBlocks extends Migration
         ");
         DBManager::get()->exec("
             ALTER TABLE `lernmodule_courses`
-            ADD COLUMN `block_id` VARCHAR(32) DEFAULT NULL
+            ADD COLUMN `block_id` VARCHAR(32) DEFAULT NULL,
+            ADD COLUMN `position` int(11) DEFAULT '1'
         ");
         DBManager::get()->exec("
             UPDATE `lernmodule_courses`

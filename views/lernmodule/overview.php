@@ -2,6 +2,38 @@
     <?= MessageBox::info(dgettext("lernmoduleplugin","Es sind noch keine Lernmodule vorhanden.")) ?>
 <? endif ?>
 
+<? foreach ($blocks as $block) : ?>
+    <? if (trim($block['title'])) : ?>
+        <h2><?= htmlReady($block['title']) ?></h2>
+    <? endif ?>
+    <? if (trim($block['infotext'])) : ?>
+        <div class="lernmodule_infotext"><?= formatReady($block['infotext']) ?></div>
+    <? endif ?>
+
+    <div id="moduleoverview"<?= $settings['singlecolumn'] ? 'class="singlecolumn"' : "" ?>>
+        <? foreach ($block->coursemodules as $coursemodule) : ?>
+            <?= $this->render_partial("lernmodule/_lernmodul_kachel", [
+                'lernmodul' => $coursemodule->module,
+                'coursemodule' => $coursemodule
+            ]) ?>
+        <? endforeach ?>
+
+        <? if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) : ?>
+            <div class="module"
+                 style="background-image: url('<?= $plugin->getPluginURL() ?>/assets/background_add.png');"
+                 title="<?= dgettext("lernmoduleplugin","Erstellen Sie ein neues Lernmodul entweder im Editor, durch ein gezipptes HTML-Dokument, mit einem PDF oder eine Webseite im Internet.") ?>">
+                <a href="<?= PluginEngine::getLink($plugin, array('block_id' => $block->getId()), "lernmodule/add") ?>"
+                   data-dialog="size=auto"
+                   class="shadow"
+                   style="max-height: 108px; height: 108px;">
+                    <?= Icon::create("add-circle", "info_alt")->asImg(80, array('style' => "vertical-align: middle; margin-left: auto; margin-right: auto;")) ?>
+                </a>
+            </div>
+        <? endif ?>
+    </div>
+<? endforeach ?>
+
+<?php /**
 <div id="moduleoverview"<?= $settings['singlecolumn'] ? 'class="singlecolumn"' : "" ?>>
     <? $already_displayed_mods = array() ?>
     <? do { ?>
@@ -155,6 +187,7 @@
         </div>
     <? endif ?>
 </div>
+ */ ?>
 
 <? if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) : ?>
     <script>
