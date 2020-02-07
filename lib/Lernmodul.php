@@ -228,29 +228,6 @@ class Lernmodul extends SimpleORMap
         }
     }
 
-    public function setDependencies($module_ids, $seminar_id)
-    {
-        LernmodulDependency::deleteBySQL("seminar_id = ? AND module_id = ?", array(
-            $seminar_id,
-            $this->getId()
-        ));
-        foreach ($module_ids as $module_id) {
-            $dependency = new LernmodulDependency();
-            $dependency['seminar_id'] = $seminar_id;
-            $dependency['module_id'] = $this->getId();
-            $dependency['depends_from_module_id'] = $module_id;
-            $dependency->store();
-        }
-    }
-
-    public function getDependencies($seminar_id)
-    {
-        return LernmodulDependency::findBySQL("module_id = ? AND seminar_id = ?", array(
-            $this->getId(),
-            $seminar_id
-        ));
-    }
-
     /**
      * unused
      * @param $course_id

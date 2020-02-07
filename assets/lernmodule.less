@@ -1,10 +1,16 @@
-#moduleoverview {
+.moduleoverview {
     display: flex;
     flex-wrap: wrap;
     &.singlecolumn {
         max-width: 350px;
     }
-    > .module {
+    .orderbox {
+        display: inline-flex;
+        &.almostdropping {
+            min-width: 320px;
+        }
+    }
+    .module {
         height: 100px;
         width: 300px;
         min-height: 100px;
@@ -59,6 +65,9 @@
                 text-shadow: rgba(0,0,0,0.3) 0px 0px 8px;
                 margin-left: 5px;
             }
+            .mover {
+                cursor: move;
+            }
             nav {
                 position: absolute;
             }
@@ -72,6 +81,10 @@
             }
         }
     }
+}
+
+.blockmover {
+    cursor: move;
 }
 
 .ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {

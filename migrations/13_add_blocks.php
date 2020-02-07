@@ -26,12 +26,17 @@ class AddBlocks extends Migration
         DBManager::get()->exec("
             ALTER TABLE `lernmodule_courses`
             ADD COLUMN `block_id` VARCHAR(32) DEFAULT NULL,
-            ADD COLUMN `position` int(11) DEFAULT '1'
+            ADD COLUMN `position` int(11) DEFAULT '1',
+            ADD COLUMN chdate int(11) NOT NULL,
+            ADD COLUMN mkdate int(11) NOT NULL
         ");
         DBManager::get()->exec("
             UPDATE `lernmodule_courses`
-            SET `block_id` = `lernmodule_courses`.seminar_id
+            SET `block_id` = `lernmodule_courses`.seminar_id,
+                mkdate = UNIX_TIMESTAMP(),
+                chdate = UNIX_TIMESTAMP()
         ");
+
         SimpleORMap::expireTableScheme();
     }
 

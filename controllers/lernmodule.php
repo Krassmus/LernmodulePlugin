@@ -167,6 +167,7 @@ class LernmoduleController extends PluginController
                 $this->modulecourse = new LernmodulCourse();
                 $this->modulecourse['module_id'] = $this->module->getId();
                 $this->modulecourse['seminar_id'] = $this->course_id;
+                $this->modulecourse['block_id'] = Request::option("block_id");
             }
             $modulecoursedata = Request::getArray("modulecourse");
             $modulecoursedata['starttime'] = strtotime($modulecoursedata['starttime']) ?: null;
@@ -175,7 +176,7 @@ class LernmoduleController extends PluginController
 
             $success = true;
 
-            $this->module->setDependencies(Request::getArray("dependencies"), $this->course_id);
+            $this->modulecourse->setDependencies(Request::getArray("dependencies"), $this->course_id);
             if ($_FILES['modulefile']['size'] > 0) {
                 $success = $this->module->copyModule($_FILES['modulefile']['tmp_name'], $_FILES['modulefile']['name']);
                 if ($this->module['material_id'] && !$this->module['url']) {
@@ -384,11 +385,72 @@ class LernmoduleController extends PluginController
         if ($this->settings->isNew()) {
             $this->settings->setId(Context::get()->id);
         }
+        if (Request::option("delete_block")) {
+            $block = new LernmodulBlock(Request::option("delete_block"));
+            if ($block['seminar_id'] === Context::get()->id) {
+                $block->delete();
+                PageLayout::postSuccess(_("Block wurde gelöscht."));
+            }
+        }
         if (Request::isPost()) {
             $this->settings->setData(Request::getArray("data"));
             $this->settings->store();
+
+            $blocks_data = Request::getArray("block");
+            foreach (Request::getArray("blocks_order") as $position => $block_id) {
+                $block = new LernmodulBlock($block_id);
+                if ($block['seminar_id'] === Context::get()->id) {
+                    $block['position'] = $position + 1;
+                    $block['title'] = trim($blocks_data[$block_id]['title']) ?: null;
+                    $block['infotext'] = trim(html_entity_decode(strip_tags($blocks_data[$block_id]['infotext']))) ? $blocks_data[$block_id]['infotext'] : null;
+                    $block->store();
+                }
+            }
+            if (Request::submitted("add_block")) {
+                $block = new LernmodulBlock();
+                $block['seminar_id'] = Context::get()->id;
+                $block['position'] = LernmodulBlock::countBySQL("seminar_id = ? ORDER BY position ASC", [$this->course_id]) + 1;
+                $block->store();
+            }
             PageLayout::postSuccess(dgettext("lernmoduleplugin","Einstellungen wurden gespeichert."));
         }
+        $this->blocks = LernmodulBlock::findBySQL("seminar_id = ? ORDER BY position ASC", [$this->course_id]);
+    }
+
+    public function sortblockmodules_action($block_id)
+    {
+        $block = new LernmodulBlock($block_id);
+        $course_id = $block['seminar_id'];
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
+            throw new AccessDeniedException();
+        }
+        foreach (Request::getArray("order") as $position => $module_id) {
+            $coursemodule = LernmodulCourse::find([$module_id, $course_id]);
+            if (!$coursemodule) {
+                $coursemodule = new LernmodulCourse();
+                $coursemodule['module_id'] = $module_id;
+                $coursemodule['seminar_id'] = $course_id;
+            }
+            $coursemodule['position'] = $position + 1;
+            $coursemodule['block_id'] = $block_id;
+            $coursemodule->store();
+        }
+        $this->render_text("ok");
+    }
+
+    public function sortblocks_action()
+    {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            throw new AccessDeniedException();
+        }
+        foreach (Request::getArray("order") as $position => $block_id) {
+            $block = new LernmodulBlock($block_id);
+            if ($block['seminar_id'] === Context::get()->id) {
+                $block['position'] = $position + 1;
+                $block->store();
+            }
+        }
+        $this->render_text("ok");
     }
 
     /**

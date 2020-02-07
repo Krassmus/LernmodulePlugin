@@ -19,8 +19,35 @@
         </label>
     </fieldset>
 
+
+    <fieldset>
+        <legend>
+            <?= _("Darstellungsblöcke") ?>
+        </legend>
+        <? foreach ($blocks as $block) : ?>
+            <div class="lernmodule_infotext">
+                <input type="hidden" name="blocks_order[]" value="<?= htmlReady($block->getId()) ?>">
+                <label>
+                    <?= _("Titel des Blocks") ?>
+                    <input type="text" name="block[<?= htmlReady($block->getId()) ?>][title]" value="<?= htmlReady($block['title']) ?>">
+                </label>
+                <label>
+                    <?= _("Informationstext") ?>
+                    <textarea class="add_toolbar wysiwyg" name="block[<?= htmlReady($block->getId()) ?>][infotext]"><?= formatReady($block['infotext']) ?></textarea>
+                </label>
+
+                <a href="<?= PluginEngine::getLink($plugin, array('delete_block' => $block->getId()), "lernmodule/admin") ?>" data-dialog data-confirm="<?= _("Wirklich den ganzen Block und die Inhalte löschen?") ?>">
+                    <?= Icon::create("trash", "clickable")->asImg(16, ['class' => "text-bottom"]) ?>
+                    <?= _("Block und Inhalte darin löschen") ?>
+                </a>
+            </div>
+        <? endforeach ?>
+    </fieldset>
+
+
     <div data-dialog-button>
         <?= \Studip\Button::create(dgettext("lernmoduleplugin","Speichern")) ?>
+        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Block hinzufügen"), "add_block") ?>
     </div>
 </form>
 <?

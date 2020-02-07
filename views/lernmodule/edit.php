@@ -6,6 +6,10 @@
     <fieldset>
         <legend><?= dgettext("lernmoduleplugin","Lernmodul hochladen und bearbeiten") ?></legend>
 
+        <? if (Request::get("block_id")) : ?>
+            <input type="hidden" name="block_id" value="<?= htmlReady(Request::get("block_id")) ?>">
+        <? endif ?>
+
         <input type="hidden" name="upload_or_url" value="<?= htmlReady(Request::get("type") ?: ($module['url'] ? "url" : "upload")) ?>">
 
         <label class="file-upload" id="file_upload"<?= $module['url'] || Request::get("type") === "url" ? ' style="display: none;"' : "" ?>>
@@ -56,7 +60,7 @@
             <div style="margin-top: 15px; margin-bottom: 15px;">
                 <?= dgettext("lernmoduleplugin","Abhängig von") ?>
                 <ul class="clean" style="font-size: 0.8em;">
-                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies(Context::get()->id)) ?>
+                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $modulecourse->getDependencies()) ?>
                     <? foreach ($lernmodule as $lernmodul) : ?>
                         <li>
                             <label>

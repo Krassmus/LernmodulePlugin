@@ -1,12 +1,58 @@
 jQuery(function () {
-    jQuery("#moduleoverview").on("click", ".module", function (event) {
+    jQuery(".moduleoverview").on("click", ".module", function (event) {
         if (jQuery(this).data("url")) {
-            if (!jQuery(event.target).is("a, a *")) {
+            if (!jQuery(event.target).is("a, a *, .mover")) {
                 location.href = jQuery(this).data("url");
                 return false;
             }
         }
     });
+    jQuery(".moduleoverview").sortable({
+        handle: ".mover",
+        items: "> .droppable",
+        connectWith: ".moduleoverview",
+        start: function () {
+            jQuery(".moduleoverview").addClass("almostdropping");
+        },
+        stop: function () {
+            jQuery(".moduleoverview").removeClass("almostdropping");
+        },
+        update: function (event, ui) {
+            let box = jQuery(ui.item).closest(".moduleoverview");
+            let block_id = box.data("block_id");
+            let order = [];
+            jQuery(box).find(".module.droppable").each(function () {
+                order.push(jQuery(this).data("module_id"));
+            });
+            jQuery.ajax({
+                "url": STUDIP.URLHelper.getURL("plugins.php/lernmoduleplugin/lernmodule/sortblockmodules/" + block_id),
+                "data": {
+                    'order': order
+                },
+                "type": "post"
+            });
+        }
+    });
+    jQuery("#blockcontainer").sortable({
+        handle: ".blockmover",
+        axis: "y",
+        update: function (event, ui) {
+            let block = jQuery(ui.item).closest(".block");
+            let block_id = block.data("block_id");
+            let order = [];
+            jQuery("#blockcontainer").find(".block").each(function () {
+                order.push(jQuery(this).data("block_id"));
+            });
+            jQuery.ajax({
+                "url": STUDIP.URLHelper.getURL("plugins.php/lernmoduleplugin/lernmodule/sortblocks"),
+                "data": {
+                    'order': order
+                },
+                "type": "post"
+            });
+        }
+    });
+
 });
 
 STUDIP.Lernmodule = {
