@@ -29,11 +29,15 @@
                 <input type="hidden" name="blocks_order[]" value="<?= htmlReady($block->getId()) ?>">
                 <label>
                     <?= _("Titel des Blocks") ?>
-                    <input type="text" name="block[<?= htmlReady($block->getId()) ?>][title]" value="<?= htmlReady($block['title']) ?>">
+                    <input type="text"
+                           name="block[<?= htmlReady($block->getId()) ?>][title]"
+                           value="<?= htmlReady($block['title']) ?>"
+                           placeholder="<?= _("Block ohne Titel") ?>">
                 </label>
                 <label>
                     <?= _("Informationstext") ?>
-                    <textarea class="add_toolbar wysiwyg" name="block[<?= htmlReady($block->getId()) ?>][infotext]"><?= formatReady($block['infotext']) ?></textarea>
+                    <textarea class="add_toolbar wysiwyg"
+                              name="block[<?= htmlReady($block->getId()) ?>][infotext]"><?= formatReady($block['infotext']) ?></textarea>
                 </label>
 
                 <a href="<?= PluginEngine::getLink($plugin, array('delete_block' => $block->getId()), "lernmodule/admin") ?>" data-dialog data-confirm="<?= _("Wirklich den ganzen Block und die Inhalte löschen?") ?>">
@@ -42,12 +46,15 @@
                 </a>
             </div>
         <? endforeach ?>
+        <a href="#" onClick="jQuery('button.add_block').click(); return false;" title="<?= _("Neuen Darstellungsblock hinzufügen") ?>">
+            <?= Icon::create("add", "clickable")->asImg(20) ?>
+        </a>
     </fieldset>
 
 
     <div data-dialog-button>
         <?= \Studip\Button::create(dgettext("lernmoduleplugin","Speichern")) ?>
-        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Block hinzufügen"), "add_block") ?>
+        <?= \Studip\Button::create(dgettext("lernmoduleplugin","Block hinzufügen"), "add_block", ['class' => "add_block"]) ?>
     </div>
 </form>
 <?

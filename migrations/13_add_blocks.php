@@ -37,6 +37,13 @@ class AddBlocks extends Migration
                 chdate = UNIX_TIMESTAMP()
         ");
 
+        DBManager::get()->exec("
+            DELETE lernmodule_courses.*
+            FROM lernmodule_courses
+                LEFT JOIN lernmodule_module USING (module_id)
+            WHERE lernmodule_module.module_id IS NULL
+        ");
+
         SimpleORMap::expireTableScheme();
     }
 

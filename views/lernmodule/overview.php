@@ -7,7 +7,7 @@
     <div class="block" data-block_id="<?= htmlReady($block->getId()) ?>">
         <? if (trim($block['title'])) : ?>
             <h2>
-                <? if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) : ?>
+                <? if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id) && (count($blocks) > 1)) : ?>
                     <img src="<?= URLHelper::getLink("plugins_packages/RasmusFuhse/LernmodulePlugin/assets/mover_blue.svg") ?>"
                          width="20"
                          class="blockmover text-bottom">
@@ -19,7 +19,7 @@
             <div class="lernmodule_infotext"><?= formatReady($block['infotext']) ?></div>
         <? endif ?>
 
-        <div class="moduleoverview"<?= $settings['singlecolumn'] ? 'class="singlecolumn"' : "" ?>
+        <div class="moduleoverview<?= $settings['singlecolumn'] ? ' singlecolumn' : "" ?>"
              data-block_id="<?= htmlReady($block->getId()) ?>">
             <? if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) : ?>
                 <div class="module"
