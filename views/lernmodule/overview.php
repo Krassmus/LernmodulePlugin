@@ -35,10 +35,12 @@
             <? endif ?>
 
             <? foreach ($block->coursemodules as $coursemodule) : ?>
-                <?= $this->render_partial("lernmodule/_lernmodul_kachel", [
-                    'lernmodul' => $coursemodule->module,
-                    'coursemodule' => $coursemodule
-                ]) ?>
+                <? if ($coursemodule->module) : ?>
+                    <?= $this->render_partial("lernmodule/_lernmodul_kachel", [
+                        'lernmodul' => $coursemodule->module,
+                        'coursemodule' => $coursemodule
+                    ]) ?>
+                <? endif ?>
             <? endforeach ?>
         </div>
     </div>

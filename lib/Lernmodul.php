@@ -40,6 +40,11 @@ class Lernmodul extends SimpleORMap
     static protected function configure($config = array())
     {
         $config['db_table'] = 'lernmodule_module';
+        $config['has_many']['lernmodulcourses'] = [
+            'class_name' => 'LernmodulCourse',
+            'on_delete'  => 'delete',
+            'on_store'   => 'store'
+        ];
         $config['serialized_fields']['customdata'] = 'JSONArrayObject';
         $config['registered_callbacks']['after_delete'][] = 'cbDeleteModuleData';
         parent::configure($config);

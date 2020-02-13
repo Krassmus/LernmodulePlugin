@@ -46,7 +46,7 @@
                 </a>
             </div>
         <? endforeach ?>
-        <a href="#" onClick="jQuery('button.add_block').click(); return false;" title="<?= _("Neuen Darstellungsblock hinzufügen") ?>">
+        <a href="#" onClick="jQuery('button.add_block').first().click(); return false;" title="<?= _("Neuen Darstellungsblock hinzufügen") ?>">
             <?= Icon::create("add", "clickable")->asImg(20) ?>
         </a>
     </fieldset>

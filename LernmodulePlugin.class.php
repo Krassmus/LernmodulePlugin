@@ -69,7 +69,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function getIconNavigation($course_id, $last_visit, $user_id)
     {
         $tab = new Navigation(dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
-        $new = Lernmodul::countBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = :course_id AND chdate >= :last_visit AND user_id <> :user_id", array(
+        $new = Lernmodul::countBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = :course_id AND lernmodule_module.chdate >= :last_visit AND user_id <> :user_id", array(
             'course_id' => $course_id,
             'last_visit' => $last_visit,
             'user_id' => $GLOBALS['user']->id

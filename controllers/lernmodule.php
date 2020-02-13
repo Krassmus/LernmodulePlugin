@@ -398,9 +398,8 @@ class LernmoduleController extends PluginController
 
             $blocks_data = Request::getArray("block");
             foreach (Request::getArray("blocks_order") as $position => $block_id) {
-                $block = new LernmodulBlock($block_id);
-                if ($block['seminar_id'] === Context::get()->id) {
-                    $block['position'] = $position + 1;
+                $block = LernmodulBlock::find($block_id);
+                if ($block && $block['seminar_id'] === Context::get()->id) {
                     $block['title'] = trim($blocks_data[$block_id]['title']) ?: null;
                     $block['infotext'] = trim(html_entity_decode(strip_tags($blocks_data[$block_id]['infotext']))) ? $blocks_data[$block_id]['infotext'] : null;
                     $block->store();
