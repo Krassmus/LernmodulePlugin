@@ -18,7 +18,7 @@ class H5peditorController extends PluginController
             $this->mod['draft'] = 1;
             $this->mod['type'] = "h5p";
             $this->mod->store();
-            $this->redirect(PluginEngine::getURL($this->plugin, array(), "h5peditor/edit/".$this->mod->getId()));
+            $this->redirect(PluginEngine::getURL($this->plugin, array('block_id' => Request::option("block_id")), "h5peditor/edit/".$this->mod->getId()));
             return;
         }
         Navigation::activateItem("/course/lernmodule/overview");

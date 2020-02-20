@@ -5,7 +5,7 @@ class LernmodulCourse extends SimpleORMap
 
     static public function findbyblock_id($block_id)
     {
-        return static::findBySQL("block_id = ? ORDER BY position ASC", [$block_id]);
+        return static::findBySQL("LEFT JOIN lernmodule_module USING (module_id) WHERE block_id = ? ORDER BY position ASC, lernmodule_module.name ASC", [$block_id]);
     }
 
     static protected function configure($config = array())
@@ -17,6 +17,15 @@ class LernmodulCourse extends SimpleORMap
             'foreign_key' => 'module_id',
             'assoc_func' => 'find',
         );
+        $config['registered_callbacks']['after_delete'][] = function ($modulcourse) {
+            $count = LernmodulCourse::countBySql("module_id = ? AND seminar_id != ?", [
+                $modulcourse['module_id'],
+                $modulcourse['seminar_id']
+            ]);
+            if (!$count) {
+                Lernmodul::find($modulcourse['module_id'])->delete();
+            }
+        };
         parent::configure($config);
     }
 

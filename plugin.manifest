@@ -1,6 +1,6 @@
 pluginname=LernmodulePlugin
 pluginclassname=LernmodulePlugin
-version=2.4
+version=2.5
 origin=RasmusFuhse
 studipMinVersion=4.0
 summary=HTML-Lernmodule

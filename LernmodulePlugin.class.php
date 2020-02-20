@@ -48,6 +48,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
             );
             Navigation::addItem("/admin/locations/h5p", $nav);
         }
+        NotificationCenter::addObserver($this, "removeLernmoduleFromDeletedCourse", "CourseDidDelete");
     }
 
     public function getTabNavigation($course_id)
@@ -116,6 +117,12 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function getDisplayTitle()
     {
         return dgettext("lernmoduleplugin","Lernmodule");
+    }
+
+    public function removeLernmoduleFromDeletedCourse($event, $course)
+    {
+        LernmodulCourse::deleteBySQL("seminar_id = ?", [$course->getId()]);
+        LernmodulCourseSettings::deleteBySQL("seminar_id = ?", [$course->getId()]);
     }
 
     static public function bytesFromPHPIniValue($val) {
