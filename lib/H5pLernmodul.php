@@ -96,6 +96,14 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                 URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/edit/" . $this->getId()),
                 Icon::create("edit", "clickable")
             );
+            $actions->addLink(
+                dgettext("lernmoduleplugin","URL kopieren"),
+                URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/get_url/".$this->getId()),
+                Icon::create("code", "clickable"),
+                array(
+                    'data-dialog' => "size=auto"
+                )
+            );
         }
         Sidebar::Get()->addWidget($actions);
 
