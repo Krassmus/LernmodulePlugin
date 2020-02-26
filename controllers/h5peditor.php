@@ -214,7 +214,8 @@ class H5peditorController extends PluginController
                 "height" => 50
             ),
             'ajaxPath' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/ajax", array('cid' => Context::get()->id, 'module_id' => $this->mod->getId() ,'cmd' => ""), true), //path to load libraries
-            'libraryUrl' => "http://localhost/wordpress/wp-content/plugins/h5p/h5p-editor-php-library/",
+            //'libraryUrl' => "http://localhost/wordpress/wp-content/plugins/h5p/h5p-editor-php-library/",
+            'libraryUrl' => $this->plugin->getPluginURL()."/assets/h5p/", //for ckeditor
             'copyrightSemantics' => array(
                 'name' => "copyright",
                 'type' => "group",
