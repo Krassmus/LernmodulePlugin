@@ -1,13 +1,14 @@
 pluginname=LernmodulePlugin
 pluginclassname=LernmodulePlugin
-version=2.5.2
+version=2.5.3
 origin=RasmusFuhse
 studipMinVersion=4.0
-summary=HTML-Lernmodule
-descriptionlong=Ein Ort, um HTML-Lernmodule hochzuladen. Es können Abhängigkeiten zwischen Lernmodulen definiert werden, sodass Lernmodul B erst ausgeführt werden kann, wenn Lernmodul A absolviert worden ist.
+summary=Lernmodule in Stud.IP
+descriptionlong=Ein Ort, um Lernmodule zu erstellen, hochzuladen oder zu verlinken. Es können Abhängigkeiten zwischen Lernmodulen definiert werden, sodass Lernmodul B erst ausgeführt werden kann, wenn Lernmodul A absolviert worden ist. Auch zeitgesteuerte Lernmodule sind möglich, die erst ab einem bestimmten Datum sichtbar sind. Man kann die Lernmodule in Darstellungsblöcke gruppieren, die je noch einen einleitenden Text bekommen. Die Reihenfolge wird per Drag&Drop bestimmt.
 homepage=https://github.com/Krassmus/LernmodulePlugin
 icon=../../../assets/images/icons/black/add/learnmodule.svg
 screenshots = assets/screenshots
 screenshots.screenshot1.png = In einer schicken Übersicht sieht man die Lernmodule, die einem bereit stehen (hier die Studierendenansicht). Die Module mit einer kleinen Krone sind die Lernmodule, die man schon durchgearbeitet hat. Die ausgegrauten Module mit dem dicken Fragezeichen müssen erst noch freigeschaltet werden.
 screenshots.screenshot2.png = So sieht es aus, wenn man das konkrete Lernmodul durcharbeitet. Es wird direkt in Stud.IP angezeigt. Man kann mit dem Button "Vollbild", das Modul auf den ganzen Bildschirm ausweiten.
 category = Inhalte und Aufgabenstellungen
+keywords = H5P-Lernmodule zum Hochladen oder selbst erstellen durch eigenen Editor; HTML-Lernmodule zum Hochladen oder Verlinken (als URL)

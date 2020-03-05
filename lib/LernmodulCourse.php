@@ -54,9 +54,6 @@ class LernmodulCourse extends SimpleORMap
 
     public function matchedPrerequisites()
     {
-        if (!$this['depends_from_module_id']) {
-            return true;
-        }
         foreach ($this->getDependencies() as $dependency) {
             $successes = LernmodulAttempt::countBySql("module_id = ? AND user_id = ? AND successful = '1'", array(
                 $dependency['depends_from_module_id'],
