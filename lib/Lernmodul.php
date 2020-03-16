@@ -40,6 +40,11 @@ class Lernmodul extends SimpleORMap
     static protected function configure($config = array())
     {
         $config['db_table'] = 'lernmodule_module';
+        $config['has_many']['lernmodulcourses'] = [
+            'class_name' => 'LernmodulCourse',
+            'on_delete'  => 'delete',
+            'on_store'   => 'store'
+        ];
         $config['serialized_fields']['customdata'] = 'JSONArrayObject';
         $config['registered_callbacks']['after_delete'][] = 'cbDeleteModuleData';
         parent::configure($config);
@@ -228,29 +233,6 @@ class Lernmodul extends SimpleORMap
         }
     }
 
-    public function setDependencies($module_ids, $seminar_id)
-    {
-        LernmodulDependency::deleteBySQL("seminar_id = ? AND module_id = ?", array(
-            $seminar_id,
-            $this->getId()
-        ));
-        foreach ($module_ids as $module_id) {
-            $dependency = new LernmodulDependency();
-            $dependency['seminar_id'] = $seminar_id;
-            $dependency['module_id'] = $this->getId();
-            $dependency['depends_from_module_id'] = $module_id;
-            $dependency->store();
-        }
-    }
-
-    public function getDependencies($seminar_id)
-    {
-        return LernmodulDependency::findBySQL("module_id = ? AND seminar_id = ?", array(
-            $this->getId(),
-            $seminar_id
-        ));
-    }
-
     /**
      * unused
      * @param $course_id
@@ -292,7 +274,11 @@ class Lernmodul extends SimpleORMap
     }
 
     public function getDownloadURL() {
-        return URLhelper::getURL( "plugins.php/lernmoduleplugin/lernmodule/download/" . $this->getId());
+        if ($this['url']) {
+            return false;
+        } else {
+            return URLhelper::getURL("plugins.php/lernmoduleplugin/lernmodule/download/" . $this->getId());
+        }
     }
 
     public function getExportFile()

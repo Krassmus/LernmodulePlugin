@@ -8,6 +8,7 @@ require_once __DIR__."/lib/ScormLernmodul.php";
 require_once __DIR__."/lib/H5pLernmodul.php";
 require_once __DIR__."/lib/LernmodulAttempt.php";
 require_once __DIR__."/lib/LernmodulCourse.php";
+require_once __DIR__."/lib/LernmodulBlock.php";
 require_once __DIR__."/lib/LernmodulCourseSettings.php";
 require_once __DIR__."/lib/LernmodulDependency.php";
 require_once __DIR__."/lib/LernmodulGame.php";
@@ -48,16 +49,21 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
             );
             Navigation::addItem("/admin/locations/h5p", $nav);
         }
+        NotificationCenter::addObserver($this, "removeLernmoduleFromDeletedCourse", "CourseDidDelete");
     }
 
     public function getTabNavigation($course_id)
     {
         $this->settings = new LernmodulCourseSettings($course_id);
-        $tab = new Navigation($this->settings['tabname'] ?: dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
+        $tabname = $this->settings['tabname'] ?: (Config::get()->LERNMODUL_GLOBAL_NAME ?: dgettext("lernmoduleplugin","Lernmodule"));
+        $tab = new Navigation(
+            $tabname,
+            PluginEngine::getURL($this, array(), "lernmodule/overview")
+        );
         $tab->setImage(
             Icon::create("learnmodule", "info_alt")
         );
-        $tab->addSubNavigation("overview", new Navigation(dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview")));
+        $tab->addSubNavigation("overview", new Navigation($tabname, PluginEngine::getURL($this, array(), "lernmodule/overview")));
         $tab->addSubNavigation("participants", new Navigation(dgettext("lernmoduleplugin","Teilnehmer"), PluginEngine::getURL($this, array(), "participants")));
         return array('lernmodule' => $tab);
     }
@@ -65,7 +71,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function getIconNavigation($course_id, $last_visit, $user_id)
     {
         $tab = new Navigation(dgettext("lernmoduleplugin","Lernmodule"), PluginEngine::getURL($this, array(), "lernmodule/overview"));
-        $new = Lernmodul::countBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = :course_id AND chdate >= :last_visit AND user_id <> :user_id", array(
+        $new = Lernmodul::countBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = :course_id AND lernmodule_module.chdate >= :last_visit AND user_id <> :user_id", array(
             'course_id' => $course_id,
             'last_visit' => $last_visit,
             'user_id' => $GLOBALS['user']->id
@@ -112,6 +118,12 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function getDisplayTitle()
     {
         return dgettext("lernmoduleplugin","Lernmodule");
+    }
+
+    public function removeLernmoduleFromDeletedCourse($event, $course)
+    {
+        LernmodulCourse::deleteBySQL("seminar_id = ?", [$course->getId()]);
+        LernmodulCourseSettings::deleteBySQL("seminar_id = ?", [$course->getId()]);
     }
 
     static public function bytesFromPHPIniValue($val) {

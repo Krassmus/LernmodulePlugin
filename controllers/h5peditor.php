@@ -18,7 +18,7 @@ class H5peditorController extends PluginController
             $this->mod['draft'] = 1;
             $this->mod['type'] = "h5p";
             $this->mod->store();
-            $this->redirect(PluginEngine::getURL($this->plugin, array(), "h5peditor/edit/".$this->mod->getId()));
+            $this->redirect(PluginEngine::getURL($this->plugin, array('block_id' => Request::option("block_id")), "h5peditor/edit/".$this->mod->getId()));
             return;
         }
         Navigation::activateItem("/course/lernmodule/overview");
@@ -30,6 +30,9 @@ class H5peditorController extends PluginController
             $this->mod->updateH5PData(json_decode(Request::get("parameters"), true), $lib);
             $connection = $this->mod->courseConnection(Context::get()->id);
             if ($connection->isNew()) {
+                $block = LernmodulBlock::find(Request::option("block_id"));
+                $connection['block_id'] = Request::option("block_id");
+                $connection['position'] = count($block->coursemodules) + 1;
                 $connection->store();
             }
             if ($this->mod['draft']) {
@@ -211,7 +214,8 @@ class H5peditorController extends PluginController
                 "height" => 50
             ),
             'ajaxPath' => URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/ajax", array('cid' => Context::get()->id, 'module_id' => $this->mod->getId() ,'cmd' => ""), true), //path to load libraries
-            'libraryUrl' => "http://localhost/wordpress/wp-content/plugins/h5p/h5p-editor-php-library/",
+            //'libraryUrl' => "http://localhost/wordpress/wp-content/plugins/h5p/h5p-editor-php-library/",
+            'libraryUrl' => $this->plugin->getPluginURL()."/assets/h5p/", //for ckeditor
             'copyrightSemantics' => array(
                 'name' => "copyright",
                 'type' => "group",

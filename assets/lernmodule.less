@@ -1,7 +1,16 @@
-#moduleoverview {
+.moduleoverview {
     display: flex;
     flex-wrap: wrap;
-    > .module {
+    &.singlecolumn {
+        max-width: 350px;
+    }
+    .orderbox {
+        display: inline-flex;
+        &.almostdropping {
+            min-width: 320px;
+        }
+    }
+    .module {
         height: 100px;
         width: 300px;
         min-height: 100px;
@@ -35,6 +44,7 @@
             margin-left: 8px;
         }
         .shadow {
+            transition: opacity 300ms;
             padding-left: 10px;
             padding-right: 10px;
             width: calc(100% - 20px);
@@ -51,15 +61,36 @@
             > a:link, > a:hover, > a:visited {
                 color: white;
                 text-align: right;
-                //display: block;
                 text-shadow: rgba(0,0,0,0.3) 0px 0px 8px;
                 margin-left: 5px;
+            }
+            .mover {
+                cursor: move;
+                flex-shrink: 0;
             }
             nav {
                 position: absolute;
             }
         }
+
+        &.dragover {
+            box-shadow: @yellow 0px 0px 12px;
+            .shadow {
+                opacity: 0.3;
+                transition: opacity 300ms;
+            }
+        }
     }
+}
+
+#blockcontainer {
+    .block {
+        margin-bottom: 30px;
+    }
+}
+
+.blockmover {
+    cursor: move;
 }
 
 .ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
@@ -70,6 +101,12 @@
 }
 .ct-series-dominant-a .ct-bar, .ct-series-dominant-a .ct-line, .ct-series-dominant-a .ct-point, .ct-series-dominant-a .ct-slice-donut {
     stroke: @base-color-80;
+}
+
+.lernmodule_infotext {
+    border: thin solid @content-color-60;
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
 label.file-upload.hovered {

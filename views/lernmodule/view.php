@@ -1,3 +1,7 @@
+<? if (trim($course_connection['infotext'])) : ?>
+    <div class="lernmodule_infotext"><?= formatReady($course_connection['infotext']) ?></div>
+<? endif ?>
+
 <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
 <? $template = $mod->getViewerTemplate($attempt, $game_attendence) ?>
@@ -33,14 +37,14 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             $mod->getDownloadURL(),
             Icon::create("download", "clickable")
         );
-    }
-    if (class_exists("LernMarktplatz")) {
-        $actions->addLink(
-            dgettext("lernmoduleplugin","Auf Lernmarktplatz veröffentlichen"),
-            PluginEngine::getURL($plugin, array(), "lernmodule/publish/" . $mod->getId()),
-            Icon::create("service", "clickable"),
-            array("data-dialog" => 1)
-        );
+        if (class_exists("LernMarktplatz")) {
+            $actions->addLink(
+                dgettext("lernmoduleplugin","Auf Lernmarktplatz veröffentlichen"),
+                PluginEngine::getURL($plugin, array(), "lernmodule/publish/" . $mod->getId()),
+                Icon::create("service", "clickable"),
+                array("data-dialog" => 1)
+            );
+        }
     }
     if ($add) {
         Sidebar::Get()->addWidget($actions);

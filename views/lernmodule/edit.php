@@ -6,6 +6,10 @@
     <fieldset>
         <legend><?= dgettext("lernmoduleplugin","Lernmodul hochladen und bearbeiten") ?></legend>
 
+        <? if (Request::get("block_id")) : ?>
+            <input type="hidden" name="block_id" value="<?= htmlReady(Request::get("block_id")) ?>">
+        <? endif ?>
+
         <input type="hidden" name="upload_or_url" value="<?= htmlReady(Request::get("type") ?: ($module['url'] ? "url" : "upload")) ?>">
 
         <label class="file-upload" id="file_upload"<?= $module['url'] || Request::get("type") === "url" ? ' style="display: none;"' : "" ?>>
@@ -56,7 +60,7 @@
             <div style="margin-top: 15px; margin-bottom: 15px;">
                 <?= dgettext("lernmoduleplugin","Abhängig von") ?>
                 <ul class="clean" style="font-size: 0.8em;">
-                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $module->getDependencies(Context::get()->id)) ?>
+                    <? $dependencies = array_map(function ($dep) { return $dep['depends_from_module_id']; }, $modulecourse->getDependencies()) ?>
                     <? foreach ($lernmodule as $lernmodul) : ?>
                         <li>
                             <label>
@@ -81,6 +85,12 @@
         <legend>
             <?= dgettext("lernmoduleplugin","Abspieloptionen") ?>
         </legend>
+
+        <label>
+            <?= dgettext("lernmoduleplugin","Infotext über dem Lernmodul") ?>
+            <textarea class="add_toolbar wysiwyg"
+                      name="modulecourse[infotext]"><?= formatReady($modulecourse['infotext']) ?></textarea>
+        </label>
 
         <? if (!$module->isNew()) : ?>
             <? if ($module['url']) : ?>
@@ -134,6 +144,12 @@
                         <a href="#" onClick="STUDIP.Lernmodule.selectNextImage(); return false;">
                             <?= Icon::create("arr_1right", "clickable")->asImg(20, array('style' => "vertical-align: middle;")) ?>
                         </a>
+                        <label style="vertical-align: inherit; display: inline-block; margin-left: 10px; cursor: pointer;" title="<?= _("Logo hochladen") ?>">
+                            <input accept="image/*"
+                                   type="file"
+                                   style="display: none;" onChange="STUDIP.Lernmodule.uploadNewLogo.call(this, '<?= htmlReady($module->getId()) ?>');">
+                            <?= Icon::create("upload", "clickable")->asImg(40, ['style' => "vertical-align: middle;"]) ?>
+                        </label>
                     </div>
                 <? endif ?>
             <? endif ?>

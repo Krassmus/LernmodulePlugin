@@ -90,21 +90,21 @@ class InitPlugin extends H5PMigration {
             'type' => "string",
             'value' => "dozent",
             'range' => "global",
-            'section' => "global",
+            'section' => "LernmodulePlugin",
             'description' => "Ab welchem Status darf jemand die Nutzerauswertung der Lernmodule sehen (autor, tutor, dozent, admin, root, leer lassen)."
         ));
         Config::get()->create("LERNMODUL_DATA_PATH", array(
             'type' => "string",
             'value' => "",
             'range' => "global",
-            'section' => "global",
+            'section' => "LernmodulePlugin",
             'description' => "Der absolute Pfad auf der Festplatte, wo die Lernmodule gespeichert werden sollen. Ist der Wert leer, sind sie in einem parallelen Pluginordner. Nur zusammen mit LERNMODUL_DATA_URL angeben."
         ));
         Config::get()->create("LERNMODUL_DATA_URL", array(
             'type' => "string",
             'value' => "",
             'range' => "global",
-            'section' => "global",
+            'section' => "LernmodulePlugin",
             'description' => "Die URL, unter der die Lernmodule stecken. Es kann sinnvoll sein, diese URL unter einer Subdomain zu haben, damit Lernmodule einen anderen Origin haben."
         ));
         StudipCacheFactory::getCache()->expire(RolePersistence::ROLES_CACHE_KEY);

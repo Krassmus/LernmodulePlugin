@@ -64,6 +64,14 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
                     'onClick' => "STUDIP.Lernmodule.editConfigs(); return false;"
                 )
             );
+            $actions->addLink(
+                dgettext("lernmoduleplugin","URL kopieren"),
+                URLHelper::getURL("plugins.php/lernmoduleplugin/html/get_url/".$this->getId()),
+                Icon::create("code", "clickable"),
+                array(
+                    'data-dialog' => "size=auto"
+                )
+            );
         }
 
         $templatefactory = new Flexi_TemplateFactory(__DIR__."/../views");

@@ -21,6 +21,14 @@ class LernmoduleController extends PluginController
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         Lernmodul::deleteBySQL("draft = '1' AND mkdate < UNIX_TIMESTAMP() - 86400");
         $this->module = Lernmodul::findByCourse($this->course_id);
+        $this->settings = new LernmodulCourseSettings(Context::get()->id);
+        $this->blocks = LernmodulBlock::findBySQL("seminar_id = ? ORDER BY position ASC", [$this->course_id]);
+        if (!count($this->blocks)) {
+            $block = new LernmodulBlock();
+            $block['seminar_id'] = $this->course_id;
+            $block->store();
+            $this->blocks[] = $block;
+        }
 
 
         if (Request::option("quit")) {
@@ -105,6 +113,9 @@ class LernmoduleController extends PluginController
 
     public function edit_action($module_id = null)
     {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
+            throw new AccessDeniedException();
+        }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id ?: null);
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
@@ -156,6 +167,7 @@ class LernmoduleController extends PluginController
                 $this->modulecourse = new LernmodulCourse();
                 $this->modulecourse['module_id'] = $this->module->getId();
                 $this->modulecourse['seminar_id'] = $this->course_id;
+                $this->modulecourse['block_id'] = Request::option("block_id");
             }
             $modulecoursedata = Request::getArray("modulecourse");
             $modulecoursedata['starttime'] = strtotime($modulecoursedata['starttime']) ?: null;
@@ -164,7 +176,7 @@ class LernmoduleController extends PluginController
 
             $success = true;
 
-            $this->module->setDependencies(Request::getArray("dependencies"), $this->course_id);
+            $this->modulecourse->setDependencies(Request::getArray("dependencies"), $this->course_id);
             if ($_FILES['modulefile']['size'] > 0) {
                 $success = $this->module->copyModule($_FILES['modulefile']['tmp_name'], $_FILES['modulefile']['name']);
                 if ($this->module['material_id'] && !$this->module['url']) {
@@ -198,12 +210,28 @@ class LernmoduleController extends PluginController
                 INNER JOIN folders ON (folders.id = file_refs.folder_id)
                 INNER JOIN files ON (files.id = file_refs.file_id)
             WHERE folders.range_id = :seminar_id
-                AND folders.folder_type IN ('StandardFolder', 'RootFolder', 'MaterialFolder')
                 AND folders.range_type = 'course'
                 AND SUBSTRING(files.mime_type, 1, 6) = 'image/'
         ");
         $statement->execute(array('seminar_id' => $this->course_id));
         $this->course_images = FileRef::findMany($statement->fetchAll(PDO::FETCH_COLUMN, 0));
+    }
+
+    public function add_logo_action($module_id)
+    {
+        if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            throw new AccessDeniedException();
+        }
+        $this->module = new Lernmodul($module_id);
+        if ($_FILES['logo']) {
+            $relative_path = "logo";
+            $end = substr($_FILES['logo']['name'], strrpos($_FILES['logo']['name'], ".") + 1);
+            $relative_path .= ".".$end;
+            move_uploaded_file($_FILES['logo']['tmp_name'], $this->module->getPath()."/".$relative_path);
+            $this->module['image'] = $relative_path;
+            $this->module->store();
+        }
+        $this->render_text($this->module->getDataURL()."/".$relative_path);
     }
 
     public function evaluation_action($module_id = null)
@@ -245,6 +273,9 @@ class LernmoduleController extends PluginController
 
     public function delete_action($module_id)
     {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
+            throw new AccessDeniedException();
+        }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {
@@ -354,11 +385,71 @@ class LernmoduleController extends PluginController
         if ($this->settings->isNew()) {
             $this->settings->setId(Context::get()->id);
         }
+        if (Request::option("delete_block")) {
+            $block = new LernmodulBlock(Request::option("delete_block"));
+            if ($block['seminar_id'] === Context::get()->id) {
+                $block->delete();
+                PageLayout::postSuccess(_("Block wurde gelöscht."));
+            }
+        }
         if (Request::isPost()) {
             $this->settings->setData(Request::getArray("data"));
             $this->settings->store();
+
+            $blocks_data = Request::getArray("block");
+            foreach (Request::getArray("blocks_order") as $position => $block_id) {
+                $block = LernmodulBlock::find($block_id);
+                if ($block && $block['seminar_id'] === Context::get()->id) {
+                    $block['title'] = trim($blocks_data[$block_id]['title']) ?: null;
+                    $block['infotext'] = trim(html_entity_decode(strip_tags($blocks_data[$block_id]['infotext']))) ? $blocks_data[$block_id]['infotext'] : null;
+                    $block->store();
+                }
+            }
+            if (Request::submitted("add_block")) {
+                $block = new LernmodulBlock();
+                $block['seminar_id'] = Context::get()->id;
+                $block['position'] = LernmodulBlock::countBySQL("seminar_id = ? ORDER BY position ASC", [$this->course_id]) + 1;
+                $block->store();
+            }
             PageLayout::postSuccess(dgettext("lernmoduleplugin","Einstellungen wurden gespeichert."));
         }
+        $this->blocks = LernmodulBlock::findBySQL("seminar_id = ? ORDER BY position ASC", [$this->course_id]);
+    }
+
+    public function sortblockmodules_action($block_id)
+    {
+        $block = new LernmodulBlock($block_id);
+        $course_id = $block['seminar_id'];
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
+            throw new AccessDeniedException();
+        }
+        foreach (Request::getArray("order") as $position => $module_id) {
+            $coursemodule = LernmodulCourse::find([$module_id, $course_id]);
+            if (!$coursemodule) {
+                $coursemodule = new LernmodulCourse();
+                $coursemodule['module_id'] = $module_id;
+                $coursemodule['seminar_id'] = $course_id;
+            }
+            $coursemodule['position'] = $position + 1;
+            $coursemodule['block_id'] = $block_id;
+            $coursemodule->store();
+        }
+        $this->render_text("ok");
+    }
+
+    public function sortblocks_action()
+    {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+            throw new AccessDeniedException();
+        }
+        foreach (Request::getArray("order") as $position => $block_id) {
+            $block = new LernmodulBlock($block_id);
+            if ($block['seminar_id'] === Context::get()->id) {
+                $block['position'] = $position + 1;
+                $block->store();
+            }
+        }
+        $this->render_text("ok");
     }
 
     /**
