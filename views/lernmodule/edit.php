@@ -237,12 +237,16 @@ if (!$module->isNew()) {
             array("data-dialog" => 1)
         );
     }
+    $actions->addLink(
+        dgettext("lernmoduleplugin","Lernmodul in Veranstaltung verschieben"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/move/" . $module->getId()),
+        Icon::create("seminar+move_up", "clickable"),
+        array("data-dialog" => 1)
+    );
     if (!Sidebar::Get()->hasWidget("actions")) {
         Sidebar::Get()->addWidget($actions);
     }
-}
 
-if (!$module->isNew()) {
     $views = new ViewsWidget();
     $views->addLink(
         $module['name'],

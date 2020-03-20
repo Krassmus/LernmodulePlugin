@@ -31,6 +31,12 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
         Icon::create("edit", "clickable")
 
     );
+    $actions->addLink(
+        dgettext("lernmoduleplugin","Lernmodul in Veranstaltung verschieben"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/move/" . $mod->getId()),
+        Icon::create("seminar+move_up", "clickable"),
+        array("data-dialog" => 1)
+    );
     if ($mod->getDownloadURL()) {
         $actions->addLink(
             dgettext("lernmoduleplugin","Lernmodul herunterladen"),

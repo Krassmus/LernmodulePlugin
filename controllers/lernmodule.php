@@ -530,4 +530,66 @@ class LernmoduleController extends PluginController
         }
     }
 
+    public function move_action($module_id)
+    {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
+            throw new AccessDeniedException();
+        }
+        $this->module = Lernmodul::find($module_id);
+        if (!$this->module->isWritable()) {
+            throw new AccessDeniedException();
+        }
+        Navigation::activateItem("/course/lernmodule/overview");
+        PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
+        PageLayout::setTitle(_("Lernmodul verschieben in andere Veranstaltung"));
+        if ($this->module['type'] && !$this->module->isNew()) {
+            $class = ucfirst($this->module['type'])."Lernmodul";
+            $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
+        }
+        if (Request::isPost() && Request::option("seminar_id") && $GLOBALS['perm']->have_studip_perm("tutor", Request::option("seminar_id"))) {
+            $connection = $this->module->courseConnection($this->course_id);
+            $connection['seminar_id'] = Request::option("seminar_id");
+
+            //delete old dependencies:
+            LernmodulDependency::deleteBySQL("seminar_id = ? AND module_id = ?", array(
+                $this->course_id,
+                $this->module->getId()
+            ));
+            $this->blocks = LernmodulBlock::findBySQL("seminar_id = ? ORDER BY position ASC", [Request::option("seminar_id")]);
+            if (!count($this->blocks)) {
+                $block = new LernmodulBlock();
+                $block['seminar_id'] = Request::option("seminar_id");
+                $block->store();
+                $this->blocks[] = $block;
+            }
+            $connection['block_id'] = $this->blocks[count($this->blocks) - 1]->getId();
+            $connection->store();
+
+            PluginManager::getInstance()->setPluginActivated(
+                $this->plugin->getPluginId(),
+                Request::option("seminar_id"),
+                true
+            );
+
+            PageLayout::postSuccess(_("Lernmodul wurde verschoben."));
+            $this->redirect(PluginEngine::getURL($this->plugin, array('cid' => Request::option("seminar_id")), "lernmodule/overview"));
+            return;
+        }
+        if (!$GLOBALS['perm']->have_perm("admin")) {
+            $statement = DBManager::get()->prepare("
+                SELECT seminare.*
+                FROM seminare
+                    INNER JOIN seminar_user ON (seminar_user.Seminar_id = seminare.Seminar_id)
+                WHERE seminar_user.user_id = :user_id
+                    AND seminar_user.status IN ('tutor', 'dozent')
+                ORDER BY seminare.start_time DESC, seminare.name ASC
+            ");
+            $statement->execute(array('user_id' => $GLOBALS['user']->id));
+            $this->mycourses = array();
+            foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $coursedata) {
+                $this->mycourses[] = Course::buildExisting($coursedata);
+            }
+        }
+    }
+
 }
