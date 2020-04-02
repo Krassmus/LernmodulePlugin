@@ -12,7 +12,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         if ($this['customdata']) {
             $data = $this['customdata']->getArrayCopy();
         }
-        if (!$data || !file_exists($this->getPath()."/".$data['start_file'])) {
+        if (!$data || !$data['start_file'] || !file_exists($this->getPath()."/".$data['start_file'])) {
             if (file_exists($this->getPath()."/index.html")) {
                 $data['start_file'] = "index.html";
             } else {
@@ -22,7 +22,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
                 }
             }
         }
-        if (!$this['customdata']['start_file']) {
+        if (!$data['start_file']) {
             $files = $this->scanForFiletypes(array("pdf"));
             $data['start_file'] = $files[0];
         }
