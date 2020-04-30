@@ -1111,19 +1111,26 @@ class H5peditorController extends PluginController
                 mkdir($path."/assets");
             }
             $path .= "/assets/";
-            $ending = strpos($_FILES['file']['name'], ".") !== false
-                ? substr($_FILES['file']['name'], strrpos($_FILES['file']['name'], ".") + 1)
+            $name = $_FILES['file']['name'] ?: "image.png";
+            $ending = strpos($name, ".") !== false
+                ? substr($name, strrpos($name, ".") + 1)
                 : "";
-            $filename = strpos($_FILES['file']['name'], ".") !== false
-                ? substr($_FILES['file']['name'], 0, strrpos($_FILES['file']['name'], "."))
-                : $_FILES['file']['name'];
+            $filename = strpos($name, ".") !== false
+                ? substr($name, 0, strrpos($name, "."))
+                : $name;
 
             $i = "";
             while (file_exists($path.$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : ""))) {
                 $i++;
             }
             $newfilepath = $path.$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : "");
-            move_uploaded_file($_FILES['file']['tmp_name'], $newfilepath);
+
+            if ($_FILES['file']['tmp_name'] && file_exists($_FILES['file']['tmp_name']) && filesize($_FILES['file']['tmp_name'])) {
+                move_uploaded_file($_FILES['file']['tmp_name'], $newfilepath);
+            } else {
+                $data = explode(",", Request::get("dataURI"), 2);
+                file_put_contents($newfilepath, base64_decode($data[1]));
+            }
 
             $image_size = getimagesize($newfilepath);
 
