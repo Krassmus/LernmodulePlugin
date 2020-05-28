@@ -1,7 +1,7 @@
 
 <div id="fullscreen_container">
     <iframe src="<?= URLHelper::getLink("plugins.php/lernmoduleplugin/h5p/iframe/".$module->getId(), array('a' => $attempt->getId())) ?>"
-            style="width: 100%; border: none; height: 100vh;"></iframe>
+            style="width: 100%; border: none; height: 100vh; min-height: 721px;"></iframe>
 </div>
 
 <script>

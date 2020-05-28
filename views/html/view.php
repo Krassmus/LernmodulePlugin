@@ -192,6 +192,6 @@
     ?>
         src="<?= htmlReady($url) ?>"
     <?= $module['sandbox'] && (!$module['url'] || (parse_url($url, PHP_URL_HOST) === $_SERVER['SERVER_NAME'])) ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
-        style="width: 100%; height: 90vh; border: none;"
+        style="width: 100%; height: 90vh; border: none; min-height: 721px;"
         id="lernmodule_iframe"
 ></iframe>
