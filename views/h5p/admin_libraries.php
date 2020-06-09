@@ -13,7 +13,7 @@
         <? foreach ($libs as $lib) : ?>
         <tr data-lib_id="<?= htmlReady($lib->getId()) ?>">
             <td><?= htmlReady($lib['name']) ?></td>
-            <td>
+            <td title="<?= dgettext("lernmoduleplugin","Patch Version: ").$lib['patch_version'] ?>">
                 <?= htmlReady($lib['major_version'].".".$lib['minor_version']) ?>
             </td>
             <td>
