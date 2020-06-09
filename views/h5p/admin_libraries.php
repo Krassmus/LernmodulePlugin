@@ -6,6 +6,7 @@
             <th><?= dgettext("lernmoduleplugin","Benutzt von") ?></th>
             <th title="<?= dgettext("lernmoduleplugin", "Viele H5P-Module melden leider nicht an Stud.IP, wenn der Nutzer sie erfolgreich absolviert hat. Mit dieser Option an, speichert Stud.IP das selbstständig nach 30 Sekunden.")  ?>"><?= dgettext("lernmoduleplugin","Auto-Rückmeldung") ?></th>
             <th><?= dgettext("lernmoduleplugin","Aktiv") ?></th>
+            <th class="actions"><?= dgettext("lernmoduleplugin","Aktion") ?></th>
         </tr>
     </thead>
     <tbody>
@@ -30,6 +31,11 @@
                     <?= Icon::create("checkbox-checked")->asImg(20, array('class' => "text-bottom checked")) ?>
                 </a>
             </td>
+            <td class="actions">
+                <a href="<?= PluginEngine::getLink($plugin, array('lib' => $lib['name']."-".$lib['major_version'].".".$lib['minor_version']), "h5p/export_library") ?>">
+                    <?= Icon::create("download", "clickable")->asImg(20, ['class' => "text-bottom"]) ?>
+                </a>
+            </td>
         </tr>
         <? endforeach ?>
     </tbody>
@@ -45,7 +51,7 @@ $actions->addLink(
     array('data-dialog' => 1)
 );
 $actions->addLink(
-    dgettext("lernmoduleplugin","Bibliotheken exportieren"),
+    dgettext("lernmoduleplugin","Alle Bibliotheken exportieren"),
     PluginEngine::getURL($plugin, array(), "h5p/export_libraries"),
     Icon::create("export", "clickable")
 );

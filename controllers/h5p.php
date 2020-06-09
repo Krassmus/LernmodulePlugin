@@ -134,6 +134,34 @@ class H5pController extends PluginController
         die();
     }
 
+    public function export_library_action() {
+        if (!$GLOBALS['perm']->have_perm("root")) {
+            throw new AccessDeniedException();
+        }
+        list($name, $version) = explode("-", Request::get("lib"));
+        $version = explode(".", $version);
+
+        $lib = H5PLib::findOneBySQL("name = :name AND major_version = :major_version AND minor_version = :minor_version", [
+            'name' => $name,
+            'major_version' => $version[0],
+            'minor_version' => $version[1]
+        ]);
+        $archive = $GLOBALS['TMP_PATH']."/h5p_lib_".$lib->getId().".zip";
+        $zip = \Studip\ZipArchive::create($archive);
+        $zip->addFromPath($lib->getPath(), $lib['name']."-".$lib['major_version'].".".$lib['minor_version']."/");
+        foreach ($lib->getSubLibs([], true) as $sublib) {
+            $zip->addFromPath($sublib->getPath(), $sublib['name']."-".$sublib['major_version'].".".$sublib['minor_version']."/");
+        }
+        $zip->close();
+
+        header("Content-Type: application/zip");
+        header("Content-Disposition: attachment; filename=\"".$lib['name']."-".$lib['major_version'].".".$lib['minor_version'].".zip\"");
+        header("Content-Length: ".filesize($archive));
+        echo file_get_contents($archive);
+        unlink($archive);
+        die();
+    }
+
 
 
     public function iframe_action($module_id)
