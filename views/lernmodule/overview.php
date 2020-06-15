@@ -80,11 +80,5 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", $course_id)) {
         Icon::create("add", "clickable"),
         array('data-dialog' => "size=auto")
     );
-    $actions->addLink(
-        _("Lernmodul erstellen"),
-        PluginEngine::getURL($plugin, array(), "editor/metadata"),
-        Icon::create("add", "clickable"),
-        array('data-dialog' => 1)
-    );
 }
 Sidebar::Get()->addWidget($actions);
