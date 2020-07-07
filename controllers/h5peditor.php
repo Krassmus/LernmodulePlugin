@@ -1134,13 +1134,20 @@ class H5peditorController extends PluginController
 
             $image_size = getimagesize($newfilepath);
 
-
-            $this->render_json(array(
+            $output = array(
                 'width' => $image_size[0],
                 'height' => $image_size[1],
                 'mime' => $_FILES['file']['type'],
-                'path' => "assets/".$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : "")
-            ));
+                'path' => "assets/".$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : ""),
+                'exists' => file_exists($newfilepath),
+                'oldpath' => $_FILES['file']['tmp_name'],
+                'newpath' => $newfilepath
+            );
+            if ($_FILES['file']['error']) {
+                $output['error'] = $_FILES['file']['error'];
+            }
+
+            $this->render_json($output);
             return;
         }
         $this->render_text("errr .. ok");

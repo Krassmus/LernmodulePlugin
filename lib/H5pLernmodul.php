@@ -278,14 +278,14 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                 unlink($path . "/content/content.json");
             }
             $content = json_encode($data['params']);
-            if (file_exists($this->getPath()."/content/assets")) { //delete all old images
+            /*if (file_exists($this->getPath()."/content/assets")) { //delete all old images
                 foreach (scandir($this->getPath()."/content/assets") as $file) {
                     $file_ecaped = str_replace(array("/", "\""), array("\\/", "\\\""), "assets/".$file); //json_encode-escaping for one string
                     if ($file !== "." && $file !== ".." && strpos($content, $file_ecaped) === false) {
                         @unlink($this->getPath()."/content/assets/".$file);
                     }
                 }
-            }
+            }*/
             file_put_contents($path . "/content/content.json", $content);
             $h5p = array(
                 'title' => $data['metadata']['title'],

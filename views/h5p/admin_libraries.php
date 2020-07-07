@@ -35,6 +35,10 @@
                 <a href="<?= PluginEngine::getLink($plugin, array('lib' => $lib['name']."-".$lib['major_version'].".".$lib['minor_version']), "h5p/export_library") ?>">
                     <?= Icon::create("download", "clickable")->asImg(20, ['class' => "text-bottom"]) ?>
                 </a>
+                <a href="<?= PluginEngine::getLink($plugin, array('lib' => $lib['name']."-".$lib['major_version'].".".$lib['minor_version']), "h5p/delete_library") ?>"
+                   data-confirm="<?= _("Wirklich diese Bibliothek löschen?") ?>">
+                    <?= Icon::create("trash", "clickable")->asImg(20, ['class' => "text-bottom"]) ?>
+                </a>
             </td>
         </tr>
         <? endforeach ?>
