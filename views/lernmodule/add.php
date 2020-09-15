@@ -1,4 +1,7 @@
 <div class="file_select_possibilities">
+    <? if (StudipVersion::newerThan("4.4.99")) : ?>
+    <div>
+    <? endif ?>
 
     <? if ($h5plibs > 0) : ?>
         <a href="<?= PluginEngine::getLink($plugin, array('block_id' => Request::option("block_id")), "h5peditor/edit") ?>">
@@ -22,6 +25,10 @@
             <?= Icon::create("service", "clickable")->asImg(50) ?>
             <?= _("OER-Campus") ?>
         </a>
+    <? endif ?>
+
+    <? if (StudipVersion::newerThan("4.4.99")) : ?>
+    </div>
     <? endif ?>
 
 </div>
