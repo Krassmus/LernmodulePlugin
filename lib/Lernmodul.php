@@ -94,7 +94,7 @@ class Lernmodul extends SimpleORMap
 
         foreach ($this->scanForFiletypes(array("php", "php3", "php1", "php2", "phtml", "asp"), null, true) as $php_file) {
             //remove all PHP-files
-            @unlink($php_file);
+            @unlink($this->getPath()."/".$php_file);
         }
 
         if (!$this['image'] || !file_exists($this->getPath()."/".$this['image'])) {
