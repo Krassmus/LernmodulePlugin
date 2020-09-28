@@ -1,5 +1,5 @@
 <div class="file_select_possibilities">
-    <? if (StudipVersion::newerThan("4.4.99")) : ?>
+    <? if (StudipVersion::newerThan("4.5.99")) : ?>
     <div>
     <? endif ?>
 
@@ -27,7 +27,7 @@
         </a>
     <? endif ?>
 
-    <? if (StudipVersion::newerThan("4.4.99")) : ?>
+    <? if (StudipVersion::newerThan("4.5.99")) : ?>
     </div>
     <? endif ?>
 
