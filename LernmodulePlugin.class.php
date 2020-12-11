@@ -185,4 +185,13 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         }
         return $L;
     }
+    function getMetadata() {
+        $metadata = parent::getMetadata();
+        $metadata['pluginname'] = dgettext("lernmoduleplugin", "Lernmodule");
+        $metadata['displayname'] = dgettext("lernmoduleplugin", "Lernmodule");
+        $metadata['descriptionlong'] = dgettext("lernmoduleplugin", "Ein Ort, um Lernmodule zu erstellen, hochzuladen oder zu verlinken. Es können Abhängigkeiten zwischen Lernmodulen definiert werden, sodass Lernmodul B erst ausgeführt werden kann, wenn Lernmodul A absolviert worden ist. Auch zeitgesteuerte Lernmodule sind möglich, die erst ab einem bestimmten Datum sichtbar sind. Man kann die Lernmodule in Darstellungsblöcke gruppieren, die je noch einen einleitenden Text bekommen. Die Reihenfolge wird per Drag&Drop bestimmt.");
+        $metadata['summary'] = dgettext("lernmoduleplugin", "Lernmodule in Stud.IP");
+        $metadata['keywords'] = dgettext("lernmoduleplugin", "H5P-Lernmodule zum Hochladen oder selbst erstellen durch eigenen Editor; HTML-Lernmodule zum Hochladen oder Verlinken (als URL)");
+        return $metadata;
+    }
 }
