@@ -167,17 +167,34 @@ class H5pController extends PluginController
         if (!$GLOBALS['perm']->have_perm("root")) {
             throw new AccessDeniedException();
         }
-        list($name, $version) = explode("-", Request::get("lib"));
-        $version = explode(".", $version);
+        if (Request::get("lib")) {
+            list($name, $version) = explode("-", Request::get("lib"));
+            $version = explode(".", $version);
 
-        $lib = H5PLib::findOneBySQL("name = :name AND major_version = :major_version AND minor_version = :minor_version", [
-            'name' => $name,
-            'major_version' => $version[0],
-            'minor_version' => $version[1]
-        ]);
-        if ($lib) {
-            $lib->delete();
-            PageLayout::postSuccess(dgettext("lernmoduleplugin","H5P-Bibliothek wurde gelöscht."));
+            $lib = H5PLib::findOneBySQL("name = :name AND major_version = :major_version AND minor_version = :minor_version", [
+                'name' => $name,
+                'major_version' => $version[0],
+                'minor_version' => $version[1]
+            ]);
+            if ($lib) {
+                $lib->delete();
+                PageLayout::postSuccess(dgettext("lernmoduleplugin", "H5P-Bibliothek wurde gelöscht."));
+            }
+        } elseif (count(Request::getArray("libs"))) {
+            foreach (Request::getArray("libs") as $libdata) {
+                list($name, $version) = explode("-", $libdata);
+                $version = explode(".", $version);
+
+                $lib = H5PLib::findOneBySQL("name = :name AND major_version = :major_version AND minor_version = :minor_version", [
+                    'name' => $name,
+                    'major_version' => $version[0],
+                    'minor_version' => $version[1]
+                ]);
+                if ($lib) {
+                    $lib->delete();
+                }
+            }
+            PageLayout::postSuccess(dgettext("lernmoduleplugin", "H5P-Bibliotheken wurden gelöscht."));
         }
         $this->redirect("h5p/admin_libraries");
     }

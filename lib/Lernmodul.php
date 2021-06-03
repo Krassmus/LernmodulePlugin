@@ -174,9 +174,6 @@ class Lernmodul extends SimpleORMap
                 $files[$key] = substr($file, $reduce);
             }
         }
-        if ($GLOBALS['FILESYSTEM_UTF8']) {
-            $files = studip_utf8decode($files);
-        }
         return $files;
     }
 

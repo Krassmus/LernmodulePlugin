@@ -107,7 +107,7 @@ class InitPlugin extends H5PMigration {
             'section' => "LernmodulePlugin",
             'description' => "Die URL, unter der die Lernmodule stecken. Es kann sinnvoll sein, diese URL unter einer Subdomain zu haben, damit Lernmodule einen anderen Origin haben."
         ));
-        StudipCacheFactory::getCache()->expire(RolePersistence::ROLES_CACHE_KEY);
+        //StudipCacheFactory::getCache()->expire(RolePersistence::ROLES_CACHE_KEY);
     }
 
     function down() {
