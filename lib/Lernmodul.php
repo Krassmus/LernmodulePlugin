@@ -104,8 +104,6 @@ class Lernmodul extends SimpleORMap
 
         if (file_exists($this->getPath() . "/h5p.json")) {
             $this['type'] = "h5p";
-        } elseif(file_exists($this->getPath() . "/imsmanifest.xml")) {
-            $this['type'] = "scorm";
         } else {
             $this['type'] = "html";
         }
