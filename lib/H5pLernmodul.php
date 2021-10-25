@@ -48,6 +48,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                 $lib['minor_version'] = $lib_data['minorVersion'];
                 $lib['patch_version'] = $lib_json['patchVersion'];
                 $lib['allowed'] = LernmodulePlugin::mayEditSandbox() ? 1 : 0;
+                $lib['allowed_in_editor'] = 0;
                 $lib['runnable'] = $lib_json['runnable'] ? 1 : 0;
                 $lib->store();
 

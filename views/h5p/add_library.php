@@ -18,6 +18,11 @@
         </label>
 
         <label>
+            <input type="checkbox" name="activate_in_editor" value="1" checked>
+            <?= dgettext("lernmoduleplugin","Bibliotheken in Editor erlauben") ?>
+        </label>
+
+        <label>
             <?= dgettext("lernmoduleplugin","Bestehende Bibliotheken überschreiben") ?>
             <select name="overwrite">
                 <option value="always"><?= dgettext("lernmoduleplugin","Immer") ?></option>

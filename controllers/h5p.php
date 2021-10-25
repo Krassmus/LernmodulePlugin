@@ -30,6 +30,17 @@ class H5pController extends PluginController
         $this->render_text("ok");
     }
 
+    public function activate_library_in_editor_action()
+    {
+        if (!$GLOBALS['perm']->have_perm("root") || !Request::isPost()) {
+            throw new AccessDeniedException();
+        }
+        $lib = H5PLib::find(Request::option("lib_id"));
+        $lib['allowed_in_editor'] = Request::int("allowed_in_editor", 0);
+        $lib->store();
+        $this->render_text("ok");
+    }
+
     public function simple_view_success_action()
     {
         if (!$GLOBALS['perm']->have_perm("root") || !Request::isPost()) {
@@ -76,6 +87,7 @@ class H5pController extends PluginController
                             $lib['minor_version'] = $json['minorVersion'];
                             $lib['patch_version'] = $json['patchVersion'];
                             $lib['allowed'] = Request::int("activate", 0);
+                            $lib['allowed_in_editor'] = Request::int("activate_in_editor", 0);
                             $lib['runnable'] = $json['runnable'] ? 1 : 0;
                             $lib->store();
                             $lib_is_new = true;
@@ -93,6 +105,9 @@ class H5pController extends PluginController
                             $lib['patch_version'] = $json['patchVersion'];
                             if (Request::int("activate", 0)) {
                                 $lib['allowed'] = 1;
+                            }
+                            if (Request::int("activate_in_editor", 0)) {
+                                $lib['allowed_in_editor'] = 1;
                             }
                             $lib->store();
                             $libs_name[] = $lib['name']." ".$lib['major_version'].".".$lib['minor_version'];

@@ -933,7 +933,7 @@ class H5peditorController extends PluginController
         if ($cmd === "libraries" && Request::get("machineName")) {
             //deliver the JSON to display the lib in the editor after it has been selected
             $main_library = H5PLib::findVersion(Request::get("machineName"), Request::get("majorVersion"), Request::get("minorVersion"));
-            if (!$main_library['allowed']) {
+            if (!$main_library['allowed_in_editor']) {
                 throw new AccessDeniedException();
             }
             $javascripts = array();
@@ -1058,12 +1058,13 @@ class H5peditorController extends PluginController
             $statement = DBManager::get()->prepare("
                     SELECT lernmodule_h5plibs.*
                     FROM lernmodule_h5plibs
-                    WHERE lernmodule_h5plibs.allowed = '1'
+                    WHERE lernmodule_h5plibs.allowed_in_editor = '1'
                         AND lernmodule_h5plibs.runnable = '1'
                         AND lib_id = (
                             SELECT l2.lib_id
                             FROM lernmodule_h5plibs AS l2
                             WHERE l2.name = lernmodule_h5plibs.name
+                                AND l2.allowed_in_editor = '1'
                             ORDER BY major_version DESC, minor_version DESC
                             LIMIT 1
                         )

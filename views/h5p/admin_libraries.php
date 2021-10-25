@@ -13,6 +13,7 @@
                 <th><?= dgettext("lernmoduleplugin","Benutzt von") ?></th>
                 <th title="<?= dgettext("lernmoduleplugin", "Viele H5P-Module melden leider nicht an Stud.IP, wenn der Nutzer sie erfolgreich absolviert hat. Mit dieser Option an, speichert Stud.IP das selbstständig nach 30 Sekunden.")  ?>"><?= dgettext("lernmoduleplugin","Auto-Rückmeldung") ?></th>
                 <th><?= dgettext("lernmoduleplugin","Aktiv") ?></th>
+                <th><?= dgettext("lernmoduleplugin","Aktiv im Editor") ?></th>
                 <th class="actions"><?= dgettext("lernmoduleplugin","Aktion") ?></th>
             </tr>
         </thead>
@@ -37,6 +38,12 @@
                 </td>
                 <td>
                     <a href="#" class="allowed<?= !$lib['allowed'] ? " notyet" : "" ?>">
+                        <?= Icon::create("checkbox-unchecked")->asImg(20, array('class' => "text-bottom unchecked")) ?>
+                        <?= Icon::create("checkbox-checked")->asImg(20, array('class' => "text-bottom checked")) ?>
+                    </a>
+                </td>
+                <td>
+                    <a href="#" class="allowed_in_editor<?= !$lib['allowed_in_editor'] ? " notyet" : "" ?>">
                         <?= Icon::create("checkbox-unchecked")->asImg(20, array('class' => "text-bottom unchecked")) ?>
                         <?= Icon::create("checkbox-checked")->asImg(20, array('class' => "text-bottom checked")) ?>
                     </a>
