@@ -1132,6 +1132,12 @@ msgstr ""
 "H5P learning modules to upload or create yourself using your own editor; "
 "HTML learning modules to upload or link (as URL);"
 
+msgid "Bibliotheken in Editor erlauben"
+msgstr "Allow libs in editor"
+
+msgid "Aktiv im Editor"
+msgstr "Active in editor"
+
 #~ msgid ""
 #~ "Dieses Modul hat Kreis-Abhängigkeiten und kann von neuen Teilnehmern nie "
 #~ "erreicht werden."

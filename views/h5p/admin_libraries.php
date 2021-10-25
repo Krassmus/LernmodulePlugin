@@ -62,7 +62,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     <?= \Studip\Button::create(_("Ausgewählte Löschen")) ?>
                 </td>
             </tr>
