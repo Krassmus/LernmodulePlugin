@@ -32,7 +32,7 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
 
     );
     $actions->addLink(
-        dgettext("lernmoduleplugin","Lernmodul in Veranstaltung verschieben"),
+        dgettext("lernmoduleplugin","Lernmodul in Veranstaltung verschieben oder kopieren"),
         PluginEngine::getURL($plugin, array(), "lernmodule/move/" . $mod->getId()),
         Icon::create("seminar+move_up", "clickable"),
         array("data-dialog" => 1)

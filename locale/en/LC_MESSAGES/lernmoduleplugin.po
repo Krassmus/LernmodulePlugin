@@ -265,6 +265,9 @@ msgstr "Select image"
 msgid "Verschieben"
 msgstr "Move"
 
+msgid "Kopieren"
+msgstr "Copy"
+
 #: ../views/lernmodule/overview.php:2
 msgid "Es sind noch keine Lernmodule vorhanden."
 msgstr "There are no learning modules yet."
@@ -291,8 +294,8 @@ msgid "Abspieloptionen bearbeiten"
 msgstr "Play options"
 
 #: ../views/lernmodule/view.php:35 ../views/lernmodule/edit.php:241
-msgid "Lernmodul in Veranstaltung verschieben"
-msgstr "Move learning module to course"
+msgid "Lernmodul in Veranstaltung verschieben oder kopieren"
+msgstr "Move or copy learning module to course"
 
 #: ../views/lernmodule/view.php:48 ../views/lernmodule/edit.php:234
 msgid "Auf Lernmarktplatz veröffentlichen"

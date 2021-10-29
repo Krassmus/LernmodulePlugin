@@ -37,6 +37,25 @@ class Lernmodul extends SimpleORMap
         return $module;
     }
 
+    static public function createCopyFromModule(Lernmodul $module)
+    {
+        $class = ucfirst($module['type'])."Lernmodul";
+        $lernmodul = new $class();
+        $lernmodul->setData($module->toRawArray());
+        $lernmodul->setId($lernmodul->getNewId());
+        mkdir($lernmodul->getPath());
+        foreach (scandir($module->getPath()) as $file) {
+            if (!in_array($file, ['.', '..'])) {
+                $lernmodul->copyr(
+                    $module->getPath()."/".$file,
+                    $lernmodul->getPath()."/".$file
+                );
+            }
+        }
+        $lernmodul->store();
+        return $lernmodul;
+    }
+
     static protected function configure($config = array())
     {
         $config['db_table'] = 'lernmodule_module';
@@ -54,6 +73,8 @@ class Lernmodul extends SimpleORMap
     {
         return new LernmodulCourse(array($this->getId(), $course_id));
     }
+
+
 
     public function copyModule($path, $filename = null)
     {
@@ -146,7 +167,8 @@ class Lernmodul extends SimpleORMap
                 if (!in_array($file, array(".", ".."))) {
                     if (!is_dir($path . "/" . $file)) {
                         if ($all || ($file[0] !== ".")) {
-                            $file_part = array_pop(explode(".", $file));
+                            $explosion = explode(".", $file);
+                            $file_part = array_pop($explosion);
                             if (in_array(strtolower($file_part), $filetypes)) {
                                 $files[] = $path . "/" . $file;
                             }
@@ -175,13 +197,16 @@ class Lernmodul extends SimpleORMap
         return $files;
     }
 
-    protected function copyr($source, $dest) {
-        if(is_dir($source)) {
-            $dir_handle=opendir($source);
-            while($file=readdir($dir_handle)){
-                if($file!="." && $file!=".."){
-                    if(is_dir($source."/".$file)){
-                        if(!is_dir($dest."/".$file)){
+    public function copyr($source, $dest) {
+        if (is_dir($source)) {
+            $dir_handle = opendir($source);
+            if (!is_dir($dest)) {
+                mkdir($dest);
+            }
+            while ($file = readdir($dir_handle)) {
+                if ($file !== "." && $file !== "..") {
+                    if (is_dir($source."/".$file)) {
+                        if (!is_dir($dest."/".$file)) {
                             mkdir($dest."/".$file);
                         }
                         $this->copyr($source."/".$file, $dest."/".$file);

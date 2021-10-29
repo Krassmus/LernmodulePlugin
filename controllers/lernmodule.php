@@ -547,14 +547,11 @@ class LernmoduleController extends PluginController
             $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
         }
         if (Request::isPost() && Request::option("seminar_id") && $GLOBALS['perm']->have_studip_perm("tutor", Request::option("seminar_id"))) {
-            $connection = $this->module->courseConnection($this->course_id);
-            $connection['seminar_id'] = Request::option("seminar_id");
-
-            //delete old dependencies:
-            LernmodulDependency::deleteBySQL("seminar_id = ? AND module_id = ?", array(
-                $this->course_id,
-                $this->module->getId()
-            ));
+            PluginManager::getInstance()->setPluginActivated(
+                $this->plugin->getPluginId(),
+                Request::option("seminar_id"),
+                true
+            );
             $this->blocks = LernmodulBlock::findBySQL("seminar_id = ? ORDER BY position ASC", [Request::option("seminar_id")]);
             if (!count($this->blocks)) {
                 $block = new LernmodulBlock();
@@ -562,14 +559,27 @@ class LernmoduleController extends PluginController
                 $block->store();
                 $this->blocks[] = $block;
             }
-            $connection['block_id'] = $this->blocks[count($this->blocks) - 1]->getId();
-            $connection->store();
+            if (Request::submitted('move')) {
+                $connection = $this->module->courseConnection($this->course_id);
+                $connection['seminar_id'] = Request::option("seminar_id");
 
-            PluginManager::getInstance()->setPluginActivated(
-                $this->plugin->getPluginId(),
-                Request::option("seminar_id"),
-                true
-            );
+                //delete old dependencies:
+                LernmodulDependency::deleteBySQL("seminar_id = ? AND module_id = ?", array(
+                    $this->course_id,
+                    $this->module->getId()
+                ));
+
+                $connection['block_id'] = $this->blocks[count($this->blocks) - 1]->getId();
+                $connection->store();
+            } elseif (Request::submitted('copy')) {
+                $lernmodule = Lernmodul::createCopyFromModule($this->module);
+
+                $connection = $lernmodule->courseConnection(Request::option("seminar_id"));
+                $connection['block_id'] = $this->blocks[count($this->blocks) - 1]->getId();
+                $connection->store();
+            }
+
+
 
             PageLayout::postSuccess(_("Lernmodul wurde verschoben."));
             $this->redirect(PluginEngine::getURL($this->plugin, array('cid' => Request::option("seminar_id")), "lernmodule/overview"));
@@ -582,12 +592,44 @@ class LernmoduleController extends PluginController
                     INNER JOIN seminar_user ON (seminar_user.Seminar_id = seminare.Seminar_id)
                 WHERE seminar_user.user_id = :user_id
                     AND seminar_user.status IN ('tutor', 'dozent')
-                ORDER BY seminare.start_time DESC, seminare.name ASC
+                ORDER BY seminare.start_time + seminare.duration_time DESC, seminare.name ASC
             ");
             $statement->execute(array('user_id' => $GLOBALS['user']->id));
-            $this->mycourses = array();
+            $this->semcourses = [];
+            $firstsemester_id = null;
             foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $coursedata) {
-                $this->mycourses[] = Course::buildExisting($coursedata);
+                $course = Course::buildExisting($coursedata);
+                if ($course['duration_time'] >= 0) {
+                    $semester = Semester::findByTimestamp($course['start_time'] + $course['duration_time']);
+                    if ($firstsemester_id === null) {
+                        $firstsemester_id = $semester->getId();
+                    }
+                    if (!isset($this->semcourses[$semester->getId()])) {
+                        $this->semcourses[$semester->getId()] = [
+                            'semester' => $semester,
+                            'courses' => []
+                        ];
+                    }
+                    $this->semcourses[$semester->getId()]['courses'][] = $course;
+                } else {
+                    if ($firstsemester_id === null) {
+                        $semester = Semester::findCurrent();
+                        $this->semcourses[$semester->getId()] = [
+                            'semester' => $semester,
+                            'courses' => []
+                        ];
+                        $firstsemester_id = $semester->getId();
+                    }
+                    $this->semcourses[$firstsemester_id]['courses'][] = $course;
+                }
+            }
+            foreach ($this->semcourses as $index => $semcourse) {
+                //now sort for name:
+                $courses = $semcourse['courses'];
+                usort($courses, function ($a, $b) {
+                    return strcasecmp($a['name'], $b['name']);
+                });
+                $this->semcourses[$index]['courses'] = $courses;
             }
         }
     }
