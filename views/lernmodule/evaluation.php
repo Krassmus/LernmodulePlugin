@@ -127,7 +127,7 @@
                         } elseif ($line['studip_duration'] < 60 * 120) {
                             echo sprintf(dgettext("lernmoduleplugin","%s Minuten"), round($line['studip_duration'] / 60));
                         } else {
-                            echo sprintf(dgettext("lernmoduleplugin","%s Stunden"), round($line['studip_duration'] / 360));
+                            echo sprintf(dgettext("lernmoduleplugin","%s Stunden"), round($line['studip_duration'] / 3600));
                         }
                         ?></td>
                     <td>
