@@ -5,6 +5,7 @@ require_once __DIR__."/lib/Lernmodul.php";
 require_once __DIR__."/lib/VanillalmLernmodul.php";
 require_once __DIR__."/lib/HtmlLernmodul.php";
 require_once __DIR__."/lib/H5pLernmodul.php";
+require_once __DIR__."/lib/VuejsLernmodul.php";
 require_once __DIR__."/lib/LernmodulAttempt.php";
 require_once __DIR__."/lib/LernmodulCourse.php";
 require_once __DIR__."/lib/LernmodulBlock.php";
