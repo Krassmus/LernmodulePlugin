@@ -6,8 +6,9 @@
 
 <? $template = $mod->getViewerTemplate($attempt, $game_attendence) ?>
 <? if ($template) : ?>
-  <? $template->set_attribute('controller', $controller); ?>
-  <?= $template->render() ?>
+    <? $template->set_attribute('controller', $controller); ?>
+    <? $template->set_attribute('plugin', $plugin); ?>
+    <?= $template->render() ?>
 <? endif ?>
 
 <script>

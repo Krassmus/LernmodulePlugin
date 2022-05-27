@@ -53,8 +53,6 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
             )
         );
         $template->set_attribute("game_attendance", $game_attendance);
-        // TODO: Load configuration and make it available to both the editor and viewer
-        $template->set_attribute("production", false);
         return $template;
     }
 

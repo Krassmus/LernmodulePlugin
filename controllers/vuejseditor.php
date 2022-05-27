@@ -28,9 +28,6 @@ class VuejseditorController extends PluginController
         $this->mod = VuejsLernmodul::find($module_id);
         $this->block_id = Request::get('block_id');
 
-        PageLayout::addStylesheet($this->plugin->getPluginURL() . '/assets/vuejs/vuejseditor.css');
-        PageLayout::addScript($this->plugin->getPluginURL() . '/assets/vuejs/vuejseditor.js');
-
         if ($this->mod['draft']) {
             PageLayout::setTitle(_("Neues Lernmodul erstellen"));
         } else {

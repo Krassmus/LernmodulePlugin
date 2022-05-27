@@ -197,6 +197,8 @@
         <? if (!$module->isNew() && is_a($module, "CustomLernmodul")) : ?>
             <? $template = $module->getEditTemplate() ?>
             <? if ($template) : ?>
+                <? $template->set_attribute('controller', $controller); ?>
+                <? $template->set_attribute('plugin', $plugin); ?>
                 <?= $template->render() ?>
             <? endif ?>
         <? endif ?>

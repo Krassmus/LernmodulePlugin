@@ -26,6 +26,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function __construct()
     {
         parent::__construct();
+        $this->config = include('config.php');
         if (UpdateInformation::isCollecting()) {
             $data = Request::getArray("page_info");
             if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {
