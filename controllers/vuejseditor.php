@@ -64,7 +64,7 @@ class VuejseditorController extends PluginController
             $connection->store();
         }
         if ($this->mod['draft']) {
-            $this->mod['draft'] = -1;
+            $this->mod['draft'] = 0;
             $this->mod->store();
         }
         PageLayout::postSuccess(_("Lernmodul wurde gespeichert"));
