@@ -48,8 +48,12 @@ class VuejseditorController extends PluginController
             throw new Exception("POST-only route");
         }
         $module_id = Request::option('module_id');
+        $task_definition = Request::get('task_definition');
         if (!$module_id) {
             throw new Exception("'module_id' missing");
+        }
+        if (!$task_definition) {
+            throw new Exception("'task_definition' missing");
         }
         $this->mod = VuejsLernmodul::find($module_id);
         if (!$this->mod) {
@@ -71,8 +75,9 @@ class VuejseditorController extends PluginController
         }
         if ($this->mod['draft']) {
             $this->mod['draft'] = 0;
-            $this->mod->store();
         }
+        $this->mod->customdata = $task_definition;
+        $this->mod->store();
         PageLayout::postSuccess(_("Lernmodul wurde gespeichert"));
         $this->redirect(
             PluginEngine::getURL(

@@ -2,17 +2,6 @@
   <div>
     <input type="text" v-model="blankText" />
   </div>
-  <button @click="saveTask" :disabled="this.saveStatus.status === 'saving'">
-    Save Task
-  </button>
-  <div>
-    {{ saveStatus.status }}
-    <div v-if="saveStatus.status === 'error'">
-      {{ saveStatus.error }}
-    </div>
-  </div>
-
-  <br />
 
   <div>
     <template v-for="(str, i) in splitTemplate" :key="i">
@@ -52,6 +41,15 @@
     <pre>{{ inputValidations }}</pre>
   </div>
 
+  <button @click="saveTask" :disabled="this.saveStatus.status === 'saving'">
+    Save Task
+  </button>
+  <div>
+    {{ saveStatus.status }}
+    <div v-if="saveStatus.status === 'error'">
+      {{ saveStatus.error }}
+    </div>
+  </div>
   <!--  <input type="text" v-model="userInput" />-->
   <!--  <div :class="isInputCorrect ? 'correct' : 'incorrect'">-->
   <!--    User input: {{ userInput }}-->
@@ -60,7 +58,8 @@
 
 <script lang="ts">
 import { saveTask } from '@/routes';
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
+import { TaskDefinition } from '@/models/TaskDefinition';
 
 type Saved = {
   status: 'saved';
@@ -79,6 +78,12 @@ function sleep(ms: number) {
 }
 
 export default defineComponent({
+  props: {
+    task: {
+      type: Object as PropType<TaskDefinition>,
+      required: true,
+    },
+  },
   data() {
     return {
       template:
@@ -95,8 +100,8 @@ export default defineComponent({
         return;
       }
       this.saveStatus = { status: 'saving' };
-      saveTask(null, {
-        type: 'FILL_IN_THE_BLANKS',
+      saveTask(window.STUDIP.LernmoduleVueJS.module_id, {
+        task_type: 'FillInTheBlanks',
         template: this.blankText,
       })
         .then(async (result) => {

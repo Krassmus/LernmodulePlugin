@@ -2,8 +2,10 @@
  * @param id The ID of the task being saved
  * @param taskDefinition The definition of the task
  */
+import { TaskDefinition } from '@/models/TaskDefinition';
+
 export async function saveTask(
-  id: string | null,
+  module_id: string,
   taskDefinition: TaskDefinition
 ): Promise<SaveTaskResponse> {
   const url = window.STUDIP.LernmoduleVueJS.saveRoute;
@@ -12,9 +14,7 @@ export async function saveTask(
   // TODO Maybe we should parse taskDefinition here to ensure it has no extra
   //   fields we didn't intend to save.
   formData.append('task_definition', JSON.stringify(taskDefinition));
-  if (id) {
-    formData.append('id', id);
-  }
+  formData.append('module_id', module_id);
   formData.append(token.name, token.value);
   return fetch(url, {
     method: 'POST',
@@ -35,9 +35,3 @@ export async function saveTask(
 export interface SaveTaskResponse {
   status: 'success';
 }
-
-export type TaskDefinition = FillInTheBlanks;
-export type FillInTheBlanks = {
-  type: 'FILL_IN_THE_BLANKS';
-  template: string;
-};

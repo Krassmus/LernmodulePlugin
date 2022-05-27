@@ -12,7 +12,8 @@
         [
             'module_id' => $mod->id,
             'moduleContents' => json_decode($mod['customdata']),
-            'attemptId' => $attempt->getId()
+            'attemptId' => $attempt->getId(),
+            'saveRoute' => $controller->url_for('vuejseditor/save')
         ]
     ); ?>
     <?= $template->render() ?>
