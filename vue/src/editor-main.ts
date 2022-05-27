@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
-import App from './App.vue';
+import LernmoduleEditor from '@/components/LernmoduleEditor.vue';
 
-createApp(App).mount('#app');
+createApp(LernmoduleEditor).mount('#app');
 
 declare global {
   interface Window {

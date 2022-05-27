@@ -5,7 +5,10 @@
 <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
 <? $template = $mod->getViewerTemplate($attempt, $game_attendence) ?>
-<?= $template ? $template->render() : "" ?>
+<? if ($template) : ?>
+  <? $template->set_attribute('controller', $controller); ?>
+  <?= $template->render() ?>
+<? endif ?>
 
 <script>
     STUDIP.Lernmodule.periodicalPushData = function () {
