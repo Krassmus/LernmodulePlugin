@@ -6,7 +6,7 @@ export async function saveTask(
   id: string | null,
   taskDefinition: TaskDefinition
 ): Promise<SaveTaskResponse> {
-  const url = window.STUDIP.H5P.saveRoute;
+  const url = window.STUDIP.LernmoduleVueJS.saveRoute;
   const token = window.STUDIP.CSRF_TOKEN;
   const formData = new FormData();
   // TODO Maybe we should parse taskDefinition here to ensure it has no extra
@@ -36,7 +36,8 @@ export interface SaveTaskResponse {
   status: 'success';
 }
 
-export interface TaskDefinition {
-  type: 'FILL_IN_THE_BLANKS' | 'MEMORY_GAME';
+export type TaskDefinition = FillInTheBlanks;
+export type FillInTheBlanks = {
+  type: 'FILL_IN_THE_BLANKS';
   template: string;
-}
+};

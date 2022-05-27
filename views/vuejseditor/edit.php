@@ -1,4 +1,4 @@
-Vue.js Edit Template
+TODO: Remove this form element. Trigger the 'save' request from Vue.JS.
 <form class="default" method="post"
       action="<?= PluginEngine::getLink($plugin, [], "vuejseditor/save") ?>">
     <?= CSRFProtection::tokenTag() ?>
@@ -7,7 +7,9 @@ Vue.js Edit Template
   <input type="submit" />
 </form>
 
+
 <div id="app">
+  <h1>Vue.js Edit Template</h1>
   Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
   Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
 
@@ -18,7 +20,7 @@ Vue.js Edit Template
 
 
 <script>
-    STUDIP.VueJSLernmodule = <?= json_encode($JSINTEGRATION) ?>
+    STUDIP.LernmoduleVueJS = <?= json_encode($javascript_global_variables) ?>
 </script>
 
 <? if (!$plugin->config[production]) : ?>

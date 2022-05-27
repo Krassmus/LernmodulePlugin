@@ -1,5 +1,5 @@
-<div>Vuejs View template</div>
 <div id="app">
+  <h1>Vuejs View template</h1>
   Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
   Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
 
@@ -10,7 +10,7 @@
 
 
 <script>
-  STUDIP.VueJSLernmodule = <?= json_encode($JSINTEGRATION) ?>
+  STUDIP.LernmoduleVueJS = <?= json_encode($javascript_global_variables) ?>
 </script>
 
 <div><?= $plugin->config['production'] ?></div>

@@ -27,10 +27,10 @@ class VuejseditorController extends PluginController
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = VuejsLernmodul::find($module_id);
         $this->block_id = Request::get('block_id');
-        $this->JSINTEGRATION = [
+        $this->javascript_global_variables = [
             'block_id' => $this->block_id,
             'module_id' => $module_id,
-            'moduleContents' => $this->mod['customdata'],
+            'moduleContents' => json_decode($this->mod['customdata']),
             'saveRoute' => $this->url_for('vuejseditor/save')
         ];
 

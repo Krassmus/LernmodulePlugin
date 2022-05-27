@@ -6,9 +6,15 @@
 
 <? $template = $mod->getViewerTemplate($attempt, $game_attendence) ?>
 <? if ($template) : ?>
-    <? $template->set_attribute('controller', $controller); ?>
     <? $template->set_attribute('plugin', $plugin); ?>
-    <? $template->set_attribute('JSINTEGRATION', [ 'moduleContents' => $mod['customdata'] ] ); ?>
+    <? $template->set_attribute(
+        'javascript_global_variables',
+        [
+            'module_id' => $mod->id,
+            'moduleContents' => json_decode($mod['customdata']),
+            'attemptId' => $attempt->getId()
+        ]
+    ); ?>
     <?= $template->render() ?>
 <? endif ?>
 
