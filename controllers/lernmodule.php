@@ -96,7 +96,8 @@ class LernmoduleController extends PluginController
 
         $class = ucfirst($this->mod['type'])."Lernmodul";
         $this->mod = $class::buildExisting($this->mod->toArray());
-        if (!$this->mod['url'] && !file_exists($this->mod->getPath())) {
+        $isVuejsModule = $this->mod['type'] === 'vuejs'; // Vue.js Lernmodule don't have urls/paths.
+        if (!$isVuejsModule && !$this->mod['url'] && !file_exists($this->mod->getPath()) ) {
             PageLayout::postMessage(MessageBox::error(dgettext("lernmoduleplugin","Kann Lernmodul nicht finden.")));
         }
 

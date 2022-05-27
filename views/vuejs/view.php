@@ -1,1 +1,1 @@
-<?php
+<div>Vuejs View template</div>

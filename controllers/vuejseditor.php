@@ -26,20 +26,10 @@ class VuejseditorController extends PluginController
         }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = VuejsLernmodul::find($module_id);
+        $this->block_id = Request::get('block_id');
 
-        $styles = array(
-            $this->plugin->getPluginURL() . '/assets/vuejs/vuejseditor.css',
-        );
-        $scripts = array(
-            $this->plugin->getPluginURL() . '/assets/vuejs/vuejseditor.js',
-        );
-
-        foreach ($styles as $style) {
-            PageLayout::addStylesheet($style);
-        }
-        foreach ($scripts as $script) {
-            PageLayout::addScript($script);
-        }
+        PageLayout::addStylesheet($this->plugin->getPluginURL() . '/assets/vuejs/vuejseditor.css');
+        PageLayout::addScript($this->plugin->getPluginURL() . '/assets/vuejs/vuejseditor.js');
 
         if ($this->mod['draft']) {
             PageLayout::setTitle(_("Neues Lernmodul erstellen"));
@@ -50,18 +40,28 @@ class VuejseditorController extends PluginController
 
     public function save_action()
     {
+        CSRFProtection::verifySecurityToken();
         if (!Request::isPost()) {
             throw new Exception("POST-only route");
         }
-        $module_id = Request::get('module_id');
+        $module_id = Request::option('module_id');
         if (!$module_id) {
             throw new Exception("'module_id' missing");
         }
-        CSRFProtection::verifySecurityToken();
         $this->mod = VuejsLernmodul::find($module_id);
+        if (!$this->mod) {
+            PageLayout::postError(_("Lernmodul nicht gefunden."));
+            $this->redirect(
+                PluginEngine::getURL($this->plugin, [], "vuejseditor/edit/" . $this->mod->getId())
+            );
+            return;
+        }
         $connection = $this->mod->courseConnection(Context::get()->id);
         if ($connection->isNew()) {
             $block = LernmodulBlock::find(Request::option("block_id"));
+            if (!$block) {
+                throw new Exception('Block missing');
+            }
             $connection['block_id'] = Request::option("block_id");
             $connection['position'] = count($block->coursemodules) + 0;
             $connection->store();
@@ -70,27 +70,14 @@ class VuejseditorController extends PluginController
             $this->mod['draft'] = -1;
             $this->mod->store();
         }
-        if ($this->mod) {
-            PageLayout::postSuccess(_("Lernmodul wurde gespeichert"));
-            $this->redirect(
-                PluginEngine::getURL(
-                    $this->plugin,
-                    array(),
-                    "lernmodule/view/" . $this->mod->getId()
-                )
-            );
-        } else {
-            PageLayout::postError(
-                _("Lernmodul konnte nicht gespeichert werden. Daten unvollständig.")
-            );
-            $this->redirect(
-                PluginEngine::getURL(
-                    $this->plugin,
-                    array(),
-                    "vuejseditor/edit/" . $this->mod->getId()
-                )
-            );
-        }
+        PageLayout::postSuccess(_("Lernmodul wurde gespeichert"));
+        $this->redirect(
+            PluginEngine::getURL(
+                $this->plugin,
+                array(),
+                "lernmodule/view/" . $this->mod->getId()
+            )
+        );
     }
 
 }
