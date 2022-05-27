@@ -10,9 +10,7 @@
 
 
 <script>
-  STUDIP.H5P = {
-    saveRoute: "<?= $controller->url_for('vuejseditor/save') ?>"
-  };
+  STUDIP.VueJSLernmodule = <?= json_encode($JSINTEGRATION) ?>
 </script>
 
 <div><?= $plugin->config['production'] ?></div>

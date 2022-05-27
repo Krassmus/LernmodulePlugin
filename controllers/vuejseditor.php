@@ -27,6 +27,12 @@ class VuejseditorController extends PluginController
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = VuejsLernmodul::find($module_id);
         $this->block_id = Request::get('block_id');
+        $this->JSINTEGRATION = [
+            'block_id' => $this->block_id,
+            'module_id' => $module_id,
+            'moduleContents' => $this->mod['customdata'],
+            'saveRoute' => $this->url_for('vuejseditor/save')
+        ];
 
         if ($this->mod['draft']) {
             PageLayout::setTitle(_("Neues Lernmodul erstellen"));

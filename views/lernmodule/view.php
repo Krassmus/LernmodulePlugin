@@ -8,6 +8,7 @@
 <? if ($template) : ?>
     <? $template->set_attribute('controller', $controller); ?>
     <? $template->set_attribute('plugin', $plugin); ?>
+    <? $template->set_attribute('JSINTEGRATION', [ 'moduleContents' => $mod['customdata'] ] ); ?>
     <?= $template->render() ?>
 <? endif ?>
 
