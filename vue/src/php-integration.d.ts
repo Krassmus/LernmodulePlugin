@@ -7,12 +7,15 @@ declare global {
       ASSETS_URL: string;
       CSRF_TOKEN: { name: string; value: string };
       LernmoduleVueJS: {
+        module: {
+          // customdata should be an instance of 'TaskDefinition', but this
+          // should be checked via parsing at runtime.
+          customdata: unknown;
+          module_id: string;
+          name: string;
+        };
         saveRoute: string;
-        module_id: string;
         block_id?: string;
-        // moduleContents should be an instance of 'TaskDefinition', but this
-        // should be checked via parsing at runtime.
-        moduleContents: unknown;
       };
     };
   }

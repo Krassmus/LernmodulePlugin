@@ -21,7 +21,7 @@ export default defineComponent({
     LernmoduleVueJS: () => window.STUDIP.LernmoduleVueJS,
     // TODO: Warning!! Bad!! You should parse the contents, do not just type-cast!!
     taskDefinition: () =>
-      window.STUDIP.LernmoduleVueJS.moduleContents as TaskDefinition,
+      window.STUDIP.LernmoduleVueJS.module.customdata as TaskDefinition,
   },
   methods: {
     componentForTaskType(type: TaskDefinition['task_type']): Component {

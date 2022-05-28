@@ -33,10 +33,10 @@ export class TaskEditorModule extends VuexModule {
 
   @Mutation
   initialize() {
-    if (!isArray(window.STUDIP.LernmoduleVueJS.moduleContents)) {
+    if (!isArray(window.STUDIP.LernmoduleVueJS.module.customdata)) {
       // TODO: Warning!! Bad!! You should parse the contents, do not just type-cast!!
-      this.serverTaskDefinition = window.STUDIP.LernmoduleVueJS
-        .moduleContents as TaskDefinition;
+      this.serverTaskDefinition = window.STUDIP.LernmoduleVueJS.module
+        .customdata as TaskDefinition;
       this.taskDefinition = this.serverTaskDefinition;
     }
   }
@@ -69,7 +69,7 @@ export class TaskEditorModule extends VuexModule {
     this.context.commit('startedSaving');
     saveTask(
       this.taskDefinition,
-      window.STUDIP.LernmoduleVueJS.module_id,
+      window.STUDIP.LernmoduleVueJS.module.module_id,
       window.STUDIP.LernmoduleVueJS.block_id
     )
       .then(async (result) => {

@@ -14,6 +14,7 @@ class VuejseditorController extends PluginController
             $this->mod = new VuejsLernmodul();
             $this->mod['draft'] = 1;
             $this->mod['type'] = "vuejs";
+            $this->mod['name'] = "Neues Vue.JS-Lernmodul";
             $this->mod->store();
             $this->redirect(
                 PluginEngine::getURL(
@@ -29,8 +30,11 @@ class VuejseditorController extends PluginController
         $this->block_id = Request::get('block_id');
         $this->javascript_global_variables = [
             'block_id' => $this->block_id,
-            'module_id' => $module_id,
-            'moduleContents' => json_decode($this->mod['customdata']),
+            'module' => [
+                'customdata' => json_decode($this->mod['customdata']),
+                'module_id' => $this->mod['id'],
+                'name' => $this->mod['name']
+            ],
             'saveRoute' => $this->url_for('vuejseditor/save')
         ];
 

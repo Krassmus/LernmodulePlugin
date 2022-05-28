@@ -10,8 +10,11 @@
     <? $template->set_attribute(
         'javascript_global_variables',
         [
-            'module_id' => $mod->id,
-            'moduleContents' => json_decode($mod['customdata']),
+            'module' => [
+                'customdata' => json_decode($mod['customdata']),
+                'module_id' => $mod['id'],
+                'name' => $mod['name']
+            ],
             'attemptId' => $attempt->getId(),
             'saveRoute' => $controller->url_for('vuejseditor/save')
         ]
