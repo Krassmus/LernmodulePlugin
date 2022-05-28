@@ -1,9 +1,11 @@
-/**
- * @param id The ID of the task being saved
- * @param taskDefinition The definition of the task
- */
 import { TaskDefinition } from '@/models/TaskDefinition';
 
+/**
+ * @param taskDefinition The definition of the task
+ * @param module_id The id from lernmodule_module
+ * @param block_id The id from lernmodule_blocks where the module is to be
+ *                 inserted.  (This only applies for newly created modules.)
+ */
 export async function saveTask(
   taskDefinition: TaskDefinition,
   module_id: string,
