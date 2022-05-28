@@ -26,6 +26,7 @@ export class TaskEditorModule extends VuexModule {
   nonFatalErrors: string[] = [];
   taskDefinition: TaskDefinition = newTask('FillInTheBlanks');
   serverTaskDefinition: TaskDefinition | [] = [];
+  moduleName: string = '';
 
   get hasUnsavedChanges(): boolean {
     return !isEqual(this.taskDefinition, this.serverTaskDefinition);
@@ -39,6 +40,7 @@ export class TaskEditorModule extends VuexModule {
         .customdata as TaskDefinition;
       this.taskDefinition = this.serverTaskDefinition;
     }
+    this.moduleName = window.STUDIP.LernmoduleVueJS.module.name;
   }
 
   @Mutation
@@ -69,6 +71,7 @@ export class TaskEditorModule extends VuexModule {
     this.context.commit('startedSaving');
     saveTask(
       this.taskDefinition,
+      this.moduleName,
       window.STUDIP.LernmoduleVueJS.module.module_id,
       window.STUDIP.LernmoduleVueJS.block_id
     )
@@ -84,5 +87,10 @@ export class TaskEditorModule extends VuexModule {
   @Mutation
   setTaskDefinition(taskDefinition: TaskDefinition) {
     this.taskDefinition = taskDefinition;
+  }
+
+  @Mutation
+  setModuleName(name: string) {
+    this.moduleName = name;
   }
 }

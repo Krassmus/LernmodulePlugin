@@ -53,11 +53,15 @@ class VuejseditorController extends PluginController
         }
         $module_id = Request::option('module_id');
         $task_definition = Request::get('task_definition');
+        $name = Request::get('name');
         if (!$module_id) {
             throw new Exception(_("'module_id' fehlt"));
         }
         if (!$task_definition) {
             throw new Exception(_("'task_definition' fehlt"));
+        }
+        if (!$name) {
+            throw new Exception(_("'name' fehlt"));
         }
         $this->mod = VuejsLernmodul::find($module_id);
         if (!$this->mod) {
@@ -77,6 +81,7 @@ class VuejseditorController extends PluginController
             $this->mod['draft'] = 0;
         }
         $this->mod->customdata = $task_definition;
+        $this->mod->name = $name;
         $this->mod->store();
         $this->render_json([
             'status' => 'success',

@@ -1,9 +1,7 @@
 <template>
-  <h1>Viewer (rendered with vue.js)</h1>
-  <div>
-    Variables passed from server:
-    <pre>{{ LernmoduleVueJS }}</pre>
-  </div>
+  <h1>Variables passed from server:</h1>
+  <pre>{{ LernmoduleVueJS }}</pre>
+  <h1>Viewer</h1>
   <component
     :is="componentForTaskType(taskDefinition.task_type)"
     :task="taskDefinition"
