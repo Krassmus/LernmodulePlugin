@@ -29,9 +29,6 @@ export async function saveTask(
     }
     // TODO Maybe we should parse the server's response to ensure it really is
     //  an instance of SaveTaskResponse.
-    //  In this case, it might be overkill -- the server either returns an HTTP
-    //  error code or { status: 'success' } -- but in a more complex API, it
-    //  would be desirable to validate the data we receive from the server.
     return response.json() as Promise<SaveTaskResponse>;
   });
 }
