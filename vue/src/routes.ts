@@ -5,8 +5,9 @@
 import { TaskDefinition } from '@/models/TaskDefinition';
 
 export async function saveTask(
+  taskDefinition: TaskDefinition,
   module_id: string,
-  taskDefinition: TaskDefinition
+  block_id?: string
 ): Promise<SaveTaskResponse> {
   const url = window.STUDIP.LernmoduleVueJS.saveRoute;
   const token = window.STUDIP.CSRF_TOKEN;
@@ -15,6 +16,9 @@ export async function saveTask(
   //   fields we didn't intend to save.
   formData.append('task_definition', JSON.stringify(taskDefinition));
   formData.append('module_id', module_id);
+  if (block_id) {
+    formData.append('block_id', block_id);
+  }
   formData.append(token.name, token.value);
   return fetch(url, {
     method: 'POST',
