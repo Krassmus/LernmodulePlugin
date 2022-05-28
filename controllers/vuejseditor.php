@@ -50,24 +50,20 @@ class VuejseditorController extends PluginController
         $module_id = Request::option('module_id');
         $task_definition = Request::get('task_definition');
         if (!$module_id) {
-            throw new Exception("'module_id' missing");
+            throw new Exception(_("'module_id' fehlt"));
         }
         if (!$task_definition) {
-            throw new Exception("'task_definition' missing");
+            throw new Exception(_("'task_definition' fehlt"));
         }
         $this->mod = VuejsLernmodul::find($module_id);
         if (!$this->mod) {
-            PageLayout::postError(_("Lernmodul nicht gefunden."));
-            $this->redirect(
-                PluginEngine::getURL($this->plugin, [], "vuejseditor/edit/" . $this->mod->getId())
-            );
-            return;
+            throw new Exception(_("Lernmodul nicht gefunden."));
         }
         $connection = $this->mod->courseConnection(Context::get()->id);
         if ($connection->isNew()) {
             $block = LernmodulBlock::find(Request::option("block_id"));
             if (!$block) {
-                throw new Exception('Block missing');
+                throw new Exception(_('Block nicht gefunden.'));
             }
             $connection['block_id'] = Request::option("block_id");
             $connection['position'] = count($block->coursemodules) + 0;
@@ -78,14 +74,10 @@ class VuejseditorController extends PluginController
         }
         $this->mod->customdata = $task_definition;
         $this->mod->store();
-        PageLayout::postSuccess(_("Lernmodul wurde gespeichert"));
-        $this->redirect(
-            PluginEngine::getURL(
-                $this->plugin,
-                array(),
-                "lernmodule/view/" . $this->mod->getId()
-            )
-        );
+        $this->render_json([
+            'status' => 'success',
+            'taskDefinition' => json_decode($task_definition),
+        ]);
     }
 
 }

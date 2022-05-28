@@ -1,13 +1,3 @@
-TODO: Remove this form element. Trigger the 'save' request from Vue.JS.
-<form class="default" method="post"
-      action="<?= PluginEngine::getLink($plugin, [], "vuejseditor/save") ?>">
-    <?= CSRFProtection::tokenTag() ?>
-  <input type="hidden" name="module_id" value="<?= $mod->id ?>" />
-  <input type="hidden" name="block_id" value="<?= $block_id ?>" />
-  <input type="submit" />
-</form>
-
-
 <div id="app">
   <h1>Vue.js Edit Template</h1>
   Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der

@@ -34,4 +34,5 @@ export async function saveTask(
 
 export interface SaveTaskResponse {
   status: 'success';
+  taskDefinition: TaskDefinition;
 }

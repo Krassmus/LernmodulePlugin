@@ -1,9 +1,5 @@
 <template>
   <div>
-    <input type="text" v-model="blankText" />
-  </div>
-
-  <div>
     <template v-for="(str, i) in splitTemplate" :key="i">
       <span v-if="i % 2 === 0">
         {{ str }}
@@ -41,15 +37,6 @@
     <pre>{{ inputValidations }}</pre>
   </div>
 
-  <button @click="saveTask" :disabled="this.saveStatus.status === 'saving'">
-    Save Task
-  </button>
-  <div>
-    {{ saveStatus.status }}
-    <div v-if="saveStatus.status === 'error'">
-      {{ saveStatus.error }}
-    </div>
-  </div>
   <!--  <input type="text" v-model="userInput" />-->
   <!--  <div :class="isInputCorrect ? 'correct' : 'incorrect'">-->
   <!--    User input: {{ userInput }}-->
@@ -57,70 +44,24 @@
 </template>
 
 <script lang="ts">
-import { saveTask } from '@/routes';
 import { defineComponent, PropType } from 'vue';
-import { TaskDefinition } from '@/models/TaskDefinition';
-
-type Saved = {
-  status: 'saved';
-};
-type Saving = {
-  status: 'saving';
-};
-type SaveError = {
-  status: 'error';
-  error: unknown;
-};
-type SaveStatus = Saved | Saving | SaveError;
-
-function sleep(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
-}
-
+import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 export default defineComponent({
   props: {
     task: {
-      type: Object as PropType<TaskDefinition>,
+      type: Object as PropType<FillInTheBlanksDefinition>,
       required: true,
     },
   },
   data() {
     return {
-      template:
-        'This kind of berry is a {blue}berry. In Norddeutschland sagt man {moin}.',
-      blankText: 'your template {here}',
       userInputs: [],
-      debug: true,
-      saveStatus: { status: 'saved' } as SaveStatus,
+      debug: false,
     };
-  },
-  methods: {
-    saveTask() {
-      if (this.saveStatus.status === 'saving') {
-        return;
-      }
-      this.saveStatus = { status: 'saving' };
-      saveTask(window.STUDIP.LernmoduleVueJS.module_id, {
-        task_type: 'FillInTheBlanks',
-        template: this.blankText,
-      })
-        .then(async (result) => {
-          await sleep(1000);
-        })
-        .then((result) => {
-          this.saveStatus = { status: 'saved' };
-        })
-        .catch((error) => {
-          this.saveStatus = {
-            status: 'error',
-            error: error,
-          };
-        });
-    },
   },
   computed: {
     splitTemplate(): string[] {
-      return this.blankText.split(/{([^{}]*)}/);
+      return this.task.template.split(/{([^{}]*)}/);
     },
     isInputCorrect(): boolean {
       return this.splitTemplate.every((el, i) => {

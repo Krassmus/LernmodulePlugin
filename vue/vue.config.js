@@ -3,10 +3,10 @@ module.exports = defineConfig({
   transpileDependencies: true,
   filenameHashing: false,
   configureWebpack: {
-    devtool: 'source-map'
+    devtool: 'source-map',
   },
   pages: {
-    'editor': 'src/editor-main.ts',
-    'viewer': 'src/viewer-main.ts'
-  }
+    editor: 'src/editor-main.ts',
+    viewer: 'src/viewer-main.ts',
+  },
 });
