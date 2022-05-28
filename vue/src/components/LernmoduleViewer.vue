@@ -3,15 +3,14 @@
   <pre>{{ LernmoduleVueJS }}</pre>
   <h1>Viewer</h1>
   <component
-    :is="componentForTaskType(taskDefinition.task_type)"
+    :is="viewerForTaskType(taskDefinition.task_type)"
     :task="taskDefinition"
   />
 </template>
 
 <script lang="ts">
 import { Component, defineComponent } from 'vue';
-import { TaskDefinition } from '@/models/TaskDefinition';
-import FillInTheBlanks from '@/components/FillInTheBlanks.vue';
+import { TaskDefinition, viewerForTaskType } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'LernmoduleViewer',
@@ -22,14 +21,7 @@ export default defineComponent({
       window.STUDIP.LernmoduleVueJS.module.customdata as TaskDefinition,
   },
   methods: {
-    componentForTaskType(type: TaskDefinition['task_type']): Component {
-      switch (type) {
-        case 'FillInTheBlanks':
-          return FillInTheBlanks;
-        default:
-          throw new Error('Unimplemented task type: ' + type);
-      }
-    },
+    viewerForTaskType,
   },
 });
 </script>

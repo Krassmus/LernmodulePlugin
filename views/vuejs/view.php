@@ -17,8 +17,10 @@
 <? if (!$plugin->config['production']) : ?>
   <script src="http://localhost:8080/js/viewer.js"></script>
   <script src="http://localhost:8080/js/chunk-vendors.js"></script>
+  <script src="http://localhost:8080/js/chunk-common.js"></script>
 <? else : ?>
   <script src="<?= $plugin->getPluginUrl() . '/vue/dist/js/viewer.js' ?>"></script>
   <script src="<?= $plugin->getPluginUrl() . '/vue/dist/js/chunk-vendors.js' ?>"></script>
+  <script src="<?= $plugin->getPluginUrl() . '/vue/dist/js/chunk-common.js' ?>"></script>
   <link rel="stylesheet" href="<?= $plugin->getPluginUrl() . '/vue/dist/css/viewer.css' ?>"></link>
 <? endif ?>

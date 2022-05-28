@@ -13,22 +13,29 @@
     </select>
   </div>
   <div>
+    <h2>Task</h2>
+    <component :is="editorForTaskType(taskDefinition.task_type)" />
+    <button @click="saveTask">Save</button>
+    <pre v-if="hasUnsavedChanges" class="save-status unsaved">
+Unsaved changes</pre
+    >
+    <pre>{{ saveStatus }}</pre>
+    <h2>Preview</h2>
     <component
-      :is="componentForTaskType(taskDefinition.task_type)"
+      :is="viewerForTaskType(taskDefinition.task_type)"
       :task="taskDefinition"
     />
   </div>
-  <button @click="saveTask">Save</button>
-  <pre v-if="hasUnsavedChanges" class="save-status unsaved">
-Unsaved changes</pre
-  >
-  <pre>{{ saveStatus }}</pre>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { newTask, TaskDefinition } from '@/models/TaskDefinition';
-import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
+import {
+  editorForTaskType,
+  newTask,
+  TaskDefinition,
+  viewerForTaskType,
+} from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 
 export default defineComponent({
@@ -42,14 +49,8 @@ export default defineComponent({
     hasUnsavedChanges: () => taskEditorStore.hasUnsavedChanges,
   },
   methods: {
-    componentForTaskType(type: TaskDefinition['task_type']) {
-      switch (type) {
-        case 'FillInTheBlanks':
-          return FillInTheBlanksEditor;
-        default:
-          throw new Error('Unimplemented task type: ' + type);
-      }
-    },
+    editorForTaskType,
+    viewerForTaskType,
     onSelectTaskType(type: TaskDefinition['task_type']): void {
       taskEditorStore.setTaskDefinition(newTask(type));
     },
