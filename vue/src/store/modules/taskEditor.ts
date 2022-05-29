@@ -17,7 +17,7 @@ type SaveStatus = Saved | Saving | SaveError;
 
 interface UndoRedoState {
   taskDefinition: TaskDefinition;
-  editType: object;
+  undoBatch: object;
 }
 
 function sleep(ms: number) {
@@ -34,7 +34,7 @@ export class TaskEditorModule extends VuexModule {
   undoRedoStack: UndoRedoState[] = [
     {
       taskDefinition: newTask('FillInTheBlanks'),
-      editType: {},
+      undoBatch: {},
     },
   ];
   undoRedoIndex = 0;
@@ -75,7 +75,7 @@ export class TaskEditorModule extends VuexModule {
       this.serverTaskDefinition = window.STUDIP.LernmoduleVueJS.module
         .customdata as TaskDefinition;
       this.undoRedoStack = [
-        { taskDefinition: this.serverTaskDefinition, editType: {} },
+        { taskDefinition: this.serverTaskDefinition, undoBatch: {} },
       ];
     }
     this.moduleName = window.STUDIP.LernmoduleVueJS.module.name;
@@ -124,22 +124,22 @@ export class TaskEditorModule extends VuexModule {
 
   /**
    * Modify the currently edited task definition, creating a new undo/redo state
-   * if appropriate.  Edits are batched together based on the parameter 'editType'.
-   * @param taskDefinition The new state of the task being edited
-   * @param editType An object.
-   * If isEqual(editType, {}), a new undo/redo state will always be created.
-   * Otherwise, a new undo/redo state will be created if editType is different
-   * from the editType of the previously performed action.
+   * if appropriate.  Edits are batched together based on the parameter 'undoBatch'.
+   * @param payload.taskDefinition The new state of the task being edited
+   * @param payload.undoBatch An object.
+   * If undoBatch is an empty object, a new undo/redo state will always be created.
+   * Otherwise, a new undo/redo state will be created if undoBatch is different
+   * from the undoBatch of the previously performed action.
    */
   @Mutation
-  performEdit(payload: { taskDefinition: TaskDefinition; editType: object }) {
+  performEdit(payload: { taskDefinition: TaskDefinition; undoBatch: object }) {
     const currentUndoRedoState = this.undoRedoStack[this.undoRedoIndex];
     if (isEqual(currentUndoRedoState.taskDefinition, payload.taskDefinition)) {
       return; // Do not pollute the undo-redo history with no-op changes
     }
     const shouldMergeEdits =
-      !isEqual(payload.editType, {}) &&
-      isEqual(payload.editType, currentUndoRedoState.editType);
+      !isEqual(payload.undoBatch, {}) &&
+      isEqual(payload.undoBatch, currentUndoRedoState.undoBatch);
     if (shouldMergeEdits) {
       // Amend the last undo state instead of creating a new one.
       currentUndoRedoState.taskDefinition = payload.taskDefinition;
@@ -151,7 +151,7 @@ export class TaskEditorModule extends VuexModule {
         .concat([
           {
             taskDefinition: payload.taskDefinition,
-            editType: payload.editType,
+            undoBatch: payload.undoBatch,
           },
         ]);
       this.undoRedoIndex += 1;

@@ -104,7 +104,7 @@ export default defineComponent({
     onSelectTaskType(type: TaskDefinition['task_type']): void {
       taskEditorStore.performEdit({
         taskDefinition: newTask(type),
-        editType: {},
+        undoBatch: {},
       });
     },
   },

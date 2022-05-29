@@ -29,7 +29,7 @@ export default defineComponent({
           ...this.taskDefinition,
           templates: newTemplates,
         },
-        editType: { type: 'editTemplate', templateIndex },
+        undoBatch: { type: 'editTemplate', templateIndex },
       });
     },
     addSubtask() {
@@ -39,7 +39,7 @@ export default defineComponent({
           ...this.taskDefinition,
           templates: newTemplates,
         },
-        editType: {},
+        undoBatch: {},
       });
     },
   },
