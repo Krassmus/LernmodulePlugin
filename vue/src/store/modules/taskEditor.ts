@@ -32,6 +32,14 @@ export class TaskEditorModule extends VuexModule {
     return !isEqual(this.taskDefinition, this.serverTaskDefinition);
   }
 
+  get canUndo(): boolean {
+    return false;
+  }
+
+  get canRedo(): boolean {
+    return false;
+  }
+
   @Mutation
   initialize() {
     if (!isArray(window.STUDIP.LernmoduleVueJS.module.customdata)) {
@@ -83,6 +91,12 @@ export class TaskEditorModule extends VuexModule {
         this.context.commit('saveFailure', { error });
       });
   }
+
+  @Mutation
+  undo() {}
+
+  @Mutation
+  redo() {}
 
   @Mutation
   setTaskDefinition(taskDefinition: TaskDefinition) {
