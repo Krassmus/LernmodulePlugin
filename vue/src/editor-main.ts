@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import LernmoduleEditor from '@/components/LernmoduleEditor.vue';
-import { taskEditorStore } from '@/store';
+import { taskEditorStore, store } from '@/store';
 
 taskEditorStore.initialize();
-createApp(LernmoduleEditor).mount('#app');
+createApp(LernmoduleEditor).use(store).mount('#app');
