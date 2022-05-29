@@ -123,13 +123,13 @@ export class TaskEditorModule extends VuexModule {
   }
 
   /**
-   * Modify the currently edited task definition and possibly create a new
-   * undo/redo state.  Changes are batched by 'editType'.
-   * If editType === {}, a new undo/redo state will always be created.
-   * Otherwise, a new undo/redo state will only be created
-   * if editType !== lastEditType.
-   * @param taskDefinition The new task definition
-   * @param editType
+   * Modify the currently edited task definition, creating a new undo/redo state
+   * if appropriate.  Edits are batched together based on the parameter 'editType'.
+   * @param taskDefinition The new state of the task being edited
+   * @param editType An object.
+   * If isEqual(editType, {}), a new undo/redo state will always be created.
+   * Otherwise, a new undo/redo state will be created if editType is different
+   * from the editType of the previously performed action.
    */
   @Mutation
   setTaskDefinition(taskDefinition: TaskDefinition, editType: object) {
@@ -148,12 +148,7 @@ export class TaskEditorModule extends VuexModule {
       // Create a new undo state and append it to the stack.
       this.undoRedoStack = this.undoRedoStack
         .slice(0, this.undoRedoIndex + 1)
-        .concat([
-          {
-            taskDefinition,
-            editType: editType,
-          },
-        ]);
+        .concat([{ taskDefinition, editType }]);
       this.undoRedoIndex += 1;
     }
   }
