@@ -24,7 +24,7 @@ export default defineComponent({
     onEditTemplate(event: InputEvent, templateIndex: number) {
       const newTemplates = [...this.taskDefinition.templates];
       newTemplates[templateIndex] = (event.target as HTMLInputElement).value;
-      taskEditorStore.setTaskDefinition({
+      taskEditorStore.performEdit({
         taskDefinition: {
           ...this.taskDefinition,
           templates: newTemplates,
@@ -34,7 +34,7 @@ export default defineComponent({
     },
     addSubtask() {
       const newTemplates = [...this.taskDefinition.templates, ''];
-      taskEditorStore.setTaskDefinition({
+      taskEditorStore.performEdit({
         taskDefinition: {
           ...this.taskDefinition,
           templates: newTemplates,

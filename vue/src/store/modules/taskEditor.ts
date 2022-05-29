@@ -132,10 +132,7 @@ export class TaskEditorModule extends VuexModule {
    * from the editType of the previously performed action.
    */
   @Mutation
-  setTaskDefinition(payload: {
-    taskDefinition: TaskDefinition;
-    editType: object;
-  }) {
+  performEdit(payload: { taskDefinition: TaskDefinition; editType: object }) {
     const currentUndoRedoState = this.undoRedoStack[this.undoRedoIndex];
     if (isEqual(currentUndoRedoState.taskDefinition, payload.taskDefinition)) {
       return; // Do not pollute the undo-redo history with no-op changes
