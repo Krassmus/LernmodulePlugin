@@ -132,23 +132,31 @@ export class TaskEditorModule extends VuexModule {
    * from the editType of the previously performed action.
    */
   @Mutation
-  setTaskDefinition(taskDefinition: TaskDefinition, editType: object) {
+  setTaskDefinition(payload: {
+    taskDefinition: TaskDefinition;
+    editType: object;
+  }) {
     const currentUndoRedoState = this.undoRedoStack[this.undoRedoIndex];
-    if (isEqual(currentUndoRedoState.taskDefinition, taskDefinition)) {
+    if (isEqual(currentUndoRedoState.taskDefinition, payload.taskDefinition)) {
       return; // Do not pollute the undo-redo history with no-op changes
     }
     const shouldMergeEdits =
-      !isEqual(editType, {}) &&
-      isEqual(editType, currentUndoRedoState.editType);
+      !isEqual(payload.editType, {}) &&
+      isEqual(payload.editType, currentUndoRedoState.editType);
     if (shouldMergeEdits) {
       // Amend the last undo state instead of creating a new one.
-      currentUndoRedoState.taskDefinition = taskDefinition;
+      currentUndoRedoState.taskDefinition = payload.taskDefinition;
       this.undoRedoStack = this.undoRedoStack.slice(0, this.undoRedoIndex + 1);
     } else {
       // Create a new undo state and append it to the stack.
       this.undoRedoStack = this.undoRedoStack
         .slice(0, this.undoRedoIndex + 1)
-        .concat([{ taskDefinition, editType }]);
+        .concat([
+          {
+            taskDefinition: payload.taskDefinition,
+            editType: payload.editType,
+          },
+        ]);
       this.undoRedoIndex += 1;
     }
   }

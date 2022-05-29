@@ -1,5 +1,12 @@
 <template>
-  <input type="text" :value="taskDefinition.template" @input="onEditTemplate" />
+  <input
+    v-for="(template, i) in taskDefinition.templates"
+    :key="i"
+    type="text"
+    :value="template"
+    @input="(ev) => onEditTemplate(ev, i)"
+  />
+  <button @click="addSubtask">Add subtask</button>
 </template>
 
 <script lang="ts">
@@ -14,14 +21,26 @@ export default defineComponent({
       taskEditorStore.taskDefinition as FillInTheBlanksDefinition,
   },
   methods: {
-    onEditTemplate(event: InputEvent) {
-      taskEditorStore.setTaskDefinition(
-        {
+    onEditTemplate(event: InputEvent, templateIndex: number) {
+      const newTemplates = [...this.taskDefinition.templates];
+      newTemplates[templateIndex] = (event.target as HTMLInputElement).value;
+      taskEditorStore.setTaskDefinition({
+        taskDefinition: {
           ...this.taskDefinition,
-          template: (event.target as HTMLInputElement).value,
+          templates: newTemplates,
         },
-        { type: 'editTemplate' }
-      );
+        editType: { type: 'editTemplate', templateIndex },
+      });
+    },
+    addSubtask() {
+      const newTemplates = [...this.taskDefinition.templates, ''];
+      taskEditorStore.setTaskDefinition({
+        taskDefinition: {
+          ...this.taskDefinition,
+          templates: newTemplates,
+        },
+        editType: {},
+      });
     },
   },
 });

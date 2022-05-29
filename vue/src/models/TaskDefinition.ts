@@ -5,7 +5,7 @@ import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
 export type TaskDefinition = FillInTheBlanksDefinition;
 export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
-  template: string;
+  templates: string[];
 };
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
@@ -13,7 +13,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FillInTheBlanks':
       return {
         task_type: 'FillInTheBlanks',
-        template: 'Template goes {here}.',
+        templates: ['Template goes {here}.'],
       };
     default:
       throw new Error('Unimplemented type: ' + type);
