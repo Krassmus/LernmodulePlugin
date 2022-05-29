@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { Component, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import { TaskDefinition, viewerForTaskType } from '@/models/TaskDefinition';
 
 export default defineComponent({

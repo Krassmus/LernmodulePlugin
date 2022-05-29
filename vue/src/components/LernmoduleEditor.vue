@@ -102,7 +102,7 @@ export default defineComponent({
       taskEditorStore.setModuleName(name);
     },
     onSelectTaskType(type: TaskDefinition['task_type']): void {
-      taskEditorStore.setTaskDefinition(newTask(type));
+      taskEditorStore.setTaskDefinition(newTask(type), {});
     },
   },
 });

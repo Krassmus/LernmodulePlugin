@@ -15,10 +15,13 @@ export default defineComponent({
   },
   methods: {
     onEditTemplate(event: InputEvent) {
-      taskEditorStore.setTaskDefinition({
-        ...this.taskDefinition,
-        template: (event.target as HTMLInputElement).value,
-      });
+      taskEditorStore.setTaskDefinition(
+        {
+          ...this.taskDefinition,
+          template: (event.target as HTMLInputElement).value,
+        },
+        { type: 'editTemplate' }
+      );
     },
   },
 });

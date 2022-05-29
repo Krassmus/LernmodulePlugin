@@ -15,6 +15,11 @@ type SaveError = {
 };
 type SaveStatus = Saved | Saving | SaveError;
 
+interface UndoRedoState {
+  taskDefinition: TaskDefinition;
+  editType: object;
+}
+
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
@@ -24,20 +29,43 @@ export class TaskEditorModule extends VuexModule {
   saveStatus: SaveStatus = { status: 'saved' };
   fatalErrors: string[] = [];
   nonFatalErrors: string[] = [];
-  taskDefinition: TaskDefinition = newTask('FillInTheBlanks');
   serverTaskDefinition: TaskDefinition | [] = [];
   moduleName: string = '';
+  undoRedoStack: UndoRedoState[] = [
+    {
+      taskDefinition: newTask('FillInTheBlanks'),
+      editType: {},
+    },
+  ];
+  undoRedoIndex = 0;
+
+  get taskDefinition(): TaskDefinition {
+    return this.undoRedoStack[this.undoRedoIndex].taskDefinition;
+  }
 
   get hasUnsavedChanges(): boolean {
     return !isEqual(this.taskDefinition, this.serverTaskDefinition);
   }
 
-  get canUndo(): boolean {
-    return false;
+  get canUndo() {
+    return this.undoRedoIndex > 0;
   }
 
-  get canRedo(): boolean {
-    return false;
+  get canRedo() {
+    return this.undoRedoIndex < this.undoRedoStack.length - 1;
+  }
+
+  @Mutation
+  undo() {
+    this.undoRedoIndex = Math.max(0, this.undoRedoIndex - 1);
+  }
+
+  @Mutation
+  redo() {
+    this.undoRedoIndex = Math.min(
+      this.undoRedoStack.length - 1,
+      this.undoRedoIndex + 1
+    );
   }
 
   @Mutation
@@ -46,7 +74,9 @@ export class TaskEditorModule extends VuexModule {
       // TODO: Warning!! Bad!! You should parse the contents, do not just type-cast!!
       this.serverTaskDefinition = window.STUDIP.LernmoduleVueJS.module
         .customdata as TaskDefinition;
-      this.taskDefinition = this.serverTaskDefinition;
+      this.undoRedoStack = [
+        { taskDefinition: this.serverTaskDefinition, editType: {} },
+      ];
     }
     this.moduleName = window.STUDIP.LernmoduleVueJS.module.name;
   }
@@ -92,15 +122,40 @@ export class TaskEditorModule extends VuexModule {
       });
   }
 
+  /**
+   * Modify the currently edited task definition and possibly create a new
+   * undo/redo state.  Changes are batched by 'editType'.
+   * If editType === {}, a new undo/redo state will always be created.
+   * Otherwise, a new undo/redo state will only be created
+   * if editType !== lastEditType.
+   * @param taskDefinition The new task definition
+   * @param editType
+   */
   @Mutation
-  undo() {}
-
-  @Mutation
-  redo() {}
-
-  @Mutation
-  setTaskDefinition(taskDefinition: TaskDefinition) {
-    this.taskDefinition = taskDefinition;
+  setTaskDefinition(taskDefinition: TaskDefinition, editType: object) {
+    const currentUndoRedoState = this.undoRedoStack[this.undoRedoIndex];
+    if (isEqual(currentUndoRedoState.taskDefinition, taskDefinition)) {
+      return; // Do not pollute the undo-redo history with no-op changes
+    }
+    const shouldMergeEdits =
+      !isEqual(editType, {}) &&
+      isEqual(editType, currentUndoRedoState.editType);
+    if (shouldMergeEdits) {
+      // Amend the last undo state instead of creating a new one.
+      currentUndoRedoState.taskDefinition = taskDefinition;
+      this.undoRedoStack = this.undoRedoStack.slice(0, this.undoRedoIndex + 1);
+    } else {
+      // Create a new undo state and append it to the stack.
+      this.undoRedoStack = this.undoRedoStack
+        .slice(0, this.undoRedoIndex + 1)
+        .concat([
+          {
+            taskDefinition,
+            editType: editType,
+          },
+        ]);
+      this.undoRedoIndex += 1;
+    }
   }
 
   @Mutation
