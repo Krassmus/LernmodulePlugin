@@ -107,19 +107,18 @@ export class TaskEditorModule extends VuexModule {
       return;
     }
     this.context.commit('startedSaving');
-    saveTask(
-      this.taskDefinition,
-      this.moduleName,
-      window.STUDIP.LernmoduleVueJS.module.module_id,
-      window.STUDIP.LernmoduleVueJS.block_id
-    )
-      .then(async (result) => {
-        await sleep(500);
-        this.context.commit('saveSuccess', result.taskDefinition);
-      })
-      .catch((error) => {
-        this.context.commit('saveFailure', { error });
-      });
+    try {
+      const saveResult = await saveTask(
+        this.taskDefinition,
+        this.moduleName,
+        window.STUDIP.LernmoduleVueJS.module.module_id,
+        window.STUDIP.LernmoduleVueJS.block_id
+      );
+      await sleep(500);
+      this.context.commit('saveSuccess', saveResult.taskDefinition);
+    } catch (error) {
+      this.context.commit('saveFailure', { error });
+    }
   }
 
   /**
