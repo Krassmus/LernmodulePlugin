@@ -136,9 +136,14 @@ export class TaskEditorModule extends VuexModule {
    * from the undoBatch of the previously performed action.
    */
   @Mutation
-  performEdit(payload: { taskDefinition: TaskDefinition; undoBatch: object }) {
+  performEdit(payload: {
+    newTaskDefinition: TaskDefinition;
+    undoBatch: object;
+  }) {
     const currentUndoRedoState = this.undoRedoStack[this.undoRedoIndex];
-    if (isEqual(currentUndoRedoState.taskDefinition, payload.taskDefinition)) {
+    if (
+      isEqual(currentUndoRedoState.taskDefinition, payload.newTaskDefinition)
+    ) {
       return; // Do not pollute the undo-redo history with no-op changes
     }
     const shouldMergeEdits =
@@ -146,7 +151,7 @@ export class TaskEditorModule extends VuexModule {
       isEqual(payload.undoBatch, currentUndoRedoState.undoBatch);
     if (shouldMergeEdits) {
       // Amend the last undo state instead of creating a new one.
-      currentUndoRedoState.taskDefinition = payload.taskDefinition;
+      currentUndoRedoState.taskDefinition = payload.newTaskDefinition;
       this.undoRedoStack = this.undoRedoStack.slice(0, this.undoRedoIndex + 1);
     } else {
       // Create a new undo state and append it to the stack.
@@ -154,7 +159,7 @@ export class TaskEditorModule extends VuexModule {
         .slice(0, this.undoRedoIndex + 1)
         .concat([
           {
-            taskDefinition: payload.taskDefinition,
+            taskDefinition: payload.newTaskDefinition,
             undoBatch: payload.undoBatch,
           },
         ]);

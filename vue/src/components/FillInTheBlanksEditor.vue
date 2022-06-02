@@ -1,10 +1,12 @@
 <template>
+  Current undo redo state:
+  <pre>{{ currentUndoRedoState }}</pre>
   <input
-    v-for="(template, i) in taskDefinition.templates"
-    :key="i"
+    v-for="(template, index) in taskDefinition.templates"
+    :key="index"
     type="text"
     :value="template"
-    @input="(ev) => onEditTemplate(ev, i)"
+    @input="(ev) => onEditTemplate(ev, index)"
   />
   <button @click="addSubtask">Add subtask</button>
 </template>
@@ -19,13 +21,15 @@ export default defineComponent({
   computed: {
     taskDefinition: () =>
       taskEditorStore.taskDefinition as FillInTheBlanksDefinition,
+    currentUndoRedoState: () =>
+      taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },
   methods: {
     onEditTemplate(event: InputEvent, templateIndex: number) {
       const newTemplates = [...this.taskDefinition.templates];
       newTemplates[templateIndex] = (event.target as HTMLInputElement).value;
       taskEditorStore.performEdit({
-        taskDefinition: {
+        newTaskDefinition: {
           ...this.taskDefinition,
           templates: newTemplates,
         },
@@ -35,7 +39,7 @@ export default defineComponent({
     addSubtask() {
       const newTemplates = [...this.taskDefinition.templates, ''];
       taskEditorStore.performEdit({
-        taskDefinition: {
+        newTaskDefinition: {
           ...this.taskDefinition,
           templates: newTemplates,
         },
