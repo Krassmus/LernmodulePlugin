@@ -70,7 +70,12 @@ export class TaskEditorModule extends VuexModule {
 
   @Mutation
   initialize() {
-    if (!isArray(window.STUDIP.LernmoduleVueJS.module.customdata)) {
+    // In Linux on Anns PC this is an empty array but on Windows on Thomas PC it's just NULL.
+    // We don't know why this is, but for now, we will just accept it and handle both cases.
+    if (
+      window.STUDIP.LernmoduleVueJS.module.customdata &&
+      !isArray(window.STUDIP.LernmoduleVueJS.module.customdata)
+    ) {
       // TODO: Warning!! Bad!! You should parse the contents, do not just type-cast!!
       this.serverTaskDefinition = window.STUDIP.LernmoduleVueJS.module
         .customdata as TaskDefinition;

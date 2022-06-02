@@ -13,7 +13,7 @@
   STUDIP.LernmoduleVueJS = <?= json_encode($javascript_global_variables) ?>;
 </script>
 
-<? if (!$plugin->config[production]) : ?>
+<? if (!$plugin->config['production']) : ?>
   <script src="http://localhost:8080/js/editor.js"></script>
   <script src="http://localhost:8080/js/chunk-vendors.js"></script>
   <script src="http://localhost:8080/js/chunk-common.js"></script>
