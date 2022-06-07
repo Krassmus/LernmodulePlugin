@@ -24,7 +24,8 @@
   <div>
     <label> Select task type </label>
     <select :value="this.taskDefinition.task_type" @input="onSelectTaskType">
-      <option value="FillInTheBlanks">FillInTheBlanks</option>
+      <option value="FillInTheBlanks">Fill in the blanks</option>
+      <option value="FlashCards">Flash cards</option>
     </select>
   </div>
   <div>
@@ -101,9 +102,10 @@ export default defineComponent({
       const name = (event.target as HTMLInputElement).value;
       taskEditorStore.setModuleName(name);
     },
-    onSelectTaskType(type: TaskDefinition['task_type']): void {
+    onSelectTaskType(event: InputEvent): void {
+      const taskType = (event.target as HTMLInputElement).value;
       taskEditorStore.performEdit({
-        newTaskDefinition: newTask(type),
+        newTaskDefinition: newTask(taskType as TaskDefinition['task_type']),
         undoBatch: {},
       });
     },
