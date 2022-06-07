@@ -2,7 +2,12 @@
   <!--  <h1>Variables passed from server:</h1>-->
   <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
   <h1 class="task-name-header">
-    Editing "{{ moduleName }}"
+    <input
+      type="text"
+      class="task-name-input"
+      :value="moduleName"
+      @input="onInputModuleName"
+    />
     <span
       :class="saveStatusText === 'Modified' ? 'save-status-modified' : ''"
       >{{ saveStatusText }}</span
@@ -16,10 +21,6 @@
     <button @click="redo" :disabled="!canRedo">Redo</button>
   </div>
 
-  <label
-    >Name des Moduls
-    <input type="text" :value="moduleName" @input="onInputModuleName" />
-  </label>
   <div>
     <label> Select task type </label>
     <select :value="this.taskDefinition.task_type" @input="onSelectTaskType">
@@ -128,6 +129,18 @@ export default defineComponent({
 
 .task-name-header {
   display: flex;
+  gap: 1em;
   justify-content: space-between;
+}
+.task-name-header:focus-within {
+  border-bottom-color: black;
+}
+
+.task-name-input {
+  flex-grow: 1;
+  border: none;
+}
+.task-name-input:focus {
+  outline: none;
 }
 </style>
