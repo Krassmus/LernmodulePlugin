@@ -4,10 +4,11 @@
 
 <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
-<? $template = $mod->getViewerTemplate($attempt, $game_attendence) ?>
-<? if ($template) : ?>
-    <? $template->set_attribute('plugin', $plugin); ?>
-    <? $template->set_attribute(
+<?php
+$template = $mod->getViewerTemplate($attempt, $game_attendence);
+if ($template) {
+    $template->set_attribute('plugin', $plugin);
+    $template->set_attribute(
         'javascript_global_variables',
         [
             'module' => [
@@ -18,9 +19,10 @@
             'attemptId' => $attempt->getId(),
             'saveRoute' => $controller->url_for('vuejseditor/save')
         ]
-    ); ?>
-    <?= $template->render() ?>
-<? endif ?>
+    );
+}
+echo $template->render();
+?>
 
 <script>
     STUDIP.Lernmodule.periodicalPushData = function () {
