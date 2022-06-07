@@ -44,12 +44,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
+import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 export default defineComponent({
-  name: 'FillInTheBlanksSubtask',
+  name: 'FillInTheBlanksViewer',
   props: {
-    template: {
-      type: String,
+    task: {
+      type: Object as PropType<FillInTheBlanksDefinition>,
       required: true,
     },
   },
@@ -61,7 +62,7 @@ export default defineComponent({
   },
   computed: {
     splitTemplate(): string[] {
-      return this.template.split(/{([^{}]*)}/);
+      return this.task.template.split(/{([^{}]*)}/);
     },
     isInputCorrect(): boolean {
       return this.splitTemplate.every((el, i) => {

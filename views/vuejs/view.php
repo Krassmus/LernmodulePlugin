@@ -13,6 +13,10 @@
   STUDIP.LernmoduleVueJS = <?= json_encode($javascript_global_variables) ?>
 </script>
 
+<!--
+If $production, load the production build of our Vue project which is compiled using 'npm run build'.
+  Otherwise, load the development build from the dev server at localhost:8080, which is launched via 'npm run hot'.
+  -->
 <div><?= $plugin->config['production'] ?></div>
 <? if (!$plugin->config['production']) : ?>
   <script src="http://localhost:8080/js/viewer.js"></script>
