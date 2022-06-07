@@ -14,6 +14,8 @@ class ParticipantsController extends PluginController
 
     public function index_action()
     {
+        // TODO: Add translation for this string
+        PageLayout::setTitle(_("Teilnehmende"));
         $this->module = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id) WHERE lernmodule_courses.seminar_id = ? ORDER BY name ASC", array(Context::get()->id));
         $this->students = Course::findCurrent()->members->filter(function ($student) { return $student['status'] === "autor"; });
     }
