@@ -62,7 +62,6 @@ export default defineComponent({
   },
   computed: {
     LernmoduleVueJS: () => window.STUDIP.LernmoduleVueJS,
-    // TODO: Warning!! Bad!! You should parse the contents, do not just type-cast!!
     taskDefinition: () => taskEditorStore.taskDefinition,
     moduleName: () => taskEditorStore.moduleName,
     saveStatus: () => taskEditorStore.saveStatus,
