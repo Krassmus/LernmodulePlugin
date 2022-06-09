@@ -8,8 +8,10 @@
         v-else
         type="text"
         v-model="userInputs[i]"
-        :readonly="submittedAnswers?.[i] === splitTemplate[i]"
-        :class="classForInputElement(i)"
+        :readonly="
+          submittedAnswers?.[Math.floor(i / 2)] === answers[Math.floor(i / 2)]
+        "
+        :class="classForInputElement(Math.floor(i / 2))"
       />
     </template>
   </div>
@@ -20,8 +22,8 @@
   <pre>{{ userInputs }}</pre>
   submittedAnswers:
   <pre>{{ submittedAnswers }}</pre>
-  splitTemplate:
-  <pre>{{ splitTemplate }}</pre>
+  answers:
+  <pre>{{ answers }}</pre>
   <!--  <div v-if="false">-->
   <!--    <span-->
   <!--      v-if="isInputCorrect"-->
@@ -69,20 +71,25 @@ export default defineComponent({
   },
   methods: {
     onClickSubmit() {
-      this.submittedAnswers = [...this.userInputs];
+      this.submittedAnswers = this.userInputs.filter((wert, i) => i % 2 === 1);
     },
     classForInputElement(index: number) {
       if (!this.submittedAnswers) {
         return '';
       }
-      return this.submittedAnswers[index] === this.splitTemplate[index]
+      return this.submittedAnswers[index] === this.answers[index]
         ? 'correct'
         : 'incorrect';
     },
   },
   computed: {
     splitTemplate(): string[] {
+      // Returns an array where the even indexes are the static text portions,
+      // and the odd indexes are the blanks.
       return this.task.template.split(/{([^{}]*)}/);
+    },
+    answers(): string[] {
+      return this.splitTemplate.filter((value, index) => index % 2 === 1);
     },
   },
 });
