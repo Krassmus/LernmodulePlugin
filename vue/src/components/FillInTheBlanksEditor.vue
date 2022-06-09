@@ -2,7 +2,7 @@
   Current undo redo state:
   <pre>{{ currentUndoRedoState }}</pre>
 
-  <button @click="addBlank">Lücke hinzufügen</button>
+  <button @click="addBlank" class="button">Lücke hinzufügen</button>
 
   <textarea
     :value="taskDefinition.template"
@@ -65,4 +65,23 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.button {
+  font-size: 1em;
+  line-height: 1.2;
+  margin: 0 0.5em 1em;
+  padding: 0.5em 1.25em;
+  border-radius: 2em;
+  background: #1a73d9;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+  transform: translateZ(0);
+  display: inline-block;
+  text-align: center;
+  text-shadow: none;
+  text-decoration: none;
+  vertical-align: baseline;
+}
+</style>
