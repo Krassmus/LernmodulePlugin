@@ -8,34 +8,36 @@
         v-else
         type="text"
         v-model="userInputs[i]"
-        :class="inputValidations[i] ? 'correct' : 'incorrect'"
+        :class="classForInputElement(i)"
       />
     </template>
   </div>
 
-  <br />
+  <button @click="onClickSubmit">Submit</button>
 
-  <div v-if="splitTemplate.length > 1">
-    <span
-      v-if="isInputCorrect"
-      :class="isInputCorrect ? 'resultCorrect' : 'resultIncorrect'"
-    >
-      Alle Lücken sind richtig ausgefüllt.
-    </span>
-
-    <span v-else :class="isInputCorrect ? 'resultCorrect' : 'resultIncorrect'">
-      Die Lücken sind nicht richtig ausgefüllt.
-    </span>
+  <div v-if="submittedAnswers">
+    {{ submittedAnswers }}
   </div>
 
-  <div v-if="debug">
-    <pre>{{ userInputs }}</pre>
+  <!--  <div v-if="false">-->
+  <!--    <span-->
+  <!--      v-if="isInputCorrect"-->
+  <!--      :class="isInputCorrect ? 'resultCorrect' : 'resultIncorrect'"-->
+  <!--    >-->
+  <!--      Alle Lücken sind richtig ausgefüllt.-->
+  <!--    </span>-->
 
-    Split template:
-    <pre>{{ splitTemplate }}</pre>
-    Input validations:
-    <pre>{{ inputValidations }}</pre>
-  </div>
+  <!--    <span v-else :class="isInputCorrect ? 'resultCorrect' : 'resultIncorrect'">-->
+  <!--      Die Lücken sind nicht richtig ausgefüllt.-->
+  <!--    </span>-->
+  <!--  </div>-->
+
+  <!--  <div v-if="debug">-->
+  <!--    <pre>{{ userInputs }}</pre>-->
+
+  <!--    Split template:-->
+  <!--    <pre>{{ splitTemplate }}</pre>-->
+  <!--  </div>-->
 
   <!--  <input type="text" v-model="userInput" />-->
   <!--  <div :class="isInputCorrect ? 'correct' : 'incorrect'">-->
@@ -46,6 +48,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
+
 export default defineComponent({
   name: 'FillInTheBlanksViewer',
   props: {
@@ -57,26 +60,26 @@ export default defineComponent({
   data() {
     return {
       userInputs: [],
-      debug: false,
+      debug: true,
+      submittedAnswers: null as string[] | null,
     };
+  },
+  methods: {
+    onClickSubmit() {
+      this.submittedAnswers = [...this.userInputs];
+    },
+    classForInputElement(index: number) {
+      if (!this.submittedAnswers) {
+        return '';
+      }
+      return this.submittedAnswers[index] === this.splitTemplate[index]
+        ? 'correct'
+        : 'incorrect';
+    },
   },
   computed: {
     splitTemplate(): string[] {
       return this.task.template.split(/{([^{}]*)}/);
-    },
-    isInputCorrect(): boolean {
-      return this.splitTemplate.every((el, i) => {
-        if (i % 2 === 0) {
-          // Das ist kein Input-Feld, sondern ein statischer String im Template
-          return true;
-        }
-        return this.userInputs[i] === this.splitTemplate[i];
-      });
-    },
-    inputValidations(): boolean[] {
-      return this.splitTemplate.map(
-        (el, i) => this.userInputs[i] === this.splitTemplate[i]
-      );
     },
   },
 });
