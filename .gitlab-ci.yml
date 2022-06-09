@@ -16,10 +16,10 @@ build-job:       # This job runs in the build stage, which runs first.
   script:
     - echo "Running build.sh..."
     - ./build.sh
-    - echo "Compile complete."
+    - echo "Build complete."
   artifacts:
     paths:
-      - ./dist/plugin.zip
+      - ./dist/
     expire_in: 1 week
 
 unit-test-job:   # This job runs in the test stage.
