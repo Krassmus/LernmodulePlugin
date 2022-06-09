@@ -1,10 +1,10 @@
 # This file is a template, and might need editing before it works on your project.
 
-# Apply the 'ann' tag so the runner on ann's laptop will pick the job
+# Apply the 'studip-plugins' tag so the group runner on studip-ci01.virt.uni-oldenburg.de will pick this job
 default:
-  image: annyanich/rocky-studip:latest
+  image: studip/studip
   tags:
-    - ann
+    - studip-plugins
 
 stages:          # List of stages for jobs, and their order of execution
   - build
