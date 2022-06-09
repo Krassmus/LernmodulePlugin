@@ -1,9 +1,13 @@
 <template>
   Current undo redo state:
   <pre>{{ currentUndoRedoState }}</pre>
+
+  <button @click="addBlank">Lücke hinzufügen</button>
+
   <textarea
     :value="taskDefinition.template"
     @input="(ev) => onEditTemplate(ev)"
+    ref="theTextArea"
   />
 </template>
 
@@ -27,6 +31,32 @@ export default defineComponent({
         newTaskDefinition: {
           ...this.taskDefinition,
           template: newValue,
+        },
+        undoBatch: { type: 'editFillInTheBlanksTemplate' },
+      });
+    },
+    addBlank() {
+      const textArea = this.$refs.theTextArea as HTMLTextAreaElement;
+
+      const selectedText = this.taskDefinition.template.slice(
+        textArea.selectionStart,
+        textArea.selectionEnd
+      );
+
+      const blank = selectedText.replace(
+        selectedText.trim(),
+        '{' + selectedText.trim() + '}'
+      );
+
+      const newText =
+        this.taskDefinition.template.substring(0, textArea.selectionStart) +
+        blank +
+        this.taskDefinition.template.substring(textArea.selectionEnd);
+
+      taskEditorStore.performEdit({
+        newTaskDefinition: {
+          ...this.taskDefinition,
+          template: newText,
         },
         undoBatch: { type: 'editFillInTheBlanksTemplate' },
       });
