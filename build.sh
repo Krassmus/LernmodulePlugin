@@ -8,6 +8,6 @@ npm run build &&
 cd .. &&
 # Zip up the whole plugin directory's contents, excluding certain folders.
 # Stud.IP will take FOREVER to install the plugin if .git or node_modules are included.
-zip -r "dist/plugin-$timestamp.zip" . -x "./.git/*" "./vue/node_modules/*" "./.idea/*" "./dist/*" &&
+zip -r "dist/lernmodule-plugin-$timestamp.zip" . -x "./.git/*" "./vue/node_modules/*" "./.idea/*" "./dist/*" &&
 # In the zip, rename config.prod.php to config.php.
-echo -e '@ config.prod.php\n@=config.php' | zipnote -w "dist/plugin-$timestamp.zip"
+echo -e '@ config.prod.php\n@=config.php' | zipnote -w "dist/lernmodule-plugin-$timestamp.zip"
