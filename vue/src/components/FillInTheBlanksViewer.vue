@@ -8,6 +8,7 @@
         v-else
         type="text"
         v-model="userInputs[i]"
+        :readonly="submittedAnswers?.[i] === splitTemplate[i]"
         :class="classForInputElement(i)"
       />
     </template>
@@ -15,10 +16,12 @@
 
   <button @click="onClickSubmit">Submit</button>
 
-  <div v-if="submittedAnswers">
-    {{ submittedAnswers }}
-  </div>
-
+  userInputs:
+  <pre>{{ userInputs }}</pre>
+  submittedAnswers:
+  <pre>{{ submittedAnswers }}</pre>
+  splitTemplate:
+  <pre>{{ splitTemplate }}</pre>
   <!--  <div v-if="false">-->
   <!--    <span-->
   <!--      v-if="isInputCorrect"-->
