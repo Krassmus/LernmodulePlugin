@@ -2,7 +2,7 @@
 
 # Apply the 'studip-plugins' tag so the group runner on studip-ci01.virt.uni-oldenburg.de will pick this job
 default:
-  image: annyanich/rockylinux-studip:0.1
+  image: annyanich/rockylinux-studip:0.2
   tags:
     - studip-plugins
 
