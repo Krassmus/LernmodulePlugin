@@ -1,13 +1,6 @@
 /*
  This file contains type declarations for global variables defined in Stud.IP
  and in our plugin.
-
- Notice:
- Normally, it would be a .d.ts file, but I could not figure out how to get
- @juit/vue-ts-checker to detect it, so I have renamed it to be a .ts file.
- That is a bit unconventional and means that we have to import this file by
- hand somewhere for the type declarations to take effect.
- I have chosen to import it in editor-main.ts.
 */
 
 // Ensure that this file will be treated as a module by Typescript.
