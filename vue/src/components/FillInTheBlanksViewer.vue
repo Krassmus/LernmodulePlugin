@@ -64,7 +64,7 @@ export default defineComponent({
   },
   data() {
     return {
-      userInputs: [] as string[],
+      userInputs: [],
       debug: true,
       submittedAnswers: null as string[] | null,
     };

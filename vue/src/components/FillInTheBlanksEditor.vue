@@ -6,7 +6,7 @@
 
   <textarea
     :value="taskDefinition.template"
-    @input="onEditTemplate"
+    @input="(ev) => onEditTemplate(ev)"
     ref="theTextArea"
   />
 </template>

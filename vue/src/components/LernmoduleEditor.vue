@@ -23,7 +23,7 @@
 
   <div>
     <label> Select task type </label>
-    <select :value="taskDefinition.task_type" @input="onSelectTaskType">
+    <select :value="this.taskDefinition.task_type" @input="onSelectTaskType">
       <option value="FillInTheBlanks">Fill in the blanks</option>
       <option value="FlashCards">Flash cards</option>
     </select>
