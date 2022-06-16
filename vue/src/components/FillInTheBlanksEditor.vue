@@ -1,14 +1,26 @@
 <template>
   Current undo redo state:
   <pre>{{ currentUndoRedoState }}</pre>
+  <div>
+    <button @click="addBlank" class="h5pButton">Lücke hinzufügen</button>
+  </div>
 
-  <button @click="addBlank" class="button">Lücke hinzufügen</button>
+  <div>
+    <textarea
+      :value="taskDefinition.template"
+      @input="(ev) => onEditTemplate(ev)"
+      ref="theTextArea"
+    />
+  </div>
 
-  <textarea
-    :value="taskDefinition.template"
-    @input="(ev) => onEditTemplate(ev)"
-    ref="theTextArea"
-  />
+  <div>
+    <input
+      type="checkbox"
+      id="checkbox"
+      v-model="taskDefinition.caseSensitive"
+    />
+    <label for="checkbox">Groß- und Kleinschreibung beachten</label>
+  </div>
 </template>
 
 <script lang="ts">
@@ -66,7 +78,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.button {
+.h5pButton {
   font-size: 1em;
   line-height: 1.2;
   margin: 0 0.5em 1em;
@@ -77,7 +89,6 @@ export default defineComponent({
   cursor: pointer;
   border: none;
   box-shadow: none;
-  transform: translateZ(0);
   display: inline-block;
   text-align: center;
   text-shadow: none;

@@ -17,19 +17,17 @@
     <button @click="saveTask" :disabled="saveStatus.status === 'saving'">
       Save
     </button>
-    <button @click="undo" :disabled="!canUndo">Undo</button>
-    <button @click="redo" :disabled="!canRedo">Redo</button>
   </div>
 
   <div>
     <label> Select task type </label>
-    <select :value="this.taskDefinition.task_type" @input="onSelectTaskType">
+    <select :value="taskDefinition.task_type" @input="onSelectTaskType">
       <option value="FillInTheBlanks">Fill in the blanks</option>
       <option value="FlashCards">Flash cards</option>
     </select>
   </div>
   <div>
-    <h2>Task</h2>
+    <h2>Editor</h2>
     <component :is="editorForTaskType(taskDefinition.task_type)" />
     <h2>Preview</h2>
     <component
