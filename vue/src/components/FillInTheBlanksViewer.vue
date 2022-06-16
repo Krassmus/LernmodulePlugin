@@ -8,9 +8,7 @@
         v-else
         type="text"
         v-model="userInputs[i]"
-        :readonly="
-          submittedAnswers?.[Math.floor(i / 2)] === answers[Math.floor(i / 2)]
-        "
+        :readonly="submittedAnswerIsCorrect(Math.floor(i / 2))"
         :class="classForInputElement(Math.floor(i / 2))"
       />
     </template>
@@ -27,6 +25,8 @@
     <pre>{{ submittedAnswers }}</pre>
     answers:
     <pre>{{ answers }}</pre>
+    Split template:
+    <pre>{{ splitTemplate }}</pre>
   </div>
   <!--  <div v-if="false">-->
   <!--    <span-->
@@ -43,10 +43,6 @@
 
   <!--  <div v-if="debug">-->
   <!--    <pre>{{ userInputs }}</pre>-->
-
-  <!--    Split template:-->
-  <!--    <pre>{{ splitTemplate }}</pre>-->
-  <!--  </div>-->
 
   <!--  <input type="text" v-model="userInput" />-->
   <!--  <div :class="isInputCorrect ? 'correct' : 'incorrect'">-->
@@ -74,27 +70,39 @@ export default defineComponent({
     };
   },
   methods: {
+    submittedAnswerIsCorrect(index: number): boolean {
+      const submittedAnswer = this.submittedAnswers?.[index];
+      const solution = this.answers[index];
+      if (!submittedAnswer) {
+        return false;
+      } else {
+        return this.isAnswerCorrect(submittedAnswer, solution);
+      }
+    },
+    isAnswerCorrect(userAnswer: string, solution: string): boolean {
+      if (this.task.caseSensitive) {
+        return userAnswer === solution;
+      } else {
+        // TODO: Was ist, wenn das in einem Sprachkurs mit einer nichtlateinischen Schrift verwendet wird? :D
+        return userAnswer.toLowerCase() === solution.toLowerCase();
+      }
+    },
     onClickSubmit() {
-      this.submittedAnswers = this.userInputs.filter((wert, i) => i % 2 === 1);
+      // this.userInputs is a sparse array, because it is created using v-model.
+      // Clone it with the spread operator to fill in the holes.
+      this.submittedAnswers = [...this.userInputs].filter(
+        (wert, i) => i % 2 === 1
+      );
     },
     classForInputElement(index: number) {
       if (!this.submittedAnswers) {
         return 'h5pBlank';
       }
 
-      if (this.task.caseSensitive) {
-        return this.submittedAnswers[index] === this.answers[index]
-          ? 'h5pBlank correct'
-          : 'h5pBlank incorrect';
+      if (this.submittedAnswerIsCorrect(index)) {
+        return 'h5pBlank correct';
       } else {
-        if (this.submittedAnswers[index] != null) {
-          return this.submittedAnswers[index].toLowerCase() ===
-            this.answers[index].toLowerCase()
-            ? 'h5pBlank correct'
-            : 'h5pBlank incorrect';
-        } else {
-          return 'h5pBlank incorrect';
-        }
+        return 'h5pBlank incorrect';
       }
     },
   },
