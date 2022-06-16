@@ -1,15 +1,15 @@
 <template>
   <div>
-    <template v-for="(str, i) in splitTemplate" :key="i">
-      <span v-if="i % 2 === 0">
-        {{ str }}
+    <template v-for="(staticString, i) in staticStrings" :key="i">
+      <span>
+        {{ staticString }}
       </span>
       <input
-        v-else
+        v-if="answers[i]"
         type="text"
         v-model="userInputs[i]"
-        :readonly="submittedAnswerIsCorrect(Math.floor(i / 2))"
-        :class="classForInputElement(Math.floor(i / 2))"
+        :readonly="submittedAnswerIsCorrect(i)"
+        :class="classForInputElement(i)"
       />
     </template>
   </div>
@@ -88,11 +88,10 @@ export default defineComponent({
       }
     },
     onClickSubmit() {
+      // Save a copy of the user's inputs.
       // this.userInputs is a sparse array, because it is created using v-model.
-      // Clone it with the spread operator to fill in the holes.
-      this.submittedAnswers = [...this.userInputs].filter(
-        (wert, i) => i % 2 === 1
-      );
+      // Copying it with the spread operator fills in the holes.
+      this.submittedAnswers = [...this.userInputs];
     },
     classForInputElement(index: number) {
       if (!this.submittedAnswers) {
@@ -111,6 +110,9 @@ export default defineComponent({
       // Returns an array where the even indexes are the static text portions,
       // and the odd indexes are the blanks.
       return this.task.template.split(/{([^{}]*)}/);
+    },
+    staticStrings(): string[] {
+      return this.splitTemplate.filter((value, index) => index % 2 === 0);
     },
     answers(): string[] {
       return this.splitTemplate.filter((value, index) => index % 2 === 1);
@@ -157,6 +159,7 @@ export default defineComponent({
   text-decoration: none;
   vertical-align: baseline;
 }
+
 .h5pBlank {
   font-family: sans-serif;
   font-size: 1em;
