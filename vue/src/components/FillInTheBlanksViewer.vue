@@ -1,15 +1,15 @@
 <template>
   <div>
-    <template v-for="(staticString, i) in staticStrings" :key="i">
-      <span>
-        {{ staticString }}
+    <template v-for="element in parsedTemplate" :key="element.uuid">
+      <span v-if="element.type === 'staticText'">
+        {{ element.text }}
       </span>
       <input
-        v-if="answers[i]"
+        v-else-if="element.type === 'blank'"
         type="text"
-        v-model="userInputs[i]"
-        :readonly="submittedAnswerIsCorrect(i)"
-        :class="classForInputElement(i)"
+        v-model="userInputs[element.uuid]"
+        :readonly="submittedAnswerIsCorrect(element)"
+        :class="classForInput(element)"
       />
     </template>
   </div>
@@ -23,10 +23,10 @@
     <pre>{{ userInputs }}</pre>
     submittedAnswers:
     <pre>{{ submittedAnswers }}</pre>
-    answers:
-    <pre>{{ answers }}</pre>
     Split template:
     <pre>{{ splitTemplate }}</pre>
+    Parsed template:
+    <pre>{{ parsedTemplate }}</pre>
   </div>
   <!--  <div v-if="false">-->
   <!--    <span-->
@@ -53,6 +53,20 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
+import { v4 as uuidv4 } from 'uuid';
+
+type FillInTheBlanksElement = Blank | StaticText;
+type Blank = {
+  type: 'blank';
+  uuid: Uuid;
+  solution: string;
+};
+type StaticText = {
+  type: 'staticText';
+  uuid: Uuid;
+  text: string;
+};
+type Uuid = string;
 
 export default defineComponent({
   name: 'FillInTheBlanksViewer',
@@ -64,19 +78,18 @@ export default defineComponent({
   },
   data() {
     return {
-      userInputs: [],
+      userInputs: {} as Record<Uuid, string>,
+      submittedAnswers: null as Record<Uuid, string> | null,
       debug: true,
-      submittedAnswers: null as string[] | null,
     };
   },
   methods: {
-    submittedAnswerIsCorrect(index: number): boolean {
-      const submittedAnswer = this.submittedAnswers?.[index];
-      const solution = this.answers[index];
+    submittedAnswerIsCorrect(blank: Blank): boolean {
+      const submittedAnswer = this.submittedAnswers?.[blank.uuid];
       if (!submittedAnswer) {
         return false;
       } else {
-        return this.isAnswerCorrect(submittedAnswer, solution);
+        return this.isAnswerCorrect(submittedAnswer, blank.solution);
       }
     },
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
@@ -89,16 +102,14 @@ export default defineComponent({
     },
     onClickSubmit() {
       // Save a copy of the user's inputs.
-      // this.userInputs is a sparse array, because it is created using v-model.
-      // Copying it with the spread operator fills in the holes.
-      this.submittedAnswers = [...this.userInputs];
+      this.submittedAnswers = { ...this.userInputs };
     },
-    classForInputElement(index: number) {
+    classForInput(blank: Blank) {
       if (!this.submittedAnswers) {
         return 'h5pBlank';
       }
 
-      if (this.submittedAnswerIsCorrect(index)) {
+      if (this.submittedAnswerIsCorrect(blank)) {
         return 'h5pBlank correct';
       } else {
         return 'h5pBlank incorrect';
@@ -111,11 +122,14 @@ export default defineComponent({
       // and the odd indexes are the blanks.
       return this.task.template.split(/{([^{}]*)}/);
     },
-    staticStrings(): string[] {
-      return this.splitTemplate.filter((value, index) => index % 2 === 0);
-    },
-    answers(): string[] {
-      return this.splitTemplate.filter((value, index) => index % 2 === 1);
+    parsedTemplate(): FillInTheBlanksElement[] {
+      return this.splitTemplate.map((value, index) => {
+        if (index % 2 === 0) {
+          return { type: 'staticText', text: value, uuid: uuidv4() };
+        } else {
+          return { type: 'blank', solution: value, uuid: uuidv4() };
+        }
+      });
     },
   },
 });
