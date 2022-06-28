@@ -4,21 +4,50 @@
       <span v-if="element.type === 'staticText'">
         {{ element.text }}
       </span>
-      <input
-        v-else-if="element.type === 'blank'"
-        type="text"
-        v-model="userInputs[element.uuid]"
-        :readonly="submittedAnswerIsCorrect(element)"
-        :class="classForInput(element)"
-      />
+      <blank v-else-if="element.type === 'blank'">
+        <input
+          type="text"
+          v-model="userInputs[element.uuid]"
+          :readonly="submittedAnswerIsCorrect(element) || blanksDisabled"
+          :class="classForInput(element)"
+        />
+        <span
+          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+          class="h5pCorrectAnswer"
+        >
+          {{ element.solution }}
+        </span>
+      </blank>
     </template>
   </div>
 
   <div>
-    <button @click="onClickSubmit" class="h5pButton">Check</button>
+    <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
+      Check
+    </button>
+    <span v-else
+      >{{ correctAnswers }} /
+      {{ parsedTemplate.filter((word) => word.type === 'blank').length }}</span
+    >
   </div>
 
   <div>
+    <button
+      v-if="showExtraButtons"
+      @click="onClickShowSolution"
+      class="h5pButton"
+    >
+      Show solutions
+    </button>
+  </div>
+
+  <div>
+    <button v-if="showExtraButtons" @click="onClickRetry" class="h5pButton">
+      Retry
+    </button>
+  </div>
+
+  <div v-if="debug">
     userInputs:
     <pre>{{ userInputs }}</pre>
     submittedAnswers:
@@ -81,6 +110,11 @@ export default defineComponent({
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
       debug: true,
+      showSolutions: false,
+      showExtraButtons: false,
+      blanksDisabled: false,
+      showCheckButton: true,
+      correctAnswers: 0,
     };
   },
   methods: {
@@ -100,9 +134,30 @@ export default defineComponent({
         return userAnswer.toLowerCase() === solution.toLowerCase();
       }
     },
-    onClickSubmit() {
+    onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
+
+      // let correctAnswers = 0;
+      //
+      // for (let i = 0; i < this.submittedAnswers.length; i++) {
+      //   console.log();
+      // }
+
+      this.showCheckButton = false;
+      this.showExtraButtons = true;
+      this.blanksDisabled = true;
+    },
+    onClickShowSolution() {
+      this.showSolutions = true;
+    },
+    onClickRetry() {
+      this.showSolutions = false;
+      this.showExtraButtons = false;
+      this.userInputs = {};
+      this.submittedAnswers = null;
+      this.blanksDisabled = false;
+      this.showCheckButton = true;
     },
     classForInput(blank: Blank) {
       if (!this.submittedAnswers) {
