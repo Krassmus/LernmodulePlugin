@@ -30,7 +30,7 @@
 
   <div>
     <button
-      v-if="showExtraButtons"
+      v-if="showExtraButtons && !showSolutions"
       @click="onClickShowSolution"
       class="h5pButton"
     >
@@ -40,7 +40,7 @@
 
   <div>
     <button v-if="showExtraButtons" @click="onClickRetry" class="h5pButton">
-      Retry
+      Try again
     </button>
   </div>
 
@@ -234,6 +234,7 @@ export default defineComponent({
   font-size: 1em;
   border-radius: 0.25em;
   border: 1px solid #a0a0a0;
+  /* top, right, bottom, left */
   padding: 0.1875em 1em 0.1875em 0.5em;
   text-overflow: ellipsis;
   overflow: hidden;
