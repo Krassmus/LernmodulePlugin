@@ -1,79 +1,58 @@
 <template>
-  <div>
-    <template v-for="element in parsedTemplate" :key="element.uuid">
-      <span v-if="element.type === 'staticText'">
-        {{ element.text }}
-      </span>
-      <span v-else-if="element.type === 'blank'">
-        <input
-          type="text"
-          v-model="userInputs[element.uuid]"
-          :readonly="submittedAnswerIsCorrect(element) || showSolutions"
-          :class="classForInput(element)"
-        />
-        <span
-          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-          class="h5pCorrectAnswer"
-        >
-          {{ element.solution }}
+  <div class="h5pModule">
+    <div>
+      <template v-for="element in parsedTemplate" :key="element.uuid">
+        <span v-if="element.type === 'staticText'">
+          {{ element.text }}
         </span>
-      </span>
-    </template>
+        <span v-else-if="element.type === 'blank'">
+          <input
+            type="text"
+            v-model="userInputs[element.uuid]"
+            :readonly="submittedAnswerIsCorrect(element) || showSolutions"
+            :disabled="submittedAnswerIsCorrect(element) || showSolutions"
+            :class="classForInput(element)"
+          />
+          <span
+            v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+            class="h5pCorrectAnswer"
+          >
+            {{ element.solution }}
+          </span>
+        </span>
+      </template>
+    </div>
+
+    <div>
+      <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
+        Check
+      </button>
+      <span v-else>{{ correctAnswers }} / {{ blanks.length }}</span>
+
+      <button
+        v-if="showExtraButtons && !showSolutions"
+        @click="onClickShowSolution"
+        class="h5pButton"
+      >
+        Show solutions
+      </button>
+
+      <button v-if="showExtraButtons" @click="onClickRetry" class="h5pButton">
+        Try again
+      </button>
+    </div>
+
+    <div v-if="debug">
+      userInputs:
+      <pre>{{ userInputs }}</pre>
+      submittedAnswers:
+      <pre>{{ submittedAnswers }}</pre>
+      Split template:
+      <pre>{{ splitTemplate }}</pre>
+      Parsed template:
+      <pre>{{ parsedTemplate }}</pre>
+    </div>
   </div>
-
-  <div>
-    <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-      Check
-    </button>
-    <span v-else>{{ correctAnswers }} / {{ blanks.length }}</span>
-  </div>
-
-  <div>
-    <button
-      v-if="showExtraButtons && !showSolutions"
-      @click="onClickShowSolution"
-      class="h5pButton"
-    >
-      Show solutions
-    </button>
-  </div>
-
-  <div>
-    <button v-if="showExtraButtons" @click="onClickRetry" class="h5pButton">
-      Try again
-    </button>
-  </div>
-
-  <div v-if="debug">
-    userInputs:
-    <pre>{{ userInputs }}</pre>
-    submittedAnswers:
-    <pre>{{ submittedAnswers }}</pre>
-    Split template:
-    <pre>{{ splitTemplate }}</pre>
-    Parsed template:
-    <pre>{{ parsedTemplate }}</pre>
-  </div>
-  <!--  <div v-if="false">-->
-  <!--    <span-->
-  <!--      v-if="isInputCorrect"-->
-  <!--      :class="isInputCorrect ? 'resultCorrect' : 'resultIncorrect'"-->
-  <!--    >-->
-  <!--      Alle Lücken sind richtig ausgefüllt.-->
-  <!--    </span>-->
-
-  <!--    <span v-else :class="isInputCorrect ? 'resultCorrect' : 'resultIncorrect'">-->
-  <!--      Die Lücken sind nicht richtig ausgefüllt.-->
-  <!--    </span>-->
-  <!--  </div>-->
-
-  <!--  <div v-if="debug">-->
-  <!--    <pre>{{ userInputs }}</pre>-->
-
-  <!--  <input type="text" v-model="userInput" />-->
-  <!--  <div :class="isInputCorrect ? 'correct' : 'incorrect'">-->
-  <!--    User input: {{ userInput }}-->
-  <!--  </div>-->
 </template>
 
 <script lang="ts">
@@ -198,6 +177,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.h5pModule {
+  border: 2px solid #eee;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+
 .h5pBlankCorrect {
   background: #9dd8bb;
   border: 1px solid #9dd8bb;
@@ -236,9 +220,11 @@ export default defineComponent({
   border: 1px solid #a0a0a0;
   /* top, right, bottom, left */
   padding: 0.1875em 1em 0.1875em 0.5em;
+  margin-bottom: 0.2em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  width: 6em;
 }
 
 .h5pBlank.autocorrect:focus {
