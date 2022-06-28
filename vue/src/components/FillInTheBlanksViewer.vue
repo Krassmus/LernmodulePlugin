@@ -8,7 +8,7 @@
         <input
           type="text"
           v-model="userInputs[element.uuid]"
-          :readonly="submittedAnswerIsCorrect(element)"
+          :readonly="submittedAnswerIsCorrect(element) || showSolutions"
           :class="classForInput(element)"
         />
         <span
@@ -80,6 +80,7 @@
 import { defineComponent, PropType } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
+import { isEqual } from 'lodash';
 
 type FillInTheBlanksElement = Blank | StaticText;
 type Blank = {
@@ -108,8 +109,6 @@ export default defineComponent({
       submittedAnswers: null as Record<Uuid, string> | null,
       debug: true,
       showSolutions: false,
-      showExtraButtons: false,
-      showCheckButton: true,
     };
   },
   methods: {
@@ -132,24 +131,19 @@ export default defineComponent({
     onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
-      this.showCheckButton = false;
-      this.showExtraButtons = true;
     },
     onClickShowSolution() {
       this.showSolutions = true;
     },
     onClickRetry() {
       this.showSolutions = false;
-      this.showExtraButtons = false;
       this.userInputs = {};
       this.submittedAnswers = null;
-      this.showCheckButton = true;
     },
     classForInput(blank: Blank) {
       if (!this.submittedAnswers) {
         return 'h5pBlank';
       }
-
       if (this.submittedAnswerIsCorrect(blank)) {
         return 'h5pBlank h5pBlankCorrect';
       } else {
@@ -186,6 +180,18 @@ export default defineComponent({
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
       ) as Blank[];
+    },
+    showExtraButtons(): boolean {
+      return (
+        this.submittedAnswers !== null &&
+        isEqual(this.submittedAnswers, this.userInputs)
+      );
+    },
+    showCheckButton(): boolean {
+      return (
+        this.submittedAnswers === null ||
+        !isEqual(this.submittedAnswers, this.userInputs)
+      );
     },
   },
 });
@@ -232,6 +238,10 @@ export default defineComponent({
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.h5pBlank.autocorrect:focus {
+  /*  Irgendwas damit es nicht rot oder grün gehighlightet wird, während noch drin getippt wird */
 }
 
 .h5pCorrectAnswer {
