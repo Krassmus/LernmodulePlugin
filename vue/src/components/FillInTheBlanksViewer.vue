@@ -110,9 +110,9 @@ export default defineComponent({
       }
 
       if (this.submittedAnswerIsCorrect(blank)) {
-        return 'h5pBlank correct';
+        return 'h5pBlank h5pBlankCorrect';
       } else {
-        return 'h5pBlank incorrect';
+        return 'h5pBlank h5pBlankIncorrect';
       }
     },
   },
@@ -136,24 +136,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.correct {
-  color: black;
-  background-color: #66d02e;
+.h5pBlankCorrect {
+  background: #9dd8bb;
+  border: 1px solid #9dd8bb;
+  color: #255c41;
 }
 
-.incorrect {
-  color: black;
+.h5pBlankIncorrect {
   background-color: #f7d0d0;
-}
-
-.resultCorrect {
-  color: #66d02e;
-  font-weight: bold;
-}
-
-.resultIncorrect {
-  color: #ff0000;
-  font-weight: bold;
+  border: 1px solid #f7d0d0;
+  color: #b71c1c;
+  text-decoration: line-through;
 }
 
 .h5pButton {
@@ -179,14 +172,19 @@ export default defineComponent({
   font-size: 1em;
   border-radius: 0.25em;
   border: 1px solid #a0a0a0;
-  border-top-color: rgb(160, 160, 160);
-  border-right-color: rgb(160, 160, 160);
-  border-bottom-color: rgb(160, 160, 160);
-  border-left-color: rgb(160, 160, 160);
   padding: 0.1875em 1em 0.1875em 0.5em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  width: 6em;
+}
+
+.h5pCorrectAnswer {
+  color: #255c41;
+  font-weight: bold;
+  border: 1px #255c41 dashed;
+  background-color: #d4f6e6;
+  padding: 0.15em;
+  border-radius: 0.25em;
+  margin-left: 0.5em;
 }
 </style>
