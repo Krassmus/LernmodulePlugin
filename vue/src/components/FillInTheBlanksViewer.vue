@@ -4,11 +4,11 @@
       <span v-if="element.type === 'staticText'">
         {{ element.text }}
       </span>
-      <blank v-else-if="element.type === 'blank'">
+      <span v-else-if="element.type === 'blank'">
         <input
           type="text"
           v-model="userInputs[element.uuid]"
-          :readonly="submittedAnswerIsCorrect(element) || blanksDisabled"
+          :readonly="submittedAnswerIsCorrect(element)"
           :class="classForInput(element)"
         />
         <span
@@ -17,7 +17,7 @@
         >
           {{ element.solution }}
         </span>
-      </blank>
+      </span>
     </template>
   </div>
 
@@ -25,10 +25,7 @@
     <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
       Check
     </button>
-    <span v-else
-      >{{ correctAnswers }} /
-      {{ parsedTemplate.filter((word) => word.type === 'blank').length }}</span
-    >
+    <span v-else>{{ correctAnswers }} / {{ blanks.length }}</span>
   </div>
 
   <div>
@@ -112,9 +109,7 @@ export default defineComponent({
       debug: true,
       showSolutions: false,
       showExtraButtons: false,
-      blanksDisabled: false,
       showCheckButton: true,
-      correctAnswers: 0,
     };
   },
   methods: {
@@ -137,16 +132,8 @@ export default defineComponent({
     onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
-
-      // let correctAnswers = 0;
-      //
-      // for (let i = 0; i < this.submittedAnswers.length; i++) {
-      //   console.log();
-      // }
-
       this.showCheckButton = false;
       this.showExtraButtons = true;
-      this.blanksDisabled = true;
     },
     onClickShowSolution() {
       this.showSolutions = true;
@@ -156,7 +143,6 @@ export default defineComponent({
       this.showExtraButtons = false;
       this.userInputs = {};
       this.submittedAnswers = null;
-      this.blanksDisabled = false;
       this.showCheckButton = true;
     },
     classForInput(blank: Blank) {
@@ -167,7 +153,13 @@ export default defineComponent({
       if (this.submittedAnswerIsCorrect(blank)) {
         return 'h5pBlank h5pBlankCorrect';
       } else {
-        return 'h5pBlank h5pBlankIncorrect';
+        if (
+          this.submittedAnswers?.[blank.uuid] === this.userInputs?.[blank.uuid]
+        ) {
+          return 'h5pBlank h5pBlankIncorrect';
+        } else {
+          return 'h5pBlank';
+        }
       }
     },
   },
@@ -185,6 +177,15 @@ export default defineComponent({
           return { type: 'blank', solution: value, uuid: uuidv4() };
         }
       });
+    },
+    correctAnswers(): number {
+      return this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
+        .length;
+    },
+    blanks(): Blank[] {
+      return this.parsedTemplate.filter(
+        (word) => word.type === 'blank'
+      ) as Blank[];
     },
   },
 });
