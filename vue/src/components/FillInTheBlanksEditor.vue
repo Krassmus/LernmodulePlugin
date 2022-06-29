@@ -1,25 +1,37 @@
 <template>
   Current undo redo state:
   <pre>{{ currentUndoRedoState }}</pre>
-  <div>
+  <div class="h5pModule">
     <button @click="addBlank" class="h5pButton">Lücke hinzufügen</button>
-  </div>
 
-  <div>
-    <textarea
-      :value="taskDefinition.template"
-      @input="(ev) => onEditTemplate(ev)"
-      ref="theTextArea"
-    />
-  </div>
-
-  <div>
-    <input
-      type="checkbox"
-      id="checkbox"
-      v-model="taskDefinition.caseSensitive"
-    />
-    <label for="checkbox">Groß- und Kleinschreibung beachten</label>
+    <div>
+      <textarea
+        :value="taskDefinition.template"
+        @input="(ev) => onEditTemplate(ev)"
+        ref="theTextArea"
+        class="h5pFillInTheBlanksEditor"
+      />
+    </div>
+    <div>
+      <input
+        type="checkbox"
+        id="caseSensitiveCheckbox"
+        v-model="taskDefinition.caseSensitive"
+      />
+      <label for="caseSensitiveCheckbox"
+        >Groß- und Kleinschreibung beachten</label
+      >
+    </div>
+    <div>
+      <input
+        type="checkbox"
+        id="autoCorrectCheckbox"
+        v-model="taskDefinition.autoCorrect"
+      />
+      <label for="autoCorrectCheckbox"
+        >Ausgefüllte Lücken sofort korrigieren</label
+      >
+    </div>
   </div>
 </template>
 
@@ -78,6 +90,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.h5pModule {
+  border: 2px solid #eee;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+
+.h5pFillInTheBlanksEditor {
+  display: block;
+  width: 50em;
+  height: 20em;
+}
+
 .h5pButton {
   font-size: 1em;
   line-height: 1.2;

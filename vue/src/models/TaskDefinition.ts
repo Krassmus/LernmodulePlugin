@@ -11,6 +11,7 @@ export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
   template: string;
   caseSensitive: boolean;
+  autoCorrect: boolean;
 };
 export type FlashCardTaskDefinition = {
   task_type: 'FlashCards';
@@ -28,6 +29,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'FillInTheBlanks',
         template: 'Template goes {here}.',
         caseSensitive: false,
+        autoCorrect: false,
       };
     case 'FlashCards':
       return {

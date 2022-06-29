@@ -2,6 +2,7 @@
   <div class="h5pModule">
     <div>
       <template v-for="element in parsedTemplate" :key="element.uuid">
+        <!--        <span v-if="element.type === 'staticText'" v-html="element.text" />-->
         <span v-if="element.type === 'staticText'">
           {{ element.text }}
         </span>
@@ -86,7 +87,7 @@ export default defineComponent({
     return {
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
-      debug: true,
+      debug: false,
       showSolutions: false,
     };
   },
