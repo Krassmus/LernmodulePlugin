@@ -13,6 +13,8 @@
             :readonly="submittedAnswerIsCorrect(element) || showSolutions"
             :disabled="submittedAnswerIsCorrect(element) || showSolutions"
             :class="classForInput(element)"
+            @blur="onInputBlurOrEnter"
+            @keyup.enter="onInputBlurOrEnter"
           />
           <span
             v-if="showSolutions && !submittedAnswerIsCorrect(element)"
@@ -28,7 +30,9 @@
       <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
         Check
       </button>
-      <span v-else>{{ correctAnswers }} / {{ blanks.length }}</span>
+      <span v-else-if="allBlanksAreFilled || !this.task.autoCorrect"
+        >{{ correctAnswers }} / {{ blanks.length }}</span
+      >
 
       <button
         v-if="showExtraButtons && !showSolutions"
@@ -124,16 +128,27 @@ export default defineComponent({
       if (!this.submittedAnswers) {
         return 'h5pBlank';
       }
-      if (this.submittedAnswerIsCorrect(blank)) {
-        return 'h5pBlank h5pBlankCorrect';
-      } else {
-        if (
-          this.submittedAnswers?.[blank.uuid] === this.userInputs?.[blank.uuid]
-        ) {
-          return 'h5pBlank h5pBlankIncorrect';
+
+      if (this.userInputs?.[blank.uuid] != undefined) {
+        if (this.submittedAnswerIsCorrect(blank)) {
+          return 'h5pBlank h5pBlankCorrect';
         } else {
-          return 'h5pBlank';
+          if (
+            this.submittedAnswers?.[blank.uuid] ===
+            this.userInputs?.[blank.uuid]
+          ) {
+            return 'h5pBlank h5pBlankIncorrect';
+          } else {
+            return 'h5pBlank';
+          }
         }
+      } else {
+        return 'h5pBlank';
+      }
+    },
+    onInputBlurOrEnter() {
+      if (this.task.autoCorrect) {
+        this.onClickCheck();
       }
     },
   },
@@ -162,15 +177,40 @@ export default defineComponent({
       ) as Blank[];
     },
     showExtraButtons(): boolean {
-      return (
-        this.submittedAnswers !== null &&
-        isEqual(this.submittedAnswers, this.userInputs)
-      );
+      if (this.task.autoCorrect) {
+        if (this.allBlanksAreFilled) {
+          return (
+            this.submittedAnswers !== null &&
+            isEqual(this.submittedAnswers, this.userInputs) &&
+            !this.allAnswersAreCorrect
+          );
+        } else {
+          return false;
+        }
+      } else {
+        return (
+          this.submittedAnswers !== null &&
+          isEqual(this.submittedAnswers, this.userInputs) &&
+          !this.allAnswersAreCorrect
+        );
+      }
     },
     showCheckButton(): boolean {
       return (
-        this.submittedAnswers === null ||
-        !isEqual(this.submittedAnswers, this.userInputs)
+        (this.submittedAnswers === null ||
+          !isEqual(this.submittedAnswers, this.userInputs)) &&
+        !this.task.autoCorrect
+      );
+    },
+    allBlanksAreFilled(): boolean {
+      return (
+        Object.keys(this.submittedAnswers ?? {}).length == this.blanks.length
+      );
+    },
+    allAnswersAreCorrect(): boolean {
+      return (
+        this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
+          .length == this.blanks.length
       );
     },
   },
