@@ -27,24 +27,29 @@
     </div>
 
     <div>
+      <span v-if="showResults" class="h5pAnswerFeedback"
+        >You got {{ correctAnswers }} of {{ blanks.length }} blanks correct.
+      </span>
+
+      <span v-if="showFillInAllTheBlanksMessage" class="h5pAnswerFeedback">
+        Please fill in all blanks to view solution
+      </span>
+
       <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
         Check
       </button>
-      <span v-else-if="allBlanksAreFilled || !this.task.autoCorrect"
-        >{{ correctAnswers }} / {{ blanks.length }}</span
-      >
 
-      <button
-        v-if="showExtraButtons && !showSolutions"
-        @click="onClickShowSolution"
-        class="h5pButton"
-      >
-        Show solutions
-      </button>
+      <div v-if="showExtraButtons">
+        <button
+          v-if="!showSolutions"
+          @click="onClickShowSolution"
+          class="h5pButton"
+        >
+          Show solutions
+        </button>
 
-      <button v-if="showExtraButtons" @click="onClickRetry" class="h5pButton">
-        Try again
-      </button>
+        <button @click="onClickTryAgain" class="h5pButton">Try again</button>
+      </div>
     </div>
 
     <div v-if="debug">
@@ -92,7 +97,7 @@ export default defineComponent({
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
       debug: false,
-      showSolutions: false,
+      userWantsToSeeSolutions: false,
     };
   },
   methods: {
@@ -117,10 +122,10 @@ export default defineComponent({
       this.submittedAnswers = { ...this.userInputs };
     },
     onClickShowSolution() {
-      this.showSolutions = true;
+      this.userWantsToSeeSolutions = true;
     },
-    onClickRetry() {
-      this.showSolutions = false;
+    onClickTryAgain() {
+      this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
     },
@@ -147,6 +152,7 @@ export default defineComponent({
       }
     },
     onInputBlurOrEnter() {
+      this.userWantsToSeeSolutions = false;
       if (this.task.autoCorrect) {
         this.onClickCheck();
       }
@@ -181,7 +187,7 @@ export default defineComponent({
         if (this.allBlanksAreFilled) {
           return (
             this.submittedAnswers !== null &&
-            isEqual(this.submittedAnswers, this.userInputs) &&
+            !this.inputHasChanged &&
             !this.allAnswersAreCorrect
           );
         } else {
@@ -190,28 +196,48 @@ export default defineComponent({
       } else {
         return (
           this.submittedAnswers !== null &&
-          isEqual(this.submittedAnswers, this.userInputs) &&
+          !this.inputHasChanged &&
           !this.allAnswersAreCorrect
         );
       }
     },
     showCheckButton(): boolean {
       return (
-        (this.submittedAnswers === null ||
-          !isEqual(this.submittedAnswers, this.userInputs)) &&
+        (this.submittedAnswers === null || this.inputHasChanged) &&
         !this.task.autoCorrect
       );
     },
-    allBlanksAreFilled(): boolean {
+    showSolutions(): boolean {
+      return this.userWantsToSeeSolutions && this.allBlanksAreFilled;
+    },
+    showFillInAllTheBlanksMessage(): boolean {
       return (
-        Object.keys(this.submittedAnswers ?? {}).length == this.blanks.length
+        this.userWantsToSeeSolutions &&
+        !this.allBlanksAreFilled &&
+        !this.inputHasChanged
       );
+    },
+    showResults(): boolean {
+      return (
+        !(this.submittedAnswers === null) &&
+        !this.showFillInAllTheBlanksMessage &&
+        (!this.task.autoCorrect || this.allBlanksAreFilled)
+      );
+    },
+    blanksFilled(): number {
+      return Object.keys(this.submittedAnswers ?? {}).length;
+    },
+    allBlanksAreFilled(): boolean {
+      return this.blanksFilled == this.blanks.length;
     },
     allAnswersAreCorrect(): boolean {
       return (
         this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
           .length == this.blanks.length
       );
+    },
+    inputHasChanged(): boolean {
+      return !isEqual(this.submittedAnswers, this.userInputs);
     },
   },
 });
@@ -280,5 +306,13 @@ export default defineComponent({
   padding: 0.15em;
   border-radius: 0.25em;
   margin-left: 0.5em;
+}
+
+.h5pAnswerFeedback {
+  font-family: Sans-Serif;
+  font-weight: 700;
+  color: #1a73d9;
+  font-size: 1em;
+  display: inline-block;
 }
 </style>
