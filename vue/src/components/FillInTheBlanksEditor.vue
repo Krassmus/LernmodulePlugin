@@ -27,6 +27,17 @@
       />
       <label for="showSolutionsCheckbox">Zeige "Show Solutions" Knopf</label>
     </div>
+    <div v-if="taskDefinition.showSolutionsAllowed">
+      <input
+        type="checkbox"
+        id="allBlanksMustBeFilledForSolutionCheckbox"
+        v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
+      />
+      <label for="allBlanksMustBeFilledForSolutionCheckbox"
+        >Alle Lücken müssen ausgefüllt sein damit Lösungen angezeigt werden
+        können</label
+      >
+    </div>
     <div>
       <input
         type="checkbox"
@@ -45,17 +56,6 @@
       />
       <label for="caseSensitiveCheckbox"
         >Groß- und Kleinschreibung beachten</label
-      >
-    </div>
-    <div>
-      <input
-        type="checkbox"
-        id="allBlanksMustBeFilledForSolutionCheckbox"
-        v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
-      />
-      <label for="allBlanksMustBeFilledForSolutionCheckbox"
-        >Alle Lücken müssen ausgefüllt sein damit Lösungen angezeigt werden
-        können</label
       >
     </div>
   </div>
