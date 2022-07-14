@@ -214,10 +214,15 @@ export default defineComponent({
       );
     },
     showSolutions(): boolean {
-      return this.userWantsToSeeSolutions && this.allBlanksAreFilled;
+      return (
+        this.userWantsToSeeSolutions &&
+        (this.allBlanksAreFilled ||
+          !this.task.allBlanksMustBeFilledForSolutions)
+      );
     },
     showFillInAllTheBlanksMessage(): boolean {
       return (
+        this.task.allBlanksMustBeFilledForSolutions &&
         this.userWantsToSeeSolutions &&
         !this.allBlanksAreFilled &&
         !this.inputHasChanged

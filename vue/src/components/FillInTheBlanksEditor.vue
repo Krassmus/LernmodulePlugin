@@ -3,7 +3,6 @@
   <pre>{{ currentUndoRedoState }}</pre>
   <div class="h5pModule">
     <button @click="addBlank" class="h5pButton">Lücke hinzufügen</button>
-
     <div>
       <textarea
         :value="taskDefinition.template"
@@ -31,6 +30,16 @@
     <div>
       <input
         type="checkbox"
+        id="autoCorrectCheckbox"
+        v-model="taskDefinition.autoCorrect"
+      />
+      <label for="autoCorrectCheckbox"
+        >Ausgefüllte Lücken sofort korrigieren</label
+      >
+    </div>
+    <div>
+      <input
+        type="checkbox"
         id="caseSensitiveCheckbox"
         v-model="taskDefinition.caseSensitive"
       />
@@ -41,11 +50,12 @@
     <div>
       <input
         type="checkbox"
-        id="autoCorrectCheckbox"
-        v-model="taskDefinition.autoCorrect"
+        id="allBlanksMustBeFilledForSolutionCheckbox"
+        v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
       />
-      <label for="autoCorrectCheckbox"
-        >Ausgefüllte Lücken sofort korrigieren</label
+      <label for="allBlanksMustBeFilledForSolutionCheckbox"
+        >Alle Lücken müssen ausgefüllt sein damit Lösungen angezeigt werden
+        können</label
       >
     </div>
   </div>

@@ -14,6 +14,7 @@ export type FillInTheBlanksDefinition = {
   showSolutionsAllowed: boolean;
   caseSensitive: boolean;
   autoCorrect: boolean;
+  allBlanksMustBeFilledForSolutions: boolean;
 };
 export type FlashCardTaskDefinition = {
   task_type: 'FlashCards';
@@ -34,6 +35,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         showSolutionsAllowed: false,
         caseSensitive: false,
         autoCorrect: false,
+        allBlanksMustBeFilledForSolutions: false,
       };
     case 'FlashCards':
       return {
