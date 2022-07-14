@@ -11,6 +11,7 @@ export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
   template: string;
   retryAllowed: boolean;
+  showSolutionsAllowed: boolean;
   caseSensitive: boolean;
   autoCorrect: boolean;
 };
@@ -30,6 +31,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'FillInTheBlanks',
         template: 'Template goes {here}.',
         retryAllowed: false,
+        showSolutionsAllowed: false,
         caseSensitive: false,
         autoCorrect: false,
       };

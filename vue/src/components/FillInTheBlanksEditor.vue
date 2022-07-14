@@ -23,6 +23,14 @@
     <div>
       <input
         type="checkbox"
+        id="showSolutionsCheckbox"
+        v-model="taskDefinition.showSolutionsAllowed"
+      />
+      <label for="showSolutionsCheckbox">Zeige "Show Solutions" Knopf</label>
+    </div>
+    <div>
+      <input
+        type="checkbox"
         id="caseSensitiveCheckbox"
         v-model="taskDefinition.caseSensitive"
       />

@@ -41,7 +41,7 @@
 
       <div v-if="showExtraButtons">
         <button
-          v-if="!showSolutions"
+          v-if="!showSolutions && this.task.showSolutionsAllowed"
           @click="onClickShowSolution"
           class="h5pButton"
         >
