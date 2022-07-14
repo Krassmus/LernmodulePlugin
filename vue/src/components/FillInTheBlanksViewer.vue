@@ -48,7 +48,13 @@
           Show solutions
         </button>
 
-        <button @click="onClickTryAgain" class="h5pButton">Try again</button>
+        <button
+          v-if="this.task.retryAllowed"
+          @click="onClickTryAgain"
+          class="h5pButton"
+        >
+          Try again
+        </button>
       </div>
     </div>
 

@@ -15,6 +15,14 @@
     <div>
       <input
         type="checkbox"
+        id="retryCheckbox"
+        v-model="taskDefinition.retryAllowed"
+      />
+      <label for="retryCheckbox">Erlaube "Retry"</label>
+    </div>
+    <div>
+      <input
+        type="checkbox"
         id="caseSensitiveCheckbox"
         v-model="taskDefinition.caseSensitive"
       />
