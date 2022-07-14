@@ -123,8 +123,9 @@ export default defineComponent({
 
 .h5pFillInTheBlanksEditor {
   display: block;
-  width: 50em;
+  width: 100%;
   height: 20em;
+  resize: none;
 }
 
 .h5pButton {
