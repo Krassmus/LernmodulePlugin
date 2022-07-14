@@ -237,10 +237,7 @@ export default defineComponent({
       return this.blanksFilled == this.blanks.length;
     },
     allAnswersAreCorrect(): boolean {
-      return (
-        this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
-          .length == this.blanks.length
-      );
+      return this.blanks.every((blank) => this.submittedAnswerIsCorrect(blank));
     },
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
