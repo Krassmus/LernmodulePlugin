@@ -1,6 +1,6 @@
 <template>
   <div class="h5pModule">
-    <div>
+    <div ref="wrapperElement">
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <!--        <span v-if="element.type === 'staticText'" v-html="element.text" />-->
         <span v-if="element.type === 'staticText'">
@@ -15,6 +15,7 @@
             :class="classForInput(element)"
             @blur="onInputBlurOrEnter"
             @keyup.enter="onInputBlurOrEnter"
+            @input="onInput"
           />
           <span
             v-if="showSolutions && !submittedAnswerIsCorrect(element)"
@@ -163,6 +164,61 @@ export default defineComponent({
         this.onClickCheck();
       }
     },
+    onInput(event: InputEvent) {
+      this.autoGrowTextField(event.target as HTMLInputElement);
+    },
+    /**
+     * Adapted from the H5P source code, MIT License
+     * https://github.com/h5p/h5p-blanks/blob/e9bf6862211c082a5724d9873496e66c489d23f7/js/blanks.js#L401
+     * TODO: Put the license in the appropriate place
+     */
+    autoGrowTextField($input: HTMLInputElement) {
+      // Do not set text field size when separate lines is enabled
+      // if (this.params.behaviour.separateLines) {
+      //   return;
+      // }
+      const computedStyles = window.getComputedStyle($input, null);
+      const computedFontSize = computedStyles.getPropertyValue('font-size');
+      const computedFontFamily = computedStyles.getPropertyValue('font-family');
+      const computedPadding = computedStyles.getPropertyValue('padding');
+      var fontSize = parseInt(computedFontSize, 10);
+      var minEm = 3;
+      var minPx = fontSize * minEm;
+      var rightPadEm = 3.25;
+      var rightPadPx = fontSize * rightPadEm;
+      var static_min_pad = 0.5 * fontSize;
+
+      setTimeout(() => {
+        var tmp = document.createElement('div');
+        tmp.textContent = $input.value;
+        const tmpStyles = {
+          position: 'absolute',
+          'white-space': 'nowrap',
+          'font-size': computedFontSize,
+          'font-family': computedFontFamily,
+          padding: computedPadding,
+          width: 'initial',
+        };
+        for (const [key, value] of Object.entries(tmpStyles)) {
+          tmp.style[key as any] = value;
+        }
+        $input.parentElement!.append(tmp);
+        var width = tmp.clientWidth;
+        var parentWidth = (this.$refs.wrapperElement as HTMLDivElement)
+          .clientWidth;
+        tmp.remove();
+        if (width <= minPx) {
+          // Apply min width
+          $input.style.width = (minPx + static_min_pad).toString();
+        } else if (width + rightPadPx >= parentWidth) {
+          // Apply max width of parent
+          $input.style.width = (parentWidth - rightPadPx).toString();
+        } else {
+          // Apply width that wraps input
+          $input.style.width = (width + static_min_pad).toString();
+        }
+      }, 1);
+    },
   },
   computed: {
     splitTemplate(): string[] {
@@ -236,7 +292,11 @@ export default defineComponent({
       );
     },
     blanksFilled(): number {
-      return Object.keys(this.submittedAnswers ?? {}).length;
+      if (!this.submittedAnswers) {
+        return 0;
+      } else {
+        return Object.keys(this.submittedAnswers).length;
+      }
     },
     allBlanksAreFilled(): boolean {
       return this.blanksFilled == this.blanks.length;
