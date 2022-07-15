@@ -172,12 +172,12 @@ export default defineComponent({
      * https://github.com/h5p/h5p-blanks/blob/e9bf6862211c082a5724d9873496e66c489d23f7/js/blanks.js#L401
      * TODO: Put the license in the appropriate place
      */
-    autoGrowTextField($input: HTMLInputElement) {
+    autoGrowTextField(input: HTMLInputElement) {
       // Do not set text field size when separate lines is enabled
       // if (this.params.behaviour.separateLines) {
       //   return;
       // }
-      const computedStyles = window.getComputedStyle($input, null);
+      const computedStyles = window.getComputedStyle(input, null);
       const computedFontSize = computedStyles.getPropertyValue('font-size');
       const computedFontFamily = computedStyles.getPropertyValue('font-family');
       const computedPadding = computedStyles.getPropertyValue('padding');
@@ -190,7 +190,7 @@ export default defineComponent({
 
       setTimeout(() => {
         var tmp = document.createElement('div');
-        tmp.textContent = $input.value;
+        tmp.textContent = input.value;
         const tmpStyles = {
           position: 'absolute',
           'white-space': 'nowrap',
@@ -202,20 +202,20 @@ export default defineComponent({
         for (const [key, value] of Object.entries(tmpStyles)) {
           tmp.style[key as any] = value;
         }
-        $input.parentElement!.append(tmp);
+        input.parentElement!.append(tmp);
         var width = tmp.clientWidth;
         var parentWidth = (this.$refs.wrapperElement as HTMLDivElement)
           .clientWidth;
         tmp.remove();
         if (width <= minPx) {
           // Apply min width
-          $input.style.width = (minPx + static_min_pad).toString();
+          input.style.width = (minPx + static_min_pad).toString();
         } else if (width + rightPadPx >= parentWidth) {
           // Apply max width of parent
-          $input.style.width = (parentWidth - rightPadPx).toString();
+          input.style.width = (parentWidth - rightPadPx).toString();
         } else {
           // Apply width that wraps input
-          $input.style.width = (width + static_min_pad).toString();
+          input.style.width = (width + static_min_pad).toString();
         }
       }, 1);
     },
@@ -355,7 +355,7 @@ export default defineComponent({
   border: 1px solid #a0a0a0;
   /* top, right, bottom, left */
   padding: 0.1875em 1em 0.1875em 0.5em;
-  margin-bottom: 0.2em;
+  margin: 0 0 0.2em 0.1em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
