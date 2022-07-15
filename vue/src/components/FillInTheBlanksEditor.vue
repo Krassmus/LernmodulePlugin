@@ -24,16 +24,29 @@
         type="checkbox"
         id="showSolutionsCheckbox"
         v-model="taskDefinition.showSolutionsAllowed"
+        @change="
+          !taskDefinition.showSolutionsAllowed
+            ? (taskDefinition.allBlanksMustBeFilledForSolutions =
+                taskDefinition.showSolutionsAllowed)
+            : ''
+        "
       />
       <label for="showSolutionsCheckbox">Zeige "Show Solutions" Knopf</label>
     </div>
-    <div v-if="taskDefinition.showSolutionsAllowed">
+    <div>
       <input
         type="checkbox"
+        :disabled="!taskDefinition.showSolutionsAllowed"
         id="allBlanksMustBeFilledForSolutionCheckbox"
         v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
       />
-      <label for="allBlanksMustBeFilledForSolutionCheckbox"
+      <label
+        for="allBlanksMustBeFilledForSolutionCheckbox"
+        :class="
+          taskDefinition.showSolutionsAllowed
+            ? 'h5pBehaviorSetting'
+            : 'h5pBehaviorSetting-disabled'
+        "
         >Alle Lücken müssen ausgefüllt sein damit Lösungen angezeigt werden
         können</label
       >
@@ -144,5 +157,12 @@ export default defineComponent({
   text-shadow: none;
   text-decoration: none;
   vertical-align: baseline;
+}
+
+.h5pBehaviorSetting {
+}
+
+.h5pBehaviorSetting-disabled {
+  opacity: 50%;
 }
 </style>
