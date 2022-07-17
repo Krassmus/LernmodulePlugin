@@ -1,6 +1,6 @@
 <template>
-  Current undo redo state:
-  <pre>{{ currentUndoRedoState }}</pre>
+  <!--  Current undo redo state:-->
+  <!--  <pre>{{ currentUndoRedoState }}</pre>-->
   <div class="h5pModule">
     <button @click="addBlank" class="h5pButton">Lücke hinzufügen</button>
     <div>
@@ -11,15 +11,71 @@
         class="h5pFillInTheBlanksEditor"
       />
     </div>
+    <h1 class="h5pBehaviorSetting">Einstellungen</h1>
+    <div class="h5pBehaviorSetting">
+      <h2>Korrektur</h2>
+      <label for="correctBehaviorSelect">Korrigiert wird </label>
+
+      <select id="correctBehaviorSelect" v-model="taskDefinition.autoCorrect">
+        <option :value="false">manuell per Button</option>
+        <option :value="true">automatisch nach Eingabe</option>
+      </select>
+      <div
+        :class="
+          !taskDefinition.autoCorrect
+            ? 'h5pBehaviorSetting'
+            : 'h5pBehaviorSetting-disabled'
+        "
+      >
+        <label for="checkButtonStringInput">Text im Button: </label>
+        <input
+          type="text"
+          id="checkButtonStringInput"
+          :disabled="taskDefinition.autoCorrect"
+          v-model="taskDefinition.stringCheckButton"
+        />
+      </div>
+      <div class="h5pBehaviorSetting">
+        <input
+          type="checkbox"
+          id="caseSensitiveCheckbox"
+          v-model="taskDefinition.caseSensitive"
+        />
+        <label for="caseSensitiveCheckbox"
+          >Groß- und Kleinschreibung beachten</label
+        >
+      </div>
+    </div>
+
+    <h2>Versuche</h2>
     <div>
       <input
         type="checkbox"
         id="retryCheckbox"
         v-model="taskDefinition.retryAllowed"
       />
-      <label for="retryCheckbox">Erlaube "Retry"</label>
+      <label for="retryCheckbox">Erlaube mehrere Versuche</label>
     </div>
-    <div>
+    <div class="h5pBehaviorSetting">
+      <label
+        for="retryButtonStringInput"
+        :class="
+          taskDefinition.retryAllowed
+            ? 'h5pBehaviorSetting'
+            : 'h5pBehaviorSetting-disabled'
+        "
+        >Text im Button:
+      </label>
+      <input
+        type="text"
+        id="retryButtonStringInput"
+        :disabled="!taskDefinition.retryAllowed"
+        v-model="taskDefinition.stringRetryButton"
+      />
+    </div>
+
+    <h2>Lösungen</h2>
+    <div class="h5pBehaviorSetting">
       <input
         type="checkbox"
         id="showSolutionsCheckbox"
@@ -31,44 +87,40 @@
             : ''
         "
       />
-      <label for="showSolutionsCheckbox">Zeige "Show Solutions" Knopf</label>
+      <label for="showSolutionsCheckbox"
+        >Lösungen können angezeigt werden</label
+      >
     </div>
-    <div>
+    <div
+      :class="
+        taskDefinition.showSolutionsAllowed
+          ? 'h5pBehaviorSetting'
+          : 'h5pBehaviorSetting-disabled'
+      "
+    >
+      <label for="solutionsButtonStringInput">Text im Button: </label>
+      <input
+        type="text"
+        id="solutionsButtonStringInput"
+        :disabled="!taskDefinition.showSolutionsAllowed"
+        v-model="taskDefinition.stringSolutionsButton"
+      />
+    </div>
+    <div
+      :class="
+        taskDefinition.showSolutionsAllowed
+          ? 'h5pBehaviorSetting'
+          : 'h5pBehaviorSetting-disabled'
+      "
+    >
       <input
         type="checkbox"
         :disabled="!taskDefinition.showSolutionsAllowed"
         id="allBlanksMustBeFilledForSolutionCheckbox"
         v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
       />
-      <label
-        for="allBlanksMustBeFilledForSolutionCheckbox"
-        :class="
-          taskDefinition.showSolutionsAllowed
-            ? 'h5pBehaviorSetting'
-            : 'h5pBehaviorSetting-disabled'
-        "
-        >Alle Lücken müssen ausgefüllt sein damit Lösungen angezeigt werden
-        können</label
-      >
-    </div>
-    <div>
-      <input
-        type="checkbox"
-        id="autoCorrectCheckbox"
-        v-model="taskDefinition.autoCorrect"
-      />
-      <label for="autoCorrectCheckbox"
-        >Ausgefüllte Lücken sofort korrigieren</label
-      >
-    </div>
-    <div>
-      <input
-        type="checkbox"
-        id="caseSensitiveCheckbox"
-        v-model="taskDefinition.caseSensitive"
-      />
-      <label for="caseSensitiveCheckbox"
-        >Groß- und Kleinschreibung beachten</label
+      <label for="allBlanksMustBeFilledForSolutionCheckbox"
+        >Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen</label
       >
     </div>
   </div>
@@ -160,9 +212,11 @@ export default defineComponent({
 }
 
 .h5pBehaviorSetting {
+  margin-top: 0.5em;
 }
 
 .h5pBehaviorSetting-disabled {
+  margin-top: 0.5em;
   opacity: 50%;
 }
 </style>

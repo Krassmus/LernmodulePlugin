@@ -27,9 +27,8 @@
     </select>
   </div>
   <div>
-    <h2>Editor</h2>
     <component :is="editorForTaskType(taskDefinition.task_type)" />
-    <h2>Preview</h2>
+    <h1 style="margin-top: 1em">Vorschau</h1>
     <component
       :is="viewerForTaskType(taskDefinition.task_type)"
       :task="taskDefinition"

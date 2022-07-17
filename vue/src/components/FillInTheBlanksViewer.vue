@@ -28,16 +28,21 @@
     </div>
 
     <div>
-      <span v-if="showResults" class="h5pAnswerFeedback"
-        >You got {{ correctAnswers }} of {{ blanks.length }} blanks correct.
+      <span v-if="showResults" class="h5pAnswerFeedback">
+        {{ correctAnswers }} / {{ blanks.length }}
+        {{ this.task.stringResultMessage }}
       </span>
 
       <span v-if="showFillInAllTheBlanksMessage" class="h5pAnswerFeedback">
-        Please fill in all blanks to view solution
+        {{
+          this.task.stringFillAllBlanksMessage
+            ? this.task.stringFillInAllBlanksMessage
+            : 'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+        }}
       </span>
 
       <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-        Check
+        {{ this.task.stringCheckButton }}
       </button>
 
       <div v-if="showExtraButtons">
@@ -46,7 +51,7 @@
           @click="onClickShowSolution"
           class="h5pButton"
         >
-          Show solutions
+          {{ this.task.stringSolutionsButton }}
         </button>
 
         <button
@@ -54,7 +59,7 @@
           @click="onClickTryAgain"
           class="h5pButton"
         >
-          Try again
+          {{ this.task.stringRetryButton }}
         </button>
       </div>
     </div>
@@ -382,5 +387,6 @@ export default defineComponent({
   color: #1a73d9;
   font-size: 1em;
   display: inline-block;
+  margin-top: 1em;
 }
 </style>

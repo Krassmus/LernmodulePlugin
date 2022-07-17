@@ -7,6 +7,7 @@ import FlashCardsEditor from '@/components/FlashCardsEditor.vue';
 export type TaskDefinition =
   | FillInTheBlanksDefinition
   | FlashCardTaskDefinition;
+
 export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
   template: string;
@@ -15,11 +16,23 @@ export type FillInTheBlanksDefinition = {
   caseSensitive: boolean;
   autoCorrect: boolean;
   allBlanksMustBeFilledForSolutions: boolean;
+  stringCheckButton: string;
+  stringRetryButton: string;
+  stringSolutionsButton: string;
+  stringFillInAllBlanksMessage: string;
+  stringResultMessage: string;
+  // strings: FillInTheBlanksStrings[];
 };
+
+// export type FillInTheBlanksStrings = {
+//   checkButton: string;
+// };
+
 export type FlashCardTaskDefinition = {
   task_type: 'FlashCards';
   cards: FlashCard[];
 };
+
 export type FlashCard = {
   frontText: string;
   backText: string;
@@ -30,12 +43,23 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FillInTheBlanks':
       return {
         task_type: 'FillInTheBlanks',
-        template: 'Template goes {here}.',
+        template: 'Hier entsteht der {Lücken}text.',
         retryAllowed: false,
         showSolutionsAllowed: false,
         caseSensitive: false,
         autoCorrect: false,
         allBlanksMustBeFilledForSolutions: false,
+        stringCheckButton: 'Antworten überprüfen',
+        stringRetryButton: 'Neuer Versuch',
+        stringSolutionsButton: 'Lösungen anzeigen',
+        stringFillInAllBlanksMessage:
+          'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
+        stringResultMessage: 'Lücken richtig ausgefüllt.',
+        // strings: [
+        //   {
+        //     checkButton: 'Überprüfe',
+        //   },
+        // ],
       };
     case 'FlashCards':
       return {
