@@ -1,6 +1,8 @@
 <template>
   <div class="h5pModule">
     <div ref="wrapperElement">
+      <h1>{{ task.title }}</h1>
+      <p>{{ task.description }}</p>
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <!--        <span v-if="element.type === 'staticText'" v-html="element.text" />-->
         <span v-if="element.type === 'staticText'">
@@ -35,7 +37,7 @@
 
       <span v-if="showFillInAllTheBlanksMessage" class="h5pAnswerFeedback">
         {{
-          this.task.stringFillAllBlanksMessage
+          this.task.stringFillInAllBlanksMessage
             ? this.task.stringFillInAllBlanksMessage
             : 'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
         }}
@@ -187,7 +189,7 @@ export default defineComponent({
       const computedFontFamily = computedStyles.getPropertyValue('font-family');
       const computedPadding = computedStyles.getPropertyValue('padding');
       var fontSize = parseInt(computedFontSize, 10);
-      var minEm = 3;
+      var minEm = 6;
       var minPx = fontSize * minEm;
       var rightPadEm = 3.25;
       var rightPadPx = fontSize * rightPadEm;

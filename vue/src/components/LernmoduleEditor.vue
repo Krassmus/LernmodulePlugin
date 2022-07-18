@@ -1,33 +1,31 @@
 <template>
   <!--  <h1>Variables passed from server:</h1>-->
   <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
-  <h1 class="task-name-header">
-    <input
-      type="text"
-      class="task-name-input"
-      :value="moduleName"
-      @input="onInputModuleName"
-    />
-    <span
-      :class="saveStatusText === 'Modified' ? 'save-status-modified' : ''"
-      >{{ saveStatusText }}</span
-    >
-  </h1>
-  <div class="save-undo-redo">
-    <button @click="saveTask" :disabled="saveStatus.status === 'saving'">
-      Save
-    </button>
+  <div>
+    <label>Aufgabentyp auswählen: </label>
+    <select :value="taskDefinition.task_type" @input="onSelectTaskType">
+      <option value="FillInTheBlanks">Lückentext</option>
+      <option value="FlashCards">Karteikarten</option>
+    </select>
   </div>
 
   <div>
-    <label> Select task type </label>
-    <select :value="taskDefinition.task_type" @input="onSelectTaskType">
-      <option value="FillInTheBlanks">Fill in the blanks</option>
-      <option value="FlashCards">Flash cards</option>
-    </select>
-  </div>
-  <div>
     <component :is="editorForTaskType(taskDefinition.task_type)" />
+
+    <div class="save-undo-redo">
+      <button
+        class="studipButton"
+        @click="saveTask"
+        :disabled="saveStatus.status === 'saving'"
+      >
+        Speichern
+      </button>
+      <!--      <span-->
+      <!--        :class="saveStatusText === 'Modified' ? 'save-status-modified' : ''"-->
+      <!--        >{{ saveStatusText }}</span-->
+      <!--      >-->
+    </div>
+
     <h1 style="margin-top: 1em">Vorschau</h1>
     <component
       :is="viewerForTaskType(taskDefinition.task_type)"
@@ -117,6 +115,7 @@ export default defineComponent({
   gap: 10px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-bottom: 5px;
+  margin-top: 5px;
 }
 .save-status-modified {
   font-weight: bold;
@@ -126,20 +125,45 @@ export default defineComponent({
   color: red;
 }
 
-.task-name-header {
-  display: flex;
-  gap: 1em;
-  justify-content: space-between;
-}
-.task-name-header:focus-within {
-  border-bottom-color: black;
-}
-
 .task-name-input {
   flex-grow: 1;
   border: none;
 }
 .task-name-input:focus {
   outline: none;
+}
+
+.studipButton {
+  background: #fff;
+  border: 1px solid #28497c;
+  border-radius: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #28497c;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Lato, sans-serif;
+  font-size: 14px;
+  line-height: 130%;
+  margin: 0.8em 0.6em 0.8em 0;
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+  min-width: 100px;
+  overflow: visible;
+  padding: 5px 15px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  -webkit-transition: none;
+  transition: none;
+}
+
+.studipButton:hover {
+  background: #28497c;
+  color: #fff;
+  outline: 0;
 }
 </style>

@@ -10,6 +10,8 @@ export type TaskDefinition =
 
 export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
+  title: string;
+  description: string;
   template: string;
   retryAllowed: boolean;
   showSolutionsAllowed: boolean;
@@ -43,6 +45,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FillInTheBlanks':
       return {
         task_type: 'FillInTheBlanks',
+        title: 'Neuer Lückentext',
+        description: 'Fülle die Lücken mit den richtigen Wörtern',
         template: 'Hier entsteht der {Lücken}text.',
         retryAllowed: false,
         showSolutionsAllowed: false,
@@ -50,7 +54,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         autoCorrect: false,
         allBlanksMustBeFilledForSolutions: false,
         stringCheckButton: 'Antworten überprüfen',
-        stringRetryButton: 'Neuer Versuch',
+        stringRetryButton: 'Erneut versuchen',
         stringSolutionsButton: 'Lösungen anzeigen',
         stringFillInAllBlanksMessage:
           'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
