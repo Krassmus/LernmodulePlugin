@@ -19,11 +19,12 @@
             @keyup.enter="onInputBlurOrEnter"
             @input="onInput"
           />
+          <span class="h5pHint">{{ element.hint }}</span>
           <span
             v-if="showSolutions && !submittedAnswerIsCorrect(element)"
             class="h5pCorrectAnswer"
           >
-            {{ element.solution }}
+            {{ element.solutions[0] }}
           </span>
         </span>
       </template>
@@ -83,13 +84,14 @@
 import { defineComponent, PropType } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEqual } from 'lodash';
+import { forEach, isEqual } from 'lodash';
 
 type FillInTheBlanksElement = Blank | StaticText;
 type Blank = {
   type: 'blank';
   uuid: Uuid;
-  solution: string;
+  solutions: string[];
+  hint: string;
 };
 type StaticText = {
   type: 'staticText';
@@ -120,7 +122,14 @@ export default defineComponent({
       if (!submittedAnswer) {
         return false;
       } else {
-        return this.isAnswerCorrect(submittedAnswer, blank.solution);
+        let isOneAnswerCorrect = false;
+        blank.solutions.forEach(
+          (element) =>
+            (isOneAnswerCorrect =
+              isOneAnswerCorrect ||
+              this.isAnswerCorrect(submittedAnswer, element))
+        );
+        return isOneAnswerCorrect;
       }
     },
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
@@ -238,7 +247,15 @@ export default defineComponent({
         if (index % 2 === 0) {
           return { type: 'staticText', text: value, uuid: uuidv4() };
         } else {
-          return { type: 'blank', solution: value, uuid: uuidv4() };
+          let splitString = value.split(':');
+          let solutions = splitString[0].split('/');
+          let hint = splitString[1];
+          return {
+            type: 'blank',
+            solutions: solutions,
+            hint: hint,
+            uuid: uuidv4(),
+          };
         }
       });
     },
@@ -390,5 +407,12 @@ export default defineComponent({
   font-size: 1em;
   display: inline-block;
   margin-top: 1em;
+}
+
+.h5pHint {
+  font-family: Sans-Serif;
+  font-weight: 400;
+  color: #1a73d9;
+  font-size: 0.75em;
 }
 </style>

@@ -23,6 +23,8 @@
         class="h5pFillInTheBlanksEditor"
       />
     </div>
+
+    <!--    <fieldset class="collapsed">-->
     <h1 class="h5pBehaviorSetting">Einstellungen</h1>
     <div class="h5pBehaviorSetting">
       <h2>Korrektur</h2>
@@ -159,6 +161,7 @@
         />
       </label>
     </div>
+    <!--    </fieldset>-->
   </div>
 </template>
 
