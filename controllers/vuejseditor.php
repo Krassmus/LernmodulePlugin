@@ -36,7 +36,7 @@ class VuejseditorController extends PluginController
                 'module_id' => $this->mod['id'],
                 'name' => $this->mod['name']
             ],
-            'infotext' => $connection['infotext'],
+            'infotext' => $connection['infotext'] ?? '',
             'saveRoute' => $this->url_for('vuejseditor/save')
         ];
 
