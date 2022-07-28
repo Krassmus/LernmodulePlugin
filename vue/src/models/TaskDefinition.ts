@@ -10,25 +10,20 @@ export type TaskDefinition =
 
 export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
-  title: string;
-  description: string;
   template: string;
   retryAllowed: boolean;
   showSolutionsAllowed: boolean;
   caseSensitive: boolean;
   autoCorrect: boolean;
   allBlanksMustBeFilledForSolutions: boolean;
-  stringCheckButton: string;
-  stringRetryButton: string;
-  stringSolutionsButton: string;
-  stringFillInAllBlanksMessage: string;
-  stringResultMessage: string;
-  // strings: FillInTheBlanksStrings[];
+  strings: {
+    checkButton: string;
+    retryButton: string;
+    solutionsButton: string;
+    fillInAllBlanksMessage: string;
+    resultMessage: string;
+  };
 };
-
-// export type FillInTheBlanksStrings = {
-//   checkButton: string;
-// };
 
 export type FlashCardTaskDefinition = {
   task_type: 'FlashCards';
@@ -45,25 +40,20 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FillInTheBlanks':
       return {
         task_type: 'FillInTheBlanks',
-        title: 'Neuer Lückentext',
-        description: 'Fülle die Lücken mit den richtigen Wörtern',
-        template: 'Hier entsteht der {Lücken}text.',
+        template: 'Hier entsteht der *Lücken*text.',
         retryAllowed: false,
         showSolutionsAllowed: false,
         caseSensitive: false,
         autoCorrect: false,
         allBlanksMustBeFilledForSolutions: false,
-        stringCheckButton: 'Antworten überprüfen',
-        stringRetryButton: 'Erneut versuchen',
-        stringSolutionsButton: 'Lösungen anzeigen',
-        stringFillInAllBlanksMessage:
-          'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
-        stringResultMessage: 'Lücken richtig ausgefüllt.',
-        // strings: [
-        //   {
-        //     checkButton: 'Überprüfe',
-        //   },
-        // ],
+        strings: {
+          checkButton: 'Anworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          fillInAllBlanksMessage:
+            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
+          resultMessage: 'Lücken richtig ausgefüllt.',
+        },
       };
     case 'FlashCards':
       return {

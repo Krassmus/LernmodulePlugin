@@ -16,10 +16,6 @@
       </fieldset>
 
       <section class="contentbox">
-        <header><h1>Aufgabenbeschreibung</h1></header>
-      </section>
-
-      <section class="contentbox">
         <header><h1>Lückentext</h1></header>
         <button @click="addBlank" class="button">Lücke hinzufügen</button>
         <div>
@@ -53,7 +49,7 @@
               <input
                 type="text"
                 :disabled="taskDefinition.autoCorrect"
-                v-model="taskDefinition.stringCheckButton"
+                v-model="taskDefinition.strings.checkButton"
               />
             </label>
           </div>
@@ -62,7 +58,7 @@
               Ergebnismitteilung:
               <input
                 type="text"
-                v-model="taskDefinition.stringResultMessage"
+                v-model="taskDefinition.strings.resultMessage"
                 style="width: 100%"
               />
             </label>
@@ -96,7 +92,7 @@
             <input
               type="text"
               :disabled="!taskDefinition.retryAllowed"
-              v-model="taskDefinition.stringRetryButton"
+              v-model="taskDefinition.strings.retryButton"
           /></label>
         </div>
 
@@ -128,7 +124,7 @@
             <input
               type="text"
               :disabled="!taskDefinition.showSolutionsAllowed"
-              v-model="taskDefinition.stringSolutionsButton"
+              v-model="taskDefinition.strings.solutionsButton"
             />
           </label>
         </div>
@@ -160,7 +156,7 @@
             <input
               type="text"
               :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"
-              v-model="taskDefinition.stringFillInAllBlanksMessage"
+              v-model="taskDefinition.strings.fillInAllBlanksMessage"
               style="width: 100%"
             />
           </label>
