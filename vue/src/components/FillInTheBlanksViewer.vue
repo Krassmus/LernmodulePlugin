@@ -122,14 +122,9 @@ export default defineComponent({
       if (!submittedAnswer) {
         return false;
       } else {
-        let isOneAnswerCorrect = false;
-        blank.solutions.forEach(
-          (element) =>
-            (isOneAnswerCorrect =
-              isOneAnswerCorrect ||
-              this.isAnswerCorrect(submittedAnswer, element))
+        return blank.solutions.some((solution) =>
+          this.isAnswerCorrect(submittedAnswer, solution)
         );
-        return isOneAnswerCorrect;
       }
     },
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
