@@ -93,6 +93,8 @@ class VuejseditorController extends PluginController
         $this->render_json([
             'status' => 'success',
             'taskDefinition' => json_decode($task_definition),
+            'moduleName' => $name,
+            'infotext' => $infotext
         ]);
     }
 }

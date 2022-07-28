@@ -1,7 +1,7 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { newTask, TaskDefinition } from '@/models/TaskDefinition';
 import { isArray, isEqual } from 'lodash';
-import { saveTask } from '@/routes';
+import { saveTask, SaveTaskResponse } from '@/routes';
 
 type Saved = {
   status: 'saved';
@@ -30,6 +30,8 @@ export class TaskEditorModule extends VuexModule {
   fatalErrors: string[] = [];
   nonFatalErrors: string[] = [];
   serverTaskDefinition: TaskDefinition | [] = [];
+  serverModuleName: string = '';
+  serverInfotext: string = '';
   moduleName: string = '';
   infotext: string = '';
   undoRedoStack: UndoRedoState[] = [
@@ -45,7 +47,11 @@ export class TaskEditorModule extends VuexModule {
   }
 
   get hasUnsavedChanges(): boolean {
-    return !isEqual(this.taskDefinition, this.serverTaskDefinition);
+    return (
+      !isEqual(this.taskDefinition, this.serverTaskDefinition) ||
+      this.serverModuleName !== this.moduleName ||
+      this.serverInfotext !== this.infotext
+    );
   }
 
   get canUndo() {
@@ -84,6 +90,8 @@ export class TaskEditorModule extends VuexModule {
         { taskDefinition: this.serverTaskDefinition, undoBatch: {} },
       ];
     }
+    this.serverModuleName = window.STUDIP.LernmoduleVueJS.module.name;
+    this.serverInfotext = window.STUDIP.LernmoduleVueJS.infotext;
     this.moduleName = window.STUDIP.LernmoduleVueJS.module.name;
     this.infotext = window.STUDIP.LernmoduleVueJS.infotext;
   }
@@ -94,9 +102,11 @@ export class TaskEditorModule extends VuexModule {
   }
 
   @Mutation
-  saveSuccess(taskDefinition: TaskDefinition) {
+  saveSuccess(payload: SaveTaskResponse) {
     this.saveStatus = { status: 'saved' };
-    this.serverTaskDefinition = taskDefinition;
+    this.serverTaskDefinition = payload.taskDefinition;
+    this.serverModuleName = payload.moduleName;
+    this.serverInfotext = payload.infotext;
   }
 
   @Mutation
@@ -123,7 +133,7 @@ export class TaskEditorModule extends VuexModule {
         window.STUDIP.LernmoduleVueJS.block_id
       );
       await sleep(500);
-      this.context.commit('saveSuccess', saveResult.taskDefinition);
+      this.context.commit('saveSuccess', saveResult);
     } catch (error) {
       this.context.commit('saveFailure', { error });
     }
@@ -169,6 +179,7 @@ export class TaskEditorModule extends VuexModule {
       this.undoRedoIndex += 1;
     }
   }
+
   @Mutation
   setModuleName(name: string) {
     this.moduleName = name;
