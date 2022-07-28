@@ -199,7 +199,7 @@ export default defineComponent({
 
       const blank = selectedText.replace(
         selectedText.trim(),
-        '{' + selectedText.trim() + '}'
+        '*' + selectedText.trim() + '*'
       );
 
       const newText =
