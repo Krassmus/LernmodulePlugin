@@ -57,16 +57,16 @@ class VuejseditorController extends PluginController
         $task_definition = Request::get('task_definition');
         $name = Request::get('name');
         $infotext = Request::get('infotext');
-        if (!$module_id) {
+        if (!isset($module_id)) {
             throw new Exception(_("'module_id' fehlt"));
         }
-        if (!$task_definition) {
+        if (!isset($task_definition)) {
             throw new Exception(_("'task_definition' fehlt"));
         }
-        if (!$name) {
+        if (!isset($name)) {
             throw new Exception(_("'name' fehlt"));
         }
-        if (!$infotext) {
+        if (!isset($infotext)) {
             throw new Exception(_("'infotext' fehlt"));
         }
         $this->mod = VuejsLernmodul::find($module_id);
