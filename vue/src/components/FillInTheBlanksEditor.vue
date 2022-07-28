@@ -2,166 +2,172 @@
   <!--  Current undo redo state:-->
   <!--  <pre>{{ currentUndoRedoState }}</pre>-->
   <div>
-    <h1 class="h5pBehaviorSetting">Titel</h1>
-    <div class="taskDescription">
-      <textarea class="taskDescriptionText" v-model="taskDefinition.title" />
-    </div>
-    <h1 class="h5pBehaviorSetting">Aufgabenbeschreibung</h1>
-    <div class="taskDescription">
-      <textarea
-        class="taskDescriptionText"
-        v-model="taskDefinition.description"
-      />
-    </div>
-    <h1 class="h5pBehaviorSetting">Lückentext</h1>
-    <button @click="addBlank" class="studipButton">Lücke hinzufügen</button>
-    <div>
-      <textarea
-        :value="taskDefinition.template"
-        @input="(ev) => onEditTemplate(ev)"
-        ref="theTextArea"
-        class="h5pFillInTheBlanksEditor"
-      />
-    </div>
-
-    <!--    <fieldset class="collapsed">-->
-    <h1 class="h5pBehaviorSetting">Einstellungen</h1>
-    <div class="h5pBehaviorSetting">
-      <h2>Korrektur</h2>
-      <label>
-        Korrigiert wird
-        <select v-model="taskDefinition.autoCorrect">
-          <option :value="false">manuell per Button</option>
-          <option :value="true">automatisch nach Eingabe</option>
-        </select>
-      </label>
-      <div
-        :class="
-          !taskDefinition.autoCorrect
-            ? 'h5pBehaviorSetting'
-            : 'h5pBehaviorSetting-disabled'
-        "
-      >
+    <form class="default">
+      <fieldset>
+        <legend>Grunddaten</legend>
         <label>
-          Text im Button:
-          <input
-            type="text"
-            :disabled="taskDefinition.autoCorrect"
-            v-model="taskDefinition.stringCheckButton"
-          />
+          Titel
+          <input type="text" v-model="taskDefinition.title" />
         </label>
-      </div>
-      <div class="h5pBehaviorSetting">
         <label>
-          Ergebnismitteilung:
-          <input
-            type="text"
-            v-model="taskDefinition.stringResultMessage"
-            style="width: 100%"
-          />
+          Aufgabenbeschreibung
+          <textarea class="h5pTextArea" v-model="taskDefinition.description" />
         </label>
-      </div>
-      <div class="h5pBehaviorSetting">
-        <label>
-          <input
-            type="checkbox"
-            id="caseSensitiveCheckbox"
-            v-model="taskDefinition.caseSensitive"
+      </fieldset>
+
+      <section class="contentbox">
+        <header><h1>Aufgabenbeschreibung</h1></header>
+      </section>
+
+      <section class="contentbox">
+        <header><h1>Lückentext</h1></header>
+        <button @click="addBlank" class="button">Lücke hinzufügen</button>
+        <div>
+          <textarea
+            :value="taskDefinition.template"
+            @input="(ev) => onEditTemplate(ev)"
+            ref="theTextArea"
+            class="h5pFillInTheBlanksEditor"
           />
-          Groß- und Kleinschreibung beachten
-        </label>
-      </div>
-    </div>
+        </div>
+      </section>
 
-    <h2>Versuche</h2>
-    <div>
-      <label>
-        <input type="checkbox" v-model="taskDefinition.retryAllowed" />
-        Mehrere Versuche erlauben
-      </label>
-    </div>
-    <div class="h5pBehaviorSetting">
-      <label
-        :class="
-          taskDefinition.retryAllowed
-            ? 'h5pBehaviorSetting'
-            : 'h5pBehaviorSetting-disabled'
-        "
-        >Text im Button:
+      <fieldset class="collapsable">
+        <legend>Einstellungen</legend>
+        <div>
+          <h1>Korrektur</h1>
+          <label>
+            Korrigiert wird
+            <select v-model="taskDefinition.autoCorrect">
+              <option :value="false">manuell per Button</option>
+              <option :value="true">automatisch nach Eingabe</option>
+            </select>
+          </label>
+          <div
+            :class="
+              !taskDefinition.autoCorrect ? '' : 'h5pBehaviorSetting-disabled'
+            "
+          >
+            <label>
+              Text im Button:
+              <input
+                type="text"
+                :disabled="taskDefinition.autoCorrect"
+                v-model="taskDefinition.stringCheckButton"
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              Ergebnismitteilung:
+              <input
+                type="text"
+                v-model="taskDefinition.stringResultMessage"
+                style="width: 100%"
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                id="caseSensitiveCheckbox"
+                v-model="taskDefinition.caseSensitive"
+              />
+              Groß- und Kleinschreibung beachten
+            </label>
+          </div>
+        </div>
 
-        <input
-          type="text"
-          :disabled="!taskDefinition.retryAllowed"
-          v-model="taskDefinition.stringRetryButton"
-      /></label>
-    </div>
+        <h1>Versuche</h1>
+        <div>
+          <label>
+            <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+            Mehrere Versuche erlauben
+          </label>
+        </div>
+        <div>
+          <label
+            :class="
+              taskDefinition.retryAllowed ? '' : 'h5pBehaviorSetting-disabled'
+            "
+            >Text im Button:
 
-    <h2>Lösungen</h2>
-    <div class="h5pBehaviorSetting">
-      <label>
-        <input
-          type="checkbox"
-          v-model="taskDefinition.showSolutionsAllowed"
-          @change="
-            !taskDefinition.showSolutionsAllowed
-              ? (taskDefinition.allBlanksMustBeFilledForSolutions =
-                  taskDefinition.showSolutionsAllowed)
-              : ''
+            <input
+              type="text"
+              :disabled="!taskDefinition.retryAllowed"
+              v-model="taskDefinition.stringRetryButton"
+          /></label>
+        </div>
+
+        <h1>Lösungen</h1>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              v-model="taskDefinition.showSolutionsAllowed"
+              @change="
+                !taskDefinition.showSolutionsAllowed
+                  ? (taskDefinition.allBlanksMustBeFilledForSolutions =
+                      taskDefinition.showSolutionsAllowed)
+                  : ''
+              "
+            />
+            Lösungen können angezeigt werden
+          </label>
+        </div>
+        <div
+          :class="
+            taskDefinition.showSolutionsAllowed
+              ? ''
+              : 'h5pBehaviorSetting-disabled'
           "
-        />
-        Lösungen können angezeigt werden
-      </label>
-    </div>
-    <div
-      :class="
-        taskDefinition.showSolutionsAllowed
-          ? 'h5pBehaviorSetting'
-          : 'h5pBehaviorSetting-disabled'
-      "
-    >
-      <label>
-        Text im Button:
-        <input
-          type="text"
-          :disabled="!taskDefinition.showSolutionsAllowed"
-          v-model="taskDefinition.stringSolutionsButton"
-        />
-      </label>
-    </div>
-    <div
-      :class="
-        taskDefinition.showSolutionsAllowed
-          ? 'h5pBehaviorSetting'
-          : 'h5pBehaviorSetting-disabled'
-      "
-    >
-      <label>
-        <input
-          type="checkbox"
-          :disabled="!taskDefinition.showSolutionsAllowed"
-          v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
-        />
-        Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.
-      </label>
-    </div>
-    <div
-      :class="
-        taskDefinition.allBlanksMustBeFilledForSolutions
-          ? 'h5pBehaviorSetting'
-          : 'h5pBehaviorSetting-disabled'
-      "
-    >
-      <label>
-        Mitteilung wenn nicht alle Lücken ausgefüllt sind:
-        <input
-          type="text"
-          :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"
-          v-model="taskDefinition.stringFillInAllBlanksMessage"
-          style="width: 100%"
-        />
-      </label>
-    </div>
-    <!--    </fieldset>-->
+        >
+          <label>
+            Text im Button:
+            <input
+              type="text"
+              :disabled="!taskDefinition.showSolutionsAllowed"
+              v-model="taskDefinition.stringSolutionsButton"
+            />
+          </label>
+        </div>
+        <div
+          :class="
+            taskDefinition.showSolutionsAllowed
+              ? ''
+              : 'h5pBehaviorSetting-disabled'
+          "
+        >
+          <label>
+            <input
+              type="checkbox"
+              :disabled="!taskDefinition.showSolutionsAllowed"
+              v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
+            />
+            Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.
+          </label>
+        </div>
+        <div
+          :class="
+            taskDefinition.allBlanksMustBeFilledForSolutions
+              ? ''
+              : 'h5pBehaviorSetting-disabled'
+          "
+        >
+          <label>
+            Mitteilung wenn nicht alle Lücken ausgefüllt sind:
+            <input
+              type="text"
+              :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"
+              v-model="taskDefinition.stringFillInAllBlanksMessage"
+              style="width: 100%"
+            />
+          </label>
+        </div>
+        <!--    </fieldset>-->
+      </fieldset>
+    </form>
   </div>
 </template>
 
@@ -250,53 +256,15 @@ export default defineComponent({
   vertical-align: baseline;
 }
 
-.studipButton {
-  background: #fff;
-  border: 1px solid #28497c;
-  border-radius: 0;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  color: #28497c;
-  cursor: pointer;
-  display: inline-block;
-  font-family: Lato, sans-serif;
-  font-size: 14px;
-  line-height: 130%;
-  margin: 0.8em 0.6em 0.8em 0;
-  margin-top: 0.8em;
-  margin-bottom: 0.8em;
-  min-width: 100px;
-  overflow: visible;
-  padding: 5px 15px;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  vertical-align: middle;
-  white-space: nowrap;
-  width: auto;
-  -webkit-transition: none;
-  transition: none;
-}
-
-.studipButton:hover {
-  background: #28497c;
-  color: #fff;
-  outline: 0;
-}
-
-.h5pBehaviorSetting {
-  margin-top: 0.5em;
-}
-
 .h5pBehaviorSetting-disabled {
-  margin-top: 0.5em;
   opacity: 50%;
 }
 
-.taskDescriptionText {
+.h5pTextArea {
   display: block;
   width: 100%;
   height: 4em;
   resize: none;
+  /*border: none;*/
 }
 </style>
