@@ -3,6 +3,7 @@ import { TaskDefinition } from '@/models/TaskDefinition';
 /**
  * @param taskDefinition The definition of the task
  * @param moduleName The name of the Lernmodul
+ * @param infoText The HTML description of the Lernmodul
  * @param module_id The id from lernmodule_module
  * @param block_id The id from lernmodule_blocks where the module is to be
  *                 inserted.  (This only applies for newly created modules.)
@@ -10,6 +11,7 @@ import { TaskDefinition } from '@/models/TaskDefinition';
 export async function saveTask(
   taskDefinition: TaskDefinition,
   moduleName: string,
+  infoText: string,
   module_id: string,
   block_id?: string
 ): Promise<SaveTaskResponse> {
@@ -21,6 +23,7 @@ export async function saveTask(
   formData.append('task_definition', JSON.stringify(taskDefinition));
   formData.append('module_id', module_id);
   formData.append('name', moduleName);
+  formData.append('infotext', infoText);
   if (block_id) {
     formData.append('block_id', block_id);
   }

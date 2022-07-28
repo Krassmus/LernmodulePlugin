@@ -3,18 +3,6 @@
   <!--  <pre>{{ currentUndoRedoState }}</pre>-->
   <div>
     <form class="default">
-      <fieldset>
-        <legend>Grunddaten</legend>
-        <label>
-          Titel
-          <input type="text" v-model="taskDefinition.title" />
-        </label>
-        <label>
-          Aufgabenbeschreibung
-          <textarea class="h5pTextArea" v-model="taskDefinition.description" />
-        </label>
-      </fieldset>
-
       <section class="contentbox">
         <header><h1>Lückentext</h1></header>
         <button @click="addBlank" class="button">Lücke hinzufügen</button>

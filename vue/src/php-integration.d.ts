@@ -7,6 +7,7 @@ declare global {
       ASSETS_URL: string;
       CSRF_TOKEN: { name: string; value: string };
       LernmoduleVueJS: {
+        infotext: string;
         module: {
           // customdata should be an instance of 'TaskDefinition', but this
           // should be checked via parsing at runtime.

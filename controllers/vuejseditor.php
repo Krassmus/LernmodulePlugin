@@ -5,9 +5,9 @@ class VuejseditorController extends PluginController
     public function edit_action($module_id = null)
     {
         if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm(
-                "tutor",
-                Context::get()->id
-            )) {
+            "tutor",
+            Context::get()->id
+        )) {
             throw new AccessDeniedException();
         }
         if (!$module_id) {
@@ -28,6 +28,7 @@ class VuejseditorController extends PluginController
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = VuejsLernmodul::find($module_id);
         $this->block_id = Request::get('block_id');
+        $connection = $this->mod->courseConnection(Context::get()->id);
         $this->javascript_global_variables = [
             'block_id' => $this->block_id,
             'module' => [
@@ -35,6 +36,7 @@ class VuejseditorController extends PluginController
                 'module_id' => $this->mod['id'],
                 'name' => $this->mod['name']
             ],
+            'infotext' => $connection['infotext'],
             'saveRoute' => $this->url_for('vuejseditor/save')
         ];
 
@@ -54,6 +56,7 @@ class VuejseditorController extends PluginController
         $module_id = Request::option('module_id');
         $task_definition = Request::get('task_definition');
         $name = Request::get('name');
+        $infotext = Request::get('infotext');
         if (!$module_id) {
             throw new Exception(_("'module_id' fehlt"));
         }
@@ -62,6 +65,9 @@ class VuejseditorController extends PluginController
         }
         if (!$name) {
             throw new Exception(_("'name' fehlt"));
+        }
+        if (!$infotext) {
+            throw new Exception(_("'infotext' fehlt"));
         }
         $this->mod = VuejsLernmodul::find($module_id);
         if (!$this->mod) {
@@ -75,11 +81,12 @@ class VuejseditorController extends PluginController
             }
             $connection['block_id'] = Request::option("block_id");
             $connection['position'] = count($block->coursemodules) + 0;
-            $connection->store();
         }
         if ($this->mod['draft']) {
             $this->mod['draft'] = 0;
         }
+        $connection['infotext'] = $infotext;
+        $connection->store();
         $this->mod->customdata = $task_definition;
         $this->mod->name = $name;
         $this->mod->store();
@@ -88,5 +95,4 @@ class VuejseditorController extends PluginController
             'taskDefinition' => json_decode($task_definition),
         ]);
     }
-
 }

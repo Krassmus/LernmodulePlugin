@@ -31,6 +31,7 @@ export class TaskEditorModule extends VuexModule {
   nonFatalErrors: string[] = [];
   serverTaskDefinition: TaskDefinition | [] = [];
   moduleName: string = '';
+  infotext: string = '';
   undoRedoStack: UndoRedoState[] = [
     {
       taskDefinition: newTask('FillInTheBlanks'),
@@ -84,6 +85,7 @@ export class TaskEditorModule extends VuexModule {
       ];
     }
     this.moduleName = window.STUDIP.LernmoduleVueJS.module.name;
+    this.infotext = window.STUDIP.LernmoduleVueJS.infotext;
   }
 
   @Mutation
@@ -116,6 +118,7 @@ export class TaskEditorModule extends VuexModule {
       const saveResult = await saveTask(
         this.taskDefinition,
         this.moduleName,
+        this.infotext,
         window.STUDIP.LernmoduleVueJS.module.module_id,
         window.STUDIP.LernmoduleVueJS.block_id
       );
@@ -166,9 +169,13 @@ export class TaskEditorModule extends VuexModule {
       this.undoRedoIndex += 1;
     }
   }
-
   @Mutation
   setModuleName(name: string) {
     this.moduleName = name;
+  }
+
+  @Mutation
+  setInfoText(value: string) {
+    this.infotext = value;
   }
 }

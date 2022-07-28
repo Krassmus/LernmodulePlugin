@@ -1,6 +1,23 @@
 <template>
   <!--  <h1>Variables passed from server:</h1>-->
   <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
+  <form class="default">
+    <fieldset>
+      <legend>Grunddaten</legend>
+      <label>
+        Titel
+        <input type="text" :value="moduleName" @input="onInputModuleName" />
+      </label>
+      <label>
+        Aufgabenbeschreibung
+        <textarea
+          class="h5pTextArea"
+          :value="infotext"
+          @input="onInputInfotext"
+        />
+      </label>
+    </fieldset>
+  </form>
   <div>
     <label>Aufgabentyp auswählen: </label>
     <select :value="taskDefinition.task_type" @input="onSelectTaskType">
@@ -61,6 +78,7 @@ export default defineComponent({
     LernmoduleVueJS: () => window.STUDIP.LernmoduleVueJS,
     taskDefinition: () => taskEditorStore.taskDefinition,
     moduleName: () => taskEditorStore.moduleName,
+    infotext: () => taskEditorStore.infotext,
     saveStatus: () => taskEditorStore.saveStatus,
     hasUnsavedChanges: () => taskEditorStore.hasUnsavedChanges,
     canUndo: () => taskEditorStore.canUndo,
@@ -97,6 +115,10 @@ export default defineComponent({
       const name = (event.target as HTMLInputElement).value;
       taskEditorStore.setModuleName(name);
     },
+    onInputInfotext(event: InputEvent) {
+      const value = (event.target as HTMLInputElement).value;
+      taskEditorStore.setInfoText(value);
+    },
     onSelectTaskType(event: InputEvent): void {
       const taskType = (event.target as HTMLInputElement).value;
       taskEditorStore.performEdit({
@@ -117,9 +139,11 @@ export default defineComponent({
   margin-bottom: 5px;
   margin-top: 5px;
 }
+
 .save-status-modified {
   font-weight: bold;
 }
+
 .save-status-modified::after {
   content: '*';
   color: red;
@@ -129,6 +153,7 @@ export default defineComponent({
   flex-grow: 1;
   border: none;
 }
+
 .task-name-input:focus {
   outline: none;
 }
