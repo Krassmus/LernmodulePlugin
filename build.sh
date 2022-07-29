@@ -5,6 +5,8 @@ git_hash=$(git rev-parse --short HEAD) &&
 cd vue &&
 npm install &&
 npm run build &&
+cd ../locale &&
+./compileTranslation &&
 cd .. &&
 # Zip up the whole plugin directory's contents, excluding certain folders.
 # Stud.IP will take FOREVER to install the plugin if .git or node_modules are included.
