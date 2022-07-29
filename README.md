@@ -9,3 +9,10 @@ HTML-Lernmodule können aber auch mit externen Editoren wie Lectora, Articulate 
 Es gibt auch eine eigene Schnittstelle, um HTML-Lernmodule um einen Feedback-Kanal zu erweitern. Falls man ein wenig Programmierfähigkeit mitbringt, kann man das HTML-Lernmodul mit drei Codezeilen mit dem Stud.IP interagieren lassen.
 
 Die Lernmodule lassen sich zeitsteuern (erst ab der zweiten Semesterwoche abspielbar machen) oder in Abhängigkeiten zueinander setzen (erst nach Modul x abspielen).
+
+## Localisation
+Dieses Plugin wird derzeit über Weblate von Deutsch auf Englisch übersetzt.  Das Weblate-Projekt für das Plugin ist auf der Weblate-Instanz der Universität Vechta zu finden: https://weblate.uni-vechta.de/projects/rasmusfuhse-lernmoduleplugin/
+
+<a href="https://weblate.uni-vechta.de/engage/rasmusfuhse-lernmoduleplugin/en/">
+<img src="https://weblate.uni-vechta.de/widgets/rasmusfuhse-lernmoduleplugin/en/php/svg-badge.svg" alt="Translation status" />
+</a>
