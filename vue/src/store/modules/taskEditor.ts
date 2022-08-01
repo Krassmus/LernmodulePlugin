@@ -67,11 +67,18 @@ export class TaskEditorModule extends VuexModule {
     if (this.undoRedoIndex > 0) {
       const currentState = this.undoRedoStack[this.undoRedoIndex];
       this.undoRedoIndex--;
+
+      // Focus the input field whose contents will change as a result of this undo.
+      // That's how undo/redo behaves in native apps like Microsoft Word.
+      // When you press undo, it scrolls to the point in the document where
+      // the undo took place.  This lets you observe the result of your action.
       const inputElements = document.querySelectorAll(
         `[data-undo-focus-id="${currentState.undoBatch}"]`
       );
       if (inputElements.length > 0) {
         const inputEl = inputElements.item(0) as HTMLElement;
+        // If the input is inside of a collapsed <fieldset>, then the <fieldset>
+        // should be un-collapsed so that the user can see the input field.
         const collapsedParents = [
           ...document.querySelectorAll('fieldset.collapsable.collapsed'),
         ].filter((element) => element.contains(inputEl));
@@ -88,6 +95,8 @@ export class TaskEditorModule extends VuexModule {
     if (this.undoRedoIndex < this.undoRedoStack.length - 1) {
       this.undoRedoIndex++;
       const nextState = this.undoRedoStack[this.undoRedoIndex];
+
+      // Manage focus -- see comments in undo()
       const inputElements = document.querySelectorAll(
         `[data-undo-focus-id="${nextState.undoBatch}"]`
       );
