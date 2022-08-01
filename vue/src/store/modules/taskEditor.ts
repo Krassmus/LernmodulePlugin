@@ -17,7 +17,7 @@ type SaveStatus = Saved | Saving | SaveError;
 
 interface UndoRedoState {
   taskDefinition: TaskDefinition;
-  undoBatch: object;
+  undoBatch: unknown;
 }
 
 function sleep(ms: number) {
@@ -143,7 +143,7 @@ export class TaskEditorModule extends VuexModule {
    * Modify the currently edited task definition, creating a new undo/redo state
    * if appropriate.  Edits are batched together based on the parameter 'undoBatch'.
    * @param payload.taskDefinition The new state of the task being edited
-   * @param payload.undoBatch An object.
+   * @param payload.undoBatch Any value.
    * If undoBatch is an empty object, a new undo/redo state will always be created.
    * Otherwise, a new undo/redo state will be created if undoBatch is different
    * from the undoBatch of the previously performed action.
@@ -151,7 +151,7 @@ export class TaskEditorModule extends VuexModule {
   @Mutation
   performEdit(payload: {
     newTaskDefinition: TaskDefinition;
-    undoBatch: object;
+    undoBatch: unknown;
   }) {
     const currentUndoRedoState = this.undoRedoStack[this.undoRedoIndex];
     if (
