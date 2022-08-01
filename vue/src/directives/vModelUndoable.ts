@@ -6,6 +6,10 @@ import { Directive, DirectiveBinding } from 'vue';
  * Like v-model, it is a two-way binding, but rather than directly modifying
  * 'taskDefinition', it saves changes into the undo-redo stack by calling
  * 'taskEditorStore.performEdit'.
+ * It also sets an attribute 'data-undo-focus-id' on the element.
+ * This attribute is used during the 'undo' and 'redo' operations.
+ * The input elements whose contents are modified by 'undo' or 'redo' will
+ * automatically be focus()ed and brought into view.
  * TODO: Can I get better stack traces when errors are thrown inside of
  *   directive hooks?  Right now, they do not show what line of the .vue file
  *   caused the errors to be thrown.
@@ -18,6 +22,7 @@ export const modelUndoable: Directive = {
     prevVnode
   ) {
     const validEl = validateElement(el);
+    validEl.setAttribute('data-undo-focus-id', parsePath(binding).join('.'));
 
     el.addEventListener('input', (ev: Event) => {
       const splitPath = parsePath(binding);
@@ -29,7 +34,7 @@ export const modelUndoable: Directive = {
       setValueAtPath(newState, restOfPath, value);
       taskEditorStore.performEdit({
         newTaskDefinition: newState,
-        undoBatch: splitPath,
+        undoBatch: splitPath.join('.'),
       });
       console.log(el, binding, vnode, prevVnode, ev, splitPath, value);
     });

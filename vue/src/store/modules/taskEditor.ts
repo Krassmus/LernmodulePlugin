@@ -64,15 +64,30 @@ export class TaskEditorModule extends VuexModule {
 
   @Mutation
   undo() {
-    this.undoRedoIndex = Math.max(0, this.undoRedoIndex - 1);
+    if (this.undoRedoIndex > 0) {
+      const currentState = this.undoRedoStack[this.undoRedoIndex];
+      this.undoRedoIndex--;
+      const undoElement = document.querySelectorAll(
+        `[data-undo-focus-id="${currentState.undoBatch}"]`
+      );
+      if (undoElement.length > 0) {
+        (undoElement.item(0) as HTMLElement).focus();
+      }
+    }
   }
 
   @Mutation
   redo() {
-    this.undoRedoIndex = Math.min(
-      this.undoRedoStack.length - 1,
-      this.undoRedoIndex + 1
-    );
+    if (this.undoRedoIndex < this.undoRedoStack.length - 1) {
+      this.undoRedoIndex++;
+      const nextState = this.undoRedoStack[this.undoRedoIndex];
+      const undoElement = document.querySelectorAll(
+        `[data-undo-focus-id="${nextState.undoBatch}"]`
+      );
+      if (undoElement.length > 0) {
+        (undoElement.item(0) as HTMLElement).focus();
+      }
+    }
   }
 
   @Mutation
