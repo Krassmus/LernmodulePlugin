@@ -22,7 +22,7 @@
           <h1>Korrektur</h1>
           <label>
             Korrigiert wird
-            <select v-model="taskDefinition.autoCorrect">
+            <select v-model-undoable="'taskDefinition.autoCorrect'">
               <option :value="false">manuell per Button</option>
               <option :value="true">automatisch nach Eingabe</option>
             </select>
@@ -159,9 +159,14 @@
 import { defineComponent } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
+import { modelUndoable } from '@/directives/vModelUndoable';
 
 export default defineComponent({
   name: 'FillInTheBlanksEditor',
+  directives: {
+    modelUndoable,
+  },
+
   computed: {
     taskDefinition: () =>
       taskEditorStore.taskDefinition as FillInTheBlanksDefinition,

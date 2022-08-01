@@ -1,6 +1,14 @@
 <template>
   <!--  <h1>Variables passed from server:</h1>-->
   <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
+  <div class="save-undo-redo">
+    <button @click="undo" :disabled="!canUndo">Undo</button>
+    <button @click="redo" :disabled="!canRedo">Redo</button>
+    <span
+      :class="saveStatusText === 'Modified' ? 'save-status-modified' : ''"
+      >{{ saveStatusText }}</span
+    >
+  </div>
   <form class="default">
     <fieldset>
       <legend>Grunddaten</legend>
@@ -37,10 +45,6 @@
       >
         Speichern
       </button>
-      <!--      <span-->
-      <!--        :class="saveStatusText === 'Modified' ? 'save-status-modified' : ''"-->
-      <!--        >{{ saveStatusText }}</span-->
-      <!--      >-->
     </div>
 
     <h1 style="margin-top: 1em">Vorschau</h1>
