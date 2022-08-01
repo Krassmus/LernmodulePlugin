@@ -33,14 +33,6 @@
           >
             <label>
               Text im Button:
-              <!-- Mit v-model-undoable fällt der ganze Boilerplate aus dem
-              letzten Commit weg. Dieser Custom Directive verwaltet den
-              Undo-Stapel, ohne dass du irgendwas besonderes machen musst.
-              Der Code in diesem Component sieht genau so aus wie mit v-model,
-              nur schreibst du den Namen des Feldes in Anführungszeichen.
-              Das Directive wird in vModelUndoable.ts definiert und in
-              editor-main.ts importiert, damit es in allen Komponenten dieses
-              Projektes zur Verfügung steht. -->
               <input
                 type="text"
                 :disabled="taskDefinition.autoCorrect"
