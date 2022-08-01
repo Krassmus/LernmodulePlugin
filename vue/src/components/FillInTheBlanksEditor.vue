@@ -33,10 +33,18 @@
           >
             <label>
               Text im Button:
+              <!-- Es ist ein bisschen unschön, dass wir hier eine Methode
+              "onInputCheckButtonString" definieren und drei Attributen setzen
+              müssen, um undo/redo nutzen zu können: v-bind:value, v-on:input,
+              und data-undo-focus-id.
+              Das ist viel komplizierter und kostet mehr Zeit als wenn 1 mit
+              v-model arbeitet und kein undo/redo umsetzt. -->
               <input
                 type="text"
                 :disabled="taskDefinition.autoCorrect"
-                v-model="taskDefinition.strings.checkButton"
+                :value="taskDefinition.strings.checkButton"
+                @input="onInputCheckButtonString"
+                data-undo-focus-id="taskDefinition.strings.checkButton"
               />
             </label>
           </div>
@@ -169,6 +177,33 @@ export default defineComponent({
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },
   methods: {
+    // Diese 'setter'-Methode müsste in leicht angepasster Form für jede
+    // Attribute geschrieben werden, die wir im Editor bearbeiten möchten.
+    // Voll der ätzende Boilerplate.
+    onInputCheckButtonString(ev: InputEvent) {
+      const value = (ev.target as HTMLInputElement).value;
+      taskEditorStore.performEdit({
+        // Wenn du bei der Konstruktion des "newTaskDefinition"-Objektes
+        // irgendwas falsch machst, wirst du vielleicht später schwer zu
+        // debuggende Probleme haben, die beim "undoen" auftreten.
+        // Man kann Immer.js nutzen, um diesen Schritt leichter zu machen --
+        // siehe https://immerjs.github.io/immer/#without-immer --
+        // aber das löst das Problem nicht, dass wir pro Attribute eine
+        // "onInput"-Methode schreiben müssen, um undo/redo zu verwenden.
+        newTaskDefinition: {
+          ...this.taskDefinition,
+          strings: {
+            ...this.taskDefinition.strings,
+            checkButton: value,
+          },
+        },
+        // Metadata, um festzustellen, welche Operationen im Undo-Verlauf
+        // zusammengeführt werden können und welche Input-Felder beim undo()
+        // und redo() fokussiert werden sollen.
+        // Entspricht der Attribute "data-undo-focus-id".
+        undoBatch: 'taskDefinition.strings.checkButton',
+      });
+    },
     addBlank() {
       const textArea = this.$refs.theTextArea as HTMLTextAreaElement;
 
