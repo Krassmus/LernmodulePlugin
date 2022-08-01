@@ -1,14 +1,22 @@
 <template>
   <!--  <h1>Variables passed from server:</h1>-->
   <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
-  <div class="save-undo-redo">
-    <button @click="undo" :disabled="!canUndo">Undo</button>
-    <button @click="redo" :disabled="!canRedo">Redo</button>
-    <span
-      :class="saveStatusText === 'Modified' ? 'save-status-modified' : ''"
-      >{{ saveStatusText }}</span
+  <teleport to="#sidebar-actions .sidebar-widget-content .widget-list">
+    <li
+      class="save-row"
+      @click="saveTask"
+      :class="saveStatus.status !== 'saving' ? 'action' : 'action disabled'"
     >
-  </div>
+      <span> Speichern </span>
+      <span
+        :class="saveStatusText === 'Modified' ? 'save-status-modified' : ''"
+        >{{ saveStatusText }}</span
+      >
+    </li>
+    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">Undo</li>
+    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">Redo</li>
+  </teleport>
+
   <form class="default">
     <fieldset>
       <legend>Grunddaten</legend>
@@ -135,15 +143,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.save-undo-redo {
-  width: 360px;
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-bottom: 5px;
-  margin-top: 5px;
+.action {
+  cursor: pointer;
+  color: #28497c;
 }
-
+.action.disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+.save-row {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 0.5em;
+}
 .save-status-modified {
   font-weight: bold;
 }
