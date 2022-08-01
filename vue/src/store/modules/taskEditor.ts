@@ -67,11 +67,18 @@ export class TaskEditorModule extends VuexModule {
     if (this.undoRedoIndex > 0) {
       const currentState = this.undoRedoStack[this.undoRedoIndex];
       this.undoRedoIndex--;
-      const undoElement = document.querySelectorAll(
+      const inputElements = document.querySelectorAll(
         `[data-undo-focus-id="${currentState.undoBatch}"]`
       );
-      if (undoElement.length > 0) {
-        (undoElement.item(0) as HTMLElement).focus();
+      if (inputElements.length > 0) {
+        const inputEl = inputElements.item(0) as HTMLElement;
+        const collapsedParents = [
+          ...document.querySelectorAll('fieldset.collapsable.collapsed'),
+        ].filter((element) => element.contains(inputEl));
+        collapsedParents.forEach((parent) =>
+          parent.classList.remove('collapsed')
+        );
+        inputEl.focus();
       }
     }
   }
@@ -81,11 +88,18 @@ export class TaskEditorModule extends VuexModule {
     if (this.undoRedoIndex < this.undoRedoStack.length - 1) {
       this.undoRedoIndex++;
       const nextState = this.undoRedoStack[this.undoRedoIndex];
-      const undoElement = document.querySelectorAll(
+      const inputElements = document.querySelectorAll(
         `[data-undo-focus-id="${nextState.undoBatch}"]`
       );
-      if (undoElement.length > 0) {
-        (undoElement.item(0) as HTMLElement).focus();
+      if (inputElements.length > 0) {
+        const inputEl = inputElements.item(0) as HTMLElement;
+        const collapsedParents = [
+          ...document.querySelectorAll('fieldset.collapsable.collapsed'),
+        ].filter((element) => element.contains(inputEl));
+        collapsedParents.forEach((parent) =>
+          parent.classList.remove('collapsed')
+        );
+        inputEl.focus();
       }
     }
   }
