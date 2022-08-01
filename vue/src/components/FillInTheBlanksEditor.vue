@@ -8,8 +8,7 @@
         <button @click="addBlank" class="button">Lücke hinzufügen</button>
         <div>
           <textarea
-            :value="taskDefinition.template"
-            @input="(ev) => onEditTemplate(ev)"
+            v-model-undoable="'taskDefinition.template'"
             ref="theTextArea"
             class="h5pFillInTheBlanksEditor"
           />
@@ -170,16 +169,6 @@ export default defineComponent({
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },
   methods: {
-    onEditTemplate(event: InputEvent) {
-      const newValue = (event.target as HTMLInputElement).value;
-      taskEditorStore.performEdit({
-        newTaskDefinition: {
-          ...this.taskDefinition,
-          template: newValue,
-        },
-        undoBatch: { type: 'editFillInTheBlanksTemplate' },
-      });
-    },
     addBlank() {
       const textArea = this.$refs.theTextArea as HTMLTextAreaElement;
 
