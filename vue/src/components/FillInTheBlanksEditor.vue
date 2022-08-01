@@ -159,13 +159,9 @@
 import { defineComponent } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
-import { modelUndoable } from '@/directives/vModelUndoable';
 
 export default defineComponent({
   name: 'FillInTheBlanksEditor',
-  directives: {
-    modelUndoable,
-  },
 
   computed: {
     taskDefinition: () =>
