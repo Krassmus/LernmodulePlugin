@@ -8,7 +8,7 @@
         <button @click="addBlank" class="button">Lücke hinzufügen</button>
         <div>
           <textarea
-            v-model-undoable="'taskDefinition.template'"
+            v-model="taskDefinition.template"
             ref="theTextArea"
             class="h5pFillInTheBlanksEditor"
           />
@@ -21,7 +21,7 @@
           <h1>Korrektur</h1>
           <label>
             Korrigiert wird
-            <select v-model-undoable="'taskDefinition.autoCorrect'">
+            <select v-model="taskDefinition.autoCorrect">
               <option :value="false">manuell per Button</option>
               <option :value="true">automatisch nach Eingabe</option>
             </select>
@@ -36,7 +36,7 @@
               <input
                 type="text"
                 :disabled="taskDefinition.autoCorrect"
-                v-model-undoable="'taskDefinition.strings.checkButton'"
+                v-model="taskDefinition.strings.checkButton"
               />
             </label>
           </div>
