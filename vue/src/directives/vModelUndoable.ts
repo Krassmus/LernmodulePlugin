@@ -64,7 +64,7 @@ export const modelUndoable: Directive = {
  */
 function parsePath(binding: DirectiveBinding<unknown>): Array<string> {
   if (typeof binding.value !== 'string') {
-    throw new Error(bindingMustBeStringError);
+    throw new Error(bindingMustBeStringError + binding.value);
   }
   const splitPath = binding.value.split('.');
   const firstPathEl = splitPath[0];
@@ -123,7 +123,8 @@ function setValueAtPath(o: object, splitPath: Array<string>, value: any) {
 // TODO translate these strings in Weblate.
 const bindingMustBeStringError =
   'The value supplied to v-model-undoable must be a string. ' +
-  'Example: <select v-model-undoable="\'taskDefinition.task_type\'">';
+  'Example: <select v-model-undoable="\'taskDefinition.task_type\'">\n' +
+  'You supplied the following value: ';
 
 const bindingMustUseTaskDefinitionError =
   'The string supplied to v-model-undoable must be a path which begins with ' +
