@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-29 16:17+0200\n"
-"PO-Revision-Date: 2022-07-29 13:40+0000\n"
+"PO-Revision-Date: 2022-08-02 14:58+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/rasmusfuhse-"
-"lernmoduleplugin/php/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/"
+"rasmusfuhse-lernmoduleplugin/php/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr "Edit module in editor"
 
 #: ../lib/VuejsLernmodul.php:30
 msgid "Ann's Javascript Test"
-msgstr ""
+msgstr "Ann's Javascript Test (This time in English! :))"
 
 #: ../lib/H5pLernmodul.php:89 ../lib/HtmlLernmodul.php:45
 #: ../controllers/h5peditor.php:123 ../controllers/h5p.php:285
