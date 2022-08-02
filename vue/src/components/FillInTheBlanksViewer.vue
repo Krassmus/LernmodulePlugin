@@ -2,6 +2,7 @@
   <div class="h5pModule">
     <div ref="wrapperElement">
       <img :src="urlForIcon('group4')" />
+      <div class="myDivWithBackground">My div with a background image</div>
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <!--        <span v-if="element.type === 'staticText'" v-html="element.text" />-->
         <span v-if="element.type === 'staticText'">
@@ -413,5 +414,14 @@ export default defineComponent({
   font-weight: 400;
   color: #1a73d9;
   font-size: 0.75em;
+}
+
+.myDivWithBackground {
+  /*This absolute URL to the icon will not work in production, because it has a
+  hard-coded localhost in it....  But this shows how to get it working for a
+  prototype, anyway.
+  TODO: Ask Jan if he knows a solution to do this correctly in a plugin */
+  background-image: url(http://localhost/51/assets/images/icons/blue/edit.svg);
+  background-repeat: no-repeat;
 }
 </style>
