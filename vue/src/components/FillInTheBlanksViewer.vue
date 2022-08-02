@@ -1,8 +1,7 @@
 <template>
   <div class="h5pModule">
     <div ref="wrapperElement">
-      <h1>{{ task.title }}</h1>
-      <p>{{ task.description }}</p>
+      <img :src="urlForIcon('group4')" />
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <!--        <span v-if="element.type === 'staticText'" v-html="element.text" />-->
         <span v-if="element.type === 'staticText'">
@@ -229,6 +228,11 @@ export default defineComponent({
           input.style.width = (width + static_min_pad).toString();
         }
       }, 1);
+    },
+    urlForIcon(iconName: string) {
+      return (
+        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
+      );
     },
   },
   computed: {
