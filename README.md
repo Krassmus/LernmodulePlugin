@@ -13,6 +13,9 @@ Die Lernmodule lassen sich zeitsteuern (erst ab der zweiten Semesterwoche abspie
 ## Localisation
 Dieses Plugin wird derzeit über Weblate von Deutsch auf Englisch übersetzt.  Das Weblate-Projekt für das Plugin ist auf der Weblate-Instanz der Universität Vechta zu finden: https://weblate.uni-vechta.de/projects/rasmusfuhse-lernmoduleplugin/
 
+### Verwaltung von Locale-Dateien
+Die Übersetzung wird aus technischen Gründen in zwei Komponenten aufgeteilt: PHP und JS.  PHP-Strings kann man mit den Scripts `locale/extractTranslationStrings` und `locale/compileTranslation` extrahieren und kompilieren.  JS-Strings kann man analog mit den Befehlen `npm run gettext:extract` und `npm run gettext:compile` im `vue/`-Verzeichnis verwalten.
+
 <a href="https://weblate.uni-vechta.de/engage/rasmusfuhse-lernmoduleplugin/en/">
 <img src="https://weblate.uni-vechta.de/widgets/rasmusfuhse-lernmoduleplugin/en/php/svg-badge.svg" alt="Translation status" />
 </a>
