@@ -9,6 +9,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: src/components/FillInTheBlanksEditor.vue:11
+msgid "Lücke hinzufügen"
+msgstr ""
+
 #: src/components/FillInTheBlanksEditor.vue:8
 msgid "Lückentext"
 msgstr "Cloze text"
