@@ -4,7 +4,9 @@
   <div>
     <form class="default">
       <section class="contentbox">
-        <header><h1>Lückentext</h1></header>
+        <header>
+          <h1>{{ $gettext('Lückentext') }}</h1>
+        </header>
         <button @click="addBlank" class="button">Lücke hinzufügen</button>
         <div>
           <textarea
