@@ -4,8 +4,8 @@ timestamp=$(date "+%Y-%m-%d_%H-%M-%S") &&
 git_hash=$(git rev-parse --short HEAD) &&
 cd vue &&
 npm install &&
-npm run build &&
 npm run gettext:compile && # Compile translations for Vue/Typescript
+npm run build &&
 cd ../locale &&
 ./compileTranslation && # Compile translations for PHP
 cd .. &&
