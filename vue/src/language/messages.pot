@@ -2,6 +2,10 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/components/FillInTheBlanksEditor.vue:11
+msgid "Lücke hinzufügen"
+msgstr ""
+
 #: src/components/FillInTheBlanksEditor.vue:8
 msgid "Lückentext"
 msgstr ""
