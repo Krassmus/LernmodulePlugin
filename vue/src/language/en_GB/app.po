@@ -1,9 +1,0 @@
-msgid ""
-msgstr ""
-"Language: en_GB\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-
-#: src/components/FillInTheBlanksEditor.vue:8
-msgid "Lückentext"
-msgstr ""
