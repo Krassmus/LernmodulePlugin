@@ -7,7 +7,9 @@
         <header>
           <h1>{{ $gettext('Lückentext') }}</h1>
         </header>
-        <button @click="addBlank" class="button">Lücke hinzufügen</button>
+        <button @click="addBlank" class="button">
+          {{ $gettext('Lücke hinzufügen') }}
+        </button>
         <div>
           <textarea
             v-model="taskDefinition.template"
