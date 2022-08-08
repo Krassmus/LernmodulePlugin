@@ -3,6 +3,7 @@ export {};
 declare global {
   interface Window {
     STUDIP: {
+      INSTALLED_LANGUAGES: { [name: string]: InstalledLanguage };
       ABSOLUTE_URI_STUDIP: string;
       ASSETS_URL: string;
       CSRF_TOKEN: { name: string; value: string };
@@ -20,4 +21,11 @@ declare global {
       };
     };
   }
+}
+
+export interface InstalledLanguage {
+  name: string;
+  path: string;
+  picture: string;
+  selected: boolean;
 }
