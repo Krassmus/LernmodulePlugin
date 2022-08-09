@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-29 16:17+0200\n"
-"PO-Revision-Date: 2022-08-02 14:58+0000\n"
+"PO-Revision-Date: 2022-08-09 14:05+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/"
 "rasmusfuhse-lernmoduleplugin/php/en/>\n"
@@ -111,7 +111,7 @@ msgstr "None"
 #: ../views/lernmodule/view.php:86 ../views/lernmodule/edit.php:260
 #: ../views/lernmodule/evaluation.php:61 ../views/lernmodule/evaluation.php:189
 msgid "Auswertung"
-msgstr "Evaluation"
+msgstr "Assessment"
 
 #: ../views/html/evaluation.php:5
 msgid "Minimalwert"
@@ -159,7 +159,7 @@ msgstr "It can't be any better!"
 
 #: ../views/participants/evaluation.php:3
 msgid "Auswertung von "
-msgstr "Evaltion of "
+msgstr "Assessment of "
 
 #: ../views/participants/evaluation.php:7
 msgid "Modul"
@@ -334,7 +334,7 @@ msgstr "Users shall participate anonymously"
 
 #: ../views/lernmodule/edit.php:167
 msgid "Nutzer dürfen die Auswertung sehen"
-msgstr "Users are allowed to see the evaluation"
+msgstr "Users are allowed to see the assessment"
 
 #: ../views/lernmodule/edit.php:171
 msgid "Abspielen ab"
