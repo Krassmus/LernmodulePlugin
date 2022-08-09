@@ -41,6 +41,7 @@ class ParticipantsController extends PluginController
 
     public function evaluation_action($user_id)
     {
+        PageLayout::setTitle(_("Auswertung"));
         if (!$this->canViewEvaluation()) {
             throw new AccessDeniedException();
         }
