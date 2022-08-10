@@ -16,8 +16,10 @@ declare global {
           module_id: string;
           name: string;
         };
-        saveRoute: string;
         block_id?: string;
+        attemptId?: string;
+        saveRoute: string;
+        updateAttemptRoute: string;
       };
     };
   }

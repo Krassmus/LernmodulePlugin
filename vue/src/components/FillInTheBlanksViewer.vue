@@ -138,6 +138,23 @@ export default defineComponent({
     onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
+      this.updateAttempt();
+    },
+    updateAttempt() {
+      // Tell the server which blanks were filled out correctly.
+      const points = {} as Record<string, number>;
+      this.blanks.forEach((blank, index) => {
+        // TODO Consider what the key should be. This is a bit ugly.
+        // The key is shown directly in the 'assessment' UI.
+        // Maybe we should change how that works?
+        points[`${index} - ${blank.solutions[0]}`] =
+          this.submittedAnswerIsCorrect(blank) ? 1 : 0;
+      });
+      this.$emit('updateAttempt', {
+        points,
+        // The attempt is marked as successful if all answers were correct.
+        success: this.correctAnswers === this.blanks.length,
+      });
     },
     onClickShowSolution() {
       this.userWantsToSeeSolutions = true;
