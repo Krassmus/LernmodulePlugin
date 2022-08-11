@@ -55,12 +55,10 @@ export interface SaveTaskResponse {
  * @param success - If true, the attempt will be marked as 'successful'.
  */
 export async function updateAttempt(
-  attempt_id: string,
   points: Record<string, number>,
   success: boolean
 ): Promise<void> {
-  const url =
-    window.STUDIP.LernmoduleVueJS.updateAttemptRoute + '/' + attempt_id;
+  const url = window.STUDIP.LernmoduleVueJS.updateAttemptRoute;
   const token = window.STUDIP.CSRF_TOKEN;
   const formData = new FormData();
   formData.append(token.name, token.value);

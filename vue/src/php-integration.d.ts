@@ -17,7 +17,6 @@ declare global {
           name: string;
         };
         block_id?: string;
-        attemptId?: string;
         saveRoute: string;
         updateAttemptRoute: string;
       };

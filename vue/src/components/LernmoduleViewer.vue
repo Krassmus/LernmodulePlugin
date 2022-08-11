@@ -29,16 +29,7 @@ export default defineComponent({
       success: boolean;
     }) {
       console.log(`onUpdateAttempt.  ${JSON.stringify(payload)}`);
-      const attemptId = window.STUDIP.LernmoduleVueJS.attemptId;
-      if (!attemptId) {
-        // TODO flash an error
-        console.warn(
-          'LernmoduleVueJS.attemptId is undefined.  ' +
-            'Your progress in this Lernmodul will not be saved.'
-        );
-        return;
-      }
-      updateAttempt(attemptId, payload.points, payload.success);
+      updateAttempt(payload.points, payload.success);
     },
   },
 });
