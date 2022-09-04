@@ -18,7 +18,7 @@
 
 <?
 Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
-if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+if (Context::get() && $GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions = Sidebar::Get()->getWidget("actions");
     $add = false;
     if (!$actions) {
@@ -64,7 +64,7 @@ $views->addLink(
     null,
     array()
 )->setActive(true);
-if ($course_connection['evaluation_for_students'] || $GLOBALS['perm']->have_studip_perm("tutor", $course_connection['seminar_id'])) {
+if ($course_connection['evaluation_for_students'] || ($course_connection['seminar_id'] && $GLOBALS['perm']->have_studip_perm("tutor", $course_connection['seminar_id']))) {
     $views->addLink(
         dgettext("lernmoduleplugin","Auswertung"),
         PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId()),
