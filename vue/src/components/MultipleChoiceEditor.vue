@@ -17,6 +17,20 @@
           {{ $gettext('Neue Antwort') }}
         </button>
       </fieldset>
+      <fieldset class="collapsable">
+        <legend>Einstellungen</legend>
+        <div>
+          <h1>Korrektur</h1>
+          <label>
+            {{
+              $gettext(
+                'Mehrere Antworten können gleichzeitig ausgewählt werden'
+              )
+            }}
+            <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
+          </label>
+        </div>
+      </fieldset>
     </form>
   </div>
 </template>

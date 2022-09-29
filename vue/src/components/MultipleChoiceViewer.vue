@@ -1,47 +1,49 @@
 <template>
   <div class="h5pModule">
-    <div>
-      <span class="h5pQuestion">
-        {{ this.task.question }}
-      </span>
-
-      <span v-for="answer in task.answers" :key="answer.text">
-        {{ answer.text }}
-      </span>
-
-      <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-        {{ this.task.strings.checkButton }}
-      </button>
-
-      <div v-if="showExtraButtons">
-        <button
-          v-if="!showSolutions && this.task.showSolutionsAllowed"
-          @click="onClickShowSolution"
-          class="h5pButton"
-        >
-          {{ this.task.strings.solutionsButton }}
-        </button>
-
-        <button
-          v-if="this.task.retryAllowed"
-          @click="onClickTryAgain"
-          class="h5pButton"
-        >
-          {{ this.task.strings.retryButton }}
-        </button>
-      </div>
+    <pre>
+selectedAnswers: {{ selectedAnswers }}
+selectedAnswer: {{ selectedAnswer }}
+    </pre>
+    <div class="h5pQuestion">
+      {{ this.task.question }}
     </div>
+    <template v-if="task.canAnswerMultiple">
+      <div v-for="(answer, i) in task.answers" :key="i">
+        <label>
+          <input
+            type="checkbox"
+            :value="answer.text"
+            v-model="selectedAnswers[answer.text]"
+          />
+          {{ answer.text }}
+        </label>
+      </div>
+    </template>
+
+    <template v-else>
+      <div v-for="(answer, i) in task.answers" :key="i">
+        <label>
+          <input
+            type="radio"
+            :value="answer"
+            v-model="selectedAnswer"
+            :disabled="isSubmitted"
+          />
+          {{ answer.text }}
+        </label>
+      </div>
+    </template>
+
+    <button @click="onClickCheck" v-if="!isSubmitted">
+      {{ this.task.strings.checkButton }}
+    </button>
+    <div v-if="isSubmitted">{{ points }} {{ $gettext('Punkte') }}</div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import {
-  FlashCardTaskDefinition,
-  MultipleChoiceTaskDefinition,
-} from '@/models/TaskDefinition';
-import { v4 as uuidv4 } from 'uuid';
-import { isEqual } from 'lodash';
+import { MultipleChoiceTaskDefinition } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'MultipleChoiceViewer',
@@ -51,7 +53,27 @@ export default defineComponent({
       required: true,
     },
   },
-  computed: {},
+  methods: {
+    onClickCheck(): void {
+      this.isSubmitted = true;
+    },
+  },
+  data() {
+    return {
+      selectedAnswers: {} as Record<string, boolean>,
+      selectedAnswer: this.task.answers[0],
+      isSubmitted: false,
+    };
+  },
+  computed: {
+    points(): number {
+      if (this.task.canAnswerMultiple) {
+        throw new Error('Not implemented'); // TODO
+      } else {
+        return this.selectedAnswer.correct ? 1 : 0;
+      }
+    },
+  },
 });
 </script>
 

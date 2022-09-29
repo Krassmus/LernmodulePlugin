@@ -42,6 +42,10 @@ export type MultipleChoiceTaskDefinition = {
   task_type: 'MultipleChoice';
   question: string;
   answers: MultipleChoiceAnswers[];
+  canAnswerMultiple: boolean;
+  strings: {
+    checkButton: string;
+  };
 };
 
 export type MultipleChoiceAnswers = {
@@ -93,6 +97,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             correct: false,
           },
         ],
+        canAnswerMultiple: true,
+        strings: {
+          checkButton: 'Antworten überprüfen',
+        },
       };
     default:
       throw new Error('Unimplemented type: ' + type);
