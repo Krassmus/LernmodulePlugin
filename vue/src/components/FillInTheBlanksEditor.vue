@@ -7,7 +7,7 @@
         <header>
           <h1>{{ $gettext('Lückentext') }}</h1>
         </header>
-        <button @click="addBlank" class="button">
+        <button @click="addBlank" class="button" type="button">
           {{ $gettext('Lücke hinzufügen') }}
         </button>
         <div>
