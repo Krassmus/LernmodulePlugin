@@ -86,14 +86,58 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'MultipleChoice':
       return {
         task_type: 'MultipleChoice',
-        question: 'Was ist die richtige Antwort?',
+        question: 'Nenne alle Planeten in unserem Sonnensystem.',
         answers: [
           {
-            text: 'Diese Antwort ist richtig.',
+            text: 'Mond',
+            correct: false,
+          },
+          {
+            text: 'Merkur',
             correct: true,
           },
           {
-            text: 'Diese Antwort ist falsch.',
+            text: 'Venus',
+            correct: true,
+          },
+          {
+            text: 'Erde',
+            correct: true,
+          },
+          {
+            text: 'Mars',
+            correct: true,
+          },
+          {
+            text: 'Io',
+            correct: false,
+          },
+          {
+            text: 'Jupiter',
+            correct: true,
+          },
+          {
+            text: 'Saturn',
+            correct: true,
+          },
+          {
+            text: 'Uranus',
+            correct: true,
+          },
+          {
+            text: 'Neptun',
+            correct: true,
+          },
+          {
+            text: 'Pluto',
+            correct: false,
+          },
+          {
+            text: 'Titan',
+            correct: false,
+          },
+          {
+            text: 'Sonne',
             correct: false,
           },
         ],

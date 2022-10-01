@@ -14,6 +14,7 @@ selectedAnswer: {{ selectedAnswer }}
             type="checkbox"
             :value="answer.text"
             v-model="selectedAnswers[answer.text]"
+            :disabled="isSubmitted"
           />
           {{ answer.text }}
         </label>
@@ -34,10 +35,16 @@ selectedAnswer: {{ selectedAnswer }}
       </div>
     </template>
 
-    <button @click="onClickCheck" v-if="!isSubmitted">
+    <button @click="onClickCheck" v-if="!isSubmitted" style="margin-top: 1em">
       {{ this.task.strings.checkButton }}
     </button>
-    <div v-if="isSubmitted">{{ points }} {{ $gettext('Punkte') }}</div>
+
+    <div v-if="isSubmitted">
+      <label for="score" style="display: block; padding-top: 1em"
+        >{{ points }} {{ $gettext('Punkte') }}</label
+      >
+      <meter id="score" min="0" :max="maxPoints" :value="points" />
+    </div>
   </div>
 </template>
 
@@ -66,9 +73,30 @@ export default defineComponent({
     };
   },
   computed: {
+    maxPoints(): number {
+      if (this.task.canAnswerMultiple) {
+        let maxPoints = 0;
+        this.task.answers.forEach((answer) => {
+          if (answer.correct) {
+            maxPoints++;
+          }
+        });
+        return maxPoints;
+      } else {
+        return 1;
+      }
+    },
     points(): number {
       if (this.task.canAnswerMultiple) {
-        throw new Error('Not implemented'); // TODO
+        let points = 0;
+
+        this.task.answers.forEach((answer) => {
+          if (this.selectedAnswers[answer.text] && answer.correct) {
+            points++;
+          }
+        });
+
+        return points;
       } else {
         return this.selectedAnswer.correct ? 1 : 0;
       }
@@ -77,4 +105,27 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+meter {
+  width: 300px;
+  height: 20px;
+}
+
+button {
+  font-size: 1em;
+  line-height: 1.2;
+  margin: 0 0.5em 1em;
+  padding: 0.5em 1.25em;
+  border-radius: 2em;
+  background: #1a73d9;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+  display: inline-block;
+  text-align: center;
+  text-shadow: none;
+  text-decoration: none;
+  vertical-align: baseline;
+}
+</style>
