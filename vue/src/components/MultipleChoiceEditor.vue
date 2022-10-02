@@ -20,7 +20,6 @@
       <fieldset class="collapsable">
         <legend>Einstellungen</legend>
         <div>
-          <h1>Korrektur</h1>
           <label>
             {{
               $gettext(
@@ -29,6 +28,10 @@
             }}
             <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
           </label>
+          <label>
+            {{ $gettext('Mehrere Versuche erlauben') }}
+            <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+          </label>
         </div>
       </fieldset>
     </form>
@@ -36,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { MultipleChoiceTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 

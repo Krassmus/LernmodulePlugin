@@ -1,6 +1,7 @@
 <template>
   <div class="h5pModule">
     <pre>
+task: {{ task }}
 selectedAnswers: {{ selectedAnswers }}
 selectedAnswer: {{ selectedAnswer }}
     </pre>
@@ -45,6 +46,13 @@ selectedAnswer: {{ selectedAnswer }}
       >
       <meter id="score" min="0" :max="maxPoints" :value="points" />
     </div>
+
+    <button
+      v-if="this.task.retryAllowed && isSubmitted"
+      @click="onClickTryAgain"
+    >
+      {{ this.task.strings.retryButton }}
+    </button>
   </div>
 </template>
 
@@ -63,6 +71,10 @@ export default defineComponent({
   methods: {
     onClickCheck(): void {
       this.isSubmitted = true;
+    },
+    onClickTryAgain() {
+      this.isSubmitted = false;
+      this.selectedAnswers = {};
     },
   },
   data() {

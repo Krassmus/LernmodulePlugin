@@ -43,8 +43,10 @@ export type MultipleChoiceTaskDefinition = {
   question: string;
   answers: MultipleChoiceAnswers[];
   canAnswerMultiple: boolean;
+  retryAllowed: boolean;
   strings: {
     checkButton: string;
+    retryButton: string;
   };
 };
 
@@ -142,8 +144,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           },
         ],
         canAnswerMultiple: true,
+        retryAllowed: true,
         strings: {
           checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
         },
       };
     default:
