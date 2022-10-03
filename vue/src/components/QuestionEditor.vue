@@ -51,10 +51,27 @@
             }}
             <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
           </label>
+        </div>
+
+        <h1>Versuche</h1>
+        <div>
           <label>
-            {{ $gettext('Mehrere Versuche erlauben') }}
             <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+            {{ $gettext('Mehrere Versuche erlauben') }}
           </label>
+        </div>
+        <div>
+          <label
+            :class="
+              taskDefinition.retryAllowed ? '' : 'h5pBehaviorSetting-disabled'
+            "
+            >{{ $gettext('Text im Button:') }}
+
+            <input
+              type="text"
+              :disabled="!taskDefinition.retryAllowed"
+              v-model="taskDefinition.strings.retryButton"
+          /></label>
         </div>
       </fieldset>
     </form>
@@ -150,5 +167,9 @@ export default defineComponent({
 .textbox {
   margin: 0px 0px 0px 0px;
   padding: 0px 0px 0px 0px;
+}
+
+.h5pBehaviorSetting-disabled {
+  opacity: 50%;
 }
 </style>
