@@ -58,13 +58,13 @@ selectedAnswer: {{ selectedAnswer }}
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MultipleChoiceTaskDefinition } from '@/models/TaskDefinition';
+import { QuestionTaskDefinition } from '@/models/TaskDefinition';
 
 export default defineComponent({
-  name: 'MultipleChoiceViewer',
+  name: 'QuestionViewer',
   props: {
     task: {
-      type: Object as PropType<MultipleChoiceTaskDefinition>,
+      type: Object as PropType<QuestionTaskDefinition>,
       required: true,
     },
   },

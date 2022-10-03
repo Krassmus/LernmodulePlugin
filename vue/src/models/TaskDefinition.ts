@@ -2,14 +2,14 @@ import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
 import FlashCardsViewer from '@/components/FlashCardsViewer.vue';
 import FlashCardsEditor from '@/components/FlashCardsEditor.vue';
-import MultipleChoiceEditor from '@/components/MultipleChoiceEditor.vue';
-import MultipleChoiceViewer from '@/components/MultipleChoiceViewer.vue';
+import QuestionEditor from '@/components/QuestionEditor.vue';
+import QuestionViewer from '@/components/QuestionViewer.vue';
 
 // TODO Use zod or another parsing library to define these datatypes
 export type TaskDefinition =
   | FillInTheBlanksDefinition
   | FlashCardTaskDefinition
-  | MultipleChoiceTaskDefinition;
+  | QuestionTaskDefinition;
 
 export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
@@ -38,10 +38,10 @@ export type FlashCard = {
   backText: string;
 };
 
-export type MultipleChoiceTaskDefinition = {
-  task_type: 'MultipleChoice';
+export type QuestionTaskDefinition = {
+  task_type: 'Question';
   question: string;
-  answers: MultipleChoiceAnswers[];
+  answers: QuestionAnswers[];
   canAnswerMultiple: boolean;
   retryAllowed: boolean;
   strings: {
@@ -50,7 +50,7 @@ export type MultipleChoiceTaskDefinition = {
   };
 };
 
-export type MultipleChoiceAnswers = {
+export type QuestionAnswers = {
   text: string;
   correct: boolean;
 };
@@ -85,9 +85,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           },
         ],
       };
-    case 'MultipleChoice':
+    case 'Question':
       return {
-        task_type: 'MultipleChoice',
+        task_type: 'Question',
         question: 'Nenne alle Planeten in unserem Sonnensystem.',
         answers: [
           {
@@ -161,8 +161,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return FillInTheBlanksViewer;
     case 'FlashCards':
       return FlashCardsViewer;
-    case 'MultipleChoice':
-      return MultipleChoiceViewer;
+    case 'Question':
+      return QuestionViewer;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -174,8 +174,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return FillInTheBlanksEditor;
     case 'FlashCards':
       return FlashCardsEditor;
-    case 'MultipleChoice':
-      return MultipleChoiceEditor;
+    case 'Question':
+      return QuestionEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }

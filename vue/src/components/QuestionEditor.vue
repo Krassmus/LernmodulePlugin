@@ -3,7 +3,7 @@
   <div>
     <form class="default">
       <fieldset>
-        <legend>{{ $gettext('Multiple Choice Frage') }}</legend>
+        <legend>{{ $gettext('Frage') }}</legend>
         <label>
           {{ $gettext('Frage') }}
           <input type="text" v-model="taskDefinition.question" />
@@ -55,11 +55,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { MultipleChoiceTaskDefinition } from '@/models/TaskDefinition';
+import { QuestionTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 
 export default defineComponent({
-  name: 'MultipleChoiceEditor',
+  name: 'QuestionEditor',
   props: {},
   methods: {
     addAnswer(): void {
@@ -71,7 +71,7 @@ export default defineComponent({
   },
   computed: {
     taskDefinition: () =>
-      taskEditorStore.taskDefinition as MultipleChoiceTaskDefinition,
+      taskEditorStore.taskDefinition as QuestionTaskDefinition,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },
