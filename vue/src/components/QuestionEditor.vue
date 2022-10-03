@@ -18,13 +18,21 @@
                 class="checkbox"
               />
             </div>
-
             <div class="flex-child-element">
               <input
                 type="text"
                 v-model="taskDefinition.answers[i].text"
                 class="textbox"
               />
+            </div>
+            <div class="flex-child-element">
+              <button
+                type="button"
+                @click="removeAnswer(answer)"
+                class="removeAnswerButton"
+              >
+                X
+              </button>
             </div>
           </div>
         </label>
@@ -55,7 +63,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { QuestionTaskDefinition } from '@/models/TaskDefinition';
+import {
+  QuestionAnswer,
+  QuestionTaskDefinition,
+} from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 
 export default defineComponent({
@@ -67,6 +78,12 @@ export default defineComponent({
         text: this.$gettext('Neue Antwort'),
         correct: true,
       });
+    },
+
+    removeAnswer(answerToRemove: QuestionAnswer): void {
+      this.taskDefinition.answers = this.taskDefinition.answers.filter(
+        (answer) => answer !== answerToRemove
+      );
     },
   },
   computed: {
@@ -102,14 +119,14 @@ export default defineComponent({
 
 .flex-parent-element {
   display: flex;
-  border: 1px solid red;
+  border: 1px solid black;
   width: 100%;
   max-width: 48em;
 }
 
 .flex-child-element {
   flex: 1;
-  border: 1px solid blueviolet;
+  border: 1px solid #1d75b3;
   margin: 0px 0px 0px 0px;
   padding: 0px 0px 0px 0px;
   /*vertical-align: center;*/
@@ -118,6 +135,12 @@ export default defineComponent({
 
 .flex-child-element:first-child {
   flex: none;
+  /*border: 1px solid red;*/
+}
+
+.flex-child-element:last-child {
+  flex: none;
+  /*border: 1px solid #00a8c6;*/
 }
 
 .checkbox {

@@ -41,7 +41,7 @@ export type FlashCard = {
 export type QuestionTaskDefinition = {
   task_type: 'Question';
   question: string;
-  answers: QuestionAnswers[];
+  answers: QuestionAnswer[];
   canAnswerMultiple: boolean;
   retryAllowed: boolean;
   strings: {
@@ -50,7 +50,7 @@ export type QuestionTaskDefinition = {
   };
 };
 
-export type QuestionAnswers = {
+export type QuestionAnswer = {
   text: string;
   correct: boolean;
 };
