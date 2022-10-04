@@ -44,6 +44,7 @@ export type QuestionTaskDefinition = {
   answers: QuestionAnswer[];
   canAnswerMultiple: boolean;
   retryAllowed: boolean;
+  randomOrder: boolean;
   strings: {
     checkButton: string;
     retryButton: string;
@@ -145,6 +146,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         ],
         canAnswerMultiple: true,
         retryAllowed: true,
+        randomOrder: true,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',

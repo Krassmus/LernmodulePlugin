@@ -1,15 +1,15 @@
 <template>
   <div class="h5pModule">
-    <pre>
-task: {{ task }}
-selectedAnswers: {{ selectedAnswers }}
-selectedAnswer: {{ selectedAnswer }}
-    </pre>
+    <!--    <pre>-->
+    <!--task: {{ task }}-->
+    <!--selectedAnswers: {{ selectedAnswers }}-->
+    <!--selectedAnswer: {{ selectedAnswer }}-->
+    <!--    </pre>-->
     <div class="h5pQuestion">
       {{ this.task.question }}
     </div>
     <template v-if="task.canAnswerMultiple">
-      <div v-for="(answer, i) in task.answers" :key="i">
+      <div v-for="(answer, i) in answers" :key="i">
         <label>
           <input
             type="checkbox"
@@ -23,7 +23,7 @@ selectedAnswer: {{ selectedAnswer }}
     </template>
 
     <template v-else>
-      <div v-for="(answer, i) in task.answers" :key="i">
+      <div v-for="(answer, i) in answers" :key="i">
         <label>
           <input
             type="radio"
@@ -58,7 +58,10 @@ selectedAnswer: {{ selectedAnswer }}
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { QuestionTaskDefinition } from '@/models/TaskDefinition';
+import {
+  QuestionAnswer,
+  QuestionTaskDefinition,
+} from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'QuestionViewer',
@@ -98,6 +101,7 @@ export default defineComponent({
         return 1;
       }
     },
+
     points(): number {
       if (this.task.canAnswerMultiple) {
         let points = 0;
@@ -111,6 +115,19 @@ export default defineComponent({
         return points;
       } else {
         return this.selectedAnswer.correct ? 1 : 0;
+      }
+    },
+
+    answers(): QuestionAnswer[] {
+      if (this.task.randomOrder) {
+        // https://stackoverflow.com/a/46545530
+        let randomizedAnswers = this.task.answers
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value);
+        return randomizedAnswers;
+      } else {
+        return this.task.answers;
       }
     },
   },

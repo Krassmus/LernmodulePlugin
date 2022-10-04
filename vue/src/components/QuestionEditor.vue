@@ -42,14 +42,22 @@
       </fieldset>
       <fieldset class="collapsable">
         <legend>Einstellungen</legend>
+        <h1>Generell</h1>
         <div>
           <label>
+            <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
             {{
               $gettext(
                 'Mehrere Antworten können gleichzeitig ausgewählt werden'
               )
             }}
-            <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
+          </label>
+        </div>
+
+        <div>
+          <label>
+            <input type="checkbox" v-model="taskDefinition.randomOrder" />
+            {{ $gettext('Zeige Antworten in zufälliger Reihenfolge') }}
           </label>
         </div>
 
