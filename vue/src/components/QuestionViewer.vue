@@ -9,7 +9,11 @@
       {{ this.task.question }}
     </div>
     <template v-if="task.canAnswerMultiple">
-      <div v-for="(answer, i) in answers" :key="i">
+      <div
+        v-for="(answer, i) in answers"
+        :key="i"
+        :class="classForAnswer(answer)"
+      >
         <label>
           <input
             type="checkbox"
@@ -23,7 +27,11 @@
     </template>
 
     <template v-else>
-      <div v-for="(answer, i) in answers" :key="i">
+      <div
+        v-for="(answer, i) in answers"
+        :key="i"
+        :class="classForAnswer(answer)"
+      >
         <label>
           <input
             type="radio"
@@ -75,9 +83,36 @@ export default defineComponent({
     onClickCheck(): void {
       this.isSubmitted = true;
     },
-    onClickTryAgain() {
+    onClickTryAgain(): void {
       this.isSubmitted = false;
       this.selectedAnswers = {};
+    },
+    classForAnswer(answer: QuestionAnswer): string {
+      if (this.isSubmitted) {
+        if (this.task.canAnswerMultiple) {
+          if (this.selectedAnswers[answer.text]) {
+            if (answer.correct) {
+              return 'correctAnswer';
+            } else {
+              return 'incorrectAnswer';
+            }
+          } else {
+            return '';
+          }
+        } else {
+          if (this.selectedAnswer === answer) {
+            if (answer.correct) {
+              return 'correctAnswer';
+            } else {
+              return 'incorrectAnswer';
+            }
+          } else {
+            return '';
+          }
+        }
+      } else {
+        return '';
+      }
     },
   },
   data() {
@@ -156,5 +191,19 @@ button {
   text-shadow: none;
   text-decoration: none;
   vertical-align: baseline;
+}
+
+.correctAnswer {
+  background: #b6e4ce;
+  border-color: #b6e4ce;
+  color: #255c41;
+  box-shadow: 0 0.1em 0 #a2bdb0;
+}
+
+.incorrectAnswer {
+  background: #fbd7d8;
+  border-color: #fbd7d8;
+  color: #b71c1c;
+  box-shadow: 0 0.1em 0 #deb8b8;
 }
 </style>
