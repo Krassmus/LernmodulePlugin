@@ -35,8 +35,7 @@
 
     <div>
       <span v-if="showResults" class="h5pAnswerFeedback">
-        {{ correctAnswers }} / {{ blanks.length }}
-        {{ this.task.strings.resultMessage }}
+        {{ this.resultMessage }}
       </span>
 
       <span v-if="showFillInAllTheBlanksMessage" class="h5pAnswerFeedback">
@@ -354,6 +353,19 @@ export default defineComponent({
     },
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
+    },
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.correctAnswers.toString()
+      );
+
+      resultMessage = resultMessage.replace(
+        ':total',
+        this.blanks.length.toString()
+      );
+
+      return resultMessage;
     },
   },
 });

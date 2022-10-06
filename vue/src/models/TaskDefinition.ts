@@ -73,7 +73,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           solutionsButton: 'Lösungen anzeigen',
           fillInAllBlanksMessage:
             'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
-          resultMessage: 'Lücken richtig ausgefüllt.',
+          resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
         },
       };
     case 'FlashCards':

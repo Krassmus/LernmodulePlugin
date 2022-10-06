@@ -50,7 +50,11 @@
           </div>
           <div>
             <label>
-              {{ $gettext('Ergebnismitteilung:') }}
+              {{
+                $gettext(
+                  'Ergebnismitteilung (mögliche Variablen :correct und :total):'
+                )
+              }}
               <input
                 type="text"
                 v-model="taskDefinition.strings.resultMessage"
