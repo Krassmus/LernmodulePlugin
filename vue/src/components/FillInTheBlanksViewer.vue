@@ -1,7 +1,10 @@
 <template>
   <div class="h5pModule">
     <div ref="wrapperElement">
-      <img :src="urlForIcon('group4')" />
+      <img
+        :src="urlForIcon('group4')"
+        alt="an icon just for testing purposes"
+      />
       <div class="myDivWithBackground">My div with a background image</div>
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <!--        <span v-if="element.type === 'staticText'" v-html="element.text" />-->
@@ -33,19 +36,19 @@
     <div>
       <span v-if="showResults" class="h5pAnswerFeedback">
         {{ correctAnswers }} / {{ blanks.length }}
-        {{ this.task.stringResultMessage }}
+        {{ this.task.strings.resultMessage }}
       </span>
 
       <span v-if="showFillInAllTheBlanksMessage" class="h5pAnswerFeedback">
         {{
-          this.task.stringFillInAllBlanksMessage
-            ? this.task.stringFillInAllBlanksMessage
+          this.task.strings.fillInAllBlanksMessage
+            ? this.task.strings.fillInAllBlanksMessage
             : 'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
         }}
       </span>
 
       <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-        {{ this.task.stringCheckButton }}
+        {{ this.task.strings.checkButton }}
       </button>
 
       <div v-if="showExtraButtons">
@@ -54,7 +57,7 @@
           @click="onClickShowSolution"
           class="h5pButton"
         >
-          {{ this.task.stringSolutionsButton }}
+          {{ this.task.strings.solutionsButton }}
         </button>
 
         <button
@@ -62,7 +65,7 @@
           @click="onClickTryAgain"
           class="h5pButton"
         >
-          {{ this.task.stringRetryButton }}
+          {{ this.task.strings.retryButton }}
         </button>
       </div>
     </div>
@@ -84,7 +87,7 @@
 import { defineComponent, PropType } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { forEach, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 
 type FillInTheBlanksElement = Blank | StaticText;
 type Blank = {
@@ -117,7 +120,9 @@ export default defineComponent({
     };
   },
   methods: {
-    submittedAnswerIsCorrect(blank: Blank): boolean {
+    submittedAnswerIsCorrect(element: FillInTheBlanksElement): boolean {
+      const blank = element as Blank;
+
       const submittedAnswer = this.submittedAnswers?.[blank.uuid];
       if (!submittedAnswer) {
         return false;
@@ -164,7 +169,7 @@ export default defineComponent({
       this.userInputs = {};
       this.submittedAnswers = null;
     },
-    classForInput(blank: Blank) {
+    classForInput(blank: FillInTheBlanksElement) {
       if (!this.submittedAnswers) {
         return 'h5pBlank';
       }
@@ -209,15 +214,15 @@ export default defineComponent({
       const computedFontSize = computedStyles.getPropertyValue('font-size');
       const computedFontFamily = computedStyles.getPropertyValue('font-family');
       const computedPadding = computedStyles.getPropertyValue('padding');
-      var fontSize = parseInt(computedFontSize, 10);
-      var minEm = 6;
-      var minPx = fontSize * minEm;
-      var rightPadEm = 3.25;
-      var rightPadPx = fontSize * rightPadEm;
-      var static_min_pad = 0.5 * fontSize;
+      const fontSize = parseInt(computedFontSize, 10);
+      const minEm = 6;
+      const minPx = fontSize * minEm;
+      const rightPadEm = 3.25;
+      const rightPadPx = fontSize * rightPadEm;
+      const static_min_pad = 0.5 * fontSize;
 
       setTimeout(() => {
-        var tmp = document.createElement('div');
+        const tmp = document.createElement('div');
         tmp.textContent = input.value;
         const tmpStyles = {
           position: 'absolute',
@@ -231,8 +236,8 @@ export default defineComponent({
           tmp.style[key as any] = value;
         }
         input.parentElement!.append(tmp);
-        var width = tmp.clientWidth;
-        var parentWidth = (this.$refs.wrapperElement as HTMLDivElement)
+        const width = tmp.clientWidth;
+        const parentWidth = (this.$refs.wrapperElement as HTMLDivElement)
           .clientWidth;
         tmp.remove();
         if (width <= minPx) {
@@ -418,7 +423,7 @@ export default defineComponent({
 }
 
 .h5pAnswerFeedback {
-  font-family: Sans-Serif;
+  font-family: sans-serif;
   font-weight: 700;
   color: #1a73d9;
   font-size: 1em;
@@ -427,7 +432,7 @@ export default defineComponent({
 }
 
 .h5pHint {
-  font-family: Sans-Serif;
+  font-family: sans-serif;
   font-weight: 400;
   color: #1a73d9;
   font-size: 0.75em;
