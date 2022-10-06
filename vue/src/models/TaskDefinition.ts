@@ -2,11 +2,14 @@ import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
 import FlashCardsViewer from '@/components/FlashCardsViewer.vue';
 import FlashCardsEditor from '@/components/FlashCardsEditor.vue';
+import QuestionEditor from '@/components/QuestionEditor.vue';
+import QuestionViewer from '@/components/QuestionViewer.vue';
 
 // TODO Use zod or another parsing library to define these datatypes
 export type TaskDefinition =
   | FillInTheBlanksDefinition
-  | FlashCardTaskDefinition;
+  | FlashCardTaskDefinition
+  | QuestionTaskDefinition;
 
 export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
@@ -33,6 +36,24 @@ export type FlashCardTaskDefinition = {
 export type FlashCard = {
   frontText: string;
   backText: string;
+};
+
+export type QuestionTaskDefinition = {
+  task_type: 'Question';
+  question: string;
+  answers: QuestionAnswer[];
+  canAnswerMultiple: boolean;
+  retryAllowed: boolean;
+  randomOrder: boolean;
+  strings: {
+    checkButton: string;
+    retryButton: string;
+  };
+};
+
+export type QuestionAnswer = {
+  text: string;
+  correct: boolean;
 };
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
@@ -65,6 +86,72 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           },
         ],
       };
+    case 'Question':
+      return {
+        task_type: 'Question',
+        question: 'Nenne alle Planeten in unserem Sonnensystem.',
+        answers: [
+          {
+            text: 'Mond',
+            correct: false,
+          },
+          {
+            text: 'Merkur',
+            correct: true,
+          },
+          {
+            text: 'Venus',
+            correct: true,
+          },
+          {
+            text: 'Erde',
+            correct: true,
+          },
+          {
+            text: 'Mars',
+            correct: true,
+          },
+          {
+            text: 'Io',
+            correct: false,
+          },
+          {
+            text: 'Jupiter',
+            correct: true,
+          },
+          {
+            text: 'Saturn',
+            correct: true,
+          },
+          {
+            text: 'Uranus',
+            correct: true,
+          },
+          {
+            text: 'Neptun',
+            correct: true,
+          },
+          {
+            text: 'Pluto',
+            correct: false,
+          },
+          {
+            text: 'Titan',
+            correct: false,
+          },
+          {
+            text: 'Sonne',
+            correct: false,
+          },
+        ],
+        canAnswerMultiple: true,
+        retryAllowed: true,
+        randomOrder: true,
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+        },
+      };
     default:
       throw new Error('Unimplemented type: ' + type);
   }
@@ -76,6 +163,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return FillInTheBlanksViewer;
     case 'FlashCards':
       return FlashCardsViewer;
+    case 'Question':
+      return QuestionViewer;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -87,6 +176,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return FillInTheBlanksEditor;
     case 'FlashCards':
       return FlashCardsEditor;
+    case 'Question':
+      return QuestionEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }

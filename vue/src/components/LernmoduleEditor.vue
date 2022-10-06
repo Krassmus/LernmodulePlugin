@@ -38,7 +38,11 @@
     <label>Aufgabentyp auswählen: </label>
     <select :value="taskDefinition.task_type" @input="onSelectTaskType">
       <option value="FillInTheBlanks">Lückentext</option>
+      <option value="Question">Frage</option>
       <option value="FlashCards">Karteikarten</option>
+      <option value="todo">Zuordnungsaufgabe</option>
+      <option value="todo">Hotspot-Frage</option>
+      <option value="todo">Bildersequenz</option>
     </select>
   </div>
 
