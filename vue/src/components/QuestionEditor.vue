@@ -41,39 +41,30 @@
         </button>
       </fieldset>
       <fieldset class="collapsable">
-        <legend>Einstellungen</legend>
-        <h1>Generell</h1>
-        <div>
-          <label>
-            <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
-            {{
-              $gettext(
-                'Mehrere Antworten können gleichzeitig ausgewählt werden'
-              )
-            }}
-          </label>
-        </div>
+        <legend>{{ $gettext('Einstellungen') }}</legend>
+        <h1>{{ $gettext('Generell') }}</h1>
+        <label>
+          <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
+          {{
+            $gettext('Mehrere Antworten können gleichzeitig ausgewählt werden')
+          }}
+        </label>
 
-        <div>
-          <label>
-            <input type="checkbox" v-model="taskDefinition.randomOrder" />
-            {{ $gettext('Zeige Antworten in zufälliger Reihenfolge') }}
-          </label>
-        </div>
+        <label>
+          <input type="checkbox" v-model="taskDefinition.randomOrder" />
+          {{ $gettext('Zeige Antworten in zufälliger Reihenfolge') }}
+        </label>
 
-        <h1>Versuche</h1>
-        <div>
-          <label>
-            <input type="checkbox" v-model="taskDefinition.retryAllowed" />
-            {{ $gettext('Mehrere Versuche erlauben') }}
-          </label>
-        </div>
-        <div>
-          <label
-            :class="
-              taskDefinition.retryAllowed ? '' : 'h5pBehaviorSetting-disabled'
-            "
-            >{{ $gettext('Text im Button:') }}
+        <h1>{{ $gettext('Versuche') }}</h1>
+        <label>
+          <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+          {{ $gettext('Mehrere Versuche erlauben') }}
+        </label>
+        <label
+          :class="
+            taskDefinition.retryAllowed ? '' : 'h5pBehaviorSetting-disabled'
+          "
+          >{{ $gettext('Text im Button:') }}
 
             <input
               type="text"
