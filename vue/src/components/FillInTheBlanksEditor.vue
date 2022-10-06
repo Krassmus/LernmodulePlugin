@@ -20,14 +20,18 @@
       </section>
 
       <fieldset class="collapsable">
-        <legend>Einstellungen</legend>
+        <legend>{{ $gettext('Einstellungen') }}</legend>
         <div>
-          <h1>Korrektur</h1>
+          <h1>{{ $gettext('Korrektur') }}</h1>
           <label>
-            Korrigiert wird
+            {{ $gettext('Korrigiert wird') }}
             <select v-model="taskDefinition.autoCorrect">
-              <option :value="false">manuell per Button</option>
-              <option :value="true">automatisch nach Eingabe</option>
+              <option :value="false">
+                {{ $gettext('manuell per Button') }}
+              </option>
+              <option :value="true">
+                {{ $gettext('automatisch nach Eingabe') }}
+              </option>
             </select>
           </label>
           <div
@@ -36,7 +40,7 @@
             "
           >
             <label>
-              Text im Button:
+              {{ $gettext('Text im Button:') }}
               <input
                 type="text"
                 :disabled="taskDefinition.autoCorrect"
@@ -46,7 +50,7 @@
           </div>
           <div>
             <label>
-              Ergebnismitteilung:
+              {{ $gettext('Ergebnismitteilung:') }}
               <input
                 type="text"
                 v-model="taskDefinition.strings.resultMessage"
@@ -61,7 +65,7 @@
                 id="caseSensitiveCheckbox"
                 v-model="taskDefinition.caseSensitive"
               />
-              Groß- und Kleinschreibung beachten
+              {{ $gettext('Groß- und Kleinschreibung beachten') }}
             </label>
           </div>
         </div>
@@ -70,7 +74,7 @@
         <div>
           <label>
             <input type="checkbox" v-model="taskDefinition.retryAllowed" />
-            Mehrere Versuche erlauben
+            {{ $gettext('Mehrere Versuche erlauben') }}
           </label>
         </div>
         <div>
@@ -78,7 +82,7 @@
             :class="
               taskDefinition.retryAllowed ? '' : 'h5pBehaviorSetting-disabled'
             "
-            >Text im Button:
+            >{{ $gettext('Text im Button:') }}
 
             <input
               type="text"
@@ -87,7 +91,7 @@
           /></label>
         </div>
 
-        <h1>Lösungen</h1>
+        <h1>{{ $gettext('Lösungen') }}</h1>
         <div>
           <label>
             <input
@@ -100,7 +104,7 @@
                   : ''
               "
             />
-            Lösungen können angezeigt werden
+            {{ $gettext('Lösungen können angezeigt werden') }}
           </label>
         </div>
         <div
@@ -111,7 +115,7 @@
           "
         >
           <label>
-            Text im Button:
+            {{ $gettext('Text im Button:') }}
             <input
               type="text"
               :disabled="!taskDefinition.showSolutionsAllowed"
@@ -132,7 +136,11 @@
               :disabled="!taskDefinition.showSolutionsAllowed"
               v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
             />
-            Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.
+            {{
+              $gettext(
+                'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.'
+              )
+            }}
           </label>
         </div>
         <div
@@ -143,7 +151,7 @@
           "
         >
           <label>
-            Mitteilung wenn nicht alle Lücken ausgefüllt sind:
+            {{ $gettext('Mitteilung wenn nicht alle Lücken ausgefüllt sind:') }}
             <input
               type="text"
               :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"

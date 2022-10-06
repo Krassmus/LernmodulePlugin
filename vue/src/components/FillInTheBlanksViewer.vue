@@ -43,7 +43,9 @@
         {{
           this.task.strings.fillInAllBlanksMessage
             ? this.task.strings.fillInAllBlanksMessage
-            : 'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+            : $gettext(
+                'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+              )
         }}
       </span>
 
