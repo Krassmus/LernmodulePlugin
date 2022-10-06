@@ -66,12 +66,32 @@
           "
           >{{ $gettext('Text im Button:') }}
 
-            <input
-              type="text"
-              :disabled="!taskDefinition.retryAllowed"
-              v-model="taskDefinition.strings.retryButton"
-          /></label>
-        </div>
+          <input
+            type="text"
+            :disabled="!taskDefinition.retryAllowed"
+            v-model="taskDefinition.strings.retryButton"
+        /></label>
+        <h1>{{ $gettext('Lösungen') }}</h1>
+        <label>
+          <input
+            type="checkbox"
+            v-model="taskDefinition.showSolutionsAllowed"
+          />
+          {{ $gettext('Lösungen können angezeigt werden') }}
+        </label>
+        <label
+          :class="
+            taskDefinition.showSolutionsAllowed
+              ? ''
+              : 'h5pBehaviorSetting-disabled'
+          "
+          >{{ $gettext('Text im Button:') }}
+
+          <input
+            type="text"
+            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="taskDefinition.strings.solutionsButton"
+        /></label>
       </fieldset>
     </form>
   </div>

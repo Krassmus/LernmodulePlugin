@@ -61,6 +61,14 @@
     >
       {{ this.task.strings.retryButton }}
     </button>
+
+    <button
+      v-if="showSolutionsButton"
+      @click="onClickShowSolution"
+      class="h5pButton"
+    >
+      {{ this.task.strings.solutionsButton }}
+    </button>
   </div>
 </template>
 
@@ -85,9 +93,17 @@ export default defineComponent({
     },
     onClickTryAgain(): void {
       this.isSubmitted = false;
+      this.showSolutions = false;
       this.selectedAnswers = {};
     },
+    onClickShowSolution(): void {
+      this.showSolutions = true;
+    },
     classForAnswer(answer: QuestionAnswer): string {
+      if (this.showSolutions) {
+        if (answer.correct) return 'correctAnswer';
+      }
+
       if (this.isSubmitted) {
         if (this.task.canAnswerMultiple) {
           if (this.selectedAnswers[answer.text]) {
@@ -120,6 +136,7 @@ export default defineComponent({
       selectedAnswers: {} as Record<string, boolean>,
       selectedAnswer: this.task.answers[0],
       isSubmitted: false,
+      showSolutions: false,
     };
   },
   computed: {
@@ -136,23 +153,19 @@ export default defineComponent({
         return 1;
       }
     },
-
     points(): number {
       if (this.task.canAnswerMultiple) {
         let points = 0;
-
         this.task.answers.forEach((answer) => {
           if (this.selectedAnswers[answer.text] && answer.correct) {
             points++;
           }
         });
-
         return points;
       } else {
         return this.selectedAnswer.correct ? 1 : 0;
       }
     },
-
     answers(): QuestionAnswer[] {
       if (this.task.randomOrder) {
         // https://stackoverflow.com/a/46545530
@@ -164,6 +177,9 @@ export default defineComponent({
       } else {
         return this.task.answers;
       }
+    },
+    showSolutionsButton(): boolean {
+      return this.task.showSolutionsAllowed && this.isSubmitted;
     },
   },
 });

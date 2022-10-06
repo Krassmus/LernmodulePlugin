@@ -45,9 +45,11 @@ export type QuestionTaskDefinition = {
   canAnswerMultiple: boolean;
   retryAllowed: boolean;
   randomOrder: boolean;
+  showSolutionsAllowed: boolean;
   strings: {
     checkButton: string;
     retryButton: string;
+    solutionsButton: string;
   };
 };
 
@@ -147,9 +149,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         canAnswerMultiple: true,
         retryAllowed: true,
         randomOrder: true,
+        showSolutionsAllowed: true,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
         },
       };
     default:
