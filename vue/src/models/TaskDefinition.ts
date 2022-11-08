@@ -56,6 +56,7 @@ export type QuestionTaskDefinition = {
 export type QuestionAnswer = {
   text: string;
   correct: boolean;
+  hint: string;
 };
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
@@ -96,54 +97,67 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           {
             text: 'Mond',
             correct: false,
+            hint: '',
           },
           {
             text: 'Merkur',
             correct: true,
+            hint: '',
           },
           {
             text: 'Venus',
             correct: true,
+            hint: '',
           },
           {
             text: 'Erde',
             correct: true,
+            hint: '',
           },
           {
             text: 'Mars',
             correct: true,
+            hint: '',
           },
           {
             text: 'Io',
             correct: false,
+            hint: '',
           },
           {
             text: 'Jupiter',
             correct: true,
+            hint: '',
           },
           {
             text: 'Saturn',
             correct: true,
+            hint: '',
           },
           {
             text: 'Uranus',
             correct: true,
+            hint: '',
           },
           {
             text: 'Neptun',
             correct: true,
+            hint: '',
           },
           {
             text: 'Pluto',
             correct: false,
+            hint: 'Hat sich hier was geändert?',
           },
           {
             text: 'Titan',
             correct: false,
+            hint: '',
           },
           {
             text: 'Sonne',
             correct: false,
+            hint: '',
           },
         ],
         canAnswerMultiple: true,

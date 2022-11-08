@@ -9,31 +9,25 @@
           <input type="text" v-model="taskDefinition.question" />
         </label>
         <label v-for="(answer, i) in taskDefinition.answers" :key="i">
-          {{ $gettext('Antwort') }}
+          {{ $gettext('Antwort') }} {{ i + 1 }}
           <div class="flex-parent-element">
-            <div class="flex-child-element">
-              <input
-                type="checkbox"
-                v-model="taskDefinition.answers[i].correct"
-                class="checkbox"
-              />
-            </div>
-            <div class="flex-child-element">
-              <input
-                type="text"
-                v-model="taskDefinition.answers[i].text"
-                class="textbox"
-              />
-            </div>
-            <div class="flex-child-element">
-              <button
-                type="button"
-                @click="removeAnswer(answer)"
-                class="removeAnswerButton"
-              >
-                X
-              </button>
-            </div>
+            <input
+              class="flex-child-element, checkbox"
+              type="checkbox"
+              v-model="taskDefinition.answers[i].correct"
+            />
+            <input
+              class="flex-child-element, textbox"
+              type="text"
+              v-model="taskDefinition.answers[i].text"
+            />
+            <button
+              class="flex-child-element, removeAnswerButton"
+              type="button"
+              @click="removeAnswer(answer)"
+            >
+              X
+            </button>
           </div>
         </label>
         <button type="button" @click="addAnswer">
@@ -113,6 +107,7 @@ export default defineComponent({
       this.taskDefinition.answers.push({
         text: this.$gettext('Neue Antwort'),
         correct: true,
+        hint: '',
       });
     },
 
@@ -132,61 +127,41 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.parent {
-  border: 1px solid black;
-  margin: 0rem;
-  padding: 0rem 0rem;
-  text-align: left;
-}
-.child {
-  display: inline-block;
-  border: 1px solid red;
-  padding: 0rem 0rem;
-  vertical-align: middle;
-}
-
-.float-parent-element {
-  width: 50%;
-}
-.float-child-element {
-  float: left;
-  width: 50%;
-}
-
 .flex-parent-element {
   display: flex;
   border: 1px solid black;
   width: 100%;
   max-width: 48em;
+  align-items: center;
 }
 
-.flex-child-element {
-  flex: 1;
-  border: 1px solid #1d75b3;
-  margin: 0px 0px 0px 0px;
-  padding: 0px 0px 0px 0px;
-  /*vertical-align: center;*/
-  /*text-align: center;*/
-}
+/*.flex-child-element {*/
+/*  flex: 1;*/
+/*  border: 4px solid #1d75b3;*/
+/*}*/
 
-.flex-child-element:first-child {
-  flex: none;
-  /*border: 1px solid red;*/
-}
+/*.flex-child-element:first-child {*/
+/*  flex: none;*/
+/*}*/
 
-.flex-child-element:last-child {
-  flex: none;
-  /*border: 1px solid #00a8c6;*/
-}
+/*.flex-child-element:last-child {*/
+/*  flex: none;*/
+/*}*/
 
-.checkbox {
-  margin: 11px 1px 0px 0px;
-}
-
-.textbox {
+input[type='text'].textbox.textbox {
   margin: 0px 0px 0px 0px;
   padding: 0px 0px 0px 0px;
 }
+
+input[type='checkbox'].checkbox.checkbox {
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+/*button[type='button'] {*/
+/*  margin: 10px 0px 0px 0px;*/
+/*  padding: 10px 0px 0px 0px;*/
+/*}*/
 
 .h5pBehaviorSetting-disabled {
   opacity: 50%;

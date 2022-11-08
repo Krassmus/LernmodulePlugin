@@ -23,6 +23,13 @@
           />
           {{ answer.text }}
         </label>
+        <label v-if="answer.hint">
+          {{ answer.hint }}
+          <img
+            :src="urlForIcon('info-circle')"
+            alt="an icon just for testing purposes"
+          />
+        </label>
       </div>
     </template>
 
@@ -129,6 +136,11 @@ export default defineComponent({
       } else {
         return '';
       }
+    },
+    urlForIcon(iconName: string) {
+      return (
+        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
+      );
     },
   },
   data() {
