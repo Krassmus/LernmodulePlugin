@@ -40,7 +40,7 @@
       <option value="FillInTheBlanks">Lückentext</option>
       <option value="Question">Frage</option>
       <option value="FlashCards">Karteikarten</option>
-      <option value="todo">Zuordnungsaufgabe</option>
+      <option value="DragTheWords">Drag The Words</option>
       <option value="todo">Hotspot-Frage</option>
       <option value="todo">Bildersequenz</option>
     </select>

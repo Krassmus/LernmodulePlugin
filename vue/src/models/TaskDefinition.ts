@@ -4,6 +4,8 @@ import FlashCardsViewer from '@/components/FlashCardsViewer.vue';
 import FlashCardsEditor from '@/components/FlashCardsEditor.vue';
 import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
+import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
+import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
 
 // TODO Use zod or another parsing library to define these datatypes
 export type TaskDefinition =
