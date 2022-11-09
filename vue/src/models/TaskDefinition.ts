@@ -9,7 +9,8 @@ import QuestionViewer from '@/components/QuestionViewer.vue';
 export type TaskDefinition =
   | FillInTheBlanksDefinition
   | FlashCardTaskDefinition
-  | QuestionTaskDefinition;
+  | QuestionTaskDefinition
+  | DragTheWordsTaskDefinition;
 
 export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
@@ -57,6 +58,21 @@ export type QuestionAnswer = {
   text: string;
   correct: boolean;
   hint: string;
+};
+
+export type DragTheWordsTaskDefinition = {
+  task_type: 'DragTheWords';
+  template: string;
+  retryAllowed: boolean;
+  showSolutionsAllowed: boolean;
+  instantFeedback: boolean;
+  strings: {
+    checkButton: string;
+    retryButton: string;
+    solutionsButton: string;
+    fillInAllBlanksMessage: string;
+    resultMessage: string;
+  };
 };
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
@@ -170,6 +186,22 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           solutionsButton: 'Lösungen anzeigen',
         },
       };
+    case 'DragTheWords':
+      return {
+        task_type: 'DragTheWords',
+        template: 'Drag the *words* to the matching *gaps*.',
+        retryAllowed: true,
+        showSolutionsAllowed: true,
+        instantFeedback: false,
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          fillInAllBlanksMessage:
+            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
+          resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
+        },
+      };
     default:
       throw new Error('Unimplemented type: ' + type);
   }
@@ -183,6 +215,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return FlashCardsViewer;
     case 'Question':
       return QuestionViewer;
+    case 'DragTheWords':
+      return DragTheWordsViewer;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -196,6 +230,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return FlashCardsEditor;
     case 'Question':
       return QuestionEditor;
+    case 'DragTheWords':
+      return DragTheWordsEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
