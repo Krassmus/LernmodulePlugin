@@ -7,7 +7,7 @@
         </span>
         <template v-else-if="element.type === 'blank'">
           <span v-if="userInputs[element.uuid]">
-            {{ getElement(userInputs[element.uuid]).solutions[0] }}
+            {{ getBlankText(userInputs[element.uuid]) }}
           </span>
           <span
             v-else
@@ -100,10 +100,23 @@ export default defineComponent({
     isAnswerUsed(elementId: Uuid): boolean {
       return Object.values(this.userInputs).includes(elementId);
     },
+    getBlankText(blankId: Uuid): string {
+      const el = this.getElement(blankId);
+      if (el.type !== 'blank') {
+        throw new Error(
+          'The element with the given id is not a blank: ' + blankId
+        );
+      }
+      return el.solutions[0];
+    },
     getElement(elementId: Uuid): DragTheWordsElement {
-      return this.parsedTemplate.find(
-        (el) => el.uuid === this.userInputs[elementId]
-      )!;
+      const el = this.parsedTemplate.find((el) => el.uuid === elementId);
+      if (!el) {
+        throw new Error(
+          'The given element does not exist in parsedTemplate: ' + elementId
+        );
+      }
+      return el;
     },
     startDrag(dragEvent: DragEvent, blank: Blank): void {
       if (dragEvent.dataTransfer) {
