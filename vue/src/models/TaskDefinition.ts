@@ -6,13 +6,16 @@ import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
 import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
+import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
+import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 
 // TODO Use zod or another parsing library to define these datatypes
 export type TaskDefinition =
   | FillInTheBlanksDefinition
   | FlashCardTaskDefinition
   | QuestionTaskDefinition
-  | DragTheWordsTaskDefinition;
+  | DragTheWordsTaskDefinition
+  | MarkTheWordsTaskDefinition;
 
 export type FillInTheBlanksDefinition = {
   task_type: 'FillInTheBlanks';
@@ -64,6 +67,21 @@ export type QuestionAnswer = {
 
 export type DragTheWordsTaskDefinition = {
   task_type: 'DragTheWords';
+  template: string;
+  retryAllowed: boolean;
+  showSolutionsAllowed: boolean;
+  instantFeedback: boolean;
+  strings: {
+    checkButton: string;
+    retryButton: string;
+    solutionsButton: string;
+    fillInAllBlanksMessage: string;
+    resultMessage: string;
+  };
+};
+
+export type MarkTheWordsTaskDefinition = {
+  task_type: 'MarkTheWords';
   template: string;
   retryAllowed: boolean;
   showSolutionsAllowed: boolean;
@@ -204,6 +222,22 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
         },
       };
+    case 'MarkTheWords':
+      return {
+        task_type: 'MarkTheWords',
+        template: 'Mark the *words* to the matching *gaps*.',
+        retryAllowed: true,
+        showSolutionsAllowed: true,
+        instantFeedback: false,
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          fillInAllBlanksMessage:
+            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
+          resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
+        },
+      };
     default:
       throw new Error('Unimplemented type: ' + type);
   }
@@ -219,6 +253,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return QuestionViewer;
     case 'DragTheWords':
       return DragTheWordsViewer;
+    case 'MarkTheWords':
+      return MarkTheWordsViewer;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -234,6 +270,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return QuestionEditor;
     case 'DragTheWords':
       return DragTheWordsEditor;
+    case 'MarkTheWords':
+      return MarkTheWordsEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
