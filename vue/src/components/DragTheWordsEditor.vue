@@ -170,10 +170,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import {
-  DragTheWordsTaskDefinition,
-  FillInTheBlanksDefinition,
-} from '@/models/TaskDefinition';
+import { DragTheWordsTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 
 export default defineComponent({

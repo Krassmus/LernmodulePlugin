@@ -5,11 +5,30 @@
         <span v-if="element.type === 'staticText'" class="h5pStaticText">
           {{ element.text }}
         </span>
-        <span v-else-if="element.type === 'blank'" class="h5pBlank">
+        <span
+          v-else-if="element.type === 'blank'"
+          class="h5pBlank"
+          @drop="onDrop($event, element)"
+          @dragover.prevent
+          @dragenter.prevent
+          @id="element.uuid;"
+        >
           {{ element.solutions[0] }}
         </span>
       </template>
     </div>
+
+    <template v-for="element in blanks" :key="element.uuid">
+      <div>
+        <span
+          class="h5pBlankSolution"
+          draggable="true"
+          @dragstart="startDrag($event, element)"
+        >
+          {{ element.solutions[0] }}
+        </span>
+      </div>
+    </template>
 
     <div>
       <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
@@ -37,10 +56,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import {
-  DragTheWordsTaskDefinition,
-  FillInTheBlanksDefinition,
-} from '@/models/TaskDefinition';
+import { DragTheWordsTaskDefinition } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from 'lodash';
 
@@ -75,6 +91,20 @@ export default defineComponent({
     };
   },
   methods: {
+    startDrag(dragEvent: DragEvent, blank: Blank): void {
+      if (dragEvent.dataTransfer != null) {
+        dragEvent.dataTransfer.dropEffect = 'move';
+        dragEvent.dataTransfer.effectAllowed = 'move';
+        dragEvent.dataTransfer.setData('itemID', blank.uuid);
+      }
+    },
+    onDrop(dragEvent: DragEvent, element: DragTheWordsElement): void {
+      if (dragEvent.dataTransfer != null) {
+        const itemID = dragEvent.dataTransfer.getData('itemID');
+        if (itemID == element.uuid) alert("That's a bingo");
+      }
+    },
+
     submittedAnswerIsCorrect(element: DragTheWordsElement): boolean {
       const blank = element as Blank;
 
@@ -148,6 +178,11 @@ export default defineComponent({
         }
       });
     },
+    blanks(): Blank[] {
+      return this.parsedTemplate.filter(
+        (word) => word.type === 'blank'
+      ) as Blank[];
+    },
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
     },
@@ -172,13 +207,18 @@ export default defineComponent({
 
 .h5pStaticText {
   background: #ffffff;
-  color: #255c41;
+  color: #000000;
 }
 
 .h5pBlank {
   background: #d8d29d;
   border: 1px solid #9dd8bb;
-  color: #255c41;
+  color: #d8d29d;
+}
+
+.h5pBlankSolution {
+  background: #d8d29d;
+  border: 1px solid #9dd8bb;
 }
 
 .h5pBlankCorrect {
