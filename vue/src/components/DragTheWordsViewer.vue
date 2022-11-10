@@ -5,20 +5,24 @@
         <span v-if="element.type === 'staticText'" class="h5pStaticText">
           {{ element.text }}
         </span>
-        <span
-          v-else-if="element.type === 'blank'"
-          class="h5pBlank"
-          @drop="onDrop($event, element)"
-          @dragover.prevent
-          @dragenter.prevent
-          @id="element.uuid;"
-        >
-          {{ element.solutions[0] }}
-        </span>
+        <template v-else-if="element.type === 'blank'">
+          <span v-if="userInputs[element.uuid]">
+            {{ getElement(userInputs[element.uuid]).solutions[0] }}
+          </span>
+          <span
+            v-else
+            class="h5pBlank"
+            @drop="onDrop($event, element)"
+            @dragover.prevent
+            @dragenter.prevent
+            @id="element.uuid;"
+          >
+          </span>
+        </template>
       </template>
     </div>
 
-    <template v-for="element in blanks" :key="element.uuid">
+    <template v-for="element in unusedAnswers" :key="element.uuid">
       <div>
         <span
           class="h5pBlankSolution"
@@ -76,6 +80,7 @@ type Uuid = string;
 
 export default defineComponent({
   name: 'DragTheWordsViewer',
+  components: {},
   props: {
     task: {
       type: Object as PropType<DragTheWordsTaskDefinition>,
@@ -84,27 +89,37 @@ export default defineComponent({
   },
   data() {
     return {
-      userInputs: {} as Record<Uuid, string>,
+      userInputs: {} as Record<Uuid, Uuid>,
       submittedAnswers: null as Record<Uuid, string> | null,
       debug: false,
       userWantsToSeeSolutions: false,
+      draggedItemId: undefined as Uuid | undefined,
     };
   },
   methods: {
+    isAnswerUsed(elementId: Uuid): boolean {
+      return Object.values(this.userInputs).includes(elementId);
+    },
+    getElement(elementId: Uuid): DragTheWordsElement {
+      return this.parsedTemplate.find(
+        (el) => el.uuid === this.userInputs[elementId]
+      )!;
+    },
     startDrag(dragEvent: DragEvent, blank: Blank): void {
-      if (dragEvent.dataTransfer != null) {
+      if (dragEvent.dataTransfer) {
         dragEvent.dataTransfer.dropEffect = 'move';
         dragEvent.dataTransfer.effectAllowed = 'move';
-        dragEvent.dataTransfer.setData('itemID', blank.uuid);
+        this.draggedItemId = blank.uuid;
       }
     },
-    onDrop(dragEvent: DragEvent, element: DragTheWordsElement): void {
-      if (dragEvent.dataTransfer != null) {
-        const itemID = dragEvent.dataTransfer.getData('itemID');
-        if (itemID == element.uuid) alert("That's a bingo");
+    onDrop(dragEvent: DragEvent, blank: Blank): void {
+      if (!this.draggedItemId) {
+        throw new Error('Dragged item id is undefined');
       }
+      this.userInputs[blank.uuid] = this.draggedItemId;
+      this.draggedItemId = undefined;
     },
-
+    // ignored by ann
     submittedAnswerIsCorrect(element: DragTheWordsElement): boolean {
       const blank = element as Blank;
 
@@ -178,6 +193,11 @@ export default defineComponent({
         }
       });
     },
+    unusedAnswers(): Blank[] {
+      return this.blanks.filter(
+        (blank) => !Object.values(this.userInputs).includes(blank.uuid)
+      );
+    },
     blanks(): Blank[] {
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
@@ -211,9 +231,12 @@ export default defineComponent({
 }
 
 .h5pBlank {
-  background: #d8d29d;
+  background: #ffe;
   border: 1px solid #9dd8bb;
   color: #d8d29d;
+  display: inline-block;
+  width: 5em;
+  height: 1em;
 }
 
 .h5pBlankSolution {
