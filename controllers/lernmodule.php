@@ -179,7 +179,7 @@ class LernmoduleController extends PluginController
             $this->modulecourse->setDependencies(Request::getArray("dependencies"), $this->course_id);
             if ($_FILES['modulefile']['size'] > 0) {
                 $success = $this->module->copyModule($_FILES['modulefile']['tmp_name'], $_FILES['modulefile']['name']);
-                if ($this->module['material_id'] && !$this->module['url']) {
+                /*if ($this->module['material_id'] && !$this->module['url']) {
                     $material = new LernmarktplatzMaterial($this->module['material_id'] != 1 ? $this->module['material_id'] : null);
 
                     $material['name'] = $this->module['name'];
@@ -197,7 +197,7 @@ class LernmoduleController extends PluginController
 
                     $this->module['material_id'] = $material->getId();
                     $this->module->store();
-                }
+                }*/
             }
             if ($success) {
                 PageLayout::postMessage(MessageBox::success(dgettext("lernmoduleplugin","Lernmodul erfolgreich gespeichert.")));
