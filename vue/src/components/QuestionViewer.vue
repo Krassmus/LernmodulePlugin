@@ -24,7 +24,8 @@
           {{ answer.text }}
         </label>
         <label v-if="answer.hint">
-          {{ answer.hint }}
+          <!--          {{ answer.hint }}-->
+          &#8203;
           <img
             :src="urlForIcon('info-circle')"
             alt="an icon just for testing purposes"

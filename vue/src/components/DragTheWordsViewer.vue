@@ -6,7 +6,7 @@
           {{ element.text }}
         </span>
         <template v-else-if="element.type === 'blank'">
-          <span v-if="userInputs[element.uuid]">
+          <span v-if="userInputs[element.uuid]" :class="classForInput(element)">
             {{ getBlankText(userInputs[element.uuid]) }}
           </span>
           <span
@@ -16,7 +16,7 @@
             @dragover.prevent
             @dragenter.prevent
             @id="element.uuid;"
-          >
+            >&#8203;
           </span>
         </template>
       </template>
@@ -40,18 +40,14 @@
       </button>
 
       <button
-        v-if="!showSolutions && this.task.showSolutionsAllowed"
-        @click="onClickShowSolution"
+        v-if="showSolutionButton"
+        @click="onClickSolution"
         class="h5pButton"
       >
         {{ this.task.strings.solutionsButton }}
       </button>
 
-      <button
-        v-if="this.task.retryAllowed"
-        @click="onClickTryAgain"
-        class="h5pButton"
-      >
+      <button v-if="showRetryButton" @click="onClickRetry" class="h5pButton">
         {{ this.task.strings.retryButton }}
       </button>
     </div>
@@ -62,7 +58,7 @@
 import { defineComponent, PropType } from 'vue';
 import { DragTheWordsTaskDefinition } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 
 type DragTheWordsElement = Blank | StaticText;
 type Blank = {
@@ -140,9 +136,10 @@ export default defineComponent({
       if (!submittedAnswer) {
         return false;
       } else {
-        return blank.solutions.some((solution) =>
-          this.isAnswerCorrect(submittedAnswer, solution)
-        );
+        // return blank.solutions.some((solution) =>
+        //   this.isAnswerCorrect(submittedAnswer, solution)
+        // );
+        return this.isAnswerCorrect(submittedAnswer, blank.uuid);
       }
     },
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
@@ -152,30 +149,30 @@ export default defineComponent({
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
     },
-    onClickShowSolution() {
+    onClickSolution() {
       this.userWantsToSeeSolutions = true;
     },
-    onClickTryAgain() {
+    onClickRetry() {
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
     },
     classForInput(blank: DragTheWordsElement) {
       if (!this.submittedAnswers) {
-        return 'h5pBlank';
+        return 'h5pFilledBlank';
       }
 
       if (this.userInputs?.[blank.uuid] != undefined) {
         if (this.submittedAnswerIsCorrect(blank)) {
-          return 'h5pBlank h5pBlankCorrect';
+          return 'h5pFilledBlank h5pBlankCorrect';
         } else {
           if (
             this.submittedAnswers?.[blank.uuid] ===
             this.userInputs?.[blank.uuid]
           ) {
-            return 'h5pBlank h5pBlankIncorrect';
+            return 'h5pFilledBlank h5pBlankIncorrect';
           } else {
-            return 'h5pBlank';
+            return 'h5pFilledBlank';
           }
         }
       } else {
@@ -221,9 +218,16 @@ export default defineComponent({
     },
     showCheckButton(): boolean {
       return (
-        (this.submittedAnswers === null || this.inputHasChanged) &&
-        !this.task.instantFeedback
+        !isEmpty(this.userInputs) &&
+        !this.task.instantFeedback &&
+        this.inputHasChanged
       );
+    },
+    showSolutionButton(): boolean {
+      return !this.showSolutions && this.task.showSolutionsAllowed;
+    },
+    showRetryButton(): boolean {
+      return this.task.retryAllowed && this.submittedAnswers !== null;
     },
     showSolutions(): boolean {
       return this.userWantsToSeeSolutions;
@@ -241,20 +245,49 @@ export default defineComponent({
 .h5pStaticText {
   background: #ffffff;
   color: #000000;
+  /*border: 1px solid #a0a0a0;*/
+  display: inline-block;
+  line-height: 2em;
 }
 
 .h5pBlank {
-  background: #ffe;
-  border: 1px solid #9dd8bb;
-  color: #d8d29d;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #a0a0a0;
+  border-radius: 0.25em;
+  margin: 0em 0.25em 0em 0.25em;
   display: inline-block;
-  width: 5em;
-  height: 1em;
+  width: 9em;
+}
+
+.h5pFilledBlank {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #a0a0a0;
+  border-radius: 0.25em;
+  margin: 0em 0.25em 0em 0.25em;
+  display: inline-flex;
+  width: 9em;
+  justify-content: center;
 }
 
 .h5pBlankSolution {
-  background: #d8d29d;
-  border: 1px solid #9dd8bb;
+  line-height: 1.25;
+  cursor: grabbing;
+  border-radius: 0.25em;
+  padding: 0.1em 0.6em;
+  margin: 0.3em;
+  vertical-align: top;
+  text-align: center;
+  display: inline-block;
+  border: 0.1em solid #c6c6c6;
+  overflow: hidden;
+  background: #ddd;
+  box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
+  z-index: 3;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .h5pBlankCorrect {
@@ -286,5 +319,9 @@ export default defineComponent({
   text-shadow: none;
   text-decoration: none;
   vertical-align: baseline;
+}
+
+span.item:empty:before {
+  content: '\200b';
 }
 </style>
