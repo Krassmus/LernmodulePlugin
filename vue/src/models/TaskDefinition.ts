@@ -90,7 +90,6 @@ export type MarkTheWordsTaskDefinition = {
     checkButton: string;
     retryButton: string;
     solutionsButton: string;
-    fillInAllBlanksMessage: string;
     resultMessage: string;
   };
 };
@@ -225,7 +224,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'MarkTheWords':
       return {
         task_type: 'MarkTheWords',
-        template: 'Mark the *words* to the matching *gaps*.',
+        template:
+          'The moon is our natural satellite, i.e. it revolves around the Earth!',
         retryAllowed: true,
         showSolutionsAllowed: true,
         instantFeedback: false,
@@ -233,9 +233,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          fillInAllBlanksMessage:
-            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
-          resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
+          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
         },
       };
     default:
