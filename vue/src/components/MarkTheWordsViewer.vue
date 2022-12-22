@@ -65,7 +65,7 @@ export default defineComponent({
   },
   data() {
     return {
-      markedWords: {} as Record<Uuid, string>,
+      markedWords: new Set<string>(),
       showResults: false,
       debug: true,
     };
@@ -78,13 +78,13 @@ export default defineComponent({
 
     onClickRetry() {
       this.showResults = false;
-      this.markedWords = {};
+      this.markedWords.clear();
     },
 
     onClickMarkWord(wordId: Uuid) {
       let word = this.getElement(wordId);
 
-      this.markedWords[wordId] = word.text;
+      this.markedWords.add(wordId);
     },
 
     classForWord(word: MarkTheWordsElement) {
@@ -106,7 +106,7 @@ export default defineComponent({
     },
 
     isMarked(word: MarkTheWordsElement): boolean {
-      return Object.prototype.hasOwnProperty.call(this.markedWords, word.uuid);
+      return this.markedWords.has(word.uuid);
     },
 
     isCorrect(word: MarkTheWordsElement): boolean {
