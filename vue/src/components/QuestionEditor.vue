@@ -129,7 +129,6 @@ export default defineComponent({
 <style scoped>
 .flex-parent-element {
   display: flex;
-  border: 1px solid black;
   width: 100%;
   max-width: 48em;
   align-items: center;
