@@ -2,10 +2,7 @@
   <div class="h5pModule">
     <div ref="wrapperElement">
       <span v-for="element in parsedTemplate" :key="element.uuid">
-        <span
-          @click="onClickMarkWord(element.uuid)"
-          :class="classForWord(element)"
-        >
+        <span @click="onClickWord(element)" :class="classForWord(element)">
           {{ element.text }}
         </span>
         <!--  prettier-ignore-->
@@ -74,8 +71,12 @@ export default defineComponent({
       this.markedWords.clear();
     },
 
-    onClickMarkWord(wordId: Uuid) {
-      this.markedWords.add(wordId);
+    onClickWord(word: MarkTheWordsElement) {
+      if (this.isMarked(word)) {
+        this.markedWords.delete(word.uuid);
+      } else {
+        this.markedWords.add(word.uuid);
+      }
     },
 
     classForWord(word: MarkTheWordsElement) {
@@ -177,7 +178,10 @@ export default defineComponent({
 }
 
 .h5pStaticText:hover {
-  border: 1px solid #0a0e14;
+  padding: 0.15em;
+
+  box-shadow: inset 0 0 0 2px #cee0f4;
+  cursor: pointer;
 }
 
 .h5pStaticTextResult {
