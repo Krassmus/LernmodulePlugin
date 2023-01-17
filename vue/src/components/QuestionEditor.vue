@@ -21,13 +21,11 @@
               type="text"
               v-model="taskDefinition.answers[i].text"
             />
-            <button
+            <img
               class="flex-child-element, removeAnswerButton"
-              type="button"
+              :src="urlForIcon('remove-circle')"
               @click="removeAnswer(answer)"
-            >
-              X
-            </button>
+            />
           </div>
         </label>
         <button type="button" @click="addAnswer">
@@ -110,10 +108,14 @@ export default defineComponent({
         hint: '',
       });
     },
-
     removeAnswer(answerToRemove: QuestionAnswer): void {
       this.taskDefinition.answers = this.taskDefinition.answers.filter(
         (answer) => answer !== answerToRemove
+      );
+    },
+    urlForIcon(iconName: string) {
+      return (
+        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
   },
