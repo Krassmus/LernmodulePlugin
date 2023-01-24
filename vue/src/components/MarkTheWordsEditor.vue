@@ -1,24 +1,29 @@
 <template>
-  <span>Editor: {{ task.template }}</span>
+  <form class="default">
+    <fieldset>
+      <legend>{{ $gettext('Text erstellen') }}</legend>
+      <div>
+        <textarea
+          v-model="taskDefinition.template"
+          ref="theTextArea"
+          class="h5pFillInTheBlanksEditor"
+        />
+      </div>
+    </fieldset>
+  </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { MarkTheWordsTaskDefinition } from '@/models/TaskDefinition';
+import { taskEditorStore } from '@/store';
 
 export default defineComponent({
   name: 'MarkTheWordsEditor',
-  props: {
-    task: {
-      type: Object as PropType<MarkTheWordsTaskDefinition>,
-      required: true,
-    },
+  computed: {
+    taskDefinition: () =>
+      taskEditorStore.taskDefinition as MarkTheWordsTaskDefinition,
   },
-  data() {
-    return {};
-  },
-  methods: {},
-  computed: {},
 });
 </script>
 

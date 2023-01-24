@@ -1,19 +1,33 @@
 <template>
-  The aufgabe that we are editing: {{ task }}
-  (TODO: Implement an editor for flash cards here :)
+  <button type="button" class="button" @click="onClickUpload">
+    {{ $gettext('Bild hochladen') }}
+  </button>
+
+  <label>
+    {{ this.debug }}
+  </label>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { FlashCardTaskDefinition } from '@/models/TaskDefinition';
+import { taskEditorStore } from '@/store';
 
 export default defineComponent({
   name: 'FlashCardsEditor',
-  props: {
-    task: {
-      type: Object as PropType<FlashCardTaskDefinition>,
-      required: true,
+  computed: {
+    taskDefinition: () =>
+      taskEditorStore.taskDefinition as FlashCardTaskDefinition,
+  },
+  methods: {
+    onClickUpload(): void {
+      this.debug = window.STUDIP.ASSETS_URL;
     },
+  },
+  data() {
+    return {
+      debug: '' as string,
+    };
   },
 });
 </script>
