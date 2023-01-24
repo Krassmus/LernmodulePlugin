@@ -35,7 +35,10 @@
 
     <div>
       <span v-if="showResults" class="h5pAnswerFeedback">
-        {{ this.resultMessage }}
+        <label for="score" style="display: block; padding-top: 1em"
+          >{{ this.resultMessage }}
+        </label>
+        <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
       </span>
 
       <span v-if="showFillInAllTheBlanksMessage" class="h5pAnswerFeedback">
@@ -366,6 +369,9 @@ export default defineComponent({
       );
 
       return resultMessage;
+    },
+    maxPoints(): number {
+      return this.blanks.length;
     },
   },
 });
