@@ -1,171 +1,166 @@
 <template>
-  <div>
-    <form class="default">
-      <section class="contentbox">
-        <header>
-          <h1>{{ $gettext('Lückentext') }}</h1>
-        </header>
-        <button @click="addBlank" class="button" type="button">
-          {{ $gettext('Lücke hinzufügen') }}
-        </button>
-        <div>
-          <textarea
-            v-model="taskDefinition.template"
-            ref="theTextArea"
-            class="h5pFillInTheBlanksEditor"
-          />
-        </div>
-      </section>
+  <form class="default">
+    <fieldset>
+      <legend>{{ $gettext('Lückentext') }}</legend>
+      <button @click="addBlank" class="button" type="button">
+        {{ $gettext('Lücke hinzufügen') }}
+      </button>
+      <div>
+        <textarea
+          v-model="taskDefinition.template"
+          ref="theTextArea"
+          class="h5pFillInTheBlanksEditor"
+        />
+      </div>
+    </fieldset>
 
-      <fieldset class="collapsable">
-        <legend>{{ $gettext('Einstellungen') }}</legend>
-        <div>
-          <h1>{{ $gettext('Korrektur') }}</h1>
-          <label>
-            {{ $gettext('Korrigiert wird') }}
-            <select v-model="taskDefinition.autoCorrect">
-              <option :value="false">
-                {{ $gettext('manuell per Button') }}
-              </option>
-              <option :value="true">
-                {{ $gettext('automatisch nach Eingabe') }}
-              </option>
-            </select>
-          </label>
-          <div
-            :class="
-              !taskDefinition.autoCorrect ? '' : 'h5pBehaviorSetting-disabled'
-            "
-          >
-            <label>
-              {{ $gettext('Text im Button:') }}
-              <input
-                type="text"
-                :disabled="taskDefinition.autoCorrect"
-                v-model="taskDefinition.strings.checkButton"
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              {{
-                $gettext(
-                  'Ergebnismitteilung (mögliche Variablen :correct und :total):'
-                )
-              }}
-              <input
-                type="text"
-                v-model="taskDefinition.strings.resultMessage"
-                style="width: 100%"
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                id="caseSensitiveCheckbox"
-                v-model="taskDefinition.caseSensitive"
-              />
-              {{ $gettext('Groß- und Kleinschreibung beachten') }}
-            </label>
-          </div>
-        </div>
-
-        <h1>Versuche</h1>
-        <div>
-          <label>
-            <input type="checkbox" v-model="taskDefinition.retryAllowed" />
-            {{ $gettext('Mehrere Versuche erlauben') }}
-          </label>
-        </div>
-        <div>
-          <label
-            :class="
-              taskDefinition.retryAllowed ? '' : 'h5pBehaviorSetting-disabled'
-            "
-            >{{ $gettext('Text im Button:') }}
-
-            <input
-              type="text"
-              :disabled="!taskDefinition.retryAllowed"
-              v-model="taskDefinition.strings.retryButton"
-          /></label>
-        </div>
-
-        <h1>{{ $gettext('Lösungen') }}</h1>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              v-model="taskDefinition.showSolutionsAllowed"
-              @change="
-                !taskDefinition.showSolutionsAllowed
-                  ? (taskDefinition.allBlanksMustBeFilledForSolutions =
-                      taskDefinition.showSolutionsAllowed)
-                  : ''
-              "
-            />
-            {{ $gettext('Lösungen können angezeigt werden') }}
-          </label>
-        </div>
+    <fieldset class="collapsable">
+      <legend>{{ $gettext('Einstellungen') }}</legend>
+      <div>
+        <h1>{{ $gettext('Korrektur') }}</h1>
+        <label>
+          {{ $gettext('Korrigiert wird') }}
+          <select v-model="taskDefinition.autoCorrect">
+            <option :value="false">
+              {{ $gettext('manuell per Button') }}
+            </option>
+            <option :value="true">
+              {{ $gettext('automatisch nach Eingabe') }}
+            </option>
+          </select>
+        </label>
         <div
           :class="
-            taskDefinition.showSolutionsAllowed
-              ? ''
-              : 'h5pBehaviorSetting-disabled'
+            !taskDefinition.autoCorrect ? '' : 'h5pBehaviorSetting-disabled'
           "
         >
           <label>
             {{ $gettext('Text im Button:') }}
             <input
               type="text"
-              :disabled="!taskDefinition.showSolutionsAllowed"
-              v-model="taskDefinition.strings.solutionsButton"
+              :disabled="taskDefinition.autoCorrect"
+              v-model="taskDefinition.strings.checkButton"
             />
           </label>
         </div>
-        <div
-          :class="
-            taskDefinition.showSolutionsAllowed
-              ? ''
-              : 'h5pBehaviorSetting-disabled'
-          "
-        >
+        <div>
           <label>
-            <input
-              type="checkbox"
-              :disabled="!taskDefinition.showSolutionsAllowed"
-              v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
-            />
             {{
               $gettext(
-                'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.'
+                'Ergebnismitteilung (mögliche Variablen :correct und :total):'
               )
             }}
-          </label>
-        </div>
-        <div
-          :class="
-            taskDefinition.allBlanksMustBeFilledForSolutions
-              ? ''
-              : 'h5pBehaviorSetting-disabled'
-          "
-        >
-          <label>
-            {{ $gettext('Mitteilung wenn nicht alle Lücken ausgefüllt sind:') }}
             <input
               type="text"
-              :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"
-              v-model="taskDefinition.strings.fillInAllBlanksMessage"
+              v-model="taskDefinition.strings.resultMessage"
               style="width: 100%"
             />
           </label>
         </div>
-        <!--    </fieldset>-->
-      </fieldset>
-    </form>
-  </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              id="caseSensitiveCheckbox"
+              v-model="taskDefinition.caseSensitive"
+            />
+            {{ $gettext('Groß- und Kleinschreibung beachten') }}
+          </label>
+        </div>
+      </div>
+
+      <h1>Versuche</h1>
+      <div>
+        <label>
+          <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+          {{ $gettext('Mehrere Versuche erlauben') }}
+        </label>
+      </div>
+      <div>
+        <label
+          :class="
+            taskDefinition.retryAllowed ? '' : 'h5pBehaviorSetting-disabled'
+          "
+          >{{ $gettext('Text im Button:') }}
+
+          <input
+            type="text"
+            :disabled="!taskDefinition.retryAllowed"
+            v-model="taskDefinition.strings.retryButton"
+        /></label>
+      </div>
+
+      <h1>{{ $gettext('Lösungen') }}</h1>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            v-model="taskDefinition.showSolutionsAllowed"
+            @change="
+              !taskDefinition.showSolutionsAllowed
+                ? (taskDefinition.allBlanksMustBeFilledForSolutions =
+                    taskDefinition.showSolutionsAllowed)
+                : ''
+            "
+          />
+          {{ $gettext('Lösungen können angezeigt werden') }}
+        </label>
+      </div>
+      <div
+        :class="
+          taskDefinition.showSolutionsAllowed
+            ? ''
+            : 'h5pBehaviorSetting-disabled'
+        "
+      >
+        <label>
+          {{ $gettext('Text im Button:') }}
+          <input
+            type="text"
+            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="taskDefinition.strings.solutionsButton"
+          />
+        </label>
+      </div>
+      <div
+        :class="
+          taskDefinition.showSolutionsAllowed
+            ? ''
+            : 'h5pBehaviorSetting-disabled'
+        "
+      >
+        <label>
+          <input
+            type="checkbox"
+            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
+          />
+          {{
+            $gettext(
+              'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.'
+            )
+          }}
+        </label>
+      </div>
+      <div
+        :class="
+          taskDefinition.allBlanksMustBeFilledForSolutions
+            ? ''
+            : 'h5pBehaviorSetting-disabled'
+        "
+      >
+        <label>
+          {{ $gettext('Mitteilung wenn nicht alle Lücken ausgefüllt sind:') }}
+          <input
+            type="text"
+            :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"
+            v-model="taskDefinition.strings.fillInAllBlanksMessage"
+            style="width: 100%"
+          />
+        </label>
+      </div>
+    </fieldset>
+  </form>
 </template>
 
 <script lang="ts">
@@ -175,7 +170,6 @@ import { taskEditorStore } from '@/store';
 
 export default defineComponent({
   name: 'DragTheWordsEditor',
-
   computed: {
     taskDefinition: () =>
       taskEditorStore.taskDefinition as DragTheWordsTaskDefinition,
