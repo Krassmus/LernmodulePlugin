@@ -172,7 +172,6 @@ import { taskEditorStore } from '@/store';
 
 export default defineComponent({
   name: 'FillInTheBlanksEditor',
-
   computed: {
     taskDefinition: () =>
       taskEditorStore.taskDefinition as FillInTheBlanksDefinition,

@@ -35,14 +35,14 @@
     </fieldset>
   </form>
   <div style="margin-bottom: 1em; margin-top: 1em">
-    <label>{{ $gettext('Aufgabentyp auswählen:') }} </label>
+    <label>{{ $gettext('Aufgabentyp auswählen:') }}</label>
     <select :value="taskDefinition.task_type" @input="onSelectTaskType">
       <option value="FillInTheBlanks">{{ $gettext('Lückentext') }}</option>
       <option value="Question">{{ $gettext('Frage') }}</option>
       <option value="FlashCards">{{ $gettext('Karteikarten') }}</option>
       <option value="DragTheWords">{{ $gettext('Drag The Words') }}</option>
       <option value="MarkTheWords">{{ $gettext('Mark The Words') }}</option>
-      <option value="todo">{{ $gettext('Hotspot-Frage<') }}/option></option>
+      <option value="todo">{{ $gettext('Hotspot-Frage') }}</option>
       <option value="todo">{{ $gettext('Bildersequenz') }}</option>
     </select>
   </div>
