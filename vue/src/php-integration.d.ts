@@ -1,8 +1,17 @@
 export {};
+
+// Extract a couple of useful types from @types/ckeditor4
+export type CKEditorInstance = InstanceType<typeof window.CKEDITOR.editor>;
+export type CKEditorConfig = typeof window.CKEDITOR.config;
+
 // Declarations for variables passed from php to the client
 declare global {
   interface Window {
     STUDIP: {
+      wysiwyg: {
+        replace: (element: Element) => void;
+      };
+      wysiwyg_enabled: boolean;
       INSTALLED_LANGUAGES: { [name: string]: InstalledLanguage };
       ABSOLUTE_URI_STUDIP: string;
       ASSETS_URL: string;

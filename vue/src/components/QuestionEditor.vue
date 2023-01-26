@@ -5,60 +5,63 @@
       <legend>{{ $gettext('Frage') }}</legend>
       <label>
         {{ $gettext('Frage') }}
-        <input type="text" v-model="taskDefinition.question" />
+        <!--        <input type="text" v-model="taskDefinition.question" />-->
+        <studip-wysiwyg v-model="taskDefinition.question" />
       </label>
-      <label v-for="(answer, i) in taskDefinition.answers" :key="i">
+      <fieldset
+        class="collapsable collapsed"
+        v-for="(answer, i) in taskDefinition.answers"
+        :key="i"
+      >
+        <legend>{{ answer.text }}</legend>
+        <div class="flex-parent-element">
+          <input
+            class="flex-child-element checkbox"
+            type="checkbox"
+            v-model="taskDefinition.answers[i].correct"
+          />
+          <input
+            class="flex-child-element textbox"
+            type="text"
+            v-model="taskDefinition.answers[i].text"
+          />
+          <img
+            class="flex-child-element removeAnswerButton"
+            :src="urlForIcon('trash')"
+            @click="removeAnswer(answer)"
+          />
+        </div>
+
         <fieldset class="collapsable collapsed">
-          <legend>{{ answer.text }}</legend>
-          <div class="flex-parent-element">
+          <legend>{{ $gettext('Hinweis und Feedback') }}</legend>
+          <label>
+            <span>{{ $gettext('Hinweis') }}</span>
             <input
-              class="flex-child-element, checkbox"
-              type="checkbox"
-              v-model="taskDefinition.answers[i].correct"
-            />
-            <input
-              class="flex-child-element, textbox"
+              class="textbox"
               type="text"
-              v-model="taskDefinition.answers[i].text"
+              v-model="taskDefinition.answers[i].strings.hint"
             />
-            <img
-              class="flex-child-element, removeAnswerButton"
-              :src="urlForIcon('trash')"
-              @click="removeAnswer(answer)"
+          </label>
+
+          <label>
+            <span>{{ $gettext('Feedback wenn ausgewählt') }}</span>
+            <input
+              class="textbox"
+              type="text"
+              v-model="taskDefinition.answers[i].strings.feedbackSelected"
             />
-          </div>
+          </label>
 
-          <fieldset class="collapsable collapsed">
-            <legend>{{ $gettext('Hinweis und Feedback') }}</legend>
-            <label>
-              <span>{{ $gettext('Hinweis') }}</span>
-              <input
-                class="textbox"
-                type="text"
-                v-model="taskDefinition.answers[i].strings.hint"
-              />
-            </label>
-
-            <label>
-              <span>{{ $gettext('Feedback wenn ausgewählt') }}</span>
-              <input
-                class="textbox"
-                type="text"
-                v-model="taskDefinition.answers[i].strings.feedbackSelected"
-              />
-            </label>
-
-            <label>
-              <span>{{ $gettext('Feedback wenn nicht ausgewählt') }}</span>
-              <input
-                class="textbox"
-                type="text"
-                v-model="taskDefinition.answers[i].strings.feedbackNotSelected"
-              />
-            </label>
-          </fieldset>
+          <label>
+            <span>{{ $gettext('Feedback wenn nicht ausgewählt') }}</span>
+            <input
+              class="textbox"
+              type="text"
+              v-model="taskDefinition.answers[i].strings.feedbackNotSelected"
+            />
+          </label>
         </fieldset>
-      </label>
+      </fieldset>
       <button type="button" class="button" @click="addAnswer">
         {{ $gettext('Neue Antwort') }}
       </button>
@@ -124,9 +127,11 @@ import {
   QuestionTaskDefinition,
 } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
+import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
 export default defineComponent({
   name: 'QuestionEditor',
+  components: { StudipWysiwyg },
   props: {},
   methods: {
     addAnswer(): void {
