@@ -23,13 +23,15 @@
           />
           {{ answer.text }}
         </label>
-        <label v-if="answer.hint">
-          <!--          {{ answer.hint }}-->
+        <label v-if="answer.strings.hint">
           &#8203;
-          <img
-            :src="urlForIcon('info-circle')"
-            alt="an icon just for testing purposes"
-          />
+          <span
+            class="tooltip tooltip-icon"
+            :data-tooltip="answer.strings.hint"
+            title=""
+            tabindex="0"
+          >
+          </span>
         </label>
       </div>
     </template>
@@ -193,6 +195,13 @@ export default defineComponent({
     },
     showSolutionsButton(): boolean {
       return this.task.showSolutionsAllowed && this.isSubmitted;
+    },
+    reachedMaxPoints(): boolean {
+      if (this.points === this.maxPoints) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
 });

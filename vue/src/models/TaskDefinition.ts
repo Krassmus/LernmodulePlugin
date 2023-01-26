@@ -62,7 +62,11 @@ export type QuestionTaskDefinition = {
 export type QuestionAnswer = {
   text: string;
   correct: boolean;
-  hint: string;
+  strings: {
+    hint: string;
+    feedbackSelected: string;
+    feedbackNotSelected: string;
+  };
 };
 
 export type DragTheWordsTaskDefinition = {
@@ -127,72 +131,73 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'Question':
       return {
         task_type: 'Question',
-        question: 'Nenne alle Planeten in unserem Sonnensystem.',
+        question:
+          'Welche dieser Himmelskörper sind Planeten in unserem Sonnensystem?',
         answers: [
           {
             text: 'Mond',
             correct: false,
-            hint: '',
+            strings: {
+              hint: '',
+              feedbackSelected: 'Dies ist ein Mond, kein Planet.',
+              feedbackNotSelected: 'Genau, der Mond ist ein Mond.',
+            },
           },
           {
             text: 'Merkur',
             correct: true,
-            hint: '',
+            strings: {
+              hint: '',
+              feedbackSelected: '',
+              feedbackNotSelected: '',
+            },
           },
           {
             text: 'Venus',
             correct: true,
-            hint: '',
-          },
-          {
-            text: 'Erde',
-            correct: true,
-            hint: '',
+            strings: {
+              hint: '',
+              feedbackSelected: '',
+              feedbackNotSelected: '',
+            },
           },
           {
             text: 'Mars',
             correct: true,
-            hint: '',
-          },
-          {
-            text: 'Io',
-            correct: false,
-            hint: '',
-          },
-          {
-            text: 'Jupiter',
-            correct: true,
-            hint: '',
-          },
-          {
-            text: 'Saturn',
-            correct: true,
-            hint: '',
-          },
-          {
-            text: 'Uranus',
-            correct: true,
-            hint: '',
-          },
-          {
-            text: 'Neptun',
-            correct: true,
-            hint: '',
+            strings: {
+              hint: '',
+              feedbackSelected: '',
+              feedbackNotSelected: '',
+            },
           },
           {
             text: 'Pluto',
             correct: false,
-            hint: 'Hat sich hier was geändert?',
+            strings: {
+              hint: 'Hat sich hier was geändert?',
+              feedbackSelected: '',
+              feedbackNotSelected: '',
+            },
           },
           {
             text: 'Titan',
             correct: false,
-            hint: '',
+            strings: {
+              hint: '',
+              feedbackSelected:
+                'Das ist leider nicht richtig. Der Titan ist ein Mond vom Saturn.',
+              feedbackNotSelected: 'Genau, der Titan ist ein Mond vom Saturn.',
+            },
           },
           {
             text: 'Sonne',
             correct: false,
-            hint: '',
+            strings: {
+              hint: '',
+              feedbackSelected:
+                'Das ist leider nicht richtig. Die Sonne ist ein Stern.',
+              feedbackNotSelected: 'Genau, die Sonne ist ein Stern.',
+            },
           },
         ],
         canAnswerMultiple: true,

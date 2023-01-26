@@ -8,31 +8,63 @@
         <input type="text" v-model="taskDefinition.question" />
       </label>
       <label v-for="(answer, i) in taskDefinition.answers" :key="i">
-        {{ $gettext('Antwort') }} {{ i + 1 }}
-        <div class="flex-parent-element">
-          <input
-            class="flex-child-element, checkbox"
-            type="checkbox"
-            v-model="taskDefinition.answers[i].correct"
-          />
-          <input
-            class="flex-child-element, textbox"
-            type="text"
-            v-model="taskDefinition.answers[i].text"
-          />
-          <img
-            class="flex-child-element, removeAnswerButton"
-            :src="urlForIcon('remove-circle')"
-            @click="removeAnswer(answer)"
-          />
-        </div>
+        <fieldset class="collapsable collapsed">
+          <legend>{{ answer.text }}</legend>
+          <div class="flex-parent-element">
+            <input
+              class="flex-child-element, checkbox"
+              type="checkbox"
+              v-model="taskDefinition.answers[i].correct"
+            />
+            <input
+              class="flex-child-element, textbox"
+              type="text"
+              v-model="taskDefinition.answers[i].text"
+            />
+            <img
+              class="flex-child-element, removeAnswerButton"
+              :src="urlForIcon('trash')"
+              @click="removeAnswer(answer)"
+            />
+          </div>
+
+          <fieldset class="collapsable collapsed">
+            <legend>{{ $gettext('Hinweis und Feedback') }}</legend>
+            <label>
+              <span>{{ $gettext('Hinweis') }}</span>
+              <input
+                class="textbox"
+                type="text"
+                v-model="taskDefinition.answers[i].strings.hint"
+              />
+            </label>
+
+            <label>
+              <span>{{ $gettext('Feedback wenn ausgewählt') }}</span>
+              <input
+                class="textbox"
+                type="text"
+                v-model="taskDefinition.answers[i].strings.feedbackSelected"
+              />
+            </label>
+
+            <label>
+              <span>{{ $gettext('Feedback wenn nicht ausgewählt') }}</span>
+              <input
+                class="textbox"
+                type="text"
+                v-model="taskDefinition.answers[i].strings.feedbackNotSelected"
+              />
+            </label>
+          </fieldset>
+        </fieldset>
       </label>
       <button type="button" class="button" @click="addAnswer">
         {{ $gettext('Neue Antwort') }}
       </button>
     </fieldset>
 
-    <fieldset class="collapsable">
+    <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
       <h1>{{ $gettext('Generell') }}</h1>
       <label>
@@ -101,7 +133,11 @@ export default defineComponent({
       this.taskDefinition.answers.push({
         text: this.$gettext('Neue Antwort'),
         correct: true,
-        hint: '',
+        strings: {
+          hint: '',
+          feedbackSelected: '',
+          feedbackNotSelected: '',
+        },
       });
     },
     removeAnswer(answerToRemove: QuestionAnswer): void {
