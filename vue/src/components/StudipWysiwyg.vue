@@ -1,6 +1,6 @@
 <template>
   <textarea
-    :value="value"
+    :value="modelValue"
     ref="studip_wysiwyg"
     class="studip-wysiwyg"
     @input="updateValue($event.target.value)"
@@ -14,7 +14,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'studip-wysiwyg',
   props: {
-    value: String,
+    modelValue: String,
   },
   data() {
     return {
@@ -40,13 +40,13 @@ export default defineComponent({
         //console.log('cke blur');
       });
       wysiwyg_editor.on('change', function () {
-        view.$emit('change', wysiwyg_editor.getData());
+        view.$emit('update:modelValue', wysiwyg_editor.getData());
       });
       return true;
     },
     updateValue(value: unknown) {
       if (this.fallbackActive) {
-        this.$emit('change', value);
+        this.$emit('update:modelValue', value);
       }
     },
   },

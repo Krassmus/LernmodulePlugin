@@ -169,8 +169,10 @@ export default defineComponent({
 .flex-parent-element {
   display: flex;
   width: 100%;
-  max-width: 48em;
+  max-width: 480em;
   align-items: center;
+  justify-content: flex-start;
+  padding-bottom: 1ex;
 }
 
 /*.flex-child-element {*/

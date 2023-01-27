@@ -1,5 +1,4 @@
 export {};
-
 // Extract a couple of useful types from @types/ckeditor4
 export type CKEditorInstance = InstanceType<typeof window.CKEDITOR.editor>;
 export type CKEditorConfig = typeof window.CKEDITOR.config;
