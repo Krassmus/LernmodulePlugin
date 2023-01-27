@@ -5,9 +5,9 @@
     <!--selectedAnswers: {{ selectedAnswers }}-->
     <!--selectedAnswer: {{ selectedAnswer }}-->
     <!--    </pre>-->
-    <div class="h5pQuestion">
-      {{ this.task.question }}
-    </div>
+    <div class="h5pQuestion" v-html="this.task.question" />
+    <!--      {{ this.task.question }}-->
+    <!--    </div>-->
     <template v-if="task.canAnswerMultiple">
       <div
         v-for="(answer, i) in answers"
