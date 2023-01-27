@@ -1,4 +1,10 @@
 <template>
+  <div
+    ref="renderedHTMLDiv"
+    v-html="task.template"
+    class="hiddenRenderedHTML"
+  ></div>
+
   <div class="h5pModule">
     <div ref="wrapperElement">
       <!--      <img

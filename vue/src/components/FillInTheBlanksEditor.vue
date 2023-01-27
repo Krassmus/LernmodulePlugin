@@ -9,11 +9,7 @@
         {{ $gettext('Lücke hinzufügen') }}
       </button>
       <div>
-        <textarea
-          v-model="taskDefinition.template"
-          ref="theTextArea"
-          class="h5pFillInTheBlanksEditor"
-        />
+        <studip-wysiwyg v-model="taskDefinition.template"></studip-wysiwyg>
       </div>
     </fieldset>
     <fieldset class="collapsable">
@@ -169,9 +165,11 @@
 import { defineComponent } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
+import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
 export default defineComponent({
   name: 'FillInTheBlanksEditor',
+  components: { StudipWysiwyg },
   computed: {
     taskDefinition: () =>
       taskEditorStore.taskDefinition as FillInTheBlanksDefinition,

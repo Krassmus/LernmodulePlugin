@@ -10,6 +10,7 @@
 <script lang="ts">
 // need v-model to provide and get content -> <studip-wysiwyg v-model="content" />
 import { defineComponent } from 'vue';
+import { getMyEditorConfig } from '@/ckeditor4';
 
 export default defineComponent({
   name: 'studip-wysiwyg',
@@ -33,7 +34,10 @@ export default defineComponent({
         return false;
       }
       let view = this;
-      window.STUDIP.wysiwyg.replace(view.$refs.studip_wysiwyg as Element);
+      window.STUDIP.wysiwyg.replace(
+        view.$refs.studip_wysiwyg as Element,
+        getMyEditorConfig()
+      );
       let wysiwyg_editor =
         window.CKEDITOR.instances[(view.$refs.studip_wysiwyg as Element).id];
       wysiwyg_editor.on('blur', function () {

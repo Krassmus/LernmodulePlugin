@@ -1,14 +1,17 @@
+import { CKEditorConfig } from '@/ckeditor4';
+
 export {};
-// Extract a couple of useful types from @types/ckeditor4
-export type CKEditorInstance = InstanceType<typeof window.CKEDITOR.editor>;
-export type CKEditorConfig = typeof window.CKEDITOR.config;
 
 // Declarations for variables passed from php to the client
 declare global {
   interface Window {
     STUDIP: {
       wysiwyg: {
-        replace: (element: Element) => void;
+        replace: (element: Element, config?: CKEditorConfig) => void;
+        // e is a <textarea> wrapped with jQuery's $() function
+        // TODO Type this function
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getDefaultConfig: (e: any) => CKEditorConfig;
       };
       wysiwyg_enabled: boolean;
       INSTALLED_LANGUAGES: { [name: string]: InstalledLanguage };
@@ -29,6 +32,8 @@ declare global {
         updateAttemptRoute: string;
       };
     };
+    // TODO use correct types for jQuery
+    $: any;
   }
 }
 
