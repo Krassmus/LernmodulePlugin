@@ -9,7 +9,10 @@
         {{ $gettext('Lücke hinzufügen') }}
       </button>
       <div>
-        <studip-wysiwyg v-model="taskDefinition.template"></studip-wysiwyg>
+        <studip-wysiwyg
+          v-model="taskDefinition.template"
+          id="ckeditorElement"
+        ></studip-wysiwyg>
       </div>
     </fieldset>
     <fieldset class="collapsable">
@@ -166,6 +169,7 @@ import { defineComponent } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
+import { CKEditorInstance } from '@/ckeditor4';
 
 export default defineComponent({
   name: 'FillInTheBlanksEditor',
@@ -178,12 +182,15 @@ export default defineComponent({
   },
   methods: {
     addBlank() {
-      const textArea = this.$refs.theTextArea as HTMLTextAreaElement;
+      // eslint-disable-next-line no-undef
+      const editor = CKEDITOR.instances['ckeditorElement'];
 
-      const selectedText = this.taskDefinition.template.slice(
-        textArea.selectionStart,
-        textArea.selectionEnd
-      );
+      const template = this.taskDefinition.template;
+
+      const selectedText = editor.getSelection().getSelectedText();
+
+      const startIndex = template.indexOf(selectedText);
+      const endIndex = startIndex + selectedText.length;
 
       const blank = selectedText.replace(
         selectedText.trim(),
@@ -191,9 +198,9 @@ export default defineComponent({
       );
 
       const newText =
-        this.taskDefinition.template.substring(0, textArea.selectionStart) +
+        template.substring(0, startIndex) +
         blank +
-        this.taskDefinition.template.substring(textArea.selectionEnd);
+        template.substring(endIndex);
 
       taskEditorStore.performEdit({
         newTaskDefinition: {
@@ -202,6 +209,8 @@ export default defineComponent({
         },
         undoBatch: { type: 'editFillInTheBlanksTemplate' },
       });
+
+      editor.setData(this.taskDefinition.template);
     },
   },
 });

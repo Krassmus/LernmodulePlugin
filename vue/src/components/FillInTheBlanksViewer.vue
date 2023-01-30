@@ -14,9 +14,7 @@
       <div class="myDivWithBackground">My div with a background image</div>-->
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <!--        <span v-if="element.type === 'staticText'" v-html="element.text" />-->
-        <span v-if="element.type === 'staticText'">
-          {{ element.text }}
-        </span>
+        <span v-if="element.type === 'staticText'" v-html="element.text" />
         <span v-else-if="element.type === 'blank'">
           <input
             type="text"
