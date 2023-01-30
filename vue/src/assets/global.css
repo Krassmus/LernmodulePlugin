@@ -1,0 +1,7 @@
+/* Replace the border between toolbar and WYSIWYG textarea that is missing
+when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
+*/
+.cke_top {
+    border-bottom: 2px solid #c5c7ca !important;
+}
+

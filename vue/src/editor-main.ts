@@ -3,6 +3,7 @@ import LernmoduleEditor from '@/components/LernmoduleEditor.vue';
 import { taskEditorStore, store } from '@/store';
 import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
+import './assets/global.css';
 
 taskEditorStore.initialize();
 const app = createApp(LernmoduleEditor);

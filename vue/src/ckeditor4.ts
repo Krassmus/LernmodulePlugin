@@ -23,5 +23,10 @@ export function getDefaultEditorConfig(): CKEditorConfig {
 export function getMyEditorConfig(): CKEditorConfig {
   const config = getDefaultEditorConfig();
   config.toolbarStartupExpanded = true;
+
+  // The 'studip-floatbar' plugin causes the CKEditor to grow very large
+  // when you scroll past it in the form editor, so we'll disable it. - Ann
+  config.extraPlugins = config.extraPlugins?.replace(',studip-floatbar', '');
+
   return config;
 }
