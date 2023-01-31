@@ -26,7 +26,10 @@
             @keyup.enter="onInputBlurOrEnter"
             @input="onInput"
           />
-          <span class="h5pHint">{{ element.hint }}</span>
+          <label v-if="element.hint">
+            <span class="tooltip tooltip-icon" :data-tooltip="element.hint">
+            </span>
+          </label>
           <span
             v-if="showSolutions && !submittedAnswerIsCorrect(element)"
             class="h5pCorrectAnswer"
