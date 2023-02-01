@@ -1,44 +1,29 @@
 <template>
-  <div
-    ref="renderedHTMLDiv"
-    v-html="task.template"
-    class="hiddenRenderedHTML"
-  ></div>
-
-  <div class="h5pModule">
-    <div ref="wrapperElement">
-      <!--      <img
-        :src="urlForIcon('group4')"
-        alt="an icon just for testing purposes"
-      />
-      <div class="myDivWithBackground">My div with a background image</div>-->
-      <template v-for="element in parsedTemplate" :key="element.uuid">
-        <!--        <span v-if="element.type === 'staticText'" v-html="element.text" />-->
-        <span v-if="element.type === 'staticText'" v-html="element.text" />
-        <span v-else-if="element.type === 'blank'">
-          <input
-            type="text"
-            v-model="userInputs[element.uuid]"
-            :readonly="submittedAnswerIsCorrect(element) || showSolutions"
-            :disabled="submittedAnswerIsCorrect(element) || showSolutions"
-            :class="classForInput(element)"
-            @blur="onInputBlurOrEnter"
-            @keyup.enter="onInputBlurOrEnter"
-            @input="onInput"
-          />
-          <label v-if="element.hint">
-            <span class="tooltip tooltip-icon" :data-tooltip="element.hint">
-            </span>
-          </label>
-          <span
-            v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-            class="h5pCorrectAnswer"
-          >
-            {{ element.solutions[0] }}
-          </span>
+  <div class="h5pModule" ref="wrapperElement">
+    <template v-for="element in parsedTemplate" :key="element.uuid">
+      <span v-if="element.type === 'staticText'" v-html="element.text" />
+      <span v-else-if="element.type === 'blank'">
+        <input
+          type="text"
+          v-model="userInputs[element.uuid]"
+          :readonly="submittedAnswerIsCorrect(element) || showSolutions"
+          :disabled="submittedAnswerIsCorrect(element) || showSolutions"
+          :class="classForInput(element)"
+          @blur="onInputBlurOrEnter"
+          @keyup.enter="onInputBlurOrEnter"
+          @input="onInput"
+        />
+        <label v-if="element.hint">
+          <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
+        </label>
+        <span
+          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+          class="h5pCorrectAnswer"
+        >
+          {{ element.solutions[0] }}
         </span>
-      </template>
-    </div>
+      </span>
+    </template>
 
     <div>
       <span v-if="showResults" class="h5pAnswerFeedback">
@@ -99,6 +84,7 @@ import { defineComponent, PropType } from 'vue';
 import { FillInTheBlanksDefinition } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from 'lodash';
+import { $gettext } from '../language/gettext';
 
 type FillInTheBlanksElement = Blank | StaticText;
 type Blank = {
@@ -131,6 +117,7 @@ export default defineComponent({
     };
   },
   methods: {
+    $gettext,
     submittedAnswerIsCorrect(element: FillInTheBlanksElement): boolean {
       const blank = element as Blank;
 
@@ -456,13 +443,6 @@ export default defineComponent({
   font-size: 1em;
   display: inline-block;
   margin-top: 1em;
-}
-
-.h5pHint {
-  font-family: sans-serif;
-  font-weight: 400;
-  color: #1a73d9;
-  font-size: 0.75em;
 }
 
 .myDivWithBackground {
