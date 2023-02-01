@@ -195,17 +195,6 @@ export default defineComponent({
       );
 
       const template = this.taskDefinition.template;
-
-      const selectedText = editor.getSelection().getSelectedText();
-
-      const startIndex = template.indexOf(selectedText);
-      const endIndex = startIndex + selectedText.length;
-
-      const blank = selectedText.replace(
-        selectedText.trim(),
-        '*' + selectedText.trim() + '*'
-      );
-
       const newText =
         template.substring(0, startIndex) +
         blank +
