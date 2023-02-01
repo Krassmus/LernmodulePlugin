@@ -182,8 +182,17 @@ export default defineComponent({
   },
   methods: {
     addBlank() {
-      // eslint-disable-next-line no-undef
-      const editor = CKEDITOR.instances['ckeditorElement'];
+      const editor = window.CKEDITOR.instances['ckeditorElement'];
+
+      const selectedText = editor.getSelection().getSelectedText();
+
+      const startIndex = editor.getSelection().getRanges()[0].startOffset;
+      const endIndex = startIndex + selectedText.length;
+
+      const blank = selectedText.replace(
+        selectedText.trim(),
+        '*' + selectedText.trim() + '*'
+      );
 
       const template = this.taskDefinition.template;
 
