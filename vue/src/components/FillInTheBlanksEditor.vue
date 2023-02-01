@@ -218,8 +218,6 @@ export default defineComponent({
         },
         undoBatch: { type: 'editFillInTheBlanksTemplate' },
       });
-
-      editor.setData(this.taskDefinition.template);
     },
   },
 });

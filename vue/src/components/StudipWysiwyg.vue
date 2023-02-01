@@ -54,6 +54,14 @@ export default defineComponent({
       }
     },
   },
+  watch: {
+    // Diese Funktion wird jedes mal aufgerufen, wenn sich der Wert von modelValue ändert.
+    modelValue: function (newValue, oldValue) {
+      const wysiwyg_editor =
+        window.CKEDITOR.instances[(this.$refs.studip_wysiwyg as Element).id];
+      wysiwyg_editor.setData(newValue);
+    },
+  },
 });
 </script>
 
