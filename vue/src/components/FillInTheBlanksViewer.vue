@@ -240,13 +240,13 @@ export default defineComponent({
         tmp.remove();
         if (width <= minPx) {
           // Apply min width
-          input.style.width = (minPx + static_min_pad).toString();
+          input.style.width = (minPx + static_min_pad).toString() + 'px';
         } else if (width + rightPadPx >= parentWidth) {
           // Apply max width of parent
-          input.style.width = (parentWidth - rightPadPx).toString();
+          input.style.width = (parentWidth - rightPadPx).toString() + 'px';
         } else {
           // Apply width that wraps input
-          input.style.width = (width + static_min_pad).toString();
+          input.style.width = (width + static_min_pad).toString() + 'px';
         }
       }, 1);
     },
