@@ -147,24 +147,17 @@ export default defineComponent({
 
       const selectedText = editor.getSelection().getSelectedText();
 
-      const startIndex = editor.getSelection().getRanges()[0].startOffset;
-      const endIndex = startIndex + selectedText.length;
-
       const blank = selectedText.replace(
         selectedText.trim(),
         '*' + selectedText.trim() + '*'
       );
 
-      const template = this.taskDefinition.template;
-      const newText =
-        template.substring(0, startIndex) +
-        blank +
-        template.substring(endIndex);
+      editor.insertText(blank);
 
       taskEditorStore.performEdit({
         newTaskDefinition: {
           ...this.taskDefinition,
-          template: newText,
+          template: editor.getData(),
         },
         undoBatch: { type: 'editFillInTheBlanksTemplate' },
       });
