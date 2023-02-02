@@ -2,7 +2,7 @@
   <div class="h5pModule" ref="wrapperElement">
     <template v-for="element in parsedTemplate" :key="element.uuid">
       <span v-if="element.type === 'staticText'" v-html="element.text" />
-      <span v-else-if="element.type === 'blank'">
+      <template v-else-if="element.type === 'blank'">
         <input
           type="text"
           v-model="userInputs[element.uuid]"
@@ -22,7 +22,7 @@
         >
           {{ element.solutions[0] }}
         </span>
-      </span>
+      </template>
     </template>
 
     <div>
@@ -372,9 +372,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
+input[type='text'] {
+  font-size: 16px;
+  line-height: 1.75em;
+  font-family: Lato, sans-serif;
+}
+
 .h5pModule {
   border: 2px solid #eee;
   padding: 0.5em 0.5em 0.5em 0.5em;
+  font-size: 16px;
+  line-height: 1.75em;
+  font-family: Lato, sans-serif;
 }
 
 .h5pBlankCorrect {
@@ -391,8 +400,6 @@ export default defineComponent({
 }
 
 .h5pButton {
-  font-size: 1em;
-  line-height: 1.2;
   margin: 1em 0.5em 1em;
   padding: 0.5em 1.25em;
   border-radius: 2em;
@@ -409,13 +416,10 @@ export default defineComponent({
 }
 
 .h5pBlank {
-  font-family: sans-serif;
-  font-size: 1em;
   border-radius: 0.25em;
   border: 1px solid #a0a0a0;
   /* top, right, bottom, left */
   padding: 0.1875em 1em 0.1875em 0.5em;
-  margin: 0 0 0.2em 0.1em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
