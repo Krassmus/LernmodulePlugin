@@ -11,13 +11,13 @@ import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 
 // TODO Use zod or another parsing library to define these datatypes
 export type TaskDefinition =
-  | FillInTheBlanksDefinition
+  | FillInTheBlanksTaskDefinition
   | FlashCardTaskDefinition
   | QuestionTaskDefinition
   | DragTheWordsTaskDefinition
   | MarkTheWordsTaskDefinition;
 
-export type FillInTheBlanksDefinition = {
+export type FillInTheBlanksTaskDefinition = {
   task_type: 'FillInTheBlanks';
   template: string;
   retryAllowed: boolean;
