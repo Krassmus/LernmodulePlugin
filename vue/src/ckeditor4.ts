@@ -27,6 +27,9 @@ export function getMyEditorConfig(): CKEditorConfig {
   // The 'studip-floatbar' plugin causes the CKEditor to grow very large
   // when you scroll past it in the form editor, so we'll disable it. - Ann
   config.extraPlugins = config.extraPlugins?.replace(',studip-floatbar', '');
+  // Fix errors from stud.ip's built-in event handlers which assume that the
+  // shared spaces plugin is configured
+  config.sharedSpaces = {};
 
   return config;
 }
