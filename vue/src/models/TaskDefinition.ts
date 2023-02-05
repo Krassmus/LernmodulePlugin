@@ -32,6 +32,12 @@ export type FillInTheBlanksTaskDefinition = {
     fillInAllBlanksMessage: string;
     resultMessage: string;
   };
+  feedback: Feedback[];
+};
+
+export type Feedback = {
+  percentage: number;
+  message: string;
 };
 
 export type FlashCardTaskDefinition = {
@@ -117,6 +123,12 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
           resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
         },
+        feedback: [
+          { percentage: 25, message: 'Naja' },
+          { percentage: 50, message: 'Gut' },
+          { percentage: 75, message: 'Sehr gut' },
+          { percentage: 100, message: 'Perfekt!' },
+        ],
       };
     case 'FlashCards':
       return {

@@ -23,7 +23,7 @@
           </option>
         </select>
       </label>
-      <label>
+      <label :class="taskDefinition.autoCorrect ? 'setting-disabled' : ''">
         {{ $gettext('Text im Button:') }}
         <input
           type="text"
@@ -43,6 +43,36 @@
           style="width: 100%"
         />
       </label>
+
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Feedback') }}</legend>
+        <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
+          <div class="feedback">
+            <label>
+              {{ $gettext('Prozent') }}
+              <input
+                type="number"
+                v-model="taskDefinition.feedback[i].percentage"
+              />
+            </label>
+
+            <label>
+              {{ $gettext('Nachricht') }}
+              <input type="text" v-model="taskDefinition.feedback[i].message" />
+            </label>
+
+            <img
+              :src="urlForIcon('trash')"
+              alt="Button with trash icon to remove a feedback range"
+              @click="removeFeedback(feedback)"
+            />
+          </div>
+        </template>
+        <button type="button" class="button" @click="addFeedback">
+          {{ $gettext('Neuer Bereich') }}
+        </button>
+      </fieldset>
+
       <label>
         <input
           type="checkbox"
@@ -126,7 +156,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { FillInTheBlanksTaskDefinition } from '@/models/TaskDefinition';
+import {
+  Feedback,
+  FillInTheBlanksTaskDefinition,
+} from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import { $gettext } from '@/language/gettext';
@@ -139,6 +172,12 @@ export default defineComponent({
       taskEditorStore.taskDefinition as FillInTheBlanksTaskDefinition,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
+
+    feedbackSortedByScore(): Feedback[] {
+      return this.taskDefinition.feedback
+        .map((value) => value)
+        .sort((a, b) => b.percentage - a.percentage);
+    },
   },
   methods: {
     $gettext,
@@ -162,8 +201,31 @@ export default defineComponent({
         undoBatch: { type: 'editFillInTheBlanksTemplate' },
       });
     },
+    addFeedback(): void {
+      this.taskDefinition.feedback.push({
+        percentage: this.feedbackSortedByScore[0]?.percentage,
+        message: 'Feedback',
+      });
+    },
+    removeFeedback(feedbackToRemove: Feedback): void {
+      this.taskDefinition.feedback = this.taskDefinition.feedback.filter(
+        (feedback) => feedback !== feedbackToRemove
+      );
+    },
+    urlForIcon(iconName: string) {
+      return (
+        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
+      );
+    },
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.feedback {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  //border: 1px solid black;
+}
+</style>

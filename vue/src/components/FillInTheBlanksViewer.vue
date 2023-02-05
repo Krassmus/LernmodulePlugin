@@ -83,8 +83,8 @@
 import { defineComponent, PropType } from 'vue';
 import { FillInTheBlanksTaskDefinition } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEqual } from 'lodash';
-import { $gettext } from '../language/gettext';
+import { isEqual, round } from 'lodash';
+import { $gettext } from '@/language/gettext';
 
 type FillInTheBlanksElement = Blank | StaticText;
 type Blank = {
@@ -362,6 +362,24 @@ export default defineComponent({
         this.blanks.length.toString()
       );
 
+      const percentageCorrect = round(
+        (this.correctAnswers / this.blanks.length) * 100
+      );
+
+      resultMessage = resultMessage.concat(
+        ' ' + percentageCorrect.toString() + '% korrekt'
+      );
+
+      const sortedFeedback = this.task.feedback
+        .map((value) => value)
+        .sort((a, b) => b.percentage - a.percentage);
+
+      for (const feedback of sortedFeedback) {
+        if (percentageCorrect > feedback.percentage) {
+          resultMessage = resultMessage.concat(feedback.message);
+          break;
+        }
+      }
       return resultMessage;
     },
     maxPoints(): number {

@@ -2,10 +2,13 @@
 when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 */
 .cke_top {
-    border-bottom: 2px solid #c5c7ca !important;
+  border-bottom: 2px solid #c5c7ca !important;
 }
 
 .setting-disabled {
-    opacity: 50%;
+  opacity: 50%;
 }
 
+/** {*/
+/*  border: 1px solid #000000;*/
+/*}*/
