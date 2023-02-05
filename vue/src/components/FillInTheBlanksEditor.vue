@@ -9,20 +9,25 @@
       </button>
       <studip-wysiwyg v-model="taskDefinition.template" id="ckeditorElement" />
     </fieldset>
-    <fieldset class="collapsable collapsed">
+
+    <fieldset class="collapsable">
       <legend>{{ $gettext('Einstellungen') }}</legend>
-      <h1>{{ $gettext('Korrektur') }}</h1>
+
       <label>
-        {{ $gettext('Korrigiert wird') }}
-        <select v-model="taskDefinition.autoCorrect">
-          <option :value="false">
-            {{ $gettext('manuell per Button') }}
-          </option>
-          <option :value="true">
-            {{ $gettext('automatisch nach Eingabe') }}
-          </option>
-        </select>
+        <input type="checkbox" v-model="taskDefinition.caseSensitive" />
+        {{ $gettext('Groß- und Kleinschreibung beachten') }}
       </label>
+
+      <label>
+        <input
+          type="checkbox"
+          v-model="taskDefinition.autoCorrect"
+          :true-value="false"
+          :false-value="true"
+        />
+        {{ $gettext('Korrektur per Button') }}
+      </label>
+
       <label :class="taskDefinition.autoCorrect ? 'setting-disabled' : ''">
         {{ $gettext('Text im Button:') }}
         <input
@@ -31,58 +36,7 @@
           v-model="taskDefinition.strings.checkButton"
         />
       </label>
-      <label>
-        {{
-          $gettext(
-            'Ergebnismitteilung (mögliche Variablen :correct und :total):'
-          )
-        }}
-        <input
-          type="text"
-          v-model="taskDefinition.strings.resultMessage"
-          style="width: 100%"
-        />
-      </label>
 
-      <fieldset class="collapsable collapsed">
-        <legend>{{ $gettext('Feedback') }}</legend>
-        <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
-          <div class="feedback">
-            <label>
-              {{ $gettext('Prozent') }}
-              <input
-                type="number"
-                v-model="taskDefinition.feedback[i].percentage"
-              />
-            </label>
-
-            <label>
-              {{ $gettext('Nachricht') }}
-              <input type="text" v-model="taskDefinition.feedback[i].message" />
-            </label>
-
-            <img
-              :src="urlForIcon('trash')"
-              alt="Button with trash icon to remove a feedback range"
-              @click="removeFeedback(feedback)"
-            />
-          </div>
-        </template>
-        <button type="button" class="button" @click="addFeedback">
-          {{ $gettext('Neuer Bereich') }}
-        </button>
-      </fieldset>
-
-      <label>
-        <input
-          type="checkbox"
-          id="caseSensitiveCheckbox"
-          v-model="taskDefinition.caseSensitive"
-        />
-        {{ $gettext('Groß- und Kleinschreibung beachten') }}
-      </label>
-
-      <h1>Versuche</h1>
       <label>
         <input type="checkbox" v-model="taskDefinition.retryAllowed" />
         {{ $gettext('Mehrere Versuche erlauben') }}
@@ -97,7 +51,6 @@
         />
       </label>
 
-      <h1>{{ $gettext('Lösungen') }}</h1>
       <label>
         <input
           type="checkbox"
@@ -150,6 +103,61 @@
           style="width: 100%"
         />
       </label>
+    </fieldset>
+    <fieldset class="collapsable collapsed">
+      <legend>{{ $gettext('Feedback') }}</legend>
+      <label>
+        {{
+          $gettext(
+            'Ergebnismitteilung (mögliche Variablen :correct und :total):'
+          )
+        }}
+        <input
+          type="text"
+          v-model="taskDefinition.strings.resultMessage"
+          style="width: 100%"
+        />
+      </label>
+      <label>{{
+        $gettext('Benutzerdefiniertes Feedback für beliebige Punktebereiche')
+      }}</label>
+      <div class="feedbackContainer">
+        <div class="feedbackPercentagesChild">
+          <label>
+            {{ $gettext('Prozent') }}
+          </label>
+          <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
+            <input
+              type="number"
+              v-model="taskDefinition.feedback[i].percentage"
+            />
+          </template>
+        </div>
+
+        <div class="feedbackMessagesChild">
+          <label>
+            {{ $gettext('Nachricht') }}
+          </label>
+          <div
+            class="feedbackMessagesChildSubdivision"
+            v-for="(feedback, i) in taskDefinition.feedback"
+            :key="i"
+          >
+            <input type="text" v-model="taskDefinition.feedback[i].message" />
+            <img
+              :src="urlForIcon('trash')"
+              alt="Button with trash icon to remove a feedback range"
+              width="16"
+              height="16"
+              @click="removeFeedback(feedback)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="button" @click="addFeedback">
+        {{ $gettext('Neuer Bereich') }}
+      </button>
     </fieldset>
   </form>
 </template>
@@ -222,10 +230,28 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.feedback {
+.feedbackContainer {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  max-width: 48em;
   //border: 1px solid black;
+}
+
+.feedbackPercentagesChild {
+  flex: 0 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.feedbackMessagesChild {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.feedbackMessagesChildSubdivision {
+  display: flex;
+  align-items: center;
 }
 </style>
