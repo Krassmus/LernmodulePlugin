@@ -135,6 +135,8 @@
           <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
             <input
               type="number"
+              min="0"
+              max="100"
               v-model="taskDefinition.feedback[i].percentage"
             />
           </template>
