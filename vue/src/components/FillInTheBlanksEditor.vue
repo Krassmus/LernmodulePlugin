@@ -4,9 +4,15 @@
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Lückentext') }}</legend>
-      <button @click="addBlank" class="button" type="button">
-        {{ $gettext('Lücke hinzufügen') }}
-      </button>
+      <div class="h5pEditorTopPanel">
+        <button @click="addBlank" class="button" type="button">
+          {{ $gettext('Lücke hinzufügen') }}
+        </button>
+        <div
+          class="h5pInstructions tooltip tooltip-icon"
+          :data-tooltip="instructions"
+        />
+      </div>
       <studip-wysiwyg v-model="taskDefinition.template" id="ckeditorElement" />
     </fieldset>
 
@@ -186,6 +192,13 @@ export default defineComponent({
         .map((value) => value)
         .sort((a, b) => b.percentage - a.percentage);
     },
+    instructions(): string {
+      return $gettext(
+        'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den "Lücke hinzufügen"–Button.' +
+          ' Sie können alternative Antworten mit einem Schrägstrich (/) hinzufügen.' +
+          ' Außerdem können Sie einen Tooltip mit einem Doppelpunkt (:) hinzufügen.'
+      );
+    },
   },
   methods: {
     $gettext,
@@ -230,6 +243,15 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.h5pEditorTopPanel {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.h5pInstructions {
+}
+
 .feedbackContainer {
   display: flex;
   justify-content: flex-start;
