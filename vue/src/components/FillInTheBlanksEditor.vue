@@ -27,13 +27,15 @@
       </label>
 
       <label>
-        <input
-          type="checkbox"
-          v-model="taskDefinition.autoCorrect"
-          :true-value="false"
-          :false-value="true"
-        />
-        {{ $gettext('Korrektur per Button') }}
+        {{ $gettext('Korrigiert wird') }}
+        <select v-model="taskDefinition.autoCorrect">
+          <option :value="false">
+            {{ $gettext('manuell per Button') }}
+          </option>
+          <option :value="true">
+            {{ $gettext('automatisch nach Eingabe') }}
+          </option>
+        </select>
       </label>
 
       <label :class="taskDefinition.autoCorrect ? 'setting-disabled' : ''">
