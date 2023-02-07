@@ -5,13 +5,15 @@
     <fieldset>
       <legend>{{ $gettext('Lückentext') }}</legend>
       <div class="h5pEditorTopPanel">
-        <button @click="addBlank" class="button" type="button">
+        <button
+          @click="addBlank"
+          class="button"
+          type="button"
+          style="margin-right: 0.1em"
+        >
           {{ $gettext('Lücke hinzufügen') }}
         </button>
-        <div
-          class="h5pInstructions tooltip tooltip-icon"
-          :data-tooltip="instructions"
-        />
+        <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
       <studip-wysiwyg v-model="taskDefinition.template" id="ckeditorElement" />
     </fieldset>
@@ -251,15 +253,11 @@ export default defineComponent({
   align-items: center;
 }
 
-.h5pInstructions {
-}
-
 .feedbackContainer {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   max-width: 48em;
-  //border: 1px solid black;
 }
 
 .feedbackPercentagesChild {
