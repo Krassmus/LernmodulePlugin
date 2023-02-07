@@ -18,51 +18,59 @@
         </label>
         <span
           v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-          class="h5pCorrectAnswer"
+          class="h5pSolution"
         >
           {{ element.solutions[0] }}
         </span>
       </template>
     </template>
 
-    <div>
-      <span v-if="showResults" class="h5pAnswerFeedback">
-        <label for="score" style="display: block; padding-top: 1em"
-          >{{ this.resultMessage }}
-        </label>
-        <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
-      </span>
+    <div class="h5pFeedbackContainer">
+      <div class="h5pFeedbackContainerTop">
+        <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
+          {{
+            this.task.strings.fillInAllBlanksMessage
+              ? this.task.strings.fillInAllBlanksMessage
+              : $gettext(
+                  'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+                )
+          }}
+        </div>
 
-      <span v-if="showFillInAllTheBlanksMessage" class="h5pAnswerFeedback">
-        {{
-          this.task.strings.fillInAllBlanksMessage
-            ? this.task.strings.fillInAllBlanksMessage
-            : $gettext(
-                'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
-              )
-        }}
-      </span>
-
-      <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-        {{ this.task.strings.checkButton }}
-      </button>
-
-      <div v-if="showExtraButtons">
-        <button
-          v-if="!showSolutions && this.task.showSolutionsAllowed"
-          @click="onClickShowSolution"
-          class="h5pButton"
-        >
-          {{ this.task.strings.solutionsButton }}
+        <div v-if="showResults && feedbackMessage" class="h5pFeedbackText">
+          {{ this.feedbackMessage }}
+        </div>
+      </div>
+      <div class="h5pFeedbackContainerCenter">
+        <div v-if="showResults">
+          <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
+          <label for="score" class="h5pFeedbackText" style="margin-left: 0.5em">
+            {{ this.resultMessage }}
+          </label>
+        </div>
+      </div>
+      <div class="h5pFeedbackContainerBottom">
+        <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
+          {{ this.task.strings.checkButton }}
         </button>
 
-        <button
-          v-if="this.task.retryAllowed"
-          @click="onClickTryAgain"
-          class="h5pButton"
-        >
-          {{ this.task.strings.retryButton }}
-        </button>
+        <div class="h5pFeedbackResultAndButtons" v-if="showExtraButtons">
+          <button
+            v-if="!showSolutions && this.task.showSolutionsAllowed"
+            @click="onClickShowSolution"
+            class="h5pButton"
+          >
+            {{ this.task.strings.solutionsButton }}
+          </button>
+
+          <button
+            v-if="this.task.retryAllowed"
+            @click="onClickTryAgain"
+            class="h5pButton"
+          >
+            {{ this.task.strings.retryButton }}
+          </button>
+        </div>
       </div>
     </div>
 
@@ -81,7 +89,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { FillInTheBlanksTaskDefinition } from '@/models/TaskDefinition';
+import {
+  Feedback,
+  FillInTheBlanksTaskDefinition,
+} from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual, round } from 'lodash';
 import { $gettext } from '@/language/gettext';
@@ -332,7 +343,8 @@ export default defineComponent({
       return (
         !(this.submittedAnswers === null) &&
         !this.showFillInAllTheBlanksMessage &&
-        (!this.task.autoCorrect || this.allBlanksAreFilled)
+        (!this.task.autoCorrect || this.allBlanksAreFilled) &&
+        !this.inputHasChanged
       );
     },
     blanksFilled(): number {
@@ -351,6 +363,19 @@ export default defineComponent({
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
     },
+    feedbackMessage(): string | undefined {
+      const percentageCorrect = round(
+        (this.correctAnswers / this.blanks.length) * 100
+      );
+
+      for (const feedback of this.feedbackSortedByScore) {
+        if (percentageCorrect >= feedback.percentage) {
+          return feedback.message;
+        }
+      }
+
+      return undefined;
+    },
     resultMessage(): string {
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
@@ -362,25 +387,12 @@ export default defineComponent({
         this.blanks.length.toString()
       );
 
-      const percentageCorrect = round(
-        (this.correctAnswers / this.blanks.length) * 100
-      );
-
-      resultMessage = resultMessage.concat(
-        ' ' + percentageCorrect.toString() + '% korrekt'
-      );
-
-      const sortedFeedback = this.task.feedback
+      return resultMessage;
+    },
+    feedbackSortedByScore(): Feedback[] {
+      return this.task.feedback
         .map((value) => value)
         .sort((a, b) => b.percentage - a.percentage);
-
-      for (const feedback of sortedFeedback) {
-        if (percentageCorrect > feedback.percentage) {
-          resultMessage = resultMessage.concat(feedback.message);
-          break;
-        }
-      }
-      return resultMessage;
     },
     maxPoints(): number {
       return this.blanks.length;
@@ -418,8 +430,10 @@ input[type='text'] {
 }
 
 .h5pButton {
-  margin: 1em 0.5em 1em;
-  padding: 0.5em 1.25em;
+  /* top, right, bottom, left */
+  margin: 1em 0.5em 1em 0em;
+  /* vertical, horizontal */
+  padding: 0.25em 1.25em;
   border-radius: 2em;
   background: #1a73d9;
   color: #fff;
@@ -437,18 +451,52 @@ input[type='text'] {
   border-radius: 0.25em;
   border: 1px solid #a0a0a0;
   /* top, right, bottom, left */
-  padding: 0.1875em 1em 0.1875em 0.5em;
+  padding: 0.1875em 0em 0.1875em 0.5em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  width: 6em;
+  width: 104px;
 }
 
 .h5pBlank.autocorrect:focus {
   /*  Irgendwas damit es nicht rot oder grün gehighlightet wird, während noch drin getippt wird */
 }
 
-.h5pCorrectAnswer {
+.h5pFeedbackContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  margin-top: 1em;
+}
+
+.h5pFeedbackContainerTop {
+}
+
+.h5pFeedbackContainerCenter {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.h5pFeedbackContainerBottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+meter {
+  //display: block;
+  margin: 0 auto;
+  width: 200px;
+}
+
+.h5pSolution {
   color: #255c41;
   font-weight: bold;
   border: 1px #255c41 dashed;
@@ -458,13 +506,11 @@ input[type='text'] {
   margin-left: 0.5em;
 }
 
-.h5pAnswerFeedback {
+.h5pFeedbackText {
   font-family: sans-serif;
   font-weight: 700;
   color: #1a73d9;
   font-size: 1em;
-  display: inline-block;
-  margin-top: 1em;
 }
 
 .myDivWithBackground {
