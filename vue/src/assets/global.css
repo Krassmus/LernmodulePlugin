@@ -8,3 +8,10 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 .setting-disabled {
   opacity: 50%;
 }
+
+.lernmodule_infotext {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.75em;
+  font-family: Lato, sans-serif;
+}
