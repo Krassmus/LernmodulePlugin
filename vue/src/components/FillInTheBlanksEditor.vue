@@ -16,7 +16,7 @@
       <studip-wysiwyg v-model="taskDefinition.template" id="ckeditorElement" />
     </fieldset>
 
-    <fieldset class="collapsable">
+    <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
       <label>
