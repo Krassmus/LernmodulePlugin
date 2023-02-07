@@ -101,7 +101,7 @@
             : 'setting-disabled'
         "
       >
-        {{ $gettext('Mitteilung wenn nicht alle Lücken ausgefüllt sind:') }}
+        {{ $gettext('Mitteilung, wenn nicht alle Lücken ausgefüllt sind:') }}
         <input
           type="text"
           :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"
@@ -125,7 +125,7 @@
         />
       </label>
       <label>{{
-        $gettext('Benutzerdefiniertes Feedback für beliebige Punktebereiche')
+        $gettext('Benutzerdefiniertes Feedback für beliebige Punktebereiche:')
       }}</label>
       <div class="feedbackContainer">
         <div class="feedbackPercentagesChild">
@@ -142,7 +142,7 @@
 
         <div class="feedbackMessagesChild">
           <label>
-            {{ $gettext('Nachricht') }}
+            {{ $gettext('Mitteilung') }}
           </label>
           <div
             class="feedbackMessagesChildSubdivision"

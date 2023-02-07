@@ -128,7 +128,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         feedback: [
           { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
           { percentage: 50, message: 'Gut.' },
-          { percentage: 75, message: 'Sehr gut' },
+          { percentage: 75, message: 'Sehr gut.' },
           { percentage: 100, message: 'Perfekt!' },
         ],
       };
@@ -243,7 +243,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         feedback: [
           { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
           { percentage: 50, message: 'Gut.' },
-          { percentage: 75, message: 'Sehr gut' },
+          { percentage: 75, message: 'Sehr gut.' },
           { percentage: 100, message: 'Perfekt!' },
         ],
       };
