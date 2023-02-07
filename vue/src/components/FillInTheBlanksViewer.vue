@@ -56,7 +56,7 @@
 
         <div class="h5pFeedbackResultAndButtons" v-if="showExtraButtons">
           <button
-            v-if="!showSolutions && this.task.showSolutionsAllowed"
+            v-if="showSolutionButton"
             @click="onClickShowSolution"
             class="h5pButton"
           >
@@ -64,7 +64,7 @@
           </button>
 
           <button
-            v-if="this.task.retryAllowed"
+            v-if="showRetryButton"
             @click="onClickTryAgain"
             class="h5pButton"
           >
@@ -323,6 +323,12 @@ export default defineComponent({
         (this.submittedAnswers === null || this.inputHasChanged) &&
         !this.task.autoCorrect
       );
+    },
+    showSolutionButton(): boolean {
+      return !this.showSolutions && this.task.showSolutionsAllowed;
+    },
+    showRetryButton(): boolean {
+      return this.task.retryAllowed && this.submittedAnswers !== null;
     },
     showSolutions(): boolean {
       return (
