@@ -4,8 +4,6 @@
     <fieldset>
       <legend>{{ $gettext('Frage') }}</legend>
       <label>
-        {{ $gettext('Frage') }}
-        <!--        <input type="text" v-model="taskDefinition.question" />-->
         <studip-wysiwyg v-model="taskDefinition.question" />
       </label>
       <fieldset
