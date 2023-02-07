@@ -81,6 +81,7 @@ export type DragTheWordsTaskDefinition = {
   retryAllowed: boolean;
   showSolutionsAllowed: boolean;
   instantFeedback: boolean;
+  allBlanksMustBeFilledForSolutions: boolean;
   strings: {
     checkButton: string;
     retryButton: string;
@@ -88,6 +89,7 @@ export type DragTheWordsTaskDefinition = {
     fillInAllBlanksMessage: string;
     resultMessage: string;
   };
+  feedback: Feedback[];
 };
 
 export type MarkTheWordsTaskDefinition = {
@@ -124,8 +126,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
         },
         feedback: [
-          { percentage: 25, message: 'Naja' },
-          { percentage: 50, message: 'Gut' },
+          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+          { percentage: 50, message: 'Gut.' },
           { percentage: 75, message: 'Sehr gut' },
           { percentage: 100, message: 'Perfekt!' },
         ],
@@ -229,6 +231,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         retryAllowed: true,
         showSolutionsAllowed: true,
         instantFeedback: false,
+        allBlanksMustBeFilledForSolutions: false,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
@@ -237,6 +240,12 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
           resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
         },
+        feedback: [
+          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+          { percentage: 50, message: 'Gut.' },
+          { percentage: 75, message: 'Sehr gut' },
+          { percentage: 100, message: 'Perfekt!' },
+        ],
       };
     case 'MarkTheWords':
       return {
