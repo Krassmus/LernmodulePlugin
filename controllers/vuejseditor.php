@@ -14,7 +14,7 @@ class VuejseditorController extends PluginController
             $this->mod = new VuejsLernmodul();
             $this->mod['draft'] = 1;
             $this->mod['type'] = "vuejs";
-            $this->mod['name'] = "Neues Vue.JS-Lernmodul";
+            $this->mod['name'] = "Neues Stud.IP H5P-Lernmodul";
             $this->mod->store();
             $this->redirect(
                 PluginEngine::getURL(

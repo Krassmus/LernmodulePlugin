@@ -9,7 +9,7 @@
         "vuejseditor/edit"
     ) ?>">
         <?= Icon::create("learnmodule", "clickable")->asImg(50) ?>
-        <?= _("Vue.js-Editor") ?>
+        <?= _("Stud.IP H5P Editor") ?>
     </a>
 
       <? if ($h5plibs > 0) : ?>
