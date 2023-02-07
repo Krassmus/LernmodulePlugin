@@ -26,14 +26,14 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
     public function getViewerTemplate($attempt, $game_attendance = null)
     {
         $actions = new ActionsWidget();
-        $actions->addLink(
-            dgettext("lernmoduleplugin", "Ann's Javascript Test"),
-            "#",
-            Icon::create("play", "clickable"),
-            array(
-                'onClick' => "window.alert('hello :)  So kannst du JS vom Actions Widget aus nutzen.')"
-            )
-        );
+//        $actions->addLink(
+//            dgettext("lernmoduleplugin", "Ann's Javascript Test"),
+//            "#",
+//            Icon::create("play", "clickable"),
+//            array(
+//                'onClick' => "window.alert('hello :)  So kannst du JS vom Actions Widget aus nutzen.')"
+//            )
+//        );
         $actions->addLink(
             dgettext("lernmoduleplugin", "Im Editor bearbeiten"),
             URLHelper::getURL("plugins.php/lernmoduleplugin/vuejseditor/edit/" . $this->getId()),

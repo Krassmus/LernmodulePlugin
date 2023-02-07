@@ -13,8 +13,8 @@
         >{{ saveStatusText }}</span
       >
     </li>
-    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">Undo</li>
-    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">Redo</li>
+    <!--    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">Undo</li>-->
+    <!--    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">Redo</li>-->
   </teleport>
 
   <form class="default">
@@ -36,14 +36,17 @@
   </form>
   <div style="margin-bottom: 1em; margin-top: 1em">
     <label>{{ $gettext('Aufgabentyp auswählen:') }}</label>
-    <select :value="taskDefinition.task_type" @input="onSelectTaskType">
+    <select
+      :value="taskDefinition.task_type"
+      @input="onSelectTaskType"
+      style="margin-left: 0.5em"
+    >
       <option value="FillInTheBlanks">{{ $gettext('Lückentext') }}</option>
       <option value="Question">{{ $gettext('Frage') }}</option>
-      <option value="FlashCards">{{ $gettext('Karteikarten') }}</option>
-      <option value="DragTheWords">{{ $gettext('Drag The Words') }}</option>
-      <option value="MarkTheWords">{{ $gettext('Mark The Words') }}</option>
-      <option value="todo">{{ $gettext('Hotspot-Frage') }}</option>
-      <option value="todo">{{ $gettext('Bildersequenz') }}</option>
+      <option value="DragTheWords">{{ $gettext('Ziehen von Wörtern') }}</option>
+      <option value="MarkTheWords">
+        {{ $gettext('Markierung von Wörtern') }}
+      </option>
     </select>
   </div>
 
