@@ -1,26 +1,24 @@
 <template>
-  <div class="h5pModule">
-    <div ref="wrapperElement">
-      <template v-for="element in parsedTemplate" :key="element.uuid">
-        <span v-if="element.type === 'staticText'" class="h5pStaticText">
-          {{ element.text }}
+  <div class="h5pModule" ref="wrapperElement">
+    <template v-for="element in parsedTemplate" :key="element.uuid">
+      <span v-if="element.type === 'staticText'" class="h5pStaticText">
+        {{ element.text }}
+      </span>
+      <template v-else-if="element.type === 'blank'">
+        <span v-if="userInputs[element.uuid]" :class="classForInput(element)">
+          {{ getBlankText(userInputs[element.uuid]) }}
         </span>
-        <template v-else-if="element.type === 'blank'">
-          <span v-if="userInputs[element.uuid]" :class="classForInput(element)">
-            {{ getBlankText(userInputs[element.uuid]) }}
-          </span>
-          <span
-            v-else
-            class="h5pBlank"
-            @drop="onDrop($event, element)"
-            @dragover.prevent
-            @dragenter.prevent
-            @id="element.uuid;"
-            >&#8203;
-          </span>
-        </template>
+        <span
+          v-else
+          class="h5pBlank"
+          @drop="onDrop($event, element)"
+          @dragover.prevent
+          @dragenter.prevent
+          @id="element.uuid;"
+          >&#8203;
+        </span>
       </template>
-    </div>
+    </template>
 
     <template v-for="element in unusedAnswers" :key="element.uuid">
       <div>
@@ -34,31 +32,80 @@
       </div>
     </template>
 
-    <div>
-      <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-        {{ this.task.strings.checkButton }}
-      </button>
+    <!--    <div>-->
+    <!--      <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">-->
+    <!--        {{ this.task.strings.checkButton }}-->
+    <!--      </button>-->
 
-      <button
-        v-if="showSolutionButton"
-        @click="onClickSolution"
-        class="h5pButton"
-      >
-        {{ this.task.strings.solutionsButton }}
-      </button>
+    <!--      <button-->
+    <!--        v-if="showSolutionButton"-->
+    <!--        @click="onClickSolution"-->
+    <!--        class="h5pButton"-->
+    <!--      >-->
+    <!--        {{ this.task.strings.solutionsButton }}-->
+    <!--      </button>-->
 
-      <button v-if="showRetryButton" @click="onClickRetry" class="h5pButton">
-        {{ this.task.strings.retryButton }}
-      </button>
+    <!--      <button v-if="showRetryButton" @click="onClickRetry" class="h5pButton">-->
+    <!--        {{ this.task.strings.retryButton }}-->
+    <!--      </button>-->
+    <!--    </div>-->
+
+    <div class="h5pFeedbackContainer">
+      <div class="h5pFeedbackContainerTop">
+        <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
+          {{
+            this.task.strings.fillInAllBlanksMessage
+              ? this.task.strings.fillInAllBlanksMessage
+              : $gettext(
+                  'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+                )
+          }}
+        </div>
+        <div v-if="showResults && feedbackMessage" class="h5pFeedbackText">
+          {{ this.feedbackMessage }}
+        </div>
+      </div>
+      <div class="h5pFeedbackContainerCenter">
+        <div v-if="showResults">
+          <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
+          <label for="score" class="h5pFeedbackText" style="margin-left: 0.5em">
+            {{ this.resultMessage }}
+          </label>
+        </div>
+      </div>
+      <div class="h5pFeedbackContainerBottom">
+        <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
+          {{ this.task.strings.checkButton }}
+        </button>
+
+        <div class="h5pFeedbackResultAndButtons" v-if="showExtraButtons">
+          <button
+            v-if="!showSolutions && this.task.showSolutionsAllowed"
+            @click="onClickShowSolution"
+            class="h5pButton"
+          >
+            {{ this.task.strings.solutionsButton }}
+          </button>
+
+          <button
+            v-if="this.task.retryAllowed"
+            @click="onClickTryAgain"
+            class="h5pButton"
+          >
+            {{ this.task.strings.retryButton }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { DragTheWordsTaskDefinition } from '@/models/TaskDefinition';
+import { DragTheWordsTaskDefinition, Feedback } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty, isEqual, round } from 'lodash';
+import { $gettext } from '../language/gettext';
 
 type DragTheWordsElement = Blank | StaticText;
 type Blank = {
@@ -93,6 +140,39 @@ export default defineComponent({
     };
   },
   methods: {
+    $gettext,
+    submittedAnswerIsCorrect(element: DragTheWordsElement): boolean {
+      const blank = element as Blank;
+
+      const submittedAnswer = this.submittedAnswers?.[blank.uuid];
+      if (!submittedAnswer) {
+        return false;
+      } else {
+        // return blank.solutions.some((solution) =>
+        //   this.isAnswerCorrect(submittedAnswer, solution)
+        // );
+        return this.isAnswerCorrect(submittedAnswer, blank.uuid);
+      }
+    },
+    isAnswerCorrect(userAnswer: string, solution: string): boolean {
+      return userAnswer === solution;
+    },
+    updateAttempt() {
+      // Tell the server which blanks were filled out correctly.
+      const points = {} as Record<string, number>;
+      this.blanks.forEach((blank, index) => {
+        // TODO Consider what the key should be. This is a bit ugly.
+        // The key is shown directly in the 'assessment' UI.
+        // Maybe we should change how that works?
+        points[`${index} - ${blank.solutions[0]}`] =
+          this.submittedAnswerIsCorrect(blank) ? 1 : 0;
+      });
+      this.$emit('updateAttempt', {
+        points,
+        // The attempt is marked as successful if all answers were correct.
+        success: this.correctAnswers === this.blanks.length,
+      });
+    },
     isAnswerUsed(elementId: Uuid): boolean {
       return Object.values(this.userInputs).includes(elementId);
     },
@@ -128,31 +208,14 @@ export default defineComponent({
       this.userInputs[blank.uuid] = this.draggedItemId;
       this.draggedItemId = undefined;
     },
-    // ignored by ann
-    submittedAnswerIsCorrect(element: DragTheWordsElement): boolean {
-      const blank = element as Blank;
-
-      const submittedAnswer = this.submittedAnswers?.[blank.uuid];
-      if (!submittedAnswer) {
-        return false;
-      } else {
-        // return blank.solutions.some((solution) =>
-        //   this.isAnswerCorrect(submittedAnswer, solution)
-        // );
-        return this.isAnswerCorrect(submittedAnswer, blank.uuid);
-      }
-    },
-    isAnswerCorrect(userAnswer: string, solution: string): boolean {
-      return userAnswer === solution;
-    },
     onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
     },
-    onClickSolution() {
+    onClickShowSolution() {
       this.userWantsToSeeSolutions = true;
     },
-    onClickRetry() {
+    onClickTryAgain() {
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
@@ -203,24 +266,62 @@ export default defineComponent({
         }
       });
     },
-    unusedAnswers(): Blank[] {
-      return this.blanks.filter(
-        (blank) => !Object.values(this.userInputs).includes(blank.uuid)
-      );
-    },
     blanks(): Blank[] {
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
       ) as Blank[];
     },
+    blanksFilled(): number {
+      if (!this.submittedAnswers) {
+        return 0;
+      } else {
+        return Object.keys(this.submittedAnswers).length;
+      }
+    },
+    allBlanksAreFilled(): boolean {
+      return this.blanksFilled == this.blanks.length;
+    },
+    correctAnswers(): number {
+      return this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
+        .length;
+    },
+    allAnswersAreCorrect(): boolean {
+      return this.blanks.every((blank) => this.submittedAnswerIsCorrect(blank));
+    },
+    maxPoints(): number {
+      return this.blanks.length;
+    },
+    unusedAnswers(): Blank[] {
+      return this.blanks.filter(
+        (blank) => !Object.values(this.userInputs).includes(blank.uuid)
+      );
+    },
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
     },
+    showExtraButtons(): boolean {
+      if (this.task.instantFeedback) {
+        if (this.allBlanksAreFilled) {
+          return (
+            this.submittedAnswers !== null &&
+            !this.inputHasChanged &&
+            !this.allAnswersAreCorrect
+          );
+        } else {
+          return false;
+        }
+      } else {
+        return (
+          this.submittedAnswers !== null &&
+          !this.inputHasChanged &&
+          !this.allAnswersAreCorrect
+        );
+      }
+    },
     showCheckButton(): boolean {
       return (
-        !isEmpty(this.userInputs) &&
-        !this.task.instantFeedback &&
-        this.inputHasChanged
+        (this.submittedAnswers === null || this.inputHasChanged) &&
+        !this.task.instantFeedback
       );
     },
     showSolutionButton(): boolean {
@@ -230,7 +331,58 @@ export default defineComponent({
       return this.task.retryAllowed && this.submittedAnswers !== null;
     },
     showSolutions(): boolean {
-      return this.userWantsToSeeSolutions;
+      return (
+        this.userWantsToSeeSolutions &&
+        (this.allBlanksAreFilled ||
+          !this.task.allBlanksMustBeFilledForSolutions)
+      );
+    },
+    showFillInAllTheBlanksMessage(): boolean {
+      return (
+        this.task.allBlanksMustBeFilledForSolutions &&
+        this.userWantsToSeeSolutions &&
+        !this.allBlanksAreFilled &&
+        !this.inputHasChanged
+      );
+    },
+    showResults(): boolean {
+      return (
+        !(this.submittedAnswers === null) &&
+        !this.showFillInAllTheBlanksMessage &&
+        (!this.task.instantFeedback || this.allBlanksAreFilled) &&
+        !this.inputHasChanged
+      );
+    },
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.correctAnswers.toString()
+      );
+
+      resultMessage = resultMessage.replace(
+        ':total',
+        this.blanks.length.toString()
+      );
+
+      return resultMessage;
+    },
+    feedbackMessage(): string | undefined {
+      const percentageCorrect = round(
+        (this.correctAnswers / this.blanks.length) * 100
+      );
+
+      for (const feedback of this.feedbackSortedByScore) {
+        if (percentageCorrect >= feedback.percentage) {
+          return feedback.message;
+        }
+      }
+
+      return undefined;
+    },
+    feedbackSortedByScore(): Feedback[] {
+      return this.task.feedback
+        .map((value) => value)
+        .sort((a, b) => b.percentage - a.percentage);
     },
   },
 });
@@ -304,10 +456,10 @@ export default defineComponent({
 }
 
 .h5pButton {
-  font-size: 1em;
-  line-height: 1.2;
-  margin: 1em 0.5em 1em;
-  padding: 0.5em 1.25em;
+  /* top, right, bottom, left */
+  margin: 1em 0.5em 1em 0em;
+  /* vertical, horizontal */
+  padding: 0.25em 1.25em;
   border-radius: 2em;
   background: #1a73d9;
   color: #fff;
