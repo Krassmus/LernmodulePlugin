@@ -149,11 +149,6 @@ export default defineComponent({
         return userAnswer.toLowerCase() === solution.toLowerCase();
       }
     },
-    onClickCheck() {
-      // Save a copy of the user's inputs.
-      this.submittedAnswers = { ...this.userInputs };
-      this.updateAttempt();
-    },
     updateAttempt() {
       // Tell the server which blanks were filled out correctly.
       const points = {} as Record<string, number>;
@@ -169,45 +164,6 @@ export default defineComponent({
         // The attempt is marked as successful if all answers were correct.
         success: this.correctAnswers === this.blanks.length,
       });
-    },
-    onClickShowSolution() {
-      this.userWantsToSeeSolutions = true;
-    },
-    onClickTryAgain() {
-      this.userWantsToSeeSolutions = false;
-      this.userInputs = {};
-      this.submittedAnswers = null;
-    },
-    classForInput(blank: FillInTheBlanksElement) {
-      if (!this.submittedAnswers) {
-        return 'h5pBlank';
-      }
-
-      if (this.userInputs?.[blank.uuid] != undefined) {
-        if (this.submittedAnswerIsCorrect(blank)) {
-          return 'h5pBlank h5pBlankCorrect';
-        } else {
-          if (
-            this.submittedAnswers?.[blank.uuid] ===
-            this.userInputs?.[blank.uuid]
-          ) {
-            return 'h5pBlank h5pBlankIncorrect';
-          } else {
-            return 'h5pBlank';
-          }
-        }
-      } else {
-        return 'h5pBlank';
-      }
-    },
-    onInputBlurOrEnter() {
-      this.userWantsToSeeSolutions = false;
-      if (this.task.autoCorrect) {
-        this.onClickCheck();
-      }
-    },
-    onInput(event: InputEvent) {
-      this.autoGrowTextField(event.target as HTMLInputElement);
     },
     /**
      * Adapted from the H5P source code, MIT License
@@ -261,6 +217,50 @@ export default defineComponent({
         }
       }, 1);
     },
+    onClickCheck() {
+      // Save a copy of the user's inputs.
+      this.submittedAnswers = { ...this.userInputs };
+      this.updateAttempt();
+    },
+    onClickShowSolution() {
+      this.userWantsToSeeSolutions = true;
+    },
+    onClickTryAgain() {
+      this.userWantsToSeeSolutions = false;
+      this.userInputs = {};
+      this.submittedAnswers = null;
+    },
+    onInputBlurOrEnter() {
+      this.userWantsToSeeSolutions = false;
+      if (this.task.autoCorrect) {
+        this.onClickCheck();
+      }
+    },
+    onInput(event: InputEvent) {
+      this.autoGrowTextField(event.target as HTMLInputElement);
+    },
+    classForInput(blank: FillInTheBlanksElement) {
+      if (!this.submittedAnswers) {
+        return 'h5pBlank';
+      }
+
+      if (this.userInputs?.[blank.uuid] != undefined) {
+        if (this.submittedAnswerIsCorrect(blank)) {
+          return 'h5pBlank h5pBlankCorrect';
+        } else {
+          if (
+            this.submittedAnswers?.[blank.uuid] ===
+            this.userInputs?.[blank.uuid]
+          ) {
+            return 'h5pBlank h5pBlankIncorrect';
+          } else {
+            return 'h5pBlank';
+          }
+        }
+      } else {
+        return 'h5pBlank';
+      }
+    },
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
@@ -290,14 +290,33 @@ export default defineComponent({
         }
       });
     },
-    correctAnswers(): number {
-      return this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
-        .length;
-    },
     blanks(): Blank[] {
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
       ) as Blank[];
+    },
+    blanksFilled(): number {
+      if (!this.submittedAnswers) {
+        return 0;
+      } else {
+        return Object.keys(this.submittedAnswers).length;
+      }
+    },
+    allBlanksAreFilled(): boolean {
+      return this.blanksFilled == this.blanks.length;
+    },
+    correctAnswers(): number {
+      return this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
+        .length;
+    },
+    allAnswersAreCorrect(): boolean {
+      return this.blanks.every((blank) => this.submittedAnswerIsCorrect(blank));
+    },
+    maxPoints(): number {
+      return this.blanks.length;
+    },
+    inputHasChanged(): boolean {
+      return !isEqual(this.submittedAnswers, this.userInputs);
     },
     showExtraButtons(): boolean {
       if (this.task.autoCorrect) {
@@ -353,21 +372,18 @@ export default defineComponent({
         !this.inputHasChanged
       );
     },
-    blanksFilled(): number {
-      if (!this.submittedAnswers) {
-        return 0;
-      } else {
-        return Object.keys(this.submittedAnswers).length;
-      }
-    },
-    allBlanksAreFilled(): boolean {
-      return this.blanksFilled == this.blanks.length;
-    },
-    allAnswersAreCorrect(): boolean {
-      return this.blanks.every((blank) => this.submittedAnswerIsCorrect(blank));
-    },
-    inputHasChanged(): boolean {
-      return !isEqual(this.submittedAnswers, this.userInputs);
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.correctAnswers.toString()
+      );
+
+      resultMessage = resultMessage.replace(
+        ':total',
+        this.blanks.length.toString()
+      );
+
+      return resultMessage;
     },
     feedbackMessage(): string | undefined {
       const percentageCorrect = round(
@@ -382,26 +398,10 @@ export default defineComponent({
 
       return undefined;
     },
-    resultMessage(): string {
-      let resultMessage = this.task.strings.resultMessage.replace(
-        ':correct',
-        this.correctAnswers.toString()
-      );
-
-      resultMessage = resultMessage.replace(
-        ':total',
-        this.blanks.length.toString()
-      );
-
-      return resultMessage;
-    },
     feedbackSortedByScore(): Feedback[] {
       return this.task.feedback
         .map((value) => value)
         .sort((a, b) => b.percentage - a.percentage);
-    },
-    maxPoints(): number {
-      return this.blanks.length;
     },
   },
 });
