@@ -13,8 +13,8 @@
         >{{ saveStatusText }}</span
       >
     </li>
-    <!--    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">Undo</li>-->
-    <!--    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">Redo</li>-->
+    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">Undo</li>
+    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">Redo</li>
   </teleport>
 
   <form class="default">

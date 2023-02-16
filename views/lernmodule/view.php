@@ -42,17 +42,17 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
         $actions = new ActionsWidget();
         $add = true;
     }
-//    $actions->addLink(
-//        dgettext("lernmoduleplugin", "Abspieloptionen bearbeiten"),
-//        PluginEngine::getURL($plugin, array(), "lernmodule/edit/" . $mod->getId()),
-//        Icon::create("edit", "clickable")
-//    );
-//    $actions->addLink(
-//        dgettext("lernmoduleplugin", "Lernmodul in Veranstaltung verschieben oder kopieren"),
-//        PluginEngine::getURL($plugin, array(), "lernmodule/move/" . $mod->getId()),
-//        Icon::create("seminar+move_up", "clickable"),
-//        array("data-dialog" => 1)
-//    );
+    $actions->addLink(
+        dgettext("lernmoduleplugin", "Abspieloptionen bearbeiten"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/edit/" . $mod->getId()),
+        Icon::create("edit", "clickable")
+    );
+    $actions->addLink(
+        dgettext("lernmoduleplugin", "Lernmodul in Veranstaltung verschieben oder kopieren"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/move/" . $mod->getId()),
+        Icon::create("seminar+move_up", "clickable"),
+        array("data-dialog" => 1)
+    );
     if ($mod->getDownloadURL()) {
         $actions->addLink(
             dgettext("lernmoduleplugin", "Lernmodul herunterladen"),
