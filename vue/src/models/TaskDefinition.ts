@@ -25,6 +25,7 @@ export type FillInTheBlanksTaskDefinition = {
   caseSensitive: boolean;
   autoCorrect: boolean;
   allBlanksMustBeFilledForSolutions: boolean;
+  acceptTypos: boolean;
   strings: {
     checkButton: string;
     retryButton: string;
@@ -112,11 +113,12 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'FillInTheBlanks',
         template: 'Hier entsteht der *Lücken*text.',
-        retryAllowed: false,
-        showSolutionsAllowed: false,
+        retryAllowed: true,
+        showSolutionsAllowed: true,
         caseSensitive: false,
         autoCorrect: false,
         allBlanksMustBeFilledForSolutions: false,
+        acceptTypos: true,
         strings: {
           checkButton: 'Anworten überprüfen',
           retryButton: 'Erneut versuchen',

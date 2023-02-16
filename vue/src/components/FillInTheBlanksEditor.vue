@@ -27,6 +27,11 @@
       </label>
 
       <label>
+        <input type="checkbox" v-model="taskDefinition.acceptTypos" />
+        {{ $gettext('Kleine Rechtschreib- oder Tippfehler ignorieren') }}
+      </label>
+
+      <label>
         {{ $gettext('Korrigiert wird') }}
         <select v-model="taskDefinition.autoCorrect">
           <option :value="false">

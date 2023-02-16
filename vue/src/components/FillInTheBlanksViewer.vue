@@ -111,6 +111,8 @@ type StaticText = {
 };
 type Uuid = string;
 
+const dljs = require('damerau-levenshtein-js');
+
 export default defineComponent({
   name: 'FillInTheBlanksViewer',
   props: {
@@ -143,10 +145,35 @@ export default defineComponent({
     },
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
       if (this.task.caseSensitive) {
-        return userAnswer === solution;
+        if (this.task.acceptTypos) {
+          return this.isAnswerCorrectWithTypo(userAnswer, solution);
+        } else {
+          return userAnswer === solution;
+        }
       } else {
         // TODO: Was ist, wenn das in einem Sprachkurs mit einer nichtlateinischen Schrift verwendet wird? :D
-        return userAnswer.toLowerCase() === solution.toLowerCase();
+        if (this.task.acceptTypos) {
+          return this.isAnswerCorrectWithTypo(
+            userAnswer.toLowerCase(),
+            solution.toLowerCase()
+          );
+        } else {
+          return userAnswer.toLowerCase() === solution.toLowerCase();
+        }
+      }
+    },
+    isAnswerCorrectWithTypo(userAnswer: string, solution: string): boolean {
+      // The calculated Damerau-Levenshtein distance between the answer and the solution
+      const distance = dljs.distance(userAnswer, solution);
+
+      // If the word is long (more than 9 chars) a distance of 2 will be accepted
+      // If it is between 4 and 9 characters a distance of 1 will be accepted
+      if (userAnswer.length > 3 && distance <= 1) {
+        return true;
+      } else if (userAnswer.length > 9 && distance <= 2) {
+        return true;
+      } else {
+        return false;
       }
     },
     updateAttempt() {
