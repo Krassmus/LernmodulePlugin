@@ -130,7 +130,7 @@ export default defineComponent({
               return 'flex-parent incorrectAnswer';
             }
           } else {
-            return '';
+            return 'flex-parent';
           }
         } else {
           if (this.selectedAnswer === answer) {
@@ -222,6 +222,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.h5pModule {
+  border: 2px solid #eee;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  font-size: 16px;
+  line-height: 1.75em;
+  font-family: Lato, sans-serif;
+}
+
 meter {
   width: 300px;
   height: 20px;
