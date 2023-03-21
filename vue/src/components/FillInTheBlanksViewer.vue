@@ -271,21 +271,14 @@ export default defineComponent({
         return 'h5pBlank';
       }
 
-      if (this.userInputs?.[blank.uuid] != undefined) {
+      if (this.submittedAnswers?.[blank.uuid] != undefined) {
         if (this.submittedAnswerIsCorrect(blank)) {
           return 'h5pBlank h5pBlankCorrect';
         } else {
-          if (
-            this.submittedAnswers?.[blank.uuid] ===
-            this.userInputs?.[blank.uuid]
-          ) {
-            return 'h5pBlank h5pBlankIncorrect';
-          } else {
-            return 'h5pBlank';
-          }
+          return 'h5pBlank h5pBlankIncorrect';
         }
       } else {
-        return 'h5pBlank';
+        return 'h5pBlank h5pBlankIncorrect';
       }
     },
     urlForIcon(iconName: string) {
