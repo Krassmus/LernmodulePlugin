@@ -28,7 +28,7 @@
 
       <label>
         <input type="checkbox" v-model="taskDefinition.acceptTypos" />
-        {{ $gettext('Kleine Rechtschreib- oder Tippfehler ignorieren') }}
+        {{ $gettext('Rechtschreib- oder Tippfehler ignorieren') }}
       </label>
 
       <label>
