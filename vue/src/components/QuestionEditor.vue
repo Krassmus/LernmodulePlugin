@@ -67,12 +67,10 @@
 
     <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
-      <h1>{{ $gettext('Generell') }}</h1>
+
       <label>
         <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
-        {{
-          $gettext('Mehrere Antworten können gleichzeitig ausgewählt werden')
-        }}
+        {{ $gettext('Mehrere Antworten können ausgewählt werden') }}
       </label>
 
       <label>
@@ -80,40 +78,34 @@
         {{ $gettext('Zeige Antworten in zufälliger Reihenfolge') }}
       </label>
 
-      <h1>{{ $gettext('Versuche') }}</h1>
       <label>
         <input type="checkbox" v-model="taskDefinition.retryAllowed" />
         {{ $gettext('Mehrere Versuche erlauben') }}
       </label>
-      <label
-        :class="
-          taskDefinition.retryAllowed ? '' : 'h5pBehaviorSetting-disabled'
-        "
+      <label :class="taskDefinition.retryAllowed ? '' : 'setting-disabled'"
         >{{ $gettext('Text im Button:') }}
 
         <input
           type="text"
           :disabled="!taskDefinition.retryAllowed"
           v-model="taskDefinition.strings.retryButton"
-      /></label>
-      <h1>{{ $gettext('Lösungen') }}</h1>
+        />
+      </label>
+
       <label>
         <input type="checkbox" v-model="taskDefinition.showSolutionsAllowed" />
         {{ $gettext('Lösungen können angezeigt werden') }}
       </label>
       <label
-        :class="
-          taskDefinition.showSolutionsAllowed
-            ? ''
-            : 'h5pBehaviorSetting-disabled'
-        "
+        :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
         >{{ $gettext('Text im Button:') }}
 
         <input
           type="text"
           :disabled="!taskDefinition.showSolutionsAllowed"
           v-model="taskDefinition.strings.solutionsButton"
-      /></label>
+        />
+      </label>
     </fieldset>
   </form>
 </template>
@@ -126,12 +118,14 @@ import {
 } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
+import { $gettext } from '../language/gettext';
 
 export default defineComponent({
   name: 'QuestionEditor',
   components: { StudipWysiwyg },
   props: {},
   methods: {
+    $gettext,
     addAnswer(): void {
       this.taskDefinition.answers.push({
         text: this.$gettext('Neue Antwort'),
@@ -187,8 +181,4 @@ export default defineComponent({
 /* margin: 0px 0px 0px 0px;*/
 /* padding: 0px 0px 0px 0px;*/
 /*}*/
-
-.h5pBehaviorSetting-disabled {
-  opacity: 50%;
-}
 </style>
