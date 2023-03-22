@@ -39,6 +39,11 @@
       </label>
 
       <label>
+        <input type="checkbox" v-model="taskDefinition.alphabeticOrder" />
+        {{ $gettext('Antworten alphabetisch sortieren') }}
+      </label>
+
+      <label>
         <input type="checkbox" v-model="taskDefinition.retryAllowed" />
         {{ $gettext('Mehrere Versuche erlauben') }}
       </label>

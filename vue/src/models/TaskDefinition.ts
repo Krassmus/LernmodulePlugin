@@ -83,6 +83,7 @@ export type DragTheWordsTaskDefinition = {
   showSolutionsAllowed: boolean;
   instantFeedback: boolean;
   allBlanksMustBeFilledForSolutions: boolean;
+  alphabeticOrder: boolean;
   strings: {
     checkButton: string;
     retryButton: string;
@@ -234,6 +235,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         showSolutionsAllowed: true,
         instantFeedback: false,
         allBlanksMustBeFilledForSolutions: false,
+        alphabeticOrder: false,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',

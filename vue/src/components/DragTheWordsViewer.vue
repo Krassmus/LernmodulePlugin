@@ -271,6 +271,21 @@ export default defineComponent({
         (word) => word.type === 'blank'
       ) as Blank[];
     },
+    randomizedAnswers(): Blank[] {
+      // https://stackoverflow.com/a/46545530
+      let randomizedAnswers = this.blanks
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+      return randomizedAnswers;
+    },
+    sortedAnswers(): Blank[] {
+      // https://stackoverflow.com/a/45544166
+      let sortedAnswers = this.blanks
+        .map((value) => value)
+        .sort((a, b) => a.solutions[0].localeCompare(b.solutions[0]));
+      return sortedAnswers;
+    },
     blanksFilled(): number {
       if (!this.submittedAnswers) {
         return 0;
@@ -292,9 +307,15 @@ export default defineComponent({
       return this.blanks.length;
     },
     unusedAnswers(): Blank[] {
-      return this.blanks.filter(
-        (blank) => !Object.values(this.userInputs).includes(blank.uuid)
-      );
+      if (this.task.alphabeticOrder) {
+        return this.sortedAnswers.filter(
+          (blank) => !Object.values(this.userInputs).includes(blank.uuid)
+        );
+      } else {
+        return this.randomizedAnswers.filter(
+          (blank) => !Object.values(this.userInputs).includes(blank.uuid)
+        );
+      }
     },
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
