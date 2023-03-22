@@ -95,6 +95,7 @@ import {
   QuestionAnswer,
   QuestionTaskDefinition,
 } from '@/models/TaskDefinition';
+import { $gettext } from '../language/gettext';
 
 export default defineComponent({
   name: 'QuestionViewer',
@@ -105,6 +106,7 @@ export default defineComponent({
     },
   },
   methods: {
+    $gettext,
     onClickCheck(): void {
       this.isSubmitted = true;
     },
