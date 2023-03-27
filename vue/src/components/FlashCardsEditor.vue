@@ -1,8 +1,4 @@
 <template>
-  <button type="button" class="button" @click="onClickUpload">
-    {{ $gettext('Bild hochladen') }}
-  </button>
-
   <EditedFlashCard
     v-for="card in taskDefinition.cards"
     :key="card.uuid"

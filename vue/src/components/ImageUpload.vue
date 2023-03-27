@@ -20,9 +20,7 @@ export default defineComponent({
   name: 'ImageUpload',
   data() {
     return {
-      uploadRequestPromise: undefined as
-        | Promise<UploadImageResponse>
-        | undefined,
+      uploadRequestPromise: undefined as Promise<unknown> | undefined,
     };
   },
   methods: {
@@ -41,11 +39,16 @@ export default defineComponent({
         );
         return;
       }
-      this.uploadRequestPromise = uploadImage(file).then((res) => {
-        this.$emit('imageUploaded', res.files[0].url);
-        this.uploadRequestPromise = undefined;
-        return res;
-      });
+      this.uploadRequestPromise = uploadImage(file)
+        .then((res) => {
+          this.$emit('imageUploaded', res.files[0].url);
+          this.uploadRequestPromise = undefined;
+        })
+        .catch((error) => {
+          console.error(error);
+          // TODO Display the error somewhere!
+          this.uploadRequestPromise = undefined;
+        });
     },
   },
 });

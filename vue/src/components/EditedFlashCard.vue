@@ -12,8 +12,7 @@
       </label>
       <label>
         {{ $gettext('Bild') }}
-        <!--        <EditedFlashCardImage v-if="card.imageUrl" :card="card" />-->
-        <div v-if="card.imageUrl">Uploaded: {{ card.imageUrl }}</div>
+        <EditedFlashCardImage v-if="card.imageUrl" :card="card" />
         <ImageUpload v-else @imageUploaded="onImageUploaded" />
       </label>
       <label
@@ -29,10 +28,11 @@ import { defineComponent, PropType } from 'vue';
 import { FlashCard, FlashCardTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import ImageUpload from '@/components/ImageUpload.vue';
+import EditedFlashCardImage from '@/components/EditedFlashCardImage.vue';
 
 export default defineComponent({
   name: 'EditedFlashCard',
-  components: { ImageUpload },
+  components: { EditedFlashCardImage, ImageUpload },
   props: {
     card: {
       type: Object as PropType<FlashCard>,
