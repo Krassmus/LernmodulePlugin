@@ -1,5 +1,4 @@
 <template>
-  <div>Image upload</div>
   <span v-if="uploadRequestPromise">{{
     $gettext('Datei wird hochgeladen')
   }}</span>
