@@ -59,8 +59,8 @@ export async function updateAttempt(
   success: boolean
 ): Promise<void> {
   const url = window.STUDIP.LernmoduleVueJS.updateAttemptRoute;
-  const token = window.STUDIP.CSRF_TOKEN;
   const formData = new FormData();
+  const token = window.STUDIP.CSRF_TOKEN;
   formData.append(token.name, token.value);
   // Convert object into a nested array which PHP will understand
   Object.entries(points).forEach(([name, score]) => {
@@ -76,5 +76,24 @@ export async function updateAttempt(
     if (!response.ok) {
       throw new Error(response.statusText);
     }
+  });
+}
+
+export async function uploadImage(image: Blob) {
+  const uploadUrl = window.STUDIP.URLHelper.getURL(
+    'dispatch.php/wysiwyg/upload'
+  );
+  const formData = new FormData();
+  const token = window.STUDIP.CSRF_TOKEN;
+  formData.append(token.name, token.value);
+  formData.append('files[]', image);
+  return fetch(uploadUrl, {
+    method: 'POST',
+    body: formData,
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return response.json();
   });
 }

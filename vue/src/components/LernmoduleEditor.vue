@@ -47,6 +47,7 @@
       <option value="MarkTheWords">
         {{ $gettext('Markierung von Wörtern') }}
       </option>
+      <option value="FlashCards">{{ $gettext('Flashcards') }}</option>
     </select>
   </div>
 

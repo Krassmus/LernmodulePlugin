@@ -6,6 +6,9 @@ export {};
 declare global {
   interface Window {
     STUDIP: {
+      URLHelper: {
+        getURL: (path: string) => string;
+      };
       wysiwyg: {
         replace: (element: Element, config?: CKEditorConfig) => void;
         // e is a <textarea> wrapped with jQuery's $() function

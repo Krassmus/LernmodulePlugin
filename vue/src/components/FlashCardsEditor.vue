@@ -12,6 +12,7 @@
 import { defineComponent } from 'vue';
 import { FlashCardTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
+import { uploadImage } from '@/routes';
 
 export default defineComponent({
   name: 'FlashCardsEditor',
@@ -20,8 +21,13 @@ export default defineComponent({
       taskEditorStore.taskDefinition as FlashCardTaskDefinition,
   },
   methods: {
-    onClickUpload(): void {
-      this.debug = window.STUDIP.ASSETS_URL;
+    async onClickUpload() {
+      const res = await this.uploadImage();
+      console.log('image upload result: ', res);
+    },
+    async uploadImage() {
+      const blob = new Blob();
+      return uploadImage(blob);
     },
   },
   data() {
