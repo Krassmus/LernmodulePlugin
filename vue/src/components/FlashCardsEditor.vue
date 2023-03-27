@@ -22,8 +22,12 @@ export default defineComponent({
   },
   methods: {
     async onClickUpload() {
-      const res = await this.uploadImage();
-      console.log('image upload result: ', res);
+      try {
+        const res = await this.uploadImage();
+        console.log('image upload result: ', res);
+      } catch (error) {
+        console.error('image upload failed. ', error);
+      }
     },
     async uploadImage() {
       const blob = new Blob();

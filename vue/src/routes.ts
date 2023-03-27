@@ -1,4 +1,5 @@
 import { TaskDefinition } from '@/models/TaskDefinition';
+import { z } from 'zod';
 
 /**
  * @param taskDefinition The definition of the task
@@ -49,7 +50,6 @@ export interface SaveTaskResponse {
 }
 
 /**
- * @param attempt_id Primary key of lernmodule_attempts
  * @param points -- a map describing how many points a student got for each part
  * of a Lernmodul.  Key: The ID or name of the part.  Value: The number of points.
  * @param success - If true, the attempt will be marked as 'successful'.
@@ -79,6 +79,16 @@ export async function updateAttempt(
   });
 }
 
+const uploadImageResponseSchema = z.object({
+  files: z.array(
+    z.object({
+      name: z.string(),
+      type: z.string(),
+      url: z.string(),
+    })
+  ),
+});
+
 export async function uploadImage(image: Blob) {
   const uploadUrl = window.STUDIP.URLHelper.getURL(
     'dispatch.php/wysiwyg/upload'
@@ -90,10 +100,15 @@ export async function uploadImage(image: Blob) {
   return fetch(uploadUrl, {
     method: 'POST',
     body: formData,
-  }).then((response) => {
+  }).then(async (response) => {
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-    return response.json();
+    const json = await response.json();
+    try {
+      return uploadImageResponseSchema.parse(json);
+    } catch (error) {
+      throw new Error('Could not parse server response', { cause: error });
+    }
   });
 }
