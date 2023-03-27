@@ -4,20 +4,21 @@
       <legend>{{ $gettext('Karte') }}</legend>
       <label
         >{{ $gettext('Frage') }}
-        <input type="text" :value="card.question" />
+        <!-- TODO Make undo/redo work while preserving the ease-of-use of v-model-->
+        <input type="text" v-model="taskDefinition.cards[cardIndex].question" />
       </label>
       <label
         >{{ $gettext('Antwort') }}
-        <input type="text" :value="card.answer" />
+        <input type="text" v-model="taskDefinition.cards[cardIndex].answer" />
       </label>
-      <label>
-        {{ $gettext('Bild') }}
+      <div>
+        <h4>{{ $gettext('Bild') }}</h4>
         <EditedFlashCardImage v-if="card.imageUrl" :card="card" />
         <ImageUpload v-else @imageUploaded="onImageUploaded" />
-      </label>
+      </div>
       <label
         >{{ $gettext('Alternativer Text') }}
-        <input type="text" :value="card.altText" />
+        <input type="text" v-model="taskDefinition.cards[cardIndex].altText" />
       </label>
     </fieldset>
   </form>
@@ -36,6 +37,10 @@ export default defineComponent({
   props: {
     card: {
       type: Object as PropType<FlashCard>,
+      required: true,
+    },
+    cardIndex: {
+      type: Number as PropType<number>,
       required: true,
     },
   },

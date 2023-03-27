@@ -23,6 +23,7 @@
       v-if="this.taskDefinition.cards[this.selectedCardIndex]"
       class="edited-flash-card"
       :card="this.taskDefinition.cards[this.selectedCardIndex]"
+      :card-index="this.selectedCardIndex"
     />
     <div v-else class="edited-flash-card no-card-selected-placeholder">
       {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
