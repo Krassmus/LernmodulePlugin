@@ -3,6 +3,12 @@
     {{ $gettext('Bild hochladen') }}
   </button>
 
+  <EditedFlashCard
+    v-for="card in taskDefinition.cards"
+    :key="card.uuid"
+    :card="card"
+  />
+
   <label>
     {{ this.debug }}
   </label>
@@ -13,9 +19,11 @@ import { defineComponent } from 'vue';
 import { FlashCardTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { uploadImage } from '@/routes';
+import EditedFlashCard from '@/components/EditedFlashCard.vue';
 
 export default defineComponent({
   name: 'FlashCardsEditor',
+  components: { EditedFlashCard },
   computed: {
     taskDefinition: () =>
       taskEditorStore.taskDefinition as FlashCardTaskDefinition,

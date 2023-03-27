@@ -8,6 +8,7 @@ import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
 import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
+import { v4 } from 'uuid';
 
 // TODO Use zod or another parsing library to define these datatypes
 export type TaskDefinition =
@@ -47,8 +48,11 @@ export type FlashCardTaskDefinition = {
 };
 
 export type FlashCard = {
-  frontText: string;
-  backText: string;
+  uuid: string;
+  question: string;
+  answer: string;
+  imageUrl?: string;
+  altText?: string;
 };
 
 export type QuestionTaskDefinition = {
@@ -140,8 +144,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'FlashCards',
         cards: [
           {
-            frontText: 'Front text',
-            backText: 'Back text',
+            uuid: v4(),
+            question: 'Question',
+            answer: 'Answer',
           },
         ],
       };
