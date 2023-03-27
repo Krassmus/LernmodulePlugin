@@ -18,6 +18,7 @@ import { uploadImage, UploadImageResponse } from '@/routes';
 
 export default defineComponent({
   name: 'ImageUpload',
+  emits: ['imageUploaded'],
   data() {
     return {
       uploadRequestPromise: undefined as Promise<unknown> | undefined,
