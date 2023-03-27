@@ -24,6 +24,9 @@
       class="edited-flash-card"
       :card="this.taskDefinition.cards[this.selectedCardIndex]"
     />
+    <div v-else class="edited-flash-card no-card-selected-placeholder">
+      {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
+    </div>
   </div>
   <label>
     {{ this.debug }}
@@ -51,6 +54,12 @@
 }
 .edited-flash-card {
   flex: 1 1 auto;
+}
+.no-card-selected-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
 }
 </style>
 
