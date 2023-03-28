@@ -20,6 +20,8 @@ export default defineComponent({
   emits: ['imageUploaded'],
   data() {
     return {
+      // Wenn dieser Promise vorhanden ist, heißt das, dass eine HTTP-Anfrage
+      // unterwegs ist.
       uploadRequestPromise: undefined as Promise<unknown> | undefined,
     };
   },

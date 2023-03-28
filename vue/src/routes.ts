@@ -90,7 +90,7 @@ const uploadImageResponseSchema = z.object({
 });
 export type UploadImageResponse = z.infer<typeof uploadImageResponseSchema>;
 
-export async function uploadImage(image: Blob | File) {
+export async function uploadImage(image: File) {
   const uploadUrl = window.STUDIP.URLHelper.getURL(
     'dispatch.php/wysiwyg/upload'
   );

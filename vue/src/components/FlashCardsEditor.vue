@@ -70,7 +70,6 @@
 import { defineComponent } from 'vue';
 import { FlashCard, FlashCardTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
-import { uploadImage } from '@/routes';
 import EditedFlashCard from '@/components/EditedFlashCard.vue';
 import { v4 } from 'uuid';
 import produce from 'immer';
@@ -83,18 +82,6 @@ export default defineComponent({
       taskEditorStore.taskDefinition as FlashCardTaskDefinition,
   },
   methods: {
-    async onClickUpload() {
-      try {
-        const res = await this.uploadImage();
-        console.log('image upload result: ', res);
-      } catch (error) {
-        console.error('image upload failed. ', error);
-      }
-    },
-    async uploadImage() {
-      const blob = new Blob();
-      return uploadImage(blob);
-    },
     selectCard(index: number) {
       this.selectedCardIndex = index;
     },
