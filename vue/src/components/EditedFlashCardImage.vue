@@ -9,6 +9,7 @@
 import { defineComponent, PropType } from 'vue';
 import { FlashCard, FlashCardTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
+import produce from 'immer';
 
 export default defineComponent({
   name: 'EditedFlashCardImage',
@@ -18,23 +19,20 @@ export default defineComponent({
       required: true,
     },
   },
+  computed: {
+    taskDefinition: () =>
+      taskEditorStore.taskDefinition as FlashCardTaskDefinition,
+  },
   methods: {
     deleteImage(): void {
-      const taskDefinition =
-        taskEditorStore.taskDefinition as FlashCardTaskDefinition;
-      const newCards = [...taskDefinition.cards];
-      const cardIndex = newCards.findIndex(
-        (card) => card.uuid === this.card.uuid
-      );
-      newCards[cardIndex] = {
-        ...newCards[cardIndex],
-        imageUrl: undefined,
-      };
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        const cardIndex = draft.cards.findIndex(
+          (card) => card.uuid === this.card.uuid
+        );
+        draft.cards[cardIndex].imageUrl = undefined;
+      });
       taskEditorStore.performEdit({
-        newTaskDefinition: {
-          ...taskDefinition,
-          cards: newCards,
-        },
+        newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },

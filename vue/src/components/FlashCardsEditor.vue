@@ -71,6 +71,7 @@ import { taskEditorStore } from '@/store';
 import { uploadImage } from '@/routes';
 import EditedFlashCard from '@/components/EditedFlashCard.vue';
 import { v4 } from 'uuid';
+import produce from 'immer';
 
 export default defineComponent({
   name: 'FlashCardsEditor',
@@ -96,19 +97,15 @@ export default defineComponent({
       this.selectedCardIndex = index;
     },
     addCard() {
-      const newCards: FlashCard[] = [
-        ...this.taskDefinition.cards,
-        {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.cards.push({
           uuid: v4(),
           question: '',
           answer: '',
-        },
-      ];
+        });
+      });
       taskEditorStore.performEdit({
-        newTaskDefinition: {
-          ...this.taskDefinition,
-          cards: newCards,
-        },
+        newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
       if (this.selectedCardIndex < 0) {
@@ -116,18 +113,16 @@ export default defineComponent({
       }
     },
     deleteCard(index: number) {
-      const newCards = [...this.taskDefinition.cards];
-      newCards.splice(index, 1);
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.cards.splice(index, 1);
+      });
       if (index === this.selectedCardIndex) {
         this.selectedCardIndex = -1;
       } else if (index < this.selectedCardIndex) {
         this.selectedCardIndex--;
       }
       taskEditorStore.performEdit({
-        newTaskDefinition: {
-          ...this.taskDefinition,
-          cards: newCards,
-        },
+        newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },

@@ -30,6 +30,7 @@ import { FlashCard, FlashCardTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import ImageUpload from '@/components/ImageUpload.vue';
 import EditedFlashCardImage from '@/components/EditedFlashCardImage.vue';
+import produce from 'immer';
 
 export default defineComponent({
   name: 'EditedFlashCard',
@@ -50,19 +51,11 @@ export default defineComponent({
   },
   methods: {
     onImageUploaded(imageUrl: string): void {
-      const newCards = [...this.taskDefinition.cards];
-      const cardIndex = newCards.findIndex(
-        (card) => card.uuid === this.card.uuid
-      );
-      newCards[cardIndex] = {
-        ...newCards[cardIndex],
-        imageUrl,
-      };
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.cards[this.cardIndex].imageUrl = imageUrl;
+      });
       taskEditorStore.performEdit({
-        newTaskDefinition: {
-          ...this.taskDefinition,
-          cards: newCards,
-        },
+        newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
