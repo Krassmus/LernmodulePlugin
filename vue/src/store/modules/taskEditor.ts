@@ -2,6 +2,12 @@ import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { newTask, TaskDefinition } from '@/models/TaskDefinition';
 import { isArray, isEqual } from 'lodash';
 import { saveTask, SaveTaskResponse } from '@/routes';
+import { setAutoFreeze } from 'immer';
+
+// Prevent immer from freezing objects.  This behavior causes trouble when we
+// attempt to use v-model with an object produced by immer, because v-model
+// works by mutating objects.
+setAutoFreeze(false);
 
 type Saved = {
   status: 'saved';
