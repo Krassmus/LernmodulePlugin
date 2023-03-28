@@ -12,7 +12,9 @@
       >
         {{ index }}.
         {{ card.question === '' ? $gettext('Karte') : card.question }}
-        <button type="button" @click="deleteCard(index)">X</button>
+        <!-- Apply .stop modifier so that the selectCard event handler on the
+        parent element doesn't get called when the delete button is clicked -->
+        <button type="button" @click.stop="deleteCard(index)">X</button>
       </div>
       <button type="button" @click="addCard">
         {{ $gettext('Karte hinzufügen') }}
@@ -108,23 +110,21 @@ export default defineComponent({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
-      if (this.selectedCardIndex < 0) {
-        this.selectedCardIndex = 0;
-      }
+      // Select the newly inserted card
+      this.selectedCardIndex = this.taskDefinition.cards.length - 1;
     },
     deleteCard(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.cards.splice(index, 1);
       });
-      if (index === this.selectedCardIndex) {
-        this.selectedCardIndex = -1;
-      } else if (index < this.selectedCardIndex) {
-        this.selectedCardIndex--;
-      }
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
+      // Adjust the selection index so the selected card doesn't unexpectedly change
+      if (index <= this.selectedCardIndex) {
+        this.selectedCardIndex = this.selectedCardIndex - 1;
+      }
     },
   },
   data() {
