@@ -8,6 +8,8 @@ import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
 import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
+import MemoryEditor from '@/components/MemoryEditor.vue';
+import MemoryViewer from '@/components/MemoryViewer.vue';
 import { v4 } from 'uuid';
 
 // TODO Use zod or another parsing library to define these datatypes
@@ -16,7 +18,8 @@ export type TaskDefinition =
   | FlashCardTaskDefinition
   | QuestionTaskDefinition
   | DragTheWordsTaskDefinition
-  | MarkTheWordsTaskDefinition;
+  | MarkTheWordsTaskDefinition
+  | MemoryTaskDefinition;
 
 export type FillInTheBlanksTaskDefinition = {
   task_type: 'FillInTheBlanks';
@@ -104,6 +107,17 @@ export type MarkTheWordsTaskDefinition = {
   retryAllowed: boolean;
   showSolutionsAllowed: boolean;
   instantFeedback: boolean;
+  strings: {
+    checkButton: string;
+    retryButton: string;
+    solutionsButton: string;
+    resultMessage: string;
+  };
+};
+
+export type MemoryTaskDefinition = {
+  task_type: 'Memory';
+  cards: FlashCard[];
   strings: {
     checkButton: string;
     retryButton: string;
@@ -271,6 +285,23 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           resultMessage: ':correct von :total Wörter richtig ausgewählt.',
         },
       };
+    case 'Memory':
+      return {
+        task_type: 'Memory',
+        cards: [
+          {
+            uuid: v4(),
+            question: 'Question',
+            answer: 'Answer',
+          },
+        ],
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+        },
+      };
     default:
       throw new Error('Unimplemented type: ' + type);
   }
@@ -288,6 +319,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return DragTheWordsViewer;
     case 'MarkTheWords':
       return MarkTheWordsViewer;
+    case 'Memory':
+      return MemoryViewer;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -305,6 +338,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return DragTheWordsEditor;
     case 'MarkTheWords':
       return MarkTheWordsEditor;
+    case 'Memory':
+      return MemoryEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
