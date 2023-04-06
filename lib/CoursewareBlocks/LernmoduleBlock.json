@@ -1,0 +1,14 @@
+{
+    "title": "Payload schema for Courseware Lernmodule blocks",
+    "type": "object",
+    "properties": {
+        "task_json": {
+            "type": "object"
+        },
+        "initialized": {
+            "type": "boolean"
+        }
+    },
+    "required": ["task_json", "initialized"],
+    "additionalProperties": false
+}
