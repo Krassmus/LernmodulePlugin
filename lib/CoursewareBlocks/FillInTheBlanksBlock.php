@@ -26,7 +26,7 @@ class FillInTheBlanksBlock extends BlockType
     public static function getDescription(): string
     {
         return dgettext(
-            'CoursewareMindmapBlock',
+            'lernmoduleplugin',
             'Eine Aufgabe, wo die Lücken in einem Lückentext von Studierenden ausgefüllt werden sollen.'
         );
     }
