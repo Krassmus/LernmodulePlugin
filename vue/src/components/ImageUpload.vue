@@ -14,6 +14,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { uploadImage, UploadImageResponse } from '@/routes';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'ImageUpload',
@@ -26,6 +27,7 @@ export default defineComponent({
     };
   },
   methods: {
+    $gettext,
     onInputChange(event: InputEvent): void {
       if (this.uploadRequestPromise) {
         console.warn(

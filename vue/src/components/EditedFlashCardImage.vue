@@ -10,6 +10,7 @@ import { defineComponent, PropType } from 'vue';
 import { FlashCard, FlashCardTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'EditedFlashCardImage',
@@ -24,6 +25,7 @@ export default defineComponent({
       taskEditorStore.taskDefinition as FlashCardTaskDefinition,
   },
   methods: {
+    $gettext,
     deleteImage(): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         const cardIndex = draft.cards.findIndex(

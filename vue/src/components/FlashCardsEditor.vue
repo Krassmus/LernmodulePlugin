@@ -73,6 +73,7 @@ import { taskEditorStore } from '@/store';
 import EditedFlashCard from '@/components/EditedFlashCard.vue';
 import { v4 } from 'uuid';
 import produce from 'immer';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'FlashCardsEditor',
@@ -82,6 +83,7 @@ export default defineComponent({
       taskEditorStore.taskDefinition as FlashCardTaskDefinition,
   },
   methods: {
+    $gettext,
     selectCard(index: number) {
       this.selectedCardIndex = index;
     },

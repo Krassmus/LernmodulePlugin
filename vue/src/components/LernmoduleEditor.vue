@@ -81,6 +81,7 @@ import {
   viewerForTaskType,
 } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'LernmoduleEditor',
@@ -121,6 +122,7 @@ export default defineComponent({
     },
   },
   methods: {
+    $gettext,
     editorForTaskType,
     viewerForTaskType,
     saveTask: taskEditorStore.saveTask,

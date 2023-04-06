@@ -31,6 +31,7 @@ import { taskEditorStore } from '@/store';
 import ImageUpload from '@/components/ImageUpload.vue';
 import EditedFlashCardImage from '@/components/EditedFlashCardImage.vue';
 import produce from 'immer';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'EditedFlashCard',
@@ -50,6 +51,7 @@ export default defineComponent({
       taskEditorStore.taskDefinition as FlashCardTaskDefinition,
   },
   methods: {
+    $gettext,
     onImageUploaded(imageUrl: string): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.cards[this.cardIndex].imageUrl = imageUrl;

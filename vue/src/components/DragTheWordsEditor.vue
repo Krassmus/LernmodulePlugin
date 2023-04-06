@@ -88,7 +88,7 @@
 import { defineComponent } from 'vue';
 import { DragTheWordsTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
-import { $gettext } from '../language/gettext';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'DragTheWordsEditor',

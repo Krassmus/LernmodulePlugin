@@ -118,7 +118,7 @@ import {
 } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
-import { $gettext } from '../language/gettext';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'QuestionEditor',

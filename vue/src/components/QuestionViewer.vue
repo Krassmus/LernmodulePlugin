@@ -95,7 +95,7 @@ import {
   QuestionAnswer,
   QuestionTaskDefinition,
 } from '@/models/TaskDefinition';
-import { $gettext } from '../language/gettext';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'QuestionViewer',
