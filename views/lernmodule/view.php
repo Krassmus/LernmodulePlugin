@@ -25,6 +25,9 @@ echo $template->render();
 ?>
 
   <script>
+    if (!STUDIP.Lernmodule) {
+        STUDIP.Lernmodule = {};
+    }
     STUDIP.Lernmodule.periodicalPushData = function() {
       return {
         'attempt_id': jQuery('#attempt_id').val(),
