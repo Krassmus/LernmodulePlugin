@@ -110,8 +110,6 @@ export default defineComponent({
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.cards.push({
           uuid: v4(),
-          question: '',
-          answer: '',
         });
       });
       taskEditorStore.performEdit({

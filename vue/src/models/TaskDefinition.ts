@@ -58,6 +58,12 @@ export type FlashCard = {
   altText?: string;
 };
 
+export type MemoryCard = {
+  uuid: string;
+  imageUrl?: string;
+  altText?: string;
+};
+
 export type QuestionTaskDefinition = {
   task_type: 'Question';
   question: string;
@@ -117,7 +123,7 @@ export type MarkTheWordsTaskDefinition = {
 
 export type MemoryTaskDefinition = {
   task_type: 'Memory';
-  cards: FlashCard[];
+  cards: MemoryCard[];
   strings: {
     checkButton: string;
     retryButton: string;
@@ -291,8 +297,6 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         cards: [
           {
             uuid: v4(),
-            question: 'Question',
-            answer: 'Answer',
           },
         ],
         strings: {

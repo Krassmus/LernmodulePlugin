@@ -1,18 +1,22 @@
 <template>
-  <div v-for="card in this.task.cards" :key="card.uuid">
-    {{ card.question }}
+  <div class="h5pMemoryGame">
+    <MemoryCard
+      v-for="card in this.task.cards"
+      :key="card.uuid"
+      :card="card"
+    ></MemoryCard>
   </div>
-  <pre>{{ this.task }}</pre>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { MemoryTaskDefinition } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
+import MemoryCard from '@/components/MemoryCard.vue';
 
 export default defineComponent({
   name: 'MemoryViewer',
-  components: {},
+  components: { MemoryCard },
   emits: ['updateAttempt'],
   props: {
     task: {
@@ -30,4 +34,9 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.h5pMemoryGame {
+  display: flex;
+  flex-flow: row nowrap;
+}
+</style>
