@@ -5,50 +5,43 @@
         {{ element.text }}
       </span>
       <template v-else-if="element.type === 'blank'">
-        <span v-if="userInputs[element.uuid]" :class="classForInput(element)">
-          {{ getBlankText(userInputs[element.uuid]) }}
+        <span
+          v-if="userInputs[element.uuid]"
+          :class="classForInput(element)"
+          draggable="true"
+          @dragstart="
+            startDragUsedAnswer($event, element, userInputs[element.uuid])
+          "
+        >
+          {{ getAnswerById(userInputs[element.uuid])?.text }}
         </span>
         <span
           v-else
           class="h5pBlank"
-          @drop="onDrop($event, element)"
+          @drop="onDropBlank($event, element)"
           @dragover.prevent
           @dragenter.prevent
-          @id="element.uuid;"
           >&#8203;
         </span>
       </template>
     </template>
 
-    <template v-for="element in unusedAnswers" :key="element.uuid">
-      <div>
+    <div
+      class="unused-answers-list"
+      @drop="onDropUnusedAnswers($event)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <div v-for="answer in unusedAnswers" :key="answer.uuid">
         <span
           class="h5pBlankSolution"
           draggable="true"
-          @dragstart="startDrag($event, element)"
+          @dragstart="startDragUnusedAnswer($event, answer)"
         >
-          {{ element.solutions[0] }}
+          {{ answer.text }} {{ answer.uuid }}
         </span>
       </div>
-    </template>
-
-    <!--    <div>-->
-    <!--      <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">-->
-    <!--        {{ this.task.strings.checkButton }}-->
-    <!--      </button>-->
-
-    <!--      <button-->
-    <!--        v-if="showSolutionButton"-->
-    <!--        @click="onClickSolution"-->
-    <!--        class="h5pButton"-->
-    <!--      >-->
-    <!--        {{ this.task.strings.solutionsButton }}-->
-    <!--      </button>-->
-
-    <!--      <button v-if="showRetryButton" @click="onClickRetry" class="h5pButton">-->
-    <!--        {{ this.task.strings.retryButton }}-->
-    <!--      </button>-->
-    <!--    </div>-->
+    </div>
 
     <div class="h5pFeedbackContainer">
       <div class="h5pFeedbackContainerTop">
@@ -108,12 +101,19 @@ import { isEmpty, isEqual, round } from 'lodash';
 import { $gettext } from '@/language/gettext';
 
 type DragTheWordsElement = Blank | StaticText;
-type Blank = {
+
+interface Blank {
   type: 'blank';
   uuid: Uuid;
-  solutions: string[];
+  solution: string;
   hint: string;
-};
+}
+
+interface Answer {
+  uuid: Uuid;
+  text: string;
+}
+
 type StaticText = {
   type: 'staticText';
   uuid: Uuid;
@@ -132,11 +132,13 @@ export default defineComponent({
   },
   data() {
     return {
+      // Map from Blank IDs to Answer IDs
       userInputs: {} as Record<Uuid, Uuid>,
       submittedAnswers: null as Record<Uuid, string> | null,
       debug: false,
       userWantsToSeeSolutions: false,
-      draggedItemId: undefined as Uuid | undefined,
+      draggedAnswerId: undefined as Uuid | undefined,
+      draggedSourceId: undefined as Uuid | undefined,
     };
   },
   methods: {
@@ -164,8 +166,11 @@ export default defineComponent({
         // TODO Consider what the key should be. This is a bit ugly.
         // The key is shown directly in the 'assessment' UI.
         // Maybe we should change how that works?
-        points[`${index} - ${blank.solutions[0]}`] =
-          this.submittedAnswerIsCorrect(blank) ? 1 : 0;
+        points[`${index} - ${blank.solution}`] = this.submittedAnswerIsCorrect(
+          blank
+        )
+          ? 1
+          : 0;
       });
       this.$emit('updateAttempt', {
         points,
@@ -183,7 +188,7 @@ export default defineComponent({
           'The element with the given id is not a blank: ' + blankId
         );
       }
-      return el.solutions[0];
+      return el.solution;
     },
     getElement(elementId: Uuid): DragTheWordsElement {
       const el = this.parsedTemplate.find((el) => el.uuid === elementId);
@@ -194,19 +199,68 @@ export default defineComponent({
       }
       return el;
     },
-    startDrag(dragEvent: DragEvent, blank: Blank): void {
+    startDragUsedAnswer(
+      dragEvent: DragEvent,
+      blank: Blank,
+      answerId: Uuid
+    ): void {
       if (dragEvent.dataTransfer) {
         dragEvent.dataTransfer.dropEffect = 'move';
         dragEvent.dataTransfer.effectAllowed = 'move';
-        this.draggedItemId = blank.uuid;
+      }
+      const answer = this.getAnswerById(answerId);
+      console.log('Dragging answer: ', answer, 'From blank: ', blank);
+
+      for (const property in this.userInputs) {
+        console.log(property);
+      }
+
+      this.draggedAnswerId = answerId;
+    },
+
+    startDragUnusedAnswer(dragEvent: DragEvent, answer: Answer): void {
+      if (dragEvent.dataTransfer) {
+        dragEvent.dataTransfer.dropEffect = 'move';
+        dragEvent.dataTransfer.effectAllowed = 'move';
+
+        console.log('Dragging answer: ', answer);
+        this.draggedAnswerId = answer.uuid;
       }
     },
-    onDrop(dragEvent: DragEvent, blank: Blank): void {
-      if (!this.draggedItemId) {
-        throw new Error('Dragged item id is undefined');
+    onDropBlank(dragEvent: DragEvent, blank: Blank): void {
+      if (!this.draggedAnswerId) {
+        throw new Error('Dragged answer id is undefined');
       }
-      this.userInputs[blank.uuid] = this.draggedItemId;
-      this.draggedItemId = undefined;
+
+      console.log('Dropped answer :', this.draggedAnswer, 'on blank: ', blank);
+
+      // Remove the dropped answer from the blank, if any, where it has been dragged from
+      const previousBlank = this.blanks.find(
+        (blank) => this.userInputs[blank.uuid] === this.draggedAnswerId
+      );
+
+      if (previousBlank) {
+        delete this.userInputs[previousBlank.uuid];
+      }
+
+      // Set the answer for the blank where the answer was dropped
+      this.userInputs[blank.uuid] = this.draggedAnswerId;
+
+      this.draggedAnswerId = undefined;
+    },
+    onDropUnusedAnswers(ev: DragEvent): void {
+      console.error('Not implemented');
+      ev.preventDefault(); // Indicate that dropping is al
+      if (!this.draggedAnswer) {
+        throw new Error('draggedAnswer is undefined');
+      }
+      // Remove the dropped answer from the blank, if any, where it has been dragged from
+      const blank = this.blanks.find(
+        (blank) => this.userInputs[blank.uuid] === this.draggedAnswerId
+      );
+      if (blank) {
+        delete this.userInputs[blank.uuid];
+      }
     },
     onClickCheck() {
       // Save a copy of the user's inputs.
@@ -242,6 +296,9 @@ export default defineComponent({
         return 'h5pBlank';
       }
     },
+    getAnswerById(id: Uuid): Answer | undefined {
+      return this.answers.find((answer) => answer.uuid === id);
+    },
   },
   computed: {
     splitTemplate(): string[] {
@@ -255,11 +312,11 @@ export default defineComponent({
           return { type: 'staticText', text: value, uuid: uuidv4() };
         } else {
           let splitString = value.split(':');
-          let solutions = splitString[0].split('/');
+          let solution = splitString[0];
           let hint = splitString[1];
           return {
             type: 'blank',
-            solutions: solutions,
+            solution: solution,
             hint: hint,
             uuid: uuidv4(),
           };
@@ -271,19 +328,32 @@ export default defineComponent({
         (word) => word.type === 'blank'
       ) as Blank[];
     },
-    randomizedAnswers(): Blank[] {
+    answers(): Answer[] {
+      return this.blanks.map((blank) => ({
+        uuid: uuidv4(),
+        text: blank.solution,
+      }));
+    },
+    draggedAnswer(): Answer | undefined {
+      if (!this.draggedAnswerId) {
+        return undefined;
+      } else {
+        return this.getAnswerById(this.draggedAnswerId);
+      }
+    },
+    randomizedAnswers(): Answer[] {
       // https://stackoverflow.com/a/46545530
-      let randomizedAnswers = this.blanks
+      let randomizedAnswers = this.answers
         .map((value) => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
         .map(({ value }) => value);
       return randomizedAnswers;
     },
-    sortedAnswers(): Blank[] {
+    sortedAnswers(): Answer[] {
       // https://stackoverflow.com/a/45544166
-      let sortedAnswers = this.blanks
+      let sortedAnswers = this.answers
         .map((value) => value)
-        .sort((a, b) => a.solutions[0].localeCompare(b.solutions[0]));
+        .sort((a, b) => a.text.localeCompare(b.text));
       return sortedAnswers;
     },
     blanksFilled(): number {
@@ -306,14 +376,14 @@ export default defineComponent({
     maxPoints(): number {
       return this.blanks.length;
     },
-    unusedAnswers(): Blank[] {
+    unusedAnswers(): Answer[] {
       if (this.task.alphabeticOrder) {
         return this.sortedAnswers.filter(
-          (blank) => !Object.values(this.userInputs).includes(blank.uuid)
+          (answer) => !Object.values(this.userInputs).includes(answer.uuid)
         );
       } else {
         return this.randomizedAnswers.filter(
-          (blank) => !Object.values(this.userInputs).includes(blank.uuid)
+          (answer) => !Object.values(this.userInputs).includes(answer.uuid)
         );
       }
     },
@@ -437,6 +507,7 @@ export default defineComponent({
 
 .h5pFilledBlank {
   background: #ffffff;
+  cursor: grabbing;
   color: #000000;
   border: 1px solid #a0a0a0;
   border-radius: 0.25em;
@@ -498,5 +569,11 @@ export default defineComponent({
 
 span.item:empty:before {
   content: '\200b';
+}
+
+.unused-answers-list {
+  min-height: 2rem;
+  border: 2px solid black;
+  border-radius: 5px;
 }
 </style>
