@@ -1,13 +1,14 @@
 <template>
   <div class="h5pMemoryCard">
     <label> {{ card.altText }}</label>
-    <img
-      :src="card.imageUrl"
-      :alt="card.altText"
-      width="100"
-      height="100"
-      @click="onClickCard(card)"
-    />
+    <div class="memoryImageContainer">
+      <img
+        :src="card.imageUrl"
+        :alt="card.altText"
+        class="memoryImage"
+        @click="onClickCard(card)"
+      />
+    </div>
   </div>
 </template>
 
@@ -34,6 +35,21 @@ export default defineComponent({
 .h5pMemoryCard {
   display: flex;
   flex-flow: column;
-  border: 2px solid #0a78d1;
+  border: 2px solid #c1c1c1;
+  aspect-ratio: 1;
+}
+
+.memoryImage {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.memoryImageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  width: 100%;
+  background: #e6e6e6;
 }
 </style>

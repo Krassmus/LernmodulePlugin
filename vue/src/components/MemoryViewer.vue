@@ -36,7 +36,9 @@ export default defineComponent({
 
 <style scoped>
 .h5pMemoryGame {
-  display: flex;
-  flex-flow: row nowrap;
+  display: grid;
+  grid-gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /*grid-template-rows: repeat(auto-fit, minmax(250px, 1fr));*/
 }
 </style>
