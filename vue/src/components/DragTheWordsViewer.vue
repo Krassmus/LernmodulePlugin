@@ -38,7 +38,7 @@
           draggable="true"
           @dragstart="startDragUnusedAnswer($event, answer)"
         >
-          {{ answer.text }} {{ answer.uuid }}
+          {{ answer.text }}
         </span>
       </div>
     </div>
@@ -601,7 +601,7 @@ span.item:empty:before {
 
 .unused-answers-list {
   min-height: 2rem;
-  border: 2px solid black;
+  border: 1px solid #eee;
   border-radius: 5px;
 }
 </style>
