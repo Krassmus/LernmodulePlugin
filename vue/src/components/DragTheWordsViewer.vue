@@ -97,7 +97,7 @@
 import { defineComponent, PropType } from 'vue';
 import { DragTheWordsTaskDefinition, Feedback } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEmpty, isEqual, round } from 'lodash';
+import { isEqual, round } from 'lodash';
 import { $gettext } from '@/language/gettext';
 
 type DragTheWordsElement = Blank | StaticText;
@@ -119,6 +119,7 @@ type StaticText = {
   uuid: Uuid;
   text: string;
 };
+
 type Uuid = string;
 
 export default defineComponent({
@@ -143,6 +144,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+
     submittedAnswerIsCorrect(element: DragTheWordsElement): boolean {
       const blank = element as Blank;
 
@@ -156,9 +158,11 @@ export default defineComponent({
         return this.isAnswerCorrect(submittedAnswer, blank.uuid);
       }
     },
+
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
       return userAnswer === solution;
     },
+
     updateAttempt() {
       // Tell the server which blanks were filled out correctly.
       const points = {} as Record<string, number>;
@@ -178,18 +182,7 @@ export default defineComponent({
         success: this.correctAnswers === this.blanks.length,
       });
     },
-    isAnswerUsed(elementId: Uuid): boolean {
-      return Object.values(this.userInputs).includes(elementId);
-    },
-    getBlankText(blankId: Uuid): string {
-      const el = this.getElement(blankId);
-      if (el.type !== 'blank') {
-        throw new Error(
-          'The element with the given id is not a blank: ' + blankId
-        );
-      }
-      return el.solution;
-    },
+
     getElement(elementId: Uuid): DragTheWordsElement {
       const el = this.parsedTemplate.find((el) => el.uuid === elementId);
       if (!el) {
@@ -199,6 +192,7 @@ export default defineComponent({
       }
       return el;
     },
+
     startDragUsedAnswer(
       dragEvent: DragEvent,
       blank: Blank,
@@ -227,6 +221,7 @@ export default defineComponent({
         this.draggedAnswerId = answer.uuid;
       }
     },
+
     onDropBlank(dragEvent: DragEvent, blank: Blank): void {
       if (!this.draggedAnswerId) {
         throw new Error('Dragged answer id is undefined');
@@ -248,6 +243,7 @@ export default defineComponent({
 
       this.draggedAnswerId = undefined;
     },
+
     onDropUnusedAnswers(ev: DragEvent): void {
       console.error('Not implemented');
       ev.preventDefault(); // Indicate that dropping is al
@@ -262,18 +258,22 @@ export default defineComponent({
         delete this.userInputs[blank.uuid];
       }
     },
+
     onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
     },
+
     onClickShowSolution() {
       this.userWantsToSeeSolutions = true;
     },
+
     onClickTryAgain() {
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
     },
+
     classForInput(blank: DragTheWordsElement) {
       if (!this.submittedAnswers) {
         return 'h5pFilledBlank';
@@ -296,6 +296,7 @@ export default defineComponent({
         return 'h5pBlank';
       }
     },
+
     getAnswerById(id: Uuid): Answer | undefined {
       return this.answers.find((answer) => answer.uuid === id);
     },
@@ -306,6 +307,7 @@ export default defineComponent({
       // and the odd indexes are the blanks.
       return this.task.template.split(/\*([^*]*)\*/);
     },
+
     parsedTemplate(): DragTheWordsElement[] {
       return this.splitTemplate.map((value, index) => {
         if (index % 2 === 0) {
@@ -323,17 +325,20 @@ export default defineComponent({
         }
       });
     },
+
     blanks(): Blank[] {
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
       ) as Blank[];
     },
+
     answers(): Answer[] {
       return this.blanks.map((blank) => ({
         uuid: uuidv4(),
         text: blank.solution,
       }));
     },
+
     draggedAnswer(): Answer | undefined {
       if (!this.draggedAnswerId) {
         return undefined;
@@ -341,21 +346,22 @@ export default defineComponent({
         return this.getAnswerById(this.draggedAnswerId);
       }
     },
+
     randomizedAnswers(): Answer[] {
       // https://stackoverflow.com/a/46545530
-      let randomizedAnswers = this.answers
+      return this.answers
         .map((value) => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
         .map(({ value }) => value);
-      return randomizedAnswers;
     },
+
     sortedAnswers(): Answer[] {
       // https://stackoverflow.com/a/45544166
-      let sortedAnswers = this.answers
+      return this.answers
         .map((value) => value)
         .sort((a, b) => a.text.localeCompare(b.text));
-      return sortedAnswers;
     },
+
     blanksFilled(): number {
       if (!this.submittedAnswers) {
         return 0;
@@ -363,19 +369,24 @@ export default defineComponent({
         return Object.keys(this.submittedAnswers).length;
       }
     },
+
     allBlanksAreFilled(): boolean {
       return this.blanksFilled == this.blanks.length;
     },
+
     correctAnswers(): number {
       return this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
         .length;
     },
+
     allAnswersAreCorrect(): boolean {
       return this.blanks.every((blank) => this.submittedAnswerIsCorrect(blank));
     },
+
     maxPoints(): number {
       return this.blanks.length;
     },
+
     unusedAnswers(): Answer[] {
       if (this.task.alphabeticOrder) {
         return this.sortedAnswers.filter(
@@ -387,9 +398,11 @@ export default defineComponent({
         );
       }
     },
+
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
     },
+
     showExtraButtons(): boolean {
       if (this.task.instantFeedback) {
         if (this.allBlanksAreFilled) {
@@ -409,18 +422,22 @@ export default defineComponent({
         );
       }
     },
+
     showCheckButton(): boolean {
       return (
         (this.submittedAnswers === null || this.inputHasChanged) &&
         !this.task.instantFeedback
       );
     },
+
     showSolutionButton(): boolean {
       return !this.showSolutions && this.task.showSolutionsAllowed;
     },
+
     showRetryButton(): boolean {
       return this.task.retryAllowed && this.submittedAnswers !== null;
     },
+
     showSolutions(): boolean {
       return (
         this.userWantsToSeeSolutions &&
@@ -428,6 +445,7 @@ export default defineComponent({
           !this.task.allBlanksMustBeFilledForSolutions)
       );
     },
+
     showFillInAllTheBlanksMessage(): boolean {
       return (
         this.task.allBlanksMustBeFilledForSolutions &&
@@ -436,6 +454,7 @@ export default defineComponent({
         !this.inputHasChanged
       );
     },
+
     showResults(): boolean {
       return (
         !(this.submittedAnswers === null) &&
@@ -444,6 +463,7 @@ export default defineComponent({
         !this.inputHasChanged
       );
     },
+
     resultMessage(): string {
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
@@ -457,6 +477,7 @@ export default defineComponent({
 
       return resultMessage;
     },
+
     feedbackMessage(): string | undefined {
       const percentageCorrect = round(
         (this.correctAnswers / this.blanks.length) * 100
@@ -470,6 +491,7 @@ export default defineComponent({
 
       return undefined;
     },
+
     feedbackSortedByScore(): Feedback[] {
       return this.task.feedback
         .map((value) => value)
@@ -486,35 +508,37 @@ export default defineComponent({
   font-size: 16px;
   line-height: 1.75em;
   font-family: Lato, sans-serif;
+  max-width: 50em;
 }
+
 .h5pStaticText {
+  display: inline;
   background: #ffffff;
   color: #000000;
-  /*border: 1px solid #a0a0a0;*/
-  display: inline-block;
-  line-height: 2em;
+  line-height: 1.875em; /* makes the static text line height the same as the blanks 1.75em line height + 1px border top and bottom */
+  margin: 0.1em 0 0 0; /* top, right, bottom, left */
 }
 
 .h5pBlank {
+  display: inline-block;
   background: #ffffff;
   color: #000000;
   border: 1px solid #a0a0a0;
   border-radius: 0.25em;
-  margin: 0em 0.25em 0em 0.25em;
-  display: inline-block;
-  width: 9em;
+  margin: 0.1em 0.1em 0 0.1em; /* top, right, bottom, left */
+  min-width: 9em;
 }
 
 .h5pFilledBlank {
+  display: inline-flex;
+  justify-content: center;
   background: #ffffff;
-  cursor: grabbing;
   color: #000000;
   border: 1px solid #a0a0a0;
   border-radius: 0.25em;
-  margin: 0em 0.25em 0em 0.25em;
-  display: inline-flex;
-  width: 9em;
-  justify-content: center;
+  margin: 0.1em 0.1em 0 0.1em; /* top, right, bottom, left */
+  min-width: 9em;
+  cursor: grabbing;
 }
 
 .h5pBlankSolution {
@@ -551,7 +575,7 @@ export default defineComponent({
 
 .h5pButton {
   /* top, right, bottom, left */
-  margin: 1em 0.5em 1em 0em;
+  margin: 1em 0.5em 1em 0;
   /* vertical, horizontal */
   padding: 0.25em 1.25em;
   border-radius: 2em;
