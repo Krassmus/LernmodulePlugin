@@ -1,33 +1,27 @@
 <template>
-  <div class="h5pMemoryCard">
+  <div class="h5pMemoryCard" v-if="card.flipped">
     <label> {{ card.altText }}</label>
     <div class="memoryImageContainer">
-      <img
-        :src="card.imageUrl"
-        :alt="card.altText"
-        class="memoryImage"
-        @click="onClickCard(card)"
-      />
+      <img :src="card.imageUrl" :alt="card.altText" class="memoryImage" />
     </div>
   </div>
+  <div v-else class="h5pMemoryCard">sad</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MemoryCard } from '@/models/TaskDefinition';
+import { ViewerMemoryCard } from '@/components/MemoryViewer.vue';
 
 export default defineComponent({
   name: 'MemoryCard',
   props: {
     card: {
-      type: Object as PropType<MemoryCard>,
+      type: Object as PropType<ViewerMemoryCard>,
       required: true,
     },
   },
   computed: {},
-  methods: {
-    onClickCard(card: MemoryCard) {},
-  },
+  methods: {},
 });
 </script>
 

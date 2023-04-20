@@ -1,22 +1,27 @@
 <template>
   <div class="h5pMemoryGame">
-    <MemoryCard
-      v-for="card in this.task.cards"
+    <MemoryCardComponent
+      v-for="card in this.cards"
       :key="card.uuid"
       :card="card"
-    ></MemoryCard>
+      @click="onClickCard(card)"
+    ></MemoryCardComponent>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MemoryTaskDefinition } from '@/models/TaskDefinition';
+import { MemoryTaskDefinition, MemoryCard } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
-import MemoryCard from '@/components/MemoryCard.vue';
+import MemoryCardComponent from '@/components/MemoryCard.vue';
+
+export interface ViewerMemoryCard extends MemoryCard {
+  flipped: boolean;
+}
 
 export default defineComponent({
   name: 'MemoryViewer',
-  components: { MemoryCard },
+  components: { MemoryCardComponent },
   emits: ['updateAttempt'],
   props: {
     task: {
@@ -27,10 +32,29 @@ export default defineComponent({
   data() {
     return {
       selectedCardIndex: -1,
+      cards: [] as ViewerMemoryCard[],
     };
   },
-  methods: { $gettext },
-  computed: {},
+  methods: {
+    $gettext,
+    onClickCard(card: ViewerMemoryCard): void {
+      card.flipped = !card.flipped;
+      console.log('Flipped ', card.altText, ' flipped: ', card.flipped);
+    },
+  },
+  watch: {
+    task: {
+      handler() {
+        console.log('watcher task');
+        this.cards = this.task.cards.map((card) => ({
+          ...card,
+          flipped: false,
+        }));
+        console.log('cards:', this.cards);
+      },
+      immediate: true,
+    },
+  },
 });
 </script>
 
