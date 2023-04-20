@@ -12,6 +12,9 @@
           @dragstart="
             startDragUsedAnswer($event, element, userInputs[element.uuid])
           "
+          @drop="onDropBlank($event, element)"
+          @dragover.prevent
+          @dragenter.prevent
         >
           {{ getAnswerById(userInputs[element.uuid])?.text }}
         </span>
@@ -145,22 +148,14 @@ export default defineComponent({
   methods: {
     $gettext,
 
-    submittedAnswerIsCorrect(element: DragTheWordsElement): boolean {
-      const blank = element as Blank;
-
+    submittedAnswerIsCorrect(blank: Blank): boolean {
       const submittedAnswerId = this.submittedAnswers?.[blank.uuid];
+      if (!submittedAnswerId) return false;
 
-      if (submittedAnswerId != undefined) {
-        const submittedAnswer = this.getAnswerById(submittedAnswerId)?.text;
+      const submittedAnswer = this.getAnswerById(submittedAnswerId)?.text;
+      if (!submittedAnswer) return false;
 
-        if (!submittedAnswer) {
-          return false;
-        } else {
-          return this.isAnswerCorrect(submittedAnswer, blank.solution);
-        }
-      } else {
-        return false;
-      }
+      return this.isAnswerCorrect(submittedAnswer, blank.solution);
     },
 
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
@@ -278,19 +273,19 @@ export default defineComponent({
       this.submittedAnswers = null;
     },
 
-    classForFilledBlank(blank: DragTheWordsElement) {
+    classForFilledBlank(blank: Blank) {
       if (!this.submittedAnswers) {
         return 'h5pFilledBlank';
       }
 
-      if (this.userInputs?.[blank.uuid] != undefined) {
+      if (this.userInputs?.[blank.uuid]) {
         if (this.submittedAnswerIsCorrect(blank)) {
           return 'h5pFilledBlank h5pBlankCorrect';
         } else {
-          if (
-            this.submittedAnswers?.[blank.uuid] ===
-            this.userInputs?.[blank.uuid]
-          ) {
+          const userInputHasChangedAfterSubmitting =
+            this.submittedAnswers?.[blank.uuid] !==
+            this.userInputs?.[blank.uuid];
+          if (!userInputHasChangedAfterSubmitting) {
             return 'h5pFilledBlank h5pBlankIncorrect';
           } else {
             return 'h5pFilledBlank';
