@@ -9,7 +9,11 @@
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
-        <input type="text" v-model="taskDefinition.cards[cardIndex].altText" />
+        <input
+          type="text"
+          :value="taskDefinition.cards[cardIndex].altText"
+          @input="onInputAltText"
+        />
       </label>
     </fieldset>
   </form>
@@ -51,6 +55,22 @@ export default defineComponent({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
+    },
+    // This is how you write the @input event handler if you want undo-redo and reactivity to work
+    onInputAltText(ev: InputEvent): void {
+      const value = (ev.target as HTMLInputElement).value;
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.cards[this.cardIndex].altText = value;
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition,
+        undoBatch: { type: 'EditedAltText' },
+      });
+    },
+    // This is what results if you write v-model="taskDefinition.cards[this.cardIndex].altText"
+    onInputAltTextBAD(ev: InputEvent): void {
+      const value = (ev.target as HTMLInputElement).value;
+      this.taskDefinition.cards[this.cardIndex].altText = value;
     },
   },
 });
