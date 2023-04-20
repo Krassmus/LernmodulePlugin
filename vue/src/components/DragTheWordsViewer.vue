@@ -7,7 +7,7 @@
       <template v-else-if="element.type === 'blank'">
         <span
           v-if="userInputs[element.uuid]"
-          :class="classForInput(element)"
+          :class="classForFilledBlank(element)"
           draggable="true"
           @dragstart="
             startDragUsedAnswer($event, element, userInputs[element.uuid])
@@ -135,7 +135,7 @@ export default defineComponent({
     return {
       // Map from Blank IDs to Answer IDs
       userInputs: {} as Record<Uuid, Uuid>,
-      submittedAnswers: null as Record<Uuid, string> | null,
+      submittedAnswers: null as Record<Uuid, Uuid> | null,
       debug: false,
       userWantsToSeeSolutions: false,
       draggedAnswerId: undefined as Uuid | undefined,
@@ -148,14 +148,18 @@ export default defineComponent({
     submittedAnswerIsCorrect(element: DragTheWordsElement): boolean {
       const blank = element as Blank;
 
-      const submittedAnswer = this.submittedAnswers?.[blank.uuid];
-      if (!submittedAnswer) {
-        return false;
+      const submittedAnswerId = this.submittedAnswers?.[blank.uuid];
+
+      if (submittedAnswerId != undefined) {
+        const submittedAnswer = this.getAnswerById(submittedAnswerId)?.text;
+
+        if (!submittedAnswer) {
+          return false;
+        } else {
+          return this.isAnswerCorrect(submittedAnswer, blank.solution);
+        }
       } else {
-        // return blank.solutions.some((solution) =>
-        //   this.isAnswerCorrect(submittedAnswer, solution)
-        // );
-        return this.isAnswerCorrect(submittedAnswer, blank.uuid);
+        return false;
       }
     },
 
@@ -274,7 +278,7 @@ export default defineComponent({
       this.submittedAnswers = null;
     },
 
-    classForInput(blank: DragTheWordsElement) {
+    classForFilledBlank(blank: DragTheWordsElement) {
       if (!this.submittedAnswers) {
         return 'h5pFilledBlank';
       }
