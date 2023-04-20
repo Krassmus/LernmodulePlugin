@@ -26,13 +26,13 @@
       </button>
     </div>
 
-    <EditedFlashCard
+    <EditedMemoryCard
       v-if="this.taskDefinition.cards[this.selectedCardIndex]"
-      class="edited-flash-card"
+      class="edited-memory-card"
       :card="this.taskDefinition.cards[this.selectedCardIndex]"
       :card-index="this.selectedCardIndex"
     />
-    <div v-else class="edited-flash-card no-card-selected-placeholder">
+    <div v-else class="edited-memory-card no-card-selected-placeholder">
       {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
     </div>
   </div>
@@ -61,7 +61,7 @@
   border: #0a78d1 2px solid;
 }
 
-.edited-flash-card {
+.edited-memory-card {
   flex: 1 1 auto;
 }
 
@@ -75,16 +75,16 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import EditedFlashCard from '@/components/EditedFlashCard.vue';
 import { taskEditorStore } from '@/store';
 import { MemoryTaskDefinition } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';
+import EditedMemoryCard from '@/components/EditedMemoryCard.vue';
 
 export default defineComponent({
   name: 'MemoryEditor',
-  components: { EditedFlashCard },
+  components: { EditedMemoryCard },
   props: {},
   data() {
     return {
