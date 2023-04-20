@@ -33,6 +33,11 @@ export default defineComponent({
     return {
       selectedCardIndex: -1,
       cards: [] as ViewerMemoryCard[],
+      // Instead of storing a 'flipped' attribute on the cards, one could also store all of their 'flipped' statuses
+      // in a record, like this....
+      flippedStates: {} as Record<string, boolean>,
+      // Maybe it would make sense to store the ID fo the first card that a player turns over
+      firstFlippedCardId: undefined as string | undefined,
     };
   },
   methods: {
@@ -45,14 +50,20 @@ export default defineComponent({
   watch: {
     task: {
       handler() {
-        console.log('watcher task');
-        this.cards = this.task.cards.map((card) => ({
-          ...card,
-          flipped: false,
-        }));
-        console.log('cards:', this.cards);
+        console.log('watcher for this.task');
+        // Make a copy of all of the cards in the task.
+        this.cards = this.task.cards.map((card) => {
+          // Retain the flipped statuses of the existing cards
+          const oldCard = this.cards.find(
+            (existingCard) => existingCard.uuid === card.uuid
+          );
+          return {
+            ...card,
+            flipped: oldCard ? oldCard.flipped : false,
+          };
+        });
       },
-      immediate: true,
+      immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
   },
 });
