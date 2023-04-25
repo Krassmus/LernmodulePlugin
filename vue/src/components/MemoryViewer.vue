@@ -14,9 +14,12 @@ import { defineComponent, PropType } from 'vue';
 import { MemoryTaskDefinition, MemoryCard } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import MemoryCardComponent from '@/components/MemoryCard.vue';
+import { v4 } from 'uuid';
 
 export interface ViewerMemoryCard extends MemoryCard {
   flipped: boolean;
+  matchingCardId: string | undefined;
+  solved: boolean;
 }
 
 export default defineComponent({
@@ -43,15 +46,56 @@ export default defineComponent({
   methods: {
     $gettext,
     onClickCard(card: ViewerMemoryCard): void {
-      card.flipped = !card.flipped;
-      console.log('Flipped ', card.altText, ' flipped: ', card.flipped);
+      // do nothing if card is already open
+      if (card.flipped) return;
+
+      card.flipped = true;
+
+      if (!this.firstFlippedCardId) {
+        // This is the first flipped card
+        this.flipAllUnsolvedCards(card.uuid);
+        this.firstFlippedCardId = card.uuid;
+        console.log('Flipped ', card.altText);
+        return;
+      } else {
+        // We flipped the second card open
+        if (card.matchingCardId === this.firstFlippedCardId) {
+          // We found a pair!
+          card.solved = true;
+          this.solveCard(this.firstFlippedCardId);
+          this.firstFlippedCardId = undefined;
+          return;
+        } else {
+          // We did not find a pair :(
+          this.firstFlippedCardId = undefined;
+          return;
+        }
+      }
+    },
+    flipAllUnsolvedCards(exceptionUuid: string): void {
+      this.cards = this.cards.map((card) => ({
+        uuid: card.uuid,
+        imageUrl: card.imageUrl,
+        altText: card.altText,
+        flipped: card.solved || card.uuid === exceptionUuid ? true : false,
+        matchingCardId: card.matchingCardId,
+        solved: card.solved,
+      }));
+    },
+    solveCard(uuid: string): void {
+      this.cards = this.cards.map((card) => {
+        return {
+          ...card,
+          solved: card.uuid === uuid ? true : card.solved,
+        };
+      });
     },
   },
   watch: {
     task: {
       handler() {
         console.log('watcher for this.task');
-        // Make a copy of all of the cards in the task.
+        // Make a copy of all of the cards in the task and add the flipped attribute.
         this.cards = this.task.cards.map((card) => {
           // Retain the flipped statuses of the existing cards
           const oldCard = this.cards.find(
@@ -60,8 +104,42 @@ export default defineComponent({
           return {
             ...card,
             flipped: oldCard ? oldCard.flipped : false,
+            matchingCardId: undefined,
+            solved: oldCard ? oldCard.solved : false,
           };
         });
+
+        let duplicatedCards = [] as ViewerMemoryCard[];
+
+        this.cards.forEach((card) => {
+          const partnerCard = {
+            uuid: v4(),
+            imageUrl: card.imageUrl,
+            altText: card.altText,
+            flipped: card.flipped,
+            matchingCardId: card.uuid,
+            solved: card.solved,
+          };
+
+          duplicatedCards.push(partnerCard);
+
+          duplicatedCards.push({
+            uuid: card.uuid,
+            imageUrl: card.imageUrl,
+            altText: card.altText,
+            flipped: card.flipped,
+            matchingCardId: partnerCard.uuid,
+            solved: card.solved,
+          });
+        });
+
+        // https://stackoverflow.com/a/46545530
+        let randomizedCards = duplicatedCards
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value);
+
+        this.cards = randomizedCards;
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
