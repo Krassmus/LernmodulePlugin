@@ -1,11 +1,13 @@
 <template>
-  <div class="h5pMemoryCard" v-if="card.flipped">
-    <label> {{ card.altText }}</label>
-    <div class="memoryImageContainer">
+  <div class="memoryCard" v-if="card.flipped">
+    <!--    <label class="cardDescription"> {{ card.altText }}</label>-->
+    <div class="memoryCardFront">
       <img :src="card.imageUrl" :alt="card.altText" class="memoryImage" />
     </div>
   </div>
-  <div v-else class="h5pMemoryCard">sad</div>
+  <div v-else class="memoryCardBack">
+    <img :src="pathForAsset('memoryCardBack', 'png')" class="memoryImage" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -21,16 +23,24 @@ export default defineComponent({
     },
   },
   computed: {},
-  methods: {},
+  methods: {
+    pathForAsset(assetName: string, type: string) {
+      return window.STUDIP.ASSETS_URL + assetName + '.' + type;
+    },
+  },
 });
 </script>
 
 <style scoped>
-.h5pMemoryCard {
+.memoryCard {
   display: flex;
   flex-flow: column;
-  border: 2px solid #c1c1c1;
+  align-items: center;
   aspect-ratio: 1;
+  background: #e7ebf1;
+  border: 2px solid #d0d7e3;
+  color: rgb(40, 73, 124);
+  padding: 1px 1px 1px 1px;
 }
 
 .memoryImage {
@@ -38,12 +48,19 @@ export default defineComponent({
   max-height: 100%;
 }
 
-.memoryImageContainer {
+.memoryCardFront {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-grow: 1;
   width: 100%;
-  background: #e6e6e6;
+}
+
+.memoryCardBack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  width: 100%;
 }
 </style>
