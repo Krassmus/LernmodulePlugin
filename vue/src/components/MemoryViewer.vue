@@ -34,12 +34,7 @@ export default defineComponent({
   },
   data() {
     return {
-      selectedCardIndex: -1,
       cards: [] as ViewerMemoryCard[],
-      // Instead of storing a 'flipped' attribute on the cards, one could also store all of their 'flipped' statuses
-      // in a record, like this....
-      flippedStates: {} as Record<string, boolean>,
-      // Maybe it would make sense to store the ID fo the first card that a player turns over
       firstFlippedCardId: undefined as string | undefined,
     };
   },
@@ -52,24 +47,22 @@ export default defineComponent({
       card.flipped = true;
 
       if (!this.firstFlippedCardId) {
-        // This is the first flipped card
+        // This is the first of two cards to be flipped around
+        // Reset all previously cardflips that were not successful except the card we just flipped
         this.flipAllUnsolvedCards(card.uuid);
+
         this.firstFlippedCardId = card.uuid;
         console.log('Flipped ', card.altText);
-        return;
       } else {
-        // We flipped the second card open
+        // We flipped the second card around, check if we got a pair!
         if (card.matchingCardId === this.firstFlippedCardId) {
           // We found a pair!
+          // Set both cards' solved attribute to true
           card.solved = true;
           this.solveCard(this.firstFlippedCardId);
-          this.firstFlippedCardId = undefined;
-          return;
-        } else {
-          // We did not find a pair :(
-          this.firstFlippedCardId = undefined;
-          return;
         }
+
+        this.firstFlippedCardId = undefined;
       }
     },
     flipAllUnsolvedCards(exceptionUuid: string): void {
