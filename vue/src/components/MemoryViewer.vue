@@ -94,20 +94,17 @@ export default defineComponent({
         console.log('watcher for this.task');
         // Make a copy of all of the cards in the task and add the flipped, solved and matchingCardId attributes
         this.cards = this.task.cards.map((card) => {
-          // Retain the flipped and solved statuses of the existing cards
-          const oldCard = this.cards.find(
-            (existingCard) => existingCard.uuid === card.uuid
-          );
           return {
             ...card,
-            flipped: oldCard ? oldCard.flipped : false,
-            solved: oldCard ? oldCard.solved : false,
+            flipped: false,
+            solved: false,
             matchingCardId: undefined,
           };
         });
 
         // Make a duplicate of each card and link them with their original through the matchingCardId attribute
         let duplicatedCards = [] as ViewerMemoryCard[];
+
         this.cards.forEach((card) => {
           const partnerId = v4();
 
@@ -124,6 +121,8 @@ export default defineComponent({
             matchingCardId: partnerId,
           });
         });
+
+        this.cards = duplicatedCards;
 
         // Shuffle the cards
         // https://stackoverflow.com/a/46545530
