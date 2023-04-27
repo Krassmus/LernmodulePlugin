@@ -434,14 +434,6 @@ input[type='text'] {
   font-family: Lato, sans-serif;
 }
 
-.h5pModule {
-  border: 2px solid #eee;
-  padding: 0.5em 0.5em 0.5em 0.5em;
-  font-size: 16px;
-  line-height: 1.75em;
-  font-family: Lato, sans-serif;
-}
-
 .h5pBlankCorrect {
   background: #9dd8bb;
   border: 1px solid #9dd8bb;
@@ -453,24 +445,6 @@ input[type='text'] {
   border: 1px solid #f7d0d0;
   color: #b71c1c;
   text-decoration: line-through;
-}
-
-.h5pButton {
-  /* top, right, bottom, left */
-  margin: 1em 0.5em 1em 0em;
-  /* vertical, horizontal */
-  padding: 0.25em 1.25em;
-  border-radius: 2em;
-  background: #1a73d9;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-  box-shadow: none;
-  display: inline-block;
-  text-align: center;
-  text-shadow: none;
-  text-decoration: none;
-  vertical-align: baseline;
 }
 
 .h5pBlank {
@@ -488,40 +462,6 @@ input[type='text'] {
   /*  Irgendwas damit es nicht rot oder grün gehighlightet wird, während noch drin getippt wird */
 }
 
-.h5pFeedbackContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  margin-top: 1em;
-}
-
-.h5pFeedbackContainerTop {
-}
-
-.h5pFeedbackContainerCenter {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: nowrap;
-}
-
-.h5pFeedbackContainerBottom {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: nowrap;
-}
-
-meter {
-  //display: block;
-  margin: 0 auto;
-  width: 200px;
-}
-
 .h5pSolution {
   color: #255c41;
   font-weight: bold;
@@ -530,13 +470,6 @@ meter {
   padding: 0.15em;
   border-radius: 0.25em;
   margin-left: 0.5em;
-}
-
-.h5pFeedbackText {
-  font-family: sans-serif;
-  font-weight: 700;
-  color: #1a73d9;
-  font-size: 1em;
 }
 
 .myDivWithBackground {
