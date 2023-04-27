@@ -64,7 +64,7 @@
       <div class="h5pFeedbackContainerCenter">
         <div v-if="showResults">
           <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
-          <label for="score" class="h5pFeedbackText" style="margin-left: 0.5em">
+          <label for="score" class="h5pFeedbackText">
             {{ this.resultMessage }}
           </label>
         </div>

@@ -75,6 +75,7 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   font-weight: 700;
   color: #1a73d9;
   font-size: 1em;
+  margin-left: 0.5em;
 }
 
 meter {
