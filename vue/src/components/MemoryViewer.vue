@@ -1,5 +1,10 @@
 <template>
   <span>Cardflips: {{ this.amountOfFlips }}</span>
+
+  <span>
+    Solved: {{ this.amountOfPairsSolved }} of
+    {{ this.totalAmountOfPairs }}
+  </span>
   <div class="h5pMemoryGame">
     <MemoryCardComponent
       v-for="card in this.cards"
@@ -7,6 +12,24 @@
       :card="card"
       @click="onClickCard(card)"
     ></MemoryCardComponent>
+  </div>
+
+  <div class="h5pFeedbackContainer">
+    <div class="h5pFeedbackContainerTop">
+      <label v-if="showResults && feedbackMessage" class="h5pFeedbackText">
+        {{ this.feedbackMessage }}
+      </label>
+    </div>
+    <div class="h5pFeedbackContainerCenter">
+      <label v-if="showResults" class="h5pFeedbackText">
+        {{ this.resultMessage }}
+      </label>
+    </div>
+    <div class="h5pFeedbackContainerBottom">
+      <button v-if="showRetryButton" @click="onClickTryAgain" class="h5pButton">
+        {{ this.task.strings.retryButton }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -38,6 +61,9 @@ export default defineComponent({
       cards: [] as ViewerMemoryCard[],
       firstFlippedCardId: undefined as string | undefined,
       amountOfFlips: 0 as number,
+      showResults: false as boolean,
+      feedbackMessage: undefined as string | undefined,
+      resultMessage: undefined as string | undefined,
     };
   },
   methods: {
@@ -87,6 +113,55 @@ export default defineComponent({
         };
       });
     },
+
+    onClickTryAgain(): void {
+      this.amountOfFlips = 0;
+      this.firstFlippedCardId = undefined;
+      this.resetCards();
+      this.shuffleCards();
+    },
+
+    resetCards(): void {
+      // Set all cards' flipped and solved attribute to false
+      this.cards = this.cards.map((card) => {
+        return {
+          ...card,
+          flipped: false,
+          solved: false,
+        };
+      });
+    },
+
+    shuffleCards(): void {
+      // Shuffle the cards
+      // https://stackoverflow.com/a/46545530
+      this.cards = this.cards
+        .map((card) => ({ card, sort: Math.random() }))
+        .sort((card1, card2) => card1.sort - card2.sort)
+        .map(({ card }) => card);
+    },
+  },
+
+  computed: {
+    totalAmountOfPairs(): number {
+      return this.task.cards.length;
+    },
+
+    amountOfPairsSolved(): number {
+      let amountOfCardsSolved = 0;
+      this.cards.forEach((card) => {
+        if (card.solved) amountOfCardsSolved++;
+      });
+      return amountOfCardsSolved / 2;
+    },
+
+    showRetryButton(): boolean {
+      if (this.amountOfPairsSolved === this.totalAmountOfPairs) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   watch: {
     task: {
@@ -125,11 +200,7 @@ export default defineComponent({
         this.cards = duplicatedCards;
 
         // Shuffle the cards
-        // https://stackoverflow.com/a/46545530
-        this.cards = duplicatedCards
-          .map((value) => ({ value, sort: Math.random() }))
-          .sort((a, b) => a.sort - b.sort)
-          .map(({ value }) => value);
+        this.shuffleCards();
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
