@@ -1,4 +1,5 @@
 <template>
+  <span>Cardflips: {{ this.amountOfFlips }}</span>
   <div class="h5pMemoryGame">
     <MemoryCardComponent
       v-for="card in this.cards"
@@ -18,8 +19,8 @@ import { v4 } from 'uuid';
 
 export interface ViewerMemoryCard extends MemoryCard {
   flipped: boolean;
-  matchingCardId: string | undefined;
   solved: boolean;
+  matchingCardId: string | undefined;
 }
 
 export default defineComponent({
@@ -36,6 +37,7 @@ export default defineComponent({
     return {
       cards: [] as ViewerMemoryCard[],
       firstFlippedCardId: undefined as string | undefined,
+      amountOfFlips: 0 as number,
     };
   },
   methods: {
@@ -47,6 +49,8 @@ export default defineComponent({
 
       card.flipped = true;
       console.log('Flipped', card.altText);
+
+      this.amountOfFlips++;
 
       if (!this.firstFlippedCardId) {
         // This is the first of two cards to be flipped around
