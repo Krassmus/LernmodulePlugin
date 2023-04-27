@@ -40,46 +40,46 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+
     onClickCard(card: ViewerMemoryCard): void {
       // do nothing if card is already open
       if (card.flipped) return;
 
       card.flipped = true;
+      console.log('Flipped', card.altText);
 
       if (!this.firstFlippedCardId) {
         // This is the first of two cards to be flipped around
-        // Reset all previously cardflips that were not successful except the card we just flipped
-        this.flipAllUnsolvedCards(card.uuid);
+        // Reset all previous unsuccessful cardflips except the card we just flipped
+        this.flipAllUnsolvedCardsExcept(card.uuid);
 
         this.firstFlippedCardId = card.uuid;
-        console.log('Flipped ', card.altText);
       } else {
-        // We flipped the second card around, check if we got a pair!
+        // We flipped the second card around, check if we got a pair
         if (card.matchingCardId === this.firstFlippedCardId) {
           // We found a pair!
           // Set both cards' solved attribute to true
           card.solved = true;
           this.solveCard(this.firstFlippedCardId);
+          console.log('Found a pair of', card.altText);
         }
 
         this.firstFlippedCardId = undefined;
       }
     },
-    flipAllUnsolvedCards(exceptionUuid: string): void {
+
+    flipAllUnsolvedCardsExcept(exceptionId: string): void {
       this.cards = this.cards.map((card) => ({
-        uuid: card.uuid,
-        imageUrl: card.imageUrl,
-        altText: card.altText,
-        flipped: card.solved || card.uuid === exceptionUuid ? true : false,
-        matchingCardId: card.matchingCardId,
-        solved: card.solved,
+        ...card,
+        flipped: card.solved || card.uuid === exceptionId ? true : false,
       }));
     },
-    solveCard(uuid: string): void {
+
+    solveCard(cardToSolveId: string): void {
       this.cards = this.cards.map((card) => {
         return {
           ...card,
-          solved: card.uuid === uuid ? true : card.solved,
+          solved: card.uuid === cardToSolveId ? true : card.solved,
         };
       });
     },
@@ -88,51 +88,45 @@ export default defineComponent({
     task: {
       handler() {
         console.log('watcher for this.task');
-        // Make a copy of all of the cards in the task and add the flipped attribute.
+        // Make a copy of all of the cards in the task and add the flipped, solved and matchingCardId attributes
         this.cards = this.task.cards.map((card) => {
-          // Retain the flipped statuses of the existing cards
+          // Retain the flipped and solved statuses of the existing cards
           const oldCard = this.cards.find(
             (existingCard) => existingCard.uuid === card.uuid
           );
           return {
             ...card,
             flipped: oldCard ? oldCard.flipped : false,
-            matchingCardId: undefined,
             solved: oldCard ? oldCard.solved : false,
+            matchingCardId: undefined,
           };
         });
 
+        // Make a duplicate of each card and link them with their original through the matchingCardId attribute
         let duplicatedCards = [] as ViewerMemoryCard[];
-
         this.cards.forEach((card) => {
-          const partnerCard = {
-            uuid: v4(),
-            imageUrl: card.imageUrl,
-            altText: card.altText,
-            flipped: card.flipped,
-            matchingCardId: card.uuid,
-            solved: card.solved,
-          };
+          const partnerId = v4();
 
-          duplicatedCards.push(partnerCard);
-
+          // The duplicate card
           duplicatedCards.push({
-            uuid: card.uuid,
-            imageUrl: card.imageUrl,
-            altText: card.altText,
-            flipped: card.flipped,
-            matchingCardId: partnerCard.uuid,
-            solved: card.solved,
+            ...card,
+            uuid: partnerId,
+            matchingCardId: card.uuid,
+          });
+
+          // The original card with the set matchingCardId attribute
+          duplicatedCards.push({
+            ...card,
+            matchingCardId: partnerId,
           });
         });
 
+        // Shuffle the cards
         // https://stackoverflow.com/a/46545530
-        let randomizedCards = duplicatedCards
+        this.cards = duplicatedCards
           .map((value) => ({ value, sort: Math.random() }))
           .sort((a, b) => a.sort - b.sort)
           .map(({ value }) => value);
-
-        this.cards = randomizedCards;
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
