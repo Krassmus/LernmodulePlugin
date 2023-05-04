@@ -81,7 +81,7 @@ export default defineComponent({
       if (!this.firstFlippedCardId) {
         // This is the first of two cards to be flipped around
         // Reset all previous unsuccessful cardflips except the card we just flipped
-        this.flipAllUnsolvedCardsExcept(card.uuid);
+        this.resetAllUnsolvedCardsExcept(card.uuid);
 
         this.firstFlippedCardId = card.uuid;
       } else {
@@ -90,7 +90,8 @@ export default defineComponent({
           // We found a pair!
           // Set both cards' solved attribute to true
           card.solved = true;
-          this.solveCard(this.firstFlippedCardId);
+          const firstCard = this.getCardById(this.firstFlippedCardId);
+          firstCard.solved = true;
           console.log('Found a pair of', card.altText);
         }
 
@@ -98,20 +99,12 @@ export default defineComponent({
       }
     },
 
-    flipAllUnsolvedCardsExcept(exceptionId: string): void {
-      this.cards = this.cards.map((card) => ({
-        ...card,
-        flipped: card.solved || card.uuid === exceptionId ? true : false,
-      }));
-    },
-
-    solveCard(cardToSolveId: string): void {
-      this.cards = this.cards.map((card) => {
-        return {
-          ...card,
-          solved: card.uuid === cardToSolveId ? true : card.solved,
-        };
-      });
+    resetAllUnsolvedCardsExcept(exceptionId: string): void {
+      for (const card of this.cards) {
+        if (!card.solved && card.uuid !== exceptionId) {
+          card.flipped = false;
+        }
+      }
     },
 
     onClickTryAgain(): void {
@@ -123,13 +116,10 @@ export default defineComponent({
 
     resetCards(): void {
       // Set all cards' flipped and solved attribute to false
-      this.cards = this.cards.map((card) => {
-        return {
-          ...card,
-          flipped: false,
-          solved: false,
-        };
-      });
+      for (const card of this.cards) {
+        card.flipped = false;
+        card.solved = false;
+      }
     },
 
     shuffleCards(): void {
@@ -139,6 +129,14 @@ export default defineComponent({
         .map((card) => ({ card, sort: Math.random() }))
         .sort((card1, card2) => card1.sort - card2.sort)
         .map(({ card }) => card);
+    },
+
+    getCardById(cardId: string): ViewerMemoryCard {
+      const card = this.cards.find((card) => card.uuid === cardId);
+      if (!card) {
+        throw new Error('No card found with the given ID: ' + cardId);
+      }
+      return card;
     },
   },
 
