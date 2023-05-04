@@ -1,12 +1,11 @@
 <template>
-  <div class="memoryCard" v-if="card.flipped">
-    <!--    <label class="cardDescription"> {{ card.altText }}</label>-->
-    <div class="memoryCardFront">
+  <div class="memoryCard" :class="{ memoryCardFlipped: card.flipped }">
+    <div v-if="card.flipped" class="memoryCardFront">
       <img :src="card.imageUrl" :alt="card.altText" class="memoryImage" />
     </div>
-  </div>
-  <div v-else class="memoryCardBack">
-    <img :src="pathForAsset('memoryCardBack', 'png')" class="memoryImage" />
+    <div v-else class="memoryCardBack">
+      <img :src="pathForAsset('memoryCardBack', 'png')" class="memoryImage" />
+    </div>
   </div>
 </template>
 
@@ -37,10 +36,15 @@ export default defineComponent({
   flex-flow: column;
   align-items: center;
   aspect-ratio: 1;
-  background: #e7ebf1;
   border: 2px solid #d0d7e3;
   color: rgb(40, 73, 124);
   padding: 1px 1px 1px 1px;
+  transition: all 0.5s ease;
+}
+
+.memoryCardFlipped {
+  transform: rotateY(180deg);
+  transform-style: flat;
 }
 
 .memoryImage {
@@ -62,5 +66,11 @@ export default defineComponent({
   justify-content: center;
   flex-grow: 1;
   width: 100%;
+}
+
+.memoryCard:hover {
+  border-color: rgba(0, 187, 109, 0.93);
+  background: rgba(0, 187, 109, 0.93);
+  padding: 2px 2px 2px 2px;
 }
 </style>
