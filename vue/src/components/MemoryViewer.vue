@@ -165,37 +165,30 @@ export default defineComponent({
     task: {
       handler() {
         console.log('watcher for this.task');
-        // Make a copy of all of the cards in the task and add the flipped, solved and matchingCardId attributes
-        this.cards = this.task.cards.map((card) => {
-          return {
-            ...card,
-            flipped: false,
-            solved: false,
-            matchingCardId: undefined,
-          };
+        this.amountOfFlips = 0;
+        // Make two copies of each card in the task. Add the flipped, solved and matchingCardId attributes
+        this.cards = this.task.cards.flatMap((card) => {
+          // The two copies of each card are linked to each other through the matchingCardId attribute
+          const duplicateCardId = v4();
+          return [
+            // The original card with the set matchingCardId attribute
+            {
+              ...card,
+              flipped: false,
+              solved: false,
+              uuid: card.uuid,
+              matchingCardId: duplicateCardId,
+            },
+            // The duplicate card
+            {
+              ...card,
+              flipped: false,
+              solved: false,
+              uuid: duplicateCardId,
+              matchingCardId: card.uuid,
+            },
+          ];
         });
-
-        // Make a duplicate of each card and link them with their original through the matchingCardId attribute
-        let duplicatedCards = [] as ViewerMemoryCard[];
-
-        this.cards.forEach((card) => {
-          const partnerId = v4();
-
-          // The duplicate card
-          duplicatedCards.push({
-            ...card,
-            uuid: partnerId,
-            matchingCardId: card.uuid,
-          });
-
-          // The original card with the set matchingCardId attribute
-          duplicatedCards.push({
-            ...card,
-            matchingCardId: partnerId,
-          });
-        });
-
-        this.cards = duplicatedCards;
 
         // Shuffle the cards
         this.shuffleCards();
