@@ -147,18 +147,14 @@ export default defineComponent({
 
     amountOfPairsSolved(): number {
       let amountOfCardsSolved = 0;
-      this.cards.forEach((card) => {
+      for (const card of this.cards) {
         if (card.solved) amountOfCardsSolved++;
-      });
+      }
       return amountOfCardsSolved / 2;
     },
 
     showRetryButton(): boolean {
-      if (this.amountOfPairsSolved === this.totalAmountOfPairs) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.amountOfPairsSolved === this.totalAmountOfPairs;
     },
   },
   watch: {
