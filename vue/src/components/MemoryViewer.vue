@@ -161,6 +161,7 @@ export default defineComponent({
     task: {
       handler() {
         console.log('watcher for this.task');
+        this.firstFlippedCardId = undefined;
         this.amountOfFlips = 0;
         // Make two copies of each card in the task. Add the flipped, solved and matchingCardId attributes
         this.cards = this.task.cards.flatMap((card) => {
