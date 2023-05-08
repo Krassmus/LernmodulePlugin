@@ -24,6 +24,7 @@
           @drop="onDropBlank($event, element)"
           @dragover.prevent
           @dragenter.prevent
+          @click="onClickBlank(element)"
           >&#8203;
         </span>
       </template>
@@ -40,6 +41,7 @@
           class="h5pBlankSolution"
           draggable="true"
           @dragstart="startDragUnusedAnswer($event, answer)"
+          @click="onClickUnusedAnswer(answer)"
         >
           {{ answer.text }}
         </span>
@@ -143,6 +145,7 @@ export default defineComponent({
       userWantsToSeeSolutions: false,
       draggedAnswerId: undefined as Uuid | undefined,
       draggedSourceId: undefined as Uuid | undefined,
+      clickedAnswerId: undefined as Uuid | undefined,
     };
   },
   methods: {
@@ -298,6 +301,18 @@ export default defineComponent({
 
     getAnswerById(id: Uuid): Answer | undefined {
       return this.answers.find((answer) => answer.uuid === id);
+    },
+
+    onClickUnusedAnswer(answer: Answer): void {
+      console.log('Clicked answer:', answer);
+      this.clickedAnswerId = answer.uuid;
+    },
+
+    onClickBlank(blank: Blank): void {
+      console.log('Clicked blank:', blank);
+      if (!this.clickedAnswerId) return;
+      this.userInputs[blank.uuid] = this.clickedAnswerId;
+      this.clickedAnswerId = undefined;
     },
   },
   computed: {
