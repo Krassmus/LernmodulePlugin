@@ -2,7 +2,8 @@
 
 use Courseware\CoursewarePlugin;
 
-class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPlugin, CoursewarePlugin
+class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPlugin,
+                                                                       CoursewarePlugin
 {
     public function __construct()
     {
@@ -10,6 +11,16 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
 
         require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
         // TODO Set the correct script/css for Vite.  Using cache-busting hashes would be smart.
+        $jsRelativePath = '/courseware-blocks-vue2/dist/assets';
+        $jsDir = $this->getPluginPath() . $jsRelativePath;
+        $jsFiles = array_filter(scandir($jsDir), function ($filename) {
+            return str_ends_with($filename, '.js') && !str_starts_with($filename, 'main');
+        });
+        foreach ($jsFiles as $jsFile) {
+            $url = $this->getPluginUrl() . $jsRelativePath . '/' . $jsFile;
+            PageLayout::addScript($url);
+        }
+
 //        \PageLayout::addScript($this->getPluginUrl() . '/dist/courseware-lernmodule-blocks.umd.min.js');
 //        \PageLayout::addStylesheet($this->getPluginURL() . '/dist/courseware-lernmodule-blocks.css');
 

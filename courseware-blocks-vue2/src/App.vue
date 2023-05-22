@@ -1,16 +1,13 @@
 <script lang="ts">
-import TheWelcome from './components/TheWelcome.vue';
+import CoursewareFillInTheBlanksBlock from '@/components/CoursewareFillInTheBlanksBlock.vue';
+
 export default {
-  components: {
-    TheWelcome,
-  },
+  components: { CoursewareFillInTheBlanksBlock },
 };
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <main><CoursewareFillInTheBlanksBlock /></main>
 </template>
 
 <style scoped>

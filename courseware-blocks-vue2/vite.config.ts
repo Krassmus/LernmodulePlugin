@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
@@ -9,6 +10,18 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  build: {
+    rollupOptions: {
+      // make sure to externalize deps that shouldn't be bundled
+      // into your library
+      input: {
+        RegisterLernmoduleCoursewareBlocks: resolve(
+          __dirname,
+          'src/register-courseware-blocks.ts'
+        ),
+      },
     },
   },
 });
