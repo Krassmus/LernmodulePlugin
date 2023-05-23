@@ -2,9 +2,11 @@
   <div class="h5pModule">
     <div ref="wrapperElement">
       <span v-for="element in parsedTemplate" :key="element.uuid">
-        <span @click="onClickWord(element)" :class="classForWord(element)">
-          {{ element.text }}
-        </span>
+        <span
+          @click="onClickWord(element)"
+          :class="classForWord(element)"
+          v-html="element.text"
+        />
         <!--  prettier-ignore-->
         <pre class="space"> </pre>
       </span>
