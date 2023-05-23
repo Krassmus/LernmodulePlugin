@@ -1,10 +1,22 @@
 import CoursewareFillInTheBlanksBlock from '@/components/CoursewareFillInTheBlanksBlock.vue';
 
 console.info('hello :)');
-window.STUDIP.eventBus.on('courseware:init-plugin-manager', (pluginManager) => {
-  pluginManager.addBlock(
-    'courseware-fill-in-the-blanks-block',
-    CoursewareFillInTheBlanksBlock
+if (!window.STUDIP) {
+  console.warn(
+    'window.STUDIP is undefined. ' +
+      'The courseware block will not be registered'
   );
-  console.info('Registered FITB block');
-});
+} else {
+  window.STUDIP.eventBus.on(
+    'courseware:init-plugin-manager',
+    (pluginManager) => {
+      pluginManager.addBlock(
+        'courseware-fill-in-the-blanks-block',
+        CoursewareFillInTheBlanksBlock
+      );
+      console.info('Registered FITB block');
+    }
+  );
+}
+
+console.info('jquery?', (window as any).$);

@@ -14,11 +14,11 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $jsRelativePath = '/courseware-blocks-vue2/dist/assets';
         $jsDir = $this->getPluginPath() . $jsRelativePath;
         $jsFiles = array_filter(scandir($jsDir), function ($filename) {
-            return str_ends_with($filename, '.js') && !str_starts_with($filename, 'main');
+            return str_ends_with($filename, '.js');
         });
         foreach ($jsFiles as $jsFile) {
             $url = $this->getPluginUrl() . $jsRelativePath . '/' . $jsFile;
-            PageLayout::addScript($url);
+            PageLayout::addScript($url, ['type' => 'module']);
         }
 
 //        \PageLayout::addScript($this->getPluginUrl() . '/dist/courseware-lernmodule-blocks.umd.min.js');
