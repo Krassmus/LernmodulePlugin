@@ -57,7 +57,7 @@ export default defineComponent({
     return {
       markedWords: new Set<string>(),
       showResults: false,
-      debug: true,
+      debug: false,
     };
   },
 
