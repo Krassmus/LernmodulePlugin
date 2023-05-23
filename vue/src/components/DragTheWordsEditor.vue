@@ -2,16 +2,18 @@
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Lückentext') }}</legend>
-      <button @click="addBlank" class="button" type="button">
-        {{ $gettext('Lücke hinzufügen') }}
-      </button>
-      <div>
-        <textarea
-          v-model="taskDefinition.template"
-          ref="theTextArea"
-          class="h5pFillInTheBlanksEditor"
-        />
+      <div class="h5pEditorTopPanel">
+        <button
+          @click="addBlank"
+          class="button"
+          type="button"
+          style="margin-right: 0.1em"
+        >
+          {{ $gettext('Lücke hinzufügen') }}
+        </button>
+        <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
+      <studip-wysiwyg v-model="taskDefinition.template" id="ckeditorElement" />
     </fieldset>
 
     <fieldset class="collapsable collapsed">
@@ -89,41 +91,43 @@ import { defineComponent } from 'vue';
 import { DragTheWordsTaskDefinition } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
+import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
 export default defineComponent({
   name: 'DragTheWordsEditor',
+  components: { StudipWysiwyg },
   computed: {
     taskDefinition: () =>
       taskEditorStore.taskDefinition as DragTheWordsTaskDefinition,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
+    instructions(): string {
+      return $gettext(
+        'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den "Lücke hinzufügen"–Button.' +
+          ' Außerdem können Sie einen Tooltip mit einem Doppelpunkt (:) hinzufügen.'
+      );
+    },
   },
   methods: {
     $gettext,
     addBlank() {
-      const textArea = this.$refs.theTextArea as HTMLTextAreaElement;
+      const editor = window.CKEDITOR.instances['ckeditorElement'];
 
-      const selectedText = this.taskDefinition.template.slice(
-        textArea.selectionStart,
-        textArea.selectionEnd
-      );
+      const selectedText = editor.getSelection().getSelectedText();
 
       const blank = selectedText.replace(
         selectedText.trim(),
         '*' + selectedText.trim() + '*'
       );
 
-      const newText =
-        this.taskDefinition.template.substring(0, textArea.selectionStart) +
-        blank +
-        this.taskDefinition.template.substring(textArea.selectionEnd);
+      editor.insertText(blank);
 
       taskEditorStore.performEdit({
         newTaskDefinition: {
           ...this.taskDefinition,
-          template: newText,
+          template: editor.getData(),
         },
-        undoBatch: { type: 'editFillInTheBlanksTemplate' },
+        undoBatch: { type: 'editDragTheWordsTemplate' },
       });
     },
   },
