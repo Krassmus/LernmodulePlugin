@@ -1,9 +1,7 @@
 <template>
   <div class="h5pModule" ref="wrapperElement">
     <template v-for="element in parsedTemplate" :key="element.uuid">
-      <span v-if="element.type === 'staticText'" class="h5pStaticText">
-        {{ element.text }}
-      </span>
+      <span v-if="element.type === 'staticText'" v-html="element.text" />
       <template v-else-if="element.type === 'blank'">
         <span
           v-if="userInputs[element.uuid]"
@@ -27,6 +25,9 @@
           @click="onClickBlank(element)"
           >&#8203;
         </span>
+        <label v-if="element.hint">
+          <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
+        </label>
       </template>
     </template>
 
