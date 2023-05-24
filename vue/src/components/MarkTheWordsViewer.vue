@@ -176,31 +176,38 @@ export default defineComponent({
 .h5pStaticText {
   background: #ffffff;
   color: #000000;
-  line-height: 2em;
+  padding: 1px 1px 1px 1px;
 }
 
 .h5pStaticText:hover {
-  box-shadow: inset 0 0 0 2px #cee0f4;
+  box-shadow: 0 0 0 2px #cee0f4;
+  border-radius: 0.25em;
   cursor: pointer;
 }
 
 .h5pMarkedWord {
-  color: #255c41;
-  font-weight: bold;
-  border: 1px solid #0a0e14;
-  background-color: #d4f6e6;
+  border: 1px solid #cee0f4;
+  border-radius: 0.25em;
+  background-color: #d4f1f6;
+}
+
+.h5pMarkedWord:hover {
+  box-shadow: 0 0 0 2px #cee0f4;
+  border-radius: 0.25em;
+  cursor: pointer;
 }
 
 .h5pCorrectAnswer {
   color: #255c41;
-  border: 1px #255c41 dashed;
-  background-color: #d4f6e6;
+  border: 1px solid #d4f6e6;
   border-radius: 0.25em;
+  background-color: #d4f6e6;
 }
 
 .h5pIncorrectAnswer {
   color: #b71c1c;
   border: 1px solid #f7d0d0;
+  border-radius: 0.25em;
   background-color: #f7d0d0;
   text-decoration: line-through;
 }
