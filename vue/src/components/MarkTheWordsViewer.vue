@@ -74,6 +74,8 @@ export default defineComponent({
     },
 
     onClickWord(word: MarkTheWordsElement) {
+      if (this.showResults) return;
+
       if (this.isMarked(word)) {
         this.markedWords.delete(word.uuid);
       } else {
@@ -143,7 +145,7 @@ export default defineComponent({
       return !this.showResults;
     },
     showRetryButton(): boolean {
-      return this.task.retryAllowed;
+      return this.task.retryAllowed && this.showResults;
     },
   },
 });
