@@ -57,7 +57,7 @@ export default defineComponent({
   },
   data() {
     return {
-      markedWords: new Set<string>(),
+      markedWords: new Set<Uuid>(),
       showResults: false,
       debug: false,
     };
@@ -180,26 +180,8 @@ export default defineComponent({
 }
 
 .h5pStaticText:hover {
-  padding: 0.15em;
-
   box-shadow: inset 0 0 0 2px #cee0f4;
   cursor: pointer;
-}
-
-.h5pStaticTextResult {
-  background: #ffffff;
-  color: #2fff00;
-  line-height: 2em;
-}
-
-.h5pCorrectAnswer {
-  color: #255c41;
-  font-weight: bold;
-  border: 1px #255c41 dashed;
-  background-color: #d4f6e6;
-  padding: 0.15em;
-  border-radius: 0.25em;
-  margin-left: 0.5em;
 }
 
 .h5pMarkedWord {
@@ -207,6 +189,20 @@ export default defineComponent({
   font-weight: bold;
   border: 1px solid #0a0e14;
   background-color: #d4f6e6;
+}
+
+.h5pCorrectAnswer {
+  color: #255c41;
+  border: 1px #255c41 dashed;
+  background-color: #d4f6e6;
+  border-radius: 0.25em;
+}
+
+.h5pIncorrectAnswer {
+  color: #b71c1c;
+  border: 1px solid #f7d0d0;
+  background-color: #f7d0d0;
+  text-decoration: line-through;
 }
 
 .space {
