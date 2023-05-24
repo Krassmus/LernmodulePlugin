@@ -112,7 +112,6 @@ export type MarkTheWordsTaskDefinition = {
   template: string;
   retryAllowed: boolean;
   showSolutionsAllowed: boolean;
-  instantFeedback: boolean;
   strings: {
     checkButton: string;
     retryButton: string;
@@ -283,7 +282,6 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           '*The* moon is our natural satellite, *i.e.* it revolves around the *Earth*!',
         retryAllowed: true,
         showSolutionsAllowed: true,
-        instantFeedback: false,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',

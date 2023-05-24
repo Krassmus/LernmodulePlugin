@@ -140,7 +140,7 @@ export default defineComponent({
       return parsedTemplate;
     },
     showCheckButton(): boolean {
-      return !this.task.instantFeedback;
+      return !this.showResults;
     },
     showRetryButton(): boolean {
       return this.task.retryAllowed;
