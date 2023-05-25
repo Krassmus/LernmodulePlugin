@@ -11,10 +11,13 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
 
         require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
         // TODO Set the correct script/css for Vite.  Using cache-busting hashes would be smart.
-        $jsRelativePath = '/courseware-blocks-vue2/dist/assets';
+        $jsRelativePath = '/courseware-blocks-vue2/dist';
         $jsDir = $this->getPluginPath() . $jsRelativePath;
         $jsFiles = array_filter(scandir($jsDir), function ($filename) {
-            return str_ends_with($filename, '.js');
+            // The webpack build of the courseware blocks generates both a minified and a
+            // non-minified version of the script that registers the blocks' vue2 components
+            return str_ends_with($filename, '.js')
+                && !str_ends_with($filename, '.min.js');
         });
         foreach ($jsFiles as $jsFile) {
             $url = $this->getPluginUrl() . $jsRelativePath . '/' . $jsFile;
