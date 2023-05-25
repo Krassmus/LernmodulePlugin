@@ -21,6 +21,14 @@
       </button>
     </div>
 
+    <template v-if="showResults">
+      <feedback-element
+        :message="feedbackMessage"
+        :achieved-points="score"
+        :max-points="maxScore"
+      />
+    </template>
+
     <div v-if="debug">
       Marked words:
       <pre>{{ markedWords }}</pre>
@@ -38,6 +46,7 @@
 import { defineComponent, PropType } from 'vue';
 import { MarkTheWordsTaskDefinition } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
+import FeedbackElement from '@/components/FeedbackElement.vue';
 
 type MarkTheWordsElement = {
   uuid: Uuid;
@@ -55,9 +64,12 @@ export default defineComponent({
       required: true,
     },
   },
+  components: {
+    FeedbackElement,
+  },
   data() {
     return {
-      markedWords: new Set<Uuid>(),
+      markedWords: new Set<MarkTheWordsElement>(),
       showResults: false,
       debug: false,
     };
@@ -77,9 +89,9 @@ export default defineComponent({
       if (this.showResults) return;
 
       if (this.isMarked(word)) {
-        this.markedWords.delete(word.uuid);
+        this.markedWords.delete(word);
       } else {
-        this.markedWords.add(word.uuid);
+        this.markedWords.add(word);
       }
     },
 
@@ -106,7 +118,7 @@ export default defineComponent({
     },
 
     isMarked(word: MarkTheWordsElement): boolean {
-      return this.markedWords.has(word.uuid);
+      return this.markedWords.has(word);
     },
   },
   computed: {
@@ -146,6 +158,31 @@ export default defineComponent({
     },
     showRetryButton(): boolean {
       return this.task.retryAllowed && this.showResults;
+    },
+    score(): number {
+      let score = 0;
+
+      for (const element of this.markedWords) {
+        if (element.correct) {
+          score++;
+        } else {
+          score--;
+        }
+      }
+
+      if (score < 0) score = 0;
+
+      return score;
+    },
+    maxScore(): number {
+      let maxScore = 0;
+      for (const element of this.parsedTemplate) {
+        if (element.correct) maxScore++;
+      }
+      return maxScore;
+    },
+    feedbackMessage(): string {
+      return this.score + ' / ' + this.maxScore;
     },
   },
 });
