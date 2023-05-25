@@ -1,7 +1,36 @@
+<template>
+  <div v-if="!coursewarePluginComponents">
+    The courseware block cannot be rendered, because the injected
+    coursewarePluginComponents are not present. This is to be expected if the
+    component is being rendered outside of Stud.IP, e.g. when you are testing it
+    under localhost:5173 using 'npm run dev'.
+  </div>
+  <div v-else class="cw-mindmap-block">
+    <!-- In PHPStorm, this line is highlighted as a type error. It appears to be
+    an IDE bug.  See https://youtrack.jetbrains.com/issue/WEB-60534 -->
+    <component
+      :is="coursewarePluginComponents.CoursewareDefaultBlock"
+      ref="defaultBlock"
+      :block="block"
+      :canEdit="canEdit"
+      :isTeacher="isTeacher"
+      :preview="true"
+      :defaultGrade="false"
+      @storeEdit="storeBlock"
+    >
+      <template #content> Fill In The Blanks block content </template>
+      <template v-if="canEdit" #edit>
+        Fill In The Blanks editor content
+      </template>
+    </component>
+  </div>
+</template>
+
+<style scoped></style>
+
 <script lang="ts">
-import type { Component, PropType } from 'vue';
+import type { PropType } from 'vue';
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
 
 export default Vue.extend({
   name: 'CoursewareFillInTheBlanksBlock',
@@ -76,28 +105,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<template>
-  <div v-if="!coursewarePluginComponents">
-    The courseware block cannot be rendered, because the injected
-    coursewarePluginComponents are not present. This is to be expected if the
-    component is being rendered outside of Stud.IP, e.g. when you are testing it
-    under localhost:5173 using 'npm run dev'.
-  </div>
-  <div v-else class="cw-mindmap-block">
-    <!-- In PHPStorm, this line is highlighted as a type error. It appears to be
-    an IDE bug.  See https://youtrack.jetbrains.com/issue/WEB-60534 -->
-    <component
-      :is="coursewarePluginComponents.CoursewareDefaultBlock"
-      ref="defaultBlock"
-      :block="block"
-      :canEdit="canEdit"
-      :isTeacher="isTeacher"
-      :preview="true"
-      :defaultGrade="false"
-      @storeEdit="storeBlock"
-    />
-  </div>
-</template>
-
-<style scoped></style>

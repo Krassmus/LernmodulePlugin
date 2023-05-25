@@ -18,5 +18,3 @@ if (!window.STUDIP) {
     }
   );
 }
-
-console.info('jquery?', (window as any).$);
