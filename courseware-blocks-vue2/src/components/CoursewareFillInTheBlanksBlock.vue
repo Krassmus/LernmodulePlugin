@@ -1,5 +1,5 @@
 <template>
-  <div v-else class="cw-mindmap-block">
+  <div class="cw-mindmap-block">
     <component
       :is="coursewarePluginComponents.CoursewareDefaultBlock"
       ref="defaultBlock"
@@ -10,7 +10,10 @@
       :defaultGrade="false"
       @storeEdit="storeBlock"
     >
-      <template #content> Fill In The Blanks block content </template>
+      <template #content>
+        <p>Fill In The Blanks block content. Payload:</p>
+        <pre>{{ block.attributes.payload }}</pre>
+      </template>
       <template v-if="canEdit" #edit>
         Fill In The Blanks editor content
       </template>
@@ -66,13 +69,20 @@ export default {
       // by hand.  Only after "initialized: true" is set will the mindmap editor
       // be activated.
 
-      // vite-plugin-vue2 weirdness: 'this' is not correctly typed in methods
+      // const attributes = {
+      //   ...this.block.attributes,
+      //   payload: {
+      //     ...this.block.attributes.payload,
+      //     initialized: true,
+      //     task_json: this.block.attributes.payload.initialized ? this.block.attributes.payload.task_json : {}
+      //   }
+      // };
       const attributes = {
         ...this.block.attributes,
         payload: {
-          ...this.block.attributes.payload,
           initialized: true,
-        },
+          task_json: { a: 1 }
+        }
       };
 
       this.$store
