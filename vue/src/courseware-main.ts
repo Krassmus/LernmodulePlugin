@@ -9,7 +9,10 @@ import { TaskDefinition } from '@/models/TaskDefinition';
 
 // Messages which the mindmap editor will respond to if they are posted to
 // the iframe which it is embedded in.
-type WindowMessage = InitializeMessage;
+type WindowMessage = InitializeMessage | WebpackMessage;
+interface WebpackMessage {
+  type: 'webpackProgress' | 'webpackOk' | 'webpackClose' | 'webpackInvalid';
+}
 interface InitializeMessage {
   type: 'InitializeCoursewareBlock';
   block: {
@@ -25,12 +28,24 @@ interface InitializeMessage {
   username: string;
 }
 
-// If in an iframe, wait to load until a message is posted to Window.
-if (window.frameElement) {
-  window.addEventListener('message', (event) => {
-    console.warn('message posted to Window: ', event, 'data: ', event.data);
-    const typedData = event.data as WindowMessage;
-    if (typedData.type === 'InitializeCoursewareBlock') {
+// Wait to load until a message is posted to Window.
+if (!window.frameElement) {
+  throw new Error(
+    'This script appears not to be running in an iframe.  It is only meant to ' +
+      'be run in an iframe inside of Stud.IP'
+  );
+}
+
+window.addEventListener('message', (event) => {
+  console.warn('message posted to Window: ', event, 'data: ', event.data);
+  const typedData = event.data as WindowMessage;
+  switch (typedData.type) {
+    case 'webpackProgress':
+    case 'webpackOk':
+    case 'webpackClose':
+    case 'webpackInvalid':
+      break; // ignore
+    case 'InitializeCoursewareBlock':
       // TODO parse the event data according to a schema instead of using these
       //  ad-hoc checks
       if (!event.data.block.attributes.payload.task_json) {
@@ -40,17 +55,12 @@ if (window.frameElement) {
         throw new Error('payload.mindmap_id is not a string');
       }
       initializeApp(typedData);
-    } else {
+      break;
+    default:
       console.error('Message not recognized: ', event.data);
       return;
-    }
-  });
-} else {
-  throw new Error(
-    'This script appears not to be running in an iframe.  It is only meant to ' +
-      'be run in an iframe inside of Stud.IP'
-  );
-}
+  }
+});
 
 function initializeApp(typedData: InitializeMessage) {
   taskEditorStore.initializeCourseware(
