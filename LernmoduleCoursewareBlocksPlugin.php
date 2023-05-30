@@ -10,7 +10,9 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         parent::__construct();
 
         require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
-        // TODO Set the correct script/css for Vite.  Using cache-busting hashes would be smart.
+        // TODO Consider using cache-busting hashes so the latest version of
+        //   the JS/CSS will always be loaded.  Currently, the webpack build
+        //   does not do this.
         $jsRelativePath = '/courseware-blocks-vue2/dist';
         $jsDir = $this->getPluginPath() . $jsRelativePath;
         $jsFiles = array_filter(scandir($jsDir), function ($filename) {
@@ -23,17 +25,20 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
             $url = $this->getPluginUrl() . $jsRelativePath . '/' . $jsFile;
             PageLayout::addScript($url, ['type' => 'module']);
         }
-
-//        \PageLayout::addScript($this->getPluginUrl() . '/dist/courseware-lernmodule-blocks.umd.min.js');
-//        \PageLayout::addStylesheet($this->getPluginURL() . '/dist/courseware-lernmodule-blocks.css');
+        $cssFiles = array_filter(scandir($jsDir), function ($filename) {
+            return str_ends_with($filename, '.css');
+        });
+        foreach ($cssFiles as $cssFile) {
+            $url = $this->getPluginUrl() . $jsRelativePath . '/' . $cssFile;
+            PageLayout::addStylesheet($url);
+        }
 
         // Render a script tag which sets global javascript variables needed for the plugin to function
-        // TODO I think this is not needed for the Lernmodule courseware blocks.
-//        $factory = new Flexi_TemplateFactory(dirname(__FILE__) . '/views');
-//        $template = $factory->open('mindmapeditor/set_global_variables');
-//        $template->set_attribute('plugin', $this);
-//        $script = $template->render();
-//        \PageLayout::addBodyElements($script);
+        $factory = new Flexi_TemplateFactory(dirname(__FILE__) . '/views');
+        $template = $factory->open('courseware/set_global_variables');
+        $template->set_attribute('plugin', $this);
+        $script = $template->render();
+        \PageLayout::addBodyElements($script);
     }
 
     /**

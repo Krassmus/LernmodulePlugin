@@ -13,15 +13,31 @@
       <template #content>
         <p>Fill In The Blanks block content. Payload:</p>
         <pre>{{ block.attributes.payload }}</pre>
+        <translate v-if="!isBlockInitialized">
+          >(Der Lernmodule-Editor wird angezeigt, nachdem das Block gespeichert
+          worden ist. ></translate
+        >
+        <iframe
+          v-else
+          ref="lernmoduleIframe"
+          class="lernmodule-iframe"
+          :src="iframeUrl"
+          @load="onIframeLoad"
+        />
       </template>
       <template v-if="canEdit" #edit>
-        Fill In The Blanks editor content
+        <!--        Fill In The Blanks editor content-->
       </template>
     </component>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.lernmodule-iframe {
+  width: 100%;
+  border: none;
+}
+</style>
 
 <script lang="js">
 export default {
@@ -47,7 +63,7 @@ export default {
     }
   },
   computed: {
-    editorUrl() {
+    iframeUrl() {
       return window.STUDIP.LernmoduleCoursewareBlocksPlugin.editorUrl;
     },
     isBlockInitialized() {
@@ -55,6 +71,16 @@ export default {
     },
   },
   methods: {
+    onEditorIframeLoad(event) {
+      console.log("on iframe load");
+      this.$refs.lernmoduleIframe.contentWindow.postMessage({
+        type: "InitializeCoursewareViewer",
+        ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,
+        canEdit: this.canEdit,
+        isTeacher: this.isTeacher,
+        block: JSON.parse(JSON.stringify(this.block)),
+      });
+    },
     storeBlock() {
       // Courseware is written such that, until a block is saved for the first
       // time by an editor, its payload will not be initialized in the DB.
