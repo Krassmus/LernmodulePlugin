@@ -125,8 +125,17 @@ export class TaskEditorModule extends VuexModule {
 
   // Initialize the editor store to a state usable for courseware
   @Mutation
-  initializeCourseware() {
-    console.info('initializeCourseware()', '(This is a no-op for now');
+  initializeCourseware(task_json: TaskDefinition) {
+    console.info('initializeCourseware()');
+    // TODO This check can be elided when task_json's type is validated using e.g. 'zod'
+    //   This is only a temporary workaround to get the code running.  Because
+    //   at the moment, task_json may be a nonsense object, e.g. {a: 1}, for testing
+    if (task_json?.task_type) {
+      this.serverTaskDefinition = task_json;
+      this.undoRedoStack = [
+        { taskDefinition: this.serverTaskDefinition, undoBatch: {} },
+      ];
+    }
   }
 
   // Initialize the editor store to a state usable for the non-courseware version

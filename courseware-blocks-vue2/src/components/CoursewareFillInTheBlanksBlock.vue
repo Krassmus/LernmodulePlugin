@@ -17,6 +17,9 @@
           >(Der Lernmodule-Editor wird angezeigt, nachdem das Block gespeichert
           worden ist. ></translate
         >
+        <!--        TODO The iframe needs to be resized to fit its contents.
+              There is a library for this: https://github.com/davidjbradshaw/iframe-resizer
+              See https://stackoverflow.com/a/21516085/7359454 -->
         <iframe
           v-else
           ref="lernmoduleIframe"
@@ -71,10 +74,10 @@ export default {
     },
   },
   methods: {
-    onEditorIframeLoad(event) {
+    onIframeLoad(event) {
       console.log("on iframe load");
       this.$refs.lernmoduleIframe.contentWindow.postMessage({
-        type: "InitializeCoursewareViewer",
+        type: "InitializeCoursewareBlock",
         ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,
         canEdit: this.canEdit,
         isTeacher: this.isTeacher,
