@@ -2,16 +2,16 @@
 import { defineComponent } from 'vue';
 import { coursewareBlockStore, taskEditorStore } from '@/store';
 import { editorForTaskType, viewerForTaskType } from '@/models/TaskDefinition';
-import { saveTask } from '@/routes';
 import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'CoursewareBlock',
-  methods: { viewerForTaskType, $gettext, saveTask, editorForTaskType },
+  methods: { viewerForTaskType, $gettext, editorForTaskType },
   computed: {
     showEditingUI: () => coursewareBlockStore.showEditorUI,
     taskDefinition: () => taskEditorStore.taskDefinition,
     saveStatus: () => taskEditorStore.saveStatus,
+    saveTask: () => taskEditorStore.saveTask,
   },
 });
 </script>
