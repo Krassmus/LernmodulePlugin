@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import LernmoduleEditor from '@/components/LernmoduleEditor.vue';
-import { taskEditorStore, store } from '@/store';
+import { taskEditorStore, store, coursewareBlockStore } from '@/store';
 import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
@@ -9,9 +9,13 @@ import { TaskDefinition } from '@/models/TaskDefinition';
 
 // Messages which the mindmap editor will respond to if they are posted to
 // the iframe which it is embedded in.
-type WindowMessage = InitializeMessage | WebpackMessage;
+type WindowMessage = InitializeMessage | ShowEditChangeMessage | WebpackMessage;
 interface WebpackMessage {
   type: 'webpackProgress' | 'webpackOk' | 'webpackClose' | 'webpackInvalid';
+}
+interface ShowEditChangeMessage {
+  type: 'ShowEditChange';
+  state: boolean;
 }
 interface InitializeMessage {
   type: 'InitializeCoursewareBlock';
@@ -55,6 +59,10 @@ window.addEventListener('message', (event) => {
         throw new Error('payload.mindmap_id is not a string');
       }
       initializeApp(typedData);
+      break;
+    case 'ShowEditChange':
+      console.log('showEditChange', typedData.state);
+      coursewareBlockStore.setShowEditorUI(typedData.state);
       break;
     default:
       console.error('Message not recognized: ', event.data);

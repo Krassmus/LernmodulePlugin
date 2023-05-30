@@ -9,6 +9,7 @@
       :preview="true"
       :defaultGrade="false"
       @storeEdit="storeBlock"
+      @showEdit="onShowEditChange"
     >
       <template #content>
         <p>Fill In The Blanks block content. Payload:</p>
@@ -42,7 +43,7 @@
 }
 </style>
 
-<script lang="js">
+<script>
 export default {
   name: 'CoursewareFillInTheBlanksBlock',
   inject: ['coursewarePluginComponents'],
@@ -60,6 +61,9 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {};
+  },
   async mounted() {
     if (!this.block.attributes.payload.initialized) {
       this.storeBlock();
@@ -74,10 +78,18 @@ export default {
     },
   },
   methods: {
-    onIframeLoad(event) {
-      console.log("on iframe load");
+    // Mirror the child CoursewareDefaultBlock's state. We need this in order
+    // to tell our iframe whether to hide/show the editing UI
+    onShowEditChange(state) {
       this.$refs.lernmoduleIframe.contentWindow.postMessage({
-        type: "InitializeCoursewareBlock",
+        type: 'ShowEditChange',
+        state,
+      });
+    },
+    onIframeLoad(event) {
+      console.log('on iframe load');
+      this.$refs.lernmoduleIframe.contentWindow.postMessage({
+        type: 'InitializeCoursewareBlock',
         ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,
         canEdit: this.canEdit,
         isTeacher: this.isTeacher,
@@ -110,8 +122,8 @@ export default {
         ...this.block.attributes,
         payload: {
           initialized: true,
-          task_json: { a: 1 }
-        }
+          task_json: { a: 1 },
+        },
       };
 
       this.$store
@@ -122,7 +134,7 @@ export default {
         })
         .then(() => {
           // close the edit menu
-         this.$refs.defaultBlock.displayFeature(false);
+          this.$refs.defaultBlock.displayFeature(false);
         });
     },
   },
