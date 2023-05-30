@@ -8,7 +8,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "vue-cli-service build --target lib --name lernmodule-courseware-blocks --formats umd,umd-min src/register-courseware-blocks.js"
+    "build": "vue-cli-service build --target lib --name lernmodule-courseware-blocks --formats umd,umd-min src/register-courseware-blocks.js",
+    "watch": "vue-cli-service build --target lib --name lernmodule-courseware-blocks --formats umd,umd-min --watch src/register-courseware-blocks.js"
   },
   "devDependencies": {
     "@types/offscreencanvas": "^2019.7.0",
