@@ -13,7 +13,9 @@
     }
 </style>
 
-<div id="app">
+<!-- data-iframe-height indicates that this element determines the height
+that the iframe should be resized to by the iFrameSizer library -->
+<div id="app" data-iframe-height>
   <h1>Lernmodule Courseware Block Template</h1>
   Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
   Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
@@ -25,6 +27,10 @@
 <script>
   window.STUDIP.LernmoduleVueJS = {};
 </script>
+
+<!-- iFrameResizer -- This script facilitates resizing the iframe to fit its contents automatically -->
+<script src='<?= $plugin->getPluginUrl(
+) . '/assets/courseware-block/iframeResizer.contentWindow.min.js' ?>'></script>
 
 <?php if (Config::get()->LERNMODULE_DEBUG) : ?>
   <script src="http://localhost:8080/js/courseware.js"></script>

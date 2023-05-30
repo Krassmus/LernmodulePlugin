@@ -38,12 +38,15 @@
 
 <style scoped>
 .lernmodule-iframe {
-  width: 100%;
+  width: 1px;
+  min-width: 100%;
   border: none;
 }
 </style>
 
 <script>
+import iframeResize from 'iframe-resizer/js/iframeResizer';
+
 export default {
   name: 'CoursewareFillInTheBlanksBlock',
   inject: ['coursewarePluginComponents'],
@@ -88,6 +91,14 @@ export default {
     },
     onIframeLoad(event) {
       console.log('on iframe load');
+      // Configure iFrameResize to resize the iframe to the height of the
+      // #app element inside the iframe
+      iframeResize(
+        { heightCalculationMethod: 'taggedElement' },
+        this.$refs.lernmoduleIframe
+      );
+
+      // Send message to initialize the Vue 3 courseware block's store
       this.$refs.lernmoduleIframe.contentWindow.postMessage({
         type: 'InitializeCoursewareBlock',
         ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,
