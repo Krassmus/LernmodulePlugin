@@ -1,11 +1,11 @@
 import { createApp } from 'vue';
-import LernmoduleEditor from '@/components/LernmoduleEditor.vue';
 import { taskEditorStore, store, coursewareBlockStore } from '@/store';
 import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
 import { isObject } from 'lodash';
 import { TaskDefinition } from '@/models/TaskDefinition';
+import CoursewareBlock from '@/components/CoursewareBlock.vue';
 
 // Messages which the mindmap editor will respond to if they are posted to
 // the iframe which it is embedded in.
@@ -80,7 +80,7 @@ function initializeApp(typedData: InitializeMessage) {
   //  display the 'edit' elements in a <legend> the way courseware blocks usually do
   // TODO Also, the 'save' button, which is displayed in the sidebar using Teleport,
   //  is not compatible with Courseware.  It also needs to be refactored/redone
-  const app = createApp(LernmoduleEditor);
+  const app = createApp(CoursewareBlock);
   app.directive('model-undoable', modelUndoable);
   app.use(store);
   app.use(gettextPlugin);
