@@ -41,7 +41,6 @@ if (!window.frameElement) {
 }
 
 window.addEventListener('message', (event) => {
-  console.warn('message posted to Window: ', event, 'data: ', event.data);
   const typedData = event.data as WindowMessage;
   switch (typedData.type) {
     case 'webpackProgress':
@@ -50,6 +49,7 @@ window.addEventListener('message', (event) => {
     case 'webpackInvalid':
       break; // ignore
     case 'InitializeCoursewareBlock':
+      console.warn('message posted to Window: ', event, 'data: ', event.data);
       // TODO parse the event data according to a schema instead of using these
       //  ad-hoc checks
       if (!event.data.block.attributes.payload.task_json) {
@@ -61,7 +61,7 @@ window.addEventListener('message', (event) => {
       initializeApp(typedData);
       break;
     case 'ShowEditChange':
-      console.log('showEditChange', typedData.state);
+      console.warn('message posted to Window: ', event, 'data: ', event.data);
       coursewareBlockStore.setShowEditorUI(typedData.state);
       break;
     default:
