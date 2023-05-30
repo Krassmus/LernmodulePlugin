@@ -5,7 +5,7 @@ import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
 
-taskEditorStore.initializeNonCourseware();
+taskEditorStore.initializeCourseware();
 const app = createApp(LernmoduleEditor);
 app.directive('model-undoable', modelUndoable);
 app.use(store);
