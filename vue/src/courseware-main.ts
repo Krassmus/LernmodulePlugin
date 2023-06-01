@@ -7,50 +7,10 @@ import { isString } from 'lodash';
 import { taskDefinitionSchema } from '@/models/TaskDefinition';
 import CoursewareBlock from '@/components/CoursewareBlock.vue';
 import { z } from 'zod';
-
-// Messages sent by webpack during development.  We can ignore them
-const webpackMessageSchema = z.object({
-  type: z.union([
-    z.literal('webpackProgress'),
-    z.literal('webpackOk'),
-    z.literal('webpackClose'),
-    z.literal('webpackInvalid'),
-  ]),
-});
-
-// Messages sent by the iFrameSizer library.  We can ignore them
-const iFrameSizerMessageSchema = z.string().startsWith('[iFrameSizer]');
-
-// Indicates that the edit UI should be shown or hidden
-const showEditChangeMessageSchema = z.object({
-  type: z.literal('ShowEditChange'),
-  state: z.boolean(),
-});
-
-// Contains data which should be used to initialize the store for the Courseware block
-const initializeCoursewareBlockMessageSchema = z.object({
-  type: z.literal('InitializeCoursewareBlock'),
-  block: z.object({
-    attributes: z.object({
-      payload: z.object({
-        initialized: z.boolean(),
-        task_json: z.unknown(),
-      }),
-    }),
-  }),
-  canEdit: z.boolean(),
-  isTeacher: z.boolean(),
-});
-type InitializeMessage = z.infer<typeof initializeCoursewareBlockMessageSchema>;
-
-// Messages which may be posted to the iframe in which the Vue 3 CoursewareBlock
-// component is embedded
-const windowMessageSchema = z.union([
-  initializeCoursewareBlockMessageSchema,
-  showEditChangeMessageSchema,
-  webpackMessageSchema,
-  iFrameSizerMessageSchema,
-]);
+import {
+  InitializeMessage,
+  iframeMessageSchema,
+} from '@/models/CoursewareBlockIframeMessages';
 
 // Wait to load until a message is posted to Window.
 if (!window.frameElement) {
@@ -61,7 +21,7 @@ if (!window.frameElement) {
 }
 
 window.addEventListener('message', (event) => {
-  const dataParseResult = windowMessageSchema.safeParse(event.data);
+  const dataParseResult = iframeMessageSchema.safeParse(event.data);
   if (!dataParseResult.success) {
     console.info('Message not recognized: ', event.data, dataParseResult.error);
     return;
@@ -88,9 +48,9 @@ window.addEventListener('message', (event) => {
   }
 });
 
-function initializeApp(typedData: InitializeMessage) {
+function initializeApp(initializeMessage: InitializeMessage) {
   const taskParseResult = taskDefinitionSchema.safeParse(
-    typedData.block.attributes.payload.task_json
+    initializeMessage.block.attributes.payload.task_json
   );
   if (taskParseResult.success) {
     taskEditorStore.initializeCourseware(taskParseResult.data);
