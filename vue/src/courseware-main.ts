@@ -65,7 +65,7 @@ window.addEventListener('message', (event) => {
       coursewareBlockStore.setShowEditorUI(typedData.state);
       break;
     default:
-      console.error('Message not recognized: ', event.data);
+      console.info('Message not recognized: ', event.data);
       return;
   }
 });
