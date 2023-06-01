@@ -1,5 +1,5 @@
 <template>
-  <div class="cw-mindmap-block">
+  <div class="cw-fill-in-the-blanks-block">
     <component
       :is="coursewarePluginComponents.CoursewareDefaultBlock"
       ref="defaultBlock"
@@ -92,7 +92,7 @@ export default {
     onIframeLoad(event) {
       console.log('on iframe load');
       // Configure iFrameResize to resize the iframe to the height of the
-      // #app element inside the iframe
+      // #app element, which is marked with data-iframe-height, inside the iframe
       iframeResize(
         { heightCalculationMethod: 'taggedElement' },
         this.$refs.lernmoduleIframe
