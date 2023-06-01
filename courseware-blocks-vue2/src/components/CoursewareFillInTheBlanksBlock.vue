@@ -14,15 +14,7 @@
       <template #content>
         <p>Fill In The Blanks block content. Payload:</p>
         <pre>{{ block.attributes.payload }}</pre>
-        <translate v-if="!isBlockInitialized">
-          >(Der Lernmodule-Editor wird angezeigt, nachdem das Block gespeichert
-          worden ist. ></translate
-        >
-        <!--        TODO The iframe needs to be resized to fit its contents.
-              There is a library for this: https://github.com/davidjbradshaw/iframe-resizer
-              See https://stackoverflow.com/a/21516085/7359454 -->
         <iframe
-          v-else
           ref="lernmoduleIframe"
           class="lernmodule-iframe"
           :src="iframeUrl"
@@ -64,14 +56,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {};
-  },
-  async mounted() {
-    if (!this.block.attributes.payload.initialized) {
-      this.storeBlock();
-    }
-  },
   computed: {
     iframeUrl() {
       return window.STUDIP.LernmoduleCoursewareBlocksPlugin.editorUrl;
@@ -106,6 +90,10 @@ export default {
         isTeacher: this.isTeacher,
         block: JSON.parse(JSON.stringify(this.block)),
       });
+
+      // Tell the Vue 3 code to show the editor, if we are in editing mode.
+      console.log('iframe loaded, calling onShowEditChange...');
+      this.onShowEditChange(this.$refs.defaultBlock.showEdit);
     },
     storeBlock() {
       // Courseware is written such that, until a block is saved for the first
