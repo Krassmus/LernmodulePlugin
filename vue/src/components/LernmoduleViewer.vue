@@ -11,16 +11,20 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { TaskDefinition, viewerForTaskType } from '@/models/TaskDefinition';
+import {
+  taskDefinitionSchema,
+  viewerForTaskType,
+} from '@/models/TaskDefinition';
 import { updateAttempt } from '@/routes';
 
 export default defineComponent({
   name: 'LernmoduleViewer',
   computed: {
     LernmoduleVueJS: () => window.STUDIP.LernmoduleVueJS,
-    // TODO: Warning!! Bad!! You should parse the contents, do not just type-cast!!
     taskDefinition: () =>
-      window.STUDIP.LernmoduleVueJS.module.customdata as TaskDefinition,
+      taskDefinitionSchema.parse(
+        window.STUDIP.LernmoduleVueJS.module.customdata
+      ),
   },
   methods: {
     viewerForTaskType,

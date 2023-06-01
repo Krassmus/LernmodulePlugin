@@ -24,8 +24,9 @@ declare global {
       LernmoduleVueJS: {
         infotext: string;
         module: {
-          // customdata should be an instance of 'TaskDefinition', but this
-          // should be checked via parsing at runtime.
+          // customdata should be an instance of 'TaskDefinition', but that
+          // should be checked via parsing at runtime. That's why customdata is
+          // annotated as type 'unknown'.
           customdata: unknown;
           module_id: string;
           name: string;

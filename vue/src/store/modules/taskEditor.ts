@@ -1,5 +1,9 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
-import { newTask, TaskDefinition } from '@/models/TaskDefinition';
+import {
+  newTask,
+  TaskDefinition,
+  taskDefinitionSchema,
+} from '@/models/TaskDefinition';
 import { isArray, isEqual } from 'lodash';
 import { saveTask, SaveTaskResponse } from '@/routes';
 import { setAutoFreeze } from 'immer';
@@ -127,9 +131,9 @@ export class TaskEditorModule extends VuexModule {
       window.STUDIP.LernmoduleVueJS.module.customdata &&
       !isArray(window.STUDIP.LernmoduleVueJS.module.customdata)
     ) {
-      // TODO: Warning!! Bad!! You should parse the contents, do not just type-cast!!
-      this.serverTaskDefinition = window.STUDIP.LernmoduleVueJS.module
-        .customdata as TaskDefinition;
+      this.serverTaskDefinition = taskDefinitionSchema.parse(
+        window.STUDIP.LernmoduleVueJS.module.customdata
+      );
       this.undoRedoStack = [
         { taskDefinition: this.serverTaskDefinition, undoBatch: {} },
       ];
