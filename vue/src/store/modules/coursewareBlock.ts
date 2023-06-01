@@ -1,4 +1,5 @@
-import { Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { TaskDefinition } from '@/models/TaskDefinition';
 
 @Module({ name: 'coursewareBlock' })
 export class CoursewareBlockModule extends VuexModule {
@@ -10,5 +11,10 @@ export class CoursewareBlockModule extends VuexModule {
   @Mutation
   setShowEditorUI(state: boolean) {
     this.showEditorUI = state;
+  }
+
+  @Action
+  saveBlock(taskDefinition: TaskDefinition) {
+    console.log('coursewareBlockStore: saveBlock() action called');
   }
 }

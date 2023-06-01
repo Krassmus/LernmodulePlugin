@@ -4,7 +4,7 @@ import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
 import { isString } from 'lodash';
-import { taskDefinitionSchema } from '@/models/TaskDefinition';
+import { newTask, taskDefinitionSchema } from '@/models/TaskDefinition';
 import CoursewareBlock from '@/components/CoursewareBlock.vue';
 import { z } from 'zod';
 import {
@@ -49,14 +49,17 @@ window.addEventListener('message', (event) => {
 });
 
 function initializeApp(initializeMessage: InitializeMessage) {
-  const taskParseResult = taskDefinitionSchema.safeParse(
-    initializeMessage.block.attributes.payload.task_json
-  );
-  if (taskParseResult.success) {
-    taskEditorStore.initializeCourseware(taskParseResult.data);
+  if (initializeMessage.block.attributes.payload.initialized) {
+    const existingTaskDefinition = taskDefinitionSchema.parse(
+      initializeMessage.block.attributes.payload.task_json
+    );
+    taskEditorStore.initializeCourseware(existingTaskDefinition);
   } else {
-    console.warn('Could not parse task_json.  Result: ', taskParseResult);
-    taskEditorStore.initializeCourseware();
+    const newTaskDefinition = newTask(
+      initializeMessage.block.attributes.payload.task_type
+    );
+    taskEditorStore.initializeCourseware(newTaskDefinition);
+    coursewareBlockStore.saveBlock(newTaskDefinition);
   }
   // TODO probably should render a courseware-specific component as the root component,
   //  because it needs to be able to switch between editor and viewer modes and

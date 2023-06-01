@@ -34,8 +34,8 @@ class FillInTheBlanksBlock extends BlockType
     public function initialPayload(): array
     {
         return [
-            "task_json" => [],
-            "initialized" => false
+            "initialized" => false,
+            "task_type" => 'FillInTheBlanks',
         ];
     }
 

@@ -131,9 +131,13 @@ export default {
       // };
       const attributes = {
         ...this.block.attributes,
+        /*
+         TODO This payload should not be hard-coded. It should instead be taken from
+            a message posted to our window from the Vue 3 code in our iframe.
+        */
         payload: {
-          initialized: true,
-          task_json: { a: 1 },
+          initialized: false,
+          task_type: 'FillInTheBlanks',
         },
       };
 

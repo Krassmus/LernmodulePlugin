@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { taskDefinitionSchema, taskTypeSchema } from '@/models/TaskDefinition';
 
 // Messages sent by webpack during development.  We can ignore them
 const webpackMessageSchema = z.object({
@@ -19,15 +20,24 @@ const showEditChangeMessageSchema = z.object({
   state: z.boolean(),
 });
 
+// This corresponds to the JSON Schema schema defined in LernmoduleBlock.json.
+const coursewareBlockPayloadSchema = z.union([
+  z.object({
+    initialized: z.literal(false),
+    task_type: taskTypeSchema,
+  }),
+  z.object({
+    initialized: z.literal(true),
+    task_json: taskDefinitionSchema,
+  }),
+]);
+
 // Contains data which should be used to initialize the store for the Courseware block
 const initializeCoursewareBlockMessageSchema = z.object({
   type: z.literal('InitializeCoursewareBlock'),
   block: z.object({
     attributes: z.object({
-      payload: z.object({
-        initialized: z.boolean(),
-        task_json: z.unknown(),
-      }),
+      payload: coursewareBlockPayloadSchema,
     }),
   }),
   canEdit: z.boolean(),

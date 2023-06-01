@@ -142,6 +142,16 @@ export const taskDefinitionSchema = z.union([
   memoryTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
+// Here, a bit of boilerplate is required to create a schema for the union of
+// all possible 'task_type' values
+export const taskTypeSchema = z.union([
+  fillInTheBlanksTaskSchema.shape.task_type,
+  flashCardTaskSchema.shape.task_type,
+  questionTaskSchema.shape.task_type,
+  dragTheWordsTaskSchema.shape.task_type,
+  markTheWordsTaskSchema.shape.task_type,
+  memoryTaskSchema.shape.task_type,
+]);
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
   switch (type) {
