@@ -181,10 +181,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import {
-  Feedback,
-  FillInTheBlanksTaskDefinition,
-} from '@/models/TaskDefinition';
+import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import { $gettext } from '@/language/gettext';
@@ -193,8 +190,7 @@ export default defineComponent({
   name: 'FillInTheBlanksEditor',
   components: { StudipWysiwyg },
   computed: {
-    taskDefinition: () =>
-      taskEditorStore.taskDefinition as FillInTheBlanksTaskDefinition,
+    taskDefinition: () => taskEditorStore.taskDefinition as FillInTheBlanksTask,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
 

@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MemoryCard, MemoryTaskDefinition } from '@/models/TaskDefinition';
+import { MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
@@ -21,8 +21,7 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () =>
-      taskEditorStore.taskDefinition as MemoryTaskDefinition,
+    taskDefinition: () => taskEditorStore.taskDefinition as MemoryTask,
   },
   methods: {
     $gettext,

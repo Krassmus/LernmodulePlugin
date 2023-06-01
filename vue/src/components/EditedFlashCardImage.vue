@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { FlashCard, FlashCardTaskDefinition } from '@/models/TaskDefinition';
+import { FlashCard, FlashCardTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
@@ -21,8 +21,7 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () =>
-      taskEditorStore.taskDefinition as FlashCardTaskDefinition,
+    taskDefinition: () => taskEditorStore.taskDefinition as FlashCardTask,
   },
   methods: {
     $gettext,

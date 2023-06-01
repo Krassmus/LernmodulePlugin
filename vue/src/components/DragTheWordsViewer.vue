@@ -101,7 +101,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { DragTheWordsTaskDefinition, Feedback } from '@/models/TaskDefinition';
+import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual, round } from 'lodash';
 import { $gettext } from '@/language/gettext';
@@ -133,7 +133,7 @@ export default defineComponent({
   components: {},
   props: {
     task: {
-      type: Object as PropType<DragTheWordsTaskDefinition>,
+      type: Object as PropType<DragTheWordsTask>,
       required: true,
     },
   },

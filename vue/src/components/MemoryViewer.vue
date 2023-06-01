@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MemoryTaskDefinition, MemoryCard } from '@/models/TaskDefinition';
+import { MemoryTask, MemoryCard } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import MemoryCardComponent from '@/components/MemoryCard.vue';
 import { v4 } from 'uuid';
@@ -52,7 +52,7 @@ export default defineComponent({
   emits: ['updateAttempt'],
   props: {
     task: {
-      type: Object as PropType<MemoryTaskDefinition>,
+      type: Object as PropType<MemoryTask>,
       required: true,
     },
   },

@@ -76,7 +76,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { taskEditorStore } from '@/store';
-import { MemoryTaskDefinition } from '@/models/TaskDefinition';
+import { MemoryTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';
@@ -134,8 +134,7 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () =>
-      taskEditorStore.taskDefinition as MemoryTaskDefinition,
+    taskDefinition: () => taskEditorStore.taskDefinition as MemoryTask,
   },
 });
 </script>

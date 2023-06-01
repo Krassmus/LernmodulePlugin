@@ -112,10 +112,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import {
-  QuestionAnswer,
-  QuestionTaskDefinition,
-} from '@/models/TaskDefinition';
+import { QuestionAnswer, QuestionTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import { $gettext } from '@/language/gettext';
@@ -149,8 +146,7 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () =>
-      taskEditorStore.taskDefinition as QuestionTaskDefinition,
+    taskDefinition: () => taskEditorStore.taskDefinition as QuestionTask,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },

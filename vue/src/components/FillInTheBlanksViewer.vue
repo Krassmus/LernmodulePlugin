@@ -89,10 +89,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import {
-  Feedback,
-  FillInTheBlanksTaskDefinition,
-} from '@/models/TaskDefinition';
+import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual, round } from 'lodash';
 import { $gettext } from '@/language/gettext';
@@ -117,7 +114,7 @@ export default defineComponent({
   name: 'FillInTheBlanksViewer',
   props: {
     task: {
-      type: Object as PropType<FillInTheBlanksTaskDefinition>,
+      type: Object as PropType<FillInTheBlanksTask>,
       required: true,
     },
   },

@@ -6,13 +6,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { FlashCardTaskDefinition } from '@/models/TaskDefinition';
+import { FlashCardTask } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'FlashCardsViewer',
   props: {
     task: {
-      type: Object as PropType<FlashCardTaskDefinition>,
+      type: Object as PropType<FlashCardTask>,
       required: true,
     },
   },

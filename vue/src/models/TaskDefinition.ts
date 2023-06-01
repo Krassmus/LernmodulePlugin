@@ -14,14 +14,14 @@ import { v4 } from 'uuid';
 
 // TODO Use zod or another parsing library to define these datatypes
 export type TaskDefinition =
-  | FillInTheBlanksTaskDefinition
-  | FlashCardTaskDefinition
-  | QuestionTaskDefinition
-  | DragTheWordsTaskDefinition
-  | MarkTheWordsTaskDefinition
-  | MemoryTaskDefinition;
+  | FillInTheBlanksTask
+  | FlashCardTask
+  | QuestionTask
+  | DragTheWordsTask
+  | MarkTheWordsTask
+  | MemoryTask;
 
-export type FillInTheBlanksTaskDefinition = {
+export type FillInTheBlanksTask = {
   task_type: 'FillInTheBlanks';
   template: string;
   retryAllowed: boolean;
@@ -45,7 +45,7 @@ export type Feedback = {
   message: string;
 };
 
-export type FlashCardTaskDefinition = {
+export type FlashCardTask = {
   task_type: 'FlashCards';
   cards: FlashCard[];
 };
@@ -64,7 +64,7 @@ export type MemoryCard = {
   altText?: string;
 };
 
-export type QuestionTaskDefinition = {
+export type QuestionTask = {
   task_type: 'Question';
   question: string;
   answers: QuestionAnswer[];
@@ -89,7 +89,7 @@ export type QuestionAnswer = {
   };
 };
 
-export type DragTheWordsTaskDefinition = {
+export type DragTheWordsTask = {
   task_type: 'DragTheWords';
   template: string;
   retryAllowed: boolean;
@@ -107,7 +107,7 @@ export type DragTheWordsTaskDefinition = {
   feedback: Feedback[];
 };
 
-export type MarkTheWordsTaskDefinition = {
+export type MarkTheWordsTask = {
   task_type: 'MarkTheWords';
   template: string;
   retryAllowed: boolean;
@@ -120,7 +120,7 @@ export type MarkTheWordsTaskDefinition = {
   };
 };
 
-export type MemoryTaskDefinition = {
+export type MemoryTask = {
   task_type: 'Memory';
   cards: MemoryCard[];
   strings: {

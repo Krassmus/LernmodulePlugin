@@ -87,17 +87,14 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import {
-  QuestionAnswer,
-  QuestionTaskDefinition,
-} from '@/models/TaskDefinition';
+import { QuestionAnswer, QuestionTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'QuestionViewer',
   props: {
     task: {
-      type: Object as PropType<QuestionTaskDefinition>,
+      type: Object as PropType<QuestionTask>,
       required: true,
     },
   },

@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { FlashCard, FlashCardTaskDefinition } from '@/models/TaskDefinition';
+import { FlashCard, FlashCardTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import EditedFlashCard from '@/components/EditedFlashCard.vue';
 import { v4 } from 'uuid';
@@ -79,8 +79,7 @@ export default defineComponent({
   name: 'FlashCardsEditor',
   components: { EditedFlashCard },
   computed: {
-    taskDefinition: () =>
-      taskEditorStore.taskDefinition as FlashCardTaskDefinition,
+    taskDefinition: () => taskEditorStore.taskDefinition as FlashCardTask,
   },
   methods: {
     $gettext,

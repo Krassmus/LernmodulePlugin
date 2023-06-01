@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MarkTheWordsTaskDefinition } from '@/models/TaskDefinition';
+import { MarkTheWordsTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
@@ -60,7 +60,7 @@ export default defineComponent({
   name: 'MarkTheWordsViewer',
   props: {
     task: {
-      type: Object as PropType<MarkTheWordsTaskDefinition>,
+      type: Object as PropType<MarkTheWordsTask>,
       required: true,
     },
   },

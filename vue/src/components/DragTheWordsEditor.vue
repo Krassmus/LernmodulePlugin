@@ -88,7 +88,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { DragTheWordsTaskDefinition } from '@/models/TaskDefinition';
+import { DragTheWordsTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
@@ -97,8 +97,7 @@ export default defineComponent({
   name: 'DragTheWordsEditor',
   components: { StudipWysiwyg },
   computed: {
-    taskDefinition: () =>
-      taskEditorStore.taskDefinition as DragTheWordsTaskDefinition,
+    taskDefinition: () => taskEditorStore.taskDefinition as DragTheWordsTask,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
     instructions(): string {
