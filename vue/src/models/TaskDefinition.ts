@@ -11,125 +11,137 @@ import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
 import MemoryViewer from '@/components/MemoryViewer.vue';
 import { v4 } from 'uuid';
+import { z } from 'zod';
 
-// TODO Use zod or another parsing library to define these datatypes
-export type TaskDefinition =
-  | FillInTheBlanksTask
-  | FlashCardTask
-  | QuestionTask
-  | DragTheWordsTask
-  | MarkTheWordsTask
-  | MemoryTask;
+export const feedbackSchema = z.object({
+  percentage: z.number(),
+  message: z.string(),
+});
+export type Feedback = z.infer<typeof feedbackSchema>;
 
-export type FillInTheBlanksTask = {
-  task_type: 'FillInTheBlanks';
-  template: string;
-  retryAllowed: boolean;
-  showSolutionsAllowed: boolean;
-  caseSensitive: boolean;
-  autoCorrect: boolean;
-  allBlanksMustBeFilledForSolutions: boolean;
-  acceptTypos: boolean;
-  strings: {
-    checkButton: string;
-    retryButton: string;
-    solutionsButton: string;
-    fillInAllBlanksMessage: string;
-    resultMessage: string;
-  };
-  feedback: Feedback[];
-};
+export const dragTheWordsTaskSchema = z.object({
+  task_type: z.literal('DragTheWords'),
+  template: z.string(),
+  retryAllowed: z.boolean(),
+  showSolutionsAllowed: z.boolean(),
+  instantFeedback: z.boolean(),
+  allBlanksMustBeFilledForSolutions: z.boolean(),
+  alphabeticOrder: z.boolean(),
+  strings: z.object({
+    checkButton: z.string(),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    fillInAllBlanksMessage: z.string(),
+    resultMessage: z.string(),
+  }),
+  feedback: z.array(feedbackSchema),
+});
+export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 
-export type Feedback = {
-  percentage: number;
-  message: string;
-};
+export const markTheWordsTaskSchema = z.object({
+  task_type: z.literal('MarkTheWords'),
+  template: z.string(),
+  retryAllowed: z.boolean(),
+  showSolutionsAllowed: z.boolean(),
+  strings: z.object({
+    checkButton: z.string(),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    resultMessage: z.string(),
+  }),
+});
+export type MarkTheWordsTask = z.infer<typeof markTheWordsTaskSchema>;
 
-export type FlashCardTask = {
-  task_type: 'FlashCards';
-  cards: FlashCard[];
-};
+export const memoryCardSchema = z.object({
+  uuid: z.string(),
+  imageUrl: z.string().optional(),
+  altText: z.string().optional(),
+});
+export type MemoryCard = z.infer<typeof memoryCardSchema>;
 
-export type FlashCard = {
-  uuid: string;
-  question: string;
-  answer: string;
-  imageUrl?: string;
-  altText?: string;
-};
+export const memoryTaskSchema = z.object({
+  task_type: z.literal('Memory'),
+  cards: z.array(memoryCardSchema),
+  strings: z.object({
+    checkButton: z.string(),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    resultMessage: z.string(),
+  }),
+});
+export type MemoryTask = z.infer<typeof memoryTaskSchema>;
 
-export type MemoryCard = {
-  uuid: string;
-  imageUrl?: string;
-  altText?: string;
-};
+export const fillInTheBlanksTaskSchema = z.object({
+  task_type: z.literal('FillInTheBlanks'),
+  template: z.string(),
+  retryAllowed: z.boolean(),
+  showSolutionsAllowed: z.boolean(),
+  caseSensitive: z.boolean(),
+  autoCorrect: z.boolean(),
+  allBlanksMustBeFilledForSolutions: z.boolean(),
+  acceptTypos: z.boolean(),
+  strings: z.object({
+    checkButton: z.string(),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    fillInAllBlanksMessage: z.string(),
+    resultMessage: z.string(),
+  }),
+  feedback: z.array(feedbackSchema),
+});
+export type FillInTheBlanksTask = z.infer<typeof fillInTheBlanksTaskSchema>;
 
-export type QuestionTask = {
-  task_type: 'Question';
-  question: string;
-  answers: QuestionAnswer[];
-  canAnswerMultiple: boolean;
-  retryAllowed: boolean;
-  randomOrder: boolean;
-  showSolutionsAllowed: boolean;
-  strings: {
-    checkButton: string;
-    retryButton: string;
-    solutionsButton: string;
-  };
-};
+export const flashCardSchema = z.object({
+  uuid: z.string(),
+  question: z.string(),
+  answer: z.string(),
+  imageUrl: z.string().optional(),
+  altText: z.string().optional(),
+});
+export type FlashCard = z.infer<typeof flashCardSchema>;
 
-export type QuestionAnswer = {
-  text: string;
-  correct: boolean;
-  strings: {
-    hint: string;
-    feedbackSelected: string;
-    feedbackNotSelected: string;
-  };
-};
+export const flashCardTaskSchema = z.object({
+  task_type: z.literal('FlashCards'),
+  cards: z.array(flashCardSchema),
+});
+export type FlashCardTask = z.infer<typeof flashCardTaskSchema>;
 
-export type DragTheWordsTask = {
-  task_type: 'DragTheWords';
-  template: string;
-  retryAllowed: boolean;
-  showSolutionsAllowed: boolean;
-  instantFeedback: boolean;
-  allBlanksMustBeFilledForSolutions: boolean;
-  alphabeticOrder: boolean;
-  strings: {
-    checkButton: string;
-    retryButton: string;
-    solutionsButton: string;
-    fillInAllBlanksMessage: string;
-    resultMessage: string;
-  };
-  feedback: Feedback[];
-};
+export const questionAnswerSchema = z.object({
+  text: z.string(),
+  correct: z.boolean(),
+  strings: z.object({
+    hint: z.string(),
+    feedbackSelected: z.string(),
+    feedbackNotSelected: z.string(),
+  }),
+});
+export type QuestionAnswer = z.infer<typeof questionAnswerSchema>;
 
-export type MarkTheWordsTask = {
-  task_type: 'MarkTheWords';
-  template: string;
-  retryAllowed: boolean;
-  showSolutionsAllowed: boolean;
-  strings: {
-    checkButton: string;
-    retryButton: string;
-    solutionsButton: string;
-    resultMessage: string;
-  };
-};
+export const questionTaskSchema = z.object({
+  task_type: z.literal('Question'),
+  question: z.string(),
+  answers: z.array(questionAnswerSchema),
+  canAnswerMultiple: z.boolean(),
+  retryAllowed: z.boolean(),
+  randomOrder: z.boolean(),
+  showSolutionsAllowed: z.boolean(),
+  strings: z.object({
+    checkButton: z.string(),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+  }),
+});
+export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
-export type MemoryTask = {
-  task_type: 'Memory';
-  cards: MemoryCard[];
-  strings: {
-    checkButton: string;
-    retryButton: string;
-    solutionsButton: string;
-    resultMessage: string;
-  };
-};
+export const taskDefinitionSchema = z.union([
+  fillInTheBlanksTaskSchema,
+  flashCardTaskSchema,
+  questionTaskSchema,
+  dragTheWordsTaskSchema,
+  markTheWordsTaskSchema,
+  memoryTaskSchema,
+]);
+export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
   switch (type) {
