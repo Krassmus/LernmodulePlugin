@@ -16,5 +16,11 @@ export class CoursewareBlockModule extends VuexModule {
   @Action
   saveBlock(taskDefinition: TaskDefinition) {
     console.log('coursewareBlockStore: saveBlock() action called');
+    // Tell the Vue 2 component we are wrapped in to save the block.
+    // See the method 'onWindowMessage' of CoursewareFillInTheBlanksBlock.vue
+    window.parent.postMessage({
+      type: 'SaveCoursewareBlock',
+      taskDefinition,
+    });
   }
 }

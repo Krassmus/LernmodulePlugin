@@ -64,7 +64,31 @@ export default {
       return this.block.attributes.payload.initialized;
     },
   },
+  created() {
+    window.addEventListener('message', this.onWindowMessage);
+  },
+  beforeDestroy() {
+    window.removeEventListener('message', this.onWindowMessage);
+  },
   methods: {
+    // Handle messages posted to our window from our iframe
+    onWindowMessage(message) {
+      if (message.source !== this.$refs.lernmoduleIframe.contentWindow) {
+        return; // Ignore the message -- it's not from our iframe
+      }
+      if (message.data && message.data.hasOwnProperty('type')) {
+        switch (message.data.type) {
+          case 'SaveCoursewareBlock':
+            console.log(
+              'got message posted to window: ',
+              message,
+              'saving courseware block. taskDefinition: ',
+              message.data.taskDefinition
+            );
+            this.storeBlock(message.data.taskDefinition);
+        }
+      }
+    },
     // Mirror the child CoursewareDefaultBlock's state. We need this in order
     // to tell our iframe whether to hide/show the editing UI
     onShowEditChange(state) {
@@ -95,37 +119,12 @@ export default {
       console.log('iframe loaded, calling onShowEditChange...');
       this.onShowEditChange(this.$refs.defaultBlock.showEdit);
     },
-    storeBlock() {
-      // Courseware is written such that, until a block is saved for the first
-      // time by an editor, its payload will not be initialized in the DB.
-      // Until the payload has been stored in the DB, a new payload will be
-      // generated using MindmapBlock::initialPayload() upon each page load.
-      // This means that if e.g. a timestamp or a random ID is generated
-      // in initialPayload(), each user who views the block will see a different
-      // timestamp and a different random ID, as long as the block is in a
-      // created-but-never-saved state.
-      // The workaround here is to explicitly handle the created-but-not-saved state
-      // using the flag "initialized", which is only set upon saving the payload
-      // by hand.  Only after "initialized: true" is set will the mindmap editor
-      // be activated.
-
-      // const attributes = {
-      //   ...this.block.attributes,
-      //   payload: {
-      //     ...this.block.attributes.payload,
-      //     initialized: true,
-      //     task_json: this.block.attributes.payload.initialized ? this.block.attributes.payload.task_json : {}
-      //   }
-      // };
+    storeBlock(taskDefinition) {
       const attributes = {
         ...this.block.attributes,
-        /*
-         TODO This payload should not be hard-coded. It should instead be taken from
-            a message posted to our window from the Vue 3 code in our iframe.
-        */
         payload: {
-          initialized: false,
-          task_type: 'FillInTheBlanks',
+          initialized: true,
+          task_json: taskDefinition,
         },
       };
 
