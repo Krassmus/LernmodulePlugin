@@ -3,34 +3,54 @@ import { taskEditorStore, store, coursewareBlockStore } from '@/store';
 import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
-import { isObject } from 'lodash';
+import { isString } from 'lodash';
 import { taskDefinitionSchema } from '@/models/TaskDefinition';
 import CoursewareBlock from '@/components/CoursewareBlock.vue';
+import { z } from 'zod';
 
-// Messages which the mindmap editor will respond to if they are posted to
-// the iframe which it is embedded in.
-type WindowMessage = InitializeMessage | ShowEditChangeMessage | WebpackMessage;
-interface WebpackMessage {
-  type: 'webpackProgress' | 'webpackOk' | 'webpackClose' | 'webpackInvalid';
-}
-interface ShowEditChangeMessage {
-  type: 'ShowEditChange';
-  state: boolean;
-}
-interface InitializeMessage {
-  type: 'InitializeCoursewareBlock';
-  block: {
-    attributes: {
-      payload: {
-        initialized: boolean;
-        task_json: object;
-      };
-    };
-  };
-  canEdit: boolean;
-  isTeacher: boolean;
-  username: string;
-}
+// Messages sent by webpack during development.  We can ignore them
+const webpackMessageSchema = z.object({
+  type: z.union([
+    z.literal('webpackProgress'),
+    z.literal('webpackOk'),
+    z.literal('webpackClose'),
+    z.literal('webpackInvalid'),
+  ]),
+});
+
+// Messages sent by the iFrameSizer library.  We can ignore them
+const iFrameSizerMessageSchema = z.string().startsWith('[iFrameSizer]');
+
+// Indicates that the edit UI should be shown or hidden
+const showEditChangeMessageSchema = z.object({
+  type: z.literal('ShowEditChange'),
+  state: z.boolean(),
+});
+
+// Contains data which should be used to initialize the store for the Courseware block
+const initializeCoursewareBlockMessageSchema = z.object({
+  type: z.literal('InitializeCoursewareBlock'),
+  block: z.object({
+    attributes: z.object({
+      payload: z.object({
+        initialized: z.boolean(),
+        task_json: z.unknown(),
+      }),
+    }),
+  }),
+  canEdit: z.boolean(),
+  isTeacher: z.boolean(),
+});
+type InitializeMessage = z.infer<typeof initializeCoursewareBlockMessageSchema>;
+
+// Messages which may be posted to the iframe in which the Vue 3 CoursewareBlock
+// component is embedded
+const windowMessageSchema = z.union([
+  initializeCoursewareBlockMessageSchema,
+  showEditChangeMessageSchema,
+  webpackMessageSchema,
+  iFrameSizerMessageSchema,
+]);
 
 // Wait to load until a message is posted to Window.
 if (!window.frameElement) {
@@ -41,8 +61,16 @@ if (!window.frameElement) {
 }
 
 window.addEventListener('message', (event) => {
-  const typedData = event.data as WindowMessage;
-  switch (typedData.type) {
+  const dataParseResult = windowMessageSchema.safeParse(event.data);
+  if (!dataParseResult.success) {
+    console.info('Message not recognized: ', event.data, dataParseResult.error);
+    return;
+  }
+  if (isString(dataParseResult.data)) {
+    // Message sent by the iFrameSizer library.  We can ignore it
+    return;
+  }
+  switch (dataParseResult.data.type) {
     case 'webpackProgress':
     case 'webpackOk':
     case 'webpackClose':
@@ -50,23 +78,13 @@ window.addEventListener('message', (event) => {
       break; // ignore
     case 'InitializeCoursewareBlock':
       console.warn('message posted to Window: ', event, 'data: ', event.data);
-      // TODO parse the event data according to a schema instead of using these
-      //  ad-hoc checks
-      if (!event.data.block.attributes.payload.task_json) {
-        throw new Error('payload.mindmap_id is undefined');
-      }
-      if (!isObject(event.data.block.attributes.payload.task_json)) {
-        throw new Error('payload.mindmap_id is not a string');
-      }
-      initializeApp(typedData);
+      initializeApp(dataParseResult.data);
       break;
     case 'ShowEditChange':
       console.warn('message posted to Window: ', event, 'data: ', event.data);
-      coursewareBlockStore.setShowEditorUI(typedData.state);
+      coursewareBlockStore.setShowEditorUI(dataParseResult.data.state);
       break;
     default:
-      console.info('Message not recognized: ', event.data);
-      return;
   }
 });
 
