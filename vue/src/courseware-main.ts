@@ -59,7 +59,6 @@ function initializeApp(initializeMessage: InitializeMessage) {
       initializeMessage.block.attributes.payload.task_type
     );
     taskEditorStore.initializeCourseware(newTaskDefinition);
-    coursewareBlockStore.saveBlock(newTaskDefinition);
   }
   // TODO probably should render a courseware-specific component as the root component,
   //  because it needs to be able to switch between editor and viewer modes and

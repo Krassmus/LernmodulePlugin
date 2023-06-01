@@ -11,7 +11,7 @@ export default defineComponent({
     showEditingUI: () => coursewareBlockStore.showEditorUI,
     taskDefinition: () => taskEditorStore.taskDefinition,
     saveStatus: () => taskEditorStore.saveStatus,
-    saveTask: () => taskEditorStore.saveTask,
+    saveBlock: () => coursewareBlockStore.saveBlock,
   },
 });
 </script>
@@ -26,7 +26,7 @@ export default defineComponent({
     <div class="save-undo-redo">
       <button
         class="button"
-        @click="saveTask"
+        @click="saveBlock"
         :disabled="saveStatus.status === 'saving'"
       >
         {{ $gettext('Speichern') }}

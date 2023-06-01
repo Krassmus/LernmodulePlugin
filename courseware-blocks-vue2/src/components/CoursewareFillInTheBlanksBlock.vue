@@ -13,7 +13,7 @@
     >
       <template #content>
         <p>Fill In The Blanks block content. Payload:</p>
-        <pre>{{ block.attributes.payload }}</pre>
+        <pre style="font-size: 8px">{{ block.attributes.payload }}</pre>
         <iframe
           ref="lernmoduleIframe"
           class="lernmodule-iframe"

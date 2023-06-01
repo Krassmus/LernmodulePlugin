@@ -1,5 +1,5 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
-import { TaskDefinition } from '@/models/TaskDefinition';
+import { taskEditorStore } from '@/store';
 
 @Module({ name: 'coursewareBlock' })
 export class CoursewareBlockModule extends VuexModule {
@@ -13,11 +13,16 @@ export class CoursewareBlockModule extends VuexModule {
     this.showEditorUI = state;
   }
 
-  @Action
-  saveBlock(taskDefinition: TaskDefinition) {
+  @Mutation
+  saveBlock() {
     console.log('coursewareBlockStore: saveBlock() action called');
     // Tell the Vue 2 component we are wrapped in to save the block.
     // See the method 'onWindowMessage' of CoursewareFillInTheBlanksBlock.vue
+    // The taskDefinition must be serialized in order for it to be passed
+    // between windows.
+    const taskDefinition = JSON.parse(
+      JSON.stringify(taskEditorStore.taskDefinition)
+    );
     window.parent.postMessage({
       type: 'SaveCoursewareBlock',
       taskDefinition,
