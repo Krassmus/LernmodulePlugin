@@ -4,7 +4,7 @@ import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
 import { isObject } from 'lodash';
-import { TaskDefinition } from '@/models/TaskDefinition';
+import { taskDefinitionSchema } from '@/models/TaskDefinition';
 import CoursewareBlock from '@/components/CoursewareBlock.vue';
 
 // Messages which the mindmap editor will respond to if they are posted to
@@ -71,10 +71,15 @@ window.addEventListener('message', (event) => {
 });
 
 function initializeApp(typedData: InitializeMessage) {
-  taskEditorStore.initializeCourseware(
-    // TODO: Warning!! Bad!! You should parse the contents, do not just type-cast!!
-    typedData.block.attributes.payload.task_json as TaskDefinition
+  const taskParseResult = taskDefinitionSchema.safeParse(
+    typedData.block.attributes.payload.task_json
   );
+  if (taskParseResult.success) {
+    taskEditorStore.initializeCourseware(taskParseResult.data);
+  } else {
+    console.warn('Could not parse task_json.  Result: ', taskParseResult);
+    taskEditorStore.initializeCourseware();
+  }
   // TODO probably should render a courseware-specific component as the root component,
   //  because it needs to be able to switch between editor and viewer modes and
   //  display the 'edit' elements in a <legend> the way courseware blocks usually do
