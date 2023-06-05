@@ -20,7 +20,7 @@ class FillInTheBlanksBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'Lückentext');
+        return dgettext('lernmoduleplugin', 'Lückentext (H5P)');
     }
 
     public static function getDescription(): string
