@@ -19,3 +19,13 @@ Die Übersetzung wird aus technischen Gründen in zwei Komponenten aufgeteilt: P
 <a href="https://weblate.uni-vechta.de/engage/rasmusfuhse-lernmoduleplugin/en/">
 <img src="https://weblate.uni-vechta.de/widgets/rasmusfuhse-lernmoduleplugin/en/php/svg-badge.svg" alt="Translation status" />
 </a>
+
+## Courseware-Blöcke
+Für manche Lernmodule, die mit Vue 3 umgesetzt wurden, gibt es entsprechende Courseware-Blöcke.
+Die Blöcke werden durch Vue2-Komponenten in den Courseware eingebunden.
+Das Vue2-Projekt befindet sich in dem Verzeichnis `courseware-blocks-vue2/`.
+
+Das Vue2-Projekt verwendet Vite als Buildsystem mithilfe des Plugins 
+[vite-plugin-vue2](https://github.com/underfin/vite-plugin-vue2).  
+Das Blogpost [How to use Vue 2 with Vite](https://www.mathew-paul.nz/posts/how-to-use-vue2-with-vite/) 
+von Mathew Paul erklärt, wie man für Vue 2.6 ein Vite-Projekt aufsetzen kann.

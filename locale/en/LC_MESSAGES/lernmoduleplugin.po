@@ -7,17 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-29 16:17+0200\n"
+"POT-Creation-Date: 2023-06-05 17:28+0200\n"
 "PO-Revision-Date: 2022-08-09 14:05+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/"
-"rasmusfuhse-lernmoduleplugin/php/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/rasmusfuhse-"
+"lernmoduleplugin/php/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.10.1\n"
+
+#: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:23
+msgid "Lückentext (H5P)"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:30
+msgid ""
+"Eine Aufgabe, wo die Lücken in einem Lückentext von Studierenden ausgefüllt "
+"werden sollen."
+msgstr ""
 
 #: ../lib/VuejsLernmodul.php:19 ../lib/VuejsLernmodul.php:38
 #: ../lib/H5pLernmodul.php:78 ../lib/H5pLernmodul.php:96
@@ -108,8 +118,9 @@ msgid "Keine"
 msgstr "None"
 
 #: ../views/html/evaluation.php:4 ../views/vuejseditor/edit.php:45
-#: ../views/lernmodule/view.php:86 ../views/lernmodule/edit.php:260
-#: ../views/lernmodule/evaluation.php:61 ../views/lernmodule/evaluation.php:189
+#: ../views/lernmodule/view.php:91 ../views/lernmodule/edit.php:260
+#: ../views/lernmodule/evaluation.php:75 ../views/lernmodule/evaluation.php:214
+#: ../controllers/participants.php:44
 msgid "Auswertung"
 msgstr "Assessment"
 
@@ -132,7 +143,7 @@ msgstr "Save"
 msgid "URL"
 msgstr "URL"
 
-#: ../views/vuejseditor/edit.php:31 ../views/lernmodule/view.php:46
+#: ../views/vuejseditor/edit.php:31 ../views/lernmodule/view.php:49
 #, fuzzy
 msgid "Abspieloptionen bearbeiten"
 msgstr "Play options"
@@ -145,15 +156,15 @@ msgstr "Wait for Javascript"
 msgid "Erstellen"
 msgstr "Create"
 
-#: ../views/participants/index.php:26 ../views/lernmodule/evaluation.php:109
+#: ../views/participants/index.php:30 ../views/lernmodule/evaluation.php:127
 msgid "Name"
 msgstr "Name"
 
-#: ../views/participants/index.php:27
+#: ../views/participants/index.php:31
 msgid "Absolvierte Lernmodule"
 msgstr "Completed learning modules"
 
-#: ../views/participants/index.php:48
+#: ../views/participants/index.php:55
 msgid "Besser geht es nicht!"
 msgstr "It can't be any better!"
 
@@ -170,7 +181,7 @@ msgid "Beginn"
 msgstr "Begin"
 
 #: ../views/participants/evaluation.php:9
-#: ../views/lernmodule/evaluation.php:110
+#: ../views/lernmodule/evaluation.php:128
 msgid "Dauer"
 msgstr "Duration"
 
@@ -179,7 +190,7 @@ msgid "Erfolg"
 msgstr "Success"
 
 #: ../views/participants/evaluation.php:21
-#: ../views/lernmodule/evaluation.php:134
+#: ../views/lernmodule/evaluation.php:159
 msgid "Uhr"
 msgstr "o'clock"
 
@@ -200,9 +211,8 @@ msgid "Noch keine Module absolviert."
 msgstr "No modules completed yet."
 
 #: ../views/lernmodule/add.php:12
-#, fuzzy
-msgid "Vue.js-Editor"
-msgstr "Editor"
+msgid "Stud.IP H5P Editor"
+msgstr ""
 
 #: ../views/lernmodule/add.php:22 ../controllers/h5peditor.php:768
 msgid "Editor"
@@ -216,16 +226,16 @@ msgstr "Web address"
 msgid "Hochladen"
 msgstr "Upload"
 
-#: ../views/lernmodule/view.php:52 ../views/lernmodule/edit.php:243
+#: ../views/lernmodule/view.php:54 ../views/lernmodule/edit.php:243
 msgid "Lernmodul in Veranstaltung verschieben oder kopieren"
 msgstr "Move or copy learning module to course"
 
-#: ../views/lernmodule/view.php:59 ../views/lernmodule/edit.php:230
-#: ../views/lernmodule/evaluation.php:166
+#: ../views/lernmodule/view.php:61 ../views/lernmodule/edit.php:230
+#: ../views/lernmodule/evaluation.php:191
 msgid "Lernmodul herunterladen"
 msgstr "Download learning module"
 
-#: ../views/lernmodule/view.php:65 ../views/lernmodule/edit.php:236
+#: ../views/lernmodule/view.php:67 ../views/lernmodule/edit.php:236
 msgid "Auf Lernmarktplatz veröffentlichen"
 msgstr "Publish on learning market space"
 
@@ -436,11 +446,11 @@ msgstr "Add new display block"
 msgid "Block hinzufügen"
 msgstr "Add learning module"
 
-#: ../views/lernmodule/evaluation.php:63
+#: ../views/lernmodule/evaluation.php:77
 msgid "Dauer des Lernmoduls"
 msgstr "Duration of learning module"
 
-#: ../views/lernmodule/evaluation.php:93
+#: ../views/lernmodule/evaluation.php:110
 msgid ""
 "Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen "
 "Durchläufe, orange die nicht erfolgreichen."
@@ -448,30 +458,30 @@ msgstr ""
 "Time of attempts in seconds or minutes. Successful attempts are blue, not "
 "successful ones orange."
 
-#: ../views/lernmodule/evaluation.php:111 ../controllers/h5peditor.php:804
+#: ../views/lernmodule/evaluation.php:129 ../controllers/h5peditor.php:804
 msgid "Datum"
 msgstr "Date"
 
-#: ../views/lernmodule/evaluation.php:123
+#: ../views/lernmodule/evaluation.php:146
 msgid "Anonym"
 msgstr "Anonymous"
 
-#: ../views/lernmodule/evaluation.php:126
+#: ../views/lernmodule/evaluation.php:151
 #, php-format
 msgid "%s Sekunden"
 msgstr "%s seconds"
 
-#: ../views/lernmodule/evaluation.php:128
+#: ../views/lernmodule/evaluation.php:153
 #, php-format
 msgid "%s Minuten"
 msgstr "%s minutes"
 
-#: ../views/lernmodule/evaluation.php:130
+#: ../views/lernmodule/evaluation.php:155
 #, php-format
 msgid "%s Stunden"
 msgstr "%s hours"
 
-#: ../views/lernmodule/evaluation.php:173
+#: ../views/lernmodule/evaluation.php:198
 msgid "Bearbeiten"
 msgstr "Edit"
 
@@ -603,7 +613,7 @@ msgstr "Learning module could not be saved. Data incomplete."
 msgid "Neues Lernmodul erstellen"
 msgstr "Create learning module"
 
-#: ../controllers/h5peditor.php:100 ../controllers/lernmodule.php:138
+#: ../controllers/h5peditor.php:100 ../controllers/lernmodule.php:158
 #: ../controllers/vuejseditor.php:46
 msgid "Lernmodul bearbeiten"
 msgstr "Edit learning module"
@@ -1042,7 +1052,7 @@ msgstr "Could not use H5P libraries"
 msgid "Direktlink zum Lernmodul"
 msgstr "Images from learning module"
 
-#: ../controllers/participants.php:18
+#: ../controllers/participants.php:17
 #, fuzzy
 msgid "Teilnehmende"
 msgstr "Participants"
@@ -1052,76 +1062,76 @@ msgstr "Participants"
 msgid "Lernmodul wurde erstellt und ist bereit zum Bearbeiten."
 msgstr "Upload and edit learning module"
 
-#: ../controllers/lernmodule.php:59
+#: ../controllers/lernmodule.php:61
 #, php-format
 msgid "Sie haben zuletzt an '%s' teilgenommen."
 msgstr "You have last participated in '%s'."
 
-#: ../controllers/lernmodule.php:63
+#: ../controllers/lernmodule.php:69
 msgid "Wieder einsteigen"
 msgstr "Continue"
 
-#: ../controllers/lernmodule.php:64
+#: ../controllers/lernmodule.php:74
 msgid "Teilnahme beenden"
 msgstr "End participation"
 
-#: ../controllers/lernmodule.php:74
+#: ../controllers/lernmodule.php:84
 #, php-format
 msgid "%s sucht noch weitere Teilnehmer für '%s'."
 msgstr "%s searches further participants for '%s'."
 
-#: ../controllers/lernmodule.php:79
+#: ../controllers/lernmodule.php:93
 msgid "Einladung annehmen"
 msgstr "Accept invitation"
 
-#: ../controllers/lernmodule.php:101
+#: ../controllers/lernmodule.php:115
 msgid "Kann Lernmodul nicht finden."
 msgstr "Could not find learning module"
 
-#: ../controllers/lernmodule.php:109
+#: ../controllers/lernmodule.php:123
 msgid "IDs passen nicht zusammen. Beitritt verweigert."
 msgstr "IDs don't fit. Access denied."
 
-#: ../controllers/lernmodule.php:138
+#: ../controllers/lernmodule.php:156
 msgid "Lernmodul erstellen"
 msgstr "Create learning module"
 
-#: ../controllers/lernmodule.php:142
+#: ../controllers/lernmodule.php:164
 msgid "Datei ist leider zu groß."
 msgstr "Filesize exceeded."
 
-#: ../controllers/lernmodule.php:162
+#: ../controllers/lernmodule.php:185
 msgid "Konnte Lernmodul nicht speichern."
 msgstr "Could not save learning module."
 
-#: ../controllers/lernmodule.php:204
+#: ../controllers/lernmodule.php:231
 msgid "Lernmodul erfolgreich gespeichert."
 msgstr "Learning module saved succussfully."
 
-#: ../controllers/lernmodule.php:284
+#: ../controllers/lernmodule.php:317
 msgid "Lernmodul gelöscht."
 msgstr "Learning module deleted."
 
-#: ../controllers/lernmodule.php:393
+#: ../controllers/lernmodule.php:427
 #, fuzzy
 msgid "Block wurde gelöscht."
 msgstr "Learning module deleted."
 
-#: ../controllers/lernmodule.php:415
+#: ../controllers/lernmodule.php:454
 msgid "Einstellungen wurden gespeichert."
 msgstr "Settings saved."
 
-#: ../controllers/lernmodule.php:485
+#: ../controllers/lernmodule.php:526
 #, fuzzy
 msgid "Quelle des Lernmoduls auswählen"
 msgstr "Duration of learning module"
 
-#: ../controllers/lernmodule.php:545
+#: ../controllers/lernmodule.php:597
 #, fuzzy
 msgid "Lernmodul verschieben in andere Veranstaltung"
 msgstr "Images of the course"
 
-#: ../controllers/lernmodule.php:585
+#: ../controllers/lernmodule.php:642
 #, fuzzy
 msgid "Lernmodul wurde verschoben."
 msgstr "Create learning module"
@@ -1192,6 +1202,10 @@ msgid ""
 msgstr ""
 "H5P learning modules to upload or create yourself using your own editor; "
 "HTML learning modules to upload or link (as URL);"
+
+#, fuzzy
+#~ msgid "Vue.js-Editor"
+#~ msgstr "Editor"
 
 #~ msgid "Dies ist ein SCORM-Modul, das noch nicht unterstützt wird."
 #~ msgstr "This is a SCORM module which is not supported yet."

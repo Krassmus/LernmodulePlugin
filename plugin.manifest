@@ -1,5 +1,6 @@
 pluginname=LernmodulePlugin
 pluginclassname=LernmodulePlugin
+pluginclassname=LernmoduleCoursewareBlocksPlugin
 version=2.6.3
 origin=RasmusFuhse
 studipMinVersion=4.0

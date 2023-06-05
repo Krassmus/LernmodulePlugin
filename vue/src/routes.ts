@@ -2,6 +2,11 @@ import { TaskDefinition } from '@/models/TaskDefinition';
 import { z } from 'zod';
 
 /**
+ * Save a Vue.js Lernmodul that is being edited in the "Lernmodule" tab of a
+ * course.
+ * TODO: Define a route or other function which can be called to save a Lernmodul
+ *   that is edited within the Courseware. That involves a different set of
+ *   database tables.
  * @param taskDefinition The definition of the task
  * @param moduleName The name of the Lernmodul
  * @param infoText The HTML description of the Lernmodul

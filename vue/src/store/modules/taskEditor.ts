@@ -123,8 +123,20 @@ export class TaskEditorModule extends VuexModule {
     }
   }
 
+  // Initialize the editor store to a state usable for courseware
   @Mutation
-  initialize() {
+  initializeCourseware(task_json: TaskDefinition) {
+    console.info('initializeCourseware()', task_json);
+    this.serverTaskDefinition = task_json;
+    this.undoRedoStack = [
+      { taskDefinition: this.serverTaskDefinition, undoBatch: {} },
+    ];
+  }
+
+  // Initialize the editor store to a state usable for the non-courseware version
+  // of Lernmodule (AKA the 'Lernmodule' tab in a course).
+  @Mutation
+  initializeNonCourseware() {
     // In Linux on Anns PC this is an empty array but on Windows on Thomas PC it's just NULL.
     // We don't know why this is, but for now, we will just accept it and handle both cases.
     if (

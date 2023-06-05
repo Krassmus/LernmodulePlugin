@@ -8,5 +8,6 @@ module.exports = defineConfig({
   pages: {
     editor: 'src/editor-main.ts',
     viewer: 'src/viewer-main.ts',
+    courseware: 'src/courseware-main.ts',
   },
 });
