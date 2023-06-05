@@ -20,6 +20,7 @@ export default defineComponent({
   <component
     :is="viewerForTaskType(taskDefinition.task_type)"
     :task="taskDefinition"
+    class="lernmodule-viewer"
   />
   <template v-if="showEditingUI">
     <component :is="editorForTaskType(taskDefinition.task_type)" />
@@ -35,4 +36,8 @@ export default defineComponent({
   </template>
 </template>
 
-<style scoped></style>
+<style scoped>
+.lernmodule-viewer {
+  margin-bottom: 1em;
+}
+</style>

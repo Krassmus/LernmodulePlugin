@@ -12,17 +12,16 @@
       @showEdit="onShowEditChange"
     >
       <template #content>
-        <p>Fill In The Blanks block content. Payload:</p>
-        <pre style="font-size: 8px">{{ block.attributes.payload }}</pre>
+        <template v-if="false">
+          <p>Fill In The Blanks block content. Payload:</p>
+          <pre style="font-size: 8px">{{ block.attributes.payload }}</pre>
+        </template>
         <iframe
           ref="lernmoduleIframe"
           class="lernmodule-iframe"
           :src="iframeUrl"
           @load="onIframeLoad"
         />
-      </template>
-      <template v-if="canEdit" #edit>
-        <!--        Fill In The Blanks editor content-->
       </template>
     </component>
   </div>
