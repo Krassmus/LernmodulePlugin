@@ -161,13 +161,13 @@
             :key="i"
           >
             <input type="text" v-model="taskDefinition.feedback[i].message" />
-            <img
-              :src="urlForIcon('trash')"
-              alt="Button with trash icon to remove a feedback range"
-              width="16"
-              height="16"
+            <button
+              type="button"
+              :title="titleForDeleteButtonForFeedback(feedback)"
               @click="removeFeedback(feedback)"
-            />
+            >
+              <img :src="urlForIcon('trash')" width="16" height="16" />
+            </button>
           </div>
         </div>
       </div>
@@ -209,6 +209,12 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+    titleForDeleteButtonForFeedback(feedback: Feedback): string {
+      return this.$gettext(
+        'Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt.',
+        { percentage: feedback.percentage.toString() }
+      );
+    },
     addBlank() {
       const editor = window.CKEDITOR.instances['ckeditorElement'];
 
@@ -258,6 +264,7 @@ export default defineComponent({
 
 .feedbackContainer {
   display: flex;
+  gap: 0.5em;
   justify-content: flex-start;
   align-items: center;
   max-width: 48em;
@@ -278,5 +285,6 @@ export default defineComponent({
 .feedbackMessagesChildSubdivision {
   display: flex;
   align-items: center;
+  gap: 0.5em;
 }
 </style>
