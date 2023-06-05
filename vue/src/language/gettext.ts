@@ -15,8 +15,4 @@ const gettextPlugin = createGettext({
 
 const $gettext = gettextPlugin.$gettext;
 
-const translationStrings = {
-  allowMultipleTries: $gettext('Mehrere Versuche erlauben'),
-};
-
-export { gettextPlugin, $gettext, translationStrings };
+export { gettextPlugin, $gettext };
