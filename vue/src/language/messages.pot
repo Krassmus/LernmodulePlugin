@@ -2,7 +2,9 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/components/CoursewareBlock.vue:10
 #: src/components/CoursewareBlock.vue:14
+#: src/components/CoursewareBlock.vue:9
 msgid "Abbrechen"
 msgstr ""
 
@@ -15,65 +17,132 @@ msgstr ""
 msgid "Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen"
 msgstr ""
 
+#: src/components/FillInTheBlanksEditor.vue:68
+#: src/components/FillInTheBlanksEditor.vue:71
+#: src/components/FillInTheBlanksEditor.vue:76
+#: src/components/FillInTheBlanksEditor.vue:95
+msgid "Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen."
+msgstr ""
+
+#: src/components/EditedFlashCard.vue:16
+#: src/components/EditedFlashCard.vue:17
 #: src/components/EditedFlashCard.vue:19
 #: src/components/EditedMemoryCard.vue:10
+#: src/components/EditedMemoryCard.vue:9
 msgid "Alternativer Text"
 msgstr ""
 
 #: src/components/EditedFlashCard.vue:10
+#: src/components/EditedFlashCard.vue:8
+#: src/components/EditedFlashCard.vue:9
 msgid "Antwort"
 msgstr ""
 
+#: src/components/DragTheWordsEditor.vue:35
+#: src/components/DragTheWordsEditor.vue:36
+#: src/components/DragTheWordsEditor.vue:41
+#: src/components/DragTheWordsEditor.vue:45
+msgid "Antworten alphabetisch sortieren"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:18
 #: src/components/LernmoduleEditor.vue:28
 msgid "Aufgabenbeschreibung"
 msgstr ""
 
+#: src/components/LernmoduleEditor.vue:23
+#: src/components/LernmoduleEditor.vue:33
+msgid "Aufgabentyp auswählen:"
+msgstr ""
+
+#: src/components/DragTheWordsEditor.vue:23
+#: src/components/DragTheWordsEditor.vue:24
 #: src/components/DragTheWordsEditor.vue:29
+#: src/components/FillInTheBlanksEditor.vue:33
+#: src/components/FillInTheBlanksEditor.vue:36
 #: src/components/FillInTheBlanksEditor.vue:41
 msgid "automatisch nach Eingabe"
 msgstr ""
 
+#: src/components/FillInTheBlanksEditor.vue:133
 #: src/components/FillInTheBlanksEditor.vue:137
+#: src/components/FillInTheBlanksEditor.vue:93
+#: src/components/FillInTheBlanksEditor.vue:96
 msgid "Benutzerdefiniertes Feedback für beliebige Punktebereiche:"
 msgstr ""
 
+#: src/components/EditedFlashCard.vue:12
+#: src/components/EditedFlashCard.vue:13
 #: src/components/EditedFlashCard.vue:15
+#: src/components/EditedMemoryCard.vue:5
 #: src/components/EditedMemoryCard.vue:6
 msgid "Bild"
 msgstr ""
 
+#: src/components/EditedFlashCardImage.vue:3
 #: src/components/EditedFlashCardImage.vue:4
+#: src/components/EditedMemoryCardImage.vue:3
 #: src/components/EditedMemoryCardImage.vue:4
 msgid "Bild Löschen"
 msgstr ""
 
+#: src/components/ImageUpload.vue:2
 #: src/components/ImageUpload.vue:3
 msgid "Datei wird hochgeladen"
 msgstr ""
 
+#: src/components/DragTheWordsEditor.vue:14
+#: src/components/DragTheWordsEditor.vue:15
 #: src/components/DragTheWordsEditor.vue:20
+#: src/components/FillInTheBlanksEditor.vue:14
+#: src/components/FillInTheBlanksEditor.vue:17
 #: src/components/FillInTheBlanksEditor.vue:22
+#: src/components/QuestionEditor.vue:39
+#: src/components/QuestionEditor.vue:41
 #: src/components/QuestionEditor.vue:69
 msgid "Einstellungen"
 msgstr ""
 
+#: src/components/FillInTheBlanksEditor.vue:213
+msgid "Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt."
+msgstr ""
+
 #: src/components/FillInTheBlanksEditor.vue:126
+#: src/components/FillInTheBlanksEditor.vue:86
+#: src/components/FillInTheBlanksEditor.vue:89
 msgid "Ergebnismitteilung (mögliche Variablen :correct und :total):"
 msgstr ""
 
 #: src/components/FillInTheBlanksEditor.vue:123
+#: src/components/FillInTheBlanksEditor.vue:83
+#: src/components/FillInTheBlanksEditor.vue:86
 msgid "Feedback"
 msgstr ""
 
+#: src/components/QuestionEditor.vue:23
+#: src/components/QuestionEditor.vue:25
+#: src/components/QuestionEditor.vue:41
 #: src/components/QuestionEditor.vue:45
 msgid "Feedback wenn ausgewählt"
 msgstr ""
 
+#: src/components/QuestionEditor.vue:28
+#: src/components/QuestionEditor.vue:30
+#: src/components/QuestionEditor.vue:46
 #: src/components/QuestionEditor.vue:54
 msgid "Feedback wenn nicht ausgewählt"
 msgstr ""
 
+#: src/components/LernmoduleEditor.vue:35
+#: src/components/LernmoduleEditor.vue:45
+msgid "Flashcards"
+msgstr ""
+
+#: src/components/EditedFlashCard.vue:4
 #: src/components/EditedFlashCard.vue:5
+#: src/components/LernmoduleEditor.vue:30
+#: src/components/LernmoduleEditor.vue:40
+#: src/components/QuestionEditor.vue:3
 #: src/components/QuestionEditor.vue:5
 msgid "Frage"
 msgstr ""
@@ -86,19 +155,32 @@ msgstr ""
 msgid "Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den \"Lücke hinzufügen\"–Button. Sie können alternative Antworten mit einem Schrägstrich (/) hinzufügen. Außerdem können Sie einen Tooltip mit einem Doppelpunkt (:) hinzufügen."
 msgstr ""
 
+#: src/components/FillInTheBlanksEditor.vue:18
+#: src/components/FillInTheBlanksEditor.vue:21
+#: src/components/FillInTheBlanksEditor.vue:26
+msgid "Groß- und Kleinschreibung beachten"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:12
 #: src/components/LernmoduleEditor.vue:22
 msgid "Grunddaten"
 msgstr ""
 
+#: src/components/QuestionEditor.vue:18
+#: src/components/QuestionEditor.vue:20
 #: src/components/QuestionEditor.vue:36
 msgid "Hinweis"
 msgstr ""
 
+#: src/components/QuestionEditor.vue:16
+#: src/components/QuestionEditor.vue:18
 #: src/components/QuestionEditor.vue:34
 msgid "Hinweis und Feedback"
 msgstr ""
 
+#: src/components/EditedFlashCard.vue:3
 #: src/components/EditedFlashCard.vue:4
+#: src/components/EditedMemoryCard.vue:3
 #: src/components/EditedMemoryCard.vue:4
 #: src/components/FlashCardsEditor.vue:6
 #: src/components/FlashCardsEditor.vue:8
@@ -112,37 +194,68 @@ msgstr ""
 #: src/components/FlashCardsEditor.vue:14
 #: src/components/FlashCardsEditor.vue:15
 #: src/components/FlashCardsEditor.vue:20
+#: src/components/MemoryEditor.vue:14
 #: src/components/MemoryEditor.vue:15
 #: src/components/MemoryEditor.vue:25
 msgid "Karte hinzufügen"
 msgstr ""
 
+#: src/components/FlashCardsEditor.vue:20
+#: src/components/FlashCardsEditor.vue:21
+#: src/components/FlashCardsEditor.vue:26
 #: src/components/FlashCardsEditor.vue:31
+#: src/components/MemoryEditor.vue:20
+#: src/components/MemoryEditor.vue:21
+#: src/components/MemoryEditor.vue:31
 #: src/components/MemoryEditor.vue:36
 msgid "Keine Karte ist zum Bearbeiten ausgewählt."
 msgstr ""
 
+#: src/components/DragTheWordsEditor.vue:17
+#: src/components/DragTheWordsEditor.vue:18
 #: src/components/DragTheWordsEditor.vue:23
+#: src/components/FillInTheBlanksEditor.vue:27
+#: src/components/FillInTheBlanksEditor.vue:30
 #: src/components/FillInTheBlanksEditor.vue:35
 msgid "Korrigiert wird"
 msgstr ""
 
+#: src/components/DragTheWordsEditor.vue:54
+#: src/components/DragTheWordsEditor.vue:55
+#: src/components/DragTheWordsEditor.vue:60
 #: src/components/DragTheWordsEditor.vue:69
+#: src/components/FillInTheBlanksEditor.vue:59
+#: src/components/FillInTheBlanksEditor.vue:62
+#: src/components/FillInTheBlanksEditor.vue:67
 #: src/components/FillInTheBlanksEditor.vue:76
+#: src/components/QuestionEditor.vue:62
+#: src/components/QuestionEditor.vue:64
+#: src/components/QuestionEditor.vue:92
+#: src/components/QuestionEditor.vue:97
 msgid "Lösungen können angezeigt werden"
 msgstr ""
 
+#: src/components/DragTheWordsEditor.vue:6
 #: src/components/DragTheWordsEditor.vue:7
+#: src/components/FillInTheBlanksEditor.vue:6
 #: src/components/FillInTheBlanksEditor.vue:9
 msgid "Lücke hinzufügen"
 msgstr ""
 
+#: src/components/DragTheWordsEditor.vue:3
 #: src/components/DragTheWordsEditor.vue:4
+#: src/components/FillInTheBlanksEditor.vue:3
 #: src/components/FillInTheBlanksEditor.vue:6
+#: src/components/LernmoduleEditor.vue:29
+#: src/components/LernmoduleEditor.vue:39
 msgid "Lückentext"
 msgstr ""
 
+#: src/components/DragTheWordsEditor.vue:20
+#: src/components/DragTheWordsEditor.vue:21
 #: src/components/DragTheWordsEditor.vue:26
+#: src/components/FillInTheBlanksEditor.vue:30
+#: src/components/FillInTheBlanksEditor.vue:33
 #: src/components/FillInTheBlanksEditor.vue:38
 msgid "manuell per Button"
 msgstr ""
@@ -151,58 +264,153 @@ msgstr ""
 msgid "Markieren Sie ein Wort als Lösung, indem Sie ein Sternchen (*) vor und hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den \"Richtiges Wort markieren\"–Button."
 msgstr ""
 
+#: src/components/LernmoduleEditor.vue:33
+#: src/components/LernmoduleEditor.vue:43
+msgid "Markierung von Wörtern"
+msgstr ""
+
+#: src/components/QuestionEditor.vue:43
+#: src/components/QuestionEditor.vue:45
+#: src/components/QuestionEditor.vue:73
+msgid "Mehrere Antworten können ausgewählt werden"
+msgstr ""
+
+#: src/components/DragTheWordsEditor.vue:40
+#: src/components/DragTheWordsEditor.vue:41
+#: src/components/DragTheWordsEditor.vue:46
+#: src/components/DragTheWordsEditor.vue:50
+#: src/components/FillInTheBlanksEditor.vue:45
+#: src/components/FillInTheBlanksEditor.vue:48
+#: src/components/FillInTheBlanksEditor.vue:53
+#: src/components/FillInTheBlanksEditor.vue:57
+#: src/components/QuestionEditor.vue:53
+#: src/components/QuestionEditor.vue:55
+#: src/components/QuestionEditor.vue:83
+msgid "Mehrere Versuche erlauben"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:36
+#: src/components/LernmoduleEditor.vue:46
+msgid "Memory-Spiel"
+msgstr ""
+
+#: src/components/FillInTheBlanksEditor.vue:107
+#: src/components/FillInTheBlanksEditor.vue:110
+#: src/components/FillInTheBlanksEditor.vue:147
+#: src/components/FillInTheBlanksEditor.vue:151
 #: src/components/FillInTheBlanksEditor.vue:156
 msgid "Mitteilung"
 msgstr ""
 
 #: src/components/FillInTheBlanksEditor.vue:107
+#: src/components/FillInTheBlanksEditor.vue:78
+#: src/components/FillInTheBlanksEditor.vue:81
+#: src/components/FillInTheBlanksEditor.vue:86
 msgid "Mitteilung, wenn nicht alle Lücken ausgefüllt sind:"
 msgstr ""
 
 #: src/components/QuestionEditor.vue:128
+#: src/components/QuestionEditor.vue:34
+#: src/components/QuestionEditor.vue:36
 #: src/components/QuestionEditor.vue:64
 msgid "Neue Antwort"
 msgstr ""
 
-#: src/components/FillInTheBlanksEditor.vue:117
-#: src/components/FillInTheBlanksEditor.vue:120
-#: src/components/FillInTheBlanksEditor.vue:157
+#: src/components/FillInTheBlanksEditor.vue:119
+#: src/components/FillInTheBlanksEditor.vue:122
+#: src/components/FillInTheBlanksEditor.vue:159
 #: src/components/FillInTheBlanksEditor.vue:176
 msgid "Neuer Bereich"
 msgstr ""
 
+#: src/components/FillInTheBlanksEditor.vue:101
+#: src/components/FillInTheBlanksEditor.vue:138
 #: src/components/FillInTheBlanksEditor.vue:142
+#: src/components/FillInTheBlanksEditor.vue:98
 msgid "Prozent"
 msgstr ""
 
+#: src/components/QuestionViewer.vue:37
+#: src/components/QuestionViewer.vue:38
 #: src/components/QuestionViewer.vue:59
 msgid "Punkte"
 msgstr ""
 
+#: src/components/FillInTheBlanksEditor.vue:23
+#: src/components/FillInTheBlanksEditor.vue:26
+#: src/components/FillInTheBlanksEditor.vue:31
+msgid "Rechtschreib- oder Tippfehler ignorieren"
+msgstr ""
+
+#: src/components/MarkTheWordsEditor.vue:6
 #: src/components/MarkTheWordsEditor.vue:7
 msgid "Richtiges Wort markieren"
 msgstr ""
 
 #: src/components/CoursewareBlock.vue:11
+#: src/components/CoursewareBlock.vue:6
+#: src/components/CoursewareBlock.vue:7
 #: src/components/LernmoduleEditor.vue:10
+#: src/components/LernmoduleEditor.vue:3
+#: src/components/LernmoduleEditor.vue:49
+#: src/components/LernmoduleEditor.vue:59
+#: src/components/LernmoduleEditor.vue:6
 msgid "Speichern"
 msgstr ""
 
+#: src/components/MarkTheWordsEditor.vue:3
 #: src/components/MarkTheWordsEditor.vue:4
 msgid "Text erstellen"
 msgstr ""
 
+#: src/components/DragTheWordsEditor.vue:29
+#: src/components/DragTheWordsEditor.vue:30
 #: src/components/DragTheWordsEditor.vue:35
+#: src/components/DragTheWordsEditor.vue:42
+#: src/components/DragTheWordsEditor.vue:43
+#: src/components/DragTheWordsEditor.vue:48
 #: src/components/DragTheWordsEditor.vue:52
+#: src/components/DragTheWordsEditor.vue:57
+#: src/components/DragTheWordsEditor.vue:58
+#: src/components/DragTheWordsEditor.vue:63
 #: src/components/DragTheWordsEditor.vue:76
+#: src/components/FillInTheBlanksEditor.vue:39
+#: src/components/FillInTheBlanksEditor.vue:42
 #: src/components/FillInTheBlanksEditor.vue:47
+#: src/components/FillInTheBlanksEditor.vue:50
+#: src/components/FillInTheBlanksEditor.vue:55
 #: src/components/FillInTheBlanksEditor.vue:59
+#: src/components/FillInTheBlanksEditor.vue:62
+#: src/components/FillInTheBlanksEditor.vue:65
+#: src/components/FillInTheBlanksEditor.vue:70
 #: src/components/FillInTheBlanksEditor.vue:83
+#: src/components/QuestionEditor.vue:55
+#: src/components/QuestionEditor.vue:57
+#: src/components/QuestionEditor.vue:64
+#: src/components/QuestionEditor.vue:66
 #: src/components/QuestionEditor.vue:85
+#: src/components/QuestionEditor.vue:94
 #: src/components/QuestionEditor.vue:99
 msgid "Text im Button:"
 msgstr ""
 
+#: src/components/LernmoduleEditor.vue:14
 #: src/components/LernmoduleEditor.vue:24
 msgid "Titel"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:53
+#: src/components/LernmoduleEditor.vue:63
+msgid "Vorschau"
+msgstr ""
+
+#: src/components/QuestionEditor.vue:48
+#: src/components/QuestionEditor.vue:50
+#: src/components/QuestionEditor.vue:78
+msgid "Zeige Antworten in zufälliger Reihenfolge"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:31
+#: src/components/LernmoduleEditor.vue:41
+msgid "Ziehen von Wörtern"
 msgstr ""
