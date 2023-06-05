@@ -1,20 +1,20 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: uol 5.1\n"
-"PO-Revision-Date: 2022-08-08 12:27+0000\n"
+"PO-Revision-Date: 2023-06-05 16:13+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/rasmusfuhse-"
-"lernmoduleplugin/js/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/"
+"rasmusfuhse-lernmoduleplugin/js/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.17\n"
 
 #: src/components/CoursewareBlock.vue:14
 msgid "Abbrechen"
-msgstr ""
+msgstr "Cancel"
 
 #: src/components/DragTheWordsViewer.vue:32
 #: src/components/DragTheWordsViewer.vue:33
@@ -23,67 +23,67 @@ msgstr ""
 #: src/components/FillInTheBlanksViewer.vue:22
 #: src/components/FillInTheBlanksViewer.vue:34
 msgid "Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen"
-msgstr ""
+msgstr "All of the blanks must be filled in order to show the solutions"
 
 #: src/components/EditedFlashCard.vue:19 src/components/EditedMemoryCard.vue:10
 msgid "Alternativer Text"
-msgstr ""
+msgstr "Alternative text"
 
 #: src/components/EditedFlashCard.vue:10
 msgid "Antwort"
-msgstr ""
+msgstr "Answer"
 
 #: src/components/LernmoduleEditor.vue:28
 msgid "Aufgabenbeschreibung"
-msgstr ""
+msgstr "Task description"
 
 #: src/components/DragTheWordsEditor.vue:29
 #: src/components/FillInTheBlanksEditor.vue:41
 msgid "automatisch nach Eingabe"
-msgstr ""
+msgstr "automatically after entry"
 
 #: src/components/FillInTheBlanksEditor.vue:137
 msgid "Benutzerdefiniertes Feedback für beliebige Punktebereiche:"
-msgstr ""
+msgstr "User-defined feedback for arbitrary point ranges:"
 
 #: src/components/EditedFlashCard.vue:15 src/components/EditedMemoryCard.vue:6
 msgid "Bild"
-msgstr ""
+msgstr "Image"
 
 #: src/components/EditedFlashCardImage.vue:4
 #: src/components/EditedMemoryCardImage.vue:4
 msgid "Bild Löschen"
-msgstr ""
+msgstr "Delete image"
 
 #: src/components/ImageUpload.vue:3
 msgid "Datei wird hochgeladen"
-msgstr ""
+msgstr "File is being uploaded"
 
 #: src/components/DragTheWordsEditor.vue:20
 #: src/components/FillInTheBlanksEditor.vue:22
 #: src/components/QuestionEditor.vue:69
 msgid "Einstellungen"
-msgstr ""
+msgstr "Settings"
 
 #: src/components/FillInTheBlanksEditor.vue:126
 msgid "Ergebnismitteilung (mögliche Variablen :correct und :total):"
-msgstr ""
+msgstr "Result message (possible variables :correct and :total):"
 
 #: src/components/FillInTheBlanksEditor.vue:123
 msgid "Feedback"
-msgstr ""
+msgstr "Feedback"
 
 #: src/components/QuestionEditor.vue:45
 msgid "Feedback wenn ausgewählt"
-msgstr ""
+msgstr "Feedback when selected"
 
 #: src/components/QuestionEditor.vue:54
 msgid "Feedback wenn nicht ausgewählt"
-msgstr ""
+msgstr "Feedback when not selected"
 
 #: src/components/EditedFlashCard.vue:5 src/components/QuestionEditor.vue:5
 msgid "Frage"
-msgstr ""
+msgstr "Question"
 
 #: src/components/DragTheWordsEditor.vue:104
 msgid ""
@@ -92,6 +92,9 @@ msgid ""
 "klicken Sie den \"Lücke hinzufügen\"–Button. Außerdem können Sie einen "
 "Tooltip mit einem Doppelpunkt (:) hinzufügen."
 msgstr ""
+"Add gaps by placing an asterisk (*) before and after the correct word(s), or "
+"highlight a word and click the \"Add Gap\" button. You can also add a "
+"tooltip with a colon (:)."
 
 #: src/components/FillInTheBlanksEditor.vue:203
 msgid ""
@@ -101,47 +104,50 @@ msgid ""
 "Antworten mit einem Schrägstrich (/) hinzufügen. Außerdem können Sie einen "
 "Tooltip mit einem Doppelpunkt (:) hinzufügen."
 msgstr ""
+"Add gaps by placing an asterisk (*) before and after the correct word(s), or "
+"highlight a word and click the \"Add Gap\" button. You can add alternative "
+"answers with a slash (/). Also, you can add a tooltip with a colon (:)."
 
 #: src/components/LernmoduleEditor.vue:22
 msgid "Grunddaten"
-msgstr ""
+msgstr "Basic data"
 
 #: src/components/QuestionEditor.vue:36
 msgid "Hinweis"
-msgstr ""
+msgstr "Hint"
 
 #: src/components/QuestionEditor.vue:34
 msgid "Hinweis und Feedback"
-msgstr ""
+msgstr "Hint and feedback"
 
 #: src/components/EditedFlashCard.vue:4 src/components/EditedMemoryCard.vue:4
 #: src/components/FlashCardsEditor.vue:6 src/components/FlashCardsEditor.vue:8
 #: src/components/FlashCardsEditor.vue:9 src/components/MemoryEditor.vue:6
 #: src/components/MemoryEditor.vue:8 src/components/MemoryEditor.vue:9
 msgid "Karte"
-msgstr ""
+msgstr "Card"
 
 #: src/components/FlashCardsEditor.vue:14
 #: src/components/FlashCardsEditor.vue:15
 #: src/components/FlashCardsEditor.vue:20 src/components/MemoryEditor.vue:15
 #: src/components/MemoryEditor.vue:25
-#, fuzzy
 msgid "Karte hinzufügen"
-msgstr "Add gap"
+msgstr "Add card"
 
 #: src/components/FlashCardsEditor.vue:31 src/components/MemoryEditor.vue:36
 msgid "Keine Karte ist zum Bearbeiten ausgewählt."
-msgstr ""
+msgstr "No card is selected for editing."
 
 #: src/components/DragTheWordsEditor.vue:23
 #: src/components/FillInTheBlanksEditor.vue:35
+#, fuzzy
 msgid "Korrigiert wird"
-msgstr ""
+msgstr "The correct answers are shown"
 
 #: src/components/DragTheWordsEditor.vue:69
 #: src/components/FillInTheBlanksEditor.vue:76
 msgid "Lösungen können angezeigt werden"
-msgstr ""
+msgstr "Solutions can be viewed"
 
 #: src/components/DragTheWordsEditor.vue:7
 #: src/components/FillInTheBlanksEditor.vue:9
@@ -156,7 +162,7 @@ msgstr "Cloze text"
 #: src/components/DragTheWordsEditor.vue:26
 #: src/components/FillInTheBlanksEditor.vue:38
 msgid "manuell per Button"
-msgstr ""
+msgstr "manually via button"
 
 #: src/components/MarkTheWordsEditor.vue:58
 msgid ""
@@ -164,45 +170,48 @@ msgid ""
 "hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den "
 "\"Richtiges Wort markieren\"–Button."
 msgstr ""
+"Mark a word as a solution by putting an asterisk (*) in front of and behind "
+"the word, or select a word and click the \"Mark correct word\" button."
 
 #: src/components/FillInTheBlanksEditor.vue:156
+#, fuzzy
 msgid "Mitteilung"
-msgstr ""
+msgstr "Notification"
 
 #: src/components/FillInTheBlanksEditor.vue:107
 msgid "Mitteilung, wenn nicht alle Lücken ausgefüllt sind:"
-msgstr ""
+msgstr "Notification if not all gaps are filled in:"
 
 #: src/components/QuestionEditor.vue:128 src/components/QuestionEditor.vue:64
 msgid "Neue Antwort"
-msgstr ""
+msgstr "New answer"
 
 #: src/components/FillInTheBlanksEditor.vue:117
 #: src/components/FillInTheBlanksEditor.vue:120
 #: src/components/FillInTheBlanksEditor.vue:157
 #: src/components/FillInTheBlanksEditor.vue:176
 msgid "Neuer Bereich"
-msgstr ""
+msgstr "New range"
 
 #: src/components/FillInTheBlanksEditor.vue:142
 msgid "Prozent"
-msgstr ""
+msgstr "Percentage"
 
 #: src/components/QuestionViewer.vue:59
 msgid "Punkte"
-msgstr ""
+msgstr "Points"
 
 #: src/components/MarkTheWordsEditor.vue:7
 msgid "Richtiges Wort markieren"
-msgstr ""
+msgstr "Mark correct word"
 
 #: src/components/CoursewareBlock.vue:11 src/components/LernmoduleEditor.vue:10
 msgid "Speichern"
-msgstr ""
+msgstr "Save"
 
 #: src/components/MarkTheWordsEditor.vue:4
 msgid "Text erstellen"
-msgstr ""
+msgstr "Create text"
 
 #: src/components/DragTheWordsEditor.vue:35
 #: src/components/DragTheWordsEditor.vue:52
@@ -212,8 +221,8 @@ msgstr ""
 #: src/components/FillInTheBlanksEditor.vue:83
 #: src/components/QuestionEditor.vue:85 src/components/QuestionEditor.vue:99
 msgid "Text im Button:"
-msgstr ""
+msgstr "Text in the button:"
 
 #: src/components/LernmoduleEditor.vue:24
 msgid "Titel"
-msgstr ""
+msgstr "Title"
