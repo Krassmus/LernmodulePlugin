@@ -42,7 +42,7 @@ export default defineComponent({
 }
 .save-cancel-buttons {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin-right: 0.8em;
 }
 </style>
