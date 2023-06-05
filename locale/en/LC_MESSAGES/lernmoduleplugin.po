@@ -8,26 +8,26 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-05 17:28+0200\n"
-"PO-Revision-Date: 2022-08-09 14:05+0000\n"
+"PO-Revision-Date: 2023-06-05 16:13+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/rasmusfuhse-"
-"lernmoduleplugin/php/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/"
+"rasmusfuhse-lernmoduleplugin/php/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.17\n"
 
 #: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:23
 msgid "Lückentext (H5P)"
-msgstr ""
+msgstr "Cloze text (H5P)"
 
 #: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:30
 msgid ""
 "Eine Aufgabe, wo die Lücken in einem Lückentext von Studierenden ausgefüllt "
 "werden sollen."
-msgstr ""
+msgstr "An assignment where the gaps in a text are to be filled in by students."
 
 #: ../lib/VuejsLernmodul.php:19 ../lib/VuejsLernmodul.php:38
 #: ../lib/H5pLernmodul.php:78 ../lib/H5pLernmodul.php:96
@@ -49,7 +49,7 @@ msgstr "Copy URL"
 
 #: ../lib/H5pLernmodul.php:116 ../controllers/h5p.php:229
 msgid "Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."
-msgstr "This H5P module uses libraries that are not shared yet"
+msgstr "This H5P module uses libraries that are not shared yet."
 
 #: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:15
 msgid "Sie befinden sich nicht innerhalb des Anmeldezeitraums."
@@ -369,7 +369,7 @@ msgstr "Do you really want to delete?"
 #: ../views/lernmodule/edit.php:217 ../controllers/h5peditor.php:153
 #: ../controllers/h5p.php:315
 msgid "Abbrechen"
-msgstr "Quit"
+msgstr "Cancel"
 
 #: ../views/lernmodule/_lernmodul_kachel.php:15
 msgid "Erfolgreich abgeschlossen"
@@ -663,7 +663,7 @@ msgstr ""
 #: ../controllers/h5peditor.php:134 ../controllers/h5peditor.php:227
 #: ../controllers/h5peditor.php:476 ../controllers/h5p.php:296
 msgid "Titel"
-msgstr ""
+msgstr "Title"
 
 #: ../controllers/h5peditor.php:135 ../controllers/h5p.php:297
 msgid "Author"
