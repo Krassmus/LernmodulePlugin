@@ -12,6 +12,7 @@ export default defineComponent({
     taskDefinition: () => taskEditorStore.taskDefinition,
     saveStatus: () => taskEditorStore.saveStatus,
     saveBlock: () => coursewareBlockStore.saveBlock,
+    cancelEditing: () => coursewareBlockStore.cancelEditing,
   },
 });
 </script>
@@ -24,13 +25,12 @@ export default defineComponent({
   />
   <template v-if="showEditingUI">
     <component :is="editorForTaskType(taskDefinition.task_type)" />
-    <div class="save-undo-redo">
-      <button
-        class="button"
-        @click="saveBlock"
-        :disabled="saveStatus.status === 'saving'"
-      >
+    <div class="save-cancel-buttons">
+      <button class="button accept" @click="saveBlock">
         {{ $gettext('Speichern') }}
+      </button>
+      <button class="button cancel" @click="cancelEditing">
+        {{ $gettext('Abbrechen') }}
       </button>
     </div>
   </template>
@@ -39,5 +39,10 @@ export default defineComponent({
 <style scoped>
 .lernmodule-viewer {
   margin-bottom: 1em;
+}
+.save-cancel-buttons {
+  display: flex;
+  justify-content: end;
+  margin-right: 0.8em;
 }
 </style>

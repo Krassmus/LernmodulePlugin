@@ -27,11 +27,14 @@
   </div>
 </template>
 
-<style scoped>
+<style>
 .lernmodule-iframe {
   width: 1px;
   min-width: 100%;
   border: none;
+}
+.cw-block-edit {
+  display: none;
 }
 </style>
 
@@ -85,6 +88,16 @@ export default {
               message.data.taskDefinition
             );
             this.storeBlock(message.data.taskDefinition);
+            break;
+          case 'CancelEditingCoursewareBlock':
+            console.log(
+              'got message posted to window: ',
+              message,
+              'canceling editing.'
+            );
+            // close the edit menu
+            this.$refs.defaultBlock.closeEdit();
+            break;
         }
       }
     },

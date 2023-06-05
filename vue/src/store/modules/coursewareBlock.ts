@@ -15,7 +15,7 @@ export class CoursewareBlockModule extends VuexModule {
 
   @Mutation
   saveBlock() {
-    console.log('coursewareBlockStore: saveBlock() action called');
+    console.log('coursewareBlockStore: saveBlock() mutation called');
     // Tell the Vue 2 component we are wrapped in to save the block.
     // See the method 'onWindowMessage' of CoursewareFillInTheBlanksBlock.vue
     // The taskDefinition must be serialized in order for it to be passed
@@ -26,6 +26,17 @@ export class CoursewareBlockModule extends VuexModule {
     window.parent.postMessage({
       type: 'SaveCoursewareBlock',
       taskDefinition,
+    });
+  }
+
+  @Mutation
+  cancelEditing() {
+    console.log('coursewareBlockStore: cancelEditing() mutation called');
+    // Tell the Vue 2 component we are wrapped in to stop editing the block
+    // without saving the user's changes.
+    // See the method 'onWindowMessage' of CoursewareFillInTheBlanksBlock.vue
+    window.parent.postMessage({
+      type: 'CancelEditingCoursewareBlock',
     });
   }
 }
