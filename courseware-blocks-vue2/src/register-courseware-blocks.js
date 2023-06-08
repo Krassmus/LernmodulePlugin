@@ -1,10 +1,33 @@
-import CoursewareFillInTheBlanksBlock from '@/components/CoursewareFillInTheBlanksBlock.vue';
+import LernmoduleCoursewareBlockBase from '@/components/LernmoduleCoursewareBlockBase.vue';
 
-console.info('hello :)');
+// When adding a Courseware block for a new task type, you must add its name
+// to this array so that a corresponding vue 2 component will be registered in
+// the Courseware.
+const taskTypes = [
+  'FillInTheBlanks',
+  'FlashCards',
+  'Question',
+  'DragTheWords',
+  'MarkTheWords',
+  'Memory',
+];
+
+console.log('Hello :) Registering Lernmodule Courseware blocks...');
 window.STUDIP.eventBus.on('courseware:init-plugin-manager', (pluginManager) => {
-  pluginManager.addBlock(
-    'courseware-fill-in-the-blanks-block',
-    CoursewareFillInTheBlanksBlock
-  );
-  console.info('Registered FITB block');
+  for (const taskType of taskTypes) {
+    const blockComponent = coursewareBlockComponentForTaskType(taskType);
+    pluginManager.addBlock(blockComponent.name, blockComponent);
+    console.info('Registered CW block component: ', blockComponent.name);
+  }
 });
+
+/**
+ * All of the Vue 2 Lernmodule Courseware block components inherit from the same
+ * base component, which is merely a proxy to our Vue 3 code.
+ */
+function coursewareBlockComponentForTaskType(taskType) {
+  return {
+    name: `Courseware${taskType}Block`,
+    extends: LernmoduleCoursewareBlockBase,
+  };
+}
