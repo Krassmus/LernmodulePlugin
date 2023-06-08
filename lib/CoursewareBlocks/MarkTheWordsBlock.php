@@ -6,21 +6,21 @@ use Courseware\BlockTypes\BlockType;
 use Opis\JsonSchema\Schema;
 
 /**
- * This class represents the content of a 'Memory' task from H5P.
+ * This class represents the content of a 'Mark The Words' task from H5P.
  *
  * @author  Ann Yanich
  * @license GPL3 or any later version
  */
-class MemoryBlock extends BlockType
+class MarkTheWordsBlock extends BlockType
 {
     public static function getType(): string
     {
-        return 'memory';
+        return 'mark-the-words';
     }
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'Memory (H5P)');
+        return dgettext('lernmoduleplugin', 'Mark The Words (H5P)');
     }
 
     public static function getDescription(): string
@@ -35,7 +35,7 @@ class MemoryBlock extends BlockType
     {
         return [
             "initialized" => false,
-            "task_type" => 'Memory',
+            "task_type" => 'MarkTheWords',
         ];
     }
 
@@ -53,7 +53,7 @@ class MemoryBlock extends BlockType
 
     public static function getContentTypes(): array
     {
-        return ['text', 'image'];
+        return ['text'];
     }
 
     public static function getFileTypes(): array

@@ -11,6 +11,9 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
 
         require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/MemoryBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/QuestionBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/DragTheWordsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/MarkTheWordsBlock.php';
         // TODO Consider using cache-busting hashes so the latest version of
         //   the JS/CSS will always be loaded.  Currently, the webpack build
         //   does not do this.
@@ -56,6 +59,9 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
     {
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FillInTheBlanksBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
 
         return $otherBlockTypes;
     }
