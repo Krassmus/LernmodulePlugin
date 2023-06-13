@@ -4,7 +4,7 @@
       <img :src="card.imageUrl" :alt="card.altText" class="memoryImage" />
     </div>
     <div v-else class="memoryCardBack">
-      <img :src="pathForAsset('memoryCardBack', 'png')" class="memoryImage" />
+      <img src="../assets/memoryCardBack.png" class="memoryImage" />
     </div>
   </div>
 </template>
@@ -22,11 +22,7 @@ export default defineComponent({
     },
   },
   computed: {},
-  methods: {
-    pathForAsset(assetName: string, type: string) {
-      return window.STUDIP.ASSETS_URL + assetName + '.' + type;
-    },
-  },
+  methods: {},
 });
 </script>
 
