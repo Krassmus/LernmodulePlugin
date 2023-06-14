@@ -68,6 +68,12 @@
     <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
+      <label
+        >{{ $gettext('Text im Button:') }}
+
+        <input type="text" v-model="taskDefinition.strings.checkButton" />
+      </label>
+
       <label>
         <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
         {{ $gettext('Mehrere Antworten können ausgewählt werden') }}
