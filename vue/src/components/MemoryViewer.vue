@@ -1,10 +1,17 @@
 <template>
-  <span>Cardflips: {{ this.amountOfFlips }}</span>
+  <div>{{ $gettext('Umgedrehte Karten: ') + this.amountOfFlips }}</div>
 
-  <span>
-    Solved: {{ this.amountOfPairsSolved }} of
-    {{ this.totalAmountOfPairs }}
-  </span>
+  <div>
+    {{
+      $gettext('Aufgedeckte Paare:') +
+      ' ' +
+      this.amountOfPairsSolved +
+      ' ' +
+      $gettext('von') +
+      ' ' +
+      this.totalAmountOfPairs
+    }}
+  </div>
   <div class="h5pMemoryGame">
     <MemoryCardComponent
       v-for="card in this.cards"
