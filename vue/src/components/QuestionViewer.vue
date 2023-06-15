@@ -51,7 +51,12 @@
       </div>
     </template>
 
-    <button @click="onClickCheck" v-if="!isSubmitted" style="margin-top: 1em">
+    <button
+      v-if="!isSubmitted"
+      @click="onClickCheck"
+      class="h5pButton"
+      style="margin-top: 1em"
+    >
       {{ this.task.strings.checkButton }}
     </button>
 
@@ -71,6 +76,7 @@
     <button
       v-if="this.task.retryAllowed && isSubmitted"
       @click="onClickTryAgain"
+      class="h5pButton"
     >
       {{ this.task.strings.retryButton }}
     </button>
@@ -228,24 +234,6 @@ export default defineComponent({
 meter {
   width: 300px;
   height: 20px;
-}
-
-button {
-  font-size: 1em;
-  line-height: 1.2;
-  margin: 0 0.5em 1em;
-  padding: 0.5em 1.25em;
-  border-radius: 2em;
-  background: #1a73d9;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-  box-shadow: none;
-  display: inline-block;
-  text-align: center;
-  text-shadow: none;
-  text-decoration: none;
-  vertical-align: baseline;
 }
 
 .correctAnswer {
