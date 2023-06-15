@@ -134,36 +134,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.h5pModule {
-  border: 2px solid #eee;
-  padding: 0.5em 0.5em 0.5em 0.5em;
-}
-
-.h5pFillInTheBlanksEditor {
-  display: block;
-  width: 100%;
-  height: 20em;
-  resize: none;
-}
-
-.h5pButton {
-  font-size: 1em;
-  line-height: 1.2;
-  margin: 0 0.5em 1em;
-  padding: 0.5em 1.25em;
-  border-radius: 2em;
-  background: #1a73d9;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-  box-shadow: none;
-  display: inline-block;
-  text-align: center;
-  text-shadow: none;
-  text-decoration: none;
-  vertical-align: baseline;
-}
-
 .h5pTextArea {
   display: block;
   width: 100%;

@@ -168,19 +168,4 @@ export default defineComponent({
   justify-content: flex-start;
   padding-bottom: 1ex;
 }
-
-/*.flex-child-element {*/
-/*  flex: 1;*/
-/*  border: 4px solid #1d75b3;*/
-/*}*/
-
-/*input[type='text'].textbox.textbox {*/
-/*  margin: 0px 0px 0px 0px;*/
-/*  padding: 0px 0px 0px 0px;*/
-/*}*/
-
-/*input[type='checkbox'].checkbox.checkbox {*/
-/* margin: 0px 0px 0px 0px;*/
-/* padding: 0px 0px 0px 0px;*/
-/*}*/
 </style>

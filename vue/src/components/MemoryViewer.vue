@@ -1,41 +1,47 @@
 <template>
-  <div>{{ $gettext('Umgedrehte Karten: ') + this.amountOfFlips }}</div>
+  <div class="h5pModule">
+    <div>{{ $gettext('Umgedrehte Karten: ') + this.amountOfFlips }}</div>
 
-  <div>
-    {{
-      $gettext('Aufgedeckte Paare:') +
-      ' ' +
-      this.amountOfPairsSolved +
-      ' ' +
-      $gettext('von') +
-      ' ' +
-      this.totalAmountOfPairs
-    }}
-  </div>
-  <div class="h5pMemoryGame">
-    <MemoryCardComponent
-      v-for="card in this.cards"
-      :key="card.uuid"
-      :card="card"
-      @click="onClickCard(card)"
-    ></MemoryCardComponent>
-  </div>
+    <div>
+      {{
+        $gettext('Aufgedeckte Paare:') +
+        ' ' +
+        this.amountOfPairsSolved +
+        ' ' +
+        $gettext('von') +
+        ' ' +
+        this.totalAmountOfPairs
+      }}
+    </div>
+    <div class="h5pMemoryGame">
+      <MemoryCardComponent
+        v-for="card in this.cards"
+        :key="card.uuid"
+        :card="card"
+        @click="onClickCard(card)"
+      ></MemoryCardComponent>
+    </div>
 
-  <div class="h5pFeedbackContainer">
-    <div class="h5pFeedbackContainerTop">
-      <label v-if="showResults && feedbackMessage" class="h5pFeedbackText">
-        {{ this.feedbackMessage }}
-      </label>
-    </div>
-    <div class="h5pFeedbackContainerCenter">
-      <label v-if="showResults" class="h5pFeedbackText">
-        {{ this.resultMessage }}
-      </label>
-    </div>
-    <div class="h5pFeedbackContainerBottom">
-      <button v-if="showRetryButton" @click="onClickTryAgain" class="h5pButton">
-        {{ this.task.strings.retryButton }}
-      </button>
+    <div class="h5pFeedbackContainer">
+      <div class="h5pFeedbackContainerTop">
+        <label v-if="showResults && feedbackMessage" class="h5pFeedbackText">
+          {{ this.feedbackMessage }}
+        </label>
+      </div>
+      <div class="h5pFeedbackContainerCenter">
+        <label v-if="showResults" class="h5pFeedbackText">
+          {{ this.resultMessage }}
+        </label>
+      </div>
+      <div class="h5pFeedbackContainerBottom">
+        <button
+          v-if="showRetryButton"
+          @click="onClickTryAgain"
+          class="h5pButton"
+        >
+          {{ this.task.strings.retryButton }}
+        </button>
+      </div>
     </div>
   </div>
 </template>

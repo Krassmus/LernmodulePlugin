@@ -517,15 +517,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.h5pModule {
-  border: 2px solid #eee;
-  padding: 0.5em 0.5em 0.5em 0.5em;
-  font-size: 16px;
-  line-height: 1.75em;
-  font-family: Lato, sans-serif;
-  max-width: 50em;
-}
-
 .h5pStaticText {
   display: inline;
   background: #ffffff;
@@ -586,24 +577,6 @@ export default defineComponent({
   border: 1px solid #f7d0d0;
   color: #b71c1c;
   text-decoration: line-through;
-}
-
-.h5pButton {
-  /* top, right, bottom, left */
-  margin: 1em 0.5em 1em 0;
-  /* vertical, horizontal */
-  padding: 0.25em 1.25em;
-  border-radius: 2em;
-  background: #1a73d9;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-  box-shadow: none;
-  display: inline-block;
-  text-align: center;
-  text-shadow: none;
-  text-decoration: none;
-  vertical-align: baseline;
 }
 
 span.item:empty:before {
