@@ -1,5 +1,6 @@
 <template>
   <component
+    class="cw-lernmodule-block"
     :is="coursewarePluginComponents.CoursewareDefaultBlock"
     ref="defaultBlock"
     :block="block"
@@ -32,7 +33,7 @@
   border: none;
 }
 /* Hide CoursewareDefaultBlock's 'edit' section */
-.cw-block-edit {
+.cw-default-block.cw-lernmodule-block .cw-block-edit {
   display: none;
 }
 </style>
