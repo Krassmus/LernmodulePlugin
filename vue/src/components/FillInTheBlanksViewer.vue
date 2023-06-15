@@ -160,18 +160,17 @@ export default defineComponent({
       }
     },
     isAnswerCorrectWithTypo(userAnswer: string, solution: string): boolean {
-      // The calculated Damerau-Levenshtein distance between the answer and the solution
+      if (userAnswer === solution) return true;
+
+      // Calculate the Damerau-Levenshtein distance between the answer and the solution
       const distance = dljs.distance(userAnswer, solution);
 
-      // If the word is long (more than 9 chars) a distance of 2 will be accepted
-      // If it is between 4 and 9 characters a distance of 1 will be accepted
-      if (userAnswer.length > 3 && distance <= 1) {
-        return true;
-      } else if (userAnswer.length > 9 && distance <= 2) {
-        return true;
-      } else {
-        return false;
-      }
+      // If the word is between 4 and 9 characters, a distance of 1 will be accepted
+      // If the word is more than 9 characters long, a distance of 2 will be accepted
+      return (
+        (userAnswer.length > 3 && distance <= 1) ||
+        (userAnswer.length > 9 && distance <= 2)
+      );
     },
     updateAttempt() {
       // Tell the server which blanks were filled out correctly.
