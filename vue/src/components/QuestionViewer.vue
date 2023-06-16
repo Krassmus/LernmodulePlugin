@@ -23,13 +23,12 @@
           />
           {{ answer.text }}
         </label>
-        <label class="flex-child" v-if="answer.strings.hint">
-          <span
-            class="tooltip tooltip-icon flex-parent"
-            :data-tooltip="answer.strings.hint"
-          >
-          </span>
-        </label>
+        <span
+          v-if="answer.strings.hint"
+          class="tooltip tooltip-icon h5pTooltip"
+          :data-tooltip="answer.strings.hint"
+        >
+        </span>
       </div>
     </template>
 
@@ -255,27 +254,23 @@ meter {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  //background: #5c98cd;
 }
 
 .flex-child {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  //background: #7070e6;
-  //width: 80px;
-  //height: 60px;
-  /* top | right | bottom | left */
-  margin: 0px 0px 10px 10px;
 }
 
 .flex-child:nth-of-type(1) {
-  //background: #d8bfc5;
   flex-grow: 0;
 }
 
 .flex-child:nth-of-type(2) {
-  //background: #a2d4d8;
   flex-grow: 0;
+}
+
+.h5pTooltip {
+  margin-left: 0.25em;
 }
 </style>
