@@ -186,11 +186,20 @@ export default defineComponent({
     points(): number {
       if (this.task.canAnswerMultiple) {
         let points = 0;
+
         this.task.answers.forEach((answer) => {
-          if (this.selectedAnswers[answer.text] && answer.correct) {
-            points++;
+          if (this.selectedAnswers[answer.text]) {
+            if (answer.correct) {
+              points++;
+            } else {
+              points--;
+            }
           }
         });
+
+        // Cannot get less than 0 points
+        if (points < 0) points = 0;
+
         return points;
       } else {
         return this.selectedAnswer.correct ? 1 : 0;
