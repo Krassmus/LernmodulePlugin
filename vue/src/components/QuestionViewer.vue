@@ -1,13 +1,6 @@
 <template>
   <div class="h5pModule">
-    <!--    <pre>-->
-    <!--task: {{ task }}-->
-    <!--selectedAnswers: {{ selectedAnswers }}-->
-    <!--selectedAnswer: {{ selectedAnswer }}-->
-    <!--    </pre>-->
     <div class="h5pQuestion" v-html="this.task.question" />
-    <!--      {{ this.task.question }}-->
-    <!--    </div>-->
     <template v-if="task.canAnswerMultiple">
       <div
         v-for="(answer, i) in answers"
@@ -23,12 +16,31 @@
           />
           {{ answer.text }}
         </label>
-        <span
+        <div
           v-if="answer.strings.hint"
           class="tooltip tooltip-icon h5pTooltip"
           :data-tooltip="answer.strings.hint"
-        >
-        </span>
+        />
+        <template v-if="isSubmitted">
+          <div
+            v-if="
+              answer.strings.feedbackSelected && selectedAnswers[answer.text]
+            "
+            class="answerFeedback"
+          >
+            {{ answer.strings.feedbackSelected }}
+          </div>
+
+          <div
+            v-else-if="
+              answer.strings.feedbackNotSelected &&
+              !selectedAnswers[answer.text]
+            "
+            class="answerFeedback"
+          >
+            {{ answer.strings.feedbackNotSelected }}
+          </div>
+        </template>
       </div>
     </template>
 
@@ -47,6 +59,28 @@
           />
           {{ answer.text }}
         </label>
+        <div
+          v-if="answer.strings.hint"
+          class="tooltip tooltip-icon h5pTooltip"
+          :data-tooltip="answer.strings.hint"
+        />
+        <template v-if="isSubmitted">
+          <div
+            v-if="answer.strings.feedbackSelected && selectedAnswer == answer"
+            class="answerFeedback"
+          >
+            {{ answer.strings.feedbackSelected }}
+          </div>
+
+          <div
+            v-else-if="
+              answer.strings.feedbackNotSelected && selectedAnswer !== answer
+            "
+            class="answerFeedback"
+          >
+            {{ answer.strings.feedbackNotSelected }}
+          </div>
+        </template>
       </div>
     </template>
 
@@ -165,6 +199,7 @@ export default defineComponent({
       selectedAnswer: this.task.answers[0],
       isSubmitted: false,
       showSolutions: false,
+      showFeedback: false,
       shaking: false,
     };
   },
@@ -271,6 +306,10 @@ meter {
 }
 
 .h5pTooltip {
+  margin-left: 0.25em;
+}
+
+.answerFeedback {
   margin-left: 0.25em;
 }
 </style>
