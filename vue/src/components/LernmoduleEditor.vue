@@ -26,10 +26,10 @@
       </label>
       <label>
         {{ $gettext('Aufgabenbeschreibung') }}
-        <textarea
-          class="h5pTextArea"
-          :value="infotext"
-          @input="onInputInfotext"
+        <studip-wysiwyg
+          :model-value="infotext"
+          id="ckeditorElement"
+          @update:modelValue="onInputInfotext"
         />
       </label>
     </fieldset>
@@ -83,9 +83,11 @@ import {
 } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
+import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
 export default defineComponent({
   name: 'LernmoduleEditor',
+  components: { StudipWysiwyg },
   mounted() {
     // Prompt about unsaved changes when leaving the page
     window.addEventListener('beforeunload', this.onBeforeUnload, {
@@ -139,9 +141,8 @@ export default defineComponent({
       const name = (event.target as HTMLInputElement).value;
       taskEditorStore.setModuleName(name);
     },
-    onInputInfotext(event: InputEvent) {
-      const value = (event.target as HTMLInputElement).value;
-      taskEditorStore.setInfoText(value);
+    onInputInfotext(modelValue: string) {
+      taskEditorStore.setInfoText(modelValue);
     },
     onSelectTaskType(event: InputEvent): void {
       const taskType = (event.target as HTMLInputElement).value;
