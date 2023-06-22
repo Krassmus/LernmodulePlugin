@@ -6,6 +6,7 @@
         v-for="(answer, i) in answers"
         :key="i"
         :class="classForAnswer(answer)"
+        @click="selectAnswer(answer)"
       >
         <label class="answerLabel">
           <input
@@ -150,6 +151,13 @@ export default defineComponent({
     },
     onClickShowSolution(): void {
       this.showSolutions = true;
+    },
+    selectAnswer(answer: QuestionAnswer): void {
+      if (this.selectedAnswers[answer.text]) {
+        this.selectedAnswers[answer.text] = false;
+      } else {
+        this.selectedAnswers[answer.text] = true;
+      }
     },
     classForAnswer(answer: QuestionAnswer): string {
       if (this.showSolutions) {
