@@ -17,7 +17,7 @@
           {{ answer.text }}
         </label>
         <div
-          v-if="answer.strings.hint"
+          v-if="answer.strings.hint && !isSubmitted"
           class="tooltip tooltip-icon h5pTooltip"
           :data-tooltip="answer.strings.hint"
         />
@@ -60,7 +60,7 @@
           {{ answer.text }}
         </label>
         <div
-          v-if="answer.strings.hint"
+          v-if="answer.strings.hint && !isSubmitted"
           class="tooltip tooltip-icon h5pTooltip"
           :data-tooltip="answer.strings.hint"
         />
