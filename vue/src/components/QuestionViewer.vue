@@ -7,12 +7,13 @@
         :key="i"
         :class="classForAnswer(answer)"
       >
-        <label class="flex-child">
+        <label class="answerLabel">
           <input
             type="checkbox"
             :value="answer.text"
             v-model="selectedAnswers[answer.text]"
             :disabled="isSubmitted"
+            class="answerCheckbox"
           />
           {{ answer.text }}
         </label>
@@ -152,33 +153,33 @@ export default defineComponent({
     },
     classForAnswer(answer: QuestionAnswer): string {
       if (this.showSolutions) {
-        if (answer.correct) return 'flex-parent correctAnswer';
+        if (answer.correct) return 'correctAnswer';
       }
 
       if (this.isSubmitted) {
         if (this.task.canAnswerMultiple) {
           if (this.selectedAnswers[answer.text]) {
             if (answer.correct) {
-              return 'flex-parent correctAnswer';
+              return 'correctAnswer';
             } else {
-              return 'flex-parent incorrectAnswer';
+              return 'incorrectAnswer';
             }
           } else {
-            return 'flex-parent';
+            return 'answer';
           }
         } else {
           if (this.selectedAnswer === answer) {
             if (answer.correct) {
-              return 'flex-parent correctAnswer';
+              return 'correctAnswer';
             } else {
-              return 'flex-parent incorrectAnswer';
+              return 'incorrectAnswer';
             }
           } else {
-            return 'flex-parent';
+            return 'answer';
           }
         }
       } else {
-        return 'flex-parent';
+        return 'answer';
       }
     },
     urlForIcon(iconName: string) {
@@ -271,38 +272,50 @@ meter {
   height: 20px;
 }
 
+.answer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 0.3em;
+  margin: 0.5em 0;
+
+  cursor: pointer;
+  border: 0.1em solid transparent;
+  background: rgba(230, 230, 230, 0.9);
+}
+
 .correctAnswer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 0.3em;
+  margin: 0.5em 0;
+
+  border: 0.1em solid #b6e4ce;
   background: #b6e4ce;
-  border-color: #b6e4ce;
   color: #255c41;
   box-shadow: 0 0.1em 0 #a2bdb0;
 }
 
 .incorrectAnswer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 0.3em;
+  margin: 0.5em 0;
+
+  border: 0.1em solid #fbd7d8;
   background: #fbd7d8;
-  border-color: #fbd7d8;
   color: #b71c1c;
   box-shadow: 0 0.1em 0 #deb8b8;
 }
 
-.flex-parent {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+.answerLabel {
+  cursor: pointer;
 }
 
-.flex-child {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.flex-child:nth-of-type(1) {
-  flex-grow: 0;
-}
-
-.flex-child:nth-of-type(2) {
-  flex-grow: 0;
+.answerCheckbox {
+  cursor: pointer;
 }
 
 .h5pTooltip {
@@ -311,5 +324,7 @@ meter {
 
 .answerFeedback {
   margin-left: 0.25em;
+  border-left: 6px solid rgba(10, 10, 10, 0.1) !important;
+  padding: 0.01em 16px;
 }
 </style>
