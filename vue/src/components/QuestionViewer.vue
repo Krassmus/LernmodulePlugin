@@ -2,27 +2,22 @@
   <div class="h5pModule">
     <div class="h5pQuestion" v-html="this.task.question" />
     <template v-if="task.canAnswerMultiple">
-      <div
-        v-for="(answer, i) in answers"
-        :key="i"
-        :class="classForAnswer(answer)"
-        @click="selectAnswer(answer)"
-      >
-        <label class="answerLabel">
+      <template v-for="(answer, i) in answers" :key="i">
+        <label :class="classForAnswer(answer)">
           <input
             type="checkbox"
             :value="answer.text"
             v-model="selectedAnswers[answer.text]"
             :disabled="isSubmitted"
-            class="answerCheckbox"
           />
           {{ answer.text }}
+          <div
+            v-if="answer.strings.hint && !isSubmitted"
+            class="tooltip tooltip-icon h5pTooltip"
+            :data-tooltip="answer.strings.hint"
+          />
         </label>
-        <div
-          v-if="answer.strings.hint && !isSubmitted"
-          class="tooltip tooltip-icon h5pTooltip"
-          :data-tooltip="answer.strings.hint"
-        />
+
         <template v-if="isSubmitted">
           <div
             v-if="
@@ -43,29 +38,27 @@
             {{ answer.strings.feedbackNotSelected }}
           </div>
         </template>
-      </div>
+      </template>
     </template>
 
     <template v-else>
-      <div
-        v-for="(answer, i) in answers"
-        :key="i"
-        :class="classForAnswer(answer)"
-      >
-        <label>
+      <template v-for="(answer, i) in answers" :key="i">
+        <label :class="classForAnswer(answer)">
           <input
             type="radio"
+            class="answerRadioButton"
             :value="answer"
             v-model="selectedAnswer"
             :disabled="isSubmitted"
           />
           {{ answer.text }}
+          <div
+            v-if="answer.strings.hint && !isSubmitted"
+            class="tooltip tooltip-icon h5pTooltip"
+            :data-tooltip="answer.strings.hint"
+          />
         </label>
-        <div
-          v-if="answer.strings.hint && !isSubmitted"
-          class="tooltip tooltip-icon h5pTooltip"
-          :data-tooltip="answer.strings.hint"
-        />
+
         <template v-if="isSubmitted">
           <div
             v-if="answer.strings.feedbackSelected && selectedAnswer == answer"
@@ -83,7 +76,7 @@
             {{ answer.strings.feedbackNotSelected }}
           </div>
         </template>
-      </div>
+      </template>
     </template>
 
     <button
@@ -139,6 +132,16 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      selectedAnswers: {} as Record<string, boolean>,
+      selectedAnswer: this.task.answers[0],
+      isSubmitted: false,
+      showSolutions: false,
+      showFeedback: false,
+      shaking: false,
+    };
+  },
   methods: {
     $gettext,
     onClickCheck(): void {
@@ -153,6 +156,8 @@ export default defineComponent({
       this.showSolutions = true;
     },
     selectAnswer(answer: QuestionAnswer): void {
+      if (this.isSubmitted) return;
+
       if (this.selectedAnswers[answer.text]) {
         this.selectedAnswers[answer.text] = false;
       } else {
@@ -173,7 +178,7 @@ export default defineComponent({
               return 'incorrectAnswer';
             }
           } else {
-            return 'answer';
+            return 'submittedAnswer';
           }
         } else {
           if (this.selectedAnswer === answer) {
@@ -183,7 +188,7 @@ export default defineComponent({
               return 'incorrectAnswer';
             }
           } else {
-            return 'answer';
+            return 'submittedAnswer';
           }
         }
       } else {
@@ -201,16 +206,6 @@ export default defineComponent({
         this.shaking = false;
       }, 1500);
     },
-  },
-  data() {
-    return {
-      selectedAnswers: {} as Record<string, boolean>,
-      selectedAnswer: this.task.answers[0],
-      isSubmitted: false,
-      showSolutions: false,
-      showFeedback: false,
-      shaking: false,
-    };
   },
   computed: {
     maxPoints(): number {
@@ -292,6 +287,17 @@ meter {
   background: rgba(230, 230, 230, 0.9);
 }
 
+.submittedAnswer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 0.3em;
+  margin: 0.5em 0;
+
+  border: 0.1em solid transparent;
+  background: rgba(230, 230, 230, 0.9);
+}
+
 .correctAnswer {
   display: flex;
   justify-content: flex-start;
@@ -318,12 +324,8 @@ meter {
   box-shadow: 0 0.1em 0 #deb8b8;
 }
 
-.answerLabel {
-  cursor: pointer;
-}
-
-.answerCheckbox {
-  cursor: pointer;
+.answerRadioButton {
+  margin-top: 0px;
 }
 
 .h5pTooltip {
