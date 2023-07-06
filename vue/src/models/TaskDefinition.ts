@@ -10,6 +10,8 @@ import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
 import MemoryViewer from '@/components/MemoryViewer.vue';
+import ImagePairingViewer from '@/components/ImagePairingViewer.vue';
+import ImagePairingEditor from '@/components/ImagePairingEditor.vue';
 import { v4 } from 'uuid';
 import { z } from 'zod';
 
@@ -133,6 +135,25 @@ export const questionTaskSchema = z.object({
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
+export const imagePairSchema = z.object({
+  uuid: z.string(),
+  imageUrl: z.string().optional(),
+  altText: z.string().optional(),
+});
+export type ImagePair = z.infer<typeof imagePairSchema>;
+
+export const imagePairingTaskSchema = z.object({
+  task_type: z.literal('ImagePairing'),
+  imagePairs: z.array(imagePairSchema),
+  strings: z.object({
+    checkButton: z.string(),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    resultMessage: z.string(),
+  }),
+});
+export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
+
 export const taskDefinitionSchema = z.union([
   fillInTheBlanksTaskSchema,
   flashCardTaskSchema,
@@ -140,6 +161,7 @@ export const taskDefinitionSchema = z.union([
   dragTheWordsTaskSchema,
   markTheWordsTaskSchema,
   memoryTaskSchema,
+  imagePairingTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 // Here, a bit of boilerplate is required to create a schema for the union of
@@ -345,6 +367,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return MarkTheWordsViewer;
     case 'Memory':
       return MemoryViewer;
+    case 'ImagePairing':
+      return ImagePairingViewer;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -364,6 +388,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return MarkTheWordsEditor;
     case 'Memory':
       return MemoryEditor;
+    case 'ImagePairing':
+      return ImagePairingEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
