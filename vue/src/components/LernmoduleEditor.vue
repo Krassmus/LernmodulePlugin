@@ -49,6 +49,7 @@
       </option>
       <option value="FlashCards">{{ $gettext('Flashcards') }}</option>
       <option value="Memory">{{ $gettext('Memory-Spiel') }}</option>
+      <option value="ImagePairing">{{ $gettext('Bilder Paare') }}</option>
     </select>
   </div>
 
