@@ -135,10 +135,17 @@ export const questionTaskSchema = z.object({
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
-export const imagePairSchema = z.object({
+export const imageSchema = z.object({
   uuid: z.string(),
   imageUrl: z.string().optional(),
   altText: z.string().optional(),
+});
+export type Image = z.infer<typeof imageSchema>;
+
+export const imagePairSchema = z.object({
+  uuid: z.string(),
+  image1: z.object(imageSchema.shape),
+  image2: imageSchema,
 });
 export type ImagePair = z.infer<typeof imagePairSchema>;
 
@@ -173,6 +180,7 @@ export const taskTypeSchema = z.union([
   dragTheWordsTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
+  imagePairingTaskSchema.shape.task_type,
 ]);
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
@@ -339,6 +347,29 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         cards: [
           {
             uuid: v4(),
+          },
+        ],
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+        },
+      };
+    case 'ImagePairing':
+      return {
+        task_type: 'ImagePairing',
+        imagePairs: [
+          {
+            uuid: v4(),
+            image1: {
+              uuid: v4(),
+              altText: 'The first image.',
+            },
+            image2: {
+              uuid: v4(),
+              altText: 'The second image.',
+            },
           },
         ],
         strings: {
