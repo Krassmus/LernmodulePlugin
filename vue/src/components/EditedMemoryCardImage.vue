@@ -13,7 +13,7 @@ import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
-  name: 'EditedFlashCardImage',
+  name: 'EditedMemoryCardImage',
   props: {
     card: {
       type: Object as PropType<MemoryCard>,
