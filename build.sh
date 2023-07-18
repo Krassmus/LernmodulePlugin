@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail # explanation at https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425
-if [ "$(node -v)" != "v14.21.1" ] || [ "$(npm -v)" != "6.14.17" ]; then
-  echo "Please use node v14.21.1 and npm 6.14.17"
+if [[ ! "$(node -v)" =~ v14\..* ]] || [[ ! "$(npm -v)" =~ 6\..* ]]; then
+  echo "Please use node v14 and npm 6"
   exit 1;
 fi;
 timestamp=$(date "+%Y-%m-%d_%H-%M-%S") &&
