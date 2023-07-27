@@ -1,7 +1,7 @@
 <template>
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Lückentext') }}</legend>
+      <legend>{{ $gettext('Drag the Words') }}</legend>
       <div class="h5pEditorTopPanel">
         <button
           @click="addBlank"

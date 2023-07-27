@@ -3,7 +3,7 @@
   <!--  <pre>{{ currentUndoRedoState }}</pre>-->
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Lückentext') }}</legend>
+      <legend>{{ $gettext('Fill in the Blanks') }}</legend>
       <div class="h5pEditorTopPanel">
         <button
           @click="addBlank"

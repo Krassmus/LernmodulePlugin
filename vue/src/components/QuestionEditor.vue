@@ -2,7 +2,7 @@
   <!--  The current task: {{ task }}-->
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Frage') }}</legend>
+      <legend>{{ $gettext('Question') }}</legend>
       <label>
         <studip-wysiwyg v-model="taskDefinition.question" />
       </label>

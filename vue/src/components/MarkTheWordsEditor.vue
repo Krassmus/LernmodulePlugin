@@ -1,7 +1,7 @@
 <template>
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Text erstellen') }}</legend>
+      <legend>{{ $gettext('Mark the Words') }}</legend>
       <div class="h5pEditorTopPanel">
         <button
           @click="addSolution"

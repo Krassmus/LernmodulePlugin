@@ -41,14 +41,16 @@
       @input="onSelectTaskType"
       style="margin-left: 0.5em"
     >
-      <option value="FillInTheBlanks">{{ $gettext('Lückentext') }}</option>
-      <option value="Question">{{ $gettext('Frage') }}</option>
-      <option value="DragTheWords">{{ $gettext('Ziehen von Wörtern') }}</option>
-      <option value="MarkTheWords">
-        {{ $gettext('Markierung von Wörtern') }}
+      <option value="FillInTheBlanks">
+        {{ $gettext('Fill in the Blanks') }}
       </option>
-      <option value="Memory">{{ $gettext('Memory-Spiel') }}</option>
-      <option value="ImagePairing">{{ $gettext('Bilder Paare') }}</option>
+      <option value="Question">{{ $gettext('Question') }}</option>
+      <option value="DragTheWords">{{ $gettext('Drag the Words') }}</option>
+      <option value="MarkTheWords">
+        {{ $gettext('Mark the Words') }}
+      </option>
+      <option value="Memory">{{ $gettext('Memory') }}</option>
+      <option value="ImagePairing">{{ $gettext('Image Pairing') }}</option>
     </select>
   </div>
 
