@@ -5,6 +5,11 @@
         v-for="imagePair in this.task.imagePairs"
         :key="imagePair.uuid"
         class="imagePairItem"
+        draggable="true"
+        @dragstart="startDragImage($event, imagePair.image1)"
+        @drop="onDropImage($event, imagePair.image1)"
+        @dragover.prevent
+        @dragenter.prevent
       >
         <img
           :src="imagePair.image1.imageUrl"
@@ -19,6 +24,11 @@
         v-for="imagePair in this.task.imagePairs"
         :key="imagePair.uuid"
         class="imagePairItem"
+        draggable="true"
+        @dragstart="startDragImage($event, imagePair.image2)"
+        @drop="onDropImage($event, imagePair.image2)"
+        @dragover.prevent
+        @dragenter.prevent
       >
         <img
           :src="imagePair.image2.imageUrl"
@@ -28,11 +38,20 @@
       </div>
     </div>
   </div>
+  <pre>{{ draggedImageId }}</pre>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { ImagePairingTask } from '@/models/TaskDefinition';
+
+interface Image {
+  uuid: Uuid;
+  imageUrl: string;
+  altText: string;
+}
+
+type Uuid = string;
 
 export default defineComponent({
   name: 'ImagePairingViewer',
@@ -43,9 +62,36 @@ export default defineComponent({
     },
   },
   data() {
-    return {};
+    return {
+      draggedImageId: undefined as Uuid | undefined,
+    };
   },
-  methods: {},
+  methods: {
+    startDragImage(dragEvent: DragEvent, image: Image): void {
+      if (dragEvent.dataTransfer) {
+        dragEvent.dataTransfer.dropEffect = 'move';
+        dragEvent.dataTransfer.effectAllowed = 'move';
+
+        console.log('Dragging image: ', image);
+        this.draggedImageId = image.uuid;
+      }
+    },
+
+    onDropImage(dragEvent: DragEvent, image: Image): void {
+      if (!this.draggedImageId) {
+        throw new Error('Dragged image id is undefined');
+      }
+
+      console.log(
+        'Dropped image :',
+        this.draggedImageId,
+        'on image: ',
+        image.altText
+      );
+
+      this.draggedImageId = undefined;
+    },
+  },
   computed: {},
 });
 </script>
@@ -72,10 +118,9 @@ export default defineComponent({
   justify-content: center;
   width: 10em;
   padding: 6px;
-  height: 10em;
-  float: left;
-  border-radius: 6px 6px 6px 6px;
   margin: 6px;
+  height: 10em;
+  border-radius: 6px 6px 6px 6px;
   cursor: pointer;
   border: 2px solid #dbe2e8;
   box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
