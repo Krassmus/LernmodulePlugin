@@ -1,7 +1,5 @@
 import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
-import FlashCardsViewer from '@/components/FlashCardsViewer.vue';
-import FlashCardsEditor from '@/components/FlashCardsEditor.vue';
 import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
 import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
@@ -93,21 +91,6 @@ export const fillInTheBlanksTaskSchema = z.object({
 });
 export type FillInTheBlanksTask = z.infer<typeof fillInTheBlanksTaskSchema>;
 
-export const flashCardSchema = z.object({
-  uuid: z.string(),
-  question: z.string(),
-  answer: z.string(),
-  imageUrl: z.string().optional(),
-  altText: z.string().optional(),
-});
-export type FlashCard = z.infer<typeof flashCardSchema>;
-
-export const flashCardTaskSchema = z.object({
-  task_type: z.literal('FlashCards'),
-  cards: z.array(flashCardSchema),
-});
-export type FlashCardTask = z.infer<typeof flashCardTaskSchema>;
-
 export const questionAnswerSchema = z.object({
   text: z.string(),
   correct: z.boolean(),
@@ -163,7 +146,6 @@ export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
 
 export const taskDefinitionSchema = z.union([
   fillInTheBlanksTaskSchema,
-  flashCardTaskSchema,
   questionTaskSchema,
   dragTheWordsTaskSchema,
   markTheWordsTaskSchema,
@@ -175,7 +157,6 @@ export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 // all possible 'task_type' values
 export const taskTypeSchema = z.union([
   fillInTheBlanksTaskSchema.shape.task_type,
-  flashCardTaskSchema.shape.task_type,
   questionTaskSchema.shape.task_type,
   dragTheWordsTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
@@ -208,17 +189,6 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           { percentage: 50, message: 'Gut.' },
           { percentage: 75, message: 'Sehr gut.' },
           { percentage: 100, message: 'Perfekt!' },
-        ],
-      };
-    case 'FlashCards':
-      return {
-        task_type: 'FlashCards',
-        cards: [
-          {
-            uuid: v4(),
-            question: 'Question',
-            answer: 'Answer',
-          },
         ],
       };
     case 'Question':
@@ -388,8 +358,6 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
     case 'FillInTheBlanks':
       return FillInTheBlanksViewer;
-    case 'FlashCards':
-      return FlashCardsViewer;
     case 'Question':
       return QuestionViewer;
     case 'DragTheWords':
@@ -409,8 +377,6 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
     case 'FillInTheBlanks':
       return FillInTheBlanksEditor;
-    case 'FlashCards':
-      return FlashCardsEditor;
     case 'Question':
       return QuestionEditor;
     case 'DragTheWords':
