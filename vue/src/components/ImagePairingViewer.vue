@@ -6,14 +6,14 @@
         :key="imagePair.uuid"
         class="imagePairItem"
         draggable="true"
-        @dragstart="startDragImage($event, imagePair.image1)"
-        @drop="onDropImage($event, imagePair.image1)"
+        @dragstart="startDragImage($event, imagePair.draggableImage)"
+        @drop="onDropImage($event, imagePair.draggableImage)"
         @dragover.prevent
         @dragenter.prevent
       >
         <img
-          :src="imagePair.image1.imageUrl"
-          :alt="imagePair.image1.altText"
+          :src="imagePair.draggableImage.imageUrl"
+          :alt="imagePair.draggableImage.altText"
           class="pairImage"
         />
       </div>
@@ -25,14 +25,14 @@
         :key="imagePair.uuid"
         class="imagePairItem"
         draggable="true"
-        @dragstart="startDragImage($event, imagePair.image2)"
-        @drop="onDropImage($event, imagePair.image2)"
+        @dragstart="startDragImage($event, imagePair.targetImage)"
+        @drop="onDropImage($event, imagePair.targetImage)"
         @dragover.prevent
         @dragenter.prevent
       >
         <img
-          :src="imagePair.image2.imageUrl"
-          :alt="imagePair.image2.altText"
+          :src="imagePair.targetImage.imageUrl"
+          :alt="imagePair.targetImage.altText"
           class="pairImage"
         />
       </div>

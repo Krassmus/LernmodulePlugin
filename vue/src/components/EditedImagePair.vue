@@ -1,37 +1,37 @@
 <template>
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Bilderpaar') }}</legend>
+      <legend>{{ $gettext('Image Pair') }}</legend>
       <div>
-        <h4>{{ $gettext('Bild 1') }}</h4>
+        <h4>{{ $gettext('Das zu ziehende Bild') }}</h4>
         <EditedImagePairImage
-          v-if="pair.image1.imageUrl"
-          :image="pair.image1"
+          v-if="pair.draggableImage.imageUrl"
+          :image="pair.draggableImage"
         />
-        <ImageUpload v-else @imageUploaded="onImage1Uploaded" />
+        <ImageUpload v-else @imageUploaded="onUploadDraggableImage" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
         <input
           type="text"
-          :value="taskDefinition.imagePairs[pairIndex].image1.altText"
-          @input="onInputAltText1"
+          :value="taskDefinition.imagePairs[pairIndex].draggableImage.altText"
+          @input="onInputDraggableImageAltText"
         />
       </label>
       <div>
-        <h4>{{ $gettext('Bild 2') }}</h4>
+        <h4>{{ $gettext('Das Zielbild') }}</h4>
         <EditedImagePairImage
-          v-if="pair.image2.imageUrl"
-          :image="pair.image2"
+          v-if="pair.targetImage.imageUrl"
+          :image="pair.targetImage"
         />
-        <ImageUpload v-else @imageUploaded="onImage2Uploaded" />
+        <ImageUpload v-else @imageUploaded="onUploadTargetImage" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
         <input
           type="text"
-          :value="taskDefinition.imagePairs[pairIndex].image2.altText"
-          @input="onInputAltText2"
+          :value="taskDefinition.imagePairs[pairIndex].targetImage.altText"
+          @input="onInputTargetImageAltText"
         />
       </label>
     </fieldset>
@@ -41,7 +41,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import ImageUpload from '@/components/ImageUpload.vue';
-import { $gettext } from '../language/gettext';
+import { $gettext } from '@/language/gettext';
 import { ImagePair, ImagePairingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
@@ -65,42 +65,42 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onImage1Uploaded(imageUrl: string): void {
+    onUploadDraggableImage(imageUrl: string): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].image1.imageUrl = imageUrl;
+        draft.imagePairs[this.pairIndex].draggableImage.imageUrl = imageUrl;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
-    onImage2Uploaded(imageUrl: string): void {
+    onUploadTargetImage(imageUrl: string): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].image2.imageUrl = imageUrl;
+        draft.imagePairs[this.pairIndex].targetImage.imageUrl = imageUrl;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
-    onInputAltText1(ev: InputEvent): void {
+    onInputDraggableImageAltText(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].image1.altText = value;
+        draft.imagePairs[this.pairIndex].draggableImage.altText = value;
       });
       taskEditorStore.performEdit({
         newTaskDefinition,
-        undoBatch: { type: 'EditedAltText1' },
+        undoBatch: { type: 'EditedDraggableImageAltText' },
       });
     },
-    onInputAltText2(ev: InputEvent): void {
+    onInputTargetImageAltText(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].image2.altText = value;
+        draft.imagePairs[this.pairIndex].targetImage.altText = value;
       });
       taskEditorStore.performEdit({
         newTaskDefinition,
-        undoBatch: { type: 'EditedAltText2' },
+        undoBatch: { type: 'EditedTargetImageAltText' },
       });
     },
   },

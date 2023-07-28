@@ -11,7 +11,6 @@
         @click="selectPair(index)"
       >
         {{ index }}.
-        {{ pair.question === '' ? $gettext('Karte') : pair.question }}
         <!-- Apply .stop modifier so that the selectCard event handler on the
             parent element doesn't get called when the delete button is clicked -->
         <img
@@ -80,10 +79,10 @@ export default defineComponent({
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.imagePairs.push({
           uuid: v4(),
-          image1: {
+          draggableImage: {
             uuid: v4(),
           },
-          image2: {
+          targetImage: {
             uuid: v4(),
           },
         });

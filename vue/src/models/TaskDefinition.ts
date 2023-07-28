@@ -127,8 +127,8 @@ export type Image = z.infer<typeof imageSchema>;
 
 export const imagePairSchema = z.object({
   uuid: z.string(),
-  image1: z.object(imageSchema.shape),
-  image2: imageSchema,
+  draggableImage: z.object(imageSchema.shape),
+  targetImage: imageSchema,
 });
 export type ImagePair = z.infer<typeof imagePairSchema>;
 
@@ -332,13 +332,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         imagePairs: [
           {
             uuid: v4(),
-            image1: {
+            draggableImage: {
               uuid: v4(),
-              altText: 'The first image.',
             },
-            image2: {
+            targetImage: {
               uuid: v4(),
-              altText: 'The second image.',
             },
           },
         ],
