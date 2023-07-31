@@ -54,8 +54,8 @@ export type MarkTheWordsTask = z.infer<typeof markTheWordsTaskSchema>;
 
 export const memoryCardSchema = z.object({
   uuid: z.string(),
-  imageUrl: z.string().optional(),
-  altText: z.string().optional(),
+  imageUrl: z.string(),
+  altText: z.string(),
 });
 export type MemoryCard = z.infer<typeof memoryCardSchema>;
 
@@ -120,14 +120,14 @@ export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
 export const imageSchema = z.object({
   uuid: z.string(),
-  imageUrl: z.string().optional(),
-  altText: z.string().optional(),
+  imageUrl: z.string(),
+  altText: z.string(),
 });
 export type Image = z.infer<typeof imageSchema>;
 
 export const imagePairSchema = z.object({
   uuid: z.string(),
-  draggableImage: z.object(imageSchema.shape),
+  draggableImage: imageSchema,
   targetImage: imageSchema,
 });
 export type ImagePair = z.infer<typeof imagePairSchema>;
@@ -317,6 +317,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         cards: [
           {
             uuid: v4(),
+            imageUrl: '',
+            altText: '',
           },
         ],
         strings: {
@@ -334,9 +336,13 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             uuid: v4(),
             draggableImage: {
               uuid: v4(),
+              imageUrl: '',
+              altText: '',
             },
             targetImage: {
               uuid: v4(),
+              imageUrl: '',
+              altText: '',
             },
           },
         ],

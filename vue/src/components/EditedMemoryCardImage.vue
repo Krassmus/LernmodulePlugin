@@ -30,7 +30,7 @@ export default defineComponent({
         const cardIndex = draft.cards.findIndex(
           (card) => card.uuid === this.card.uuid
         );
-        draft.cards[cardIndex].imageUrl = undefined;
+        draft.cards[cardIndex].imageUrl = '';
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,

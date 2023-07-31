@@ -81,9 +81,13 @@ export default defineComponent({
           uuid: v4(),
           draggableImage: {
             uuid: v4(),
+            imageUrl: '',
+            altText: '',
           },
           targetImage: {
             uuid: v4(),
+            imageUrl: '',
+            altText: '',
           },
         });
       });

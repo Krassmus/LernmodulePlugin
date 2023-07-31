@@ -26,7 +26,7 @@ import { defineComponent, PropType } from 'vue';
 import { Image } from '@/models/TaskDefinition';
 
 export default defineComponent({
-  name: 'ViewerImagePair',
+  name: 'TargetImage',
   components: {},
   props: {
     draggableImage: {

@@ -2,23 +2,27 @@
   <div class="imagePairingRow">
     <div class="draggableImagesColumn">
       <template
-        v-for="draggableImage in Object.keys(this.draggableImages)"
-        :key="draggableImage"
+        v-for="draggableImageId in Object.keys(this.usedDraggableImages)"
+        :key="draggableImageId"
       >
         <img
-          :class="getClassForDraggableImage(draggableImage)"
+          :class="getClassForDraggableImage(draggableImageId)"
           draggable="true"
-          @dragstart="startDragImage($event, draggableImage)"
-          :src="getImageById(draggableImage).imageUrl"
-          :alt="getImageById(draggableImage).altText"
+          @dragstart="startDragImage($event, draggableImageId)"
+          :src="getImageById(draggableImageId).imageUrl"
+          :alt="getImageById(draggableImageId).altText"
         />
       </template>
     </div>
 
-    <div class="imagePairsColumn">
-      <ViewerImagePair
+    <div class="targetImagesColumn">
+      <TargetImage
         v-for="imagePair in this.userLinkedImagePairs"
-        :draggable-image="getImageByIdWithUndefined(imagePair.draggableImageId)"
+        :draggable-image="
+          imagePair.draggableImageId
+            ? getImageById(imagePair.draggableImageId)
+            : undefined
+        "
         :target-image="getImageById(imagePair.targetImageId)"
         :key="imagePair.uuid"
         @drop="onDropImage($event, imagePair)"
@@ -34,14 +38,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import {
-  Image,
-  ImagePair,
-  ImagePairingTask,
-  MemoryCard,
-} from '@/models/TaskDefinition';
-import { v4 } from 'uuid';
-import ViewerImagePair from '@/components/ViewerImagePair.vue';
+import { Image, ImagePairingTask } from '@/models/TaskDefinition';
+import TargetImage from '@/components/TargetImage.vue';
 
 type Uuid = string;
 
@@ -55,7 +53,7 @@ export interface UserLinkedImagePair {
 export default defineComponent({
   name: 'ImagePairingViewer',
   components: {
-    ViewerImagePair,
+    TargetImage,
   },
   props: {
     task: {
@@ -66,8 +64,8 @@ export default defineComponent({
   data() {
     return {
       draggedImageId: undefined as Uuid | undefined,
-      images: [] as Image[],
-      draggableImages: {} as Record<Uuid, boolean>,
+      imagesById: {} as Record<Uuid, Image>,
+      usedDraggableImages: {} as Record<Uuid, boolean>,
       userLinkedImagePairs: [] as UserLinkedImagePair[],
     };
   },
@@ -77,7 +75,7 @@ export default defineComponent({
         dragEvent.dataTransfer.dropEffect = 'move';
         dragEvent.dataTransfer.effectAllowed = 'move';
 
-        if (!this.draggableImages[imageId]) {
+        if (!this.usedDraggableImages[imageId]) {
           console.log('Dragging image:', imageId);
           this.draggedImageId = imageId;
         }
@@ -121,7 +119,7 @@ export default defineComponent({
 
         targetImagePair.draggableImageId = this.draggedImageId;
 
-        this.draggableImages[this.draggedImageId] = true;
+        this.usedDraggableImages[this.draggedImageId] = true;
       }
 
       console.log(
@@ -133,34 +131,23 @@ export default defineComponent({
 
       this.draggedImageId = undefined;
     },
-
     getImageById(imageId: string): Image {
-      const image = this.images.find((image) => image.uuid === imageId);
+      const image = this.imagesById[imageId];
       if (!image) {
         throw new Error('No image found with the given ID: ' + imageId);
       }
       return image;
     },
-
-    getImageByIdWithUndefined(imageId: string | undefined): Image | undefined {
-      if (imageId === undefined) return undefined;
-      const image = this.images.find((image) => image.uuid === imageId);
-      if (!image) {
-        throw new Error('No image found with the given ID: ' + imageId);
-      }
-      return image;
-    },
-
     onClickImagePair(imagePair: UserLinkedImagePair): void {
       console.log('Clicked on image pair', imagePair.uuid);
       if (imagePair.draggableImageId !== undefined) {
-        this.draggableImages[imagePair.draggableImageId] = false;
+        this.usedDraggableImages[imagePair.draggableImageId] = false;
         imagePair.draggableImageId = undefined;
       }
     },
 
     getClassForDraggableImage(draggableImageId: Uuid) {
-      if (this.draggableImages[draggableImageId]) {
+      if (this.usedDraggableImages[draggableImageId]) {
         return 'draggableImageHidden';
       } else {
         return 'draggableImage';
@@ -172,16 +159,19 @@ export default defineComponent({
     task: {
       handler() {
         console.log('watcher for this.task');
-        // Make two copies of each card in the task. Add the flipped, solved and matchingCardId attributes
-
-        this.images = [];
+        // Copy every image into the map imagesById so we can look up images by ID in O(1)
+        this.imagesById = {};
         this.userLinkedImagePairs = [];
 
         for (const imagePair of this.task.imagePairs) {
-          this.images.push(imagePair.draggableImage);
-          this.images.push(imagePair.targetImage);
+          this.imagesById[imagePair.draggableImage.uuid] =
+            imagePair.draggableImage;
+          this.imagesById[imagePair.targetImage.uuid] = imagePair.targetImage;
 
-          this.draggableImages[imagePair.draggableImage.uuid] = false;
+          this.usedDraggableImages[imagePair.draggableImage.uuid] = false;
+
+          // Record from target ID -> draggable image ID
+          // const imagesDraggedOntoTargets = {} as Record<Uuid, Uuid>
 
           this.userLinkedImagePairs.push({
             uuid: imagePair.uuid,
@@ -210,7 +200,7 @@ export default defineComponent({
   align-items: center;
 }
 
-.imagePairsColumn {
+.targetImagesColumn {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
