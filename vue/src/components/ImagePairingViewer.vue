@@ -17,20 +17,16 @@
 
     <div class="targetImagesColumn">
       <TargetImage
-        v-for="imagePair in this.userLinkedImagePairs"
-        :draggable-image="
-          imagePair.draggableImageId
-            ? getImageById(imagePair.draggableImageId)
-            : undefined
-        "
-        :target-image="getImageById(imagePair.targetImageId)"
+        v-for="imagePair in this.task.imagePairs"
+        :draggable-image="getImageDraggedOntoTarget(imagePair.targetImage.uuid)"
+        :target-image="getImageById(imagePair.targetImage.uuid)"
         :key="imagePair.uuid"
         @drop="onDropImage($event, imagePair)"
         draggable="true"
-        @dragstart="startDragImagePair($event, imagePair)"
+        @dragstart="startDragTargetImage($event, imagePair)"
         @dragover.prevent
         @dragenter.prevent
-        @click="onClickImagePair(imagePair)"
+        @click="onClickTargetImage(imagePair)"
       />
     </div>
   </div>
@@ -38,17 +34,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Image, ImagePairingTask } from '@/models/TaskDefinition';
+import { Image, ImagePair, ImagePairingTask } from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
 
 type Uuid = string;
-
-export interface UserLinkedImagePair {
-  uuid: Uuid;
-  draggableImageId: Uuid | undefined;
-  correctDraggableImageId: Uuid;
-  targetImageId: Uuid;
-}
 
 export default defineComponent({
   name: 'ImagePairingViewer',
@@ -65,11 +54,21 @@ export default defineComponent({
     return {
       draggedImageId: undefined as Uuid | undefined,
       imagesById: {} as Record<Uuid, Image>,
+      // Basically a Set -- True if the draggable image of a given ID has been used
       usedDraggableImages: {} as Record<Uuid, boolean>,
-      userLinkedImagePairs: [] as UserLinkedImagePair[],
+      // Record from target ID -> draggable image ID
+      imagesDraggedOntoTargets: {} as Record<Uuid, Uuid>,
     };
   },
   methods: {
+    getImageDraggedOntoTarget(targetId: Uuid): Image | undefined {
+      const draggedImageId = this.imagesDraggedOntoTargets[targetId];
+      if (draggedImageId) {
+        return this.getImageById(draggedImageId);
+      } else {
+        return undefined;
+      }
+    },
     startDragImage(dragEvent: DragEvent, imageId: Uuid): void {
       if (dragEvent.dataTransfer) {
         dragEvent.dataTransfer.dropEffect = 'move';
@@ -82,17 +81,18 @@ export default defineComponent({
       }
     },
 
-    startDragImagePair(
-      dragEvent: DragEvent,
-      imagePair: UserLinkedImagePair
-    ): void {
+    startDragTargetImage(dragEvent: DragEvent, imagePair: ImagePair): void {
       if (dragEvent.dataTransfer) {
         dragEvent.dataTransfer.dropEffect = 'move';
         dragEvent.dataTransfer.effectAllowed = 'move';
-
-        if (imagePair.draggableImageId !== undefined) {
-          this.draggedImageId = imagePair.draggableImageId;
-
+        // Remember that the image has been dragged away from a target
+        // where it had been placed by the user
+        dragEvent.dataTransfer.setData('targetId', imagePair.targetImage.uuid);
+        // Check if an image has been dragged onto the target already
+        const userDraggedImageId =
+          this.imagesDraggedOntoTargets[imagePair.targetImage.uuid];
+        if (userDraggedImageId) {
+          this.draggedImageId = userDraggedImageId;
           console.log(
             'Dragging image:',
             this.draggedImageId,
@@ -103,32 +103,32 @@ export default defineComponent({
       }
     },
 
-    onDropImage(event: DragEvent, targetImagePair: UserLinkedImagePair): void {
+    onDropImage(event: DragEvent, targetImagePair: ImagePair): void {
       if (!this.draggedImageId) {
         return;
       }
 
-      if (targetImagePair.draggableImageId === undefined) {
-        const originImagePair = this.userLinkedImagePairs.find(
-          (imagePair) => imagePair.draggableImageId === this.draggedImageId
-        );
-
-        if (originImagePair !== undefined) {
-          originImagePair.draggableImageId = undefined;
+      // Check if an answer has already been input.  If it has, we should do nothing.
+      if (!this.imagesDraggedOntoTargets[targetImagePair.targetImage.uuid]) {
+        // If the image has been dragged away from another target, then it should
+        // be removed from that target when it is dropped onto this target.
+        const otherTargetId = event.dataTransfer?.getData('targetId');
+        if (otherTargetId) {
+          delete this.imagesDraggedOntoTargets[otherTargetId];
         }
-
-        targetImagePair.draggableImageId = this.draggedImageId;
-
+        // Save the dragged image onto the target where it has been dropped
+        this.imagesDraggedOntoTargets[targetImagePair.targetImage.uuid] =
+          this.draggedImageId;
         this.usedDraggableImages[this.draggedImageId] = true;
       }
 
       console.log(
         'Dropped image:',
         this.draggedImageId,
-        'on image pair:',
-        targetImagePair.uuid
+        'on target:',
+        targetImagePair.targetImage.uuid
       );
-
+      // Mark that the drag interaction is over.
       this.draggedImageId = undefined;
     },
     getImageById(imageId: string): Image {
@@ -138,14 +138,17 @@ export default defineComponent({
       }
       return image;
     },
-    onClickImagePair(imagePair: UserLinkedImagePair): void {
-      console.log('Clicked on image pair', imagePair.uuid);
-      if (imagePair.draggableImageId !== undefined) {
-        this.usedDraggableImages[imagePair.draggableImageId] = false;
-        imagePair.draggableImageId = undefined;
+    onClickTargetImage(imagePair: ImagePair): void {
+      console.log('Clicked on target image', imagePair.targetImage.uuid);
+      // Remove the image, if any, that has been dragged by the user onto
+      // the target they have clicked.
+      const usedImageId =
+        this.imagesDraggedOntoTargets[imagePair.targetImage.uuid];
+      if (usedImageId) {
+        delete this.imagesDraggedOntoTargets[imagePair.targetImage.uuid];
+        this.usedDraggableImages[usedImageId] = false;
       }
     },
-
     getClassForDraggableImage(draggableImageId: Uuid) {
       if (this.usedDraggableImages[draggableImageId]) {
         return 'draggableImageHidden';
@@ -161,24 +164,12 @@ export default defineComponent({
         console.log('watcher for this.task');
         // Copy every image into the map imagesById so we can look up images by ID in O(1)
         this.imagesById = {};
-        this.userLinkedImagePairs = [];
 
         for (const imagePair of this.task.imagePairs) {
           this.imagesById[imagePair.draggableImage.uuid] =
             imagePair.draggableImage;
           this.imagesById[imagePair.targetImage.uuid] = imagePair.targetImage;
-
           this.usedDraggableImages[imagePair.draggableImage.uuid] = false;
-
-          // Record from target ID -> draggable image ID
-          // const imagesDraggedOntoTargets = {} as Record<Uuid, Uuid>
-
-          this.userLinkedImagePairs.push({
-            uuid: imagePair.uuid,
-            draggableImageId: undefined,
-            correctDraggableImageId: imagePair.draggableImage.uuid,
-            targetImageId: imagePair.targetImage.uuid,
-          });
         }
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
