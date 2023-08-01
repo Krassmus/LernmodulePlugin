@@ -10,6 +10,7 @@ const taskTypes = [
   'DragTheWords',
   'MarkTheWords',
   'Memory',
+  'LmbInteractiveVideo',
 ];
 
 console.log('Hello :) Registering Lernmodule Courseware blocks...');

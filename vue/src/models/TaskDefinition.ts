@@ -12,6 +12,8 @@ import ImagePairingViewer from '@/components/ImagePairingViewer.vue';
 import ImagePairingEditor from '@/components/ImagePairingEditor.vue';
 import { v4 } from 'uuid';
 import { z } from 'zod';
+import InteractiveVideoViewer from '@/components/InteractiveVideoViewer.vue';
+import InteractiveVideoEditor from '@/components/InteractiveVideoEditor.vue';
 
 export const feedbackSchema = z.object({
   percentage: z.number(),
@@ -144,6 +146,11 @@ export const imagePairingTaskSchema = z.object({
 });
 export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
 
+export const interactiveVideoTaskSchema = z.object({
+  task_type: z.literal('InteractiveVideo'),
+});
+export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
+
 export const taskDefinitionSchema = z.union([
   fillInTheBlanksTaskSchema,
   questionTaskSchema,
@@ -151,6 +158,7 @@ export const taskDefinitionSchema = z.union([
   markTheWordsTaskSchema,
   memoryTaskSchema,
   imagePairingTaskSchema,
+  interactiveVideoTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 // Here, a bit of boilerplate is required to create a schema for the union of
@@ -162,6 +170,7 @@ export const taskTypeSchema = z.union([
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
   imagePairingTaskSchema.shape.task_type,
+  interactiveVideoTaskSchema.shape.task_type,
 ]);
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
@@ -353,6 +362,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           resultMessage: ':correct von :total Wörter richtig ausgewählt.',
         },
       };
+    case 'InteractiveVideo':
+      return {
+        task_type: 'InteractiveVideo',
+      };
     default:
       throw new Error('Unimplemented type: ' + type);
   }
@@ -372,6 +385,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return MemoryViewer;
     case 'ImagePairing':
       return ImagePairingViewer;
+    case 'InteractiveVideo':
+      return InteractiveVideoViewer;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -391,6 +406,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return MemoryEditor;
     case 'ImagePairing':
       return ImagePairingEditor;
+    case 'InteractiveVideo':
+      return InteractiveVideoEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
