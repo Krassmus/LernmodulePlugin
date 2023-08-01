@@ -6,7 +6,6 @@ import './assets/global.css';
 import { isString } from 'lodash';
 import { newTask, taskDefinitionSchema } from '@/models/TaskDefinition';
 import CoursewareBlock from '@/components/CoursewareBlock.vue';
-import { z } from 'zod';
 import {
   InitializeMessage,
   iframeMessageSchema,
@@ -27,9 +26,11 @@ window.addEventListener('message', (event) => {
     return;
   }
   if (isString(dataParseResult.data)) {
-    // Message sent by the iFrameSizer library.  We can ignore it
+    // Either a 'webpackHotUpdatea324efae9d340c78' (or something like it)
+    // or a message sent by the iFrameSizer library. We can ignore it.
     return;
   }
+
   switch (dataParseResult.data.type) {
     case 'webpackProgress':
     case 'webpackOk':
@@ -60,11 +61,6 @@ function initializeApp(initializeMessage: InitializeMessage) {
     );
     taskEditorStore.initializeCourseware(newTaskDefinition);
   }
-  // TODO probably should render a courseware-specific component as the root component,
-  //  because it needs to be able to switch between editor and viewer modes and
-  //  display the 'edit' elements in a <legend> the way courseware blocks usually do
-  // TODO Also, the 'save' button, which is displayed in the sidebar using Teleport,
-  //  is not compatible with Courseware.  It also needs to be refactored/redone
   const app = createApp(CoursewareBlock);
   app.directive('model-undoable', modelUndoable);
   app.use(store);

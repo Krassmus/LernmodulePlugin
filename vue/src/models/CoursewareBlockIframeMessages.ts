@@ -2,14 +2,17 @@ import { z } from 'zod';
 import { taskDefinitionSchema, taskTypeSchema } from '@/models/TaskDefinition';
 
 // Messages sent by webpack during development.  We can ignore them
-const webpackMessageSchema = z.object({
-  type: z.union([
-    z.literal('webpackProgress'),
-    z.literal('webpackOk'),
-    z.literal('webpackClose'),
-    z.literal('webpackInvalid'),
-  ]),
-});
+const webpackMessageSchema = z.union([
+  z.object({
+    type: z.union([
+      z.literal('webpackProgress'),
+      z.literal('webpackOk'),
+      z.literal('webpackClose'),
+      z.literal('webpackInvalid'),
+    ]),
+  }),
+  z.string().startsWith('webpackHotUpdate'), // e.g. 'webpackHotUpdate324efae9d340c78'
+]);
 
 // Messages sent by the iFrameSizer library.  We can ignore them
 const iFrameSizerMessageSchema = z.string().startsWith('[iFrameSizer]');
