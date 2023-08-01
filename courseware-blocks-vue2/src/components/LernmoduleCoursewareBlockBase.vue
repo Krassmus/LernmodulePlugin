@@ -1,3 +1,12 @@
+<!--
+This component embeds the Vue 3 component 'CoursewareBlock'
+(vue/src/components/CoursewareBlock.vue) using an iframe.
+This enables us to write our Lernmodule Courseware blocks in Vue 3, although
+the Stud.IP core is using Vue 2.
+We resize the iframe automatically to fit its contents, and we pass messages
+back and forth with the iframe window in order to load and save the block,
+hide/show its editing UI, and so on.
+-->
 <template>
   <component
     class="cw-lernmodule-block"
