@@ -54,8 +54,10 @@ export default defineComponent({
     return {
       draggedImageId: undefined as Uuid | undefined,
       imagesById: {} as Record<Uuid, Image>,
-      // Basically a Set -- True if the draggable image of a given ID has been used
-      // We used Record instead of Set because I wasn't sure if sets are reactive in Vue 3.
+      // Basically a Set -- True if the draggable image of a given ID has been used.
+      // We used Record instead of Set because I wasn't sure if sets are
+      // reactive in Vue 3.
+      // See [Footnote1] for thoughts on a possible refactoring.
       usedDraggableImages: {} as Record<Uuid, boolean>,
       // Record from target ID -> draggable image ID
       imagesDraggedOntoTargets: {} as Record<Uuid, Uuid>,
@@ -198,6 +200,19 @@ export default defineComponent({
     },
   },
 });
+
+/*
+ [Footnote1] The data structure `usedDraggableImages` isn't really needed, as the set
+ of 'used draggable images' corresponds to the set of elements of
+ `Object.values(imagesDraggedOntoTargets)`. All expressions of the form
+ `usedDraggableImages[draggableImageId]` could be replaced with the expression
+ `Object.values(imagesDraggedOntoTargets).contains(draggableImageId)`. The Big-O
+ complexity of the computation needed after each user interaction would then be
+ worse (I think N^2), but as N (the number of image pairs) will likely
+ not exceed 100, the performance for our application would still be acceptable.
+ I did not perform this refactoring because I think the code is fine as-is
+ -- it works, and we understand it, so why mess around with it? - Ann
+*/
 </script>
 
 <style scoped>
