@@ -9,6 +9,7 @@
           :class="getClassForDraggableImage(draggableImageId)"
           draggable="true"
           @dragstart="startDragImage($event, draggableImageId)"
+          @click="onClickDraggableImage(draggableImageId)"
           :src="getImageById(draggableImageId).imageUrl"
           :alt="getImageById(draggableImageId).altText"
         />
@@ -52,7 +53,7 @@ export default defineComponent({
   },
   data() {
     return {
-      draggedImageId: undefined as Uuid | undefined,
+      imageIdInteractedWith: undefined as Uuid | undefined,
       imagesById: {} as Record<Uuid, Image>,
       // We used Record instead of Set because I wasn't sure if sets are
       // reactive in Vue 3.
@@ -85,6 +86,7 @@ export default defineComponent({
       }
       return pair.draggableImage.uuid === userInput;
     },
+
     getImageDraggedOntoTarget(targetId: Uuid): Image | undefined {
       const draggedImageId = this.imagesDraggedOntoTargets[targetId];
       if (draggedImageId) {
@@ -93,6 +95,7 @@ export default defineComponent({
         return undefined;
       }
     },
+
     startDragImage(dragEvent: DragEvent, imageId: Uuid): void {
       if (dragEvent.dataTransfer) {
         dragEvent.dataTransfer.dropEffect = 'move';
@@ -100,7 +103,7 @@ export default defineComponent({
 
         if (!this.isDraggableImageUsed(imageId)) {
           console.log('Dragging image:', imageId);
-          this.draggedImageId = imageId;
+          this.imageIdInteractedWith = imageId;
         }
       }
     },
@@ -115,10 +118,10 @@ export default defineComponent({
         // Check if an image has been dragged onto the target already
         const userDraggedImageId = this.imagesDraggedOntoTargets[targetImageId];
         if (userDraggedImageId) {
-          this.draggedImageId = userDraggedImageId;
+          this.imageIdInteractedWith = userDraggedImageId;
           console.log(
             'Dragging image:',
-            this.draggedImageId,
+            this.imageIdInteractedWith,
             'from target image',
             targetImageId
           );
@@ -127,7 +130,7 @@ export default defineComponent({
     },
 
     onDropOnTargetImage(event: DragEvent, targetImageId: Uuid): void {
-      if (!this.draggedImageId) {
+      if (!this.imageIdInteractedWith) {
         return;
       }
 
@@ -140,17 +143,18 @@ export default defineComponent({
           delete this.imagesDraggedOntoTargets[otherTargetId];
         }
         // Save the dragged image onto the target where it has been dropped
-        this.imagesDraggedOntoTargets[targetImageId] = this.draggedImageId;
+        this.imagesDraggedOntoTargets[targetImageId] =
+          this.imageIdInteractedWith;
       }
 
       console.log(
         'Dropped image:',
-        this.draggedImageId,
+        this.imageIdInteractedWith,
         'on target:',
         targetImageId
       );
       // Mark that the drag interaction is over.
-      this.draggedImageId = undefined;
+      this.imageIdInteractedWith = undefined;
     },
     getImageById(imageId: string): Image {
       const image = this.imagesById[imageId];
@@ -159,6 +163,7 @@ export default defineComponent({
       }
       return image;
     },
+
     onClickTargetImage(targetImageId: Uuid): void {
       console.log('Clicked on target image', targetImageId);
       // Remove the image, if any, that has been dragged by the user onto
@@ -166,8 +171,16 @@ export default defineComponent({
       const usedImageId = this.imagesDraggedOntoTargets[targetImageId];
       if (usedImageId) {
         delete this.imagesDraggedOntoTargets[targetImageId];
+      } else {
+        // Check if the user clicked a draggable image and wants to put it here
+        if (this.imageIdInteractedWith) {
+          this.imagesDraggedOntoTargets[targetImageId] =
+            this.imageIdInteractedWith;
+          this.imageIdInteractedWith = undefined;
+        }
       }
     },
+
     getClassForDraggableImage(draggableImageId: Uuid): string {
       if (this.isDraggableImageUsed(draggableImageId)) {
         return 'draggableImageHidden';
@@ -181,6 +194,13 @@ export default defineComponent({
         draggableImageId
       );
     },
+
+    onClickDraggableImage(imageId: Uuid): void {
+      if (!this.isDraggableImageUsed(imageId)) {
+        console.log('Clicked on image:', imageId);
+        this.imageIdInteractedWith = imageId;
+      }
+    },
   },
   computed: {
     draggableImages(): String[] {
@@ -189,8 +209,6 @@ export default defineComponent({
       this.task.imagePairs.forEach((imagePair) =>
         images.push(imagePair.draggableImage.uuid)
       );
-
-      console.log(images);
 
       return images;
     },
