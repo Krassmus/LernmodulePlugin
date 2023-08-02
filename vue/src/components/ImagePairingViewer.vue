@@ -2,7 +2,7 @@
   <div class="imagePairingRow">
     <div class="draggableImagesColumn">
       <template
-        v-for="draggableImageId in Object.keys(this.usedDraggableImages)"
+        v-for="draggableImageId in draggableImages"
         :key="draggableImageId"
       >
         <img
@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Image, ImagePair, ImagePairingTask } from '@/models/TaskDefinition';
+import { Image, ImagePairingTask } from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
 
 type Uuid = string;
@@ -54,11 +54,8 @@ export default defineComponent({
     return {
       draggedImageId: undefined as Uuid | undefined,
       imagesById: {} as Record<Uuid, Image>,
-      // Basically a Set -- True if the draggable image of a given ID has been used.
       // We used Record instead of Set because I wasn't sure if sets are
       // reactive in Vue 3.
-      // See [Footnote1] for thoughts on a possible refactoring.
-      usedDraggableImages: {} as Record<Uuid, boolean>,
       // Record from target ID -> draggable image ID
       imagesDraggedOntoTargets: {} as Record<Uuid, Uuid>,
     };
@@ -101,7 +98,7 @@ export default defineComponent({
         dragEvent.dataTransfer.dropEffect = 'move';
         dragEvent.dataTransfer.effectAllowed = 'move';
 
-        if (!this.usedDraggableImages[imageId]) {
+        if (!this.isDraggableImageUsed(imageId)) {
           console.log('Dragging image:', imageId);
           this.draggedImageId = imageId;
         }
@@ -144,7 +141,6 @@ export default defineComponent({
         }
         // Save the dragged image onto the target where it has been dropped
         this.imagesDraggedOntoTargets[targetImageId] = this.draggedImageId;
-        this.usedDraggableImages[this.draggedImageId] = true;
       }
 
       console.log(
@@ -170,18 +166,35 @@ export default defineComponent({
       const usedImageId = this.imagesDraggedOntoTargets[targetImageId];
       if (usedImageId) {
         delete this.imagesDraggedOntoTargets[targetImageId];
-        this.usedDraggableImages[usedImageId] = false;
       }
     },
-    getClassForDraggableImage(draggableImageId: Uuid) {
-      if (this.usedDraggableImages[draggableImageId]) {
+    getClassForDraggableImage(draggableImageId: Uuid): string {
+      if (this.isDraggableImageUsed(draggableImageId)) {
         return 'draggableImageHidden';
       } else {
         return 'draggableImage';
       }
     },
+
+    isDraggableImageUsed(draggableImageId: Uuid): boolean {
+      return Object.values(this.imagesDraggedOntoTargets).includes(
+        draggableImageId
+      );
+    },
   },
-  computed: {},
+  computed: {
+    draggableImages(): String[] {
+      let images: String[] = [];
+
+      this.task.imagePairs.forEach((imagePair) =>
+        images.push(imagePair.draggableImage.uuid)
+      );
+
+      console.log(images);
+
+      return images;
+    },
+  },
   watch: {
     task: {
       handler() {
@@ -193,26 +206,12 @@ export default defineComponent({
           this.imagesById[imagePair.draggableImage.uuid] =
             imagePair.draggableImage;
           this.imagesById[imagePair.targetImage.uuid] = imagePair.targetImage;
-          this.usedDraggableImages[imagePair.draggableImage.uuid] = false;
         }
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
   },
 });
-
-/*
- [Footnote1] The data structure `usedDraggableImages` isn't really needed, as the set
- of 'used draggable images' corresponds to the set of elements of
- `Object.values(imagesDraggedOntoTargets)`. All expressions of the form
- `usedDraggableImages[draggableImageId]` could be replaced with the expression
- `Object.values(imagesDraggedOntoTargets).contains(draggableImageId)`. The Big-O
- complexity of the computation needed after each user interaction would then be
- worse (I think N^2), but as N (the number of image pairs) will likely
- not exceed 100, the performance for our application would still be acceptable.
- I did not perform this refactoring because I think the code is fine as-is
- -- it works, and we understand it, so why mess around with it? - Ann
-*/
 </script>
 
 <style scoped>
