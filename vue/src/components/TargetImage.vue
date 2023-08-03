@@ -1,18 +1,21 @@
 <template>
-  <div v-if="draggableImage" class="twoImages">
-    <img
-      :src="draggableImage.imageUrl"
-      :alt="draggableImage.altText"
-      class="image small"
-    />
-
-    <img
-      :src="targetImage.imageUrl"
-      :alt="targetImage.altText"
-      class="image small"
-    />
+  <div v-if="draggableImage" class="grid-square two-images">
+    <div class="image-container back">
+      <img
+        :src="targetImage.imageUrl"
+        :alt="targetImage.altText"
+        class="image small"
+      />
+    </div>
+    <div class="image-container front">
+      <img
+        :src="draggableImage.imageUrl"
+        :alt="draggableImage.altText"
+        class="image small"
+      />
+    </div>
   </div>
-  <div v-else class="oneImage">
+  <div v-else class="grid-square one-image">
     <img
       :src="targetImage.imageUrl"
       :alt="targetImage.altText"
@@ -44,46 +47,51 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.grid-square {
+  width: 10em;
+  padding: 6px;
+  margin: 6px;
+  height: 10em;
+  border-radius: 6px 6px 6px 6px;
+  cursor: pointer;
+  border: 2px solid #dbe2e8;
+  box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
+}
+
+.grid-square.one-image {
+  display: flex;
+  justify-content: center;
+}
+
+.grid-square.two-images {
+  position: relative;
+}
+.grid-square.two-images:not(:hover) .image {
+  border: 1px solid white;
+}
+.grid-square.two-images:hover .image {
+  border: 1px solid rgba(0, 187, 109, 0.93);
+}
+
+.image-container {
+  position: absolute;
+  width: 55%;
+  height: 55%;
+}
+.image-container.front {
+  top: 0.5em;
+  left: 0.5em;
+}
+.image-container.back {
+  bottom: 0.5em;
+  right: 0.5em;
+}
+
 .image {
-  object-fit: contain;
-  object-position: center;
-}
-
-.image.small {
-  width: 50%;
-  height: 50%;
-}
-
-.image.large {
   width: 100%;
   height: 100%;
-}
-
-.oneImage {
-  display: flex;
-  justify-content: center;
-  width: 10em;
-  padding: 6px;
-  margin: 6px;
-  height: 10em;
-  border-radius: 6px 6px 6px 6px;
-  cursor: pointer;
-  border: 2px solid #dbe2e8;
-  box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
-}
-
-.twoImages {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 10em;
-  padding: 6px;
-  margin: 6px;
-  height: 10em;
-  border-radius: 6px 6px 6px 6px;
-  cursor: pointer;
-  border: 2px solid #dbe2e8;
-  box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
+  object-fit: contain;
+  object-position: center;
+  box-sizing: border-box;
 }
 </style>
