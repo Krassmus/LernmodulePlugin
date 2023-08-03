@@ -258,7 +258,7 @@ export default defineComponent({
 }
 
 .hidden {
-  opacity: 50%;
+  opacity: 25%;
 }
 
 .draggableImage.selected {
