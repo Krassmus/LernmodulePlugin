@@ -253,7 +253,7 @@ export default defineComponent({
 }
 
 .draggableImage.selected {
-  border: 3px solid black;
+  border: 2px solid black;
 }
 
 .draggableImage:not(.hidden):not(.selected):hover {
