@@ -115,13 +115,22 @@ export default defineComponent({
       if (dragEvent.dataTransfer) {
         dragEvent.dataTransfer.dropEffect = 'move';
         dragEvent.dataTransfer.effectAllowed = 'move';
+
         // Remember that the image has been dragged away from a target
         // where it had been placed by the user
         dragEvent.dataTransfer.setData('targetId', targetImageId);
+
         // Check if an image has been dragged onto the target already
         const userDraggedImageId = this.imagesDraggedOntoTargets[targetImageId];
         if (userDraggedImageId) {
           this.imageIdInteractedWith = userDraggedImageId;
+
+          // Add the interactive image to the cursor even if the user
+          // clicked on the target image
+          let dragImage = document.createElement('img');
+          dragImage.src = this.getImageById(userDraggedImageId).imageUrl;
+          dragEvent.dataTransfer.setDragImage(dragImage, 0, 0);
+
           console.log(
             'Dragging image:',
             this.imageIdInteractedWith,
