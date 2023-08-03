@@ -6,7 +6,10 @@
         :key="draggableImageId"
       >
         <img
-          :class="getClassForDraggableImage(draggableImageId)"
+          class="draggableImage"
+          :class="{
+            hidden: this.isDraggableImageUsed(draggableImageId),
+          }"
           draggable="true"
           @dragstart="startDragImage($event, draggableImageId)"
           @click="onClickDraggableImage(draggableImageId)"
@@ -54,7 +57,6 @@ export default defineComponent({
   data() {
     return {
       imageIdInteractedWith: undefined as Uuid | undefined,
-      imagesById: {} as Record<Uuid, Image>,
       // We used Record instead of Set because I wasn't sure if sets are
       // reactive in Vue 3.
       // Record from target ID -> draggable image ID
@@ -181,14 +183,10 @@ export default defineComponent({
       }
     },
 
-    getClassForDraggableImage(draggableImageId: Uuid): string {
-      if (this.isDraggableImageUsed(draggableImageId)) {
-        return 'draggableImageHidden';
-      } else {
-        return 'draggableImage';
-      }
-    },
-
+    // This has a complexity of O(n).  When it is called in our v-for to set
+    // the class of every draggable image element, it makes it O(n^2).
+    // But that should be OK, because no one will put more than (say) 100
+    // images in a single task, right?
     isDraggableImageUsed(draggableImageId: Uuid): boolean {
       return Object.values(this.imagesDraggedOntoTargets).includes(
         draggableImageId
@@ -203,30 +201,17 @@ export default defineComponent({
     },
   },
   computed: {
-    draggableImages(): String[] {
-      let images: String[] = [];
-
-      this.task.imagePairs.forEach((imagePair) =>
-        images.push(imagePair.draggableImage.uuid)
-      );
-
-      return images;
+    draggableImages(): Uuid[] {
+      return this.task.imagePairs.map((pair) => pair.draggableImage.uuid);
     },
-  },
-  watch: {
-    task: {
-      handler() {
-        console.log('watcher for this.task');
-        // Copy every image into the map imagesById so we can look up images by ID in O(1)
-        this.imagesById = {};
 
-        for (const imagePair of this.task.imagePairs) {
-          this.imagesById[imagePair.draggableImage.uuid] =
-            imagePair.draggableImage;
-          this.imagesById[imagePair.targetImage.uuid] = imagePair.targetImage;
-        }
-      },
-      immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
+    imagesById(): Record<Uuid, Image> {
+      const imagesById: Record<Uuid, Image> = {};
+      for (const imagePair of this.task.imagePairs) {
+        imagesById[imagePair.draggableImage.uuid] = imagePair.draggableImage;
+        imagesById[imagePair.targetImage.uuid] = imagePair.targetImage;
+      }
+      return imagesById;
     },
   },
 });
@@ -265,21 +250,11 @@ export default defineComponent({
   box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
 }
 
-.draggableImageHidden {
-  display: flex;
-  justify-content: center;
-  width: 10em;
-  padding: 6px;
-  margin: 6px;
-  height: 10em;
-  border-radius: 6px 6px 6px 6px;
-  cursor: pointer;
-  border: 2px solid #dbe2e8;
-  box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
-  opacity: 20%;
+.hidden {
+  opacity: 50%;
 }
 
-.draggableImage:hover {
+.draggableImage:not(.hidden):hover {
   border: 2px solid rgba(0, 187, 109, 0.93);
 }
 </style>
