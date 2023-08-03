@@ -9,6 +9,7 @@
           class="draggableImage"
           :class="{
             hidden: this.isDraggableImageUsed(draggableImageId),
+            selected: this.imageIdInteractedWith === draggableImageId,
           }"
           draggable="true"
           @dragstart="startDragImage($event, draggableImageId)"
@@ -254,7 +255,11 @@ export default defineComponent({
   opacity: 50%;
 }
 
-.draggableImage:not(.hidden):hover {
+.draggableImage.selected {
+  border: 3px solid black;
+}
+
+.draggableImage:not(.hidden):not(.selected):hover {
   border: 2px solid rgba(0, 187, 109, 0.93);
 }
 </style>
