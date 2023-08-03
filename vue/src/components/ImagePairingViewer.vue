@@ -234,6 +234,8 @@ export default defineComponent({
 }
 
 .draggableImage {
+  object-fit: contain;
+  object-position: center;
   display: flex;
   justify-content: center;
   width: 10em;

@@ -3,20 +3,20 @@
     <img
       :src="draggableImage.imageUrl"
       :alt="draggableImage.altText"
-      class="smallImage"
+      class="image small"
     />
 
     <img
       :src="targetImage.imageUrl"
       :alt="targetImage.altText"
-      class="smallImage"
+      class="image small"
     />
   </div>
   <div v-else class="oneImage">
     <img
       :src="targetImage.imageUrl"
       :alt="targetImage.altText"
-      class="bigImage"
+      class="image large"
     />
   </div>
 </template>
@@ -44,12 +44,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.smallImage {
+.image {
+  object-fit: contain;
+  object-position: center;
+}
+
+.image.small {
   width: 50%;
   height: 50%;
 }
 
-.bigImage {
+.image.large {
   width: 100%;
   height: 100%;
 }
