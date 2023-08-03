@@ -137,18 +137,14 @@ export default defineComponent({
         return;
       }
 
-      // Check if an answer has already been input.  If it has, we should do nothing.
-      if (!this.imagesDraggedOntoTargets[targetImageId]) {
-        // If the image has been dragged away from another target, then it should
-        // be removed from that target when it is dropped onto this target.
-        const otherTargetId = event.dataTransfer?.getData('targetId');
-        if (otherTargetId) {
-          delete this.imagesDraggedOntoTargets[otherTargetId];
-        }
-        // Save the dragged image onto the target where it has been dropped
-        this.imagesDraggedOntoTargets[targetImageId] =
-          this.imageIdInteractedWith;
+      // If the image has been dragged away from another target, then it should
+      // be removed from that target when it is dropped onto this target.
+      const otherTargetId = event.dataTransfer?.getData('targetId');
+      if (otherTargetId) {
+        delete this.imagesDraggedOntoTargets[otherTargetId];
       }
+      // Save the dragged image onto the target where it has been dropped
+      this.imagesDraggedOntoTargets[targetImageId] = this.imageIdInteractedWith;
 
       console.log(
         'Dropped image:',
@@ -174,13 +170,12 @@ export default defineComponent({
       const usedImageId = this.imagesDraggedOntoTargets[targetImageId];
       if (usedImageId) {
         delete this.imagesDraggedOntoTargets[targetImageId];
-      } else {
-        // Check if the user clicked a draggable image and wants to put it here
-        if (this.imageIdInteractedWith) {
-          this.imagesDraggedOntoTargets[targetImageId] =
-            this.imageIdInteractedWith;
-          this.imageIdInteractedWith = undefined;
-        }
+      }
+      // Check if the user clicked a draggable image and wants to put it here
+      if (this.imageIdInteractedWith) {
+        this.imagesDraggedOntoTargets[targetImageId] =
+          this.imageIdInteractedWith;
+        this.imageIdInteractedWith = undefined;
       }
     },
 
