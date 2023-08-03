@@ -9,6 +9,8 @@ const webpackMessageSchema = z.union([
       z.literal('webpackOk'),
       z.literal('webpackClose'),
       z.literal('webpackInvalid'),
+      z.literal('webpackErrors'),
+      z.literal('webpackStillOk'),
     ]),
   }),
   z.string().startsWith('webpackHotUpdate'), // e.g. 'webpackHotUpdate324efae9d340c78'

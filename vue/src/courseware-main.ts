@@ -36,6 +36,8 @@ window.addEventListener('message', (event) => {
     case 'webpackOk':
     case 'webpackClose':
     case 'webpackInvalid':
+    case 'webpackErrors':
+    case 'webpackStillOk':
       break; // ignore
     case 'InitializeCoursewareBlock':
       console.warn('message posted to Window: ', event, 'data: ', event.data);
