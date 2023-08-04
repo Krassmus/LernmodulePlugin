@@ -1,6 +1,11 @@
 <template>
   <div class="imagePairingRow">
-    <div class="draggableImagesColumn">
+    <div
+      class="draggableImagesColumn"
+      @dragover.prevent
+      @dragenter.prevent
+      @drop="onDropOnInteractiveImages($event)"
+    >
       <template
         v-for="draggableImageId in draggableImages"
         :key="draggableImageId"
@@ -164,6 +169,7 @@ export default defineComponent({
       // Mark that the drag interaction is over.
       this.imageIdInteractedWith = undefined;
     },
+
     getImageById(imageId: string): Image {
       const image = this.imagesById[imageId];
       if (!image) {
@@ -203,6 +209,24 @@ export default defineComponent({
         console.log('Clicked on image:', imageId);
         this.imageIdInteractedWith = imageId;
       }
+    },
+
+    onDropOnInteractiveImages(event: DragEvent): void {
+      if (!this.imageIdInteractedWith) {
+        return;
+      }
+
+      // If the image has been dragged away from a target, then it should
+      // be removed from that target when it is dropped here.
+      const otherTargetId = event.dataTransfer?.getData('targetId');
+      if (otherTargetId) {
+        delete this.imagesDraggedOntoTargets[otherTargetId];
+      }
+
+      console.log('Returned image:', this.imageIdInteractedWith);
+
+      // Mark that the interaction is over.
+      this.imageIdInteractedWith = undefined;
     },
   },
   computed: {
