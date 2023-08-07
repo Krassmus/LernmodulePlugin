@@ -231,7 +231,13 @@ export default defineComponent({
   },
   computed: {
     draggableImages(): Uuid[] {
-      return this.task.imagePairs.map((pair) => pair.draggableImage.uuid);
+      // Shuffle the images
+      // https://stackoverflow.com/a/46545530
+      const interactiveImages = this.task.imagePairs
+        .map((imagePair) => ({ imagePair: imagePair, sort: Math.random() }))
+        .sort((imagePair1, imagePair2) => imagePair1.sort - imagePair2.sort)
+        .map(({ imagePair }) => imagePair.draggableImage.uuid);
+      return interactiveImages;
     },
 
     imagesById(): Record<Uuid, Image> {
