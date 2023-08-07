@@ -6,23 +6,21 @@
       @dragenter.prevent
       @drop="onDropOnInteractiveImages($event)"
     >
-      <template
+      <img
         v-for="draggableImageId in draggableImages"
         :key="draggableImageId"
-      >
-        <img
-          class="draggableImage"
-          :class="{
-            hidden: this.isDraggableImageUsed(draggableImageId),
-            selected: this.imageIdInteractedWith === draggableImageId,
-          }"
-          draggable="true"
-          @dragstart="startDragImage($event, draggableImageId)"
-          @click="onClickDraggableImage(draggableImageId)"
-          :src="getImageById(draggableImageId).imageUrl"
-          :alt="getImageById(draggableImageId).altText"
-        />
-      </template>
+        class="draggableImage"
+        :class="{
+          hidden: this.isDraggableImageUsed(draggableImageId),
+          selected: this.imageIdInteractedWith === draggableImageId,
+        }"
+        draggable="true"
+        @dragstart="startDragImage($event, draggableImageId)"
+        @click="onClickDraggableImage(draggableImageId)"
+        :src="getImageById(draggableImageId).imageUrl"
+        :alt="getImageById(draggableImageId).altText"
+        ref="draggableImages"
+      />
     </div>
 
     <div class="targetImagesColumn">
@@ -132,9 +130,16 @@ export default defineComponent({
 
           // Add the interactive image to the cursor even if the user
           // clicked on the target image
-          let dragImage = document.createElement('img');
-          dragImage.src = this.getImageById(userDraggedImageId).imageUrl;
-          dragEvent.dataTransfer.setDragImage(dragImage, 0, 0);
+          const refToImage = (
+            this.$refs.draggableImages as HTMLImageElement[]
+          ).find(
+            (value) =>
+              value.src == this.getImageById(userDraggedImageId).imageUrl
+          );
+
+          if (refToImage) {
+            dragEvent.dataTransfer.setDragImage(refToImage, 100, 50);
+          }
 
           console.log(
             'Dragging image:',
