@@ -14,7 +14,7 @@
           hidden: this.isDraggableImageUsed(draggableImageId),
           selected: this.imageIdInteractedWith === draggableImageId,
         }"
-        draggable="true"
+        :draggable="!this.isDraggableImageUsed(draggableImageId)"
         @dragstart="startDragImage($event, draggableImageId)"
         @click="onClickDraggableImage(draggableImageId)"
         :src="getImageById(draggableImageId).imageUrl"
@@ -30,7 +30,7 @@
         :target-image="getImageById(imagePair.targetImage.uuid)"
         :key="imagePair.uuid"
         @drop="onDropOnTargetImage($event, imagePair.targetImage.uuid)"
-        draggable="true"
+        :draggable="getImageDraggedOntoTarget(imagePair.targetImage.uuid)"
         @dragstart="startDragTargetImage($event, imagePair.targetImage.uuid)"
         @dragover.prevent
         @dragenter.prevent
@@ -293,6 +293,7 @@ export default defineComponent({
 
 .hidden {
   opacity: 25%;
+  cursor: auto;
 }
 
 .draggableImage.selected {

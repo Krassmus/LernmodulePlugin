@@ -17,6 +17,7 @@
   </div>
   <div v-else class="grid-square one-image">
     <img
+      draggable="false"
       :src="targetImage.imageUrl"
       :alt="targetImage.altText"
       class="image large"
@@ -53,7 +54,7 @@ export default defineComponent({
   margin: 6px;
   height: 8em;
   border-radius: 6px 6px 6px 6px;
-  cursor: pointer;
+
   border: 2px solid #dbe2e8;
   box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
 }
@@ -65,6 +66,7 @@ export default defineComponent({
 
 .grid-square.two-images {
   position: relative;
+  cursor: pointer;
 }
 .grid-square.two-images:not(:hover) .image {
   border: 1px solid white;
