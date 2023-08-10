@@ -48,10 +48,10 @@ export default defineComponent({
 
 <style scoped>
 .grid-square {
-  width: 10em;
+  width: 8em;
   padding: 6px;
   margin: 6px;
-  height: 10em;
+  height: 8em;
   border-radius: 6px 6px 6px 6px;
   cursor: pointer;
   border: 2px solid #dbe2e8;
