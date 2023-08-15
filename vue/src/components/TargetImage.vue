@@ -4,14 +4,14 @@
       <img
         :src="targetImage.imageUrl"
         :alt="targetImage.altText"
-        class="image small"
+        class="image"
       />
     </div>
     <div class="image-container front">
       <img
         :src="draggableImage.imageUrl"
         :alt="draggableImage.altText"
-        class="image small"
+        class="image"
       />
     </div>
   </div>
@@ -20,7 +20,7 @@
       draggable="false"
       :src="targetImage.imageUrl"
       :alt="targetImage.altText"
-      class="image large"
+      class="image"
     />
   </div>
 </template>
@@ -54,23 +54,25 @@ export default defineComponent({
   margin: 6px;
   height: 8em;
   border-radius: 6px 6px 6px 6px;
-
-  border: 2px solid #dbe2e8;
-  box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
 }
 
 .grid-square.one-image {
   display: flex;
   justify-content: center;
+  border: 2px solid #dbe2e8;
+  box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
 }
 
 .grid-square.two-images {
   position: relative;
   cursor: pointer;
+  background-color: #eef1f4;
 }
+
 .grid-square.two-images:not(:hover) .image {
   border: 1px solid white;
 }
+
 .grid-square.two-images:hover .image {
   border: 1px solid rgba(0, 187, 109, 0.93);
 }
@@ -80,10 +82,12 @@ export default defineComponent({
   width: 55%;
   height: 55%;
 }
+
 .image-container.front {
   top: 0.5em;
   left: 0.5em;
 }
+
 .image-container.back {
   bottom: 0.5em;
   right: 0.5em;
@@ -95,5 +99,6 @@ export default defineComponent({
   object-fit: contain;
   object-position: center;
   box-sizing: border-box;
+  background-color: #eef1f4;
 }
 </style>

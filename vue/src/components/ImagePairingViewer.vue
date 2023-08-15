@@ -274,6 +274,7 @@ export default defineComponent({
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  background-color: #eef1f4;
 }
 
 .draggableImage {
@@ -289,6 +290,7 @@ export default defineComponent({
   cursor: pointer;
   border: 2px solid #dbe2e8;
   box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
+  background-color: #eef1f4;
 }
 
 .hidden {
@@ -297,7 +299,7 @@ export default defineComponent({
 }
 
 .draggableImage.selected {
-  border: 2px solid black;
+  border: 2px solid rgba(0, 187, 109, 0.93);
 }
 
 .draggableImage:not(.hidden):not(.selected):hover {
