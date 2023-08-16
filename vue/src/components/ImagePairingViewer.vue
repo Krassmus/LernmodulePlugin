@@ -26,6 +26,15 @@
     <div class="targetImagesColumn">
       <TargetImage
         v-for="imagePair in this.task.imagePairs"
+        class="targetImage"
+        :class="{
+          correct:
+            this.showResults &&
+            this.isAnswerCorrect(imagePair.targetImage.uuid),
+          incorrect:
+            this.showResults &&
+            !this.isAnswerCorrect(imagePair.targetImage.uuid),
+        }"
         :draggable-image="getImageDraggedOntoTarget(imagePair.targetImage.uuid)"
         :target-image="getImageById(imagePair.targetImage.uuid)"
         :key="imagePair.uuid"
@@ -38,12 +47,19 @@
       />
     </div>
   </div>
+  <button type="button" class="h5pButton" @click="checkResults()">
+    {{ this.task.strings.checkButton }}
+  </button>
+  <button type="button" class="h5pButton" @click="reset()">
+    {{ this.task.strings.retryButton }}
+  </button>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { Image, ImagePairingTask } from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
+import { boolean } from 'zod';
 
 type Uuid = string;
 
@@ -65,6 +81,7 @@ export default defineComponent({
       // reactive in Vue 3.
       // Record from target ID -> draggable image ID
       imagesDraggedOntoTargets: {} as Record<Uuid, Uuid>,
+      showResults: false as boolean,
     };
   },
   methods: {
@@ -233,6 +250,15 @@ export default defineComponent({
       // Mark that the interaction is over.
       this.imageIdInteractedWith = undefined;
     },
+
+    checkResults(): void {
+      this.showResults = true;
+    },
+
+    reset(): void {
+      this.showResults = false;
+      this.imagesDraggedOntoTargets = {};
+    },
   },
   computed: {
     draggableImages(): Uuid[] {
@@ -304,5 +330,13 @@ export default defineComponent({
 
 .draggableImage:not(.hidden):not(.selected):hover {
   border: 2px solid rgba(0, 187, 109, 0.93);
+}
+
+.targetImage.correct {
+  background-color: rgba(0, 204, 102, 0.92);
+}
+
+.targetImage.incorrect {
+  background-color: rgba(255, 0, 0, 0.92);
 }
 </style>
