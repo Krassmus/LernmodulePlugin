@@ -186,7 +186,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         allBlanksMustBeFilledForSolutions: false,
         acceptTypos: true,
         strings: {
-          checkButton: 'Anworten überprüfen',
+          checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
           fillInAllBlanksMessage:
