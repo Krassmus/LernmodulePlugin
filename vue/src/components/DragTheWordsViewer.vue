@@ -584,6 +584,7 @@ span.item:empty:before {
 }
 
 .unused-answers-list {
+  margin-top: 0.5em;
   min-height: 2rem;
   border: 1px solid #eee;
   border-radius: 5px;
