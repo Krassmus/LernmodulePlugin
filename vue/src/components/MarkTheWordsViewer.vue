@@ -1,14 +1,14 @@
 <template>
   <div class="h5pModule">
     <div ref="wrapperElement">
-      <span v-for="element in parsedTemplate" :key="element.uuid">
+      <span v-for="(element, index) in parsedTemplate" :key="element.uuid">
         <span
           @click="onClickWord(element)"
           :class="classForWord(element)"
           v-html="element.text"
         />
         <!--  prettier-ignore-->
-        <pre class="space"> </pre>
+        <pre v-if="index < parsedTemplate.length - 1" class="space"> </pre>
       </span>
     </div>
 
@@ -136,6 +136,7 @@ export default defineComponent({
           templateElement
             .trim()
             .split(' ')
+            .filter((el) => el !== '')
             .forEach((staticWord) => {
               parsedTemplate.push({
                 uuid: uuidv4(),
@@ -192,7 +193,6 @@ export default defineComponent({
 .h5pStaticText {
   background: #ffffff;
   color: #000000;
-  padding: 1px 1px 1px 1px;
 }
 
 .h5pStaticText:hover {
