@@ -25,8 +25,6 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 }
 
 .h5pButton {
-  /* top, right, bottom, left */
-  margin: 1em 0.5em 1em 0em;
   /* vertical, horizontal */
   padding: 0.25em 1.25em;
   border-radius: 2em;
@@ -40,15 +38,11 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   text-shadow: none;
   text-decoration: none;
   vertical-align: baseline;
+  white-space: nowrap;
 }
 
 .h5pFeedbackContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-
-  margin-top: 1em;
+  margin-top: 0.5em;
 }
 
 .h5pFeedbackContainerTop {
@@ -56,18 +50,16 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 
 .h5pFeedbackContainerCenter {
   display: flex;
-  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  flex-wrap: nowrap;
 }
 
 .h5pFeedbackContainerBottom {
   display: flex;
-  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  gap: 1em;
 }
 
 .h5pFeedbackText {
@@ -77,6 +69,5 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 
 meter {
   display: block;
-  margin: 0 auto;
-  width: 200px;
+  width: 300px;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="h5pModule fill-in-the-blanks-viewer" ref="wrapperElement">
+  <div class="h5pModule" ref="wrapperElement">
     <template v-for="element in parsedTemplate" :key="element.uuid">
       <span v-if="element.type === 'staticText'" v-html="element.text" />
       <template v-else-if="element.type === 'blank'">
@@ -54,7 +54,7 @@
           {{ this.task.strings.checkButton }}
         </button>
 
-        <div class="h5pFeedbackResultAndButtons" v-if="showExtraButtons">
+        <template v-if="showExtraButtons">
           <button
             v-if="showSolutionButton"
             @click="onClickShowSolution"
@@ -70,7 +70,7 @@
           >
             {{ this.task.strings.retryButton }}
           </button>
-        </div>
+        </template>
       </div>
     </div>
 
@@ -466,9 +466,5 @@ input[type='text'] {
   padding: 0.15em;
   border-radius: 0.25em;
   margin-left: 0.5em;
-}
-
-.fill-in-the-blanks-viewer {
-  line-height: 1.75em;
 }
 </style>
