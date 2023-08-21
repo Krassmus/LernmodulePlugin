@@ -1,5 +1,5 @@
 <template>
-  <div class="h5pModule" ref="wrapperElement">
+  <div class="h5pModule fill-in-the-blanks-viewer" ref="wrapperElement">
     <template v-for="element in parsedTemplate" :key="element.uuid">
       <span v-if="element.type === 'staticText'" v-html="element.text" />
       <template v-else-if="element.type === 'blank'">
@@ -426,7 +426,7 @@ export default defineComponent({
 <style scoped>
 input[type='text'] {
   font-size: 16px;
-  line-height: 1.75em;
+  max-height: 1em;
   font-family: Lato, sans-serif;
 }
 
@@ -468,12 +468,7 @@ input[type='text'] {
   margin-left: 0.5em;
 }
 
-.myDivWithBackground {
-  /*This absolute URL to the icon will not work in production, because it has a
-  hard-coded localhost in it....  But this shows how to get it working for a
-  prototype, anyway.
-  TODO: Ask Jan if he knows a solution to do this correctly in a plugin */
-  background-image: url(http://localhost/51/assets/images/icons/blue/edit.svg);
-  background-repeat: no-repeat;
+.fill-in-the-blanks-viewer {
+  line-height: 1.75em;
 }
 </style>
