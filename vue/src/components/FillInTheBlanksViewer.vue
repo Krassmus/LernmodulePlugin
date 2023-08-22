@@ -425,7 +425,6 @@ export default defineComponent({
 
 <style scoped>
 input[type='text'] {
-  font-size: 16px;
   max-height: 1em;
   font-family: Lato, sans-serif;
 }
