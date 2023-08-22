@@ -14,12 +14,13 @@
         {{ card.question === '' ? $gettext('Karte') : card.question }}
         <!-- Apply .stop modifier so that the selectCard event handler on the
             parent element doesn't get called when the delete button is clicked -->
-        <img
+        <button
+          type="button"
           class="flex-child-element removeAnswerButton"
-          :src="urlForIcon('trash')"
-          @click="deleteCard(index)"
-          alt="an icon showing a trash bin"
-        />
+          @click.stop="deleteCard(index)"
+        >
+          <img :src="urlForIcon('trash')" :alt="$gettext('Karte löschen')" />
+        </button>
       </div>
       <button type="button" @click="addCard">
         {{ $gettext('Karte hinzufügen') }}
