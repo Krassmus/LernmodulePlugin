@@ -59,7 +59,6 @@
 import { defineComponent, PropType } from 'vue';
 import { Image, ImagePairingTask } from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
-import { boolean } from 'zod';
 
 type Uuid = string;
 
