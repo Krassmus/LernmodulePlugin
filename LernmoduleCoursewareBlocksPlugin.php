@@ -59,11 +59,11 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
     public function registerBlockTypes(array $otherBlockTypes): array
     {
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FillInTheBlanksBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
+//        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
+//        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
 
         return $otherBlockTypes;
     }
