@@ -23,11 +23,13 @@
             type="text"
             v-model="taskDefinition.answers[i].text"
           />
-          <img
+          <button
+            type="button"
             class="flex-child-element removeAnswerButton"
-            :src="urlForIcon('trash')"
             @click="removeAnswer(answer)"
-          />
+          >
+            <img :src="urlForIcon('trash')" :title="$gettext('Löschen')" />
+          </button>
         </div>
 
         <fieldset class="collapsable collapsed">
