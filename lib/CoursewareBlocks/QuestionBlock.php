@@ -20,14 +20,14 @@ class QuestionBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'Frage (H5P)');
+        return dgettext('lernmoduleplugin', 'LMB - Frage');
     }
 
     public static function getDescription(): string
     {
         return dgettext(
             'lernmoduleplugin',
-            'TODO'
+            'Eine Lernaufgabe, wo eine Multiple-Choice-Frage beantwortet werden soll.'
         );
     }
 
