@@ -16,12 +16,15 @@
 <!-- data-iframe-height indicates that this element determines the height
 that the iframe should be resized to by the iFrameSizer library -->
 <div id="app" data-iframe-height>
-  <h1>Lernmodule Courseware Block Template</h1>
-  Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
-  Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
-  <pre><?= Config::get()->LERNMODULE_DEBUG ?
-          'LERNMODULE_DEBUG === true. Überprüfe, ob der Dev-Server läuft.' :
-          'LERNMODULE_DEBUG === false. Überprüfe die Inhalte von /vue/dist.' ?></pre>
+    <?php if (!Config::get()->LERNMODULE_DEBUG) : ?>
+  <div style='display: none;'> <?php endif ?>
+    <h1>Lernmodule Courseware Block Template</h1>
+    Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
+    Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
+    <pre><?= Config::get()->LERNMODULE_DEBUG ?
+            'LERNMODULE_DEBUG === true. Überprüfe, ob der Dev-Server läuft.' :
+            'LERNMODULE_DEBUG === false. Überprüfe die Inhalte von /vue/dist.' ?></pre>
+      <?php if (!Config::get()->LERNMODULE_DEBUG) : ?> </div> <?php endif ?>
 </div>
 
 <script>
