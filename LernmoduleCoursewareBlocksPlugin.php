@@ -77,6 +77,14 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
             background-image:url(' . $icon->asImagePath() . ')
         }'
         );
+
+        // Add CSS to make the vue3 courseware block's 'draggable' handle look right in Stud.IP 5.3
+        \PageLayout::addStyle(
+            '.cw-block-item-sortable > .cw-lernmodule-block {
+               margin-top: -30px;
+        }'
+        );
+
     }
 
     /**

@@ -4,12 +4,18 @@
 
 <!--  Hide all of Stud.IP's layout elements and remove extraneous padding.-->
 <style>
-    #barBottomContainer, #flex-header, .secondary-navigation, #layout-sidebar, #layout_footer, #page_title_container {
+    #barBottomContainer, #flex-header, .secondary-navigation, #layout-sidebar, #layout_footer, #page_title_container, #skip_link_navigation, #main-header, #sidebar, #main-footer, #scroll-to-top {
         display: none !important;
     }
 
     #layout_wrapper, #layout_content, #layout_container {
         padding: 0 !important;
+    }
+    #content-wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+        grid-column: 1/3 !important;
+        grid-row: 1/3 !important;
     }
 </style>
 
