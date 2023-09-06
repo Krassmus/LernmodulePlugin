@@ -84,7 +84,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
             );
         } else {
             $tab->setImage(
-                Icon::create("learnmodule", "inactive", array('title' => dgettext("lernmoduleplugin","Lernmodule")))
+                Icon::create("learnmodule", "clickable", array('title' => dgettext("lernmoduleplugin","Lernmodule")))
             );
         }
         return $tab;
