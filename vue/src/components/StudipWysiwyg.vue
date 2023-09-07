@@ -38,8 +38,9 @@ export default defineComponent({
         view.$refs.studip_wysiwyg as Element,
         getMyEditorConfig()
       );
-      let wysiwyg_editor =
-        window.CKEDITOR.instances[(view.$refs.studip_wysiwyg as Element).id];
+      let wysiwyg_editor = window.STUDIP.wysiwyg.getEditor(
+        view.$refs.studip_wysiwyg as Element
+      )!;
       wysiwyg_editor.on('blur', function () {
         //console.log('cke blur');
       });

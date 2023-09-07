@@ -15,7 +15,7 @@
         </button>
         <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
-      <studip-wysiwyg v-model="taskDefinition.template" id="ckeditorElement" />
+      <studip-wysiwyg v-model="taskDefinition.template" ref="ckeditorElement" />
     </fieldset>
 
     <fieldset class="collapsable collapsed">
@@ -216,7 +216,9 @@ export default defineComponent({
       );
     },
     addBlank() {
-      const editor = window.CKEDITOR.instances['ckeditorElement'];
+      const editor = window.STUDIP.wysiwyg.getEditor(
+        this.$refs.ckeditorElement as Element
+      )!;
 
       const selectedText = editor.getSelection().getSelectedText();
 

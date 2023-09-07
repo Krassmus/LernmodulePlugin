@@ -1,4 +1,4 @@
-import { CKEditorConfig } from '@/ckeditor4';
+import { CKEditorConfig, CKEditorInstance } from '@/ckeditor4';
 
 export {};
 
@@ -11,6 +11,7 @@ declare global {
       };
       wysiwyg: {
         replace: (element: Element, config?: CKEditorConfig) => void;
+        getEditor: (element: Element) => CKEditorInstance | undefined;
         // e is a <textarea> wrapped with jQuery's $() function
         // TODO Type this function
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
