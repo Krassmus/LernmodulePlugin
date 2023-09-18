@@ -220,14 +220,15 @@ export default defineComponent({
         this.$refs.ckeditorElement as Element
       )!;
 
-      const selectedText = editor.getSelection().getSelectedText();
-
-      const blank = selectedText.replace(
-        selectedText.trim(),
-        '*' + selectedText.trim() + '*'
-      );
-
-      editor.insertText(blank);
+      // TODO implement selection
+      // const selectedText = editor.getSelection().getSelectedText();
+      //
+      // const blank = selectedText.replace(
+      //   selectedText.trim(),
+      //   '*' + selectedText.trim() + '*'
+      // );
+      //
+      // editor.insertText(blank);
 
       taskEditorStore.performEdit({
         newTaskDefinition: {

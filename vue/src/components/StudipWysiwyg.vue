@@ -10,7 +10,6 @@
 <script lang="ts">
 // need v-model to provide and get content -> <studip-wysiwyg v-model="content" />
 import { defineComponent } from 'vue';
-import { getMyEditorConfig } from '@/ckeditor4';
 
 export default defineComponent({
   name: 'studip-wysiwyg',
@@ -33,20 +32,23 @@ export default defineComponent({
       if (!window.STUDIP.wysiwyg_enabled) {
         return false;
       }
-      let view = this;
-      window.STUDIP.wysiwyg.replace(
-        view.$refs.studip_wysiwyg as Element,
-        getMyEditorConfig()
-      );
-      let wysiwyg_editor = window.STUDIP.wysiwyg.getEditor(
-        view.$refs.studip_wysiwyg as Element
-      )!;
-      wysiwyg_editor.on('blur', function () {
-        //console.log('cke blur');
-      });
-      wysiwyg_editor.on('change', function () {
-        view.$emit('update:modelValue', wysiwyg_editor.getData());
-      });
+      const el = this.$refs.studip_wysiwyg as Element;
+      // TODO This is a namespaced event, wysiwyg.load -- that's a jquery concept --
+      // I guess that we should consider using jquery here instead of onload.
+      // not sure what's the cleanest reading way to do this.
+      (el as any).onload = (event: any) => {
+        console.info('load');
+        let wysiwyg_editor = window.STUDIP.wysiwyg.getEditor(
+          this.$refs.studip_wysiwyg as Element
+        )!;
+        wysiwyg_editor.on('blur', () => {
+          //console.log('cke blur');
+        });
+        wysiwyg_editor.model.document.on('change:data', () => {
+          this.$emit('update:modelValue', wysiwyg_editor.getData());
+        });
+      };
+      window.STUDIP.wysiwyg.replace(el);
       return true;
     },
     updateValue(value: unknown) {

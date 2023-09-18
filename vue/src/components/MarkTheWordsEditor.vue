@@ -35,22 +35,29 @@ export default defineComponent({
         this.$refs.ckeditorElement as Element
       )!;
 
-      const selectedText = editor.getSelection().getSelectedText();
+      const selection = editor.model.document.selection;
+      const range = selection.getFirstRange();
+      for (const item of range?.getItems() ?? []) {
+        console.log(item);
+      }
 
-      const solution = selectedText.replace(
-        selectedText.trim(),
-        '*' + selectedText.trim() + '*'
-      );
-
-      editor.insertText(solution);
-
-      taskEditorStore.performEdit({
-        newTaskDefinition: {
-          ...this.taskDefinition,
-          template: editor.getData(),
-        },
-        undoBatch: { type: 'editMarkTheWordsTemplate' },
-      });
+      // TODO implement selection
+      // const selectedText = editor.getSelection().getSelectedText();
+      //
+      // const solution = selectedText.replace(
+      //   selectedText.trim(),
+      //   '*' + selectedText.trim() + '*'
+      // );
+      //
+      // editor.insertText(solution);
+      //
+      // taskEditorStore.performEdit({
+      //   newTaskDefinition: {
+      //     ...this.taskDefinition,
+      //     template: editor.getData(),
+      //   },
+      //   undoBatch: { type: 'editMarkTheWordsTemplate' },
+      // });
     },
   },
 
