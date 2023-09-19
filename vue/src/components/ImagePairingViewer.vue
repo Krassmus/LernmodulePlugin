@@ -6,23 +6,26 @@
       @dragenter.prevent
       @drop="onDropOnInteractiveImages($event)"
     >
-      <img
+      <div
         v-for="draggableImageId in draggableImages"
         :key="draggableImageId"
-        class="draggableImage"
+        class="draggableImageContainer"
         :class="{
           hidden: this.isDraggableImageUsed(draggableImageId),
           selected: this.imageIdInteractedWith === draggableImageId,
         }"
-        :draggable="!this.isDraggableImageUsed(draggableImageId)"
-        @dragstart="startDragImage($event, draggableImageId)"
-        @click="onClickDraggableImage(draggableImageId)"
-        :src="getImageById(draggableImageId).imageUrl"
-        :alt="getImageById(draggableImageId).altText"
-        ref="draggableImages"
-      />
+      >
+        <img
+          class="draggableImage"
+          :draggable="!this.isDraggableImageUsed(draggableImageId)"
+          @dragstart="startDragImage($event, draggableImageId)"
+          @click="onClickDraggableImage(draggableImageId)"
+          :src="getImageById(draggableImageId).imageUrl"
+          :alt="getImageById(draggableImageId).altText"
+          ref="draggableImages"
+        />
+      </div>
     </div>
-
     <div class="targetImagesColumn">
       <TargetImage
         v-for="imagePair in this.task.imagePairs"
@@ -154,7 +157,7 @@ export default defineComponent({
           );
 
           if (refToImage) {
-            dragEvent.dataTransfer.setDragImage(refToImage, 100, 50);
+            // dragEvent.dataTransfer.setDragImage(refToImage, 100, 50);
           }
 
           console.log(
@@ -308,27 +311,14 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   width: 8em;
-  padding: 6px;
-  margin: 6px;
   height: 8em;
-  border-radius: 6px 6px 6px 6px;
+  box-shadow: inset 0 2px 74px 0 #cbd5de;
   cursor: pointer;
-  border: 2px solid #dbe2e8;
-  box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
-  background-color: #eef1f4;
 }
 
 .hidden {
   opacity: 25%;
   cursor: auto;
-}
-
-.draggableImage.selected {
-  border: 2px solid rgba(0, 187, 109, 0.93);
-}
-
-.draggableImage:not(.hidden):not(.selected):hover {
-  border: 2px solid rgba(0, 187, 109, 0.93);
 }
 
 .targetImage.correct {
@@ -337,5 +327,20 @@ export default defineComponent({
 
 .targetImage.incorrect {
   background-color: rgba(255, 0, 0, 0.92);
+}
+
+.draggableImageContainer {
+  border: 2px solid #dbe2e8;
+  border-radius: 6px;
+  margin: 6px;
+  padding: 6px;
+}
+
+.draggableImageContainer.selected {
+  border: 2px solid rgba(0, 187, 109, 0.93);
+}
+
+.draggableImageContainer:not(.hidden):not(.selected):hover {
+  border: 2px solid #1a73d9;
 }
 </style>
