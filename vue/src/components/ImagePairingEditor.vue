@@ -11,12 +11,12 @@
         @click="selectPair(index)"
       >
         {{ index }}.
-        <!-- Apply .stop modifier so that the selectCard event handler on the
+        <!-- Apply .stop modifier to @click so that the click event handler on the
             parent element doesn't get called when the delete button is clicked -->
         <img
           class="flex-child-element removeAnswerButton"
           :src="urlForIcon('trash')"
-          @click="deletePair(index)"
+          @click.stop="deletePair(index)"
           alt="an icon showing a trash bin"
         />
       </div>
