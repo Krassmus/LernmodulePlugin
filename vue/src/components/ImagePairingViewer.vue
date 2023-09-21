@@ -296,6 +296,7 @@ export default defineComponent({
   flex-wrap: wrap;
   align-items: center;
   user-select: none;
+  border: 1px solid #cbd5de;
 }
 
 .targetImagesColumn {
@@ -305,6 +306,7 @@ export default defineComponent({
   align-items: center;
   background-color: #eef1f4;
   user-select: none;
+  border: 1px solid #cbd5de;
 }
 
 .draggableImage {
