@@ -157,7 +157,11 @@ export default defineComponent({
           );
 
           if (refToImage) {
-            // dragEvent.dataTransfer.setDragImage(refToImage, 100, 50);
+            dragEvent.dataTransfer.setDragImage(
+              refToImage.parentElement!,
+              0,
+              0
+            );
           }
 
           console.log(
