@@ -50,6 +50,7 @@
       />
     </div>
   </div>
+  <br />
   <button type="button" class="h5pButton" @click="checkResults()">
     {{ this.task.strings.checkButton }}
   </button>
