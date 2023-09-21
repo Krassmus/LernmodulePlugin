@@ -54,12 +54,13 @@ export default defineComponent({
   margin: 6px;
   height: 8em;
   border-radius: 6px 6px 6px 6px;
+  border: 2px solid transparent;
 }
 
 .grid-square.one-image {
   display: flex;
   justify-content: center;
-  border: 2px solid #dbe2e8;
+  border-color: #dbe2e8;
   box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
 }
 
