@@ -11,7 +11,7 @@
         :key="draggableImageId"
         class="draggableImageContainer"
         :class="{
-          hidden: this.isDraggableImageUsed(draggableImageId),
+          disabled: this.isDraggableImageUsed(draggableImageId),
           selected: this.imageIdInteractedWith === draggableImageId,
         }"
       >
@@ -318,7 +318,7 @@ export default defineComponent({
   cursor: pointer;
 }
 
-.hidden {
+.disabled {
   opacity: 25%;
   cursor: auto;
 }
