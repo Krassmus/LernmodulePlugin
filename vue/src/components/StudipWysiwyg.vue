@@ -32,23 +32,18 @@ export default defineComponent({
       if (!window.STUDIP.wysiwyg_enabled) {
         return false;
       }
-      const el = this.$refs.studip_wysiwyg as Element;
-      // TODO This is a namespaced event, wysiwyg.load -- that's a jquery concept --
-      // I guess that we should consider using jquery here instead of onload.
-      // not sure what's the cleanest reading way to do this.
-      (el as any).onload = (event: any) => {
+      const textAreaElement = this.$refs.studip_wysiwyg as HTMLTextAreaElement;
+      // Process the jQuery event 'wysiwyg.load' which is triggered asynchronously
+      // after the wysiwyg editor is mounted using the 'replace()' method.
+      textAreaElement.onload = (event: any) => {
         console.info('load');
-        let wysiwyg_editor = window.STUDIP.wysiwyg.getEditor(
-          this.$refs.studip_wysiwyg as Element
-        )!;
-        wysiwyg_editor.on('blur', () => {
-          //console.log('cke blur');
-        });
+        let wysiwyg_editor = window.STUDIP.wysiwyg.getEditor(textAreaElement)!;
         wysiwyg_editor.model.document.on('change:data', () => {
           this.$emit('update:modelValue', wysiwyg_editor.getData());
         });
       };
-      window.STUDIP.wysiwyg.replace(el);
+      // Asynchronous method which does not return a promise >:|
+      window.STUDIP.wysiwyg.replace(textAreaElement);
       return true;
     },
     updateValue(value: unknown) {
