@@ -13,7 +13,7 @@
         </button>
         <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
-      <studip-wysiwyg v-model="taskDefinition.template" ref="ckeditorElement" />
+      <StudipWysiwyg v-model="taskDefinition.template" ref="wysiwyg" />
     </fieldset>
   </form>
 </template>
@@ -31,9 +31,11 @@ export default defineComponent({
   methods: {
     $gettext,
     addSolution() {
-      const editor = window.STUDIP.wysiwyg.getEditor(
-        this.$refs.ckeditorElement as Element
-      )!;
+      const wysiwygEl = (this.$refs.wysiwyg as any)?.$el;
+      const editor = window.STUDIP.wysiwyg.getEditor(wysiwygEl);
+      if (!editor) {
+        throw new Error('wysiwyg.getEditor returned ' + editor);
+      }
 
       const selection = editor.model.document.selection;
       const range = selection.getFirstRange();
