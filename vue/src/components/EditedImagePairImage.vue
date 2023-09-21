@@ -1,5 +1,9 @@
 <template>
-  <img :src="image.imageUrl" :alt="image.altText" />
+  <img
+    :src="image.imageUrl"
+    :alt="image.altText"
+    class="edited-image-pair-image"
+  />
 </template>
 
 <script lang="ts">
@@ -22,4 +26,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.edited-image-pair-image {
+  object-fit: contain;
+  object-position: center;
+  width: 8em;
+  height: 8em;
+}
+</style>
