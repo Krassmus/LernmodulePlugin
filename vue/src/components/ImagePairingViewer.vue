@@ -123,13 +123,26 @@ export default defineComponent({
     },
 
     startDragImage(dragEvent: DragEvent, imageId: Uuid): void {
-      if (dragEvent.dataTransfer) {
-        dragEvent.dataTransfer.dropEffect = 'move';
-        dragEvent.dataTransfer.effectAllowed = 'move';
+      if (!this.isDraggableImageUsed(imageId)) {
+        console.log('Dragging image:', imageId);
+        this.imageIdInteractedWith = imageId;
 
-        if (!this.isDraggableImageUsed(imageId)) {
-          console.log('Dragging image:', imageId);
-          this.imageIdInteractedWith = imageId;
+        dragEvent.dataTransfer!.dropEffect = 'move';
+        dragEvent.dataTransfer!.effectAllowed = 'move';
+
+        // Change the drag image to the parent element to include the border
+        const refToImage = (
+          this.$refs.draggableImages as HTMLImageElement[]
+        ).find((value) => value.src == this.getImageById(imageId).imageUrl);
+
+        const parentElementOfImage = refToImage?.parentElement!;
+
+        if (parentElementOfImage) {
+          dragEvent.dataTransfer!.setDragImage(
+            parentElementOfImage,
+            parentElementOfImage.clientWidth / 2,
+            parentElementOfImage.clientHeight / 2
+          );
         }
       }
     },
