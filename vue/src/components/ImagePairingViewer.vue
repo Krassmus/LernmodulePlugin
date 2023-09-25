@@ -346,10 +346,10 @@ export default defineComponent({
 }
 
 .draggableImageContainer.selected {
-  border: 2px solid rgba(0, 187, 109, 0.93);
+  border: 2px solid #1a73d9;
 }
 
-.draggableImageContainer:not(.hidden):not(.selected):hover {
+.draggableImageContainer:not(.disabled):not(.selected):hover {
   border: 2px solid #1a73d9;
 }
 </style>
