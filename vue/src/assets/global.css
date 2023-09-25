@@ -25,6 +25,7 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 .h5pButton {
   /* vertical, horizontal */
   padding: 0.25em 1.25em;
+  margin-right: 0.75em;
   border-radius: 2em;
   background: #1a73d9;
   color: #fff;
@@ -37,6 +38,10 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   text-decoration: none;
   vertical-align: baseline;
   white-space: nowrap;
+}
+
+.h5pButton:last-child {
+  margin-right: 0;
 }
 
 .h5pFeedbackContainer {
