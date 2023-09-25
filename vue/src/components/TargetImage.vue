@@ -5,6 +5,11 @@
         :src="targetImage.imageUrl"
         :alt="targetImage.altText"
         class="image"
+        :class="{
+          correct: this.isCorrect,
+          incorrect: !this.isCorrect,
+          showResult: this.showResult,
+        }"
       />
     </div>
     <div class="image-container front">
@@ -12,6 +17,11 @@
         :src="draggableImage.imageUrl"
         :alt="draggableImage.altText"
         class="image"
+        :class="{
+          correct: this.isCorrect,
+          incorrect: !this.isCorrect,
+          showResult: this.showResult,
+        }"
       />
     </div>
   </div>
@@ -41,6 +51,14 @@ export default defineComponent({
       type: Object as PropType<Image>,
       required: true,
     },
+    isCorrect: {
+      type: Boolean,
+      required: false,
+    },
+    showResult: {
+      type: Boolean,
+      required: false,
+    },
   },
   computed: {},
   methods: {},
@@ -67,16 +85,33 @@ export default defineComponent({
 
 .grid-square.two-images {
   position: relative;
-  cursor: pointer;
   background-color: #eef1f4;
 }
 
-.grid-square.two-images:not(:hover) .image {
-  border: 1px solid white;
+.grid-square.two-images .image {
+  border-radius: 6px;
 }
 
-.grid-square.two-images:hover .image {
-  border: 1px solid rgba(0, 187, 109, 0.93);
+.grid-square.two-images:not(:hover):not(.showResult) .image {
+  border: 2px solid white;
+}
+
+.grid-square.two-images .image:is(.correct):is(.showResult) {
+  border: 2px solid #64a877;
+}
+
+.grid-square.two-images .image:is(.incorrect):is(.showResult) {
+  border: 2px solid #dd2e2e;
+}
+
+.grid-square.two-images:hover .image:not(.showResult) {
+  cursor: grab;
+  border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
+}
+
+.grid-square.two-images:hover .image:is(.showResult) {
+  cursor: default;
 }
 
 .image-container {

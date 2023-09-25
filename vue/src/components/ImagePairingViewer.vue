@@ -30,16 +30,10 @@
       <TargetImage
         v-for="imagePair in this.task.imagePairs"
         class="targetImage"
-        :class="{
-          correct:
-            this.showResults &&
-            this.isAnswerCorrect(imagePair.targetImage.uuid),
-          incorrect:
-            this.showResults &&
-            !this.isAnswerCorrect(imagePair.targetImage.uuid),
-        }"
         :draggable-image="getImageDraggedOntoTarget(imagePair.targetImage.uuid)"
         :target-image="getImageById(imagePair.targetImage.uuid)"
+        :isCorrect="this.isAnswerCorrect(imagePair.targetImage.uuid)"
+        :showResult="this.showResults"
         :key="imagePair.uuid"
         @drop="onDropOnTargetImage($event, imagePair.targetImage.uuid)"
         :draggable="getImageDraggedOntoTarget(imagePair.targetImage.uuid)"
@@ -333,20 +327,11 @@ export default defineComponent({
   width: 8em;
   height: 8em;
   box-shadow: inset 0 2px 74px 0 #cbd5de;
-  cursor: pointer;
 }
 
 .disabled {
+  cursor: default;
   opacity: 25%;
-  cursor: auto;
-}
-
-.targetImage.correct {
-  background-color: rgba(0, 204, 102, 0.92);
-}
-
-.targetImage.incorrect {
-  background-color: rgba(255, 0, 0, 0.92);
 }
 
 .draggableImageContainer {
