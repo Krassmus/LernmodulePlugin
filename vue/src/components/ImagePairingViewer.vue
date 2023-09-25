@@ -135,43 +135,41 @@ export default defineComponent({
     },
 
     startDragTargetImage(dragEvent: DragEvent, targetImageId: Uuid): void {
-      if (dragEvent.dataTransfer) {
-        dragEvent.dataTransfer.dropEffect = 'move';
-        dragEvent.dataTransfer.effectAllowed = 'move';
+      dragEvent.dataTransfer!.dropEffect = 'move';
+      dragEvent.dataTransfer!.effectAllowed = 'move';
+      // Remember that the image has been dragged away from a target
+      // where it had been placed by the user
+      dragEvent.dataTransfer!.setData('targetId', targetImageId);
 
-        // Remember that the image has been dragged away from a target
-        // where it had been placed by the user
-        dragEvent.dataTransfer.setData('targetId', targetImageId);
+      // Check if an image has been dragged onto the target already
+      const userDraggedImageId = this.imagesDraggedOntoTargets[targetImageId];
+      if (userDraggedImageId) {
+        this.imageIdInteractedWith = userDraggedImageId;
 
-        // Check if an image has been dragged onto the target already
-        const userDraggedImageId = this.imagesDraggedOntoTargets[targetImageId];
-        if (userDraggedImageId) {
-          this.imageIdInteractedWith = userDraggedImageId;
+        // Add the interactive image to the cursor even if the user
+        // clicked on the target image
+        const refToImage = (
+          this.$refs.draggableImages as HTMLImageElement[]
+        ).find(
+          (value) => value.src == this.getImageById(userDraggedImageId).imageUrl
+        );
 
-          // Add the interactive image to the cursor even if the user
-          // clicked on the target image
-          const refToImage = (
-            this.$refs.draggableImages as HTMLImageElement[]
-          ).find(
-            (value) =>
-              value.src == this.getImageById(userDraggedImageId).imageUrl
-          );
+        const parentElementOfImage = refToImage?.parentElement!;
 
-          if (refToImage) {
-            dragEvent.dataTransfer.setDragImage(
-              refToImage.parentElement!,
-              0,
-              0
-            );
-          }
-
-          console.log(
-            'Dragging image:',
-            this.imageIdInteractedWith,
-            'from target image',
-            targetImageId
+        if (parentElementOfImage) {
+          dragEvent.dataTransfer!.setDragImage(
+            parentElementOfImage,
+            parentElementOfImage.clientWidth / 2,
+            parentElementOfImage.clientHeight / 2
           );
         }
+
+        console.log(
+          'Dragging image:',
+          this.imageIdInteractedWith,
+          'from target image',
+          targetImageId
+        );
       }
     },
 
