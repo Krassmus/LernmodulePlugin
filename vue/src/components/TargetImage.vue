@@ -53,7 +53,7 @@ export default defineComponent({
   padding: 6px;
   margin: 6px;
   height: 8em;
-  border-radius: 6px 6px 6px 6px;
+  border-radius: 6px;
   border: 2px solid transparent;
 }
 
@@ -62,6 +62,7 @@ export default defineComponent({
   justify-content: center;
   border-color: #dbe2e8;
   box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
+  background-color: #ffffff;
 }
 
 .grid-square.two-images {
