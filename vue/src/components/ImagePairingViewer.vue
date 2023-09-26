@@ -45,10 +45,20 @@
     </div>
   </div>
   <br />
-  <button type="button" class="h5pButton" @click="checkResults()">
+  <button
+    v-if="!this.showResults"
+    type="button"
+    class="h5pButton"
+    @click="checkResults()"
+  >
     {{ this.task.strings.checkButton }}
   </button>
-  <button type="button" class="h5pButton" @click="reset()">
+  <button
+    v-if="this.showResults"
+    type="button"
+    class="h5pButton"
+    @click="reset()"
+  >
     {{ this.task.strings.retryButton }}
   </button>
 </template>
