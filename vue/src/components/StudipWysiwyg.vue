@@ -37,10 +37,23 @@ export default defineComponent({
       // after the wysiwyg editor is mounted using the 'replace()' method.
       textAreaElement.onload = (event: any) => {
         console.info('load');
-        let wysiwyg_editor = window.STUDIP.wysiwyg.getEditor(textAreaElement)!;
-        wysiwyg_editor.model.document.on('change:data', () => {
-          this.$emit('update:modelValue', wysiwyg_editor.getData());
+        let ckeditor = window.STUDIP.wysiwyg.getEditor(textAreaElement)!;
+        ckeditor.model.document.on('change:data', () => {
+          this.$emit('update:modelValue', ckeditor.getData());
         });
+        // Override 'enter' to insert <br /> instead of <p></p>.
+        // This produces HTML which is more easily parsed in our various learning tasks.
+        // E.g. "Fill In The Blanks" turns words surrounded by *asterisks* into gaps.
+        // Source: https://github.com/ckeditor/ckeditor5/issues/1141#issuecomment-403403526
+        ckeditor.editing.view.document.on(
+          'enter',
+          (evt, data) => {
+            ckeditor.execute('shiftEnter');
+            data.preventDefault();
+            evt.stop();
+          },
+          { priority: 'high' }
+        );
       };
       // Asynchronous method which does not return a promise >:|
       window.STUDIP.wysiwyg.replace(textAreaElement);
