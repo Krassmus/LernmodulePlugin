@@ -76,7 +76,7 @@ export default defineComponent({
     return {
       markedWords: new Set<MarkTheWordsElement>(),
       showResults: false,
-      debug: false,
+      debug: true,
     };
   },
 
@@ -154,10 +154,21 @@ export default defineComponent({
     },
   },
   computed: {
+    /**
+     * Returns an array where the even indexes are the static text portions,
+     * and the odd indexes are the correct words to be marked.
+     */
     splitTemplate(): string[] {
-      // Returns an array where the even indexes are the static text portions,
-      // and the odd indexes are the correct words to be marked.
-      return this.task.template.split(/\*([^*]*)\*/);
+      // Remove <p> tags at the start and end of the text's contents.
+      // These tags are inserted automatically by CKEditor5.
+      // It appears to be a WONTFIX on their end.
+      // See https://github.com/ckeditor/ckeditor5/issues/1537
+      const removedPTags = this.task.template
+        .replace(/<p>(.*?)/, '$1')
+        .replace(/(.*?)<\/p>/, '$1');
+      // Split the text into chunks based on pairs of asterisks
+      const split = removedPTags.split(/\*([^*]*)\*/);
+      return split;
     },
 
     parsedTemplate(): MarkTheWordsElement[] {
