@@ -39,7 +39,15 @@ export default defineComponent({
         console.info('load');
         let ckeditor = window.STUDIP.wysiwyg.getEditor(textAreaElement)!;
         ckeditor.model.document.on('change:data', () => {
-          this.$emit('update:modelValue', ckeditor.getData());
+          const data = ckeditor.getData();
+          // Remove the <p> tag wrapping the editor's contents.
+          // These tags are inserted automatically by CKEditor5.
+          // It appears to be a WONTFIX on their end.
+          // See https://github.com/ckeditor/ckeditor5/issues/1537
+          const removedPTagsText = data
+            .replace(/<p>(.*?)/, '$1')
+            .replace(/(.*?)<\/p>/, '$1');
+          this.$emit('update:modelValue', removedPTagsText);
         });
         // Override 'enter' to insert <br /> instead of <p></p> in the editor.
         // This produces HTML which is more easily parsed in our various learning tasks.

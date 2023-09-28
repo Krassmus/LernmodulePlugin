@@ -40,7 +40,6 @@ export default defineComponent({
         console.error('getEditor(wysiwygEl) returned: ', editor);
         throw new Error('Could not get reference to wysiwyg editor');
       }
-
       const selection = editor.model.document.selection;
       const start = selection.getFirstPosition();
       const end = selection.getLastPosition();
