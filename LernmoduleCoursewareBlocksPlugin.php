@@ -78,7 +78,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         }'
         );
 
-        // Add CSS to make the vue3 courseware block's 'draggable' handle look right in Stud.IP 5.3
+        // Add CSS to make the vue3 courseware block's 'draggable' handle look right in Stud.IP 5.4
         \PageLayout::addStyle(
             '.cw-block-item-sortable > .cw-lernmodule-block {
                margin-top: -38px;
