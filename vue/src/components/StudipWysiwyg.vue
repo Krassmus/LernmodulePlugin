@@ -41,9 +41,8 @@ export default defineComponent({
         ckeditor.model.document.on('change:data', () => {
           this.$emit('update:modelValue', ckeditor.getData());
         });
-        // Override 'enter' to insert <br /> instead of <p></p>.
+        // Override 'enter' to insert <br /> instead of <p></p> in the editor.
         // This produces HTML which is more easily parsed in our various learning tasks.
-        // E.g. "Fill In The Blanks" turns words surrounded by *asterisks* into gaps.
         // Source: https://github.com/ckeditor/ckeditor5/issues/1141#issuecomment-403403526
         ckeditor.editing.view.document.on(
           'enter',
@@ -54,8 +53,17 @@ export default defineComponent({
           },
           { priority: 'high' }
         );
+        // Disable the autoformat plugin so that *asterisks* surrounding text
+        // are not automatically converted into italic formatting.
+        // We use this syntax in the editor for various tasks, such as Fill In The Blanks.
+        // (It might be nicer to disable this using 'removePlugins' option in
+        // the config for CKEditor5, but the interface of STUDIP.wysiwyg.replace()
+        // does not allow us to alter the CKEditor5 config.)
+        const autoformat = ckeditor.plugins.get('Autoformat');
+        (autoformat as unknown as { isEnabled: boolean }).isEnabled = false;
       };
-      // Asynchronous method which does not return a promise >:|
+      // This asynchronous method does not return a promise.  Instead, it fires
+      // a 'load' event, which is processed in the above event handler. >:|
       window.STUDIP.wysiwyg.replace(textAreaElement);
       return true;
     },
