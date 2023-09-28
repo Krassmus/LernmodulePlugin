@@ -49,6 +49,9 @@
       <option value="MarkTheWords">
         {{ $gettext('Mark the Words') }}
       </option>
+      <option value="ImagePairing">
+        {{ $gettext('Image Pairing') }}
+      </option>
     </select>
   </div>
 
