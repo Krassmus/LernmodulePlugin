@@ -29,8 +29,8 @@
       <div class="h5pFeedbackContainerTop">
         <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
           {{
-            this.task.strings.fillInAllBlanksMessage
-              ? this.task.strings.fillInAllBlanksMessage
+            task.strings.fillInAllBlanksMessage
+              ? task.strings.fillInAllBlanksMessage
               : $gettext(
                   'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
                 )
@@ -38,20 +38,20 @@
         </div>
 
         <div v-if="showResults && feedbackMessage" class="h5pFeedbackText">
-          {{ this.feedbackMessage }}
+          {{ feedbackMessage }}
         </div>
       </div>
       <div class="h5pFeedbackContainerCenter">
         <div v-if="showResults">
           <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
           <label for="score" class="h5pFeedbackText">
-            {{ this.resultMessage }}
+            {{ resultMessage }}
           </label>
         </div>
       </div>
       <div class="h5pFeedbackContainerBottom">
         <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-          {{ this.task.strings.checkButton }}
+          {{ task.strings.checkButton }}
         </button>
 
         <template v-if="showExtraButtons">
@@ -60,7 +60,7 @@
             @click="onClickShowSolution"
             class="h5pButton"
           >
-            {{ this.task.strings.solutionsButton }}
+            {{ task.strings.solutionsButton }}
           </button>
 
           <button
@@ -68,7 +68,7 @@
             @click="onClickTryAgain"
             class="h5pButton"
           >
-            {{ this.task.strings.retryButton }}
+            {{ task.strings.retryButton }}
           </button>
         </template>
       </div>
@@ -259,7 +259,7 @@ export default defineComponent({
         this.onClickCheck();
       }
     },
-    onInput(event: InputEvent) {
+    onInput(event: Event) {
       this.autoGrowTextField(event.target as HTMLInputElement);
     },
     classForInput(blank: FillInTheBlanksElement) {
