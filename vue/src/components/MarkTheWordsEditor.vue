@@ -30,36 +30,28 @@ export default defineComponent({
   components: { StudipWysiwyg },
   methods: {
     $gettext,
+    /**
+     * Surround the selected text with two asterisks
+     */
     addSolution() {
       const wysiwygEl = (this.$refs.wysiwyg as any)?.$el;
       const editor = window.STUDIP.wysiwyg.getEditor(wysiwygEl);
       if (!editor) {
-        throw new Error('wysiwyg.getEditor returned ' + editor);
+        console.error('getEditor(wysiwygEl) returned: ', editor);
+        throw new Error('Could not get reference to wysiwyg editor');
       }
 
       const selection = editor.model.document.selection;
-      const range = selection.getFirstRange();
-      for (const item of range?.getItems() ?? []) {
-        console.log(item);
+      const start = selection.getFirstPosition();
+      const end = selection.getLastPosition();
+      if (!start || !end) {
+        console.error('selection start: ', start, ' selection end: ', end);
+        throw new Error('Could not get selection in editor');
       }
-
-      // TODO implement selection
-      // const selectedText = editor.getSelection().getSelectedText();
-      //
-      // const solution = selectedText.replace(
-      //   selectedText.trim(),
-      //   '*' + selectedText.trim() + '*'
-      // );
-      //
-      // editor.insertText(solution);
-      //
-      // taskEditorStore.performEdit({
-      //   newTaskDefinition: {
-      //     ...this.taskDefinition,
-      //     template: editor.getData(),
-      //   },
-      //   undoBatch: { type: 'editMarkTheWordsTemplate' },
-      // });
+      editor.model.change((writer) => {
+        writer.insertText('*', end);
+        writer.insertText('*', start);
+      });
     },
   },
 
