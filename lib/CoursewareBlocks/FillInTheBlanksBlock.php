@@ -20,14 +20,14 @@ class FillInTheBlanksBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'Lückentext (H5P)');
+        return dgettext('lernmoduleplugin', 'LMB - Fill in the Blanks');
     }
 
     public static function getDescription(): string
     {
         return dgettext(
             'lernmoduleplugin',
-            'Eine Aufgabe, wo die Lücken in einem Lückentext von Studierenden ausgefüllt werden sollen.'
+            'Eine Lernaufgabe, wo die Lücken in einem Lückentext ausgefüllt werden sollen.'
         );
     }
 

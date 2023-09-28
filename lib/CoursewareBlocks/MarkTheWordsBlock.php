@@ -20,14 +20,14 @@ class MarkTheWordsBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'Mark The Words (H5P)');
+        return dgettext('lernmoduleplugin', 'LMB - Mark the Words');
     }
 
     public static function getDescription(): string
     {
         return dgettext(
             'lernmoduleplugin',
-            'TODO'
+            'Eine Lernaufgabe, wo bestimmte Wörter in einem Text markiert werden sollen.'
         );
     }
 

@@ -20,14 +20,14 @@ class DragTheWordsBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'Drag The Words (H5P)');
+        return dgettext('lernmoduleplugin', 'LMB - Drag the Words');
     }
 
     public static function getDescription(): string
     {
         return dgettext(
             'lernmoduleplugin',
-            'TODO'
+            'Eine Lernaufgabe, wo Wörter in die Lücken in einem Text gezogen werden sollen.'
         );
     }
 

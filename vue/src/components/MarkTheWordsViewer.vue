@@ -3,7 +3,12 @@
     <div ref="wrapperElement">
       <span v-for="(element, index) in parsedTemplate" :key="element.uuid">
         <span
+          tabindex="0"
+          role="button"
+          :aria-pressed="isMarked(element)"
           @click="onClickWord(element)"
+          @keydown="(event) => onWordKeydown(event, element)"
+          @keyup="(event) => onWordKeyup(event, element)"
           :class="classForWord(element)"
           v-html="element.text"
         />
@@ -95,6 +100,33 @@ export default defineComponent({
       }
     },
 
+    /**
+     * Marks/unmarks a word using the enter key.
+     */
+    onWordKeydown(event: KeyboardEvent, word: MarkTheWordsElement) {
+      // The action button is activated by space on the keyup event, but the
+      // default action for space is already triggered on keydown. It needs to be
+      // prevented to stop scrolling the page before activating the button.
+      if (event.code === 'Space') {
+        event.preventDefault();
+      }
+      // If enter is pressed, activate the button
+      else if (event.code === 'Enter' || event.code === 'Return') {
+        event.preventDefault();
+        this.onClickWord(word);
+      }
+    },
+
+    /**
+     * Marks/unmarks a word with the space key.
+     */
+    onWordKeyup(event: KeyboardEvent, word: MarkTheWordsElement) {
+      if (event.code === 'Space') {
+        event.preventDefault();
+        this.onClickWord(word);
+      }
+    },
+
     classForWord(word: MarkTheWordsElement) {
       if (this.showResults) {
         // User is done marking words and wants to see the results
@@ -122,9 +154,12 @@ export default defineComponent({
     },
   },
   computed: {
+    /**
+     * Returns an array where the even indexes are the static text portions,
+     * and the odd indexes are the correct words to be marked.
+     */
     splitTemplate(): string[] {
-      // Returns an array where the even indexes are the static text portions,
-      // and the odd indexes are the correct words to be marked.
+      // Split the text into chunks based on pairs of asterisks
       return this.task.template.split(/\*([^*]*)\*/);
     },
 

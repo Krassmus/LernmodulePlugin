@@ -4,24 +4,33 @@
 
 <!--  Hide all of Stud.IP's layout elements and remove extraneous padding.-->
 <style>
-    #barBottomContainer, #flex-header, .secondary-navigation, #layout-sidebar, #layout_footer, #page_title_container {
+    #barBottomContainer, #flex-header, .secondary-navigation, #layout-sidebar, #layout_footer, #page_title_container, #skip_link_navigation, #main-header, #sidebar, #main-footer, #scroll-to-top {
         display: none !important;
     }
 
     #layout_wrapper, #layout_content, #layout_container {
         padding: 0 !important;
     }
+    #content-wrapper {
+        padding: 0 !important;
+        margin: 0 !important;
+        grid-column: 1/3 !important;
+        grid-row: 1/3 !important;
+    }
 </style>
 
 <!-- data-iframe-height indicates that this element determines the height
 that the iframe should be resized to by the iFrameSizer library -->
 <div id="app" data-iframe-height>
-  <h1>Lernmodule Courseware Block Template</h1>
-  Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
-  Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
-  <pre><?= Config::get()->LERNMODULE_DEBUG ?
-          'LERNMODULE_DEBUG === true. Überprüfe, ob der Dev-Server läuft.' :
-          'LERNMODULE_DEBUG === false. Überprüfe die Inhalte von /vue/dist.' ?></pre>
+    <?php if (!Config::get()->LERNMODULE_DEBUG) : ?>
+  <div style='display: none;'> <?php endif ?>
+    <h1>Lernmodule Courseware Block Template</h1>
+    Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
+    Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
+    <pre><?= Config::get()->LERNMODULE_DEBUG ?
+            'LERNMODULE_DEBUG === true. Überprüfe, ob der Dev-Server läuft.' :
+            'LERNMODULE_DEBUG === false. Überprüfe die Inhalte von /vue/dist.' ?></pre>
+      <?php if (!Config::get()->LERNMODULE_DEBUG) : ?> </div> <?php endif ?>
 </div>
 
 <script>

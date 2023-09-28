@@ -13,7 +13,7 @@
         </button>
         <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
-      <studip-wysiwyg v-model="taskDefinition.template" id="ckeditorElement" />
+      <StudipWysiwyg v-model="taskDefinition.template" ref="wysiwyg" />
     </fieldset>
   </form>
 </template>
@@ -30,24 +30,26 @@ export default defineComponent({
   components: { StudipWysiwyg },
   methods: {
     $gettext,
+    /**
+     * Surround the selected text with two asterisks
+     */
     addSolution() {
-      const editor = window.CKEDITOR.instances['ckeditorElement'];
-
-      const selectedText = editor.getSelection().getSelectedText();
-
-      const solution = selectedText.replace(
-        selectedText.trim(),
-        '*' + selectedText.trim() + '*'
-      );
-
-      editor.insertText(solution);
-
-      taskEditorStore.performEdit({
-        newTaskDefinition: {
-          ...this.taskDefinition,
-          template: editor.getData(),
-        },
-        undoBatch: { type: 'editMarkTheWordsTemplate' },
+      const wysiwygEl = (this.$refs.wysiwyg as any)?.$el;
+      const editor = window.STUDIP.wysiwyg.getEditor(wysiwygEl);
+      if (!editor) {
+        console.error('getEditor(wysiwygEl) returned: ', editor);
+        throw new Error('Could not get reference to wysiwyg editor');
+      }
+      const selection = editor.model.document.selection;
+      const start = selection.getFirstPosition();
+      const end = selection.getLastPosition();
+      if (!start || !end) {
+        console.error('selection start: ', start, ' selection end: ', end);
+        throw new Error('Could not get selection in editor');
+      }
+      editor.model.change((writer) => {
+        writer.insertText('*', end);
+        writer.insertText('*', start);
       });
     },
   },

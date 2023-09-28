@@ -1,4 +1,4 @@
-import { CKEditorConfig } from '@/ckeditor4';
+import { Editor } from '@ckeditor/ckeditor5-core';
 
 export {};
 
@@ -10,11 +10,11 @@ declare global {
         getURL: (path: string) => string;
       };
       wysiwyg: {
-        replace: (element: Element, config?: CKEditorConfig) => void;
-        // e is a <textarea> wrapped with jQuery's $() function
-        // TODO Type this function
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getDefaultConfig: (e: any) => CKEditorConfig;
+        replace: (element: Element) => void;
+        // TODO Use correct type for ckeditor5 editor instance
+        getEditor: (
+          element: Element
+        ) => (Editor & { getData(): string }) | undefined;
       };
       wysiwyg_enabled: boolean;
       INSTALLED_LANGUAGES: { [name: string]: InstalledLanguage };

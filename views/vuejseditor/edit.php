@@ -1,12 +1,15 @@
 <!--<div>--><?php //= Config::get()->LERNMODULE_DEBUG ? 'LERNMODULE_DEBUG = ' . Config::get()->LERNMODULE_DEBUG : '' ?><!--</div>-->
 <div id="app">
-  <h1>Vue.js Edit Template</h1>
-  Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
-  Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
+    <?php if (!Config::get()->LERNMODULE_DEBUG) : ?>
+  <div style='display: none;'> <?php endif ?>
+    <h1>Vue.js Edit Template</h1>
+    Wenn die Vue-App nach Laden der Seite an dieser Stelle nicht erscheint, kann es sein, dass der
+    Dev-Server nicht läuft oder der Production-Build nicht ausgeführt wurde.
 
-  <pre><?= Config::get()->LERNMODULE_DEBUG ?
-          'LERNMODULE_DEBUG === true. Überprüfe, ob der Dev-Server läuft.' :
-          'LERNMODULE_DEBUG === false. Überprüfe die Inhalte von /vue/dist.' ?></pre>
+    <pre><?= Config::get()->LERNMODULE_DEBUG ?
+            'LERNMODULE_DEBUG === true. Überprüfe, ob der Dev-Server läuft.' :
+            'LERNMODULE_DEBUG === false. Überprüfe die Inhalte von /vue/dist.' ?></pre>
+      <?php if (!Config::get()->LERNMODULE_DEBUG) : ?> </div> <?php endif ?>
 </div>
 
 

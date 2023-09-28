@@ -44,6 +44,47 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $template->set_attribute('plugin', $this);
         $script = $template->render();
         \PageLayout::addBodyElements($script);
+
+        // Add CSS to set the correct icons for the blocks in the block adder
+        $icon = Icon::create('tan3');
+        \PageLayout::addStyle(
+            '.cw-blockadder-item.cw-blockadder-item-mark-the-words {
+            background-image:url(' . $icon->asImagePath() . ')
+        }'
+        );
+        $icon = Icon::create('tan3');
+        \PageLayout::addStyle(
+            '.cw-blockadder-item.cw-blockadder-item-drag-the-words {
+            background-image:url(' . $icon->asImagePath() . ')
+        }'
+        );
+        $icon = Icon::create('question');
+        \PageLayout::addStyle(
+            '.cw-blockadder-item.cw-blockadder-item-question {
+            background-image:url(' . $icon->asImagePath() . ')
+        }'
+        );
+        $icon = Icon::create('file-office');
+        \PageLayout::addStyle(
+            '.cw-blockadder-item.cw-blockadder-item-fill-in-the-blanks {
+            background-image:url(' . $icon->asImagePath() . ')
+        }'
+        );
+
+        $icon = Icon::create('content2');
+        \PageLayout::addStyle(
+            '.cw-blockadder-item.cw-blockadder-item-memory {
+            background-image:url(' . $icon->asImagePath() . ')
+        }'
+        );
+
+        // Add CSS to make the vue3 courseware block's 'draggable' handle look right in Stud.IP 5.4
+        \PageLayout::addStyle(
+            '.cw-block-item-sortable > .cw-lernmodule-block {
+               margin-top: -38px;
+        }'
+        );
+
     }
 
     /**
@@ -59,11 +100,11 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
     public function registerBlockTypes(array $otherBlockTypes): array
     {
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FillInTheBlanksBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
+//        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
+//        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
 
         return $otherBlockTypes;
     }

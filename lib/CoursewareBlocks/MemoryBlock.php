@@ -20,7 +20,7 @@ class MemoryBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'Memory (H5P)');
+        return dgettext('lernmoduleplugin', 'LMB - Memory');
     }
 
     public static function getDescription(): string
