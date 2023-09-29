@@ -5,11 +5,11 @@ import LernmoduleCoursewareBlockBase from '@/components/LernmoduleCoursewareBloc
 // the Courseware.
 const taskTypes = [
   'FillInTheBlanks',
-  'FlashCards',
   'Question',
   'DragTheWords',
   'MarkTheWords',
   'Memory',
+  'ImagePairing',
   'LmbInteractiveVideo',
 ];
 
