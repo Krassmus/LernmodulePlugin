@@ -11,13 +11,16 @@
         :key="draggableImageId"
         class="draggableImageContainer"
         :class="{
-          disabled: this.isDraggableImageUsed(draggableImageId),
+          disabled:
+            this.isDraggableImageUsed(draggableImageId) || this.showResults,
           selected: this.imageIdInteractedWith === draggableImageId,
         }"
       >
         <img
           class="draggableImage"
-          :draggable="!this.isDraggableImageUsed(draggableImageId)"
+          :draggable="
+            !this.isDraggableImageUsed(draggableImageId) && !this.showResults
+          "
           @dragstart="startDragImage($event, draggableImageId)"
           @click="onClickDraggableImage(draggableImageId)"
           :src="getImageById(draggableImageId).imageUrl"
@@ -36,7 +39,10 @@
         :showResult="this.showResults"
         :key="imagePair.uuid"
         @drop="onDropOnTargetImage($event, imagePair.targetImage.uuid)"
-        :draggable="getImageDraggedOntoTarget(imagePair.targetImage.uuid)"
+        :draggable="
+          getImageDraggedOntoTarget(imagePair.targetImage.uuid) &&
+          !this.showResults
+        "
         @dragstart="startDragTargetImage($event, imagePair.targetImage.uuid)"
         @dragover.prevent
         @dragenter.prevent
@@ -224,6 +230,10 @@ export default defineComponent({
 
     onClickTargetImage(targetImageId: Uuid): void {
       console.log('Clicked on target image', targetImageId);
+
+      // Do nothing if we are displaying the results already
+      if (this.showResults) return;
+
       // Remove the image, if any, that has been dragged by the user onto
       // the target they have clicked.
       const usedImageId = this.imagesDraggedOntoTargets[targetImageId];

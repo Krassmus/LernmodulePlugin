@@ -5,6 +5,7 @@
         :src="targetImage.imageUrl"
         :alt="targetImage.altText"
         class="image"
+        draggable="false"
         :class="{
           correct: this.isCorrect,
           incorrect: !this.isCorrect,
@@ -17,6 +18,7 @@
         :src="draggableImage.imageUrl"
         :alt="draggableImage.altText"
         class="image"
+        draggable="false"
         :class="{
           correct: this.isCorrect,
           incorrect: !this.isCorrect,
