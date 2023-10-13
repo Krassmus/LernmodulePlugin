@@ -146,8 +146,40 @@ export const imagePairingTaskSchema = z.object({
 });
 export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
 
+// Interactive Video Block with different types of interactions that trigger
+// at different points in the video.
+// Pause interaction: Video pauses at a specific point in time
+const pauseInteractionSchema = z.object({
+  interactionType: z.literal('pause'),
+  time: z.number(), // Milliseconds
+  text: z.string(), // Sanitized HTML from Wysiwyg editor
+});
+// LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
+// point in the video for the student to solve.
+// Unfortunately, this is somewhat cumbersome to define in zod.
+// I have written this based off a recipe in the documentation of zod.
+const baseLmbTaskInteractionSchema = z.object({
+  interactionType: z.literal('lmbTask'),
+  time: z.number(),
+});
+type LmbTaskInteraction = z.infer<typeof baseLmbTaskInteractionSchema> & {
+  taskDefinition: TaskDefinition;
+};
+const lmbTaskInteractionSchema: z.ZodType<LmbTaskInteraction> =
+  baseLmbTaskInteractionSchema.extend({
+    taskDefinition: z.lazy(() => taskDefinitionSchema),
+  });
+
+// TODO for some reason, this does not compile using z.discriminatedUnion().
+// It still functions the same with union(), but discriminatedUnion() is supposed
+// to give better error messages and complete type checking faster.
+const interactiveVideoInteractionSchema = z.union([
+  pauseInteractionSchema,
+  lmbTaskInteractionSchema,
+]);
 export const interactiveVideoTaskSchema = z.object({
   task_type: z.literal('InteractiveVideo'),
+  interactions: z.array(interactiveVideoInteractionSchema),
 });
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
 
@@ -365,6 +397,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'InteractiveVideo':
       return {
         task_type: 'InteractiveVideo',
+        interactions: [],
       };
     default:
       throw new Error('Unimplemented type: ' + type);
