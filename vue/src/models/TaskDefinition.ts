@@ -146,39 +146,56 @@ export const imagePairingTaskSchema = z.object({
 });
 export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
 
-// Interactive Video Block with different types of interactions that trigger
-// at different points in the video.
+// Types for the LMB Interactive Video Block.
 // Pause interaction: Video pauses at a specific point in time
-const pauseInteractionSchema = z.object({
-  interactionType: z.literal('pause'),
+const pauseSchema = z.object({
+  type: z.literal('pause'),
   time: z.number(), // Milliseconds
   text: z.string(), // Sanitized HTML from Wysiwyg editor
 });
+
+// Overlay: An overlay is shown on top of the video over a span of time
+const overlaySchema = z.object({
+  type: z.literal('overlay'),
+  time: z.number(), // Milliseconds
+  duration: z.number(), // Milliseconds
+  text: z.string(), // Sanitized HTML from Wysiwyg editor
+});
+
 // LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
 // point in the video for the student to solve.
-// Unfortunately, this is somewhat cumbersome to define in zod.
-// I have written this based off a recipe in the documentation of zod.
-const baseLmbTaskInteractionSchema = z.object({
-  interactionType: z.literal('lmbTask'),
+// The code needed to express this type in zod is unfortunately a little bit
+// cumbersome, because it contains a recursive dependency on the 'TaskDefinition'
+// schema. This example is adapted from the documentation of zod:
+// https://github.com/colinhacks/zod#recursive-types
+const baseLmbTaskSchema = z.object({
+  type: z.literal('lmbTask'),
   time: z.number(),
 });
-type LmbTaskInteraction = z.infer<typeof baseLmbTaskInteractionSchema> & {
+type LmbTask = z.infer<typeof baseLmbTaskSchema> & {
   taskDefinition: TaskDefinition;
 };
-const lmbTaskInteractionSchema: z.ZodType<LmbTaskInteraction> =
-  baseLmbTaskInteractionSchema.extend({
-    taskDefinition: z.lazy(() => taskDefinitionSchema),
-  });
+const lmbTaskSchema: z.ZodType<LmbTask> = baseLmbTaskSchema.extend({
+  taskDefinition: z.lazy(() => taskDefinitionSchema),
+});
 
-// TODO for some reason, this does not compile using z.discriminatedUnion().
-// It still functions the same with union(), but discriminatedUnion() is supposed
-// to give better error messages and complete type checking faster.
 const interactiveVideoInteractionSchema = z.union([
-  pauseInteractionSchema,
-  lmbTaskInteractionSchema,
+  pauseSchema,
+  overlaySchema,
+  lmbTaskSchema,
 ]);
 export const interactiveVideoTaskSchema = z.object({
   task_type: z.literal('InteractiveVideo'),
+  video: z.union([
+    z.object({
+      type: z.literal('youtube'),
+      url: z.string(),
+    }),
+    z.object({
+      type: z.literal('studipFileReference'),
+      // TODO check what data needs to be saved for this feature
+    }),
+  ]),
   interactions: z.array(interactiveVideoInteractionSchema),
 });
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
@@ -398,6 +415,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'InteractiveVideo',
         interactions: [],
+        video: {
+          type: 'youtube',
+          url: '',
+        },
       };
     default:
       throw new Error('Unimplemented type: ' + type);
