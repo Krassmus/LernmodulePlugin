@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { taskEditorStore } from '@/store';
-import { InteractiveVideoTask } from '@/models/TaskDefinition';
+import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 
 export default defineComponent({
   name: 'InteractiveVideoEditor',

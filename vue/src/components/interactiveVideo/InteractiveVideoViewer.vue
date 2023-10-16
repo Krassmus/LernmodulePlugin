@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { InteractiveVideoTask } from '@/models/TaskDefinition';
+import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 
 export default defineComponent({
   name: 'InteractiveVideoViewer',
@@ -10,9 +10,16 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      counter: 0,
+    };
+  },
 });
 </script>
 
-<template><div>InteractiveVideoViewer</div></template>
+<template>
+  <div>InteractiveVideoViewer</div>
+</template>
 
 <style scoped></style>

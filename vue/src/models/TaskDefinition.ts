@@ -12,8 +12,9 @@ import ImagePairingViewer from '@/components/ImagePairingViewer.vue';
 import ImagePairingEditor from '@/components/ImagePairingEditor.vue';
 import { v4 } from 'uuid';
 import { z } from 'zod';
-import InteractiveVideoViewer from '@/components/InteractiveVideoViewer.vue';
-import InteractiveVideoEditor from '@/components/InteractiveVideoEditor.vue';
+import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
+import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
+import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
 
 export const feedbackSchema = z.object({
   percentage: z.number(),
@@ -145,60 +146,6 @@ export const imagePairingTaskSchema = z.object({
   }),
 });
 export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
-
-// Types for the LMB Interactive Video Block.
-// Pause interaction: Video pauses at a specific point in time
-const pauseSchema = z.object({
-  type: z.literal('pause'),
-  time: z.number(), // Milliseconds
-  text: z.string(), // Sanitized HTML from Wysiwyg editor
-});
-
-// Overlay: An overlay is shown on top of the video over a span of time
-const overlaySchema = z.object({
-  type: z.literal('overlay'),
-  time: z.number(), // Milliseconds
-  duration: z.number(), // Milliseconds
-  text: z.string(), // Sanitized HTML from Wysiwyg editor
-});
-
-// LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
-// point in the video for the student to solve.
-// The code needed to express this type in zod is unfortunately a little bit
-// cumbersome, because it contains a recursive dependency on the 'TaskDefinition'
-// schema. This example is adapted from the documentation of zod:
-// https://github.com/colinhacks/zod#recursive-types
-const baseLmbTaskSchema = z.object({
-  type: z.literal('lmbTask'),
-  time: z.number(),
-});
-type LmbTask = z.infer<typeof baseLmbTaskSchema> & {
-  taskDefinition: TaskDefinition;
-};
-const lmbTaskSchema: z.ZodType<LmbTask> = baseLmbTaskSchema.extend({
-  taskDefinition: z.lazy(() => taskDefinitionSchema),
-});
-
-const interactiveVideoInteractionSchema = z.union([
-  pauseSchema,
-  overlaySchema,
-  lmbTaskSchema,
-]);
-export const interactiveVideoTaskSchema = z.object({
-  task_type: z.literal('InteractiveVideo'),
-  video: z.union([
-    z.object({
-      type: z.literal('youtube'),
-      url: z.string(),
-    }),
-    z.object({
-      type: z.literal('studipFileReference'),
-      // TODO check what data needs to be saved for this feature
-    }),
-  ]),
-  interactions: z.array(interactiveVideoInteractionSchema),
-});
-export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
 
 export const taskDefinitionSchema = z.union([
   fillInTheBlanksTaskSchema,
@@ -416,8 +363,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'InteractiveVideo',
         interactions: [],
         video: {
-          type: 'youtube',
-          url: '',
+          type: 'none',
         },
       };
     default:
