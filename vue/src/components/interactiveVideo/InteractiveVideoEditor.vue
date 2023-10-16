@@ -4,9 +4,11 @@ import { taskEditorStore } from '@/store';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import CoursewareTabs from '@/components/interactiveVideo/CoursewareTabs.vue';
 import CoursewareTab from '@/components/interactiveVideo/CoursewareTab.vue';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'InteractiveVideoEditor',
+  methods: { $gettext },
   computed: {
     taskDefinition: () =>
       taskEditorStore.taskDefinition as InteractiveVideoTask,
@@ -21,7 +23,12 @@ export default defineComponent({
 <template>
   <div>Editor for interactive video</div>
   <CoursewareTabs>
-    <CoursewareTab :index="0" :name="'Video hinzufügen'" :selected="true">
+    <CoursewareTab
+      :index="0"
+      :name="$gettext('1. Video hinzufügen')"
+      :icon="'video2'"
+      :selected="true"
+    >
       First tab -- here you add the video
       <pre>{{ taskDefinition.video }}</pre>
     </CoursewareTab>
