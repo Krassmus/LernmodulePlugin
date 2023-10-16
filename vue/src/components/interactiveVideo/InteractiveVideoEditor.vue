@@ -2,9 +2,9 @@
 import { defineComponent } from 'vue';
 import { taskEditorStore } from '@/store';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
-import CoursewareTabs from '@/components/interactiveVideo/CoursewareTabs.vue';
-import CoursewareTab from '@/components/interactiveVideo/CoursewareTab.vue';
 import { $gettext } from '@/language/gettext';
+import TabsComponent from '@/components/interactiveVideo/TabsComponent.vue';
+import TabComponent from '@/components/interactiveVideo/TabComponent.vue';
 
 export default defineComponent({
   name: 'InteractiveVideoEditor',
@@ -14,25 +14,27 @@ export default defineComponent({
       taskEditorStore.taskDefinition as InteractiveVideoTask,
   },
   components: {
-    CoursewareTab,
-    CoursewareTabs,
+    TabComponent,
+    TabsComponent,
   },
 });
 </script>
 
 <template>
   <div>Editor for interactive video</div>
-  <CoursewareTabs>
-    <CoursewareTab
-      :index="0"
-      :name="$gettext('1. Video hinzufügen')"
-      :icon="'video2'"
-      :selected="true"
-    >
+  <TabsComponent>
+    <TabComponent :title="$gettext('1. Video auswählen')" icon="video2">
       First tab -- here you add the video
       <pre>{{ taskDefinition.video }}</pre>
-    </CoursewareTab>
-  </CoursewareTabs>
+    </TabComponent>
+    <TabComponent
+      :title="$gettext('2. Interaktionen hinzufügen')"
+      icon="content"
+    >
+      Second tab -- Here you add the interactions
+      <pre>{{ taskDefinition.interactions }}</pre>
+    </TabComponent>
+  </TabsComponent>
   <div>
     Task definition:
     <pre>{{ taskDefinition }}</pre>

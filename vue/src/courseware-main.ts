@@ -67,5 +67,13 @@ function initializeApp(initializeMessage: InitializeMessage) {
   app.directive('model-undoable', modelUndoable);
   app.use(store);
   app.use(gettextPlugin);
+
+  // This config is needed until Vue 3.3 in order to allow us to pass around
+  // reactive refs using provide/inject.  In particular, this functionality
+  // is used in the TabsComponent/TabComponent.vue used in the Interactive Video
+  // task editor.
+  // https://vuejs.org/guide/components/provide-inject.html#working-with-reactivity
+  app.config.unwrapInjectedRef = true;
+
   app.mount('#app');
 }
