@@ -5,6 +5,7 @@
     class="cw-tab cw-tabs-content"
     :class="{ 'cw-tab-active': isActive }"
     v-show="isActive"
+    :aria-labelledby="buttonSelector"
   >
     <slot />
   </div>
@@ -41,6 +42,11 @@ export default defineComponent({
     activeTabHash() {
       console.log('test');
       this.isActive = this.activeTabHash === this.hash;
+    },
+  },
+  computed: {
+    buttonSelector() {
+      return '#' + this.hash;
     },
   },
 });

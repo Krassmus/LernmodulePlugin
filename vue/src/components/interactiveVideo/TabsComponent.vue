@@ -13,6 +13,10 @@
           [`cw-tabs-nav-icon-solo-${tab.icon}`]:
             tab.icon !== '' && tab.name === '',
         }"
+        :aria-selected="tab.hash === activeTabHash"
+        :aria-controls="tab.hash"
+        :id="'#' + tab.hash"
+        :tabindex="0"
       >
         {{ tab.title }}
       </button>
