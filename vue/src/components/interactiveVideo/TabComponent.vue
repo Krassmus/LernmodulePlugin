@@ -1,6 +1,11 @@
 <!-- Adapted from https://zerotomastery.io/blog/tab-component-design-with-vue/ -->
 <template>
-  <div class="p-8" v-show="isActive">
+  <div
+    role="tabpanel"
+    class="cw-tab cw-tabs-content"
+    :class="{ 'cw-tab-active': isActive }"
+    v-show="isActive"
+  >
     <slot />
   </div>
 </template>
@@ -14,6 +19,11 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    icon: {
+      type: String,
+      required: false,
+      default: '',
+    },
   },
   data() {
     return { hash: '', isActive: false };
@@ -24,6 +34,7 @@ export default defineComponent({
     this.addTab({
       title: this.title,
       hash: this.hash,
+      icon: this.icon,
     });
   },
   watch: {

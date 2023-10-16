@@ -1,20 +1,22 @@
 <!-- Adapted from https://zerotomastery.io/blog/tab-component-design-with-vue/ -->
 <template>
-  <div class="border-4 border-black rounded">
-    <ul class="flex flex-nowrap justify-between">
-      <li
-        class="w-full font-black text-center py-4 cursor-pointer border-b-4 border-black"
-        :class="{
-          'bg-yellow-50': tab.hash !== activeTabHash,
-          'bg-lime-200': tab.hash === activeTabHash,
-        }"
+  <div class="cw-tabs">
+    <div role="tablist" class="cw-tabs-nav">
+      <button
         v-for="tab in tabs"
         :key="tab.title"
         @click="activeTabHash = tab.hash"
+        :class="{
+          'is-active': tab.hash === activeTabHash,
+          [`cw-tabs-nav-icon-text-${tab.icon}`]:
+            tab.icon !== '' && tab.name !== '',
+          [`cw-tabs-nav-icon-solo-${tab.icon}`]:
+            tab.icon !== '' && tab.name === '',
+        }"
       >
         {{ tab.title }}
-      </li>
-    </ul>
+      </button>
+    </div>
     <slot />
   </div>
 </template>
