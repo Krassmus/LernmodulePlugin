@@ -21,7 +21,6 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>Editor for interactive video</div>
   <TabsComponent>
     <TabComponent :title="$gettext('1. Video auswählen')" icon="video2">
       First tab -- here you add the video

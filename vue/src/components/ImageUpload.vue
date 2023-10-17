@@ -28,7 +28,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onInputChange(event: InputEvent): void {
+    onInputChange(event: Event): void {
       if (this.uploadRequestPromise) {
         console.warn(
           'ImageUpload: onInputChange fired while uploadRequestPromise is already defined.'
