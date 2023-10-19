@@ -9,6 +9,11 @@
       <div
         v-for="draggableImageId in draggableImages"
         :key="draggableImageId"
+        :draggable="
+          !this.isDraggableImageUsed(draggableImageId) && !this.showResults
+        "
+        @dragstart="startDragImage($event, draggableImageId)"
+        @click="onClickDraggableImage(draggableImageId)"
         class="draggableImageContainer"
         :class="{
           disabled:
@@ -18,11 +23,6 @@
       >
         <img
           class="draggableImage"
-          :draggable="
-            !this.isDraggableImageUsed(draggableImageId) && !this.showResults
-          "
-          @dragstart="startDragImage($event, draggableImageId)"
-          @click="onClickDraggableImage(draggableImageId)"
           :src="getImageById(draggableImageId).imageUrl"
           :alt="getImageById(draggableImageId).altText"
           ref="draggableImages"
