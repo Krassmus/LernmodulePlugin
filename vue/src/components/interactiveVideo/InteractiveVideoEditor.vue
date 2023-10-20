@@ -1,6 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { taskEditorStore } from '@/store';
+import { defineComponent, PropType } from 'vue';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
 import TabsComponent from '@/components/interactiveVideo/TabsComponent.vue';
@@ -9,10 +8,13 @@ import TabComponent from '@/components/interactiveVideo/TabComponent.vue';
 export default defineComponent({
   name: 'InteractiveVideoEditor',
   methods: { $gettext },
-  computed: {
-    taskDefinition: () =>
-      taskEditorStore.taskDefinition as InteractiveVideoTask,
+  props: {
+    taskDefinition: {
+      type: Object as PropType<InteractiveVideoTask>,
+      required: true,
+    },
   },
+  computed: {},
   components: {
     TabComponent,
     TabsComponent,
