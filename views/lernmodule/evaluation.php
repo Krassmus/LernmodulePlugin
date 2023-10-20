@@ -148,7 +148,7 @@
                         return String(node.data('timestamp') || node.text()).trim();
                     },
                     cssAsc: 'sortasc',
-                    cssDesc: 'sortdesc'<? if (count($resultrows > 2)) : ?>,
+                    cssDesc: 'sortdesc'<? if (count($resultrows) > 2) : ?>,
                     sortList : [[3,0]]
                     <? endif ?>
                 });
