@@ -36,8 +36,8 @@ const urls = [
   'http://youtu.be/dQw4w9WgXcQ?feature=youtube_gdata_player',
 ];
 
-let i, r;
-for (i = 0; i < urls.length; ++i) {
-  r = urls[i].match(regex);
-  console.log(r![1]);
-}
+// let i, r;
+// for (i = 0; i < urls.length; ++i) {
+// r = urls[i].match(regex);
+// console.log(r![1]);
+// }
