@@ -24,7 +24,10 @@ export default defineComponent({
     class="lernmodule-viewer"
   />
   <template v-if="showEditingUI">
-    <component :is="editorForTaskType(taskDefinition.task_type)" />
+    <component
+      :is="editorForTaskType(taskDefinition.task_type)"
+      :taskDefinition="taskDefinition"
+    />
     <div class="save-cancel-buttons">
       <button class="button accept" @click="saveBlock">
         {{ $gettext('Speichern') }}
