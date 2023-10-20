@@ -1,13 +1,34 @@
+<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
+<!-- eslint-disable vue/no-mutating-props -->
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
 import TabsComponent from '@/components/interactiveVideo/TabsComponent.vue';
 import TabComponent from '@/components/interactiveVideo/TabComponent.vue';
+import YoutubeEmbed from '@/components/interactiveVideo/YoutubeEmbed.vue';
 
 export default defineComponent({
   name: 'InteractiveVideoEditor',
-  methods: { $gettext },
+  data() {
+    return {
+      youtubeUrlInput: '',
+    };
+  },
+  methods: {
+    $gettext,
+    onSaveYoutubeVideo() {
+      this.taskDefinition.video = {
+        type: 'youtube',
+        url: this.youtubeUrlInput,
+      };
+    },
+    deleteVideo() {
+      this.taskDefinition.video = {
+        type: 'none',
+      };
+    },
+  },
   props: {
     taskDefinition: {
       type: Object as PropType<InteractiveVideoTask>,
@@ -16,6 +37,7 @@ export default defineComponent({
   },
   computed: {},
   components: {
+    YoutubeEmbed,
     TabComponent,
     TabsComponent,
   },
@@ -25,8 +47,32 @@ export default defineComponent({
 <template>
   <TabsComponent>
     <TabComponent :title="$gettext('1. Video auswählen')" icon="video2">
-      First tab -- here you add the video
-      <pre>{{ taskDefinition.video }}</pre>
+      {{
+        $gettext(
+          'Lade ein Video hoch oder füge einen Link zu einem Youtube-Video ein.'
+        )
+      }}
+      <div v-if="taskDefinition.video.type === 'none'">
+        <!--        <label>-->
+        <!--          {{ $gettext('Video hochladen') }}-->
+        <!--          <input type="file" @change="onPickVideoFile" />-->
+        <!--        </label>-->
+        <label>
+          {{ $gettext('Youtube-URL verwenden') }}
+          <input type="text" v-model="youtubeUrlInput" />
+        </label>
+        <button @click="onSaveYoutubeVideo">Speichern</button>
+      </div>
+      <div v-else-if="taskDefinition.video.type === 'youtube'">
+        <div>Youtube video. {{ taskDefinition.video.url }}</div>
+        <YoutubeEmbed :url="taskDefinition.video.url" />
+        <div>
+          <button @click="deleteVideo">{{ $gettext('Video löschen') }}</button>
+        </div>
+      </div>
+      <div v-else>
+        Stud.IP video. (Not implemented.) {{ taskDefinition.video }}
+      </div>
     </TabComponent>
     <TabComponent
       :title="$gettext('2. Interaktionen hinzufügen')"
