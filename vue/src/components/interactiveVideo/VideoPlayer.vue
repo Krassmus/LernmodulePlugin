@@ -45,7 +45,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <video-js ref="videoElement" class="video-js"> </video-js>
+  <video-js ref="videoElement" class="video-js vjs-fluid"> </video-js>
 </template>
 
 <style scoped></style>
