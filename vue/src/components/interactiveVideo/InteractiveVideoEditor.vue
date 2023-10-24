@@ -6,7 +6,7 @@ import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
 import TabsComponent from '@/components/interactiveVideo/TabsComponent.vue';
 import TabComponent from '@/components/interactiveVideo/TabComponent.vue';
-import YoutubeEmbed from '@/components/interactiveVideo/YoutubeEmbed.vue';
+import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 
 export default defineComponent({
   name: 'InteractiveVideoEditor',
@@ -37,7 +37,7 @@ export default defineComponent({
   },
   computed: {},
   components: {
-    YoutubeEmbed,
+    VideoPlayer,
     TabComponent,
     TabsComponent,
   },
@@ -65,7 +65,7 @@ export default defineComponent({
       </div>
       <div v-else-if="taskDefinition.video.type === 'youtube'">
         <div>Youtube video. {{ taskDefinition.video.url }}</div>
-        <YoutubeEmbed :url="taskDefinition.video.url" />
+        <VideoPlayer :url="taskDefinition.video.url" />
         <div>
           <button @click="deleteVideo">{{ $gettext('Video löschen') }}</button>
         </div>

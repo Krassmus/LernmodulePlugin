@@ -412,3 +412,13 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       throw new Error('Unimplemented task type: ' + type);
   }
 }
+
+/**
+ * @return true if the viewer for the given task type should be visible
+ * while the editor for that task type is open.
+ */
+export function showViewerAboveEditor(
+  type: TaskDefinition['task_type']
+): boolean {
+  return type !== 'InteractiveVideo';
+}
