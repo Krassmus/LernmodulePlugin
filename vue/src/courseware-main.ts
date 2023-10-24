@@ -22,7 +22,8 @@ if (!window.frameElement) {
 window.addEventListener('message', (event) => {
   const dataParseResult = iframeMessageSchema.safeParse(event.data);
   if (!dataParseResult.success) {
-    console.info('Message not recognized: ', event.data, dataParseResult.error);
+    // This produces a LOT of log spam when using the youtube iframe player api.
+    // console.info('Message not recognized: ', event.data, dataParseResult.error);
     return;
   }
   if (isString(dataParseResult.data)) {
