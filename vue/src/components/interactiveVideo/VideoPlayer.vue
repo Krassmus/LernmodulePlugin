@@ -16,6 +16,7 @@ export default defineComponent({
   data() {
     return {
       player: null as Player | null,
+      currentTime: 0,
     };
   },
   methods: {
@@ -33,6 +34,12 @@ export default defineComponent({
       },
       this.onPlayerReady
     );
+    this.player.on('timeupdate', () => {
+      const time = this.player!.currentTime();
+      if (time) {
+        this.currentTime = time;
+      }
+    });
   },
   watch: {
     url: {
@@ -46,6 +53,7 @@ export default defineComponent({
 
 <template>
   <video-js ref="videoElement" class="video-js vjs-fluid"> </video-js>
+  <pre>{{ currentTime }}</pre>
 </template>
 
 <style scoped></style>
