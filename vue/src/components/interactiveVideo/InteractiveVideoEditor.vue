@@ -7,6 +7,7 @@ import { $gettext } from '@/language/gettext';
 import TabsComponent from '@/components/interactiveVideo/TabsComponent.vue';
 import TabComponent from '@/components/interactiveVideo/TabComponent.vue';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
+import AddInteractions from '@/components/interactiveVideo/AddInteractions.vue';
 
 export default defineComponent({
   name: 'InteractiveVideoEditor',
@@ -47,6 +48,7 @@ export default defineComponent({
   },
   computed: {},
   components: {
+    AddInteractions,
     VideoPlayer,
     TabComponent,
     TabsComponent,
@@ -90,7 +92,7 @@ export default defineComponent({
       :title="$gettext('2. Interaktionen hinzufügen')"
       icon="content"
     >
-      <pre>{{ taskDefinition.interactions }}</pre>
+      <AddInteractions :task-definition="taskDefinition" />
     </TabComponent>
   </TabsComponent>
   <div>
