@@ -35,6 +35,16 @@ export default defineComponent({
       required: true,
     },
   },
+  watch: {
+    'taskDefinition.video': {
+      immediate: true,
+      handler: function (value) {
+        if (value.type === 'youtube') {
+          this.youtubeUrlInput = value.url;
+        }
+      },
+    },
+  },
   computed: {},
   components: {
     VideoPlayer,
@@ -52,7 +62,7 @@ export default defineComponent({
           'Lade ein Video hoch oder füge einen Link zu einem Youtube-Video ein.'
         )
       }}
-      <div v-if="taskDefinition.video.type === 'none'">
+      <div>
         <!--        <label>-->
         <!--          {{ $gettext('Video hochladen') }}-->
         <!--          <input type="file" @change="onPickVideoFile" />-->
@@ -63,12 +73,14 @@ export default defineComponent({
         </label>
         <button @click="onSaveYoutubeVideo">Speichern</button>
       </div>
+      <div v-if="taskDefinition.video.type === 'none'">
+        {{ $gettext('Kein Video ausgewählt') }}
+      </div>
       <div v-else-if="taskDefinition.video.type === 'youtube'">
-        <div>Youtube video. {{ taskDefinition.video.url }}</div>
-        <VideoPlayer :url="taskDefinition.video.url" />
         <div>
           <button @click="deleteVideo">{{ $gettext('Video löschen') }}</button>
         </div>
+        <VideoPlayer :video="taskDefinition.video" />
       </div>
       <div v-else>
         Stud.IP video. (Not implemented.) {{ taskDefinition.video }}
@@ -78,7 +90,6 @@ export default defineComponent({
       :title="$gettext('2. Interaktionen hinzufügen')"
       icon="content"
     >
-      Second tab -- Here you add the interactions
       <pre>{{ taskDefinition.interactions }}</pre>
     </TabComponent>
   </TabsComponent>

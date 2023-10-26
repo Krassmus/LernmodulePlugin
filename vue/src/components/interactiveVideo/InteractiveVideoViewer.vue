@@ -21,8 +21,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>InteractiveVideoViewer</div>
-  <VideoPlayer v-if="task.video.type === 'youtube'" :url="task.video.url" />
+  <div>
+    <div>InteractiveVideoViewer</div>
+    <VideoPlayer :video="task.video" />
+  </div>
 </template>
 
 <style scoped></style>
