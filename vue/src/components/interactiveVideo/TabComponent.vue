@@ -40,7 +40,6 @@ export default defineComponent({
   },
   watch: {
     activeTabHash() {
-      console.log('test');
       this.isActive = this.activeTabHash === this.hash;
     },
   },
