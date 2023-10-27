@@ -17,8 +17,13 @@ export default defineComponent({
   data() {
     return {
       player: null as Player | null,
-      currentTime: 0,
     };
+  },
+  watch: {
+    video(value) {
+      console.log('video prop changed', value);
+      this.initializePlayer();
+    },
   },
   computed: {
     videoUrl(): string {
@@ -71,21 +76,18 @@ export default defineComponent({
       this.player.on('timeupdate', () => {
         const time = this.player!.currentTime();
         if (time) {
-          this.currentTime = time;
+          this.$emit('timeupdate', time);
         }
+      });
+      this.player.on('loadedmetadata', () => {
+        this.$emit('metadataChange', {
+          length: this.player!.duration(),
+        });
       });
     },
   },
   mounted() {
     this.initializePlayer();
-  },
-  watch: {
-    video: {
-      handler(newVal) {
-        console.log('video prop changed', newVal);
-        this.initializePlayer();
-      },
-    },
   },
 });
 </script>
@@ -93,7 +95,6 @@ export default defineComponent({
 <template>
   <div>
     <div ref="container"></div>
-    <pre>{{ currentTime }}</pre>
   </div>
 </template>
 

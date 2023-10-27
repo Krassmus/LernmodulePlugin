@@ -1,6 +1,12 @@
 <template>
   <div class="timeline-root">
-    <div class="timeline">The timeline</div>
+    <div class="timeline">
+      The timeline.
+      <div>
+        Length:
+        <pre>{{ videoMetadata.length }}</pre>
+      </div>
+    </div>
     <div
       class="time-marker"
       :style="{
@@ -10,20 +16,27 @@
   </div>
 </template>
 <script lang="ts">
-export default {
+import { defineComponent, PropType } from 'vue';
+import { VideoMetadata } from '@/components/interactiveVideo/events';
+
+export default defineComponent({
   name: 'VideoTimeline',
   props: {
     currentTime: {
       type: Number,
       required: true,
     },
+    videoMetadata: {
+      type: Object as PropType<VideoMetadata>,
+      required: true,
+    },
   },
   computed: {
     positionForTimeMarker(): string {
-      return '55%';
+      return `${(this.currentTime / this.videoMetadata.length) * 100}%`;
     },
   },
-};
+});
 </script>
 <style scoped>
 .timeline {
