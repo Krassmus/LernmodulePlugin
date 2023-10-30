@@ -9,7 +9,7 @@
     class="video-timeline"
     :currentTime="currentTime"
     :videoMetadata="videoMetadata"
-    @on-timeline-seek="onTimelineSeek"
+    @timelineSeek="onTimelineSeek"
   />
 </template>
 
@@ -50,6 +50,9 @@ export default defineComponent({
     },
     onTimelineSeek(time: number) {
       console.log('onTImelineSeek', time);
+      (
+        this.$refs.videoPlayer as InstanceType<typeof VideoPlayer>
+      ).player!.currentTime(time);
     },
   },
 });

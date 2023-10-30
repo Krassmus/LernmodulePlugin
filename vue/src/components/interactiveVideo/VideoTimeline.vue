@@ -38,13 +38,30 @@ export default defineComponent({
       const timeString = date.toISOString().substring(14, 19);
       return timeString;
     },
+    onPointerDownAxis(e: PointerEvent) {
+      const rect = (
+        this.$refs.timelineAxis as HTMLElement
+      ).getBoundingClientRect();
+      const x = e.clientX - rect.left; //x position within the element.
+      const xFraction = x / rect.width;
+      const time = xFraction * this.videoMetadata.length;
+      const clampedTime = Math.min(
+        this.videoMetadata.length,
+        Math.max(0, time)
+      );
+      this.$emit('timelineSeek', clampedTime);
+    },
   },
 });
 </script>
 
 <template>
   <div class="timeline-root">
-    <div class="timeline-axis">
+    <div
+      class="timeline-axis"
+      ref="timelineAxis"
+      @pointerdown.capture="onPointerDownAxis"
+    >
       <div class="tick" v-for="(point, index) in axisScale" :key="index">
         <div class="tick-label">
           {{ index % 5 === 0 ? formatVideoTimestamp(point) : ' ' }}
@@ -85,6 +102,7 @@ export default defineComponent({
   justify-content: space-between;
   align-items: flex-end;
   gap: 1em;
+  cursor: pointer;
   .tick {
     position: relative;
     .tick-label {
