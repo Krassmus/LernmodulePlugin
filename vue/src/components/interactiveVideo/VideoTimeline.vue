@@ -19,13 +19,14 @@ export default defineComponent({
       return `${(this.currentTime / this.videoMetadata.length) * 100}%`;
     },
     axisScale(): number[] {
-      const points = 26;
+      const points = 25;
       const start = 0;
       const end = this.videoMetadata.length;
       const scale: number[] = [];
       for (let i = 0; i < points; i++) {
         scale.push(start + ((end - start) / points) * i);
       }
+      scale.push(end);
       return scale;
     },
   },
@@ -57,18 +58,18 @@ export default defineComponent({
       </div>
     </div>
     <div class="timeline">
-      The timeline.
-      <div>
-        Length:
-        <pre>{{ videoMetadata.length }}</pre>
-      </div>
+      <div
+        class="time-marker"
+        :style="{
+          left: positionForTimeMarker,
+        }"
+      />
     </div>
-    <div
-      class="time-marker"
-      :style="{
-        left: positionForTimeMarker,
-      }"
-    />
+    The timeline.
+    <div>
+      Length:
+      <pre>{{ videoMetadata.length }}</pre>
+    </div>
   </div>
 </template>
 
@@ -82,18 +83,18 @@ export default defineComponent({
   top: 0;
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+  gap: 1em;
   .tick {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    width: 1em;
+    position: relative;
     .tick-label {
+      position: absolute;
+      top: -1.5em;
+      transform: translateX(-50%);
+      text-align: center;
       white-space: pre;
-      align-self: start;
     }
     .tick-line {
-      align-self: start;
       width: 1px;
       border-left: thin solid lightgray;
       height: 1em;
@@ -104,6 +105,7 @@ export default defineComponent({
   }
 }
 .timeline {
+  position: relative;
   width: 100%;
   height: 5em;
   border: 1px solid black;
