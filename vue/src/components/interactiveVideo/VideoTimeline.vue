@@ -64,11 +64,11 @@ export default defineComponent({
           left: positionForTimeMarker,
         }"
       />
-    </div>
-    The timeline.
-    <div>
-      Length:
-      <pre>{{ videoMetadata.length }}</pre>
+      The timeline.
+      <div>
+        Length:
+        <pre>{{ videoMetadata.length }}</pre>
+      </div>
     </div>
   </div>
 </template>
