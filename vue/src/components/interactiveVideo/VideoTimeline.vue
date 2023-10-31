@@ -1,6 +1,7 @@
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { ComponentPublicInstance, defineComponent, PropType } from 'vue';
 import { VideoMetadata } from '@/components/interactiveVideo/events';
+import { throttle } from 'lodash';
 
 export default defineComponent({
   name: 'VideoTimeline',
@@ -38,25 +39,56 @@ export default defineComponent({
       const timeString = date.toISOString().substring(14, 19);
       return timeString;
     },
-    onPointerDownAxis(e: PointerEvent) {
+    /**
+     * Convert the x coordinate in pixels on the timeline to a time in seconds
+     * in the video, clamped between 0 and the video's length
+     */
+    xCoordinateToTime(clientX: number): number {
       const rect = (
         this.$refs.timelineAxis as HTMLElement
       ).getBoundingClientRect();
-      const x = e.clientX - rect.left; //x position within the element.
+      const x = clientX - rect.left; //x position within the element.
       const xFraction = x / rect.width;
       const time = xFraction * this.videoMetadata.length;
       const clampedTime = Math.min(
         this.videoMetadata.length,
         Math.max(0, time)
       );
-      this.$emit('timelineSeek', clampedTime);
+      return clampedTime;
     },
+    onPointerDownAxis(e: PointerEvent) {
+      const time = this.xCoordinateToTime(e.clientX);
+      this.$emit('timelineSeek', time);
+    },
+    onDragStartTimeMarker(e: DragEvent) {
+      console.log('dragstart time marker');
+      e.dataTransfer!.setData('type', 'timeMarker');
+    },
+    onDragTimeMarker(e: DragEvent) {},
+    onDragEndTimeMarker(e: Event) {
+      console.log('dragend time marker');
+    },
+    onDragOverTimeline(e: DragEvent) {
+      const dragType = e.dataTransfer!.getData('type');
+      if (dragType === 'timeMarker') {
+        e.preventDefault(); // Stop ghost image from flying back after drop
+        const time = this.xCoordinateToTime(e.clientX);
+        this.emitTimelineSeekThrottled(time);
+      }
+    },
+    emitTimelineSeekThrottled: throttle(function emitTimelineSeek(
+      this: ComponentPublicInstance,
+      time: number
+    ) {
+      this.$emit('timelineSeek', time);
+    },
+    100),
   },
 });
 </script>
 
 <template>
-  <div class="timeline-root">
+  <div class="timeline-root" @dragover="onDragOverTimeline">
     <div
       class="timeline-axis"
       ref="timelineAxis"
@@ -77,6 +109,10 @@ export default defineComponent({
     <div class="timeline">
       <div
         class="time-marker"
+        draggable="true"
+        @dragstart="onDragStartTimeMarker"
+        @dragend="onDragEndTimeMarker"
+        @drag="onDragTimeMarker"
         :style="{
           left: positionForTimeMarker,
         }"
@@ -103,6 +139,7 @@ export default defineComponent({
   align-items: flex-end;
   gap: 1em;
   cursor: pointer;
+  user-select: none;
   .tick {
     position: relative;
     .tick-label {
