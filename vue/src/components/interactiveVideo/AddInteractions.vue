@@ -5,6 +5,13 @@
     @timeupdate="onTimeUpdate"
     @metadataChange="onVideoMetadataChange"
   />
+  <div class="insert-interactions-buttons">
+    <button
+      type="button"
+      class="button add"
+      @click="insertInteraction('FillInTheBlanks')"
+    ></button>
+  </div>
   <VideoTimeline
     class="video-timeline"
     :currentTime="currentTime"
@@ -13,7 +20,14 @@
   />
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+//@use '../../../../../../../../resources/assets/stylesheets/scss/buttons' as
+//  buttons;
+//
+//.button.file-office {
+//  @include buttons.button-with-icon(file-office, clickable, info_alt);
+//}
+
 .video-timeline {
   margin-top: 2em;
 }
@@ -25,6 +39,7 @@ import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
 import { VideoMetadata } from '@/components/interactiveVideo/events';
+import { TaskDefinition } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'AddInteractions',
@@ -53,6 +68,9 @@ export default defineComponent({
       (
         this.$refs.videoPlayer as InstanceType<typeof VideoPlayer>
       ).player!.currentTime(time);
+    },
+    insertInteraction(type: TaskDefinition['task_type']) {
+      console.log('insertInteraction', type);
     },
   },
 });
