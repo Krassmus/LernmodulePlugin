@@ -27,6 +27,10 @@ export default defineComponent({
       type: Object as PropType<InteractiveVideoTask>,
       required: true,
     },
+    selectedInteractionId: {
+      type: String,
+      required: false,
+    },
   },
   computed: {
     positionForTimeMarker(): string {
@@ -77,10 +81,15 @@ export default defineComponent({
       const startPercent =
         (interaction.startTime / this.videoMetadata.length) * 100;
       const endPercent = (endTime / this.videoMetadata.length) * 100;
+      const isSelected = interaction.id === this.selectedInteractionId;
       return {
         left: `${startPercent}%`,
         width: `${endPercent - startPercent}%`,
+        border: isSelected ? '3px solid black' : undefined,
       };
+    },
+    onClickInteraction(interactionId: string) {
+      this.$emit('interactionSelected', interactionId);
     },
     onPointerDownAxis(e: PointerEvent) {
       const time = this.xCoordinateToTime(e.clientX);
@@ -134,6 +143,7 @@ export default defineComponent({
         :key="interaction.id"
         class="timeline-interaction"
         :style="timelineInteractionStyle(interaction)"
+        @click="onClickInteraction(interaction.id)"
       >
         Interaction {{ interaction.type }}
       </div>

@@ -19,8 +19,14 @@
     :task="taskDefinition"
     :currentTime="currentTime"
     :videoMetadata="videoMetadata"
+    :selectedInteractionId="selectedInteractionId"
     @timelineSeek="onTimelineSeek"
+    @interactionSelected="onInteractionSelected"
   />
+  <div v-if="selectedInteractionId">
+    Selected interaction:
+    <pre>{{ selectedInteraction }}</pre>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -61,9 +67,20 @@ export default defineComponent({
     return {
       currentTime: 0,
       videoMetadata: { length: 1 } as VideoMetadata,
+      selectedInteractionId: undefined as string | undefined,
     };
   },
+  computed: {
+    selectedInteraction() {
+      return this.taskDefinition.interactions.find(
+        (interaction) => interaction.id === this.selectedInteractionId
+      );
+    },
+  },
   methods: {
+    onInteractionSelected(selectionId: string) {
+      this.selectedInteractionId = selectionId;
+    },
     onVideoMetadataChange(data: VideoMetadata) {
       this.videoMetadata = data;
     },
