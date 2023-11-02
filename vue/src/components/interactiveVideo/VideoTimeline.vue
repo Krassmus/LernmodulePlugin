@@ -69,32 +69,17 @@ export default defineComponent({
       );
       return clampedTime;
     },
-    /**
-     * Convert a time in the video to an x coordinate on the timeline
-     * @param time
-     */
-    timeToXCoordinate(time: number): number {
-      const fraction = time / this.videoMetadata.length;
-      const rect = (
-        this.$refs.timelineAxis as HTMLElement | undefined
-      )?.getBoundingClientRect();
-      if (!rect) {
-        return NaN;
-      }
-      const timelineWidth = rect.width;
-      const x = fraction * timelineWidth;
-      return x;
-    },
     timelineInteractionStyle(interaction: Interaction): StyleValue {
       const endTime =
         interaction.type === 'pause'
           ? interaction.startTime + 1
           : interaction.endTime;
-      const startPixels = this.timeToXCoordinate(interaction.startTime);
-      const endPixels = this.timeToXCoordinate(endTime);
+      const startPercent =
+        (interaction.startTime / this.videoMetadata.length) * 100;
+      const endPercent = (endTime / this.videoMetadata.length) * 100;
       return {
-        left: `${startPixels}px`,
-        width: `${endPixels - startPixels}px`,
+        left: `${startPercent}%`,
+        width: `${endPercent - startPercent}%`,
       };
     },
     onPointerDownAxis(e: PointerEvent) {
@@ -186,7 +171,7 @@ export default defineComponent({
     position: absolute;
     height: 100%;
     box-sizing: border-box;
-    border: 1px solid transparent;
+    border: 2px solid darkgrey;
     background: #e7ebf1;
   }
 }
