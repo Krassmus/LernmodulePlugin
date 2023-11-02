@@ -54,7 +54,7 @@ export default defineComponent({
     },
     /**
      * Convert the x coordinate in pixels on the timeline to a time in seconds
-     * in the video, clamped between 0 and the video's length
+     * in the video, clamped between 0 and the video's length.
      */
     xCoordinateToTime(clientX: number): number {
       const rect = (
@@ -89,10 +89,6 @@ export default defineComponent({
     onDragStartTimeMarker(e: DragEvent) {
       console.log('dragstart time marker');
       e.dataTransfer!.setData('type', 'timeMarker');
-    },
-    onDragTimeMarker(e: DragEvent) {},
-    onDragEndTimeMarker(e: Event) {
-      console.log('dragend time marker');
     },
     onDragOverTimeline(e: DragEvent) {
       const dragType = e.dataTransfer!.getData('type');
@@ -146,8 +142,6 @@ export default defineComponent({
         class="time-marker"
         draggable="true"
         @dragstart="onDragStartTimeMarker"
-        @dragend="onDragEndTimeMarker"
-        @drag="onDragTimeMarker"
         :style="{
           left: positionForTimeMarker,
         }"
