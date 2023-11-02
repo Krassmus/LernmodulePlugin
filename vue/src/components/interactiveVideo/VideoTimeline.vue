@@ -1,7 +1,16 @@
 <script lang="ts">
-import { ComponentPublicInstance, defineComponent, PropType } from 'vue';
+import {
+  ComponentPublicInstance,
+  defineComponent,
+  PropType,
+  StyleValue,
+} from 'vue';
 import { VideoMetadata } from '@/components/interactiveVideo/events';
 import { throttle } from 'lodash';
+import {
+  Interaction,
+  InteractiveVideoTask,
+} from '@/models/InteractiveVideoTask';
 
 export default defineComponent({
   name: 'VideoTimeline',
@@ -12,6 +21,10 @@ export default defineComponent({
     },
     videoMetadata: {
       type: Object as PropType<VideoMetadata>,
+      required: true,
+    },
+    task: {
+      type: Object as PropType<InteractiveVideoTask>,
       required: true,
     },
   },
@@ -55,6 +68,34 @@ export default defineComponent({
         Math.max(0, time)
       );
       return clampedTime;
+    },
+    /**
+     * Convert a time in the video to an x coordinate on the timeline
+     * @param time
+     */
+    timeToXCoordinate(time: number): number {
+      const fraction = time / this.videoMetadata.length;
+      const rect = (
+        this.$refs.timelineAxis as HTMLElement | undefined
+      )?.getBoundingClientRect();
+      if (!rect) {
+        return NaN;
+      }
+      const timelineWidth = rect.width;
+      const x = fraction * timelineWidth;
+      return x;
+    },
+    timelineInteractionStyle(interaction: Interaction): StyleValue {
+      const endTime =
+        interaction.type === 'pause'
+          ? interaction.startTime + 1
+          : interaction.endTime;
+      const startPixels = this.timeToXCoordinate(interaction.startTime);
+      const endPixels = this.timeToXCoordinate(endTime);
+      return {
+        left: `${startPixels}px`,
+        width: `${endPixels - startPixels}px`,
+      };
     },
     onPointerDownAxis(e: PointerEvent) {
       const time = this.xCoordinateToTime(e.clientX);
@@ -108,6 +149,15 @@ export default defineComponent({
     </div>
     <div class="timeline">
       <div
+        v-for="interaction in task.interactions"
+        :key="interaction.id"
+        class="timeline-interaction"
+        :style="timelineInteractionStyle(interaction)"
+      >
+        Interaction {{ interaction.type }}
+      </div>
+
+      <div
         class="time-marker"
         draggable="true"
         @dragstart="onDragStartTimeMarker"
@@ -117,11 +167,6 @@ export default defineComponent({
           left: positionForTimeMarker,
         }"
       />
-      The timeline.
-      <div>
-        Length:
-        <pre>{{ videoMetadata.length }}</pre>
-      </div>
     </div>
   </div>
 </template>
@@ -132,6 +177,35 @@ export default defineComponent({
   margin-left: 1em;
   margin-right: 1em;
 }
+.timeline {
+  position: relative;
+  width: 100%;
+  height: 5em;
+  border: 1px solid black;
+  .timeline-interaction {
+    position: absolute;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    background: #e7ebf1;
+  }
+}
+.time-marker {
+  position: absolute;
+  top: 0;
+  height: 5em;
+  width: 2px;
+  background-color: blue;
+}
+.time-marker::before {
+  content: '';
+  position: absolute;
+  top: -1em;
+  height: 1em;
+  width: 1em;
+  background-color: blue;
+}
+
 .timeline-axis {
   top: 0;
   display: flex;
@@ -158,26 +232,5 @@ export default defineComponent({
       }
     }
   }
-}
-.timeline {
-  position: relative;
-  width: 100%;
-  height: 5em;
-  border: 1px solid black;
-}
-.time-marker {
-  position: absolute;
-  top: 0;
-  height: 5em;
-  width: 2px;
-  background-color: blue;
-}
-.time-marker::before {
-  content: '';
-  position: absolute;
-  top: -1em;
-  height: 1em;
-  width: 1em;
-  background-color: blue;
 }
 </style>

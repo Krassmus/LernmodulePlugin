@@ -10,10 +10,13 @@
       type="button"
       class="button add"
       @click="insertInteraction('FillInTheBlanks')"
-    ></button>
+    >
+      Fill In The Blanks
+    </button>
   </div>
   <VideoTimeline
     class="video-timeline"
+    :task="taskDefinition"
     :currentTime="currentTime"
     :videoMetadata="videoMetadata"
     @timelineSeek="onTimelineSeek"
@@ -35,11 +38,15 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
+import {
+  Interaction,
+  InteractiveVideoTask,
+} from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
 import { VideoMetadata } from '@/components/interactiveVideo/events';
-import { TaskDefinition } from '@/models/TaskDefinition';
+import { newTask, TaskDefinition } from '@/models/TaskDefinition';
+import { v4 } from 'uuid';
 
 export default defineComponent({
   name: 'AddInteractions',
@@ -71,6 +78,17 @@ export default defineComponent({
     },
     insertInteraction(type: TaskDefinition['task_type']) {
       console.log('insertInteraction', type);
+      const task = newTask(type);
+      const interaction: Interaction = {
+        type: 'lmbTask',
+        id: v4(),
+        taskDefinition: task,
+        startTime: this.currentTime,
+        endTime: Math.min(this.videoMetadata.length, this.currentTime + 10),
+      };
+      // TODO make undoable ?
+      // eslint-disable-next-line vue/no-mutating-props
+      this.taskDefinition.interactions.push(interaction);
     },
   },
 });

@@ -7,15 +7,17 @@ import { TaskDefinition, taskDefinitionSchema } from '@/models/TaskDefinition';
 // Pause interaction: Video pauses at a specific point in time
 const pauseSchema = z.object({
   type: z.literal('pause'),
-  time: z.number(), // Milliseconds
+  id: z.string(),
+  startTime: z.number(), // Seconds
   text: z.string(), // Sanitized HTML from Wysiwyg editor
 });
 
 // Overlay: An overlay is shown on top of the video over a span of time
 const overlaySchema = z.object({
   type: z.literal('overlay'),
-  time: z.number(), // Milliseconds
-  duration: z.number(), // Milliseconds
+  id: z.string(),
+  startTime: z.number(), // Seconds
+  endTime: z.number(), // Seconds
   text: z.string(), // Sanitized HTML from Wysiwyg editor
 });
 
@@ -27,7 +29,9 @@ const overlaySchema = z.object({
 // https://github.com/colinhacks/zod#recursive-types
 const baseLmbTaskSchema = z.object({
   type: z.literal('lmbTask'),
-  time: z.number(),
+  id: z.string(),
+  startTime: z.number(), // Seconds
+  endTime: z.number(), // Seconds
 });
 type LmbTask = z.infer<typeof baseLmbTaskSchema> & {
   taskDefinition: TaskDefinition;
@@ -35,12 +39,12 @@ type LmbTask = z.infer<typeof baseLmbTaskSchema> & {
 const lmbTaskSchema: z.ZodType<LmbTask> = baseLmbTaskSchema.extend({
   taskDefinition: z.lazy(() => taskDefinitionSchema),
 });
-
-const interactiveVideoInteractionSchema = z.union([
-  pauseSchema,
-  overlaySchema,
-  lmbTaskSchema,
-]);
+const interactiveVideoInteractionSchema = z
+  .union([pauseSchema, overlaySchema, lmbTaskSchema])
+  .refine((data) => data.type === 'pause' || data.endTime > data.startTime, {
+    message: 'endTime cannot be earlier than startTime',
+    path: ['endTime'],
+  });
 
 export const interactiveVideoTaskSchema = z.object({
   task_type: z.literal('InteractiveVideo'),
@@ -59,4 +63,5 @@ export const interactiveVideoTaskSchema = z.object({
   ]),
   interactions: z.array(interactiveVideoInteractionSchema),
 });
+export type Interaction = z.infer<typeof interactiveVideoInteractionSchema>;
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
