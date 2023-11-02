@@ -25,7 +25,7 @@
       </button>
     </div>
 
-    <EditedImage
+    <ImageSequencingEditorImage
       v-if="this.taskDefinition.images[this.selectedImageIndex]"
       class="edited-memory-card"
       :image="this.taskDefinition.images[this.selectedImageIndex]"
@@ -44,11 +44,11 @@ import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { v4 } from 'uuid';
-import EditedImage from '@/components/EditedImage.vue';
+import ImageSequencingEditorImage from '@/components/ImageSequencingEditorImage.vue';
 
 export default defineComponent({
   name: 'ImageSequencingEditor',
-  components: { EditedImage },
+  components: { ImageSequencingEditorImage },
   props: {
     task: {
       type: Object as PropType<ImageSequencingTask>,

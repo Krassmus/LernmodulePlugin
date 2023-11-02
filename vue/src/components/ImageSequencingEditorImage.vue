@@ -8,7 +8,7 @@
           v-if="image.imageUrl"
           :src="image.imageUrl"
           :alt="image.altText"
-          class="edited-image-pair-image"
+          class="image-sequencing-editor-image"
         />
         <ImageUpload v-else @imageUploaded="onUploadImage" />
       </div>
@@ -28,17 +28,12 @@
 import { defineComponent, PropType } from 'vue';
 import ImageUpload from '@/components/ImageUpload.vue';
 import { $gettext } from '@/language/gettext';
-import {
-  Image,
-  ImagePair,
-  ImagePairingTask,
-  ImageSequencingTask,
-} from '@/models/TaskDefinition';
+import { Image, ImageSequencingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 
 export default defineComponent({
-  name: 'EditedImage',
+  name: 'ImageSequencingEditorImage',
   components: { ImageUpload },
   props: {
     image: {
@@ -82,7 +77,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.edited-image-pair-image {
+.image-sequencing-editor-image {
   object-fit: contain;
   object-position: center;
   width: 8em;
