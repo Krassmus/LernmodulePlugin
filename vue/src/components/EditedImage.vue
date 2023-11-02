@@ -4,7 +4,12 @@
       <legend>{{ $gettext('Bild') }}</legend>
       <div>
         <h4>{{ $gettext('Das Bild') }}</h4>
-        <EditedImagePairImage v-if="image.imageUrl" :image="image" />
+        <img
+          v-if="image.imageUrl"
+          :src="image.imageUrl"
+          :alt="image.altText"
+          class="edited-image-pair-image"
+        />
         <ImageUpload v-else @imageUploaded="onUploadImage" />
       </div>
       <label
@@ -31,7 +36,6 @@ import {
 } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
-import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 
 export default defineComponent({
   name: 'EditedImage',
@@ -77,4 +81,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.edited-image-pair-image {
+  object-fit: contain;
+  object-position: center;
+  width: 8em;
+  height: 8em;
+}
+</style>
