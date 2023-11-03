@@ -90,6 +90,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['updateAttempt'],
   data() {
     return {
       imageIdInteractedWith: undefined as Uuid | undefined,
@@ -156,6 +157,11 @@ export default defineComponent({
           const cloneOfParent = parentElementOfImage.cloneNode(
             true
           ) as HTMLElement;
+
+          cloneOfParent.style.top = '0';
+          cloneOfParent.style.left = '0';
+          cloneOfParent.style.position = 'absolute';
+          cloneOfParent.style.zIndex = '-999';
 
           parentElementOfImage.parentElement!.append(cloneOfParent);
 
