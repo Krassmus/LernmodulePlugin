@@ -13,11 +13,14 @@
           !this.isDraggableImageUsed(draggableImageId) && !this.showResults
         "
         @dragstart="startDragImage($event, draggableImageId)"
+        @dragend="endDragImage($event, draggableImageId)"
         @click="onClickDraggableImage(draggableImageId)"
         class="draggableImageContainer"
         :class="{
           disabled:
-            this.isDraggableImageUsed(draggableImageId) || this.showResults,
+            this.isDraggableImageUsed(draggableImageId) ||
+            this.showResults ||
+            this.draggedImageId === draggableImageId,
           selected: this.imageIdInteractedWith === draggableImageId,
         }"
       >
@@ -90,9 +93,10 @@ export default defineComponent({
   data() {
     return {
       imageIdInteractedWith: undefined as Uuid | undefined,
+      draggedImageId: undefined as Uuid | undefined,
       // We used Record instead of Set because I wasn't sure if sets are
       // reactive in Vue 3.
-      // Record from target ID -> draggable image ID
+      // Record from target ID -> draggable image ID.
       imagesDraggedOntoTargets: {} as Record<Uuid, Uuid>,
       showResults: false as boolean,
     };
@@ -136,6 +140,7 @@ export default defineComponent({
       if (!this.isDraggableImageUsed(imageId)) {
         console.log('Dragging image:', imageId);
         this.imageIdInteractedWith = imageId;
+        this.draggedImageId = imageId;
 
         dragEvent.dataTransfer!.dropEffect = 'move';
         dragEvent.dataTransfer!.effectAllowed = 'move';
@@ -147,14 +152,27 @@ export default defineComponent({
 
         const parentElementOfImage = refToImage?.parentElement!;
 
-        if (parentElementOfImage) {
+        if (refToImage && parentElementOfImage) {
+          const cloneOfParent = parentElementOfImage.cloneNode(
+            true
+          ) as HTMLElement;
+
+          parentElementOfImage.parentElement!.append(cloneOfParent);
+
           dragEvent.dataTransfer!.setDragImage(
-            parentElementOfImage,
+            cloneOfParent,
             parentElementOfImage.clientWidth / 2,
             parentElementOfImage.clientHeight / 2
           );
+
+          setTimeout(() => cloneOfParent.remove());
         }
       }
+    },
+
+    endDragImage(dragEvent: DragEvent, imageId: string): void {
+      this.imageIdInteractedWith = undefined;
+      this.draggedImageId = undefined;
     },
 
     startDragTargetImage(dragEvent: DragEvent, targetImageId: Uuid): void {
