@@ -95,7 +95,7 @@ export default defineComponent({
       <AddInteractions :task-definition="taskDefinition" />
     </TabComponent>
   </TabsComponent>
-  <div>
+  <div style="display: none">
     Task definition:
     <pre>{{ taskDefinition }}</pre>
   </div>
