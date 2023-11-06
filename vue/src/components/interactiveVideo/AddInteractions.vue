@@ -113,6 +113,8 @@ export default defineComponent({
         taskDefinition: task,
         startTime: this.currentTime,
         endTime: Math.min(this.videoMetadata.length, this.currentTime + 10),
+        x: 0.5,
+        y: 0.5,
       };
       // TODO make undoable ?
       // eslint-disable-next-line vue/no-mutating-props

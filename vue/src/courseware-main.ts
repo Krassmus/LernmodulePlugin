@@ -22,10 +22,29 @@ if (!window.frameElement) {
 window.addEventListener('message', (event) => {
   const dataParseResult = iframeMessageSchema.safeParse(event.data);
   if (!dataParseResult.success) {
-    // This produces a LOT of log spam when using the youtube iframe player api.
+    // Logging every single parsing failure produces a LOT of log spam when using the
+    // youtube iframe player api.
     // console.info('Message not recognized: ', event.data, dataParseResult.error);
+    if (event.data?.type === 'InitializeCoursewareBlock') {
+      // If the TaskDefinition loaded from the database does not match the current
+      // TaskDefinition schema, the parsing error will be printed here.  This may
+      // happen if, for example, we add a new non-optional field and the task definition
+      // in the database is missing that field.
+      // The error message may be hard to understand, because the datatype encoded by
+      // iframeMessageSchema is very big and nested.
+      // To improve the quality of the zod error messages we receive, I think it may be
+      // useful to split the parsing into two stages -- recognizing which iframe message
+      // type, and then parsing a TaskDefinition inside of the message, if needed.
+      // TODO #15
+      console.info(
+        'Message not recognized: ',
+        event.data,
+        dataParseResult.error
+      );
+    }
     return;
   }
+
   if (isString(dataParseResult.data)) {
     // Either a 'webpackHotUpdatea324efae9d340c78' (or something like it)
     // or a message sent by the iFrameSizer library. We can ignore it.

@@ -18,6 +18,8 @@ const overlaySchema = z.object({
   id: z.string(),
   startTime: z.number(), // Seconds
   endTime: z.number(), // Seconds
+  x: z.number(), // Position, as a fraction of video width, between 0 and 1
+  y: z.number(), // Position, as a fraction of video height, between 0 and 1
   text: z.string(), // Sanitized HTML from Wysiwyg editor
 });
 
@@ -32,6 +34,8 @@ const baseLmbTaskSchema = z.object({
   id: z.string(),
   startTime: z.number(), // Seconds
   endTime: z.number(), // Seconds
+  x: z.number(), // Position, as a fraction of video width, between 0 and 1
+  y: z.number(), // Position, as a fraction of video height, between 0 and 1
 });
 type LmbTask = z.infer<typeof baseLmbTaskSchema> & {
   taskDefinition: TaskDefinition;
