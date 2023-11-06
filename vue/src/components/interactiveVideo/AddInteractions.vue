@@ -23,9 +23,15 @@
     @timelineSeek="onTimelineSeek"
     @interactionSelected="onInteractionSelected"
   />
-  <div v-if="selectedInteractionId">
-    Selected interaction:
-    <pre>{{ selectedInteraction }}</pre>
+  <div v-if="selectedInteraction">
+    Selected interaction type: {{ selectedInteraction.type }}
+    <component
+      v-if="selectedInteraction.type === 'lmbTask'"
+      :key="selectedInteraction.id"
+      :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
+      :taskDefinition="selectedInteraction.taskDefinition"
+    >
+    </component>
   </div>
 </template>
 
@@ -51,7 +57,11 @@ import {
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
 import { VideoMetadata } from '@/components/interactiveVideo/events';
-import { newTask, TaskDefinition } from '@/models/TaskDefinition';
+import {
+  editorForTaskType,
+  newTask,
+  TaskDefinition,
+} from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 
 export default defineComponent({
@@ -71,13 +81,14 @@ export default defineComponent({
     };
   },
   computed: {
-    selectedInteraction() {
+    selectedInteraction(): Interaction | undefined {
       return this.taskDefinition.interactions.find(
         (interaction) => interaction.id === this.selectedInteractionId
       );
     },
   },
   methods: {
+    editorForTaskType,
     onInteractionSelected(selectionId: string) {
       this.selectedInteractionId = selectionId;
     },
