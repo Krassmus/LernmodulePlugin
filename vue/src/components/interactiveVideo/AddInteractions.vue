@@ -22,6 +22,7 @@
     :selectedInteractionId="selectedInteractionId"
     @timelineSeek="onTimelineSeek"
     @interactionSelected="onInteractionSelected"
+    @deleteInteraction="deleteInteraction"
   />
   <div v-if="selectedInteraction">
     Selected interaction type: {{ selectedInteraction.type }}
@@ -119,6 +120,14 @@ export default defineComponent({
       // TODO make undoable ?
       // eslint-disable-next-line vue/no-mutating-props
       this.taskDefinition.interactions.push(interaction);
+    },
+    deleteInteraction(id: string) {
+      console.log('deleteInteraction', id);
+      const index = this.taskDefinition.interactions.findIndex(
+        (i) => i.id === id
+      );
+      // eslint-disable-next-line vue/no-mutating-props
+      this.taskDefinition.interactions.splice(index, 1);
     },
   },
 });

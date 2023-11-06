@@ -11,6 +11,7 @@ import {
   Interaction,
   InteractiveVideoTask,
 } from '@/models/InteractiveVideoTask';
+import { $gettext } from '../../language/gettext';
 
 export default defineComponent({
   name: 'VideoTimeline',
@@ -49,6 +50,7 @@ export default defineComponent({
     },
   },
   methods: {
+    $gettext,
     // mm:ss
     formatVideoTimestamp(seconds: number): string {
       const date = new Date(0);
@@ -146,6 +148,13 @@ export default defineComponent({
         @click="onClickInteraction(interaction.id)"
       >
         Interaction {{ interaction.type }}
+        <button
+          type="button"
+          class="button delete"
+          @click="$emit('deleteInteraction', interaction.id)"
+        >
+          {{ $gettext('Löschen') }}
+        </button>
       </div>
 
       <div
