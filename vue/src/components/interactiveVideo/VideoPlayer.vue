@@ -53,7 +53,7 @@ export default defineComponent({
     visibleInteractions(): Interaction[] {
       return this.task.interactions.filter((i) => {
         const endTime = i.type === 'pause' ? i.startTime + 1 : i.endTime;
-        return i.startTime < this.time && endTime > this.time;
+        return i.startTime <= this.time && endTime > this.time;
       });
     },
   },

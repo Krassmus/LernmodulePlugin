@@ -121,6 +121,7 @@ export default defineComponent({
       // TODO make undoable ?
       // eslint-disable-next-line vue/no-mutating-props
       this.taskDefinition.interactions.push(interaction);
+      this.selectedInteractionId = interaction.id;
     },
     deleteInteraction(id: string) {
       console.log('deleteInteraction', id);
