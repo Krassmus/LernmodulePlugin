@@ -1,9 +1,10 @@
 <template>
   <VideoPlayer
     ref="videoPlayer"
-    :video="taskDefinition.video"
+    :task="taskDefinition"
     @timeupdate="onTimeUpdate"
     @metadataChange="onVideoMetadataChange"
+    @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
   />
   <div class="insert-interactions-buttons">
     <button
@@ -21,7 +22,7 @@
     :videoMetadata="videoMetadata"
     :selectedInteractionId="selectedInteractionId"
     @timelineSeek="onTimelineSeek"
-    @interactionSelected="onInteractionSelected"
+    @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
     @deleteInteraction="deleteInteraction"
   />
   <div v-if="selectedInteraction">
@@ -90,7 +91,7 @@ export default defineComponent({
   },
   methods: {
     editorForTaskType,
-    onInteractionSelected(selectionId: string) {
+    selectInteraction(selectionId: string) {
       this.selectedInteractionId = selectionId;
     },
     onVideoMetadataChange(data: VideoMetadata) {

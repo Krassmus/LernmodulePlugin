@@ -90,8 +90,8 @@ export default defineComponent({
         border: isSelected ? '3px solid black' : undefined,
       };
     },
-    onClickInteraction(interactionId: string) {
-      this.$emit('interactionSelected', interactionId);
+    onClickInteraction(interaction: Interaction) {
+      this.$emit('clickInteraction', interaction);
     },
     onPointerDownAxis(e: PointerEvent) {
       const time = this.xCoordinateToTime(e.clientX);
@@ -145,7 +145,7 @@ export default defineComponent({
         :key="interaction.id"
         class="timeline-interaction"
         :style="timelineInteractionStyle(interaction)"
-        @click="onClickInteraction(interaction.id)"
+        @click="onClickInteraction(interaction)"
       >
         Interaction {{ interaction.type }}
         <button

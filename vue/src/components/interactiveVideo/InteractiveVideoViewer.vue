@@ -23,7 +23,7 @@ export default defineComponent({
 <template>
   <div>
     <div>InteractiveVideoViewer</div>
-    <VideoPlayer :video="task.video" />
+    <VideoPlayer :task="task" />
   </div>
 </template>
 

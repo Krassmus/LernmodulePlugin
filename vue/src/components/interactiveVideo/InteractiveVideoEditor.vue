@@ -82,7 +82,7 @@ export default defineComponent({
         <div>
           <button @click="deleteVideo">{{ $gettext('Video löschen') }}</button>
         </div>
-        <VideoPlayer :video="taskDefinition.video" />
+        <VideoPlayer :task="taskDefinition" />
       </div>
       <div v-else>
         Stud.IP video. (Not implemented.) {{ taskDefinition.video }}

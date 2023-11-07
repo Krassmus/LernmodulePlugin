@@ -4,43 +4,57 @@ import videojs from 'video.js';
 import Player from 'video.js/dist/types/player';
 require('!style-loader!css-loader!video.js/dist/video-js.css');
 import 'videojs-youtube/dist/Youtube.min.js';
-import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
+import {
+  Interaction,
+  InteractiveVideoTask,
+} from '@/models/InteractiveVideoTask';
 
 export default defineComponent({
   name: 'VideoPlayer',
   props: {
-    video: {
-      type: Object as PropType<InteractiveVideoTask['video']>,
+    task: {
+      type: Object as PropType<InteractiveVideoTask>,
       required: true,
     },
   },
   data() {
     return {
       player: null as Player | null,
+      time: 0,
     };
   },
   watch: {
-    video(value) {
+    'task.video': function (value) {
       console.log('video prop changed', value);
       this.initializePlayer();
     },
   },
   computed: {
     videoUrl(): string {
-      switch (this.video.type) {
+      switch (this.task.video.type) {
         case 'youtube':
-          return this.video.url;
+          return this.task.video.url;
         default:
           return '';
       }
     },
     videoType(): string | undefined {
-      switch (this.video.type) {
+      switch (this.task.video.type) {
         case 'youtube':
           return 'video/youtube';
         default:
           return '';
       }
+    },
+    /**
+     * @return a list of Interaction objects whose clickable icons (or other elements)
+     * should be shown overlaid over the video at the timestamp given by this.time.
+     */
+    visibleInteractions(): Interaction[] {
+      return this.task.interactions.filter((i) => {
+        const endTime = i.type === 'pause' ? i.startTime + 1 : i.endTime;
+        return i.startTime < this.time && endTime > this.time;
+      });
     },
   },
   methods: {
@@ -77,6 +91,7 @@ export default defineComponent({
         const time = this.player!.currentTime();
         if (time) {
           this.$emit('timeupdate', time);
+          this.time = time;
         }
       });
       this.player.on('loadedmetadata', () => {
@@ -84,6 +99,10 @@ export default defineComponent({
           length: this.player!.duration(),
         });
       });
+    },
+    onClickInteraction(interaction: Interaction): void {
+      this.$emit('clickInteraction', interaction);
+      console.log('onClickInteraction', interaction);
     },
   },
   mounted() {
@@ -93,9 +112,43 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>
+  <div class="video-player-root">
     <div ref="container"></div>
+    <template v-for="interaction in visibleInteractions" :key="interaction.id">
+      <button
+        v-if="interaction.type === 'lmbTask'"
+        type="button"
+        class="video-player-overlay"
+        :style="{
+          left: `${interaction.x * 100}%`,
+          top: `${interaction.y * 100}%`,
+        }"
+        @click="onClickInteraction(interaction)"
+      >
+        <div>{{ interaction.taskDefinition.task_type }}</div>
+      </button>
+    </template>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.video-player-root {
+  position: relative;
+}
+.video-player-overlays {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+.video-player-overlay {
+  position: absolute;
+  background: white;
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
