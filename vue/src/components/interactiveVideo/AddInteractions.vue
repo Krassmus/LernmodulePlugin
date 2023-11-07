@@ -25,8 +25,26 @@
     @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
     @deleteInteraction="deleteInteraction"
   />
-  <div v-if="selectedInteraction">
-    Selected interaction type: {{ selectedInteraction.type }}
+  <form
+    v-if="selectedInteraction"
+    class="default selected-interaction-properties"
+  >
+    <fieldset>
+      <legend>
+        {{ printInteractionType(selectedInteraction) }}
+        {{ $gettext('bearbeiten') }}
+      </legend>
+      <label v-if="selectedInteraction.type === 'pause'">
+        {{ $gettext('Zeitpunkt') }}
+        <input type="number" v-model="selectedInteraction.startTime" />
+      </label>
+      <label v-else>
+        {{ $gettext('Start') }}
+        <input type="number" v-model="selectedInteraction.startTime" />
+        {{ $gettext('Ende') }}
+        <input type="number" v-model="selectedInteraction.endTime" />
+      </label>
+    </fieldset>
     <component
       v-if="selectedInteraction.type === 'lmbTask'"
       :key="selectedInteraction.id"
@@ -34,7 +52,7 @@
       :taskDefinition="selectedInteraction.taskDefinition"
     >
     </component>
-  </div>
+  </form>
 </template>
 
 <style scoped lang="scss">
@@ -48,6 +66,10 @@
 .video-timeline {
   margin-top: 2em;
 }
+
+.selected-interaction-properties {
+  margin-top: 2em;
+}
 </style>
 
 <script lang="ts">
@@ -55,6 +77,7 @@ import { defineComponent, PropType } from 'vue';
 import {
   Interaction,
   InteractiveVideoTask,
+  printInteractionType,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
@@ -65,6 +88,7 @@ import {
   TaskDefinition,
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
+import { $gettext } from '../../language/gettext';
 
 export default defineComponent({
   name: 'AddInteractions',
@@ -90,6 +114,8 @@ export default defineComponent({
     },
   },
   methods: {
+    printInteractionType,
+    $gettext,
     editorForTaskType,
     selectInteraction(selectionId: string) {
       this.selectedInteractionId = selectionId;

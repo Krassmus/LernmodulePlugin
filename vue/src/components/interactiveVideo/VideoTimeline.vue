@@ -10,6 +10,7 @@ import { throttle } from 'lodash';
 import {
   Interaction,
   InteractiveVideoTask,
+  printInteractionType,
 } from '@/models/InteractiveVideoTask';
 import { $gettext } from '../../language/gettext';
 
@@ -50,6 +51,7 @@ export default defineComponent({
     },
   },
   methods: {
+    printInteractionType,
     $gettext,
     // mm:ss
     formatVideoTimestamp(seconds: number): string {
@@ -147,7 +149,7 @@ export default defineComponent({
         :style="timelineInteractionStyle(interaction)"
         @click="onClickInteraction(interaction)"
       >
-        Interaction {{ interaction.type }}
+        {{ printInteractionType(interaction) }}
         <button
           type="button"
           class="button delete"

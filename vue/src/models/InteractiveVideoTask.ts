@@ -1,6 +1,11 @@
 // Types for the Interactive Video task type.
 import { z } from 'zod';
-import { TaskDefinition, taskDefinitionSchema } from '@/models/TaskDefinition';
+import {
+  printTaskType,
+  TaskDefinition,
+  taskDefinitionSchema,
+} from '@/models/TaskDefinition';
+import { $gettext } from '@/language/gettext';
 
 // There are different types of 'interaction' which can be added to the video.
 
@@ -71,3 +76,14 @@ export const interactiveVideoTaskSchema = z.object({
 });
 export type Interaction = z.infer<typeof interactiveVideoInteractionSchema>;
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
+
+export function printInteractionType(interaction: Interaction): string {
+  switch (interaction.type) {
+    case 'pause':
+      return $gettext('Pause');
+    case 'lmbTask':
+      return printTaskType(interaction.taskDefinition.task_type);
+    case 'overlay':
+      return $gettext('Einblendung');
+  }
+}

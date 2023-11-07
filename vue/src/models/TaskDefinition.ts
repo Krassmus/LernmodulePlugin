@@ -15,6 +15,7 @@ import { z } from 'zod';
 import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
 import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
 import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
+import { $gettext } from '@/language/gettext';
 
 export const feedbackSchema = z.object({
   percentage: z.number(),
@@ -410,6 +411,25 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return InteractiveVideoEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
+  }
+}
+
+export function printTaskType(type: TaskDefinition['task_type']): string {
+  switch (type) {
+    case 'Memory':
+      return $gettext('Memory');
+    case 'FillInTheBlanks':
+      return $gettext('Fill In The Blanks');
+    case 'Question':
+      return $gettext('Question');
+    case 'DragTheWords':
+      return $gettext('Drag The Words');
+    case 'MarkTheWords':
+      return $gettext('Mark The Words');
+    case 'ImagePairing':
+      return $gettext('Image Pairing');
+    case 'InteractiveVideo':
+      return $gettext('Interactive Video');
   }
 }
 
