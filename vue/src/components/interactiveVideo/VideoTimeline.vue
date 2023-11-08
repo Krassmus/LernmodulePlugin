@@ -141,13 +141,13 @@ export default defineComponent({
         ></div>
       </div>
     </div>
-    <div class="timeline">
+    <div class="timeline" @pointerdown.self="onPointerDownAxis">
       <div
         v-for="interaction in task.interactions"
         :key="interaction.id"
         class="timeline-interaction"
         :style="timelineInteractionStyle(interaction)"
-        @click="onClickInteraction(interaction)"
+        @click.stop="onClickInteraction(interaction)"
       >
         {{ printInteractionType(interaction) }}
         <button
@@ -182,12 +182,14 @@ export default defineComponent({
   width: 100%;
   height: 5em;
   border: 1px solid black;
+  cursor: text;
   .timeline-interaction {
     position: absolute;
     height: 100%;
     box-sizing: border-box;
     border: 2px solid darkgrey;
     background: #e7ebf1;
+    cursor: default;
   }
 }
 .time-marker {
@@ -212,7 +214,7 @@ export default defineComponent({
   justify-content: space-between;
   align-items: flex-end;
   gap: 1em;
-  cursor: pointer;
+  cursor: text;
   user-select: none;
   .tick {
     position: relative;
