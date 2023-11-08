@@ -55,7 +55,7 @@ export default defineComponent({
         draft.images[this.imageIndex].imageUrl = imageUrl;
       });
       taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
+        newTaskDefinition,
         undoBatch: {},
       });
     },
