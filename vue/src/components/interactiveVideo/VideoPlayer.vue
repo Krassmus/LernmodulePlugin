@@ -46,16 +46,6 @@ export default defineComponent({
           return '';
       }
     },
-    /**
-     * @return a list of Interaction objects whose clickable icons (or other elements)
-     * should be shown overlaid over the video at the timestamp given by this.time.
-     */
-    visibleInteractions(): Interaction[] {
-      return this.task.interactions.filter((i) => {
-        const endTime = i.type === 'pause' ? i.startTime + 1 : i.endTime;
-        return i.startTime <= this.time && endTime > this.time;
-      });
-    },
   },
   methods: {
     onPlayerReady() {
@@ -100,10 +90,6 @@ export default defineComponent({
         });
       });
     },
-    onClickInteraction(interaction: Interaction): void {
-      this.$emit('clickInteraction', interaction);
-      console.log('onClickInteraction', interaction);
-    },
   },
   mounted() {
     this.initializePlayer();
@@ -114,41 +100,12 @@ export default defineComponent({
 <template>
   <div class="video-player-root">
     <div ref="container"></div>
-    <template v-for="interaction in visibleInteractions" :key="interaction.id">
-      <button
-        v-if="interaction.type === 'lmbTask'"
-        type="button"
-        class="video-player-overlay"
-        :style="{
-          left: `${interaction.x * 100}%`,
-          top: `${interaction.y * 100}%`,
-        }"
-        @click="onClickInteraction(interaction)"
-      >
-        <div>{{ interaction.taskDefinition.task_type }}</div>
-      </button>
-    </template>
+    <slot />
   </div>
 </template>
 
 <style scoped>
 .video-player-root {
   position: relative;
-}
-.video-player-overlays {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-}
-.video-player-overlay {
-  position: absolute;
-  background: white;
-  aspect-ratio: 1/1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 </style>
