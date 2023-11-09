@@ -5,22 +5,7 @@
     @timeupdate="onTimeUpdate"
     @metadataChange="onVideoMetadataChange"
     @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
-  >
-    <template v-for="interaction in visibleInteractions" :key="interaction.id">
-      <button
-        v-if="interaction.type === 'lmbTask'"
-        type="button"
-        class="video-player-overlay"
-        :style="{
-          left: `${interaction.x * 100}%`,
-          top: `${interaction.y * 100}%`,
-        }"
-        @click="selectInteraction(interaction.id)"
-      >
-        <div>{{ interaction.taskDefinition.task_type }}</div>
-      </button>
-    </template>
-  </VideoPlayer>
+  />
   <div class="insert-interactions-buttons">
     <button
       type="button"
@@ -85,15 +70,6 @@
 .selected-interaction-properties {
   margin-top: 2em;
 }
-
-.video-player-overlay {
-  position: absolute;
-  background: white;
-  aspect-ratio: 1/1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 </style>
 
 <script lang="ts">
@@ -135,16 +111,6 @@ export default defineComponent({
       return this.taskDefinition.interactions.find(
         (interaction) => interaction.id === this.selectedInteractionId
       );
-    },
-    /**
-     * @return a list of Interaction objects whose clickable icons (or other elements)
-     * should be shown overlaid over the video at the timestamp given by this.time.
-     */
-    visibleInteractions(): Interaction[] {
-      return this.taskDefinition.interactions.filter((i) => {
-        const endTime = i.type === 'pause' ? i.startTime + 1 : i.endTime;
-        return i.startTime <= this.currentTime && endTime > this.currentTime;
-      });
     },
   },
   methods: {
