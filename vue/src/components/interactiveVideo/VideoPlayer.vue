@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import videojs from 'video.js';
 import Player from 'video.js/dist/types/player';
 require('!style-loader!css-loader!video.js/dist/video-js.css');
@@ -8,9 +8,20 @@ import {
   Interaction,
   InteractiveVideoTask,
 } from '@/models/InteractiveVideoTask';
+import {
+  EditorState,
+  editorStateSymbol,
+} from '@/components/interactiveVideo/editorState';
+import LmbTaskInteraction from '@/components/interactiveVideo/interactions/LmbTaskInteraction.vue';
 
 export default defineComponent({
   name: 'VideoPlayer',
+  components: { LmbTaskInteraction },
+  setup() {
+    return {
+      editorState: inject<EditorState>(editorStateSymbol),
+    };
+  },
   props: {
     task: {
       type: Object as PropType<InteractiveVideoTask>,
@@ -100,10 +111,6 @@ export default defineComponent({
         });
       });
     },
-    onClickInteraction(interaction: Interaction): void {
-      this.$emit('clickInteraction', interaction);
-      console.log('onClickInteraction', interaction);
-    },
   },
   mounted() {
     this.initializePlayer();
@@ -115,18 +122,16 @@ export default defineComponent({
   <div class="video-player-root">
     <div ref="container"></div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
-      <button
+      <LmbTaskInteraction
         v-if="interaction.type === 'lmbTask'"
-        type="button"
         class="video-player-overlay"
         :style="{
           left: `${interaction.x * 100}%`,
           top: `${interaction.y * 100}%`,
         }"
-        @click="onClickInteraction(interaction)"
-      >
-        <div>{{ interaction.taskDefinition.task_type }}</div>
-      </button>
+        :interaction="interaction"
+        @mousedown.capture="editorState?.selectInteraction(interaction.id)"
+      />
     </template>
   </div>
 </template>

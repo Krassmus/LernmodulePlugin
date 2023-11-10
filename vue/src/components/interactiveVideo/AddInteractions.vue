@@ -72,12 +72,11 @@
 }
 </style>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import {
+<script setup lang="ts">
+import { computed, defineProps, PropType, provide, ref } from 'vue';
+import type {
   Interaction,
   InteractiveVideoTask,
-  printInteractionType,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
@@ -89,74 +88,70 @@ import {
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 import { $gettext } from '../../language/gettext';
+import {
+  EditorState,
+  editorStateSymbol,
+} from '@/components/interactiveVideo/editorState';
+import { printInteractionType } from '@/models/InteractiveVideoTask';
 
-export default defineComponent({
-  name: 'AddInteractions',
-  components: { VideoTimeline, VideoPlayer },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<InteractiveVideoTask>,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      currentTime: 0,
-      videoMetadata: { length: 1 } as VideoMetadata,
-      selectedInteractionId: undefined as string | undefined,
-    };
-  },
-  computed: {
-    selectedInteraction(): Interaction | undefined {
-      return this.taskDefinition.interactions.find(
-        (interaction) => interaction.id === this.selectedInteractionId
-      );
-    },
-  },
-  methods: {
-    printInteractionType,
-    $gettext,
-    editorForTaskType,
-    selectInteraction(selectionId: string) {
-      this.selectedInteractionId = selectionId;
-    },
-    onVideoMetadataChange(data: VideoMetadata) {
-      this.videoMetadata = data;
-    },
-    onTimeUpdate(time: number) {
-      this.currentTime = time;
-    },
-    onTimelineSeek(time: number) {
-      console.log('onTImelineSeek', time);
-      (
-        this.$refs.videoPlayer as InstanceType<typeof VideoPlayer>
-      ).player!.currentTime(time);
-    },
-    insertInteraction(type: TaskDefinition['task_type']) {
-      console.log('insertInteraction', type);
-      const task = newTask(type);
-      const interaction: Interaction = {
-        type: 'lmbTask',
-        id: v4(),
-        taskDefinition: task,
-        startTime: this.currentTime,
-        endTime: Math.min(this.videoMetadata.length, this.currentTime + 10),
-        x: 0.5,
-        y: 0.5,
-      };
-      // TODO make undoable ?
-      // eslint-disable-next-line vue/no-mutating-props
-      this.taskDefinition.interactions.push(interaction);
-      this.selectedInteractionId = interaction.id;
-    },
-    deleteInteraction(id: string) {
-      console.log('deleteInteraction', id);
-      const index = this.taskDefinition.interactions.findIndex(
-        (i) => i.id === id
-      );
-      // eslint-disable-next-line vue/no-mutating-props
-      this.taskDefinition.interactions.splice(index, 1);
-    },
+const props = defineProps({
+  taskDefinition: {
+    type: Object as PropType<InteractiveVideoTask>,
+    required: true,
   },
 });
+const currentTime = ref(0);
+const videoMetadata = ref<VideoMetadata>({ length: 1 });
+const selectedInteractionId = ref<string | undefined>(undefined);
+const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
+  undefined
+);
+
+provide(editorStateSymbol, {
+  selectInteraction,
+  selectedInteractionId,
+});
+
+const selectedInteraction = computed(() =>
+  props.taskDefinition.interactions.find(
+    (interaction) => interaction.id === selectedInteractionId.value
+  )
+);
+
+function selectInteraction(selectionId: string) {
+  selectedInteractionId.value = selectionId;
+}
+function onVideoMetadataChange(data: VideoMetadata) {
+  videoMetadata.value = data;
+}
+function onTimeUpdate(time: number) {
+  currentTime.value = time;
+}
+function onTimelineSeek(time: number) {
+  console.log('onTImelineSeek', time);
+  videoPlayer.value!.player!.currentTime(time);
+}
+function insertInteraction(type: TaskDefinition['task_type']) {
+  console.log('insertInteraction', type);
+  const task = newTask(type);
+  const interaction: Interaction = {
+    type: 'lmbTask',
+    id: v4(),
+    taskDefinition: task,
+    startTime: currentTime.value,
+    endTime: Math.min(videoMetadata.value.length, currentTime.value + 10),
+    x: 0.5,
+    y: 0.5,
+  };
+  // TODO make undoable ?
+  // eslint-disable-next-line vue/no-mutating-props
+  props.taskDefinition.interactions.push(interaction);
+  selectedInteractionId.value = interaction.id;
+}
+function deleteInteraction(id: string) {
+  console.log('deleteInteraction', id);
+  const index = props.taskDefinition.interactions.findIndex((i) => i.id === id);
+  // eslint-disable-next-line vue/no-mutating-props
+  props.taskDefinition.interactions.splice(index, 1);
+}
 </script>

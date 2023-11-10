@@ -44,14 +44,15 @@ const baseLmbTaskSchema = z.object({
   x: z.number(), // Position, as a fraction of video width, between 0 and 1
   y: z.number(), // Position, as a fraction of video height, between 0 and 1
 });
-type LmbTask = z.infer<typeof baseLmbTaskSchema> & {
+export type LmbTaskInteraction = z.infer<typeof baseLmbTaskSchema> & {
   taskDefinition: TaskDefinition;
 };
-const lmbTaskSchema: z.ZodType<LmbTask> = baseLmbTaskSchema.extend({
-  taskDefinition: z.lazy(() => taskDefinitionSchema),
-});
+const lmbTaskInteractionSchema: z.ZodType<LmbTaskInteraction> =
+  baseLmbTaskSchema.extend({
+    taskDefinition: z.lazy(() => taskDefinitionSchema),
+  });
 const interactiveVideoInteractionSchema = z
-  .union([pauseSchema, overlaySchema, lmbTaskSchema])
+  .union([pauseSchema, overlaySchema, lmbTaskInteractionSchema])
   .refine((data) => data.type === 'pause' || data.endTime > data.startTime, {
     message: 'endTime cannot be earlier than startTime',
     path: ['endTime'],
