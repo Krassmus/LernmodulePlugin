@@ -10,7 +10,7 @@ export default defineComponent({
   name: 'LmbTaskInteraction',
   setup() {
     return {
-      editorState: inject<EditorState>(editorStateSymbol),
+      editor: inject<EditorState>(editorStateSymbol),
     };
   },
   props: {
@@ -26,7 +26,7 @@ export default defineComponent({
   <button
     type="button"
     :class="{
-      selected: editorState?.selectedInteractionId.value === interaction.id,
+      selected: editor?.selectedInteractionId.value === interaction.id,
     }"
   >
     {{ interaction.taskDefinition.task_type }}

@@ -19,7 +19,7 @@ export default defineComponent({
   components: { LmbTaskInteraction },
   setup() {
     return {
-      editorState: inject<EditorState>(editorStateSymbol),
+      editor: inject<EditorState>(editorStateSymbol),
     };
   },
   props: {
@@ -130,7 +130,7 @@ export default defineComponent({
           top: `${interaction.y * 100}%`,
         }"
         :interaction="interaction"
-        @mousedown.capture="editorState?.selectInteraction(interaction.id)"
+        @pointerdown.capture="editor?.selectInteraction(interaction.id)"
       />
     </template>
   </div>
