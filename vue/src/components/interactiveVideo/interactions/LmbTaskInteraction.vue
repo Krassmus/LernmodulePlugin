@@ -23,12 +23,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <button
-    type="button"
+  <div
+    v-if="editor"
     :class="{
       selected: editor?.selectedInteractionId.value === interaction.id,
     }"
   >
+    {{ interaction.taskDefinition.task_type }}
+  </div>
+  <button v-else>
     {{ interaction.taskDefinition.task_type }}
   </button>
 </template>

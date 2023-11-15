@@ -110,6 +110,7 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
 provide(editorStateSymbol, {
   selectInteraction,
   selectedInteractionId,
+  dragInteraction,
 });
 
 const selectedInteraction = computed(() =>
@@ -151,7 +152,19 @@ function insertInteraction(type: TaskDefinition['task_type']) {
 function deleteInteraction(id: string) {
   console.log('deleteInteraction', id);
   const index = props.taskDefinition.interactions.findIndex((i) => i.id === id);
+  // TODO make undoable... Don't want to delete a whole task permanently with no undo
   // eslint-disable-next-line vue/no-mutating-props
   props.taskDefinition.interactions.splice(index, 1);
+}
+function dragInteraction(id: string, xFraction: number, yFraction: number) {
+  const interaction = props.taskDefinition?.interactions.find(
+    (i) => i.id === id
+  );
+  if (!interaction) {
+    throw new Error(`Interaction with id ${id} not found`);
+  }
+  // TODO make undoable ?
+  interaction.x = xFraction;
+  interaction.y = yFraction;
 }
 </script>

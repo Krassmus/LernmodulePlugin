@@ -111,6 +111,39 @@ export default defineComponent({
         });
       });
     },
+    onDragStartInteraction(event: DragEvent, interaction: Interaction) {
+      event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
+      event.dataTransfer!.setData('type', 'dragInteraction');
+      event.dataTransfer!.setData('interactionId', interaction.id);
+    },
+    onDragoverRoot(event: DragEvent) {
+      if (event.dataTransfer?.getData('type') === 'dragInteraction') {
+        console.log('onDragoverRoot');
+        const rect = (this.$refs.root as HTMLElement).getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const xFraction = x / rect.width;
+        const clampedXFraction = Math.min(1, Math.max(0, xFraction));
+        const y = event.clientY - rect.top;
+        const yFraction = y / rect.height;
+        const clampedYFraction = Math.min(1, Math.max(0, yFraction));
+        console.log(
+          'clientX',
+          event.clientX,
+          'rect.left',
+          rect.left,
+          'rect.width',
+          rect.width,
+          'x',
+          x,
+          'xFraction',
+          xFraction,
+          'clampedXFraction',
+          clampedXFraction
+        );
+        const id = event.dataTransfer!.getData('interactionId');
+        this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
+      }
+    },
   },
   mounted() {
     this.initializePlayer();
@@ -119,7 +152,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="video-player-root">
+  <div class="video-player-root" ref="root" @dragover="onDragoverRoot">
     <div ref="container"></div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
@@ -130,7 +163,9 @@ export default defineComponent({
           top: `${interaction.y * 100}%`,
         }"
         :interaction="interaction"
+        :draggable="!!editor"
         @pointerdown.capture="editor?.selectInteraction(interaction.id)"
+        @dragstart="onDragStartInteraction($event, interaction)"
       />
     </template>
   </div>
