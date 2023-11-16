@@ -54,6 +54,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['updateAttempt'],
   data() {
     return {
       images: [] as Image[],
