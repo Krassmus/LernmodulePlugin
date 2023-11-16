@@ -6,6 +6,7 @@
       class="imageContainer"
       draggable="true"
       @dragstart="startDragImage($event, image)"
+      @dragover="onDragOver($event, image)"
       @drop="onDropImage($event, image)"
     >
       <img
@@ -81,22 +82,45 @@ export default defineComponent({
 
     onDropImage(event: DragEvent, image: Image): void {
       if (this.imageInteractedWith) {
-        const originPosition = this.images.indexOf(this.imageInteractedWith);
-        const targetPosition = this.images.indexOf(image);
+        const fromIndex = this.images.indexOf(this.imageInteractedWith);
+        const toIndex = this.images.indexOf(image);
 
         console.log(
           'Dropped image',
           this.imageInteractedWith?.altText,
           '(',
-          originPosition,
+          fromIndex,
           ') on target',
           image.altText,
           '(',
-          targetPosition,
+          toIndex,
           ')'
         );
 
-        this.moveInArray(this.images, originPosition, targetPosition);
+        this.moveInArray(this.images, fromIndex, toIndex);
+
+        this.imageInteractedWith = undefined;
+      }
+    },
+
+    onDragOver(event: DragEvent, image: Image): void {
+      if (this.imageInteractedWith) {
+        const fromIndex = this.images.indexOf(this.imageInteractedWith);
+        const toIndex = this.images.indexOf(image);
+
+        console.log(
+          'Dragging image',
+          this.imageInteractedWith?.altText,
+          '(',
+          fromIndex,
+          ') over target',
+          image.altText,
+          '(',
+          toIndex,
+          ')'
+        );
+
+        this.moveInArray(this.images, fromIndex, toIndex);
       }
     },
 
