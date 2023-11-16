@@ -1,7 +1,7 @@
 <template>
   <div class="imageRow">
     <div
-      v-for="image in images"
+      v-for="image in this.images"
       :key="image.uuid"
       class="imageContainer"
       @dragover.prevent
@@ -37,10 +37,13 @@ export default defineComponent({
   },
   data() {
     return {
+      images: [] as Image[],
       imageInteractedWith: undefined as Image | undefined,
     };
   },
-  beforeMount(): void {},
+  beforeMount(): void {
+    console.log('Before Mount');
+  },
   methods: {
     $gettext,
     urlForIcon(iconName: string) {
@@ -64,13 +67,14 @@ export default defineComponent({
   },
   computed: {
     taskDefinition: () => taskEditorStore.taskDefinition as ImageSequencingTask,
-    images(): Image[] {
-      // Shuffle the images
-      // https://stackoverflow.com/a/46545530
-      return this.task.images
-        .map((image) => ({ image: image, sort: Math.random() }))
-        .sort((image1, image2) => image1.sort - image2.sort)
-        .map(({ image }) => image);
+  },
+  watch: {
+    task: {
+      handler() {
+        console.log('watcher for this.task');
+        this.images = this.task.images;
+      },
+      immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
   },
 });
