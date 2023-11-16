@@ -21,6 +21,22 @@
       }}</span>
     </div>
   </div>
+  <button
+    v-if="!this.showResults"
+    type="button"
+    class="h5pButton"
+    @click="checkResults()"
+  >
+    {{ this.task.strings.checkButton }}
+  </button>
+  <button
+    v-if="this.showResults"
+    type="button"
+    class="h5pButton"
+    @click="reset()"
+  >
+    {{ this.task.strings.retryButton }}
+  </button>
 </template>
 
 <script lang="ts">
@@ -42,6 +58,7 @@ export default defineComponent({
     return {
       images: [] as Image[],
       imageInteractedWith: undefined as Image | undefined,
+      showResults: false as boolean,
     };
   },
   beforeMount(): void {
@@ -49,11 +66,13 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
+
     startDragImage(dragEvent: DragEvent, image: Image) {
       this.imageInteractedWith = image;
       console.log('Dragging image', image.altText);
@@ -84,6 +103,14 @@ export default defineComponent({
       let element = array[fromIndex];
       array.splice(fromIndex, 1);
       array.splice(toIndex, 0, element);
+    },
+
+    checkResults(): void {
+      this.showResults = true;
+    },
+
+    reset(): void {
+      this.showResults = false;
     },
   },
   computed: {
