@@ -11,10 +11,14 @@
       <img
         class="image"
         draggable="false"
+        @dragover.prevent
+        @dragenter.prevent
         :src="image.imageUrl"
         :alt="image.altText"
       />
-      <span class="imageDescription">{{ image.altText }}</span>
+      <span class="imageDescription" @dragover.prevent @dragenter.prevent>{{
+        image.altText
+      }}</span>
     </div>
   </div>
 </template>
