@@ -4,16 +4,15 @@
       v-for="image in this.images"
       :key="image.uuid"
       class="imageContainer"
-      @dragover.prevent
-      @dragenter.prevent
+      draggable="true"
+      @dragstart="startDragImage($event, image)"
+      @drop="onDropImage($event, image)"
     >
       <img
         class="image"
+        draggable="false"
         :src="image.imageUrl"
         :alt="image.altText"
-        draggable="true"
-        @dragstart="startDragImage($event, image)"
-        @drop="onDropImage($event, image)"
       />
       <span class="imageDescription">{{ image.altText }}</span>
     </div>
@@ -101,6 +100,7 @@ export default defineComponent({
   border-radius: 6px;
   margin: 6px;
   padding: 6px;
+  cursor: grab;
 }
 
 .image {
