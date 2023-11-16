@@ -8,13 +8,14 @@
       @dragenter.prevent
     >
       <img
-        class="draggableImage"
+        class="image"
         :src="image.imageUrl"
         :alt="image.altText"
         draggable="true"
         @dragstart="startDragImage($event, image)"
         @drop="onDropImage($event, image)"
       />
+      <span class="imageDescription">{{ image.altText }}</span>
     </div>
   </div>
 </template>
@@ -89,14 +90,21 @@ export default defineComponent({
 }
 
 .imageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 2px solid #dbe2e8;
   border-radius: 6px;
   margin: 6px;
   padding: 6px;
 }
 
-.draggableImage {
+.image {
   width: 10em;
   height: 10em;
+}
+
+.imageDescription {
+  margin-top: 6px;
 }
 </style>
