@@ -60,12 +60,30 @@ export default defineComponent({
     },
 
     onDropImage(event: DragEvent, image: Image): void {
-      console.log(
-        'Dropped image',
-        this.imageInteractedWith?.altText,
-        'on target:',
-        image.altText
-      );
+      if (this.imageInteractedWith) {
+        const originPosition = this.images.indexOf(this.imageInteractedWith);
+        const targetPosition = this.images.indexOf(image);
+
+        console.log(
+          'Dropped image',
+          this.imageInteractedWith?.altText,
+          '(',
+          originPosition,
+          ') on target',
+          image.altText,
+          '(',
+          targetPosition,
+          ')'
+        );
+
+        this.moveInArray(this.images, originPosition, targetPosition);
+      }
+    },
+
+    moveInArray(array: Image[], fromIndex: number, toIndex: number) {
+      let element = array[fromIndex];
+      array.splice(fromIndex, 1);
+      array.splice(toIndex, 0, element);
     },
   },
   computed: {
