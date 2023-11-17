@@ -38,6 +38,6 @@ export default defineComponent({
 
 <style scoped>
 .selected {
-  border: 4px solid black;
+  border: 4px solid blue;
 }
 </style>

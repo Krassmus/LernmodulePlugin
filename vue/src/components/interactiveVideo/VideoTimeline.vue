@@ -14,6 +14,7 @@ import {
 } from '@/models/InteractiveVideoTask';
 import { $gettext } from '../../language/gettext';
 
+type DragState = { type: 'timeMarker' } | undefined;
 export default defineComponent({
   name: 'VideoTimeline',
   props: {
@@ -33,6 +34,11 @@ export default defineComponent({
       type: String,
       required: false,
     },
+  },
+  data() {
+    return {
+      dragState: undefined as DragState,
+    };
   },
   computed: {
     positionForTimeMarker(): string {
@@ -101,11 +107,10 @@ export default defineComponent({
     },
     onDragStartTimeMarker(e: DragEvent) {
       console.log('dragstart time marker');
-      e.dataTransfer!.setData('type', 'timeMarker');
+      this.dragState = { type: 'timeMarker' };
     },
     onDragOverTimeline(e: DragEvent) {
-      const dragType = e.dataTransfer!.getData('type');
-      if (dragType === 'timeMarker') {
+      if (this.dragState?.type === 'timeMarker') {
         e.preventDefault(); // Stop ghost image from flying back after drop
         const time = this.xCoordinateToTime(e.clientX);
         this.emitTimelineSeekThrottled(time);
@@ -123,7 +128,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="timeline-root" @dragover="onDragOverTimeline">
+  <div class="timeline-root" @dragover.capture="onDragOverTimeline">
     <div
       class="timeline-axis"
       ref="timelineAxis"

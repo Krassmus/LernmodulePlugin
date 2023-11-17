@@ -14,6 +14,7 @@ import {
 } from '@/components/interactiveVideo/editorState';
 import LmbTaskInteraction from '@/components/interactiveVideo/interactions/LmbTaskInteraction.vue';
 
+type DragState = { type: 'dragInteraction'; interactionId: string } | undefined;
 export default defineComponent({
   name: 'VideoPlayer',
   components: { LmbTaskInteraction },
@@ -32,6 +33,7 @@ export default defineComponent({
     return {
       player: null as Player | null,
       time: 0,
+      dragState: undefined as DragState,
     };
   },
   watch: {
@@ -112,13 +114,20 @@ export default defineComponent({
       });
     },
     onDragStartInteraction(event: DragEvent, interaction: Interaction) {
+      console.log('dragStart');
       event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
-      event.dataTransfer!.setData('type', 'dragInteraction');
-      event.dataTransfer!.setData('interactionId', interaction.id);
+      this.dragState = {
+        type: 'dragInteraction',
+        interactionId: interaction.id,
+      };
+    },
+    onDragEndInteraction(event: DragEvent, interaction: Interaction) {
+      console.log('dragEnd');
+      this.dragState = undefined;
     },
     onDragoverRoot(event: DragEvent) {
-      if (event.dataTransfer?.getData('type') === 'dragInteraction') {
-        console.log('onDragoverRoot');
+      console.log('onDragoverRoot');
+      if (this.dragState?.type === 'dragInteraction') {
         const rect = (this.$refs.root as HTMLElement).getBoundingClientRect();
         const x = event.clientX - rect.left;
         const xFraction = x / rect.width;
@@ -140,7 +149,7 @@ export default defineComponent({
           'clampedXFraction',
           clampedXFraction
         );
-        const id = event.dataTransfer!.getData('interactionId');
+        const id = this.dragState.interactionId;
         this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
       }
     },
@@ -152,7 +161,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="video-player-root" ref="root" @dragover="onDragoverRoot">
+  <div
+    class="video-player-root"
+    ref="root"
+    @dragover.capture="onDragoverRoot"
+    :class="{ 'drag-in-progress': !!dragState }"
+  >
     <div ref="container"></div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
@@ -166,12 +180,16 @@ export default defineComponent({
         :draggable="!!editor"
         @pointerdown.capture="editor?.selectInteraction(interaction.id)"
         @dragstart="onDragStartInteraction($event, interaction)"
+        @dragend="onDragEndInteraction($event, interaction)"
       />
     </template>
   </div>
 </template>
 
 <style scoped>
+.drag-in-progress > :not(.video-player-overlay) {
+  pointer-events: none;
+}
 .video-player-root {
   position: relative;
 }
