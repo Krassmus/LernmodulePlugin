@@ -17,7 +17,6 @@
 </script>
 
 <?
-Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
 if (Context::get() && $GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions = Sidebar::Get()->getWidget("actions");
     $add = false;
@@ -68,8 +67,6 @@ if ($course_connection['evaluation_for_students'] || ($course_connection['semina
     $views->addLink(
         dgettext("lernmoduleplugin","Auswertung"),
         PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId()),
-        null,
-        array()
     );
 }
 

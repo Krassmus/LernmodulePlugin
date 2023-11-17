@@ -943,7 +943,7 @@ class H5peditorController extends PluginController
             $lib_ids = array();
             $library = json_decode(file_get_contents($main_library->getPath() . "/library.json"), true);
 
-            $dependencies = (array) $library['editorDependencies'];
+            $dependencies = (array)($library['editorDependencies'] ?? []);
 
             foreach ($dependencies as $dependency) {
                 $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);

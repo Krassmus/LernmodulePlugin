@@ -251,14 +251,10 @@ if (!$module->isNew()) {
     $views->addLink(
         $module['name'],
         PluginEngine::getURL($plugin, array(), "lernmodule/view/".$module->getId()),
-        null,
-        array()
     );
     $views->addLink(
         dgettext("lernmoduleplugin","Auswertung"),
         PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$module->getId()),
-        null,
-        array()
     );
 
     Sidebar::Get()->addWidget($views);

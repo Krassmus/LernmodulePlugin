@@ -57,5 +57,3 @@
         <?= \Studip\Button::create(dgettext("lernmoduleplugin","Block hinzufügen"), "add_block", ['class' => "add_block"]) ?>
     </div>
 </form>
-<?
-Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
