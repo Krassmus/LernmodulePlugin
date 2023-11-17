@@ -45,13 +45,15 @@
         <input type="number" v-model="selectedInteraction.endTime" />
       </label>
     </fieldset>
-    <component
-      v-if="selectedInteraction.type === 'lmbTask'"
-      :key="selectedInteraction.id"
-      :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
-      :taskDefinition="selectedInteraction.taskDefinition"
-    >
-    </component>
+    <KeepAlive>
+      <component
+        v-if="selectedInteraction.type === 'lmbTask'"
+        :key="selectedInteraction.id"
+        :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
+        :taskDefinition="selectedInteraction.taskDefinition"
+      >
+      </component>
+    </KeepAlive>
   </form>
 </template>
 
