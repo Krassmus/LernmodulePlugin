@@ -12,8 +12,8 @@
 
 <form method="post" enctype="multipart/form-data" id="h5p-content-form">
     <input type="hidden" name="block_id" value="<?= htmlReady(Request::option("block_id")) ?>">
-    <input type="hidden" name="library" value="<?= $library ?: 0 ?>"/>
-    <input type="hidden" name="parameters" value="<?= htmlReady(json_encode($params)) ?>"/>
+    <input type="hidden" name="library" value="<?= $library ?? 0 ?>"/>
+    <input type="hidden" name="parameters" value="<?= htmlReady(json_encode($params ?? [])) ?>"/>
     <div id="post-body-content">
         <div class="h5p-create">
             <div class="h5p-editor"><?= dgettext("lernmoduleplugin","Warte auf Javascript") ?></div>
@@ -23,6 +23,3 @@
 </form>
 
 <script>H5PIntegration = <?= json_encode($integration) ?>;</script>
-
-<?
-Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));

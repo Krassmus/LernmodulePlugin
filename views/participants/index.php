@@ -31,7 +31,7 @@ usort($student_data, function ($data1, $data2) {
         <? foreach ($student_data as $student) : ?>
             <tr>
                 <td>
-                    <? $link = Config::get()->LERNMODUL_PARTICIPANT_EVALUATION && $GLOBALS['perm']->have_studip_perm(Config::get()->LERNMODUL_PARTICIPANT_EVALUATION, $_SESSION['SessionSeminar'])
+                    <? $link = Context::get() && Config::get()->LERNMODUL_PARTICIPANT_EVALUATION && $GLOBALS['perm']->have_studip_perm(Config::get()->LERNMODUL_PARTICIPANT_EVALUATION, Context::get()->id)
                         ? PluginEngine::getLink($plugin, array(), "participants/evaluation/".$student['user_id'])
                         : URLHelper::getLink("dispatch.php/profile", array('username' => $student['username'])) ?>
                     <a href="<?= $link ?>">
@@ -53,5 +53,3 @@ usort($student_data, function ($data1, $data2) {
         <? endforeach ?>
     </tbody>
 </table>
-<?
-Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
