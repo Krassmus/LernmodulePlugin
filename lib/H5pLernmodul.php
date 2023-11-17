@@ -77,7 +77,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         $actions->addLink(
             dgettext("lernmoduleplugin","Im Editor bearbeiten"),
             URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/edit/".$this->getId()),
-            Icon::create("edit", "clickable")
+            Icon::create("edit")
         );
         Sidebar::Get()->addWidget($actions);
     }
@@ -95,12 +95,12 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
             $actions->addLink(
                 dgettext("lernmoduleplugin", "Im Editor bearbeiten"),
                 URLHelper::getURL("plugins.php/lernmoduleplugin/h5peditor/edit/" . $this->getId()),
-                Icon::create("edit", "clickable")
+                Icon::create("edit")
             );
             $actions->addLink(
                 dgettext("lernmoduleplugin","URL kopieren"),
                 URLHelper::getURL("plugins.php/lernmoduleplugin/h5p/get_url/".$this->getId()),
-                Icon::create("code", "clickable"),
+                Icon::create("code"),
                 array(
                     'data-dialog' => "size=auto"
                 )
@@ -243,6 +243,7 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
         if (!file_exists($this->getPath() . "/h5p.json")) {
             return null;
         }
+        $main_lib_minor_version = '';
         $json = json_decode(file_get_contents($this->getPath() . "/h5p.json"), true);
         $main_lib_name = $json['mainLibrary'];
         foreach ($json['preloadedDependencies'] as $lib_data) {
@@ -279,21 +280,13 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                 unlink($path . "/content/content.json");
             }
             $content = json_encode($data['params']);
-            /*if (file_exists($this->getPath()."/content/assets")) { //delete all old images
-                foreach (scandir($this->getPath()."/content/assets") as $file) {
-                    $file_ecaped = str_replace(array("/", "\""), array("\\/", "\\\""), "assets/".$file); //json_encode-escaping for one string
-                    if ($file !== "." && $file !== ".." && strpos($content, $file_ecaped) === false) {
-                        @unlink($this->getPath()."/content/assets/".$file);
-                    }
-                }
-            }*/
             file_put_contents($path . "/content/content.json", $content);
             $h5p = array(
                 'title' => $data['metadata']['title'],
-                'language' => $data['metadata']['language'] ?: "und",
+                'language' => $data['metadata']['language'] ?? "und",
                 'mainLibrary' => $mainlib['name'],
                 'embedTypes' => array("div"),
-                'license' => $data['metadata']['license'] ?: "U",
+                'license' => $data['metadata']['license'] ?? "U",
                 'preloadedDependencies' => array(
                     array(
                         'machineName' => $mainlib['name'],
@@ -302,22 +295,22 @@ class H5pLernmodul extends Lernmodul implements CustomLernmodul
                     )
                 )
             );
-            if ($data['metadata']['authors']) {
+            if (!empty($data['metadata']['authors'])) {
                 $h5p['authors'] = $data['metadata']['authors'];
             }
-            if ($data['metadata']['changes']) {
+            if (!empty($data['metadata']['changes'])) {
                 $h5p['changes'] = $data['metadata']['changes'];
             }
-            if ($data['metadata']['yearFrom']) {
+            if (!empty($data['metadata']['yearFrom'])) {
                 $h5p['yearFrom'] = $data['metadata']['yearFrom'];
             }
-            if ($data['metadata']['yearTo']) {
+            if (!empty($data['metadata']['yearTo'])) {
                 $h5p['yearTo'] = $data['metadata']['yearTo'];
             }
-            if ($data['metadata']['source']) {
+            if (!empty($data['metadata']['source'])) {
                 $h5p['source'] = $data['metadata']['source'];
             }
-            if ($data['metadata']['licenseExtras']) {
+            if (!empty($data['metadata']['licenseExtras'])) {
                 $h5p['licenseExtras'] = $data['metadata']['licenseExtras'];
             }
             if (file_exists($path . "/h5p.json")) {

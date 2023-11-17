@@ -2,8 +2,8 @@
 
 class LernmoduleController extends PluginController
 {
-
-    public function before_filter(&$action, &$args) {
+    public function before_filter(&$action, &$args)
+    {
         parent::before_filter($action, $args);
         if (Navigation::hasItem("/course/lernmodule")) {
             Navigation::getItem("/course/lernmodule")->setImage(
@@ -11,7 +11,6 @@ class LernmoduleController extends PluginController
             );
         }
         PageLayout::setTitle(Context::getHeaderLine()." - ".$this->plugin->getDisplayTitle());
-        $this->utf8decode_xhr = false;
         $this->course_id = Context::get()->id;
     }
 
@@ -36,6 +35,7 @@ class LernmoduleController extends PluginController
             if ($attendance['user_id'] === $GLOBALS['user']->id) {
                 $attendance->delete();
                 $this->redirect("lernmodule/overview");
+                return;
             }
         }
 
@@ -176,28 +176,9 @@ class LernmoduleController extends PluginController
 
             $success = true;
 
-            $this->modulecourse->setDependencies(Request::getArray("dependencies"), $this->course_id);
+            $this->modulecourse->setDependencies(Request::getArray("dependencies"));
             if ($_FILES['modulefile']['size'] > 0) {
                 $success = $this->module->copyModule($_FILES['modulefile']['tmp_name'], $_FILES['modulefile']['name']);
-                /*if ($this->module['material_id'] && !$this->module['url']) {
-                    $material = new LernmarktplatzMaterial($this->module['material_id'] != 1 ? $this->module['material_id'] : null);
-
-                    $material['name'] = $this->module['name'];
-                    $material['filename'] = $this->module['name'].".zip";
-                    $material['short_description'] = $this->module['name'];
-                    $material['description'] = $this->module['name'];
-                    $material['content_type'] = "application/zip";
-                    $material['front_image_content_type'] = "application/zip";
-                    $material['user_id'] = $GLOBALS['user']->id;
-                    copy($_FILES['modulefile']['tmp_name'], $material->getFilePath());
-                    $material->store();
-                    //$topics = $material->getTopics();
-                    $material->addTag("Lernmodul");
-                    $material->pushDataToIndexServers();
-
-                    $this->module['material_id'] = $material->getId();
-                    $this->module->store();
-                }*/
             }
             if ($success) {
                 PageLayout::postMessage(MessageBox::success(dgettext("lernmoduleplugin","Lernmodul erfolgreich gespeichert.")));
@@ -223,15 +204,16 @@ class LernmoduleController extends PluginController
             throw new AccessDeniedException();
         }
         $this->module = new Lernmodul($module_id);
-        if ($_FILES['logo']) {
+        $relative_path = '';
+        if (!empty($_FILES['logo'])) {
             $relative_path = "logo";
             $end = substr($_FILES['logo']['name'], strrpos($_FILES['logo']['name'], ".") + 1);
             $relative_path .= ".".$end;
-            move_uploaded_file($_FILES['logo']['tmp_name'], $this->module->getPath()."/".$relative_path);
+            move_uploaded_file($_FILES['logo']['tmp_name'], $this->module->getPath() . "/" . $relative_path);
             $this->module['image'] = $relative_path;
             $this->module->store();
         }
-        $this->render_text($this->module->getDataURL()."/".$relative_path);
+        $this->render_text($this->module->getDataURL() . "/" . $relative_path);
     }
 
     public function evaluation_action($module_id = null)
@@ -302,10 +284,12 @@ class LernmoduleController extends PluginController
             $old_message = $this->attempt->customdata
                 ? $this->attempt->customdata->getArrayCopy()
                 : array();
-            $message['properties'] = array_merge((array) $old_message['properties'], (array) $message['properties']);
-            foreach ((array) $old_message['points'] as $class => $value) {
-                if ($message['points'][$class] < $value) {
-                    $message['points'][$class] = $value;
+            $message['properties'] = array_merge((array)($old_message['properties'] ?? []), (array)($message['properties'] ?? []));
+            if (!empty($old_message['points'])) {
+                foreach ((array)$old_message['points'] as $class => $value) {
+                    if ($message['points'][$class] < $value) {
+                        $message['points'][$class] = $value;
+                    }
                 }
             }
             $this->attempt->customdata = $message;
@@ -488,7 +472,7 @@ class LernmoduleController extends PluginController
     {
         $this->module = Lernmodul::find($module_id);
         if (!class_exists("LernMarktplatz")) {
-            throw Exception("Lernmarktplatz ist nicht aktiviert.");
+            throw new Exception("Lernmarktplatz ist nicht aktiviert.");
         }
 
         $image = $this->module['image']
@@ -517,7 +501,7 @@ class LernmoduleController extends PluginController
     {
         $this->module = Lernmodul::find(Request::option("module_id"));
         if (!class_exists("LernMarktplatz")) {
-            throw Exception("Lernmarktplatz ist nicht aktiviert.");
+            throw new Exception("Lernmarktplatz ist nicht aktiviert.");
         }
         if (Request::get("material_id")) {
             $this->module['material_id'] = Request::get("material_id");

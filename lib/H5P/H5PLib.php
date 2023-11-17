@@ -43,7 +43,7 @@ class H5PLib extends SimpleORMap
     public function countUsage()
     {
         $statement = DBManager::get()->prepare("
-            SELECT COUNT(*) 
+            SELECT COUNT(*)
             FROM lernmodule_h5plib_module
             WHERE lib_id = ?
         ");
@@ -57,9 +57,9 @@ class H5PLib extends SimpleORMap
         $sublibs = array();
         if (file_exists($library_json)) {
             $json = json_decode(file_get_contents($library_json), true);
-            $dependencies = (array) $json['preloadedDependencies'];
+            $dependencies = (array) ($json['preloadedDependencies'] ?? []);
             if ($editor) {
-                $dependencies = array_merge($dependencies, (array) $json['editorDependencies']);
+                $dependencies = array_merge($dependencies, (array)($json['editorDependencies'] ?? []));
             }
             foreach ($dependencies as $dependency) {
                 $sublib = H5PLib::findVersion(
@@ -150,8 +150,11 @@ class H5PLib extends SimpleORMap
         $dir_name = $this['name'] . "-" . $this['major_version'] . "." . $this['minor_version'];
         if (file_exists($library_json)) {
             $library_json = json_decode(file_get_contents($library_json), true);
-            foreach ((array) $library_json[$css_or_jss === "js" ? 'preloadedJs' : "preloadedCss"] as $file) {
-                $files[] = $dir_name . "/" . $file['path'];
+            $css = $css_or_jss === "js" ? 'preloadedJs' : "preloadedCss";
+            if (!empty($library_json[$css])) {
+                foreach ((array) $library_json[$css] as $file) {
+                    $files[] = $dir_name . "/" . $file['path'];
+                }
             }
         }
         if ($editor && ($css_or_jss === "js") && (file_exists($this->getPath()."/presave.js"))) {
