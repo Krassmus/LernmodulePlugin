@@ -14,7 +14,14 @@ import {
 } from '@/components/interactiveVideo/editorState';
 import LmbTaskInteraction from '@/components/interactiveVideo/interactions/LmbTaskInteraction.vue';
 
-type DragState = { type: 'dragInteraction'; interactionId: string } | undefined;
+type DragState =
+  | {
+      type: 'dragInteraction';
+      interactionId: string;
+      mouseStartPos: [number, number]; // clientX, clientY
+      interactionStartPos: [number, number]; // fraction x, fraction y
+    }
+  | undefined;
 export default defineComponent({
   name: 'VideoPlayer',
   components: { LmbTaskInteraction },
@@ -119,6 +126,8 @@ export default defineComponent({
       this.dragState = {
         type: 'dragInteraction',
         interactionId: interaction.id,
+        mouseStartPos: [event.clientX, event.clientY],
+        interactionStartPos: [interaction.x, interaction.y],
       };
     },
     onDragEndInteraction(event: DragEvent, interaction: Interaction) {
@@ -129,11 +138,13 @@ export default defineComponent({
       console.log('onDragoverRoot');
       if (this.dragState?.type === 'dragInteraction') {
         const rect = (this.$refs.root as HTMLElement).getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const xFraction = x / rect.width;
+        const clientDx = event.clientX - this.dragState.mouseStartPos[0];
+        const dxFraction = clientDx / rect.width;
+        const xFraction = this.dragState.interactionStartPos[0] + dxFraction;
         const clampedXFraction = Math.min(1, Math.max(0, xFraction));
-        const y = event.clientY - rect.top;
-        const yFraction = y / rect.height;
+        const clientDy = event.clientY - this.dragState.mouseStartPos[1];
+        const dyFraction = clientDy / rect.height;
+        const yFraction = this.dragState.interactionStartPos[1] + dyFraction;
         const clampedYFraction = Math.min(1, Math.max(0, yFraction));
         console.log(
           'clientX',
@@ -142,8 +153,6 @@ export default defineComponent({
           rect.left,
           'rect.width',
           rect.width,
-          'x',
-          x,
           'xFraction',
           xFraction,
           'clampedXFraction',
