@@ -146,18 +146,6 @@ export default defineComponent({
         const dyFraction = clientDy / rect.height;
         const yFraction = this.dragState.interactionStartPos[1] + dyFraction;
         const clampedYFraction = Math.min(1, Math.max(0, yFraction));
-        console.log(
-          'clientX',
-          event.clientX,
-          'rect.left',
-          rect.left,
-          'rect.width',
-          rect.width,
-          'xFraction',
-          xFraction,
-          'clampedXFraction',
-          clampedXFraction
-        );
         const id = this.dragState.interactionId;
         this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
       }
