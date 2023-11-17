@@ -4,7 +4,7 @@
 
 <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
-<? $template = $mod->getViewerTemplate($attempt, $game_attendence) ?>
+<? $template = $mod->getViewerTemplate($attempt, $game_attendence ?? null) ?>
 <?= $template ? $template->render() : "" ?>
 
 <script>
@@ -66,7 +66,7 @@ $views->addLink(
 if ($course_connection['evaluation_for_students'] || ($course_connection['seminar_id'] && $GLOBALS['perm']->have_studip_perm("tutor", $course_connection['seminar_id']))) {
     $views->addLink(
         dgettext("lernmoduleplugin","Auswertung"),
-        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId()),
+        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId())
     );
 }
 

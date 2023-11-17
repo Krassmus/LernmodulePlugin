@@ -9,7 +9,7 @@ class EditorController extends PluginController
         Navigation::getItem("/course/lernmodule")->setImage(
             Icon::create("learnmodule", "info")
         );
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
     }
@@ -26,7 +26,7 @@ class EditorController extends PluginController
             $this->module = new VanillalmLernmodul($this->module->getId());
 
             $path = $this->module->getPath();
-            if ($_FILES['logo'] && $_FILES['logo']['size']) {
+            if (!empty($_FILES['logo']) && $_FILES['logo']['size']) {
                 if (!file_exists($path)) {
                     mkdir($path);
                 }
@@ -49,7 +49,7 @@ class EditorController extends PluginController
     }
 
     public function block_action($module_id, $block_id = null) {
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", $_SESSION['SessionSeminar'])) {
+        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
         $this->module = new VanillalmLernmodul($module_id);

@@ -1,20 +1,5 @@
 <?php
 
-require_once __DIR__."/lib/CustomLernmodul.interface.php";
-require_once __DIR__."/lib/Lernmodul.php";
-require_once __DIR__."/lib/VanillalmLernmodul.php";
-require_once __DIR__."/lib/HtmlLernmodul.php";
-require_once __DIR__."/lib/H5pLernmodul.php";
-require_once __DIR__."/lib/LernmodulAttempt.php";
-require_once __DIR__."/lib/LernmodulCourse.php";
-require_once __DIR__."/lib/LernmodulBlock.php";
-require_once __DIR__."/lib/LernmodulCourseSettings.php";
-require_once __DIR__."/lib/LernmodulDependency.php";
-require_once __DIR__."/lib/LernmodulGame.php";
-require_once __DIR__."/lib/LernmodulGameAttendance.php";
-require_once __DIR__."/lib/LernmodulAdmission/LernmodulAdmission.class.php";
-require_once __DIR__."/lib/H5P/H5PLib.php";
-
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
     $GLOBALS['FILESYSTEM_UTF8'] = true;
 }
@@ -24,10 +9,11 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     public function __construct()
     {
         parent::__construct();
+        StudipAutoloader::addAutoloadPath(__DIR__ . '/lib');
+        StudipAutoloader::addAutoloadPath(__DIR__ . '/lib/H5P');
         if (UpdateInformation::isCollecting()) {
             $data = Request::getArray("page_info");
             if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {
-                $data['Lernmodule']['attempt_id'];
                 $attempt = new LernmodulAttempt($data['Lernmodule']['attempt_id']);
                 if ($attempt['user_id'] === $GLOBALS['user']->id) {
                     if ($data['Lernmodule']['customData']) {
@@ -101,7 +87,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
 
     public function perform($unconsumed_path)
     {
-        $this->addStylesheet("assets/lernmodule.less");
+        $this->addStylesheet("assets/lernmodule.scss");
         bindtextdomain("lernmoduleplugin", $this->getPluginPath()."/locale");
         bind_textdomain_codeset("lernmoduleplugin", 'UTF-8');
         parent::perform($unconsumed_path);
@@ -125,9 +111,9 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
     }
 
     static public function bytesFromPHPIniValue($val) {
-        $val = trim($val);
-        $last = strtolower($val[strlen($val)-1]);
-        switch($last) {
+        $lastChar = strtolower(substr($val, -1));
+        $val = (int)trim($val);
+        switch($lastChar) {
             case 'g':
                 $val *= 1024;
             case 'm':
@@ -183,7 +169,8 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlu
         }
         return $L;
     }
-    function getMetadata() {
+
+    public function getMetadata() {
         $metadata = parent::getMetadata();
         $metadata['pluginname'] = dgettext("lernmoduleplugin", "Lernmodule");
         $metadata['displayname'] = dgettext("lernmoduleplugin", "Lernmodule");
