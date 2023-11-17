@@ -105,7 +105,7 @@
         <table class="default" id="resulttable">
             <thead>
                 <tr>
-                    <th sytel="width: 50px"></th>
+                    <th style="width: 50px"></th>
                     <th><?= dgettext("lernmoduleplugin","Name") ?></th>
                     <th><?= dgettext("lernmoduleplugin","Dauer") ?></th>
                     <th><?= dgettext("lernmoduleplugin","Datum") ?></th>
