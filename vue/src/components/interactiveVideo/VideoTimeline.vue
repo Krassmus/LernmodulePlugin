@@ -2,6 +2,7 @@
 import {
   ComponentPublicInstance,
   defineComponent,
+  inject,
   PropType,
   StyleValue,
 } from 'vue';
@@ -13,10 +14,27 @@ import {
   printInteractionType,
 } from '@/models/InteractiveVideoTask';
 import { $gettext } from '../../language/gettext';
+import {
+  EditorState,
+  editorStateSymbol,
+} from '@/components/interactiveVideo/editorState';
 
-type DragState = { type: 'timeMarker' } | undefined;
+type DragState =
+  | { type: 'timeMarker' }
+  | {
+      type: 'interaction';
+      id: string;
+      mouseStartPos: [number, number]; // clientX, clientY
+      interactionStartTime: number; // Seconds
+    }
+  | undefined;
 export default defineComponent({
   name: 'VideoTimeline',
+  setup() {
+    return {
+      editor: inject<EditorState>(editorStateSymbol),
+    };
+  },
   props: {
     currentTime: {
       type: Number,
@@ -101,6 +119,19 @@ export default defineComponent({
     onClickInteraction(interaction: Interaction) {
       this.$emit('clickInteraction', interaction);
     },
+    onDragStartInteraction(event: DragEvent, interaction: Interaction) {
+      console.log('dragStartInteraction');
+      event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
+      this.dragState = {
+        type: 'interaction',
+        id: interaction.id,
+        mouseStartPos: [event.clientX, event.clientY],
+        interactionStartTime: interaction.startTime,
+      };
+    },
+    onDragEndInteraction(event: DragEvent, interaction: Interaction) {
+      this.dragState = undefined;
+    },
     onPointerDownAxis(e: PointerEvent) {
       const time = this.xCoordinateToTime(e.clientX);
       this.$emit('timelineSeek', time);
@@ -114,6 +145,21 @@ export default defineComponent({
         e.preventDefault(); // Stop ghost image from flying back after drop
         const time = this.xCoordinateToTime(e.clientX);
         this.emitTimelineSeekThrottled(time);
+      } else if (this.dragState?.type === 'interaction') {
+        const mouseDx = e.clientX - this.dragState.mouseStartPos[0];
+        const rect = (
+          this.$refs.timelineAxis as HTMLElement
+        ).getBoundingClientRect();
+        const secondsPerPixel = this.videoMetadata.length / rect.width;
+        const dSeconds = mouseDx * secondsPerPixel;
+        const seconds = this.dragState.interactionStartTime + dSeconds;
+        // TODO prevent from dragging so far that the endTime > video length
+        const secondsClamped = Math.max(
+          0,
+          Math.min(this.videoMetadata.length, seconds)
+        );
+        const id = this.dragState.id;
+        this.editor?.dragInteractionTimeline(id, secondsClamped);
       }
     },
     emitTimelineSeekThrottled: throttle(function emitTimelineSeek(
@@ -152,7 +198,10 @@ export default defineComponent({
         :key="interaction.id"
         class="timeline-interaction"
         :style="timelineInteractionStyle(interaction)"
+        draggable="true"
         @click.stop="onClickInteraction(interaction)"
+        @dragstart="onDragStartInteraction($event, interaction)"
+        @dragend="onDragEndInteraction($event, interaction)"
       >
         {{ printInteractionType(interaction) }}
         <button

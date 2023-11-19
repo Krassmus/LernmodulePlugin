@@ -113,6 +113,7 @@ provide(editorStateSymbol, {
   selectInteraction,
   selectedInteractionId,
   dragInteraction,
+  dragInteractionTimeline,
 });
 
 const selectedInteraction = computed(() =>
@@ -168,5 +169,15 @@ function dragInteraction(id: string, xFraction: number, yFraction: number) {
   // TODO make undoable ?
   interaction.x = xFraction;
   interaction.y = yFraction;
+}
+function dragInteractionTimeline(id: string, startTime: number) {
+  const interaction = props.taskDefinition?.interactions.find(
+    (i) => i.id === id
+  );
+  if (!interaction) {
+    throw new Error(`Interaction with id ${id} not found`);
+  }
+  // TODO make undoable ?
+  interaction.startTime = startTime;
 }
 </script>
