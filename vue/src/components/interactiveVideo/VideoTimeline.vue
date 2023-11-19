@@ -26,6 +26,7 @@ type DragState =
       id: string;
       mouseStartPos: [number, number]; // clientX, clientY
       interactionStartTime: number; // Seconds
+      interactionDuration: number; // Seconds
     }
   | undefined;
 export default defineComponent({
@@ -122,11 +123,16 @@ export default defineComponent({
     onDragStartInteraction(event: DragEvent, interaction: Interaction) {
       console.log('dragStartInteraction');
       event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
+      const interactionLength =
+        interaction.type === 'pause'
+          ? 1
+          : interaction.endTime - interaction.startTime;
       this.dragState = {
         type: 'interaction',
         id: interaction.id,
         mouseStartPos: [event.clientX, event.clientY],
         interactionStartTime: interaction.startTime,
+        interactionDuration: interactionLength,
       };
     },
     onDragEndInteraction(event: DragEvent, interaction: Interaction) {
@@ -153,11 +159,10 @@ export default defineComponent({
         const secondsPerPixel = this.videoMetadata.length / rect.width;
         const dSeconds = mouseDx * secondsPerPixel;
         const seconds = this.dragState.interactionStartTime + dSeconds;
-        // TODO prevent from dragging so far that the endTime > video length
-        const secondsClamped = Math.max(
-          0,
-          Math.min(this.videoMetadata.length, seconds)
-        );
+        // Prevent from dragging so far that the endTime > video length
+        const maxTime =
+          this.videoMetadata.length - this.dragState.interactionDuration;
+        const secondsClamped = Math.max(0, Math.min(maxTime, seconds));
         const id = this.dragState.id;
         this.editor?.dragInteractionTimeline(id, secondsClamped);
       }

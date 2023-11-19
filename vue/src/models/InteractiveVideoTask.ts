@@ -8,6 +8,11 @@ import {
 import { $gettext } from '@/language/gettext';
 
 // There are different types of 'interaction' which can be added to the video.
+// TODO Maybe put the 'base' attributes shared by all types of interaction all in one place.
+// TODO I think it may be wiser to use 'startTime' and 'duration' rather than 'startTime' and 'endTime'.
+// I chose to use 'start' and 'end' because it made the ui in one place easier to implement
+// (v-model for 'end time' input field), but I have noticed that I must calculate a duration
+// by hand in many other places anyway.
 
 // Pause interaction: Video pauses at a specific point in time
 const pauseSchema = z.object({

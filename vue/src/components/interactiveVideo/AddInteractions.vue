@@ -103,7 +103,8 @@ const props = defineProps({
   },
 });
 const currentTime = ref(0);
-const videoMetadata = ref<VideoMetadata>({ length: 1 });
+// TODO should probably default to 1 or a very small or large value.  24 chosen so I can work while offline  -Ann
+const videoMetadata = ref<VideoMetadata>({ length: 24 });
 const selectedInteractionId = ref<string | undefined>(undefined);
 const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
   undefined
@@ -178,6 +179,10 @@ function dragInteractionTimeline(id: string, startTime: number) {
     throw new Error(`Interaction with id ${id} not found`);
   }
   // TODO make undoable ?
+  if (interaction.type !== 'pause') {
+    const duration = interaction.endTime - interaction.startTime;
+    interaction.endTime = startTime + duration;
+  }
   interaction.startTime = startTime;
 }
 </script>
