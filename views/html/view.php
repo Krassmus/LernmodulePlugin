@@ -79,7 +79,11 @@
     window.addEventListener("message", function (event) {
         var origin = event.origin || event.originalEvent.origin;
         var myorigin = "<?= htmlReady($myorigin) ?>";
-        var message = JSON.parse(event.data);
+        try {
+            var message = JSON.parse(event.data);
+        } catch(e) {
+            return;
+        }
         if (message.secret === '<?= $framesecret ?>') {
             STUDIP.Lernmodule.received_message_api_messages = true;
             //it's from the correct window, yay!

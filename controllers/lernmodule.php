@@ -277,8 +277,9 @@ class LernmoduleController extends PluginController
         if (Request::isPost()) {
             $this->attempt['chdate'] = time();
             $message = Request::getArray("message");
-            if ($message['success']) {
+            if (Request::get('success') || $message['success']) {
                 $this->attempt['successful'] = 1;
+                echo "ok";
             }
             unset($message['success']);
             $old_message = $this->attempt->customdata
