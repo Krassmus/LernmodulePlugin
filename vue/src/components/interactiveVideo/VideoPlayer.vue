@@ -13,6 +13,8 @@ import {
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
 import LmbTaskInteraction from '@/components/interactiveVideo/interactions/LmbTaskInteraction.vue';
+import { printTaskType, viewerForTaskType } from '@/models/TaskDefinition';
+import { $gettext } from '../../language/gettext';
 
 type DragState =
   | {
@@ -41,6 +43,7 @@ export default defineComponent({
       player: null as Player | null,
       time: 0,
       dragState: undefined as DragState,
+      activeInteraction: undefined as Interaction | undefined,
     };
   },
   watch: {
@@ -78,6 +81,9 @@ export default defineComponent({
     },
   },
   methods: {
+    $gettext,
+    printTaskType,
+    viewerForTaskType,
     onPlayerReady() {
       console.log('player ready');
     },
@@ -119,6 +125,13 @@ export default defineComponent({
           length: this.player!.duration(),
         });
       });
+    },
+    activateInteraction(interaction: Interaction) {
+      this.activeInteraction = interaction;
+      this.player!.pause();
+    },
+    closeInteraction() {
+      this.activeInteraction = undefined;
     },
     onDragStartInteraction(event: DragEvent, interaction: Interaction) {
       console.log('dragStart');
@@ -168,7 +181,7 @@ export default defineComponent({
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
         v-if="interaction.type === 'lmbTask'"
-        class="video-player-overlay"
+        class="video-player-interaction"
         :style="{
           left: `${interaction.x * 100}%`,
           top: `${interaction.y * 100}%`,
@@ -178,32 +191,72 @@ export default defineComponent({
         @pointerdown.capture="editor?.selectInteraction(interaction.id)"
         @dragstart="onDragStartInteraction($event, interaction)"
         @dragend="onDragEndInteraction($event, interaction)"
+        @activateInteraction="activateInteraction"
       />
     </template>
+    <Transition name="fade">
+      <div
+        v-if="activeInteraction?.type === 'lmbTask'"
+        class="active-interaction-container"
+        @click.self="closeInteraction"
+      >
+        <div class="active-interaction">
+          <h1>
+            {{ printTaskType(activeInteraction.taskDefinition.task_type) }}
+          </h1>
+          <component
+            :is="viewerForTaskType(activeInteraction.taskDefinition.task_type)"
+            :task="activeInteraction.taskDefinition"
+          />
+          <button type="button" class="button" @click="closeInteraction">
+            {{ $gettext('Schließen') }}
+          </button>
+        </div>
+      </div>
+      <div v-else-if="activeInteraction?.type === 'pause'">Pause</div>
+      <div v-else-if="activeInteraction?.type === 'overlay'">Overlay</div>
+    </Transition>
   </div>
 </template>
 
-<style scoped>
-.drag-in-progress > :not(.video-player-overlay) {
+<style scoped lang="scss">
+.drag-in-progress > :not(.video-player-interaction) {
   pointer-events: none;
 }
 .video-player-root {
   position: relative;
 }
-.video-player-overlays {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-}
-.video-player-overlay {
+.video-player-interaction {
   position: absolute;
   background: white;
   aspect-ratio: 1/1;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.active-interaction-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  .active-interaction {
+    position: absolute;
+    top: 1em;
+    bottom: 1em;
+    left: 1em;
+    right: 1em;
+    background: white;
+    padding: 1em;
+  }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

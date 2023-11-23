@@ -31,7 +31,11 @@ export default defineComponent({
   >
     {{ interaction.taskDefinition.task_type }}
   </div>
-  <button v-else>
+  <button
+    v-else
+    type="button"
+    @click="$emit('activateInteraction', interaction)"
+  >
     {{ interaction.taskDefinition.task_type }}
   </button>
 </template>
