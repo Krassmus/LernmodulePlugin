@@ -225,6 +225,7 @@ export default defineComponent({
 }
 .video-player-root {
   position: relative;
+  overflow: hidden;
 }
 .video-player-interaction {
   position: absolute;
