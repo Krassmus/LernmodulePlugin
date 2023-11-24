@@ -5,9 +5,11 @@ import {
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
 import { Interaction, LmbTaskInteraction } from '@/models/InteractiveVideoTask';
+import { printTaskType } from '../../../models/TaskDefinition';
 
 export default defineComponent({
   name: 'LmbTaskInteraction',
+  methods: { printTaskType },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),
@@ -29,7 +31,7 @@ export default defineComponent({
       selected: editor?.selectedInteractionId.value === interaction.id,
     }"
   >
-    {{ interaction.taskDefinition.task_type }}
+    {{ printTaskType(interaction.taskDefinition.task_type) }}
   </div>
   <button
     v-else
