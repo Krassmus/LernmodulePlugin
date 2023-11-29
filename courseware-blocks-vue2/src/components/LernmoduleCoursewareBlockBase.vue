@@ -106,6 +106,9 @@ export default {
             );
             // close the edit menu
             this.$refs.defaultBlock.closeEdit();
+            // Reload the iframe (this causes the state of the block to reset to how
+            // it is on the server, discarding user's unsaved changes).
+            this.$refs.lernmoduleIframe.contentWindow.location.reload();
             break;
         }
       }
