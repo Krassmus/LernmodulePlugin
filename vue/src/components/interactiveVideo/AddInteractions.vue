@@ -55,11 +55,18 @@
     <KeepAlive>
       <component
         v-if="selectedInteraction.type === 'lmbTask'"
-        :key="selectedInteraction.id"
+        :key="`${selectedInteraction.id}-viewer`"
+        :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
+        :task="selectedInteraction.taskDefinition"
+      />
+    </KeepAlive>
+    <KeepAlive>
+      <component
+        v-if="selectedInteraction.type === 'lmbTask'"
+        :key="`${selectedInteraction.id}-editor`"
         :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
         :taskDefinition="selectedInteraction.taskDefinition"
-      >
-      </component>
+      />
     </KeepAlive>
   </form>
 </template>
@@ -88,6 +95,7 @@ import {
   newTask,
   printTaskType,
   TaskDefinition,
+  viewerForTaskType,
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 import { $gettext } from '../../language/gettext';
