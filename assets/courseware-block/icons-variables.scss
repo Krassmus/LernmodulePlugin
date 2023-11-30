@@ -1,27 +1,3 @@
-@function icon-path($icon, $role: clickable) {
-  $icon: unquote($icon);
-  $role: unquote($role);
-
-  $color: 'blue';
-  @if $role == info {
-    $color: 'black';
-  } @else if $role == accept or $role == status-green {
-    $color: 'green';
-  } @else if $role == inactive {
-    $color: 'grey';
-  } @else if $role == new or $role == attention or $role == status-red {
-    $color: 'red';
-  } @else if $role == info_alt or $role == info-alt {
-    $color: 'white';
-  } @else if $role == status-yellow {
-    $color: 'yellow';
-  }
-
-  @return "#{$icon-path}/#{$color}/#{$icon}.svg";
-}
-$image-path: "../images" !default;
-$icon-path: "#{$image-path}/icons" !default;
-
 .button-with-empty-icon {
   white-space: nowrap;
 
@@ -52,24 +28,7 @@ $icon-path: "#{$image-path}/icons" !default;
     }
   }
 }
+
 .button.file-office {
   @include button-with-icon(file-office, clickable, info_alt);
 }
-
-$prefix: "--"; // Prefix string for custom CSS properties
-
-// Merges a variable name with $prefix
-@function custom-property-name($name) {
-  @return $prefix + $name;
-}
-
-// Defines a custom property
-@mixin define-custom-property($name, $value) {
-  #{custom-property-name($name)}: $value;
-}
-
-body {
-  // Append SASS variables which are desired to be accesible:
-  //@include define-custom-property('file-office', $file-office);
-}
-
