@@ -14,7 +14,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'feedback-element',
+  name: 'FeedbackElement',
   props: {
     message: String,
     maxPoints: Number,

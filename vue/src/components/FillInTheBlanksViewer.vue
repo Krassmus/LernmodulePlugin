@@ -24,8 +24,8 @@
         </span>
       </template>
     </template>
-
-    <div class="h5pFeedbackContainer">
+    <FeedbackElement v-if="debug"></FeedbackElement>
+    <div v-else class="h5pFeedbackContainer">
       <div class="h5pFeedbackContainerTop">
         <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
           {{
@@ -93,6 +93,7 @@ import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual, round } from 'lodash';
 import { $gettext } from '@/language/gettext';
+import FeedbackElement from '@/components/FeedbackElement.vue';
 
 type FillInTheBlanksElement = Blank | StaticText;
 type Blank = {
@@ -112,6 +113,9 @@ const dljs = require('damerau-levenshtein-js');
 
 export default defineComponent({
   name: 'FillInTheBlanksViewer',
+  components: {
+    FeedbackElement,
+  },
   props: {
     task: {
       type: Object as PropType<FillInTheBlanksTask>,
