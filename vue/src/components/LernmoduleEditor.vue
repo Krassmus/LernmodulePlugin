@@ -52,6 +52,9 @@
       <option value="ImagePairing">
         {{ $gettext('Image Pairing') }}
       </option>
+      <option value="ImageSequencing">
+        {{ $gettext('Image Sequencing') }}
+      </option>
     </select>
   </div>
 

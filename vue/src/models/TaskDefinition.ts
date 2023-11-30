@@ -10,6 +10,8 @@ import MemoryEditor from '@/components/MemoryEditor.vue';
 import MemoryViewer from '@/components/MemoryViewer.vue';
 import ImagePairingViewer from '@/components/ImagePairingViewer.vue';
 import ImagePairingEditor from '@/components/ImagePairingEditor.vue';
+import ImageSequencingViewer from '@/components/ImageSequencingViewer.vue';
+import ImageSequencingEditor from '@/components/ImageSequencingEditor.vue';
 import { v4 } from 'uuid';
 import { z } from 'zod';
 import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
@@ -148,6 +150,23 @@ export const imagePairingTaskSchema = z.object({
 });
 export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
 
+export const imageSequencingTaskSchema = z.object({
+  task_type: z.literal('ImageSequencing'),
+  images: z.array(imageSchema),
+  strings: z.object({
+    checkButton: z.string(),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    resultMessage: z.string(),
+  }),
+});
+export type ImageSequencingTask = z.infer<typeof imageSequencingTaskSchema>;
+
+export const interactiveVideoTaskSchema = z.object({
+  task_type: z.literal('InteractiveVideo'),
+});
+export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
+
 export const taskDefinitionSchema = z.union([
   fillInTheBlanksTaskSchema,
   questionTaskSchema,
@@ -155,6 +174,7 @@ export const taskDefinitionSchema = z.union([
   markTheWordsTaskSchema,
   memoryTaskSchema,
   imagePairingTaskSchema,
+  imageSequencingTaskSchema,
   interactiveVideoTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
@@ -167,6 +187,7 @@ export const taskTypeSchema = z.union([
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
   imagePairingTaskSchema.shape.task_type,
+  imageSequencingTaskSchema.shape.task_type,
   interactiveVideoTaskSchema.shape.task_type,
 ]);
 
@@ -359,6 +380,23 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           resultMessage: ':correct von :total Wörter richtig ausgewählt.',
         },
       };
+    case 'ImageSequencing':
+      return {
+        task_type: 'ImageSequencing',
+        images: [
+          {
+            uuid: v4(),
+            imageUrl: '',
+            altText: '',
+          },
+        ],
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+        },
+      };
     case 'InteractiveVideo':
       return {
         task_type: 'InteractiveVideo',
@@ -386,6 +424,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return MemoryViewer;
     case 'ImagePairing':
       return ImagePairingViewer;
+    case 'ImageSequencing':
+      return ImageSequencingViewer;
     case 'InteractiveVideo':
       return InteractiveVideoViewer;
     default:
@@ -407,6 +447,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return MemoryEditor;
     case 'ImagePairing':
       return ImagePairingEditor;
+    case 'ImageSequencing':
+      return ImageSequencingEditor;
     case 'InteractiveVideo':
       return InteractiveVideoEditor;
     default:
