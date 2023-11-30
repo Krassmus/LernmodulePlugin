@@ -12,7 +12,14 @@
       class="button file-office"
       @click="insertInteraction('FillInTheBlanks')"
     >
-      Fill In The Blanks
+      {{ printTaskType('FillInTheBlanks') }}
+    </button>
+    <button
+      type="button"
+      class="button tan3"
+      @click="insertInteraction('DragTheWords')"
+    >
+      {{ printTaskType('DragTheWords') }}
     </button>
   </div>
   <VideoTimeline
@@ -79,6 +86,7 @@ import { VideoMetadata } from '@/components/interactiveVideo/events';
 import {
   editorForTaskType,
   newTask,
+  printTaskType,
   TaskDefinition,
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';

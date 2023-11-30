@@ -1,4 +1,5 @@
 <!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
+<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
   <form class="default">
@@ -181,6 +182,7 @@
 
 <script lang="ts">
 // Allow us to mutate the prop 'taskDefinition' as much as we want
+// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
 /* eslint-disable vue/no-mutating-props */
 import { defineComponent, PropType } from 'vue';
 import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
