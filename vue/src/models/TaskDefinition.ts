@@ -162,11 +162,6 @@ export const imageSequencingTaskSchema = z.object({
 });
 export type ImageSequencingTask = z.infer<typeof imageSequencingTaskSchema>;
 
-export const interactiveVideoTaskSchema = z.object({
-  task_type: z.literal('InteractiveVideo'),
-});
-export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
-
 export const taskDefinitionSchema = z.union([
   fillInTheBlanksTaskSchema,
   questionTaskSchema,
@@ -458,6 +453,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
 
 export function printTaskType(type: TaskDefinition['task_type']): string {
   switch (type) {
+    case 'ImageSequencing':
+      return $gettext('Image Sequencing');
     case 'Memory':
       return $gettext('Memory');
     case 'FillInTheBlanks':
