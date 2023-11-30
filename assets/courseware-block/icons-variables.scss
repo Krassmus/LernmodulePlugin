@@ -35,3 +35,6 @@
 .button.tan3 {
   @include button-with-icon(tan3, clickable, info_alt);
 }
+.button.question {
+  @include button-with-icon(question, clickable, info_alt);
+}

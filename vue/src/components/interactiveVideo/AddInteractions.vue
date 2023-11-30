@@ -8,18 +8,14 @@
   />
   <div class="insert-interactions-buttons">
     <button
+      v-for="[taskType, icon] in taskTypesAndIcons"
+      :key="taskType"
       type="button"
-      class="button file-office"
-      @click="insertInteraction('FillInTheBlanks')"
+      class="button"
+      :class="icon"
+      @click="insertInteraction(taskType)"
     >
-      {{ printTaskType('FillInTheBlanks') }}
-    </button>
-    <button
-      type="button"
-      class="button tan3"
-      @click="insertInteraction('DragTheWords')"
-    >
-      {{ printTaskType('DragTheWords') }}
+      {{ printTaskType(taskType) }}
     </button>
   </div>
   <VideoTimeline
@@ -118,6 +114,13 @@ const selectedInteractionId = ref<string | undefined>(undefined);
 const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
   undefined
 );
+
+const taskTypesAndIcons: Array<[TaskDefinition['task_type'], string]> = [
+  ['FillInTheBlanks', 'file-office'],
+  ['DragTheWords', 'tan3'],
+  ['MarkTheWords', 'tan3'],
+  ['Question', 'question'],
+];
 
 provide(editorStateSymbol, {
   selectInteraction,
