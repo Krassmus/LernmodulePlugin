@@ -52,6 +52,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $this->addBlockIconCSS('question', 'question');
         $this->addBlockIconCSS('fill-in-the-blanks', 'file-office');
         $this->addBlockIconCSS('memory', 'content2');
+        $this->addStylesheet('assets/courseware-block/icons-variables.scss');
 
         // Add CSS to make the vue3 courseware block's 'draggable' handle look right in Stud.IP 5.4
         \PageLayout::addStyle(

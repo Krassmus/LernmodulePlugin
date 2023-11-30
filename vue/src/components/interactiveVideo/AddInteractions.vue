@@ -9,7 +9,7 @@
   <div class="insert-interactions-buttons">
     <button
       type="button"
-      class="button add"
+      class="button file-office"
       @click="insertInteraction('FillInTheBlanks')"
     >
       Fill In The Blanks
@@ -58,13 +58,6 @@
 </template>
 
 <style scoped lang="scss">
-//@use '../../../../../../../../resources/assets/stylesheets/scss/buttons' as
-//  buttons;
-//
-//.button.file-office {
-//  @include buttons.button-with-icon(file-office, clickable, info_alt);
-//}
-
 .video-timeline {
   margin-top: 2em;
 }
