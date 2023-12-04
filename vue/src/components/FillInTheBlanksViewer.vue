@@ -24,31 +24,25 @@
         </span>
       </template>
     </template>
-    <FeedbackElement v-if="debug"></FeedbackElement>
-    <div v-else class="h5pFeedbackContainer">
-      <div class="h5pFeedbackContainerTop">
-        <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
-          {{
-            task.strings.fillInAllBlanksMessage
-              ? task.strings.fillInAllBlanksMessage
-              : $gettext(
-                  'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
-                )
-          }}
-        </div>
 
-        <div v-if="showResults && feedbackMessage" class="h5pFeedbackText">
-          {{ feedbackMessage }}
-        </div>
+    <FeedbackElement
+      v-if="showResults"
+      :achievedPoints="correctAnswers"
+      :maxPoints="maxPoints"
+      :resultMessage="resultMessage"
+      :feedback="task.feedback"
+    />
+    <div class="h5pFeedbackContainer">
+      <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
+        {{
+          task.strings.fillInAllBlanksMessage
+            ? task.strings.fillInAllBlanksMessage
+            : $gettext(
+                'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+              )
+        }}
       </div>
-      <div class="h5pFeedbackContainerCenter">
-        <div v-if="showResults">
-          <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
-          <label for="score" class="h5pFeedbackText">
-            {{ resultMessage }}
-          </label>
-        </div>
-      </div>
+
       <div class="h5pFeedbackContainerBottom">
         <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
           {{ task.strings.checkButton }}
