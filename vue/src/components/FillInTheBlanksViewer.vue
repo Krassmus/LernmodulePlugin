@@ -73,17 +73,6 @@
         </template>
       </div>
     </div>
-
-    <div v-if="debug">
-      userInputs:
-      <pre>{{ userInputs }}</pre>
-      submittedAnswers:
-      <pre>{{ submittedAnswers }}</pre>
-      Split template:
-      <pre>{{ splitTemplate }}</pre>
-      Parsed template:
-      <pre>{{ parsedTemplate }}</pre>
-    </div>
   </div>
 </template>
 
@@ -126,7 +115,6 @@ export default defineComponent({
     return {
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
-      debug: false,
       userWantsToSeeSolutions: false,
     };
   },
