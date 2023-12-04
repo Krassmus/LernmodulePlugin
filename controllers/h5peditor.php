@@ -111,7 +111,7 @@ class H5peditorController extends PluginController
             ),
             'saveFreq' => 2,
             'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
-            'libraryUrl' => H5PLernmodul::getH5pLibURL(), //needed to fetch the library.json via ajax-request
+            'libraryUrl' => H5pLernmodul::getH5pLibURL(), //needed to fetch the library.json via ajax-request
             'l10n' => array(
                 'H5P' => array(
                     'fullscreen' => dgettext("lernmoduleplugin","Vollbild"),
@@ -994,10 +994,10 @@ class H5peditorController extends PluginController
             foreach ($libs as $lib) {
                 if ($lib) {
                     foreach ($lib->getFiles("js", true) as $js) {
-                        $javascripts[] = H5PLernmodul::getH5pLibURL() . "/" . $js;
+                        $javascripts[] = H5pLernmodul::getH5pLibURL() . "/" . $js;
                     }
                     foreach ($lib->getFiles("css", true) as $style) {
-                        $css[] = H5PLernmodul::getH5pLibURL() . "/" . $style;
+                        $css[] = H5pLernmodul::getH5pLibURL() . "/" . $style;
                     }
                 }
 
@@ -1089,7 +1089,7 @@ class H5peditorController extends PluginController
         } elseif ($cmd === "files") {
             //upload files ...
             $_FILES['file'];
-            $mod = H5PLernmodul::find(Request::get("module_id"));
+            $mod = H5pLernmodul::find(Request::get("module_id"));
             if (!$mod) {
                 throw new Exception(_("Modul existiert nicht. Kann Datei nicht hochladen."));
             }

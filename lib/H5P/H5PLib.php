@@ -171,7 +171,7 @@ class H5PLib extends SimpleORMap
     public function createModWithData($data) {
         //{"params":{"timeline":{"defaultZoomLevel":"0","height":600,"asset":{},"date":[{"asset":{},"startDate":"1623,09,10","endDate":"1640,02,08","headline":"Murad IV","text":"<p>Brutaler Sultan t�tet seine B�rger mit der Arkebuse. Ist halt sein gutes Recht, ne?</p>\n"}],"language":"en","headline":"Passierte das wirklich?","text":""}},"metadata":{"license":"U","authors":[],"changes":[],"extraTitle":"Sultan Murad 4.","title":"Sultan Murad 4."}}
         if ($data && $data['params'] && $data['metadata']['title']) {
-            $mod = new H5PLernmodul();
+            $mod = new H5pLernmodul();
             $mod['name'] = $data['metadata']['title'];
             $mod['user_id'] = $GLOBALS['user']->id;
             $mod['type'] = "h5p";
