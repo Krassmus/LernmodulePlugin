@@ -43,15 +43,20 @@ export default defineComponent({
     },
 
     feedbackMessage(): string | undefined {
-      if (this.achievedPoints && this.maxPoints && this.feedbackSortedByScore) {
-        const percentageCorrect = round(
-          (this.achievedPoints / this.maxPoints) * 100
-        );
+      if (
+        typeof this.achievedPoints === 'undefined' ||
+        typeof this.maxPoints === 'undefined'
+      ) {
+        return undefined;
+      }
 
-        for (const feedback of this.feedbackSortedByScore) {
-          if (percentageCorrect >= feedback.percentage) {
-            return feedback.message;
-          }
+      const percentageCorrect = round(
+        (this.achievedPoints / this.maxPoints) * 100
+      );
+
+      for (const feedback of this.feedbackSortedByScore) {
+        if (percentageCorrect >= feedback.percentage) {
+          return feedback.message;
         }
       }
 
