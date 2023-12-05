@@ -6,7 +6,7 @@
       </label>
       <meter id="score" min="0" :max="maxPoints" :value="achievedPoints" />
     </div>
-    <div v-if="showResults && feedbackMessage" class="h5pFeedbackText">
+    <div v-if="feedbackMessage" class="h5pFeedbackText">
       {{ feedbackMessage }}
     </div>
   </div>
