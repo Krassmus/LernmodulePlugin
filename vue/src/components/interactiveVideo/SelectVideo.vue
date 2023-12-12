@@ -48,32 +48,79 @@ export default defineComponent({
 </script>
 
 <template>
-  {{
-    $gettext(
-      'Lade ein Video hoch oder füge einen Link zu einem Youtube-Video ein.'
-    )
-  }}
-  <div>
-    <!--        <label>-->
-    <!--          {{ $gettext('Video hochladen') }}-->
-    <!--          <input type="file" @change="onPickVideoFile" />-->
-    <!--        </label>-->
-    <label>
-      {{ $gettext('Youtube-URL verwenden') }}
-      <input type="text" v-model="youtubeUrlInput" />
-    </label>
-    <button @click="onSaveYoutubeVideo">Speichern</button>
-  </div>
-  <div v-if="taskDefinition.video.type === 'none'">
-    {{ $gettext('Kein Video ausgewählt') }}
-  </div>
-  <div v-else-if="taskDefinition.video.type === 'youtube'">
-    <div>
-      <button @click="deleteVideo">{{ $gettext('Video löschen') }}</button>
+  <p>
+    {{
+      $gettext(
+        'Lade ein Video hoch oder füge einen Link zu einem Youtube-Video ein.'
+      )
+    }}
+  </p>
+  <ul class="picker">
+    <li>
+      <label>
+        {{ $gettext('Video hochladen') }}
+        <input type="file" @change="onPickVideoFile" />
+      </label>
+    </li>
+    <li class="separator" aria-hidden="true" role="presentation"></li>
+    <li>
+      <label>
+        {{ $gettext('Youtube-URL') }}
+        <input
+          class="youtube-url-input"
+          type="text"
+          v-model="youtubeUrlInput"
+        />
+      </label>
+      <button class="button" @click="onSaveYoutubeVideo">
+        {{ $gettext('Anwenden') }}
+      </button>
+    </li>
+  </ul>
+  <div class="video-preview">
+    <div v-if="taskDefinition.video.type === 'none'">
+      {{ $gettext('Aktuell kein Video ausgewählt') }}
     </div>
-    <VideoPlayer :task="taskDefinition" />
+    <div v-else>
+      <div v-if="taskDefinition.video.type === 'youtube'">
+        <VideoPlayer :task="taskDefinition" />
+      </div>
+      <div v-else-if="taskDefinition.video.type === 'studip'">
+        Stud.IP video. (Not implemented.) {{ taskDefinition.video }}
+      </div>
+      <div class="video-preview-actions">
+        <button class="button trash" @click="deleteVideo">
+          {{ $gettext('Video löschen') }}
+        </button>
+      </div>
+    </div>
   </div>
-  <div v-else>Stud.IP video. (Not implemented.) {{ taskDefinition.video }}</div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.picker {
+  list-style: none;
+  padding: 0 1em 0 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  > * {
+    flex: 1 1 auto;
+  }
+  .separator {
+    background: #d0d7e3;
+    flex: 0 0 1px;
+  }
+}
+.youtube-url-input {
+  width: 100%;
+  max-width: 48em;
+}
+.video-preview {
+  margin-top: 1em;
+  .video-preview-actions {
+    margin-top: 1em;
+    text-align: end;
+  }
+}
+</style>
