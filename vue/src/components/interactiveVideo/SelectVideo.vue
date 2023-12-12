@@ -55,15 +55,15 @@ export default defineComponent({
       )
     }}
   </p>
-  <ul class="picker">
-    <li>
+  <div class="picker">
+    <div>
       <label>
         {{ $gettext('Video hochladen') }}
         <input type="file" @change="onPickVideoFile" />
       </label>
-    </li>
-    <li class="separator" aria-hidden="true" role="presentation"></li>
-    <li>
+    </div>
+    <div class="separator" aria-hidden="true" role="presentation"></div>
+    <div>
       <label>
         {{ $gettext('Youtube-URL') }}
         <input
@@ -72,15 +72,17 @@ export default defineComponent({
           v-model="youtubeUrlInput"
         />
       </label>
-      <button class="button" @click="onSaveYoutubeVideo">
-        {{ $gettext('Anwenden') }}
-      </button>
-    </li>
-  </ul>
-  <div class="video-preview">
-    <div v-if="taskDefinition.video.type === 'none'">
-      {{ $gettext('Aktuell kein Video ausgewählt') }}
+      <div class="youtube-url-actions">
+        <button class="button" @click="onSaveYoutubeVideo">
+          {{ $gettext('Übernehmen') }}
+        </button>
+      </div>
     </div>
+  </div>
+  <div class="video-preview">
+    <p style="text-align: center" v-if="taskDefinition.video.type === 'none'">
+      {{ $gettext('Aktuell ist kein Video ausgewählt.') }}
+    </p>
     <div v-else>
       <div v-if="taskDefinition.video.type === 'youtube'">
         <VideoPlayer :task="taskDefinition" />
@@ -99,18 +101,17 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .picker {
-  list-style: none;
-  padding: 0 1em 0 0;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
   gap: 1em;
-  > * {
-    flex: 1 1 auto;
-  }
   .separator {
     background: #d0d7e3;
-    flex: 0 0 1px;
   }
+  margin-right: 1em;
+}
+.youtube-url-actions {
+  display: flex;
+  justify-content: end;
 }
 .youtube-url-input {
   width: 100%;
