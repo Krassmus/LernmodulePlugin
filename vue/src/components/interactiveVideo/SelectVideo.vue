@@ -103,19 +103,22 @@ export default defineComponent({
 .picker {
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
-  gap: 1em;
+  gap: 0.5em;
   .separator {
     background: #d0d7e3;
   }
-  margin-right: 1em;
 }
 .youtube-url-actions {
   display: flex;
   justify-content: end;
+  button.button {
+    margin-right: 0;
+  }
 }
 .youtube-url-input {
   width: 100%;
   max-width: 48em;
+  box-sizing: border-box;
 }
 .video-preview {
   margin-top: 1em;
