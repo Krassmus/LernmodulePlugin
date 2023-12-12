@@ -6,29 +6,16 @@ import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
 import TabsComponent from '@/components/interactiveVideo/TabsComponent.vue';
 import TabComponent from '@/components/interactiveVideo/TabComponent.vue';
-import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import AddInteractions from '@/components/interactiveVideo/AddInteractions.vue';
+import SelectVideo from '@/components/interactiveVideo/SelectVideo.vue';
 
 export default defineComponent({
   name: 'InteractiveVideoEditor',
   data() {
-    return {
-      youtubeUrlInput: '',
-    };
+    return {};
   },
   methods: {
     $gettext,
-    onSaveYoutubeVideo() {
-      this.taskDefinition.video = {
-        type: 'youtube',
-        url: this.youtubeUrlInput,
-      };
-    },
-    deleteVideo() {
-      this.taskDefinition.video = {
-        type: 'none',
-      };
-    },
   },
   props: {
     taskDefinition: {
@@ -36,20 +23,10 @@ export default defineComponent({
       required: true,
     },
   },
-  watch: {
-    'taskDefinition.video': {
-      immediate: true,
-      handler: function (value) {
-        if (value.type === 'youtube') {
-          this.youtubeUrlInput = value.url;
-        }
-      },
-    },
-  },
   computed: {},
   components: {
+    SelectVideo,
     AddInteractions,
-    VideoPlayer,
     TabComponent,
     TabsComponent,
   },
@@ -59,34 +36,7 @@ export default defineComponent({
 <template>
   <TabsComponent>
     <TabComponent :title="$gettext('1. Video auswählen')" icon="video2">
-      {{
-        $gettext(
-          'Lade ein Video hoch oder füge einen Link zu einem Youtube-Video ein.'
-        )
-      }}
-      <div>
-        <!--        <label>-->
-        <!--          {{ $gettext('Video hochladen') }}-->
-        <!--          <input type="file" @change="onPickVideoFile" />-->
-        <!--        </label>-->
-        <label>
-          {{ $gettext('Youtube-URL verwenden') }}
-          <input type="text" v-model="youtubeUrlInput" />
-        </label>
-        <button @click="onSaveYoutubeVideo">Speichern</button>
-      </div>
-      <div v-if="taskDefinition.video.type === 'none'">
-        {{ $gettext('Kein Video ausgewählt') }}
-      </div>
-      <div v-else-if="taskDefinition.video.type === 'youtube'">
-        <div>
-          <button @click="deleteVideo">{{ $gettext('Video löschen') }}</button>
-        </div>
-        <VideoPlayer :task="taskDefinition" />
-      </div>
-      <div v-else>
-        Stud.IP video. (Not implemented.) {{ taskDefinition.video }}
-      </div>
+      <SelectVideo :task-definition="taskDefinition" />
     </TabComponent>
     <TabComponent
       :title="$gettext('2. Interaktionen hinzufügen')"
