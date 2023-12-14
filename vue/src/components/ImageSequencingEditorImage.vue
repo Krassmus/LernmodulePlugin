@@ -10,7 +10,7 @@
           :alt="image.altText"
           class="image-sequencing-editor-image"
         />
-        <ImageUpload v-else @imageUploaded="onUploadImage" />
+        <FileUpload v-else @file-uploaded="onUploadImage" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -26,15 +26,15 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import ImageUpload from '@/components/ImageUpload.vue';
 import { $gettext } from '@/language/gettext';
 import { Image, ImageSequencingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
+import FileUpload from '@/components/FileUpload.vue';
 
 export default defineComponent({
   name: 'ImageSequencingEditorImage',
-  components: { ImageUpload },
+  components: { FileUpload },
   props: {
     image: {
       type: Object as PropType<Image>,

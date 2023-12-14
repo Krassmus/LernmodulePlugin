@@ -8,7 +8,7 @@
           v-if="pair.draggableImage.imageUrl"
           :image="pair.draggableImage"
         />
-        <ImageUpload v-else @imageUploaded="onUploadDraggableImage" />
+        <FileUpload v-else @file-uploaded="onUploadDraggableImage" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -24,7 +24,7 @@
           v-if="pair.targetImage.imageUrl"
           :image="pair.targetImage"
         />
-        <ImageUpload v-else @imageUploaded="onUploadTargetImage" />
+        <FileUpload v-else @file-uploaded="onUploadTargetImage" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -40,16 +40,16 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import ImageUpload from '@/components/ImageUpload.vue';
 import { $gettext } from '@/language/gettext';
 import { ImagePair, ImagePairingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
+import FileUpload from '@/components/FileUpload.vue';
 
 export default defineComponent({
   name: 'EditedImagePair',
-  components: { EditedImagePairImage, ImageUpload },
+  components: { FileUpload, EditedImagePairImage },
   props: {
     pair: {
       type: Object as PropType<ImagePair>,

@@ -5,7 +5,7 @@
       <div>
         <h4>{{ $gettext('Bild') }}</h4>
         <EditedMemoryCardImage v-if="card.imageUrl" :card="card" />
-        <ImageUpload v-else @imageUploaded="onImageUploaded" />
+        <FileUpload v-else @file-uploaded="onImageUploaded" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -27,10 +27,11 @@ import ImageUpload from '@/components/ImageUpload.vue';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
+import FileUpload from '@/components/FileUpload.vue';
 
 export default defineComponent({
   name: 'EditedMemoryCard',
-  components: { EditedMemoryCardImage, ImageUpload },
+  components: { FileUpload, EditedMemoryCardImage },
   props: {
     card: {
       type: Object as PropType<MemoryCard>,

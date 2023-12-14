@@ -85,7 +85,7 @@ export async function updateAttempt(
   });
 }
 
-const uploadImageResponseSchema = z.object({
+const uploadFileResponseSchema = z.object({
   files: z.array(
     z.object({
       name: z.string(),
@@ -94,13 +94,13 @@ const uploadImageResponseSchema = z.object({
     })
   ),
 });
-export type UploadImageResponse = z.infer<typeof uploadImageResponseSchema>;
+export type UploadFileResponse = z.infer<typeof uploadFileResponseSchema>;
 
 /**
- * Upload the given image to the user's Wysiwyg Uploads folder in Stud.IP.
+ * Upload the given file to the user's Wysiwyg Uploads folder in Stud.IP.
  * @param image A File object
  */
-export async function uploadImage(image: File): Promise<UploadImageResponse> {
+export async function uploadFile(image: File): Promise<UploadFileResponse> {
   const uploadUrl = window.STUDIP.URLHelper.getURL(
     'dispatch.php/wysiwyg/upload'
   );
@@ -117,7 +117,7 @@ export async function uploadImage(image: File): Promise<UploadImageResponse> {
     }
     const json = await response.json();
     try {
-      return uploadImageResponseSchema.parse(json);
+      return uploadFileResponseSchema.parse(json);
     } catch (error) {
       throw new Error('Could not parse server response', { cause: error });
     }
