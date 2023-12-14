@@ -110,7 +110,7 @@ export default defineComponent({
 }
 .youtube-url-actions {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   button.button {
     margin-right: 0;
   }
