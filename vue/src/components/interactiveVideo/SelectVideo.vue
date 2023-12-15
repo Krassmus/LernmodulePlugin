@@ -5,6 +5,7 @@ import { defineComponent, PropType } from 'vue';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
+import FileUpload from '@/components/FileUpload.vue';
 
 export default defineComponent({
   name: 'SelectVideo',
@@ -42,8 +43,13 @@ export default defineComponent({
         type: 'none',
       };
     },
+    onUploadStudipVideo() {
+      this.taskDefinition.video = {
+        type: 'studipFileReference',
+      };
+    },
   },
-  components: { VideoPlayer },
+  components: { FileUpload, VideoPlayer },
 });
 </script>
 
@@ -59,7 +65,7 @@ export default defineComponent({
     <div>
       <label>
         {{ $gettext('Video hochladen') }}
-        <input type="file" @change="onPickVideoFile" />
+        <FileUpload @file-uploaded="onUploadStudipVideo" />
       </label>
     </div>
     <div class="separator" aria-hidden="true" role="presentation"></div>
@@ -87,7 +93,7 @@ export default defineComponent({
       <div v-if="taskDefinition.video.type === 'youtube'">
         <VideoPlayer :task="taskDefinition" />
       </div>
-      <div v-else-if="taskDefinition.video.type === 'studip'">
+      <div v-else-if="taskDefinition.video.type === 'studipFileReference'">
         Stud.IP video. (Not implemented.) {{ taskDefinition.video }}
       </div>
       <div class="video-preview-actions">
