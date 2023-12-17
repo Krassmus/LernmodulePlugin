@@ -53,7 +53,7 @@ export default defineComponent({
       }
       this.uploadRequestPromise = uploadFile(file)
         .then((res) => {
-          this.$emit('fileUploaded', res.files[0].url);
+          this.$emit('fileUploaded', res.files[0]);
           this.uploadRequestPromise = undefined;
         })
         .catch((error) => {

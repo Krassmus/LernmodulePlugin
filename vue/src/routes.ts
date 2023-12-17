@@ -85,14 +85,15 @@ export async function updateAttempt(
   });
 }
 
+const uploadedFileSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  url: z.string(),
+});
+export type UploadedFile = z.infer<typeof uploadedFileSchema>;
+
 const uploadFileResponseSchema = z.object({
-  files: z.array(
-    z.object({
-      name: z.string(),
-      type: z.string(),
-      url: z.string(),
-    })
-  ),
+  files: z.array(uploadedFileSchema),
 });
 export type UploadFileResponse = z.infer<typeof uploadFileResponseSchema>;
 

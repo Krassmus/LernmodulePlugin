@@ -6,6 +6,7 @@ import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
+import { UploadedFile } from '@/routes';
 
 export default defineComponent({
   name: 'SelectVideo',
@@ -43,7 +44,7 @@ export default defineComponent({
         type: 'none',
       };
     },
-    onUploadStudipVideo() {
+    onUploadStudipVideo(file: UploadedFile) {
       this.taskDefinition.video = {
         type: 'studipFileReference',
       };

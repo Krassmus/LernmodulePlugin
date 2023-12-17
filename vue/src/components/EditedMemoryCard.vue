@@ -28,6 +28,7 @@ import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
+import { UploadedFile } from '@/routes';
 
 export default defineComponent({
   name: 'EditedMemoryCard',
@@ -47,9 +48,10 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onImageUploaded(imageUrl: string): void {
+    onImageUploaded(file: UploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.cards[this.cardIndex].imageUrl = imageUrl;
+        // TODO #20  - Store file ID instead of URL
+        draft.cards[this.cardIndex].imageUrl = file.url;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,

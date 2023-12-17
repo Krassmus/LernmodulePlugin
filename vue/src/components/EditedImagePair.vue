@@ -46,6 +46,7 @@ import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
+import { UploadedFile } from '@/routes';
 
 export default defineComponent({
   name: 'EditedImagePair',
@@ -65,18 +66,20 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onUploadDraggableImage(imageUrl: string): void {
+    onUploadDraggableImage(file: UploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].draggableImage.imageUrl = imageUrl;
+        // TODO #20  - Store file ID instead of URL
+        draft.imagePairs[this.pairIndex].draggableImage.imageUrl = file.url;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
-    onUploadTargetImage(imageUrl: string): void {
+    onUploadTargetImage(file: UploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].targetImage.imageUrl = imageUrl;
+        // TODO #20  - Store file ID instead of URL
+        draft.imagePairs[this.pairIndex].targetImage.imageUrl = file.url;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
