@@ -58,66 +58,76 @@ export default defineComponent({
 </script>
 
 <template>
-  <p>
-    {{
-      $gettext(
-        'Lade ein Video hoch oder füge einen Link zu einem Youtube-Video ein.'
-      )
-    }}
-  </p>
-  <div class="picker">
-    <div>
-      <label>
-        {{ $gettext('Video hochladen') }}
-        <FileUpload @file-uploaded="onUploadStudipVideo" :accept="'video/*'" />
-      </label>
-    </div>
-    <div class="separator" aria-hidden="true" role="presentation"></div>
-    <div>
-      <label>
-        {{ $gettext('Youtube-URL') }}
-        <input
-          class="youtube-url-input"
-          type="text"
-          v-model="youtubeUrlInput"
-        />
-      </label>
-      <div class="youtube-url-actions">
-        <button
-          class="button accept"
-          @click="onSaveYoutubeVideo"
-          :disabled="
-            taskDefinition.video.type === 'youtube' &&
-            taskDefinition.video.url === youtubeUrlInput
-          "
-        >
-          {{ $gettext('Übernehmen') }}
-        </button>
+  <div
+    :class="{
+      hidden: taskDefinition.video.type !== 'none',
+    }"
+  >
+    <p>
+      {{
+        $gettext(
+          'Lade ein Video hoch oder füge einen Link zu einem Youtube-Video ein.'
+        )
+      }}
+    </p>
+    <div class="picker">
+      <div>
+        <label>
+          {{ $gettext('Video hochladen') }}
+          <FileUpload
+            @file-uploaded="onUploadStudipVideo"
+            :accept="'video/*'"
+          />
+        </label>
+      </div>
+      <div class="separator" aria-hidden="true" role="presentation"></div>
+      <div>
+        <label>
+          {{ $gettext('Youtube-URL') }}
+          <input
+            class="youtube-url-input"
+            type="text"
+            v-model="youtubeUrlInput"
+          />
+        </label>
+        <div class="youtube-url-actions">
+          <button
+            class="button accept"
+            @click="onSaveYoutubeVideo"
+            :disabled="
+              taskDefinition.video.type === 'youtube' &&
+              taskDefinition.video.url === youtubeUrlInput
+            "
+          >
+            {{ $gettext('Übernehmen') }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-  <div class="video-preview">
-    <p style="text-align: center" v-if="taskDefinition.video.type === 'none'">
-      {{ $gettext('Aktuell ist kein Video ausgewählt.') }}
-    </p>
-    <div v-else>
-      <div v-if="taskDefinition.video.type === 'youtube'">
-        <p>
-          {{ $gettext('Youtube-Video: ') }}
-          <a :href="taskDefinition.video.url">
-            {{ taskDefinition.video.url }}</a
-          >
-        </p>
-        <VideoPlayer :task="taskDefinition" />
-      </div>
-      <div v-else-if="taskDefinition.video.type === 'studipFileReference'">
-        <VideoPlayer :task="taskDefinition" />
-      </div>
-      <div class="video-preview-actions">
-        <button class="button trash" @click="deleteVideo">
-          {{ $gettext('Video löschen') }}
-        </button>
-      </div>
+  <div class="video-preview" v-if="taskDefinition.video.type !== 'none'">
+    <div v-if="taskDefinition.video.type === 'youtube'">
+      <VideoPlayer :task="taskDefinition" class="video-player" />
+      <p>
+        {{ $gettext('Youtube-Video: ') }}
+        <a :href="taskDefinition.video.url" target="_blank">
+          {{ taskDefinition.video.url }}</a
+        >
+      </p>
+    </div>
+    <div v-else-if="taskDefinition.video.type === 'studipFileReference'">
+      <VideoPlayer :task="taskDefinition" class="video-player" />
+      <p>
+        {{ $gettext('Hochgeladenes Video: ') }}
+        <a :href="taskDefinition.video.file.url" target="_blank">{{
+          taskDefinition.video.file.name
+        }}</a>
+      </p>
+    </div>
+    <div class="video-preview-actions">
+      <button class="button trash" @click="deleteVideo">
+        {{ $gettext('Video löschen') }}
+      </button>
     </div>
   </div>
 </template>
@@ -129,6 +139,9 @@ export default defineComponent({
   gap: 0.5em;
   .separator {
     background: #d0d7e3;
+  }
+  &.hidden {
+    display: none;
   }
 }
 .youtube-url-actions {
@@ -145,6 +158,9 @@ export default defineComponent({
 }
 .video-preview {
   margin-top: 1em;
+  .video-player {
+    margin-bottom: 1em;
+  }
   .video-preview-actions {
     margin-top: 1em;
     text-align: end;
