@@ -37,14 +37,6 @@ export default defineComponent({
       type: Object as PropType<InteractiveVideoTask>,
       required: true,
     },
-    mode: {
-      type: String,
-      required: false,
-      default: 'fluid',
-      validate(value: unknown) {
-        return value === 'fluid' || value === 'fill';
-      },
-    },
   },
   data() {
     return {
@@ -107,11 +99,7 @@ export default defineComponent({
       // The dispose() method removes the player element from the dom, so we must
       // create and append the player element by hand to the DOM each time.
       const playerElement = document.createElement('video-js');
-      if (this.mode === 'fluid') {
-        playerElement.classList.add('video-js', 'vjs-fluid');
-      } else if (this.mode === 'fill') {
-        playerElement.classList.add('video-js', 'vjs-fill', 'vjs-responsive');
-      }
+      playerElement.classList.add('video-js', 'vjs-fluid');
       (this.$refs.container as HTMLDivElement).appendChild(playerElement);
 
       // Create the player and set up event listeners
@@ -193,12 +181,7 @@ export default defineComponent({
     @dragover.capture="onDragoverRoot"
     :class="{ 'drag-in-progress': !!dragState }"
   >
-    <div
-      ref="container"
-      :class="{
-        [`container-${mode}`]: true,
-      }"
-    ></div>
+    <div ref="container"></div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
         v-if="interaction.type === 'lmbTask'"
@@ -247,10 +230,6 @@ export default defineComponent({
 .video-player-root {
   position: relative;
   overflow: hidden;
-}
-.container.fill {
-  height: 100%;
-  width: 100%;
 }
 .video-player-interaction {
   position: absolute;
