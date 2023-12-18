@@ -212,7 +212,7 @@ export default defineComponent({
             :is="viewerForTaskType(activeInteraction.taskDefinition.task_type)"
             :task="activeInteraction.taskDefinition"
           />
-          <button type="button" class="button" @click="closeInteraction">
+          <button type="button" class="button cancel" @click="closeInteraction">
             {{ $gettext('Schließen') }}
           </button>
         </div>
@@ -254,6 +254,7 @@ export default defineComponent({
     right: 1em;
     background: white;
     padding: 1em;
+    overflow: scroll;
   }
 }
 .fade-enter-active,
