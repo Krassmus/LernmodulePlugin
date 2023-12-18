@@ -21,10 +21,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>
-    <div>InteractiveVideoViewer</div>
-    <VideoPlayer :task="task" />
-  </div>
+  <VideoPlayer :task="task" />
 </template>
 
 <style scoped></style>
