@@ -38,7 +38,7 @@ export default defineComponent({
     type="button"
     @click="$emit('activateInteraction', interaction)"
   >
-    {{ interaction.taskDefinition.task_type }}
+    {{ printTaskType(interaction.taskDefinition.task_type) }}
   </button>
 </template>
 
