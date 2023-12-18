@@ -27,6 +27,8 @@ export default defineComponent({
       handler: function (value) {
         if (value.type === 'youtube') {
           this.youtubeUrlInput = value.url;
+        } else {
+          this.youtubeUrlInput = '';
         }
       },
     },
@@ -81,7 +83,14 @@ export default defineComponent({
         />
       </label>
       <div class="youtube-url-actions">
-        <button class="button" @click="onSaveYoutubeVideo">
+        <button
+          class="button accept"
+          @click="onSaveYoutubeVideo"
+          :disabled="
+            taskDefinition.video.type === 'youtube' &&
+            taskDefinition.video.url === youtubeUrlInput
+          "
+        >
           {{ $gettext('Übernehmen') }}
         </button>
       </div>
@@ -93,6 +102,12 @@ export default defineComponent({
     </p>
     <div v-else>
       <div v-if="taskDefinition.video.type === 'youtube'">
+        <p>
+          {{ $gettext('Youtube-Video: ') }}
+          <a :href="taskDefinition.video.url">
+            {{ taskDefinition.video.url }}</a
+          >
+        </p>
         <VideoPlayer :task="taskDefinition" />
       </div>
       <div v-else-if="taskDefinition.video.type === 'studipFileReference'">
