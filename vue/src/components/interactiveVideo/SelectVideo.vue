@@ -108,10 +108,10 @@ export default defineComponent({
             {{ taskDefinition.video.url }}</a
           >
         </p>
-        <VideoPlayer :task="taskDefinition" />
+        <VideoPlayer :task="taskDefinition" mode="fill" class="video-player" />
       </div>
       <div v-else-if="taskDefinition.video.type === 'studipFileReference'">
-        <VideoPlayer :task="taskDefinition" />
+        <VideoPlayer :task="taskDefinition" mode="fill" class="video-player" />
       </div>
       <div class="video-preview-actions">
         <button class="button trash" @click="deleteVideo">
@@ -148,6 +148,9 @@ export default defineComponent({
   .video-preview-actions {
     margin-top: 1em;
     text-align: end;
+  }
+  .video-player {
+    height: 20em;
   }
 }
 </style>
