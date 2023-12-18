@@ -47,6 +47,7 @@ export default defineComponent({
     onUploadStudipVideo(file: UploadedFile) {
       this.taskDefinition.video = {
         type: 'studipFileReference',
+        file,
       };
     },
   },
@@ -66,7 +67,7 @@ export default defineComponent({
     <div>
       <label>
         {{ $gettext('Video hochladen') }}
-        <FileUpload @file-uploaded="onUploadStudipVideo" />
+        <FileUpload @file-uploaded="onUploadStudipVideo" :accept="'video/*'" />
       </label>
     </div>
     <div class="separator" aria-hidden="true" role="presentation"></div>
@@ -95,7 +96,7 @@ export default defineComponent({
         <VideoPlayer :task="taskDefinition" />
       </div>
       <div v-else-if="taskDefinition.video.type === 'studipFileReference'">
-        Stud.IP video. (Not implemented.) {{ taskDefinition.video }}
+        <VideoPlayer :task="taskDefinition" />
       </div>
       <div class="video-preview-actions">
         <button class="button trash" @click="deleteVideo">

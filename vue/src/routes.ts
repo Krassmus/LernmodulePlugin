@@ -85,7 +85,7 @@ export async function updateAttempt(
   });
 }
 
-const uploadedFileSchema = z.object({
+export const uploadedFileSchema = z.object({
   name: z.string(),
   type: z.string(),
   url: z.string(),

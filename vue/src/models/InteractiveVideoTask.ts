@@ -6,6 +6,7 @@ import {
   taskDefinitionSchema,
 } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
+import { uploadedFileSchema } from '@/routes';
 
 // There are different types of 'interaction' which can be added to the video.
 // TODO Maybe put the 'base' attributes shared by all types of interaction all in one place.
@@ -75,7 +76,8 @@ export const interactiveVideoTaskSchema = z.object({
     }),
     z.object({
       type: z.literal('studipFileReference'),
-      // TODO check what data needs to be saved for this feature to be implemented
+      // TODO #20 -- Consider storing file ID instead of { url, name, type }
+      file: uploadedFileSchema,
     }),
   ]),
   interactions: z.array(interactiveVideoInteractionSchema),

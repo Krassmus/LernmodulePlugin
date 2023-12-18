@@ -57,6 +57,8 @@ export default defineComponent({
       switch (this.task.video.type) {
         case 'youtube':
           return this.task.video.url;
+        case 'studipFileReference':
+          return this.task.video.file.url;
         default:
           return '';
       }
@@ -65,6 +67,8 @@ export default defineComponent({
       switch (this.task.video.type) {
         case 'youtube':
           return 'video/youtube';
+        case 'studipFileReference':
+          return this.task.video.file.type;
         default:
           return '';
       }
@@ -102,7 +106,7 @@ export default defineComponent({
       this.player = videojs(
         playerElement,
         {
-          techOrder: ['youtube'],
+          techOrder: ['html5', 'youtube'],
           sources: [
             {
               src: this.videoUrl,
