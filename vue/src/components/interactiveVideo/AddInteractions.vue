@@ -28,43 +28,10 @@
     @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
     @deleteInteraction="deleteInteraction"
   />
-  <form
+  <SelectedInteractionProperties
     v-if="selectedInteraction"
-    class="default selected-interaction-properties"
-  >
-    <fieldset>
-      <legend>
-        {{ printInteractionType(selectedInteraction) }}
-        {{ $gettext('bearbeiten') }}
-      </legend>
-      <label v-if="selectedInteraction.type === 'pause'">
-        {{ $gettext('Zeitpunkt') }}
-        <input type="number" v-model="selectedInteraction.startTime" />
-      </label>
-      <label v-else>
-        {{ $gettext('Start') }}
-        <input type="number" v-model="selectedInteraction.startTime" />
-        {{ $gettext('Ende') }}
-        <input type="number" v-model="selectedInteraction.endTime" />
-      </label>
-    </fieldset>
-    <KeepAlive>
-      <component
-        v-if="selectedInteraction.type === 'lmbTask'"
-        :key="`${selectedInteraction.id}-viewer`"
-        :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
-        :task="selectedInteraction.taskDefinition"
-      />
-    </KeepAlive>
-    <KeepAlive>
-      <component
-        v-if="selectedInteraction.type === 'lmbTask'"
-        :key="`${selectedInteraction.id}-editor`"
-        :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
-        :taskDefinition="selectedInteraction.taskDefinition"
-      />
-    </KeepAlive>
-  </form>
+    :selectedInteraction="selectedInteraction"
+  />
 </template>
 
 <style scoped lang="scss">
@@ -85,21 +52,15 @@ import type {
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
+import SelectedInteractionProperties from '@/components/interactiveVideo/SelectedInteractionProperties.vue';
 import { VideoMetadata } from '@/components/interactiveVideo/events';
 import {
-  editorForTaskType,
   newTask,
   printTaskType,
   TaskDefinition,
-  viewerForTaskType,
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
-import { $gettext } from '../../language/gettext';
-import {
-  EditorState,
-  editorStateSymbol,
-} from '@/components/interactiveVideo/editorState';
-import { printInteractionType } from '@/models/InteractiveVideoTask';
+import { editorStateSymbol } from '@/components/interactiveVideo/editorState';
 
 const props = defineProps({
   taskDefinition: {
