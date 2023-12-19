@@ -38,3 +38,11 @@
 .button.question {
   @include button-with-icon(question, clickable, info_alt);
 }
+
+// A button which is just an icon without text.
+.small-button.trash {
+  @include button-with-icon(trash, clickable, info_alt);
+  &::before {
+    margin: unset; // Remove the margin set by button-with-icon
+  }
+}

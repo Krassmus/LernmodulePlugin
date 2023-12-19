@@ -211,11 +211,10 @@ export default defineComponent({
         {{ printInteractionType(interaction) }}
         <button
           type="button"
-          class="button delete"
+          class="small-button trash delete-interaction"
           @click="$emit('deleteInteraction', interaction.id)"
-        >
-          {{ $gettext('Löschen') }}
-        </button>
+          :title="$gettext('Löschen')"
+        ></button>
       </div>
 
       <div
@@ -249,6 +248,13 @@ export default defineComponent({
     border: 2px solid darkgrey;
     background: #e7ebf1;
     cursor: default;
+
+    button.delete-interaction {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0;
+    }
   }
 }
 .time-marker {
