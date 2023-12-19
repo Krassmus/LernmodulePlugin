@@ -12,15 +12,15 @@
         {{ $gettext('Zeitpunkt') }}
 
         <!-- eslint-disable-next-line vue/no-mutating-props-->
-        <input type="number" v-model="selectedInteraction.startTime" />
+        <input type="number" class="time-input" v-model="inputStartTime" />
       </label>
       <label v-else>
         {{ $gettext('Start') }}
         <!-- eslint-disable-next-line vue/no-mutating-props-->
-        <input type="number" v-model="selectedInteraction.startTime" />
+        <input type="number" class="time-input" v-model="inputStartTime" />
         {{ $gettext('Ende') }}
         <!-- eslint-disable-next-line vue/no-mutating-props-->
-        <input type="number" v-model="selectedInteraction.endTime" />
+        <input type="number" class="time-input" v-model="inputEndTime" />
       </label>
     </fieldset>
     <KeepAlive>
@@ -42,26 +42,71 @@
   </form>
 </template>
 <script lang="ts">
-import { PropType } from 'vue';
+import { inject, PropType } from 'vue';
 import {
   Interaction,
   printInteractionType,
 } from '@/models/InteractiveVideoTask';
 import { editorForTaskType, viewerForTaskType } from '@/models/TaskDefinition';
 import { $gettext } from '../../language/gettext';
+import {
+  EditorState,
+  editorStateSymbol,
+} from '@/components/interactiveVideo/editorState';
 
 export default {
   name: 'SelectedInteractionProperties',
-  methods: {
-    viewerForTaskType,
-    $gettext,
-    printInteractionType,
-    editorForTaskType,
+  setup() {
+    return {
+      editor: inject<EditorState>(editorStateSymbol),
+    };
   },
   props: {
     selectedInteraction: {
       type: Object as PropType<Interaction>,
       required: true,
+    },
+  },
+  data() {
+    return {
+      // inputStartTime
+    };
+  },
+  methods: {
+    viewerForTaskType,
+    $gettext,
+    printInteractionType,
+    editorForTaskType,
+    validateStartTime(value: number): boolean {
+      // return value > 0 && value < this.editor!.
+      //  TODO check video length as well.
+      if (this.selectedInteraction.type === 'pause') {
+        return value > 0;
+      } else {
+        return value > 0 && value < this.selectedInteraction.endTime;
+      }
+    },
+  },
+  computed: {
+    inputStartTime: {
+      get() {
+        return this.selectedInteraction.startTime;
+      },
+      set(value: number) {
+        if (this.validateStartTime(value)) {
+          // eslint-disable-next-line vue/no-mutating-props
+          this.selectedInteraction.startTime = value;
+        }
+      },
+    },
+    inputEndTime: {
+      get() {
+        return this.selectedInteraction.endTime;
+      },
+      set(value: number) {
+        // eslint-disable-next-line vue/no-mutating-props
+        this.selectedInteraction.endTime = value;
+      },
     },
   },
 };
