@@ -86,6 +86,10 @@ export default {
         return value > 0 && value < this.selectedInteraction.endTime;
       }
     },
+    validateEndTime(value: number): boolean {
+      //  TODO check video length as well.
+      return value > 0 && value > this.selectedInteraction.startTime;
+    },
   },
   computed: {
     inputStartTime: {
@@ -104,8 +108,10 @@ export default {
         return this.selectedInteraction.endTime;
       },
       set(value: number) {
-        // eslint-disable-next-line vue/no-mutating-props
-        this.selectedInteraction.endTime = value;
+        if (this.validateEndTime(value)) {
+          // eslint-disable-next-line vue/no-mutating-props
+          this.selectedInteraction.endTime = value;
+        }
       },
     },
   },
@@ -114,5 +120,8 @@ export default {
 <style scoped lang="scss">
 .selected-interaction-properties {
   margin-top: 2em;
+}
+form.default .time-input {
+  max-width: 12em;
 }
 </style>
