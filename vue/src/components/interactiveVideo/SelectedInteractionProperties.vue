@@ -1,7 +1,7 @@
 <template>
   <form
     v-if="selectedInteraction"
-    class="default show_validation_hints selected-interaction-properties"
+    class="default selected-interaction-properties"
   >
     <fieldset>
       <legend>
