@@ -3,7 +3,7 @@
     v-if="selectedInteraction"
     class="default selected-interaction-properties"
   >
-    <fieldset>
+    <fieldset ref="timeInputsFieldset">
       <legend>
         {{ printInteractionType(selectedInteraction) }}
         {{ $gettext('bearbeiten') }}
@@ -12,12 +12,13 @@
         {{ $gettext('Start') }}
         <input
           type="number"
-          v-model="inputStartTime"
+          v-model.number="inputStartTime"
           class="time-input"
           :class="{
             invalid: inputStartTimeErrors.length > 0,
           }"
           :aria-invalid="inputStartTimeErrors.length > 0"
+          @blur="onBlurTimeInputs"
         />
       </label>
       <p
@@ -30,8 +31,12 @@
       <template v-if="selectedInteraction.type !== 'pause'">
         <label>
           {{ $gettext('Ende') }}
-          <!-- eslint-disable-next-line vue/no-mutating-props-->
-          <input type="number" class="time-input" v-model="inputEndTime" />
+          <input
+            type="number"
+            class="time-input"
+            v-model="inputEndTime"
+            @blur="onBlurTimeInputs"
+          />
         </label>
       </template>
     </fieldset>
@@ -89,6 +94,27 @@ export default defineComponent({
     $gettext,
     printInteractionType,
     editorForTaskType,
+    onBlurTimeInputs(event: FocusEvent) {
+      const isFocusWithinTimeInputs = (
+        this.$refs.timeInputsFieldset as Node
+      ).contains(event.relatedTarget as Node);
+      if (isFocusWithinTimeInputs) {
+        // Don't reset the fields' input values if the user is still editing the
+        // start/end times
+        return;
+      }
+      this.inputStartTime = this.selectedInteraction.startTime;
+      if (this.selectedInteraction.type !== 'pause') {
+        this.inputEndTime = this.selectedInteraction.endTime;
+      }
+      console.log(
+        'onblur',
+        this.selectedInteraction.startTime,
+        this.inputStartTime,
+        (this.selectedInteraction as { endTime?: number })?.endTime,
+        this.inputEndTime
+      );
+    },
     validateEndTime(value: number): boolean {
       //  TODO check video length as well.
       return value >= 0 && value > this.selectedInteraction.startTime;
@@ -111,6 +137,9 @@ export default defineComponent({
   computed: {
     inputStartTimeErrors(): string[] {
       const errors: string[] = [];
+      if (!(typeof this.inputStartTime === 'number')) {
+        errors.push($gettext('Das eingegebene Wert muss eine Nummer sein.'));
+      }
       if (this.inputStartTime < 0) {
         errors.push($gettext('Das eingegebene Wert muss größer als 0 sein.'));
       }
