@@ -114,6 +114,7 @@ export default defineComponent({
             },
           ],
           controls: true,
+          autoplay: this.task.autoplay,
         },
         this.onPlayerReady
       );
