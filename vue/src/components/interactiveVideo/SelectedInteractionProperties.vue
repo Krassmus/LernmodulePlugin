@@ -127,10 +127,6 @@ export default defineComponent({
         this.inputEndTime
       );
     },
-    validateEndTime(value: number): boolean {
-      //  TODO check video length as well.
-      return value >= 0 && value > this.selectedInteraction.startTime;
-    },
   },
   watch: {
     inputStartTime(value: number) {
@@ -156,6 +152,17 @@ export default defineComponent({
         }
         // eslint-disable-next-line vue/no-mutating-props
         this.selectedInteraction.endTime = value;
+        /*
+         Scenario: startTime = 0, endTime = 4.
+         User begins to edit startTime and sets startTime = 5.
+         This is invalid (startTime > endTime) and is not applied.
+         Then, user edits endTime and sets endTime = 6.
+         Now, both inputs are valid. start < end. So, both should be applied.
+        */
+        if (this.inputStartTimeErrors.length === 0) {
+          // eslint-disable-next-line vue/no-mutating-props
+          this.selectedInteraction.startTime = this.inputStartTime;
+        }
       }
     },
     'selectedInteraction.endTime': {
