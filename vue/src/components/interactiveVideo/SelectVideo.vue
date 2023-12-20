@@ -150,17 +150,19 @@ export default defineComponent({
         <input type="checkbox" v-model="taskDefinition.autoplay" />
         {{ $gettext('Automatisch abspielen') }}
       </label>
-      <label>
-        {{ $gettext('Anfangen um') }}
-        <input
-          type="number"
-          class="wide"
-          v-model.number="taskDefinition.startAt"
-        />
-      </label>
-      <button type="button" class="button" @click="onClickUseCurrentTime">
-        {{ $gettext('Aktuelle Zeit übernehmen') }}
-      </button>
+      <div class="start-at-setting">
+        <label>
+          {{ $gettext('Anfangen um') }}
+          <input
+            type="number"
+            class="wide"
+            v-model.number="taskDefinition.startAt"
+          />
+        </label>
+        <button type="button" class="button" @click="onClickUseCurrentTime">
+          {{ $gettext('Aktuelle Zeit übernehmen') }}
+        </button>
+      </div>
     </fieldset>
   </form>
 </template>
@@ -198,6 +200,11 @@ export default defineComponent({
     margin-top: 1em;
     text-align: end;
   }
+}
+.start-at-setting {
+  display: flex;
+  gap: 1em;
+  align-items: end;
 }
 input[type='number'].wide {
   max-width: 12em;
