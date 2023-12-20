@@ -33,11 +33,22 @@
           {{ $gettext('Ende') }}
           <input
             type="number"
+            v-model.number="inputEndTime"
             class="time-input"
-            v-model="inputEndTime"
+            :class="{
+              invalid: inputEndTimeErrors.length > 0,
+            }"
+            :aria-invalid="inputEndTimeErrors.length > 0"
             @blur="onBlurTimeInputs"
           />
         </label>
+        <p
+          class="validation-error"
+          v-for="error in inputEndTimeErrors"
+          :key="error"
+        >
+          {{ error }}
+        </p>
       </template>
     </fieldset>
     <KeepAlive>
@@ -87,6 +98,7 @@ export default defineComponent({
   data() {
     return {
       inputStartTime: NaN,
+      inputEndTime: NaN,
     };
   },
   methods: {
@@ -133,6 +145,25 @@ export default defineComponent({
       },
       immediate: true,
     },
+    inputEndTime(value: number) {
+      if (this.inputEndTimeErrors.length === 0) {
+        if (this.selectedInteraction.type === 'pause') {
+          console.error(
+            'Unexpected end time input for "pause" interaction. (A "pause" has ' +
+              'no end time.) Ignoring.'
+          );
+          return;
+        }
+        // eslint-disable-next-line vue/no-mutating-props
+        this.selectedInteraction.endTime = value;
+      }
+    },
+    'selectedInteraction.endTime': {
+      handler: function (value: number) {
+        this.inputEndTime = value;
+      },
+      immediate: true,
+    },
   },
   computed: {
     inputStartTimeErrors(): string[] {
@@ -145,22 +176,27 @@ export default defineComponent({
       }
       if (this.selectedInteraction.type !== 'pause') {
         if (this.inputStartTime >= this.selectedInteraction.endTime) {
-          errors.push($gettext('Der Startpunkt muss vor dem Endpunkt kommen.'));
+          errors.push($gettext('Der Startpunkt muss vor dem Endpunkt sein.'));
         }
         // TODO check video length as well.
       }
       return errors;
     },
-    inputEndTime: {
-      get(): number {
-        return (this.selectedInteraction as { endTime: number }).endTime;
-      },
-      set(value: number): void {
-        if (this.validateEndTime(value)) {
-          // eslint-disable-next-line vue/no-mutating-props
-          (this.selectedInteraction as { endTime: number }).endTime = value;
+    inputEndTimeErrors(): string[] {
+      const errors: string[] = [];
+      if (!(typeof this.inputEndTime === 'number')) {
+        errors.push($gettext('Das eingegebene Wert muss eine Nummer sein.'));
+      }
+      if (this.inputEndTime < 0) {
+        errors.push($gettext('Das eingegebene Wert muss größer als 0 sein.'));
+      }
+      if (this.selectedInteraction.type !== 'pause') {
+        if (this.inputEndTime <= this.selectedInteraction.startTime) {
+          errors.push($gettext('Der Startpunkt muss vor dem Endpunkt sein.'));
         }
-      },
+        // TODO check video length as well.
+      }
+      return errors;
     },
   },
 });
