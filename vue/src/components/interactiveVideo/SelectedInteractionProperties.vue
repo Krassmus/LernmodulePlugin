@@ -54,7 +54,7 @@
   </form>
 </template>
 <script lang="ts">
-import { inject, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import {
   Interaction,
   printInteractionType,
@@ -66,7 +66,7 @@ import {
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
 
-export default {
+export default defineComponent({
   name: 'SelectedInteractionProperties',
   setup() {
     return {
@@ -123,18 +123,18 @@ export default {
       return errors;
     },
     inputEndTime: {
-      get() {
-        return this.selectedInteraction.endTime;
+      get(): number {
+        return (this.selectedInteraction as { endTime: number }).endTime;
       },
-      set(value: number) {
+      set(value: number): void {
         if (this.validateEndTime(value)) {
           // eslint-disable-next-line vue/no-mutating-props
-          this.selectedInteraction.endTime = value;
+          (this.selectedInteraction as { endTime: number }).endTime = value;
         }
       },
     },
   },
-};
+});
 </script>
 <style scoped lang="scss">
 form.default .time-input {
