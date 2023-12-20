@@ -19,6 +19,7 @@ export default defineComponent({
   data() {
     return {
       youtubeUrlInput: '',
+      currentTime: 0,
     };
   },
   watch: {
@@ -40,6 +41,12 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+    onTimeUpdate(time: number) {
+      this.currentTime = time;
+    },
+    onClickUseCurrentTime() {
+      this.taskDefinition.startAt = this.currentTime;
+    },
     onSaveYoutubeVideo() {
       this.taskDefinition.video = {
         type: 'youtube',
@@ -115,6 +122,7 @@ export default defineComponent({
       ref="videoPlayer"
       :task="taskDefinition"
       class="video-player"
+      @timeupdate="onTimeUpdate"
     />
     <p v-if="taskDefinition.video.type === 'youtube'">
       {{ $gettext('Youtube-Video: ') }}
@@ -144,8 +152,15 @@ export default defineComponent({
       </label>
       <label>
         {{ $gettext('Anfangen um') }}
-        <input type="number" v-model.number="taskDefinition.startAt" />
+        <input
+          type="number"
+          class="wide"
+          v-model.number="taskDefinition.startAt"
+        />
       </label>
+      <button type="button" class="button" @click="onClickUseCurrentTime">
+        {{ $gettext('Aktuelle Zeit übernehmen') }}
+      </button>
     </fieldset>
   </form>
 </template>
@@ -183,5 +198,8 @@ export default defineComponent({
     margin-top: 1em;
     text-align: end;
   }
+}
+input[type='number'].wide {
+  max-width: 12em;
 }
 </style>
