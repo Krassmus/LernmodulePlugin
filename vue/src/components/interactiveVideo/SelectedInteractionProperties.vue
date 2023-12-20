@@ -1,64 +1,58 @@
 <template>
-  <form
-    v-if="selectedInteraction"
-    class="default selected-interaction-properties"
-  >
-    <fieldset ref="timeInputsFieldset">
-      <legend>
-        {{ printInteractionType(selectedInteraction) }}
-        {{ $gettext('bearbeiten') }}
-      </legend>
-      <label>
-        {{ $gettext('Start') }}
-        <input
-          type="number"
-          v-model.number="inputStartTime"
-          class="time-input"
-          :class="{
-            invalid: inputStartTimeErrors.length > 0,
-          }"
-          :aria-invalid="inputStartTimeErrors.length > 0"
-          @blur="onBlurTimeInputs"
-        />
-      </label>
-      <p
-        class="validation-error"
-        v-for="error in inputStartTimeErrors"
-        :key="error"
-      >
-        {{ error }}
-      </p>
-      <template v-if="selectedInteraction.type !== 'pause'">
+  <div class="selected-interaction-properties">
+    <h3>
+      {{ $gettext('Interaktion') }}
+      "{{ printInteractionType(selectedInteraction) }}"
+    </h3>
+    <form v-if="selectedInteraction" class="default">
+      <fieldset ref="timeInputsFieldset">
+        <legend>
+          {{ $gettext('Zeitpunkt') }}
+        </legend>
         <label>
-          {{ $gettext('Ende') }}
+          {{ $gettext('Start') }}
           <input
             type="number"
-            v-model.number="inputEndTime"
+            v-model.number="inputStartTime"
             class="time-input"
             :class="{
-              invalid: inputEndTimeErrors.length > 0,
+              invalid: inputStartTimeErrors.length > 0,
             }"
-            :aria-invalid="inputEndTimeErrors.length > 0"
+            :aria-invalid="inputStartTimeErrors.length > 0"
             @blur="onBlurTimeInputs"
           />
         </label>
         <p
           class="validation-error"
-          v-for="error in inputEndTimeErrors"
+          v-for="error in inputStartTimeErrors"
           :key="error"
         >
           {{ error }}
         </p>
-      </template>
-    </fieldset>
-    <KeepAlive>
-      <component
-        v-if="selectedInteraction.type === 'lmbTask'"
-        :key="`${selectedInteraction.id}-viewer`"
-        :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
-        :task="selectedInteraction.taskDefinition"
-      />
-    </KeepAlive>
+        <template v-if="selectedInteraction.type !== 'pause'">
+          <label>
+            {{ $gettext('Ende') }}
+            <input
+              type="number"
+              v-model.number="inputEndTime"
+              class="time-input"
+              :class="{
+                invalid: inputEndTimeErrors.length > 0,
+              }"
+              :aria-invalid="inputEndTimeErrors.length > 0"
+              @blur="onBlurTimeInputs"
+            />
+          </label>
+          <p
+            class="validation-error"
+            v-for="error in inputEndTimeErrors"
+            :key="error"
+          >
+            {{ error }}
+          </p>
+        </template>
+      </fieldset>
+    </form>
     <KeepAlive>
       <component
         v-if="selectedInteraction.type === 'lmbTask'"
@@ -67,7 +61,19 @@
         :taskDefinition="selectedInteraction.taskDefinition"
       />
     </KeepAlive>
-  </form>
+    <h3>
+      {{ $gettext('Vorschau') }}
+    </h3>
+    <KeepAlive>
+      <component
+        v-if="selectedInteraction.type === 'lmbTask'"
+        class="lmb-task-preview"
+        :key="`${selectedInteraction.id}-viewer`"
+        :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
+        :task="selectedInteraction.taskDefinition"
+      />
+    </KeepAlive>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
@@ -212,9 +218,7 @@ export default defineComponent({
 form.default .time-input {
   max-width: 12em;
 }
-.selected-interaction-properties {
-  fieldset {
-    width: 100%;
-  }
+.lmb-task-preview {
+  margin-bottom: 1em;
 }
 </style>

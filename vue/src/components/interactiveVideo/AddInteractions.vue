@@ -40,7 +40,7 @@
 }
 
 .selected-interaction-properties {
-  margin-top: 2em;
+  margin-top: 1em;
 }
 </style>
 
