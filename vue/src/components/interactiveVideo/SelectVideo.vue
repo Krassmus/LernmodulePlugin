@@ -130,6 +130,16 @@ export default defineComponent({
       </button>
     </div>
   </div>
+  <form class="form default">
+    <fieldset>
+      <legend>{{ $gettext('Einstellungen') }}</legend>
+      <label>
+        <!-- eslint-disable vue/no-mutating-props -->
+        <input type="checkbox" v-model="taskDefinition.autoplay" />
+        {{ $gettext('Automatisch abspielen') }}
+      </label>
+    </fieldset>
+  </form>
 </template>
 
 <style scoped lang="scss">

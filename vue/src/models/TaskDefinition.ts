@@ -173,6 +173,23 @@ export const taskDefinitionSchema = z.union([
   interactiveVideoTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
+
+// Allowed lmb task types to be inserted in the Interactive Video Editor.
+// Excludes the type 'interactive video' to avoid a recursive reference, which
+// is cumbersome to solve in Typescript/Zod.
+// I at first used the workaround described at https://github.com/colinhacks/zod#recursive-types
+// but I later ran into hard-to-resolve typechecking errors when I started to
+// use .optional() inside of schemas. I decided this is the better option for now. -Ann
+export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
+  fillInTheBlanksTaskSchema,
+  questionTaskSchema,
+  dragTheWordsTaskSchema,
+  markTheWordsTaskSchema,
+  memoryTaskSchema,
+  imagePairingTaskSchema,
+  imageSequencingTaskSchema,
+]);
+
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
 export const taskTypeSchema = z.union([
@@ -399,6 +416,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         video: {
           type: 'none',
         },
+        autoplay: false,
       };
     default:
       throw new Error('Unimplemented type: ' + type);

@@ -2,8 +2,7 @@
 import { z } from 'zod';
 import {
   printTaskType,
-  TaskDefinition,
-  taskDefinitionSchema,
+  taskDefinitionSchemaMinusInteractiveVideo,
 } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { uploadedFileSchema } from '@/routes';
@@ -38,31 +37,24 @@ const overlaySchema = z.object({
 
 // LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
 // point in the video for the student to solve.
-// The code needed to express this type in zod is unfortunately a little bit
-// cumbersome, because it contains a recursive dependency on the 'TaskDefinition'
-// schema. This example is adapted from the documentation of zod:
-// https://github.com/colinhacks/zod#recursive-types
-const baseLmbTaskSchema = z.object({
+const lmbTaskInteractionSchema = z.object({
   type: z.literal('lmbTask'),
   id: z.string(),
   startTime: z.number(), // Seconds
   endTime: z.number(), // Seconds
   x: z.number(), // Position, as a fraction of video width, between 0 and 1
   y: z.number(), // Position, as a fraction of video height, between 0 and 1
+  taskDefinition: z.lazy(() => taskDefinitionSchemaMinusInteractiveVideo),
 });
-export type LmbTaskInteraction = z.infer<typeof baseLmbTaskSchema> & {
-  taskDefinition: TaskDefinition;
-};
-const lmbTaskInteractionSchema: z.ZodType<LmbTaskInteraction> =
-  baseLmbTaskSchema.extend({
-    taskDefinition: z.lazy(() => taskDefinitionSchema),
-  });
+export type LmbTaskInteraction = z.infer<typeof lmbTaskInteractionSchema>;
+
 const interactiveVideoInteractionSchema = z
   .union([pauseSchema, overlaySchema, lmbTaskInteractionSchema])
   .refine((data) => data.type === 'pause' || data.endTime > data.startTime, {
     message: 'endTime cannot be earlier than startTime',
     path: ['endTime'],
   });
+export type Interaction = z.infer<typeof interactiveVideoInteractionSchema>;
 
 export const interactiveVideoTaskSchema = z.object({
   task_type: z.literal('InteractiveVideo'),
@@ -80,9 +72,9 @@ export const interactiveVideoTaskSchema = z.object({
       file: uploadedFileSchema,
     }),
   ]),
+  autoplay: z.boolean().optional().default(false),
   interactions: z.array(interactiveVideoInteractionSchema),
 });
-export type Interaction = z.infer<typeof interactiveVideoInteractionSchema>;
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
 
 export function printInteractionType(interaction: Interaction): string {
