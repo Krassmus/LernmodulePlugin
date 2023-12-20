@@ -59,7 +59,10 @@
   </div>
 
   <div>
-    <component :is="editorForTaskType(taskDefinition.task_type)" />
+    <component
+      :is="editorForTaskType(taskDefinition.task_type)"
+      :taskDefinition="taskDefinition"
+    />
 
     <div class="save-undo-redo">
       <button
