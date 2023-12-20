@@ -114,7 +114,7 @@ export default defineComponent({
             },
           ],
           controls: true,
-          autoplay: this.task.autoplay,
+          autoplay: this.task.autoplay && !this.editor,
         },
         this.onPlayerReady
       );
@@ -126,6 +126,10 @@ export default defineComponent({
         }
       });
       this.player.on('loadedmetadata', () => {
+        this.player!.currentTime(this.task.startAt);
+        if (this.task.autoplay && !this.editor) {
+          this.player!.play();
+        }
         this.$emit('metadataChange', {
           length: this.player!.duration(),
         });

@@ -32,6 +32,11 @@ export default defineComponent({
         }
       },
     },
+    'taskDefinition.startAt': function (startAt: number) {
+      (
+        this.$refs.videoPlayer as InstanceType<typeof VideoPlayer>
+      )?.player!.currentTime(startAt);
+    },
   },
   methods: {
     $gettext,
@@ -106,24 +111,23 @@ export default defineComponent({
     </div>
   </div>
   <div class="video-preview" v-if="taskDefinition.video.type !== 'none'">
-    <div v-if="taskDefinition.video.type === 'youtube'">
-      <VideoPlayer :task="taskDefinition" class="video-player" />
-      <p>
-        {{ $gettext('Youtube-Video: ') }}
-        <a :href="taskDefinition.video.url" target="_blank">
-          {{ taskDefinition.video.url }}</a
-        >
-      </p>
-    </div>
-    <div v-else-if="taskDefinition.video.type === 'studipFileReference'">
-      <VideoPlayer :task="taskDefinition" class="video-player" />
-      <p>
-        {{ $gettext('Hochgeladenes Video: ') }}
-        <a :href="taskDefinition.video.file.url" target="_blank">{{
-          taskDefinition.video.file.name
-        }}</a>
-      </p>
-    </div>
+    <VideoPlayer
+      ref="videoPlayer"
+      :task="taskDefinition"
+      class="video-player"
+    />
+    <p v-if="taskDefinition.video.type === 'youtube'">
+      {{ $gettext('Youtube-Video: ') }}
+      <a :href="taskDefinition.video.url" target="_blank">
+        {{ taskDefinition.video.url }}</a
+      >
+    </p>
+    <p v-else-if="taskDefinition.video.type === 'studipFileReference'">
+      {{ $gettext('Hochgeladenes Video: ') }}
+      <a :href="taskDefinition.video.file.url" target="_blank">{{
+        taskDefinition.video.file.name
+      }}</a>
+    </p>
     <div class="video-preview-actions">
       <button class="button trash" @click="deleteVideo">
         {{ $gettext('Video löschen') }}
@@ -137,6 +141,10 @@ export default defineComponent({
         <!-- eslint-disable vue/no-mutating-props -->
         <input type="checkbox" v-model="taskDefinition.autoplay" />
         {{ $gettext('Automatisch abspielen') }}
+      </label>
+      <label>
+        {{ $gettext('Anfangen um') }}
+        <input type="number" v-model.number="taskDefinition.startAt" />
       </label>
     </fieldset>
   </form>

@@ -73,6 +73,7 @@ export const interactiveVideoTaskSchema = z.object({
     }),
   ]),
   autoplay: z.boolean().optional().default(false),
+  startAt: z.number().optional().default(0),
   interactions: z.array(interactiveVideoInteractionSchema),
 });
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
