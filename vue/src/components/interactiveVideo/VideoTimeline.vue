@@ -61,11 +61,17 @@ export default defineComponent({
       dragState: undefined as DragState,
       zoom: undefined as ZoomBehavior<Element, unknown> | undefined,
       zoomTransform: zoomIdentity,
+      timelineStyle: { transform: zoomIdentity.toString() },
     };
   },
   mounted() {
+    const onZoom = (event: D3ZoomEvent<Element, unknown>) => {
+      console.log('onZoom', event);
+      this.zoomTransform = event.transform;
+      this.timelineStyle.transform = this.zoomTransform.toString();
+    };
     this.zoom = zoom()
-      .on('zoom', this.onZoom)
+      .on('zoom', onZoom)
       .filter((event) => event.type === 'wheel');
     select(this.$refs.root as Element).call(this.zoom);
   },
@@ -97,10 +103,6 @@ export default defineComponent({
       date.setSeconds(seconds);
       const timeString = date.toISOString().substring(14, 19);
       return timeString;
-    },
-    onZoom(event: D3ZoomEvent<Element, unknown>) {
-      console.log('onZoom', event);
-      this.zoomTransform = event.transform;
     },
     /**
      * Convert the x coordinate in pixels on the timeline to a time in seconds
@@ -215,7 +217,11 @@ export default defineComponent({
         ></div>
       </div>
     </div>
-    <div class="timeline" @pointerdown.self="onPointerDownAxis">
+    <div
+      class="timeline"
+      @pointerdown.self="onPointerDownAxis"
+      :style="timelineStyle"
+    >
       <div
         v-for="interaction in task.interactions"
         :key="interaction.id"
