@@ -18,7 +18,7 @@ import {
   EditorState,
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
-import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
+import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity } from 'd3-zoom';
 import { select } from 'd3-selection';
 
 type DragState =
@@ -60,10 +60,13 @@ export default defineComponent({
     return {
       dragState: undefined as DragState,
       zoom: undefined as ZoomBehavior<Element, unknown> | undefined,
+      zoomTransform: zoomIdentity,
     };
   },
   mounted() {
-    this.zoom = zoom().on('zoom', this.onZoom);
+    this.zoom = zoom()
+      .on('zoom', this.onZoom)
+      .filter((event) => event.type === 'wheel');
     select(this.$refs.root as Element).call(this.zoom);
   },
   beforeUnmount() {
@@ -97,6 +100,7 @@ export default defineComponent({
     },
     onZoom(event: D3ZoomEvent<Element, unknown>) {
       console.log('onZoom', event);
+      this.zoomTransform = event.transform;
     },
     /**
      * Convert the x coordinate in pixels on the timeline to a time in seconds
