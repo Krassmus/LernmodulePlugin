@@ -160,7 +160,7 @@ export default defineComponent({
           />
         </label>
         <button type="button" class="button" @click="onClickUseCurrentTime">
-          {{ $gettext('Aktuelle Zeit übernehmen') }}
+          {{ $gettext('Aktuelle Position setzen') }}
         </button>
       </div>
     </fieldset>
@@ -204,7 +204,7 @@ export default defineComponent({
 .start-at-setting {
   display: flex;
   gap: 1em;
-  align-items: end;
+  align-items: flex-end;
 }
 input[type='number'].wide {
   max-width: 12em;
