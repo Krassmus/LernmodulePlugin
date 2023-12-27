@@ -244,6 +244,7 @@ export default defineComponent({
         }"
       />
     </div>
+    <div style="white-space: pre-wrap">zoomTransform: {{ zoomTransform }}</div>
   </div>
 </template>
 
