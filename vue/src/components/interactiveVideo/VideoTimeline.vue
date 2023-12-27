@@ -151,6 +151,7 @@ export default defineComponent({
         interactionStartTime: interaction.startTime,
         interactionDuration: interactionLength,
       };
+      this.editor!.selectInteraction(interaction.id);
     },
     onDragEndInteraction(event: DragEvent, interaction: Interaction) {
       this.dragState = undefined;
