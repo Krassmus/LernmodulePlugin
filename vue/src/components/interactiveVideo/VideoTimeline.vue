@@ -61,14 +61,14 @@ export default defineComponent({
       dragState: undefined as DragState,
       zoom: undefined as ZoomBehavior<Element, unknown> | undefined,
       zoomTransform: zoomIdentity,
-      timelineStyle: { transform: zoomIdentity.toString() },
+      zoomTransformString: zoomIdentity.toString(),
     };
   },
   mounted() {
     const onZoom = (event: D3ZoomEvent<Element, unknown>) => {
       console.log('onZoom', event);
       this.zoomTransform = event.transform;
-      this.timelineStyle.transform = this.zoomTransform.toString();
+      this.zoomTransformString = event.transform.toString();
     };
     this.zoom = zoom()
       .on('zoom', onZoom)
@@ -220,7 +220,7 @@ export default defineComponent({
     <div
       class="timeline"
       @pointerdown.self="onPointerDownAxis"
-      :style="timelineStyle"
+      :style="{ transform: zoomTransformString }"
     >
       <div
         v-for="interaction in task.interactions"
