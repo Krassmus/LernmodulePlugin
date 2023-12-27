@@ -18,6 +18,8 @@ import {
   EditorState,
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
+import { D3ZoomEvent, zoom, ZoomBehavior } from 'd3-zoom';
+import { select } from 'd3-selection';
 
 type DragState =
   | { type: 'timeMarker' }
@@ -57,7 +59,15 @@ export default defineComponent({
   data() {
     return {
       dragState: undefined as DragState,
+      zoom: undefined as ZoomBehavior<Element, unknown> | undefined,
     };
+  },
+  mounted() {
+    this.zoom = zoom().on('zoom', this.onZoom);
+    select(this.$refs.root as Element).call(this.zoom);
+  },
+  beforeUnmount() {
+    select(this.$refs.root as Element).on('.zoom', null);
   },
   computed: {
     positionForTimeMarker(): string {
@@ -84,6 +94,9 @@ export default defineComponent({
       date.setSeconds(seconds);
       const timeString = date.toISOString().substring(14, 19);
       return timeString;
+    },
+    onZoom(event: D3ZoomEvent<Element, unknown>) {
+      console.log('onZoom', event);
     },
     /**
      * Convert the x coordinate in pixels on the timeline to a time in seconds
@@ -179,7 +192,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="timeline-root" @dragover.capture="onDragOverTimeline">
+  <div ref="root" class="timeline-root" @dragover.capture="onDragOverTimeline">
     <div
       class="timeline-axis"
       ref="timelineAxis"
