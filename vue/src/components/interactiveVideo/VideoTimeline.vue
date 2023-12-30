@@ -20,6 +20,7 @@ import {
 } from '@/components/interactiveVideo/editorState';
 import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity } from 'd3-zoom';
 import { select } from 'd3-selection';
+import getEmValueFromElement from '@/components/interactiveVideo/getEmValueFromElement';
 
 type DragState =
   | { type: 'timeMarker' }
@@ -61,31 +62,45 @@ export default defineComponent({
       dragState: undefined as DragState,
       zoom: undefined as ZoomBehavior<Element, unknown> | undefined,
       zoomTransform: zoomIdentity,
-      zoomTransformString: zoomIdentity.toString(),
+      viewportWidthEm: 1,
     };
   },
   mounted() {
+    // Set up d3-zoom
     const onZoom = (event: D3ZoomEvent<Element, unknown>) => {
       console.log('onZoom', event);
       this.zoomTransform = event.transform;
-      this.zoomTransformString = event.transform.toString();
     };
     this.zoom = zoom()
       .on('zoom', onZoom)
-      .filter((event) => event.type === 'wheel');
+      .filter((event) => event.type === 'wheel')
+      .scaleExtent([0.02, 5]);
     select(this.$refs.root as Element).call(this.zoom);
+
+    this.recomputeViewportWidth();
   },
   beforeUnmount() {
     select(this.$refs.root as Element).on('.zoom', null);
   },
   computed: {
+    viewportWidthSeconds(): number {
+      const secondsPerEm = 0.5;
+      return (this.viewportWidthEm * secondsPerEm) / this.zoomTransform.k;
+    },
+    viewportStart(): number {
+      return 0; // TODO implement panning in timeline
+    },
+    viewportEnd(): number {
+      return this.viewportStart + this.viewportWidthSeconds;
+    },
     positionForTimeMarker(): string {
-      return `${(this.currentTime / this.videoMetadata.length) * 100}%`;
+      const deltaT = this.currentTime - this.viewportStart;
+      return `${(deltaT / this.viewportWidthSeconds) * 100}%`;
     },
     axisScale(): number[] {
       const points = 25;
-      const start = 0;
-      const end = this.videoMetadata.length;
+      const start = this.viewportStart;
+      const end = this.viewportEnd;
       const scale: number[] = [];
       for (let i = 0; i < points; i++) {
         scale.push(start + ((end - start) / points) * i);
@@ -97,6 +112,16 @@ export default defineComponent({
   methods: {
     printInteractionType,
     $gettext,
+    recomputeViewportWidth() {
+      const rect = (
+        this.$refs.timelineAxis as HTMLElement
+      ).getBoundingClientRect();
+      const widthInEm = getEmValueFromElement(
+        this.$refs.timelineAxis as HTMLElement,
+        rect.width
+      );
+      this.viewportWidthEm = widthInEm;
+    },
     // mm:ss
     formatVideoTimestamp(seconds: number): string {
       const date = new Date(0);
@@ -114,7 +139,7 @@ export default defineComponent({
       ).getBoundingClientRect();
       const x = clientX - rect.left; //x position within the element.
       const xFraction = x / rect.width;
-      const time = xFraction * this.videoMetadata.length;
+      const time = this.viewportStart + xFraction * this.viewportWidthSeconds;
       const clampedTime = Math.min(
         this.videoMetadata.length,
         Math.max(0, time)
@@ -217,11 +242,7 @@ export default defineComponent({
         ></div>
       </div>
     </div>
-    <div
-      class="timeline"
-      @pointerdown.self="onPointerDownAxis"
-      :style="{ transform: zoomTransformString }"
-    >
+    <div class="timeline" @pointerdown.self="onPointerDownAxis">
       <div
         v-for="interaction in task.interactions"
         :key="interaction.id"
@@ -250,7 +271,17 @@ export default defineComponent({
         }"
       />
     </div>
-    <div style="white-space: pre-wrap">zoomTransform: {{ zoomTransform }}</div>
+    <div style="white-space: pre-wrap">
+      {{
+        {
+          zoomTransform,
+          viewportWidthEm,
+          viewportWidthSeconds,
+          viewportStart,
+          viewportEnd,
+        }
+      }}
+    </div>
   </div>
 </template>
 
