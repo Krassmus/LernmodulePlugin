@@ -77,7 +77,12 @@ export default defineComponent({
       .scaleExtent([0.02, 5]);
     select(this.$refs.root as Element).call(this.zoom);
 
-    this.recomputeViewportWidth();
+    // When timeline axis becomes visible, its width should be recalculated.
+    // TODO recalculate also when it changes size (e.g. window is resized)
+    const observer = new IntersectionObserver(() =>
+      this.recomputeViewportWidth()
+    );
+    observer.observe(this.$refs.timelineAxis);
   },
   beforeUnmount() {
     select(this.$refs.root as Element).on('.zoom', null);
