@@ -151,9 +151,11 @@ export default defineComponent({
         interaction.type === 'pause'
           ? interaction.startTime + 1
           : interaction.endTime;
-      const startPercent =
-        (interaction.startTime / this.videoMetadata.length) * 100;
-      const endPercent = (endTime / this.videoMetadata.length) * 100;
+
+      const startDeltaT = interaction.startTime - this.viewportStart;
+      const startPercent = (startDeltaT / this.viewportWidthSeconds) * 100;
+      const endDeltaT = endTime - this.viewportStart;
+      const endPercent = (endDeltaT / this.viewportWidthSeconds) * 100;
       const isSelected = interaction.id === this.selectedInteractionId;
       return {
         left: `${startPercent}%`,
@@ -201,7 +203,7 @@ export default defineComponent({
         const rect = (
           this.$refs.timelineAxis as HTMLElement
         ).getBoundingClientRect();
-        const secondsPerPixel = this.videoMetadata.length / rect.width;
+        const secondsPerPixel = this.viewportWidthSeconds / rect.width;
         const dSeconds = mouseDx * secondsPerPixel;
         const seconds = this.dragState.interactionStartTime + dSeconds;
         // Prevent from dragging so far that the endTime > video length
