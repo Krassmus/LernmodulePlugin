@@ -31,7 +31,7 @@ usort($student_data, function ($data1, $data2) {
         <? foreach ($student_data as $student) : ?>
             <tr>
                 <td>
-                    <? $link = Context::get() && Config::get()->LERNMODUL_PARTICIPANT_EVALUATION && $GLOBALS['perm']->have_studip_perm(Config::get()->LERNMODUL_PARTICIPANT_EVALUATION, Context::get()->id)
+                    <? $link = (Context::getId() && Config::get()->LERNMODUL_PARTICIPANT_EVALUATION && $GLOBALS['perm']->have_studip_perm(Config::get()->LERNMODUL_PARTICIPANT_EVALUATION, Context::getId()))
                         ? PluginEngine::getLink($plugin, array(), "participants/evaluation/".$student['user_id'])
                         : URLHelper::getLink("dispatch.php/profile", array('username' => $student['username'])) ?>
                     <a href="<?= $link ?>">
