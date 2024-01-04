@@ -10,12 +10,12 @@
  * @license CC BY-SA 3.0 https://stackoverflow.com/a/34540037/7359454
  * Adapted by Ann Yanich
  *
- * @returns {Boolean|Number} The EM value, or false if unable to convert.
+ * @returns {Boolean|undefined} The EM value, or undefined if unable to convert.
  */
 export default function getEmValueFromElement(
   element: Element,
   pixelValue: number
-): number | boolean {
+): number | undefined {
   if (element.parentNode) {
     const parentFontSize = parseFloat(
       window.getComputedStyle(element.parentNode as Element).fontSize
@@ -27,5 +27,5 @@ export default function getEmValueFromElement(
       (elementFontSize / parentFontSize) * elementFontSize;
     return pixelValue / pixelValueOfOneEm;
   }
-  return false;
+  return undefined;
 }

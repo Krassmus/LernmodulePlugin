@@ -18,8 +18,6 @@ import {
   EditorState,
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
-import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity } from 'd3-zoom';
-import { select } from 'd3-selection';
 import getEmValueFromElement from '@/components/interactiveVideo/getEmValueFromElement';
 
 type DragState =
@@ -60,40 +58,27 @@ export default defineComponent({
   data() {
     return {
       dragState: undefined as DragState,
-      zoom: undefined as ZoomBehavior<Element, unknown> | undefined,
-      zoomTransform: zoomIdentity,
+      zoomTransform: { t: 0, k: 1 },
       viewportWidthEm: 1,
     };
   },
   mounted() {
-    // Set up d3-zoom
-    const onZoom = (event: D3ZoomEvent<Element, unknown>) => {
-      console.log('onZoom', event);
-      this.zoomTransform = event.transform;
-    };
-    this.zoom = zoom()
-      .on('zoom', onZoom)
-      .filter((event) => event.type === 'wheel')
-      .scaleExtent([0.02, 5]);
-    select(this.$refs.root as Element).call(this.zoom);
-
     // When timeline axis becomes visible, its width should be recalculated.
     // TODO recalculate also when it changes size (e.g. window is resized)
     const observer = new IntersectionObserver(() =>
       this.recomputeViewportWidth()
     );
-    observer.observe(this.$refs.timelineAxis);
-  },
-  beforeUnmount() {
-    select(this.$refs.root as Element).on('.zoom', null);
+    observer.observe(this.$refs.timelineAxis as HTMLElement);
   },
   computed: {
+    secondsPerEm(): number {
+      return 0.5 / this.zoomTransform.k;
+    },
     viewportWidthSeconds(): number {
-      const secondsPerEm = 0.5;
-      return (this.viewportWidthEm * secondsPerEm) / this.zoomTransform.k;
+      return this.viewportWidthEm * this.secondsPerEm;
     },
     viewportStart(): number {
-      return 0; // TODO implement panning in timeline
+      return this.zoomTransform.t;
     },
     viewportEnd(): number {
       return this.viewportStart + this.viewportWidthSeconds;
@@ -117,14 +102,26 @@ export default defineComponent({
   methods: {
     printInteractionType,
     $gettext,
+    onWheel(event: WheelEvent) {
+      const dy = event.deltaY / 1000;
+      const exp = Math.exp(dy);
+      this.zoomTransform.k *= exp;
+    },
+    pixelsToEm(pixels: number): number {
+      const timeline = this.$refs.timelineAxis;
+      if (!timeline) {
+        return 1;
+      }
+      return (
+        getEmValueFromElement(this.$refs.timelineAxis as HTMLElement, pixels) ??
+        NaN
+      );
+    },
     recomputeViewportWidth() {
       const rect = (
         this.$refs.timelineAxis as HTMLElement
       ).getBoundingClientRect();
-      const widthInEm = getEmValueFromElement(
-        this.$refs.timelineAxis as HTMLElement,
-        rect.width
-      );
+      const widthInEm = this.pixelsToEm(rect.width);
       this.viewportWidthEm = widthInEm;
     },
     // mm:ss
@@ -249,24 +246,30 @@ export default defineComponent({
         ></div>
       </div>
     </div>
-    <div class="timeline" @pointerdown.self="onPointerDownAxis">
-      <div
-        v-for="interaction in task.interactions"
-        :key="interaction.id"
-        class="timeline-interaction"
-        :style="timelineInteractionStyle(interaction)"
-        draggable="true"
-        @click.stop="onClickInteraction(interaction)"
-        @dragstart="onDragStartInteraction($event, interaction)"
-        @dragend="onDragEndInteraction($event, interaction)"
-      >
-        {{ printInteractionType(interaction) }}
-        <button
-          type="button"
-          class="small-button trash delete-interaction"
-          @click="$emit('deleteInteraction', interaction.id)"
-          :title="$gettext('Löschen')"
-        ></button>
+    <div
+      class="timeline"
+      @pointerdown.self="onPointerDownAxis"
+      @wheel="onWheel"
+    >
+      <div class="timeline-interactions">
+        <div
+          v-for="interaction in task.interactions"
+          :key="interaction.id"
+          class="timeline-interaction"
+          :style="timelineInteractionStyle(interaction)"
+          draggable="true"
+          @click.stop="onClickInteraction(interaction)"
+          @dragstart="onDragStartInteraction($event, interaction)"
+          @dragend="onDragEndInteraction($event, interaction)"
+        >
+          {{ printInteractionType(interaction) }}
+          <button
+            type="button"
+            class="small-button trash delete-interaction"
+            @click="$emit('deleteInteraction', interaction.id)"
+            :title="$gettext('Löschen')"
+          ></button>
+        </div>
       </div>
 
       <div
@@ -304,36 +307,45 @@ export default defineComponent({
   height: 5em;
   border: 1px solid black;
   cursor: text;
-  .timeline-interaction {
-    position: absolute;
-    height: 100%;
-    box-sizing: border-box;
-    border: 2px solid darkgrey;
-    background: #e7ebf1;
-    cursor: default;
 
-    button.delete-interaction {
+  .time-marker {
+    position: absolute;
+    top: 0;
+    height: 5em;
+    width: 2px;
+    background-color: blue;
+    &::before {
+      content: '';
       position: absolute;
-      top: 0;
-      right: 0;
-      padding: 0;
+      top: -1em;
+      height: 1em;
+      width: 1em;
+      background-color: blue;
     }
   }
-}
-.time-marker {
-  position: absolute;
-  top: 0;
-  height: 5em;
-  width: 2px;
-  background-color: blue;
-}
-.time-marker::before {
-  content: '';
-  position: absolute;
-  top: -1em;
-  height: 1em;
-  width: 1em;
-  background-color: blue;
+
+  .timeline-interactions {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .timeline-interaction {
+      position: absolute;
+      height: 100%;
+      box-sizing: border-box;
+      border: 2px solid darkgrey;
+      background: #e7ebf1;
+      cursor: default;
+
+      button.delete-interaction {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0;
+      }
+    }
+  }
 }
 
 .timeline-axis {
