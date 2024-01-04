@@ -35,10 +35,12 @@ type DragState =
   | {
       type: 'interactionStart';
       id: string;
+      time: number; // Seconds
     }
   | {
       type: 'interactionEnd';
       id: string;
+      time: number; // Seconds
     }
   | undefined;
 export default defineComponent({
@@ -278,11 +280,19 @@ export default defineComponent({
       this.dragState = undefined;
     },
     onPointerDownInteractionStart(ev: PointerEvent, interaction: Interaction) {
-      this.dragState = { type: 'interactionStart', id: interaction.id };
+      this.dragState = {
+        type: 'interactionStart',
+        id: interaction.id,
+        time: interaction.startTime,
+      };
       (ev.target as HTMLElement).setPointerCapture(ev.pointerId);
     },
     onPointerDownInteractionEnd(ev: PointerEvent, interaction: Interaction) {
-      this.dragState = { type: 'interactionEnd', id: interaction.id };
+      this.dragState = {
+        type: 'interactionEnd',
+        id: interaction.id,
+        time: (interaction as any).endTime,
+      };
       (ev.target as HTMLElement).setPointerCapture(ev.pointerId);
     },
     onPointerMoveInteractionStart(ev: PointerEvent, interaction: Interaction) {
@@ -291,12 +301,13 @@ export default defineComponent({
         this.dragState.id === interaction.id
       ) {
         const dSeconds = this.pixelsToSeconds(ev.movementX);
-        const seconds = interaction.startTime + dSeconds;
-        const secondsClamped = Math.max(
+        this.dragState.time += dSeconds;
+        const timeClamped = Math.max(
           0,
-          Math.min((interaction as any).endTime - 0.1, seconds)
+          Math.min((interaction as any).endTime - 0.1, this.dragState.time)
         );
-        interaction.startTime = secondsClamped;
+        // TODO make undoable
+        interaction.startTime = timeClamped;
       }
     },
     onPointerMoveInteractionEnd(ev: PointerEvent, interaction: Interaction) {
@@ -305,11 +316,12 @@ export default defineComponent({
         this.dragState.id === interaction.id
       ) {
         const dSeconds = this.pixelsToSeconds(ev.movementX);
-        const seconds: number = (interaction as any).endTime + dSeconds;
+        this.dragState.time += dSeconds;
         const secondsClamped = Math.max(
           interaction.startTime + 0.1,
-          Math.min(this.videoMetadata.length, seconds)
+          Math.min(this.videoMetadata.length, this.dragState.time)
         );
+        // TODO make undoable
         (interaction as any).endTime = secondsClamped;
       }
     },
