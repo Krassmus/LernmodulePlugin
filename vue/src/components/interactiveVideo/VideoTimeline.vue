@@ -71,11 +71,9 @@ export default defineComponent({
     observer.observe(this.$refs.timelineAxis as HTMLElement);
   },
   computed: {
-    secondsPerEm(): number {
-      return 0.5 / this.zoomTransform.k;
-    },
     viewportWidthSeconds(): number {
-      return this.viewportWidthEm * this.secondsPerEm;
+      const secondsPerEm = 0.5 / this.zoomTransform.k;
+      return this.viewportWidthEm * secondsPerEm;
     },
     viewportStart(): number {
       return this.zoomTransform.t;
@@ -103,9 +101,28 @@ export default defineComponent({
     printInteractionType,
     $gettext,
     onWheel(event: WheelEvent) {
-      const dy = event.deltaY / 1000;
+      event.preventDefault(); // Prevent scrolling page up/down
+
+      // Save information needed to recalculate 't' (translate) parameter after zoom
+      const viewportStart0 = this.zoomTransform.t;
+      const viewportWidth0 = this.viewportWidthSeconds;
+      const t = this.xCoordinateToTime(event.clientX);
+      console.log('clientx', event.clientX, 't', t);
+
+      // Calculate new zoom level
+      const dy = -event.deltaY / 1000;
       const exp = Math.exp(dy);
-      this.zoomTransform.k *= exp;
+      const newK = this.zoomTransform.k * exp;
+      this.zoomTransform.k = Math.max(0.02, Math.min(5, newK));
+
+      // Calculate new translation in order to keep the point under the mouse
+      // cursor stationary.
+      // viewportWidthSeconds is recalculated (because it's a computed property)
+      // after zoomTransform.k is modified.
+      const viewportWidth1 = this.viewportWidthSeconds;
+      const viewportStart1 =
+        t - ((t - viewportStart0) / viewportWidth0) * viewportWidth1;
+      this.zoomTransform.t = viewportStart1;
     },
     pixelsToEm(pixels: number): number {
       const timeline = this.$refs.timelineAxis;
