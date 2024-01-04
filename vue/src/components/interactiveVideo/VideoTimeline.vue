@@ -92,6 +92,14 @@ export default defineComponent({
       });
     select(this.$refs.timeline as HTMLElement).call(dragBehavior);
   },
+  watch: {
+    // Automatically scroll timeline to keep the current playback position in view
+    currentTime(currentTime: number) {
+      if (currentTime < this.viewportStart || currentTime > this.viewportEnd) {
+        this.zoomTransform.t = this.constrainZoomTranslate(currentTime - 0.5);
+      }
+    },
+  },
   computed: {
     viewportWidthSeconds(): number {
       const secondsPerEm = 0.5 / this.zoomTransform.k;
