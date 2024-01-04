@@ -147,7 +147,6 @@ export default defineComponent({
       const viewportStart0 = this.zoomTransform.t;
       const viewportWidth0 = this.viewportWidthSeconds;
       const t = this.xCoordinateToTime(event.clientX);
-      console.log('clientx', event.clientX, 't', t);
 
       // Calculate new zoom level
       const dy = -event.deltaY / 1000;
@@ -180,9 +179,12 @@ export default defineComponent({
       );
     },
     recomputeViewportWidth() {
-      const rect = (
-        this.$refs.timelineAxis as HTMLElement
-      ).getBoundingClientRect();
+      const axis = this.$refs.timelineAxis as HTMLElement | null;
+      if (!axis) {
+        console.warn('recomputeViewportWidth: timelineAxis is null');
+        return;
+      }
+      const rect = axis.getBoundingClientRect();
       const widthInEm = this.pixelsToEm(rect.width);
       this.viewportWidthEm = widthInEm;
     },
@@ -255,8 +257,6 @@ export default defineComponent({
       this.$emit('clickInteraction', interaction);
     },
     onDragStartInteraction(event: DragEvent, interaction: Interaction) {
-      console.log('dragStartInteraction');
-      console.log('event target: ', event.target);
       event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
       const interactionLength = interaction.endTime - interaction.startTime;
       this.dragState = {
@@ -437,12 +437,12 @@ export default defineComponent({
     <div style="white-space: pre-wrap">
       {{
         {
-          dragState,
           zoomTransform,
           viewportWidthEm,
           viewportWidthSeconds,
           viewportStart,
           viewportEnd,
+          dragState: dragState,
         }
       }}
     </div>
