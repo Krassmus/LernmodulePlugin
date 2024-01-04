@@ -32,6 +32,10 @@ type DragState =
       interactionStartTime: number; // Seconds
       interactionDuration: number; // Seconds
     }
+  | {
+      type: 'interactionStartTime';
+      id: string;
+    }
   | undefined;
 export default defineComponent({
   name: 'VideoTimeline',
@@ -251,6 +255,7 @@ export default defineComponent({
     },
     onDragStartInteraction(event: DragEvent, interaction: Interaction) {
       console.log('dragStartInteraction');
+      console.log('event target: ', event.target);
       event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
       const interactionLength =
         interaction.type === 'pause'
@@ -268,6 +273,22 @@ export default defineComponent({
     onDragEndInteraction(event: DragEvent, interaction: Interaction) {
       this.dragState = undefined;
     },
+    onDragStartInteractionStartTime(
+      event: DragEvent,
+      interaction: Interaction
+    ) {
+      console.log('dragStartInteractionStartTime');
+      console.log('event target: ', event.target);
+      event.dataTransfer!.setDragImage(
+        (event.target as any).parentElement,
+        -99999,
+        -99999
+      );
+      this.dragState = { type: 'interactionStartTime', id: interaction.id };
+    },
+    onDragEndInteractionStartTime(interaction: Interaction) {
+      this.dragState = undefined;
+    },
     onPointerDownAxis(e: PointerEvent) {
       const time = this.xCoordinateToTime(e.clientX);
       this.$emit('timelineSeek', time);
@@ -281,6 +302,8 @@ export default defineComponent({
         e.preventDefault(); // Stop ghost image from flying back after drop
         const time = this.xCoordinateToTime(e.clientX);
         this.emitTimelineSeekThrottled(time);
+      } else if (this.dragState?.type === 'interactionStartTime') {
+        // e.preventDefault(); // Stop ghost image
       } else if (this.dragState?.type === 'interaction') {
         const mouseDx = e.clientX - this.dragState.mouseStartPos[0];
         const rect = (
@@ -353,6 +376,14 @@ export default defineComponent({
             @click="$emit('deleteInteraction', interaction.id)"
             :title="$gettext('Löschen')"
           ></button>
+          <div
+            class="interaction-drag-handle start"
+            draggable="true"
+            @dragstart.stop="
+              onDragStartInteractionStartTime($event, interaction)
+            "
+            @dragend.stop="onDragEndInteractionStartTime(interaction)"
+          ></div>
         </div>
       </div>
 
@@ -368,6 +399,7 @@ export default defineComponent({
     <div style="white-space: pre-wrap">
       {{
         {
+          dragState,
           zoomTransform,
           viewportWidthEm,
           viewportWidthSeconds,
@@ -426,6 +458,15 @@ export default defineComponent({
       border: 2px solid darkgrey;
       background: #e7ebf1;
       cursor: default;
+
+      .interaction-drag-handle.start {
+        position: absolute;
+        left: -1px;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        cursor: ew-resize;
+      }
 
       button.delete-interaction {
         position: absolute;
