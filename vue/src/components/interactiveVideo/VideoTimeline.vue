@@ -33,7 +33,11 @@ type DragState =
       interactionDuration: number; // Seconds
     }
   | {
-      type: 'interactionStartTime';
+      type: 'interactionStart';
+      id: string;
+    }
+  | {
+      type: 'interactionEnd';
       id: string;
     }
   | undefined;
@@ -273,21 +277,47 @@ export default defineComponent({
     onDragEndInteraction(event: DragEvent, interaction: Interaction) {
       this.dragState = undefined;
     },
-    onDragStartInteractionStartTime(
-      event: DragEvent,
-      interaction: Interaction
-    ) {
-      console.log('dragStartInteractionStartTime');
-      console.log('event target: ', event.target);
-      event.dataTransfer!.setDragImage(
-        (event.target as any).parentElement,
-        -99999,
-        -99999
-      );
-      this.dragState = { type: 'interactionStartTime', id: interaction.id };
+    onPointerDownInteractionStart(ev: PointerEvent, interaction: Interaction) {
+      this.dragState = { type: 'interactionStart', id: interaction.id };
+      (ev.target as HTMLElement).setPointerCapture(ev.pointerId);
     },
-    onDragEndInteractionStartTime(interaction: Interaction) {
+    onPointerDownInteractionEnd(ev: PointerEvent, interaction: Interaction) {
+      this.dragState = { type: 'interactionEnd', id: interaction.id };
+      (ev.target as HTMLElement).setPointerCapture(ev.pointerId);
+    },
+    onPointerMoveInteractionStart(ev: PointerEvent, interaction: Interaction) {
+      if (
+        this.dragState?.type === 'interactionStart' &&
+        this.dragState.id === interaction.id
+      ) {
+        const seconds = this.xCoordinateToTime(ev.clientX);
+        const clamped = Math.max(
+          0,
+          Math.min((interaction as any).endTime - 0.1, seconds)
+        );
+        interaction.startTime = clamped;
+      }
+    },
+    onPointerMoveInteractionEnd(ev: PointerEvent, interaction: Interaction) {
+      if (
+        this.dragState?.type === 'interactionEnd' &&
+        this.dragState.id === interaction.id
+      ) {
+        const seconds = this.xCoordinateToTime(ev.clientX);
+        const clamped = Math.max(
+          interaction.startTime + 0.1,
+          Math.min(this.videoMetadata.length, seconds)
+        );
+        (interaction as any).endTime = clamped;
+      }
+    },
+    onPointerUpInteractionStart(ev: PointerEvent, interaction: Interaction) {
       this.dragState = undefined;
+      (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
+    },
+    onPointerUpInteractionEnd(ev: PointerEvent, interaction: Interaction) {
+      this.dragState = undefined;
+      (ev.target as HTMLElement).releasePointerCapture(ev.pointerId);
     },
     onPointerDownAxis(e: PointerEvent) {
       const time = this.xCoordinateToTime(e.clientX);
@@ -302,8 +332,6 @@ export default defineComponent({
         e.preventDefault(); // Stop ghost image from flying back after drop
         const time = this.xCoordinateToTime(e.clientX);
         this.emitTimelineSeekThrottled(time);
-      } else if (this.dragState?.type === 'interactionStartTime') {
-        // e.preventDefault(); // Stop ghost image
       } else if (this.dragState?.type === 'interaction') {
         const mouseDx = e.clientX - this.dragState.mouseStartPos[0];
         const rect = (
@@ -364,7 +392,7 @@ export default defineComponent({
           :key="interaction.id"
           class="timeline-interaction"
           :style="timelineInteractionStyle(interaction)"
-          draggable="true"
+          :draggable="!dragState"
           @click.stop="onClickInteraction(interaction)"
           @dragstart="onDragStartInteraction($event, interaction)"
           @dragend="onDragEndInteraction($event, interaction)"
@@ -378,11 +406,15 @@ export default defineComponent({
           ></button>
           <div
             class="interaction-drag-handle start"
-            draggable="true"
-            @dragstart.stop="
-              onDragStartInteractionStartTime($event, interaction)
-            "
-            @dragend.stop="onDragEndInteractionStartTime(interaction)"
+            @pointerdown="onPointerDownInteractionStart($event, interaction)"
+            @pointermove="onPointerMoveInteractionStart($event, interaction)"
+            @pointerup="onPointerUpInteractionStart($event, interaction)"
+          ></div>
+          <div
+            class="interaction-drag-handle end"
+            @pointerdown="onPointerDownInteractionEnd($event, interaction)"
+            @pointermove="onPointerMoveInteractionEnd($event, interaction)"
+            @pointerup="onPointerUpInteractionEnd($event, interaction)"
           ></div>
         </div>
       </div>
@@ -459,13 +491,18 @@ export default defineComponent({
       background: #e7ebf1;
       cursor: default;
 
-      .interaction-drag-handle.start {
+      .interaction-drag-handle {
         position: absolute;
-        left: -1px;
         top: 0;
         bottom: 0;
-        width: 4px;
+        width: 5px;
         cursor: ew-resize;
+        &.start {
+          left: -1px;
+        }
+        &.end {
+          right: -4px;
+        }
       }
 
       button.delete-interaction {
