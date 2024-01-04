@@ -240,14 +240,9 @@ export default defineComponent({
       return clampedTime;
     },
     timelineInteractionStyle(interaction: Interaction): StyleValue {
-      const endTime =
-        interaction.type === 'pause'
-          ? interaction.startTime + 1
-          : interaction.endTime;
-
       const startDeltaT = interaction.startTime - this.viewportStart;
       const startPercent = (startDeltaT / this.viewportWidthSeconds) * 100;
-      const endDeltaT = endTime - this.viewportStart;
+      const endDeltaT = interaction.endTime - this.viewportStart;
       const endPercent = (endDeltaT / this.viewportWidthSeconds) * 100;
       const isSelected = interaction.id === this.selectedInteractionId;
       return {
@@ -263,10 +258,7 @@ export default defineComponent({
       console.log('dragStartInteraction');
       console.log('event target: ', event.target);
       event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
-      const interactionLength =
-        interaction.type === 'pause'
-          ? 1
-          : interaction.endTime - interaction.startTime;
+      const interactionLength = interaction.endTime - interaction.startTime;
       this.dragState = {
         type: 'interaction',
         id: interaction.id,

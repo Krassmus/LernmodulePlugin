@@ -79,8 +79,7 @@ export default defineComponent({
      */
     visibleInteractions(): Interaction[] {
       return this.task.interactions.filter((i) => {
-        const endTime = i.type === 'pause' ? i.startTime + 1 : i.endTime;
-        return i.startTime <= this.time && endTime > this.time;
+        return i.startTime <= this.time && i.endTime > this.time;
       });
     },
   },
@@ -222,7 +221,6 @@ export default defineComponent({
           </button>
         </div>
       </div>
-      <div v-else-if="activeInteraction?.type === 'pause'">Pause</div>
       <div v-else-if="activeInteraction?.type === 'overlay'">Overlay</div>
     </Transition>
   </div>

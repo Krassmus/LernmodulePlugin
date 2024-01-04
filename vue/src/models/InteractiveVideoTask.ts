@@ -14,16 +14,6 @@ import { uploadedFileSchema } from '@/routes';
 // (v-model for 'end time' input field), but I have noticed that I must calculate a duration
 // by hand in many other places anyway.
 
-// Pause interaction: Video pauses at a specific point in time
-const pauseSchema = z.object({
-  type: z.literal('pause'),
-  id: z.string(),
-  startTime: z.number(), // Seconds
-  x: z.number(), // Position, as a fraction of video width, between 0 and 1
-  y: z.number(), // Position, as a fraction of video height, between 0 and 1
-  text: z.string(), // Sanitized HTML from Wysiwyg editor
-});
-
 // Overlay: An overlay is shown on top of the video over a span of time
 const overlaySchema = z.object({
   type: z.literal('overlay'),
@@ -49,8 +39,8 @@ const lmbTaskInteractionSchema = z.object({
 export type LmbTaskInteraction = z.infer<typeof lmbTaskInteractionSchema>;
 
 const interactiveVideoInteractionSchema = z
-  .union([pauseSchema, overlaySchema, lmbTaskInteractionSchema])
-  .refine((data) => data.type === 'pause' || data.endTime > data.startTime, {
+  .union([overlaySchema, lmbTaskInteractionSchema])
+  .refine((data) => data.endTime > data.startTime, {
     message: 'endTime cannot be earlier than startTime',
     path: ['endTime'],
   });
@@ -80,8 +70,6 @@ export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
 
 export function printInteractionType(interaction: Interaction): string {
   switch (interaction.type) {
-    case 'pause':
-      return $gettext('Pause');
     case 'lmbTask':
       return printTaskType(interaction.taskDefinition.task_type);
     case 'overlay':

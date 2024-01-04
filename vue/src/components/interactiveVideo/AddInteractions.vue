@@ -152,10 +152,8 @@ function dragInteractionTimeline(id: string, startTime: number) {
     throw new Error(`Interaction with id ${id} not found`);
   }
   // TODO make undoable ?
-  if (interaction.type !== 'pause') {
-    const duration = interaction.endTime - interaction.startTime;
-    interaction.endTime = startTime + duration;
-  }
+  const duration = interaction.endTime - interaction.startTime;
+  interaction.endTime = startTime + duration;
   interaction.startTime = startTime;
 }
 </script>
