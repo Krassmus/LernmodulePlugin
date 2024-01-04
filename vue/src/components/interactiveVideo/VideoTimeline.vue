@@ -24,6 +24,7 @@ import { D3DragEvent, drag } from 'd3-drag';
 
 type DragState =
   | { type: 'timeMarker' }
+  | { type: 'panTimeline' }
   | {
       type: 'interaction';
       id: string;
@@ -73,17 +74,23 @@ export default defineComponent({
     observer.observe(this.$refs.timelineAxis as HTMLElement);
 
     // Set up d3-drag
-    const dragTimeline = (event: D3DragEvent<Element, unknown, unknown>) => {
-      const dSeconds = this.pixelsToSeconds(event.dx);
+    const dragTimeline = (ev: D3DragEvent<HTMLElement, unknown, unknown>) => {
+      const dSeconds = this.pixelsToSeconds(ev.dx);
       const translate = this.zoomTransform.t - dSeconds;
       this.zoomTransform.t = this.constrainZoomTranslate(translate);
     };
-    const dragBehavior = drag<Element, unknown>()
-      .filter((event: D3DragEvent<Element, unknown, unknown>) => {
-        return true; // TODO only right clicks allowed
+    const dragBehavior = drag<HTMLElement, unknown>()
+      .filter((event: D3DragEvent<HTMLElement, unknown, unknown>) => {
+        return (event as any).button !== 0; // All buttons except 'left click'
       })
-      .on('drag', dragTimeline);
-    select(this.$refs.timeline as Element).call(dragBehavior);
+      .on('start', () => {
+        this.dragState = { type: 'panTimeline' };
+      })
+      .on('drag', dragTimeline)
+      .on('end', () => {
+        this.dragState = undefined;
+      });
+    select(this.$refs.timeline as HTMLElement).call(dragBehavior);
   },
   computed: {
     viewportWidthSeconds(): number {
@@ -292,6 +299,7 @@ export default defineComponent({
     </div>
     <div
       class="timeline"
+      :class="{ 'pan-timeline': this.dragState?.type === 'panTimeline' }"
       ref="timeline"
       @pointerdown.self="onPointerDownAxis"
       @wheel="onWheel"
@@ -353,6 +361,11 @@ export default defineComponent({
   height: 5em;
   border: 1px solid black;
   cursor: text;
+
+  &.pan-timeline,
+  &.pan-timeline * {
+    cursor: move !important;
+  }
 
   .time-marker {
     position: absolute;
