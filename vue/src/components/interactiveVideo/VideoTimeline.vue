@@ -113,6 +113,7 @@ export default defineComponent({
       const dy = -event.deltaY / 1000;
       const exp = Math.exp(dy);
       const newK = this.zoomTransform.k * exp;
+      // Prevent zooming too far in/out
       this.zoomTransform.k = Math.max(0.02, Math.min(5, newK));
 
       // Calculate new translation in order to keep the point under the mouse
@@ -122,7 +123,11 @@ export default defineComponent({
       const viewportWidth1 = this.viewportWidthSeconds;
       const viewportStart1 =
         t - ((t - viewportStart0) / viewportWidth0) * viewportWidth1;
-      this.zoomTransform.t = viewportStart1;
+      // Prevent panning before video start or after video end
+      this.zoomTransform.t = Math.max(
+        0,
+        Math.min(this.videoMetadata.length, viewportStart1)
+      );
     },
     pixelsToEm(pixels: number): number {
       const timeline = this.$refs.timelineAxis;
