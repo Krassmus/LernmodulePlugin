@@ -290,12 +290,13 @@ export default defineComponent({
         this.dragState?.type === 'interactionStart' &&
         this.dragState.id === interaction.id
       ) {
-        const seconds = this.xCoordinateToTime(ev.clientX);
-        const clamped = Math.max(
+        const dSeconds = this.pixelsToSeconds(ev.movementX);
+        const seconds = interaction.startTime + dSeconds;
+        const secondsClamped = Math.max(
           0,
           Math.min((interaction as any).endTime - 0.1, seconds)
         );
-        interaction.startTime = clamped;
+        interaction.startTime = secondsClamped;
       }
     },
     onPointerMoveInteractionEnd(ev: PointerEvent, interaction: Interaction) {
@@ -303,12 +304,13 @@ export default defineComponent({
         this.dragState?.type === 'interactionEnd' &&
         this.dragState.id === interaction.id
       ) {
-        const seconds = this.xCoordinateToTime(ev.clientX);
-        const clamped = Math.max(
+        const dSeconds = this.pixelsToSeconds(ev.movementX);
+        const seconds: number = (interaction as any).endTime + dSeconds;
+        const secondsClamped = Math.max(
           interaction.startTime + 0.1,
           Math.min(this.videoMetadata.length, seconds)
         );
-        (interaction as any).endTime = clamped;
+        (interaction as any).endTime = secondsClamped;
       }
     },
     onPointerUpInteractionStart(ev: PointerEvent, interaction: Interaction) {
