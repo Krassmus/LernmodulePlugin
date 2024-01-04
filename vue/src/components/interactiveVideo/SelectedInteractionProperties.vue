@@ -125,7 +125,7 @@ export default defineComponent({
         'onblur',
         this.selectedInteraction.startTime,
         this.inputStartTime,
-        (this.selectedInteraction as { endTime?: number })?.endTime,
+        this.selectedInteraction.endTime,
         this.inputEndTime
       );
     },

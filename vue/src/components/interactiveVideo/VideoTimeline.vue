@@ -283,7 +283,7 @@ export default defineComponent({
       this.dragState = {
         type: 'interactionEnd',
         id: interaction.id,
-        time: (interaction as any).endTime,
+        time: interaction.endTime,
       };
       (ev.target as HTMLElement).setPointerCapture(ev.pointerId);
     },
@@ -296,7 +296,7 @@ export default defineComponent({
         this.dragState.time += dSeconds;
         const timeClamped = Math.max(
           0,
-          Math.min((interaction as any).endTime - 0.1, this.dragState.time)
+          Math.min(interaction.endTime - 0.1, this.dragState.time)
         );
         // TODO make undoable
         interaction.startTime = timeClamped;
@@ -314,7 +314,7 @@ export default defineComponent({
           Math.min(this.videoMetadata.length, this.dragState.time)
         );
         // TODO make undoable
-        (interaction as any).endTime = secondsClamped;
+        interaction.endTime = secondsClamped;
       }
     },
     onPointerUpInteractionStart(ev: PointerEvent, interaction: Interaction) {
