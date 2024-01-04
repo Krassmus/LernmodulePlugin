@@ -19,6 +19,8 @@ import {
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
 import getEmValueFromElement from '@/components/interactiveVideo/getEmValueFromElement';
+import { select } from 'd3-selection';
+import { D3DragEvent, drag } from 'd3-drag';
 
 type DragState =
   | { type: 'timeMarker' }
@@ -69,6 +71,19 @@ export default defineComponent({
       this.recomputeViewportWidth()
     );
     observer.observe(this.$refs.timelineAxis as HTMLElement);
+
+    // Set up d3-drag
+    const dragTimeline = (event: D3DragEvent<Element, unknown, unknown>) => {
+      const dSeconds = this.pixelsToSeconds(event.dx);
+      const translate = this.zoomTransform.t - dSeconds;
+      this.zoomTransform.t = this.constrainZoomTranslate(translate);
+    };
+    const dragBehavior = drag<Element, unknown>()
+      .filter((event: D3DragEvent<Element, unknown, unknown>) => {
+        return true; // TODO only right clicks allowed
+      })
+      .on('drag', dragTimeline);
+    select(this.$refs.timeline as Element).call(dragBehavior);
   },
   computed: {
     viewportWidthSeconds(): number {
@@ -124,10 +139,10 @@ export default defineComponent({
       const viewportStart1 =
         t - ((t - viewportStart0) / viewportWidth0) * viewportWidth1;
       // Prevent panning before video start or after video end
-      this.zoomTransform.t = Math.max(
-        0,
-        Math.min(this.videoMetadata.length, viewportStart1)
-      );
+      this.zoomTransform.t = this.constrainZoomTranslate(viewportStart1);
+    },
+    constrainZoomTranslate(t: number): number {
+      return Math.max(0, Math.min(this.videoMetadata.length, t));
     },
     pixelsToEm(pixels: number): number {
       const timeline = this.$refs.timelineAxis;
@@ -152,6 +167,13 @@ export default defineComponent({
       date.setSeconds(seconds);
       const timeString = date.toISOString().substring(14, 19);
       return timeString;
+    },
+    pixelsToSeconds(pixels: number): number {
+      const rect = (
+        this.$refs.timelineAxis as HTMLElement
+      ).getBoundingClientRect();
+      const fraction = pixels / rect.width;
+      return fraction * this.viewportWidthSeconds;
     },
     /**
      * Convert the x coordinate in pixels on the timeline to a time in seconds
@@ -270,8 +292,10 @@ export default defineComponent({
     </div>
     <div
       class="timeline"
+      ref="timeline"
       @pointerdown.self="onPointerDownAxis"
       @wheel="onWheel"
+      @contextmenu.prevent
     >
       <div class="timeline-interactions">
         <div
