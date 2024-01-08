@@ -10,6 +10,11 @@ Es gibt auch eine eigene Schnittstelle, um HTML-Lernmodule um einen Feedback-Kan
 
 Die Lernmodule lassen sich zeitsteuern (erst ab der zweiten Semesterwoche abspielbar machen) oder in Abhängigkeiten zueinander setzen (erst nach Modul x abspielen).
 
+Ab Stud.IP 5.4 bietet das LernmodulePlugin neue, verbesserte Versionen von manchen existierenden Lernmodulen. Diese wurden auf Vue neu umgesetzt, um eine bessere Integration in Stud.IP zu gewährleisten.  Die Vue-Lernmodule stehen auch als Blöcke in dem Courseware zur Verfügung.
+
+## Vue-Projektstruktur
+Es gibt in diesem Plugin zwei Vue-Projekte: `vue/` (Vue 3) und `courseware-blocks-vue2/` (Vue 2). Die Viewer und Editor für die neuen Lernmodule sind in Vue 3 umgesetzt.  Da im Courseware und in dem Rest vom Stud.IP-Kern Vue 2 noch verwendet wird, sind die Courseware-Blöcke für die neuen Lernmodule notwendigerweise auf Vue 2 umgesetzt. Die Courseware-Blöcke binden die Lernmodule über Iframes ein.
+
 ## Localisation
 Dieses Plugin wird derzeit über Weblate von Deutsch auf Englisch übersetzt.  Das Weblate-Projekt für das Plugin ist auf der Weblate-Instanz der Universität Vechta zu finden: https://weblate.uni-vechta.de/projects/rasmusfuhse-lernmoduleplugin/
 
@@ -20,12 +25,3 @@ Die Übersetzung wird aus technischen Gründen in zwei Komponenten aufgeteilt: P
 <img src="https://weblate.uni-vechta.de/widgets/rasmusfuhse-lernmoduleplugin/en/php/svg-badge.svg" alt="Translation status" />
 </a>
 
-## Courseware-Blöcke
-Für manche Lernmodule, die mit Vue 3 umgesetzt wurden, gibt es entsprechende Courseware-Blöcke.
-Die Blöcke werden durch Vue2-Komponenten in den Courseware eingebunden.
-Das Vue2-Projekt befindet sich in dem Verzeichnis `courseware-blocks-vue2/`.
-
-Das Vue2-Projekt verwendet Vite als Buildsystem mithilfe des Plugins 
-[vite-plugin-vue2](https://github.com/underfin/vite-plugin-vue2).  
-Das Blogpost [How to use Vue 2 with Vite](https://www.mathew-paul.nz/posts/how-to-use-vue2-with-vite/) 
-von Mathew Paul erklärt, wie man für Vue 2.6 ein Vite-Projekt aufsetzen kann.
