@@ -4,9 +4,6 @@ import { z } from 'zod';
 /**
  * Save a Vue.js Lernmodul that is being edited in the "Lernmodule" tab of a
  * course.
- * TODO: Define a route or other function which can be called to save a Lernmodul
- *   that is edited within the Courseware. That involves a different set of
- *   database tables.
  * @param taskDefinition The definition of the task
  * @param moduleName The name of the Lernmodul
  * @param infoText The HTML description of the Lernmodul
@@ -55,14 +52,18 @@ export interface SaveTaskResponse {
 }
 
 /**
- * @param points -- a map describing how many points a student got for each part
- * of a Lernmodul.  Key: The ID or name of the part.  Value: The number of points.
+ * Send a request to Stud.IP to update the number of points earned by the student
+ * for the Lernmodul that is currently viewed.
+ * @param points -- a map describing how many points the student should be reported
+ * as having for each part of the Lernmodul.
+ * Key: The ID or name of the part.  Value: The number of points.
  * @param success - If true, the attempt will be marked as 'successful'.
  */
 export async function updateAttempt(
   points: Record<string, number>,
   success: boolean
 ): Promise<void> {
+  // The ID of the Lernmodul is encoded in this URL provided to us by the server.
   const url = window.STUDIP.LernmoduleVueJS.updateAttemptRoute;
   const formData = new FormData();
   const token = window.STUDIP.CSRF_TOKEN;
@@ -84,18 +85,23 @@ export async function updateAttempt(
   });
 }
 
-const uploadImageResponseSchema = z.object({
-  files: z.array(
-    z.object({
-      name: z.string(),
-      type: z.string(),
-      url: z.string(),
-    })
-  ),
+export const uploadedFileSchema = z.object({
+  name: z.string(),
+  type: z.string(),
+  url: z.string(),
 });
-export type UploadImageResponse = z.infer<typeof uploadImageResponseSchema>;
+export type UploadedFile = z.infer<typeof uploadedFileSchema>;
 
-export async function uploadImage(image: File) {
+const uploadFileResponseSchema = z.object({
+  files: z.array(uploadedFileSchema),
+});
+export type UploadFileResponse = z.infer<typeof uploadFileResponseSchema>;
+
+/**
+ * Upload the given file to the user's Wysiwyg Uploads folder in Stud.IP.
+ * @param image A File object
+ */
+export async function uploadFile(image: File): Promise<UploadFileResponse> {
   const uploadUrl = window.STUDIP.URLHelper.getURL(
     'dispatch.php/wysiwyg/upload'
   );
@@ -112,7 +118,7 @@ export async function uploadImage(image: File) {
     }
     const json = await response.json();
     try {
-      return uploadImageResponseSchema.parse(json);
+      return uploadFileResponseSchema.parse(json);
     } catch (error) {
       throw new Error('Could not parse server response', { cause: error });
     }

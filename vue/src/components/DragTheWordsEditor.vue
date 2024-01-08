@@ -1,3 +1,6 @@
+<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
+<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <form class="default">
     <fieldset>
@@ -87,7 +90,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+// Allow us to mutate the prop 'taskDefinition' as much as we want.
+// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
+/* eslint-disable vue/no-mutating-props */
+import { defineComponent, PropType } from 'vue';
 import { DragTheWordsTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
@@ -96,8 +102,13 @@ import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 export default defineComponent({
   name: 'DragTheWordsEditor',
   components: { StudipWysiwyg },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<DragTheWordsTask>,
+      required: true,
+    },
+  },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as DragTheWordsTask,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
     instructions(): string {

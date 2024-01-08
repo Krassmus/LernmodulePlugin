@@ -1,3 +1,6 @@
+<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
+<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <!--  The current task: {{ task }}-->
   <form class="default">
@@ -119,7 +122,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+// Allow us to mutate the prop 'taskDefinition' as much as we want
+// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
+/* eslint-disable vue/no-mutating-props */
+import { defineComponent, PropType } from 'vue';
 import { QuestionAnswer, QuestionTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
@@ -128,7 +134,12 @@ import { $gettext } from '@/language/gettext';
 export default defineComponent({
   name: 'QuestionEditor',
   components: { StudipWysiwyg },
-  props: {},
+  props: {
+    taskDefinition: {
+      type: Object as PropType<QuestionTask>,
+      required: true,
+    },
+  },
   methods: {
     $gettext,
     addAnswer(): void {
@@ -154,7 +165,6 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as QuestionTask,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },

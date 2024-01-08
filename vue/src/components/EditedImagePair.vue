@@ -8,7 +8,7 @@
           v-if="pair.draggableImage.imageUrl"
           :image="pair.draggableImage"
         />
-        <ImageUpload v-else @imageUploaded="onUploadDraggableImage" />
+        <FileUpload v-else @file-uploaded="onUploadDraggableImage" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -24,7 +24,7 @@
           v-if="pair.targetImage.imageUrl"
           :image="pair.targetImage"
         />
-        <ImageUpload v-else @imageUploaded="onUploadTargetImage" />
+        <FileUpload v-else @file-uploaded="onUploadTargetImage" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -40,16 +40,17 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import ImageUpload from '@/components/ImageUpload.vue';
 import { $gettext } from '@/language/gettext';
 import { ImagePair, ImagePairingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
+import FileUpload from '@/components/FileUpload.vue';
+import { UploadedFile } from '@/routes';
 
 export default defineComponent({
   name: 'EditedImagePair',
-  components: { EditedImagePairImage, ImageUpload },
+  components: { FileUpload, EditedImagePairImage },
   props: {
     pair: {
       type: Object as PropType<ImagePair>,
@@ -65,18 +66,20 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onUploadDraggableImage(imageUrl: string): void {
+    onUploadDraggableImage(file: UploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].draggableImage.imageUrl = imageUrl;
+        // TODO #20  - Store file ID instead of URL
+        draft.imagePairs[this.pairIndex].draggableImage.imageUrl = file.url;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
-    onUploadTargetImage(imageUrl: string): void {
+    onUploadTargetImage(file: UploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].targetImage.imageUrl = imageUrl;
+        // TODO #20  - Store file ID instead of URL
+        draft.imagePairs[this.pairIndex].targetImage.imageUrl = file.url;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,

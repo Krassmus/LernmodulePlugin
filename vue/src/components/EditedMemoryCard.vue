@@ -5,7 +5,7 @@
       <div>
         <h4>{{ $gettext('Bild') }}</h4>
         <EditedMemoryCardImage v-if="card.imageUrl" :card="card" />
-        <ImageUpload v-else @imageUploaded="onImageUploaded" />
+        <FileUpload v-else @file-uploaded="onImageUploaded" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -27,10 +27,12 @@ import ImageUpload from '@/components/ImageUpload.vue';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
+import FileUpload from '@/components/FileUpload.vue';
+import { UploadedFile } from '@/routes';
 
 export default defineComponent({
   name: 'EditedMemoryCard',
-  components: { EditedMemoryCardImage, ImageUpload },
+  components: { FileUpload, EditedMemoryCardImage },
   props: {
     card: {
       type: Object as PropType<MemoryCard>,
@@ -46,9 +48,10 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onImageUploaded(imageUrl: string): void {
+    onImageUploaded(file: UploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.cards[this.cardIndex].imageUrl = imageUrl;
+        // TODO #20  - Store file ID instead of URL
+        draft.cards[this.cardIndex].imageUrl = file.url;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,

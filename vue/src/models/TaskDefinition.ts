@@ -14,8 +14,10 @@ import ImageSequencingViewer from '@/components/ImageSequencingViewer.vue';
 import ImageSequencingEditor from '@/components/ImageSequencingEditor.vue';
 import { v4 } from 'uuid';
 import { z } from 'zod';
-import InteractiveVideoViewer from '@/components/InteractiveVideoViewer.vue';
-import InteractiveVideoEditor from '@/components/InteractiveVideoEditor.vue';
+import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
+import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
+import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
+import { $gettext } from '@/language/gettext';
 
 export const feedbackSchema = z.object({
   percentage: z.number(),
@@ -160,11 +162,6 @@ export const imageSequencingTaskSchema = z.object({
 });
 export type ImageSequencingTask = z.infer<typeof imageSequencingTaskSchema>;
 
-export const interactiveVideoTaskSchema = z.object({
-  task_type: z.literal('InteractiveVideo'),
-});
-export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
-
 export const taskDefinitionSchema = z.union([
   fillInTheBlanksTaskSchema,
   questionTaskSchema,
@@ -176,6 +173,23 @@ export const taskDefinitionSchema = z.union([
   interactiveVideoTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
+
+// Allowed lmb task types to be inserted in the Interactive Video Editor.
+// Excludes the type 'interactive video' to avoid a recursive reference, which
+// is cumbersome to solve in Typescript/Zod.
+// I at first used the workaround described at https://github.com/colinhacks/zod#recursive-types
+// but I later ran into hard-to-resolve typechecking errors when I started to
+// use .optional() inside of schemas. I decided this is the better option for now. -Ann
+export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
+  fillInTheBlanksTaskSchema,
+  questionTaskSchema,
+  dragTheWordsTaskSchema,
+  markTheWordsTaskSchema,
+  memoryTaskSchema,
+  imagePairingTaskSchema,
+  imageSequencingTaskSchema,
+]);
+
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
 export const taskTypeSchema = z.union([
@@ -398,6 +412,12 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'InteractiveVideo':
       return {
         task_type: 'InteractiveVideo',
+        interactions: [],
+        video: {
+          type: 'none',
+        },
+        autoplay: false,
+        startAt: 0,
       };
     default:
       throw new Error('Unimplemented type: ' + type);
@@ -448,4 +468,35 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
+}
+
+export function printTaskType(type: TaskDefinition['task_type']): string {
+  switch (type) {
+    case 'ImageSequencing':
+      return $gettext('Image Sequencing');
+    case 'Memory':
+      return $gettext('Memory');
+    case 'FillInTheBlanks':
+      return $gettext('Fill In The Blanks');
+    case 'Question':
+      return $gettext('Question');
+    case 'DragTheWords':
+      return $gettext('Drag The Words');
+    case 'MarkTheWords':
+      return $gettext('Mark The Words');
+    case 'ImagePairing':
+      return $gettext('Image Pairing');
+    case 'InteractiveVideo':
+      return $gettext('Interactive Video');
+  }
+}
+
+/**
+ * @return true if the viewer for the given task type should be visible
+ * while the editor for that task type is open.
+ */
+export function showViewerAboveEditor(
+  type: TaskDefinition['task_type']
+): boolean {
+  return type !== 'InteractiveVideo';
 }

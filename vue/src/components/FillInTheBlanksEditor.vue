@@ -1,6 +1,7 @@
+<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
+<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <!--  Current undo redo state:-->
-  <!--  <pre>{{ currentUndoRedoState }}</pre>-->
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Fill in the Blanks') }}</legend>
@@ -180,20 +181,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+// Allow us to mutate the prop 'taskDefinition' as much as we want
+// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
+/* eslint-disable vue/no-mutating-props */
+import { defineComponent, PropType } from 'vue';
 import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
-import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'FillInTheBlanksEditor',
   components: { StudipWysiwyg },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<FillInTheBlanksTask>,
+      required: true,
+    },
+  },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as FillInTheBlanksTask,
-    currentUndoRedoState: () =>
-      taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
-
     feedbackSortedByScore(): Feedback[] {
       return this.taskDefinition.feedback
         .map((value) => value)

@@ -1,3 +1,6 @@
+<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
+<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <form class="default">
     <fieldset>
@@ -19,7 +22,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+// Allow us to mutate the prop 'taskDefinition' as much as we want
+// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
+/* eslint-disable vue/no-mutating-props */
+import { defineComponent, PropType } from 'vue';
 import { MarkTheWordsTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
@@ -28,6 +34,12 @@ import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 export default defineComponent({
   name: 'MarkTheWordsEditor',
   components: { StudipWysiwyg },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<MarkTheWordsTask>,
+      required: true,
+    },
+  },
   methods: {
     $gettext,
     /**
@@ -55,7 +67,6 @@ export default defineComponent({
   },
 
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as MarkTheWordsTask,
     instructions(): string {
       return $gettext(
         'Markieren Sie ein Wort als Lösung, indem Sie ein Sternchen (*) vor und hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den "Richtiges Wort markieren"–Button.'

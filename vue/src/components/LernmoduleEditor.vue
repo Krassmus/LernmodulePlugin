@@ -49,11 +49,20 @@
       <option value="MarkTheWords">
         {{ $gettext('Mark the Words') }}
       </option>
+      <option value="ImagePairing">
+        {{ $gettext('Image Pairing') }}
+      </option>
+      <option value="ImageSequencing">
+        {{ $gettext('Image Sequencing') }}
+      </option>
     </select>
   </div>
 
   <div>
-    <component :is="editorForTaskType(taskDefinition.task_type)" />
+    <component
+      :is="editorForTaskType(taskDefinition.task_type)"
+      :taskDefinition="taskDefinition"
+    />
 
     <div class="save-undo-redo">
       <button

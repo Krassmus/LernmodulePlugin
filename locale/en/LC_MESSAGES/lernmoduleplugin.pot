@@ -1,0 +1,1216 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-08 11:42+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../lib/CoursewareBlocks/DragTheWordsBlock.php:23
+msgid "LMB - Drag the Words"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/DragTheWordsBlock.php:30
+msgid ""
+"Eine Lernaufgabe, wo Wörter in die Lücken in einem Text gezogen werden "
+"sollen."
+msgstr ""
+
+#: ../lib/CoursewareBlocks/MemoryBlock.php:23
+msgid "LMB - Memory"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/MemoryBlock.php:30
+msgid "TODO"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/QuestionBlock.php:23
+msgid "LMB - Frage"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/QuestionBlock.php:30
+msgid ""
+"Eine Lernaufgabe, wo eine Multiple-Choice-Frage beantwortet werden soll."
+msgstr ""
+
+#: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:23
+msgid "LMB - Interactive Video"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:30
+msgid ""
+"Spielt ein mit Interaktionen angereichertes Video ab.  Andere LMB-Aufgaben "
+"können zu bestimmten Zeitpunkten im Video eingespielt werden."
+msgstr ""
+
+#: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:23
+msgid "LMB - Mark the Words"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:30
+msgid ""
+"Eine Lernaufgabe, wo bestimmte Wörter in einem Text markiert werden sollen."
+msgstr ""
+
+#: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:23
+msgid "LMB - Fill in the Blanks"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:30
+msgid ""
+"Eine Lernaufgabe, wo die Lücken in einem Lückentext ausgefüllt werden sollen."
+msgstr ""
+
+#: ../lib/CoursewareBlocks/ImagePairingBlock.php:23
+msgid "LMB - Image Pairing"
+msgstr ""
+
+#: ../lib/CoursewareBlocks/ImagePairingBlock.php:30
+msgid ""
+"Eine Lernaufgabe, wo Paare von Bildern zu einander gematcht werden sollen."
+msgstr ""
+
+#: ../lib/VuejsLernmodul.php:19 ../lib/VuejsLernmodul.php:38
+#: ../lib/H5pLernmodul.php:78 ../lib/H5pLernmodul.php:96
+msgid "Im Editor bearbeiten"
+msgstr ""
+
+#: ../lib/VuejsLernmodul.php:30
+msgid "Ann's Javascript Test"
+msgstr ""
+
+#: ../lib/H5pLernmodul.php:89 ../lib/HtmlLernmodul.php:45
+#: ../controllers/h5peditor.php:123 ../controllers/h5p.php:285
+msgid "Vollbild"
+msgstr ""
+
+#: ../lib/H5pLernmodul.php:101 ../lib/HtmlLernmodul.php:68
+msgid "URL kopieren"
+msgstr ""
+
+#: ../lib/H5pLernmodul.php:116 ../controllers/h5p.php:229
+msgid "Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."
+msgstr ""
+
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:15
+msgid "Sie befinden sich nicht innerhalb des Anmeldezeitraums."
+msgstr ""
+
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:34
+msgid ""
+"Anmelderegeln dieses Typs legen ein Lernmodul fest, das erfolgreich besucht "
+"sein muss, um zu der Veranstaltung zugelassen zu werden."
+msgstr ""
+
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:38
+msgid "Lernmodul als Voraussetzung"
+msgstr ""
+
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:51
+msgid "Lernmodul"
+msgstr ""
+
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:74
+#, php-format
+msgid "Sie haben das Lernmodul '%s' noch nicht absolviert"
+msgstr ""
+
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:103
+#, php-format
+msgid ""
+"Um zu der Veranstaltung zugelassen zu werden, müssen Sie an dem Lernmodul "
+"'%s' erfolgreich teilgenommen haben."
+msgstr ""
+
+#: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:112
+msgid "Bitte geben Sie das Modul ein."
+msgstr ""
+
+#: ../lib/HtmlLernmodul.php:58
+msgid "Konfigurieren"
+msgstr ""
+
+#: ../lib/Lernmodul.php:87
+msgid "Konnte im Dateisystem keinen Ordner für das Lernmodul anlegen."
+msgstr ""
+
+#: ../lib/Lernmodul.php:141
+msgid "Verzeichnis konnte nicht angelegt werden."
+msgstr ""
+
+#: ../views/html/edit.php:5
+msgid "Im abgesicherten Modus abspielen"
+msgstr ""
+
+#: ../views/html/edit.php:10
+msgid "Startdatei (.html)"
+msgstr ""
+
+#: ../views/html/edit.php:28
+msgid "Enddatei (.html)"
+msgstr ""
+
+#: ../views/html/edit.php:30
+msgid "Keine"
+msgstr ""
+
+#: ../views/html/evaluation.php:4 ../views/vuejseditor/edit.php:48
+#: ../views/lernmodule/view.php:91 ../views/lernmodule/edit.php:260
+#: ../views/lernmodule/evaluation.php:75 ../views/lernmodule/evaluation.php:214
+#: ../controllers/participants.php:44
+msgid "Auswertung"
+msgstr ""
+
+#: ../views/html/evaluation.php:5
+msgid "Minimalwert"
+msgstr ""
+
+#: ../views/html/evaluation.php:6
+msgid "Höchstwert"
+msgstr ""
+
+#: ../views/html/set_configs.php:18 ../views/h5peditor/edit.php:22
+#: ../views/lernmodule/edit.php:209 ../views/lernmodule/blubber.php:9
+#: ../views/lernmodule/admin.php:56 ../views/h5p/add_library.php:35
+#: ../views/editor/metadata.php:15
+msgid "Speichern"
+msgstr ""
+
+#: ../views/html/get_url.php:4 ../views/h5p/get_url.php:4
+msgid "URL"
+msgstr ""
+
+#: ../views/vuejseditor/edit.php:34 ../views/lernmodule/view.php:49
+msgid "Abspieloptionen bearbeiten"
+msgstr ""
+
+#: ../views/h5peditor/edit.php:19
+msgid "Warte auf Javascript"
+msgstr ""
+
+#: ../views/h5peditor/edit.php:22
+msgid "Erstellen"
+msgstr ""
+
+#: ../views/participants/index.php:30 ../views/lernmodule/evaluation.php:127
+msgid "Name"
+msgstr ""
+
+#: ../views/participants/index.php:31
+msgid "Absolvierte Lernmodule"
+msgstr ""
+
+#: ../views/participants/index.php:55
+msgid "Besser geht es nicht!"
+msgstr ""
+
+#: ../views/participants/evaluation.php:3
+msgid "Auswertung von "
+msgstr ""
+
+#: ../views/participants/evaluation.php:7
+msgid "Modul"
+msgstr ""
+
+#: ../views/participants/evaluation.php:8
+msgid "Beginn"
+msgstr ""
+
+#: ../views/participants/evaluation.php:9
+#: ../views/lernmodule/evaluation.php:128
+msgid "Dauer"
+msgstr ""
+
+#: ../views/participants/evaluation.php:10
+msgid "Erfolg"
+msgstr ""
+
+#: ../views/participants/evaluation.php:21
+#: ../views/lernmodule/evaluation.php:159
+msgid "Uhr"
+msgstr ""
+
+#: ../views/participants/evaluation.php:27
+msgid "Sekunden"
+msgstr ""
+
+#: ../views/participants/evaluation.php:29
+msgid "Minuten"
+msgstr ""
+
+#: ../views/participants/evaluation.php:31
+msgid "Stunden"
+msgstr ""
+
+#: ../views/participants/evaluation.php:43
+msgid "Noch keine Module absolviert."
+msgstr ""
+
+#: ../views/lernmodule/add.php:12
+msgid "Stud.IP H5P Editor"
+msgstr ""
+
+#: ../views/lernmodule/add.php:22 ../controllers/h5peditor.php:768
+msgid "Editor"
+msgstr ""
+
+#: ../views/lernmodule/add.php:32
+msgid "Webadresse"
+msgstr ""
+
+#: ../views/lernmodule/add.php:41
+msgid "Hochladen"
+msgstr ""
+
+#: ../views/lernmodule/view.php:54 ../views/lernmodule/edit.php:243
+msgid "Lernmodul in Veranstaltung verschieben oder kopieren"
+msgstr ""
+
+#: ../views/lernmodule/view.php:61 ../views/lernmodule/edit.php:230
+#: ../views/lernmodule/evaluation.php:191
+msgid "Lernmodul herunterladen"
+msgstr ""
+
+#: ../views/lernmodule/view.php:67 ../views/lernmodule/edit.php:236
+msgid "Auf Lernmarktplatz veröffentlichen"
+msgstr ""
+
+#: ../views/lernmodule/overview.php:2
+msgid "Es sind noch keine Lernmodule vorhanden."
+msgstr ""
+
+#: ../views/lernmodule/overview.php:27
+msgid ""
+"Erstellen Sie ein neues Lernmodul entweder im Editor, durch ein gezipptes "
+"HTML-Dokument, mit einem PDF oder eine Webseite im Internet."
+msgstr ""
+
+#: ../views/lernmodule/overview.php:72
+msgid "Bereich konfigurieren"
+msgstr ""
+
+#: ../views/lernmodule/overview.php:78
+msgid "Lernmodul hinzufügen"
+msgstr ""
+
+#: ../views/lernmodule/move.php:7 ../views/lernmodule/move.php:12
+msgid "Veranstaltung auswählen"
+msgstr ""
+
+#: ../views/lernmodule/move.php:28
+msgid "Verschieben"
+msgstr ""
+
+#: ../views/lernmodule/move.php:29
+msgid "Kopieren"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:7
+msgid "Lernmodul hochladen und bearbeiten"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:17
+#, php-format
+msgid "Lernmodul auswählen (Gezipptes HTML, H5P oder PDF, maximal %s MB)"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:46
+msgid "URL des Lernmoduls"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:55
+msgid "Name des Moduls"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:61
+msgid "Abhängig von"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:79
+msgid ""
+"Auf Lernmarktplatz veröffentlichen (unter CC-BY-SA für alle zum freien "
+"Download)"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:86
+msgid "Abspieloptionen"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:90
+msgid "Infotext über dem Lernmodul"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:98
+msgid "Adresse des Logos"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:112
+msgid "Bild auswählen"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:114
+msgid "Keines"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:116
+msgid "Bilder aus dem Lernmodul"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:125
+msgid "Bilder der Veranstaltung"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:133
+msgid "Noch kein Bild im Dateibereich"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:147
+msgid "Logo hochladen"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:161
+msgid "Nutzer sollen anonym teilnehmen"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:167
+msgid "Nutzer dürfen die Auswertung sehen"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:171
+msgid "Abspielen ab"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:179
+msgid "Gradebook-Eintrag bei Erfolg setzen"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:192
+msgid "Kann mehrmals absolviert werden."
+msgstr ""
+
+#: ../views/lernmodule/edit.php:211
+msgid "Löschen"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:213
+msgid "Wirklich löschen?"
+msgstr ""
+
+#: ../views/lernmodule/edit.php:217 ../controllers/h5peditor.php:153
+#: ../controllers/h5p.php:315
+msgid "Abbrechen"
+msgstr ""
+
+#: ../views/lernmodule/_lernmodul_kachel.php:15
+msgid "Erfolgreich abgeschlossen"
+msgstr ""
+
+#: ../views/lernmodule/_lernmodul_kachel.php:39
+#, php-format
+msgid "Dieses Modul wird erst ab %s Uhr verfügbar sein."
+msgstr ""
+
+#: ../views/lernmodule/_lernmodul_kachel.php:47
+msgid ""
+"Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module "
+"durcharbeiten."
+msgstr ""
+
+#: ../views/lernmodule/blubber.php:5
+msgid "Wollen Sie folgendes Blubbern?"
+msgstr ""
+
+#: ../views/lernmodule/blubber.php:10
+msgid "Nicht mehr nachfragen"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:6
+msgid "Einstellungen der Veranstaltung"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:8
+msgid "Name des Reiters"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:12 ../LernmodulePlugin.class.php:63
+#: ../LernmodulePlugin.class.php:89 ../LernmodulePlugin.class.php:113
+#: ../LernmodulePlugin.class.php:145 ../LernmodulePlugin.class.php:221
+#: ../LernmodulePlugin.class.php:222
+msgid "Lernmodule"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:18
+msgid "Einspaltiges Layout"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:25
+msgid "Darstellungsblöcke"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:31
+msgid "Titel des Blocks"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:35
+msgid "Block ohne Titel"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:38
+msgid "Informationstext"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:43
+msgid "Wirklich den ganzen Block und die Inhalte löschen?"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:45
+msgid "Block und Inhalte darin löschen"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:49
+msgid "Neuen Darstellungsblock hinzufügen"
+msgstr ""
+
+#: ../views/lernmodule/admin.php:57
+msgid "Block hinzufügen"
+msgstr ""
+
+#: ../views/lernmodule/evaluation.php:77
+msgid "Dauer des Lernmoduls"
+msgstr ""
+
+#: ../views/lernmodule/evaluation.php:110
+msgid ""
+"Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen "
+"Durchläufe, orange die nicht erfolgreichen."
+msgstr ""
+
+#: ../views/lernmodule/evaluation.php:129 ../controllers/h5peditor.php:804
+msgid "Datum"
+msgstr ""
+
+#: ../views/lernmodule/evaluation.php:146
+msgid "Anonym"
+msgstr ""
+
+#: ../views/lernmodule/evaluation.php:151
+#, php-format
+msgid "%s Sekunden"
+msgstr ""
+
+#: ../views/lernmodule/evaluation.php:153
+#, php-format
+msgid "%s Minuten"
+msgstr ""
+
+#: ../views/lernmodule/evaluation.php:155
+#, php-format
+msgid "%s Stunden"
+msgstr ""
+
+#: ../views/lernmodule/evaluation.php:198
+msgid "Bearbeiten"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:2
+msgid "Wirklich alle ausgewählen Bibliotheken löschen?"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:11
+msgid "Bibliothek"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:12
+msgid "Version"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:13
+msgid "Benutzt von"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:14
+msgid ""
+"Viele H5P-Module melden leider nicht an Stud.IP, wenn der Nutzer sie "
+"erfolgreich absolviert hat. Mit dieser Option an, speichert Stud.IP das "
+"selbstständig nach 30 Sekunden."
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:14
+msgid "Auto-Rückmeldung"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:15
+msgid "Aktiv"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:16
+msgid "Aktiv im Editor"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:17
+msgid "Aktion"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:27
+msgid "Patch Version: "
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:56
+msgid "Wirklich diese Bibliothek löschen?"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:66
+msgid "Ausgewählte Löschen"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:78
+msgid "Bibliotheken hinzufügen"
+msgstr ""
+
+#: ../views/h5p/admin_libraries.php:84
+msgid "Alle Bibliotheken exportieren"
+msgstr ""
+
+#: ../views/h5p/add_library.php:7
+msgid "Bibliotheken hochladen"
+msgstr ""
+
+#: ../views/h5p/add_library.php:12
+#, php-format
+msgid "H5P-Lernmodul oder ZIP mit Bibliotheken auswählen (maximal %s MB)"
+msgstr ""
+
+#: ../views/h5p/add_library.php:17
+msgid "Gefundene Bibliotheken gleich aktivieren"
+msgstr ""
+
+#: ../views/h5p/add_library.php:22
+msgid "Bibliotheken in Editor erlauben"
+msgstr ""
+
+#: ../views/h5p/add_library.php:26
+msgid "Bestehende Bibliotheken überschreiben"
+msgstr ""
+
+#: ../views/h5p/add_library.php:28
+msgid "Immer"
+msgstr ""
+
+#: ../views/h5p/add_library.php:29
+msgid "Nur die nicht aktivierten"
+msgstr ""
+
+#: ../views/h5p/add_library.php:30
+msgid "Nur, wenn die Patch-Version höher ist"
+msgstr ""
+
+#: ../views/editor/metadata.php:6
+msgid "Name des Lernmoduls"
+msgstr ""
+
+#: ../views/editor/metadata.php:7
+msgid "..."
+msgstr ""
+
+#: ../views/editor/metadata.php:11
+msgid "Logo-Bild"
+msgstr ""
+
+#: ../views/admission/configure.php:2
+msgid "Studierende müssen folgendes Lernmodul absolviert haben:"
+msgstr ""
+
+#: ../controllers/h5peditor.php:43
+msgid "Lernmodul wurde gespeichert"
+msgstr ""
+
+#: ../controllers/h5peditor.php:47
+msgid "Lernmodul konnte nicht gespeichert werden. Daten unvollständig."
+msgstr ""
+
+#: ../controllers/h5peditor.php:98 ../controllers/vuejseditor.php:44
+msgid "Neues Lernmodul erstellen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:100 ../controllers/lernmodule.php:158
+#: ../controllers/vuejseditor.php:46
+msgid "Lernmodul bearbeiten"
+msgstr ""
+
+#: ../controllers/h5peditor.php:124 ../controllers/h5p.php:286
+msgid "Vollbild beenden"
+msgstr ""
+
+#: ../controllers/h5peditor.php:125 ../controllers/h5p.php:287
+msgid "Download"
+msgstr ""
+
+#: ../controllers/h5peditor.php:126 ../controllers/h5p.php:288
+msgid "Nutzungsbedingung"
+msgstr ""
+
+#: ../controllers/h5peditor.php:127 ../controllers/h5p.php:289
+msgid "Einbetten"
+msgstr ""
+
+#: ../controllers/h5peditor.php:128 ../controllers/h5p.php:290
+msgid "Größe"
+msgstr ""
+
+#: ../controllers/h5peditor.php:129 ../controllers/h5p.php:291
+msgid "Zeige mehr"
+msgstr ""
+
+#: ../controllers/h5peditor.php:130 ../controllers/h5p.php:292
+msgid "Zuklappen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:131 ../controllers/h5p.php:293
+msgid ""
+"Include this script on your website if you want dynamic sizing of the "
+"embedded content:"
+msgstr ""
+
+#: ../controllers/h5peditor.php:132 ../controllers/h5p.php:294
+msgid "Rights of use"
+msgstr ""
+
+#: ../controllers/h5peditor.php:133 ../controllers/h5p.php:295
+msgid "Schließen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:134 ../controllers/h5peditor.php:227
+#: ../controllers/h5peditor.php:476 ../controllers/h5p.php:296
+msgid "Titel"
+msgstr ""
+
+#: ../controllers/h5peditor.php:135 ../controllers/h5p.php:297
+msgid "Author"
+msgstr ""
+
+#: ../controllers/h5peditor.php:136 ../controllers/h5p.php:298
+msgid "Jahr"
+msgstr ""
+
+#: ../controllers/h5peditor.php:137 ../controllers/h5peditor.php:248
+#: ../controllers/h5peditor.php:735 ../controllers/h5p.php:299
+msgid "Quelle"
+msgstr ""
+
+#: ../controllers/h5peditor.php:138 ../controllers/h5p.php:300
+msgid "License"
+msgstr ""
+
+#: ../controllers/h5peditor.php:139 ../controllers/h5p.php:301
+msgid "Thumbnail"
+msgstr ""
+
+#: ../controllers/h5peditor.php:140 ../controllers/h5p.php:302
+msgid "No copyright information available for this content."
+msgstr ""
+
+#: ../controllers/h5peditor.php:141 ../controllers/h5p.php:303
+msgid "Download this content as a H5P file."
+msgstr ""
+
+#: ../controllers/h5peditor.php:142 ../controllers/h5p.php:304
+msgid "View copyright information for this content."
+msgstr ""
+
+#: ../controllers/h5peditor.php:143 ../controllers/h5p.php:305
+msgid "View the embed code for this content."
+msgstr ""
+
+#: ../controllers/h5peditor.php:144 ../controllers/h5p.php:306
+msgid "Visit H5P.org to check out more cool content."
+msgstr ""
+
+#: ../controllers/h5peditor.php:145 ../controllers/h5p.php:307
+msgid "This content has changed since you last used it."
+msgstr ""
+
+#: ../controllers/h5peditor.php:146 ../controllers/h5p.php:308
+msgid "You'll be starting over."
+msgstr ""
+
+#: ../controllers/h5peditor.php:147 ../controllers/h5p.php:309
+msgid "von"
+msgstr ""
+
+#: ../controllers/h5peditor.php:148 ../controllers/h5p.php:310
+msgid "Mehr anzeigen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:149 ../controllers/h5p.php:311
+msgid "Weniger anzeigen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:150 ../controllers/h5p.php:312
+msgid "Sublevel"
+msgstr ""
+
+#: ../controllers/h5peditor.php:151 ../controllers/h5p.php:313
+msgid "Aktion bestätigen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:152 ../controllers/h5p.php:314
+msgid "Wirklich fortfahren? Änderungen können nicht rückgängig gemacht werden."
+msgstr ""
+
+#: ../controllers/h5peditor.php:154 ../controllers/h5p.php:316
+msgid "Bestätigen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:155 ../controllers/h5p.php:317
+msgid "Undisclosed"
+msgstr ""
+
+#: ../controllers/h5peditor.php:156 ../controllers/h5p.php:318
+msgid "Attribution"
+msgstr ""
+
+#: ../controllers/h5peditor.php:157 ../controllers/h5p.php:319
+msgid "Attribution-ShareAlike"
+msgstr ""
+
+#: ../controllers/h5peditor.php:158 ../controllers/h5p.php:320
+msgid "Attribution-NoDerivs"
+msgstr ""
+
+#: ../controllers/h5peditor.php:159 ../controllers/h5p.php:321
+msgid "Attribution-NonCommercial"
+msgstr ""
+
+#: ../controllers/h5peditor.php:160 ../controllers/h5p.php:322
+msgid "Attribution-NonCommercial-ShareAlike"
+msgstr ""
+
+#: ../controllers/h5peditor.php:161 ../controllers/h5p.php:323
+msgid "Attribution-NonCommercial-NoDerivs"
+msgstr ""
+
+#: ../controllers/h5peditor.php:162 ../controllers/h5peditor.php:272
+#: ../controllers/h5peditor.php:298 ../controllers/h5peditor.php:324
+#: ../controllers/h5peditor.php:350 ../controllers/h5peditor.php:376
+#: ../controllers/h5peditor.php:402 ../controllers/h5peditor.php:502
+#: ../controllers/h5peditor.php:529 ../controllers/h5peditor.php:556
+#: ../controllers/h5peditor.php:583 ../controllers/h5peditor.php:610
+#: ../controllers/h5peditor.php:637 ../controllers/h5peditor.php:693
+#: ../controllers/h5p.php:324
+msgid "4.0 International"
+msgstr ""
+
+#: ../controllers/h5peditor.php:163 ../controllers/h5peditor.php:276
+#: ../controllers/h5peditor.php:302 ../controllers/h5peditor.php:328
+#: ../controllers/h5peditor.php:354 ../controllers/h5peditor.php:380
+#: ../controllers/h5peditor.php:406 ../controllers/h5peditor.php:506
+#: ../controllers/h5peditor.php:533 ../controllers/h5peditor.php:560
+#: ../controllers/h5peditor.php:587 ../controllers/h5peditor.php:614
+#: ../controllers/h5peditor.php:641 ../controllers/h5peditor.php:697
+#: ../controllers/h5p.php:325
+msgid "3.0 Unported"
+msgstr ""
+
+#: ../controllers/h5peditor.php:164 ../controllers/h5peditor.php:280
+#: ../controllers/h5peditor.php:306 ../controllers/h5peditor.php:332
+#: ../controllers/h5peditor.php:358 ../controllers/h5peditor.php:384
+#: ../controllers/h5peditor.php:410 ../controllers/h5peditor.php:510
+#: ../controllers/h5peditor.php:537 ../controllers/h5peditor.php:564
+#: ../controllers/h5peditor.php:591 ../controllers/h5peditor.php:618
+#: ../controllers/h5peditor.php:645 ../controllers/h5peditor.php:701
+#: ../controllers/h5p.php:326
+msgid "2.5 Generic"
+msgstr ""
+
+#: ../controllers/h5peditor.php:165 ../controllers/h5peditor.php:284
+#: ../controllers/h5peditor.php:310 ../controllers/h5peditor.php:336
+#: ../controllers/h5peditor.php:362 ../controllers/h5peditor.php:388
+#: ../controllers/h5peditor.php:414 ../controllers/h5peditor.php:514
+#: ../controllers/h5peditor.php:541 ../controllers/h5peditor.php:568
+#: ../controllers/h5peditor.php:595 ../controllers/h5peditor.php:622
+#: ../controllers/h5peditor.php:649 ../controllers/h5peditor.php:705
+#: ../controllers/h5p.php:327
+msgid "2.0 Generic"
+msgstr ""
+
+#: ../controllers/h5peditor.php:166 ../controllers/h5peditor.php:288
+#: ../controllers/h5peditor.php:314 ../controllers/h5peditor.php:340
+#: ../controllers/h5peditor.php:366 ../controllers/h5peditor.php:392
+#: ../controllers/h5peditor.php:418 ../controllers/h5peditor.php:518
+#: ../controllers/h5peditor.php:545 ../controllers/h5peditor.php:572
+#: ../controllers/h5peditor.php:599 ../controllers/h5peditor.php:626
+#: ../controllers/h5peditor.php:653 ../controllers/h5peditor.php:709
+#: ../controllers/h5p.php:328
+msgid "1.0 Generic"
+msgstr ""
+
+#: ../controllers/h5peditor.php:167 ../controllers/h5p.php:329
+msgid "General Public License"
+msgstr ""
+
+#: ../controllers/h5peditor.php:168 ../controllers/h5peditor.php:428
+#: ../controllers/h5p.php:330
+msgid "Version 3"
+msgstr ""
+
+#: ../controllers/h5peditor.php:169 ../controllers/h5peditor.php:432
+#: ../controllers/h5p.php:331
+msgid "Version 2"
+msgstr ""
+
+#: ../controllers/h5peditor.php:170 ../controllers/h5peditor.php:436
+#: ../controllers/h5p.php:332
+msgid "Version 1"
+msgstr ""
+
+#: ../controllers/h5peditor.php:171 ../controllers/h5p.php:333
+msgid "Public Domain"
+msgstr ""
+
+#: ../controllers/h5peditor.php:172 ../controllers/h5p.php:334
+msgid "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication"
+msgstr ""
+
+#: ../controllers/h5peditor.php:173 ../controllers/h5peditor.php:454
+#: ../controllers/h5p.php:335
+msgid "Public Domain Mark"
+msgstr ""
+
+#: ../controllers/h5peditor.php:174 ../controllers/h5peditor.php:681
+#: ../controllers/h5p.php:336
+msgid "Copyright"
+msgstr ""
+
+#: ../controllers/h5peditor.php:175 ../controllers/h5p.php:337
+msgid "Inhaltstyp"
+msgstr ""
+
+#: ../controllers/h5peditor.php:176 ../controllers/h5p.php:338
+msgid "License Extras"
+msgstr ""
+
+#: ../controllers/h5peditor.php:177 ../controllers/h5peditor.php:798
+#: ../controllers/h5p.php:339
+msgid "Changelog"
+msgstr ""
+
+#: ../controllers/h5peditor.php:222
+msgid "Copyright Informationen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:228
+msgid "La Gioconda"
+msgstr ""
+
+#: ../controllers/h5peditor.php:234 ../controllers/h5peditor.php:764
+msgid "Autor"
+msgstr ""
+
+#: ../controllers/h5peditor.php:235
+msgid "Leonardo da Vinci"
+msgstr ""
+
+#: ../controllers/h5peditor.php:242
+msgid "1503 - 1517"
+msgstr ""
+
+#: ../controllers/h5peditor.php:259 ../controllers/h5peditor.php:482
+msgid "Lizenz"
+msgstr ""
+
+#: ../controllers/h5peditor.php:264 ../controllers/h5peditor.php:488
+msgid "Unbestimmt"
+msgstr ""
+
+#: ../controllers/h5peditor.php:446
+msgid "-"
+msgstr ""
+
+#: ../controllers/h5peditor.php:450
+msgid "CC0 1.0 Universal"
+msgstr ""
+
+#: ../controllers/h5peditor.php:467 ../controllers/h5peditor.php:688
+msgid "Lizenzversion"
+msgstr ""
+
+#: ../controllers/h5peditor.php:492
+msgid "Creative Commons"
+msgstr ""
+
+#: ../controllers/h5peditor.php:497
+msgid "Attribution (CC BY)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:524
+msgid "Attribution-ShareAlike (CC BY-SA)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:551
+msgid "Attribution-NoDerivs (CC BY-ND)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:578
+msgid "Attribution-NonCommercial (CC BY-NC)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:605
+msgid "Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:632
+msgid "Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:659
+msgid "Public Domain Dedication (CC0)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:663
+msgid "Public Domain Mark (PDM)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:669
+msgid "General Public License v3"
+msgstr ""
+
+#: ../controllers/h5peditor.php:673
+msgid "Gemeinfrei"
+msgstr ""
+
+#: ../controllers/h5peditor.php:677
+msgid "Public Domain Dedication and Licence"
+msgstr ""
+
+#: ../controllers/h5peditor.php:717
+msgid "Jahre (ab)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:726
+msgid "Jahre (bis)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:750
+msgid "Autorenname"
+msgstr ""
+
+#: ../controllers/h5peditor.php:758
+msgid "Rolle des Autors"
+msgstr ""
+
+#: ../controllers/h5peditor.php:772
+msgid "Lizenzgeber"
+msgstr ""
+
+#: ../controllers/h5peditor.php:776
+msgid "Originator"
+msgstr ""
+
+#: ../controllers/h5peditor.php:787
+msgid "Lizenz-Zusatzinformationen"
+msgstr ""
+
+#: ../controllers/h5peditor.php:789
+msgid "Weitere Informationen bezüglich der Lizenz"
+msgstr ""
+
+#: ../controllers/h5peditor.php:810
+msgid "Verändert durch"
+msgstr ""
+
+#: ../controllers/h5peditor.php:817
+msgid "Beschreibung der Änderung"
+msgstr ""
+
+#: ../controllers/h5peditor.php:818
+msgid "Foto zugeschnitten, Text geändert, etc."
+msgstr ""
+
+#: ../controllers/h5peditor.php:828
+msgid "Autorenkommentare"
+msgstr ""
+
+#: ../controllers/h5peditor.php:829
+msgid "Kommentare für den Editor (dieser Kommentar wird nicht veröffentlicht)"
+msgstr ""
+
+#: ../controllers/h5peditor.php:892
+msgid "Bist du sicher, dass du diesen Inhalt löschen willst?"
+msgstr ""
+
+#: ../controllers/h5peditor.php:1099
+msgid "Modul existiert nicht. Kann Datei nicht hochladen."
+msgstr ""
+
+#: ../controllers/h5p.php:18 ../LernmodulePlugin.class.php:50
+msgid "H5P-Bibliotheken"
+msgstr ""
+
+#: ../controllers/h5p.php:122
+msgid "H5P-Bibliotheken wurden übernommen"
+msgstr ""
+
+#: ../controllers/h5p.php:124
+msgid ""
+"Es konnten leider keine H5P-Bibliotheken in der Datei gefunden werden, die "
+"übernommen wurden."
+msgstr ""
+
+#: ../controllers/h5p.php:196
+msgid "H5P-Bibliothek wurde gelöscht."
+msgstr ""
+
+#: ../controllers/h5p.php:212
+msgid "H5P-Bibliotheken wurden gelöscht."
+msgstr ""
+
+#: ../controllers/h5p.php:492 ../controllers/html.php:42
+msgid "Direktlink zum Lernmodul"
+msgstr ""
+
+#: ../controllers/participants.php:17
+msgid "Teilnehmende"
+msgstr ""
+
+#: ../controllers/editor.php:45
+msgid "Lernmodul wurde erstellt und ist bereit zum Bearbeiten."
+msgstr ""
+
+#: ../controllers/lernmodule.php:61
+#, php-format
+msgid "Sie haben zuletzt an '%s' teilgenommen."
+msgstr ""
+
+#: ../controllers/lernmodule.php:69
+msgid "Wieder einsteigen"
+msgstr ""
+
+#: ../controllers/lernmodule.php:74
+msgid "Teilnahme beenden"
+msgstr ""
+
+#: ../controllers/lernmodule.php:84
+#, php-format
+msgid "%s sucht noch weitere Teilnehmer für '%s'."
+msgstr ""
+
+#: ../controllers/lernmodule.php:93
+msgid "Einladung annehmen"
+msgstr ""
+
+#: ../controllers/lernmodule.php:115
+msgid "Kann Lernmodul nicht finden."
+msgstr ""
+
+#: ../controllers/lernmodule.php:123
+msgid "IDs passen nicht zusammen. Beitritt verweigert."
+msgstr ""
+
+#: ../controllers/lernmodule.php:156
+msgid "Lernmodul erstellen"
+msgstr ""
+
+#: ../controllers/lernmodule.php:164
+msgid "Datei ist leider zu groß."
+msgstr ""
+
+#: ../controllers/lernmodule.php:185
+msgid "Konnte Lernmodul nicht speichern."
+msgstr ""
+
+#: ../controllers/lernmodule.php:231
+msgid "Lernmodul erfolgreich gespeichert."
+msgstr ""
+
+#: ../controllers/lernmodule.php:317
+msgid "Lernmodul gelöscht."
+msgstr ""
+
+#: ../controllers/lernmodule.php:427
+msgid "Block wurde gelöscht."
+msgstr ""
+
+#: ../controllers/lernmodule.php:454
+msgid "Einstellungen wurden gespeichert."
+msgstr ""
+
+#: ../controllers/lernmodule.php:526
+msgid "Quelle des Lernmoduls auswählen"
+msgstr ""
+
+#: ../controllers/lernmodule.php:597
+msgid "Lernmodul verschieben in andere Veranstaltung"
+msgstr ""
+
+#: ../controllers/lernmodule.php:642
+msgid "Lernmodul wurde verschoben."
+msgstr ""
+
+#: ../controllers/vuejseditor.php:61
+msgid "'module_id' fehlt"
+msgstr ""
+
+#: ../controllers/vuejseditor.php:64
+msgid "'task_definition' fehlt"
+msgstr ""
+
+#: ../controllers/vuejseditor.php:67
+msgid "'name' fehlt"
+msgstr ""
+
+#: ../controllers/vuejseditor.php:70
+msgid "'infotext' fehlt"
+msgstr ""
+
+#: ../controllers/vuejseditor.php:74
+msgid "Lernmodul nicht gefunden."
+msgstr ""
+
+#: ../controllers/vuejseditor.php:80
+msgid "Block nicht gefunden."
+msgstr ""
+
+#: ../controllers/html.php:32
+msgid "Werte wurden gespeichert."
+msgstr ""
+
+#: ../LernmodulePlugin.class.php:79
+msgid "Teilnehmer"
+msgstr ""
+
+#: ../LernmodulePlugin.class.php:108
+#, php-format
+msgid "%s neue Lernmodule"
+msgstr ""
+
+#: ../LernmodulePlugin.class.php:225
+msgid ""
+"Ein Ort, um Lernmodule zu erstellen, hochzuladen oder zu verlinken. Es "
+"können Abhängigkeiten zwischen Lernmodulen definiert werden, sodass "
+"Lernmodul B erst ausgeführt werden kann, wenn Lernmodul A absolviert worden "
+"ist. Auch zeitgesteuerte Lernmodule sind möglich, die erst ab einem "
+"bestimmten Datum sichtbar sind. Man kann die Lernmodule in "
+"Darstellungsblöcke gruppieren, die je noch einen einleitenden Text bekommen. "
+"Die Reihenfolge wird per Drag&Drop bestimmt."
+msgstr ""
+
+#: ../LernmodulePlugin.class.php:227
+msgid "Lernmodule in Stud.IP"
+msgstr ""
+
+#: ../LernmodulePlugin.class.php:230
+msgid ""
+"H5P-Lernmodule zum Hochladen oder selbst erstellen durch eigenen Editor; "
+"HTML-Lernmodule zum Hochladen oder Verlinken (als URL)"
+msgstr ""
