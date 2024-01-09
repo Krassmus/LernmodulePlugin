@@ -42,9 +42,6 @@ export default defineComponent({
     return {
       player: null as Player | null,
       time: 0,
-      isSeeking: false,
-      setStartAtTime: false,
-      attachedSeekHandlers: false,
       dragState: undefined as DragState,
       activeInteraction: undefined as Interaction | undefined,
     };
@@ -122,42 +119,19 @@ export default defineComponent({
       );
       this.player.on('timeupdate', () => {
         const time = this.player!.currentTime();
-        if (time && !this.isSeeking) {
+        if (time) {
           this.$emit('timeupdate', time);
           this.time = time;
         }
       });
       this.player.on('loadedmetadata', () => {
-        console.log('loadedMetadata');
-        if (!this.setStartAtTime) {
-          this.setStartAtTime = true;
-          this.player!.currentTime(this.task.startAt);
-          if (this.task.autoplay && !this.editor) {
-            this.player!.play();
-          }
+        this.player!.currentTime(this.task.startAt);
+        if (this.task.autoplay && !this.editor) {
+          this.player!.play();
         }
         this.$emit('metadataChange', {
           length: this.player!.duration(),
         });
-
-        if (!this.editor && !this.attachedSeekHandlers) {
-          this.attachedSeekHandlers = true;
-          this.player!.on('seeking', (event: any) => {
-            console.log('onSeeking', event);
-            this.isSeeking = true;
-          });
-          this.player!.on('seeked', (event: any) => {
-            console.log('onSeeked', event);
-            if (
-              this.task.disableNavigation === 'forwardAndBackward' ||
-              (this.task.disableNavigation === 'forward' &&
-                this.player!.currentTime()! > this.time)
-            ) {
-              this.player!.currentTime(this.time);
-            }
-            this.isSeeking = false;
-          });
-        }
       });
     },
     activateInteraction(interaction: Interaction) {
