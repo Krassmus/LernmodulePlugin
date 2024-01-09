@@ -64,6 +64,14 @@ export const interactiveVideoTaskSchema = z.object({
   ]),
   autoplay: z.boolean().optional().default(false),
   startAt: z.number().optional().default(0),
+  disableNavigation: z
+    .union([
+      z.literal('forward'),
+      z.literal('forwardAndBackward'),
+      z.literal('none'),
+    ])
+    .optional()
+    .default('none'),
   interactions: z.array(interactiveVideoInteractionSchema),
 });
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;

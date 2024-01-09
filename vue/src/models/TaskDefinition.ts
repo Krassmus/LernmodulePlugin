@@ -418,6 +418,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         },
         autoplay: false,
         startAt: 0,
+        disableNavigation: 'none',
       };
     default:
       throw new Error('Unimplemented type: ' + type);

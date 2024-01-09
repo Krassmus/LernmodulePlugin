@@ -163,6 +163,20 @@ export default defineComponent({
           {{ $gettext('Aktuelle Position setzen') }}
         </button>
       </div>
+      <label>
+        {{ $gettext('Navigation deaktivieren') }}
+        <select v-model="taskDefinition.disableNavigation">
+          <option :value="'none'">
+            {{ $gettext('Vor- und zurückspulen erlaubt') }}
+          </option>
+          <option :value="'forward'">
+            {{ $gettext('Vorspulen deaktiviert') }}
+          </option>
+          <option :value="'forwardAndBackward'">
+            {{ $gettext('Vor- und Zurückspulen deaktiviert') }}
+          </option>
+        </select>
+      </label>
     </fieldset>
   </form>
 </template>
