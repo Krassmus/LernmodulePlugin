@@ -92,9 +92,6 @@ export default defineComponent({
     'taskDefinition.startAt': {
       immediate: true,
       handler: function (startPosition: number) {
-        (
-          this.$refs.videoPlayer as InstanceType<typeof VideoPlayer>
-        )?.player!.currentTime(startPosition);
         this.startAtInput = formatSecondsToHhMmSs(startPosition);
       },
     },
