@@ -44,14 +44,21 @@ export default defineComponent({
         this.userInput = formatSecondsToHhMmSs(newValue);
       },
     },
+    parsedUserInput() {
+      if (this.parsedUserInput instanceof Error) {
+        this.$emit('update:error', this.parsedUserInput);
+      }
+    },
   },
   methods: {
     onBlurUserInput() {
       if (this.parsedUserInput instanceof Error) {
         // Reset the input to a good value
         this.userInput = formatSecondsToHhMmSs(this.modelValue);
+        this.$emit('update:error', undefined);
       } else {
         this.$emit('update:modelValue', this.parsedUserInput);
+        this.$emit('update:error', undefined);
       }
     },
   },

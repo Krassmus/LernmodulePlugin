@@ -42,6 +42,7 @@ export default defineComponent({
   data() {
     return {
       youtubeUrlInput: '',
+      startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
     };
   },
@@ -172,11 +173,17 @@ export default defineComponent({
         <div class="start-at-setting-flex">
           <label>
             {{ $gettext('Anfangen um') }}
-            <HhMmSsInput v-model="taskDefinition.startAt" />
+            <HhMmSsInput
+              v-model="taskDefinition.startAt"
+              @update:error="(error) => (startPositionInputError = error)"
+            />
           </label>
           <button type="button" class="button" @click="onClickUseCurrentTime">
             {{ $gettext('Aktuelle Position setzen') }}
           </button>
+        </div>
+        <div class="errors" v-if="startPositionInputError">
+          {{ startPositionInputError }}
         </div>
       </div>
     </fieldset>
