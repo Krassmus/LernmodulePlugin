@@ -47,6 +47,8 @@ export default defineComponent({
     parsedUserInput() {
       if (this.parsedUserInput instanceof Error) {
         this.$emit('update:error', this.parsedUserInput);
+      } else {
+        this.$emit('update:error', undefined);
       }
     },
   },
