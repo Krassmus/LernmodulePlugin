@@ -174,6 +174,8 @@ export default defineComponent({
           <label>
             {{ $gettext('Anfangen um') }}
             <HhMmSsInput
+              :class="{ invalid: !!startPositionInputError }"
+              :aria-invalid="!!startPositionInputError"
               v-model="taskDefinition.startAt"
               @update:error="(error) => (startPositionInputError = error)"
             />
