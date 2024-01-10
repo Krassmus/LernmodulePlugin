@@ -11,9 +11,10 @@
         </legend>
         <label>
           {{ $gettext('Start') }}
-          <input
-            type="number"
-            v-model.number="inputStartTime"
+          <HhMmSsInput
+            v-model="inputStartTime"
+            @update:error="(error) => (inputStartTimeFormatError = error)"
+            :show-centiseconds="true"
             class="time-input"
             :class="{
               invalid: inputStartTimeErrors.length > 0,
@@ -31,9 +32,10 @@
         </p>
         <label>
           {{ $gettext('Ende') }}
-          <input
-            type="number"
-            v-model.number="inputEndTime"
+          <HhMmSsInput
+            v-model="inputEndTime"
+            @update:error="(error) => (inputEndTimeFormatError = error)"
+            :show-centiseconds="true"
             class="time-input"
             :class="{
               invalid: inputEndTimeErrors.length > 0,
@@ -85,9 +87,11 @@ import {
   EditorState,
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
+import HhMmSsInput from '@/components/interactiveVideo/HhMmSsInput.vue';
 
 export default defineComponent({
   name: 'SelectedInteractionProperties',
+  components: { HhMmSsInput },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),
@@ -102,7 +106,9 @@ export default defineComponent({
   data() {
     return {
       inputStartTime: NaN,
+      inputStartTimeFormatError: undefined as Error | undefined,
       inputEndTime: NaN,
+      inputEndTimeFormatError: undefined as Error | undefined,
     };
   },
   methods: {
@@ -170,8 +176,8 @@ export default defineComponent({
   computed: {
     inputStartTimeErrors(): string[] {
       const errors: string[] = [];
-      if (!(typeof this.inputStartTime === 'number')) {
-        errors.push($gettext('Das eingegebene Wert muss eine Nummer sein.'));
+      if (this.inputStartTimeFormatError) {
+        errors.push(this.inputStartTimeFormatError.message);
       }
       if (this.inputStartTime < 0) {
         errors.push($gettext('Das eingegebene Wert muss größer als 0 sein.'));
@@ -184,8 +190,8 @@ export default defineComponent({
     },
     inputEndTimeErrors(): string[] {
       const errors: string[] = [];
-      if (!(typeof this.inputEndTime === 'number')) {
-        errors.push($gettext('Das eingegebene Wert muss eine Nummer sein.'));
+      if (this.inputEndTimeFormatError) {
+        errors.push(this.inputEndTimeFormatError.message);
       }
       if (this.inputEndTime < 0) {
         errors.push($gettext('Das eingegebene Wert muss größer als 0 sein.'));

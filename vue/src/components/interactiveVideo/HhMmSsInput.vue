@@ -2,34 +2,17 @@
 import { defineComponent } from 'vue';
 import { $gettext } from '@/language/gettext';
 
-function formatSecondsToHhMmSs(time: number): string {
-  let hours = 0,
-    minutes = 0,
-    seconds = 0;
-  while (time >= 3600) {
-    time -= 3600;
-    hours += 1;
-  }
-  while (time >= 60) {
-    time -= 60;
-    minutes += 1;
-  }
-  seconds = time;
-  function twoDigits(n: number): string {
-    return n.toLocaleString('de-DE', {
-      minimumIntegerDigits: 2,
-      maximumFractionDigits: 0,
-    });
-  }
-  return `${twoDigits(hours)}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
-}
-
 export default defineComponent({
   name: 'HhMmSsInput',
   props: {
     modelValue: {
       type: Number,
       required: true,
+    },
+    showCentiseconds: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   data() {
@@ -41,7 +24,7 @@ export default defineComponent({
     modelValue: {
       immediate: true,
       handler(newValue: number) {
-        this.userInput = formatSecondsToHhMmSs(newValue);
+        this.userInput = this.formatSeconds(newValue);
       },
     },
     parsedUserInput() {
@@ -56,12 +39,49 @@ export default defineComponent({
     onBlurUserInput() {
       if (this.parsedUserInput instanceof Error) {
         // Reset the input to a good value
-        this.userInput = formatSecondsToHhMmSs(this.modelValue);
+        this.userInput = this.formatSeconds(this.modelValue);
         this.$emit('update:error', undefined);
       } else {
         this.$emit('update:modelValue', this.parsedUserInput);
         this.$emit('update:error', undefined);
       }
+    },
+    // Format a time in seconds as HH:MM:SS (and optional milliseconds)
+    formatSeconds(time: number): string {
+      let hours = 0,
+        minutes = 0,
+        seconds = 0,
+        centiseconds = 0;
+      while (time >= 3600) {
+        time -= 3600;
+        hours += 1;
+      }
+      while (time >= 60) {
+        time -= 60;
+        minutes += 1;
+      }
+      if (this.showCentiseconds) {
+        while (time >= 1) {
+          time -= 1;
+          seconds += 1;
+        }
+        centiseconds = Math.floor(time * 100);
+      } else {
+        seconds = time;
+      }
+      function twoDigits(n: number): string {
+        return n.toLocaleString('de-DE', {
+          minimumIntegerDigits: 2,
+          maximumFractionDigits: 0,
+        });
+      }
+      let string = `${twoDigits(hours)}:${twoDigits(minutes)}:${twoDigits(
+        seconds
+      )}`;
+      if (this.showCentiseconds) {
+        string = `${string}:${twoDigits(centiseconds)}`;
+      }
+      return string;
     },
   },
   computed: {
