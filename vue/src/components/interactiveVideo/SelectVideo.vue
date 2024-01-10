@@ -174,7 +174,6 @@ export default defineComponent({
             {{ $gettext('Anfangen um') }}
             <HhMmSsInput v-model="taskDefinition.startAt" />
           </label>
-          <pre>{{ taskDefinition.startAt }}</pre>
           <button type="button" class="button" @click="onClickUseCurrentTime">
             {{ $gettext('Aktuelle Position setzen') }}
           </button>
