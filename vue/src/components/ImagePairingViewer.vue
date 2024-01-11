@@ -2,6 +2,7 @@
   <div class="imagePairingRow">
     <div
       class="draggableImagesColumn"
+      draggable="false"
       @dragover.prevent
       @dragenter.prevent
       @drop="onDropOnInteractiveImages($event)"
@@ -28,6 +29,7 @@
           class="draggableImage"
           :src="getImageById(draggableImageId).imageUrl"
           :alt="getImageById(draggableImageId).altText"
+          draggable="false"
           ref="draggableImages"
         />
       </div>
@@ -283,7 +285,7 @@ export default defineComponent({
     },
 
     onClickDraggableImage(imageId: Uuid): void {
-      if (!this.isDraggableImageUsed(imageId)) {
+      if (!this.isDraggableImageUsed(imageId) && !this.showResults) {
         console.log('Clicked on image:', imageId);
         this.imageIdInteractedWith = imageId;
       }
