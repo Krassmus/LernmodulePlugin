@@ -236,11 +236,6 @@ export default defineComponent({
 }
 .video-player-interaction {
   position: absolute;
-  background: white;
-  aspect-ratio: 1/1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .active-interaction-container {
   position: absolute;

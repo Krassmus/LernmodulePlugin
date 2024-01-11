@@ -5,11 +5,11 @@ import {
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
 import { Interaction, LmbTaskInteraction } from '@/models/InteractiveVideoTask';
-import { printTaskType } from '../../../models/TaskDefinition';
+import { iconForTaskType, printTaskType } from '../../../models/TaskDefinition';
 
 export default defineComponent({
   name: 'LmbTaskInteraction',
-  methods: { printTaskType },
+  methods: { iconForTaskType, printTaskType },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),
@@ -25,24 +25,53 @@ export default defineComponent({
 </script>
 
 <template>
-  <div
-    v-if="editor"
+  <button
+    type="button"
+    class="lmb-task-interaction"
     :class="{
       selected: editor?.selectedInteractionId.value === interaction.id,
     }"
-  >
-    {{ printTaskType(interaction.taskDefinition.task_type) }}
-  </div>
-  <button
-    v-else
-    type="button"
     @click="$emit('activateInteraction', interaction)"
   >
-    {{ printTaskType(interaction.taskDefinition.task_type) }}
+    <div
+      class="icon-circle"
+      :class="iconForTaskType(interaction.taskDefinition.task_type)"
+    ></div>
   </button>
+  <!--  <div-->
+  <!--    v-if="editor"-->
+  <!--    :class="{-->
+  <!--      selected: editor?.selectedInteractionId.value === interaction.id,-->
+  <!--    }"-->
+  <!--  >-->
+  <!--    {{ printTaskType(interaction.taskDefinition.task_type) }}-->
+  <!--  </div>-->
+  <!--  <button-->
+  <!--    v-else-->
+  <!--    type="button"-->
+  <!--    @click="$emit('activateInteraction', interaction)"-->
+  <!--  >-->
+  <!--    {{ printTaskType(interaction.taskDefinition.task_type) }}-->
+  <!--  </button>-->
 </template>
 
 <style scoped>
+.lmb-task-interaction {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.icon-circle {
+  background: #c3abd1;
+  shape-outside: circle();
+  clip-path: circle();
+  width: 3em;
+  height: 3em;
+}
 .selected {
   border: 4px solid blue;
 }

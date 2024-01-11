@@ -500,3 +500,25 @@ export function showViewerAboveEditor(
 ): boolean {
   return type !== 'InteractiveVideo';
 }
+
+export function iconForTaskType(type: TaskDefinition['task_type']): string {
+  switch (type) {
+    case 'Memory':
+      break;
+    case 'FillInTheBlanks':
+      return 'file-office';
+    case 'Question':
+      return 'question';
+    case 'DragTheWords':
+      return 'tan3';
+    case 'MarkTheWords':
+      return 'tan3';
+    case 'ImagePairing':
+      break;
+    case 'ImageSequencing':
+      break;
+    case 'InteractiveVideo':
+      break;
+  }
+  return 'question';
+}

@@ -1,40 +1,45 @@
 <template>
-  <VideoPlayer
-    ref="videoPlayer"
-    :task="taskDefinition"
-    @timeupdate="onTimeUpdate"
-    @metadataChange="onVideoMetadataChange"
-    @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
-  />
-  <div class="insert-interactions-buttons">
-    <button
-      v-for="[taskType, icon] in taskTypesAndIcons"
-      :key="taskType"
-      type="button"
-      class="button"
-      :class="icon"
-      @click="insertInteraction(taskType)"
-    >
-      {{ printTaskType(taskType) }}
-    </button>
+  <div class="add-interactions-root">
+    <VideoPlayer
+      ref="videoPlayer"
+      :task="taskDefinition"
+      @timeupdate="onTimeUpdate"
+      @metadataChange="onVideoMetadataChange"
+      @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
+    />
+    <div class="insert-interactions-buttons">
+      <button
+        v-for="taskType in taskTypes"
+        :key="taskType"
+        type="button"
+        class="button"
+        :class="iconForTaskType(taskType)"
+        @click="insertInteraction(taskType)"
+      >
+        {{ printTaskType(taskType) }}
+      </button>
+    </div>
+    <VideoTimeline
+      class="video-timeline"
+      :task="taskDefinition"
+      :currentTime="currentTime"
+      :videoMetadata="videoMetadata"
+      :selectedInteractionId="selectedInteractionId"
+      @timelineSeek="onTimelineSeek"
+      @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
+      @deleteInteraction="deleteInteraction"
+    />
+    <SelectedInteractionProperties
+      v-if="selectedInteraction"
+      :selectedInteraction="selectedInteraction"
+    />
   </div>
-  <VideoTimeline
-    class="video-timeline"
-    :task="taskDefinition"
-    :currentTime="currentTime"
-    :videoMetadata="videoMetadata"
-    :selectedInteractionId="selectedInteractionId"
-    @timelineSeek="onTimelineSeek"
-    @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
-    @deleteInteraction="deleteInteraction"
-  />
-  <SelectedInteractionProperties
-    v-if="selectedInteraction"
-    :selectedInteraction="selectedInteraction"
-  />
 </template>
 
 <style scoped lang="scss">
+.add-interactions-root {
+  overflow: hidden;
+}
 .video-timeline {
   margin-top: 2em;
 }
@@ -55,6 +60,7 @@ import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
 import SelectedInteractionProperties from '@/components/interactiveVideo/SelectedInteractionProperties.vue';
 import { VideoMetadata } from '@/components/interactiveVideo/events';
 import {
+  iconForTaskType,
   newTask,
   printTaskType,
   TaskDefinition,
@@ -76,11 +82,11 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
   undefined
 );
 
-const taskTypesAndIcons: Array<[TaskDefinition['task_type'], string]> = [
-  ['FillInTheBlanks', 'file-office'],
-  ['DragTheWords', 'tan3'],
-  ['MarkTheWords', 'tan3'],
-  ['Question', 'question'],
+const taskTypes: Array<TaskDefinition['task_type']> = [
+  'FillInTheBlanks',
+  'DragTheWords',
+  'MarkTheWords',
+  'Question',
 ];
 
 provide(editorStateSymbol, {
