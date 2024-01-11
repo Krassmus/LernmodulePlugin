@@ -49,6 +49,7 @@
           !this.showResults
         "
         @dragstart="startDragTargetImage($event, imagePair.targetImage.uuid)"
+        @dragend="endDragTargetImage($event, imagePair.targetImage.uuid)"
         @dragover.prevent
         @dragenter.prevent
         @click="onClickTargetImage(imagePair.targetImage.uuid)"
@@ -222,6 +223,11 @@ export default defineComponent({
       }
     },
 
+    endDragTargetImage(event: DragEvent, targetImageId: Uuid) {
+      this.imageIdInteractedWith = undefined;
+      this.draggedImageId = undefined;
+    },
+
     onDropOnTargetImage(event: DragEvent, targetImageId: Uuid): void {
       if (!this.imageIdInteractedWith) {
         return;
@@ -244,6 +250,7 @@ export default defineComponent({
       );
       // Mark that the drag interaction is over.
       this.imageIdInteractedWith = undefined;
+      this.draggedImageId = undefined;
     },
 
     getImageById(imageId: string): Image {
