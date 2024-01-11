@@ -78,7 +78,8 @@ export default defineComponent({
      * a message explaining why the user's input was invalid.
      */
     parsedUserInput(): number | Error {
-      const timeRegexCentiseconds = /^(\d?\d)[;:](\d?\d)[;:](\d?\d)[;:](\d?\d)/;
+      const timeRegexCentiseconds =
+        /^(\d?\d)[;:](\d?\d)[;:](\d?\d)[;:](\d?\d)$/;
       const centisecondsMatch = timeRegexCentiseconds.exec(this.userInput);
       if (centisecondsMatch) {
         return (
