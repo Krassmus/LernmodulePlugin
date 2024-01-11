@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
-  name: 'HhMmSsInput',
+  name: 'VideoTimeInput',
   props: {
     modelValue: {
       type: Number,

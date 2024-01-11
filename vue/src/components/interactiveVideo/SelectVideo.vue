@@ -7,7 +7,7 @@ import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
 import { UploadedFile } from '@/routes';
-import HhMmSsInput from '@/components/interactiveVideo/HhMmSsInput.vue';
+import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -84,7 +84,7 @@ export default defineComponent({
       };
     },
   },
-  components: { HhMmSsInput, FileUpload, VideoPlayer },
+  components: { VideoTimeInput, FileUpload, VideoPlayer },
 });
 </script>
 
@@ -173,7 +173,7 @@ export default defineComponent({
         <div class="start-at-setting-flex">
           <label>
             {{ $gettext('Anfangen um') }}
-            <HhMmSsInput
+            <VideoTimeInput
               :class="{ invalid: !!startPositionInputError }"
               :aria-invalid="!!startPositionInputError"
               v-model="taskDefinition.startAt"

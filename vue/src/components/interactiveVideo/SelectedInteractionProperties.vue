@@ -11,7 +11,7 @@
         </legend>
         <label>
           {{ $gettext('Start') }}
-          <HhMmSsInput
+          <VideoTimeInput
             v-model="inputStartTime"
             @update:error="(error) => (inputStartTimeFormatError = error)"
             class="time-input"
@@ -31,7 +31,7 @@
         </p>
         <label>
           {{ $gettext('Ende') }}
-          <HhMmSsInput
+          <VideoTimeInput
             v-model="inputEndTime"
             @update:error="(error) => (inputEndTimeFormatError = error)"
             class="time-input"
@@ -85,11 +85,11 @@ import {
   EditorState,
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
-import HhMmSsInput from '@/components/interactiveVideo/HhMmSsInput.vue';
+import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 
 export default defineComponent({
   name: 'SelectedInteractionProperties',
-  components: { HhMmSsInput },
+  components: { VideoTimeInput },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),
