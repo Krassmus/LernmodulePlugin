@@ -66,4 +66,47 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+.h5pFeedbackText {
+  font-size: 1em;
+  margin-left: 0.5em;
+  color: #1a73d9;
+  font-weight: 700;
+}
+
+.h5pFeedbackContainer {
+  margin-top: 0.5em;
+}
+
+.h5pFeedbackContainerTop {
+}
+
+.h5pFeedbackContainerCenter {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.h5pFeedbackContainerBottom {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+meter {
+  /* Reset the default appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  width: 100%;
+  height: 30px;
+
+  /* For Firefox */
+  background: #eee;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) inset;
+  border-radius: 3px;
+}
+</style>
