@@ -81,30 +81,12 @@ export default defineComponent({
     },
 
     onDropImage(event: DragEvent, image: Image): void {
-      if (this.imageInteractedWith) {
-        const fromIndex = this.images.indexOf(this.imageInteractedWith);
-        const toIndex = this.images.indexOf(image);
-
-        console.log(
-          'Dropped image',
-          this.imageInteractedWith?.altText,
-          '(',
-          fromIndex,
-          ') on target',
-          image.altText,
-          '(',
-          toIndex,
-          ')'
-        );
-
-        this.moveInArray(this.images, fromIndex, toIndex);
-
-        this.imageInteractedWith = undefined;
-      }
+      console.log('Dropped image', this.imageInteractedWith?.altText);
+      this.imageInteractedWith = undefined;
     },
 
     onDragOver(event: DragEvent, image: Image): void {
-      if (this.imageInteractedWith) {
+      if (this.imageInteractedWith && this.imageInteractedWith != image) {
         const fromIndex = this.images.indexOf(this.imageInteractedWith);
         const toIndex = this.images.indexOf(image);
 
