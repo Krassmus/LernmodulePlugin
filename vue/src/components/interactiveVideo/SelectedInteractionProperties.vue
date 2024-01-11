@@ -14,7 +14,6 @@
           <HhMmSsInput
             v-model="inputStartTime"
             @update:error="(error) => (inputStartTimeFormatError = error)"
-            :show-centiseconds="true"
             class="time-input"
             :class="{
               invalid: inputStartTimeErrors.length > 0,
@@ -35,7 +34,6 @@
           <HhMmSsInput
             v-model="inputEndTime"
             @update:error="(error) => (inputEndTimeFormatError = error)"
-            :show-centiseconds="true"
             class="time-input"
             :class="{
               invalid: inputEndTimeErrors.length > 0,
