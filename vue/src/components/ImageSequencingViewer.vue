@@ -38,6 +38,7 @@
   >
     {{ this.task.strings.retryButton }}
   </button>
+  <span class="results" v-if="showResults">{{ this.correctAnswers }}</span>
 </template>
 
 <script lang="ts">
@@ -122,12 +123,21 @@ export default defineComponent({
   },
   computed: {
     taskDefinition: () => taskEditorStore.taskDefinition as ImageSequencingTask,
+    correctAnswers() {
+      let correctAnswers = 0;
+      for (let i = 0; i < this.task.images.length; i++) {
+        if (this.task.images[i].uuid === this.images[i].uuid) {
+          correctAnswers++;
+        }
+      }
+      return correctAnswers;
+    },
   },
   watch: {
     task: {
       handler() {
         console.log('watcher for this.task');
-        this.images = this.task.images;
+        this.images = [...this.task.images];
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
