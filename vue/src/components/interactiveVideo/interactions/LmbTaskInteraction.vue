@@ -34,7 +34,7 @@ export default defineComponent({
     @click="$emit('activateInteraction', interaction)"
   >
     <div
-      class="icon-circle"
+      class="icon-circle button"
       :class="iconForTaskType(interaction.taskDefinition.task_type)"
     ></div>
   </button>
@@ -55,8 +55,9 @@ export default defineComponent({
   <!--  </button>-->
 </template>
 
-<style scoped>
-.lmb-task-interaction {
+<style scoped lang="scss">
+button.lmb-task-interaction {
+  /* CSS Reset for button styles */
   padding: 0;
   border: none;
   font: inherit;
@@ -64,15 +65,17 @@ export default defineComponent({
   background-color: transparent;
   cursor: pointer;
   box-sizing: border-box;
-}
-.icon-circle {
-  background: #c3abd1;
-  shape-outside: circle();
-  clip-path: circle();
-  width: 3em;
-  height: 3em;
-}
-.selected {
-  border: 4px solid blue;
+
+  &.selected {
+    border: 4px solid blue;
+  }
+
+  > .icon-circle {
+    background: #c3abd1;
+    shape-outside: circle();
+    clip-path: circle();
+    width: 3em;
+    height: 3em;
+  }
 }
 </style>
