@@ -19,7 +19,6 @@
               invalid: inputStartTimeErrors.length > 0,
             }"
             :aria-invalid="inputStartTimeErrors.length > 0"
-            @blur="onBlurTimeInputs"
           />
         </label>
         <p
@@ -39,7 +38,6 @@
               invalid: inputEndTimeErrors.length > 0,
             }"
             :aria-invalid="inputEndTimeErrors.length > 0"
-            @blur="onBlurTimeInputs"
           />
         </label>
         <p
@@ -103,9 +101,9 @@ export default defineComponent({
   },
   data() {
     return {
-      inputStartTime: NaN,
+      inputStartTime: 0,
       inputStartTimeFormatError: undefined as Error | undefined,
-      inputEndTime: NaN,
+      inputEndTime: 1,
       inputEndTimeFormatError: undefined as Error | undefined,
     };
   },
@@ -114,31 +112,16 @@ export default defineComponent({
     $gettext,
     printInteractionType,
     editorForTaskType,
-    onBlurTimeInputs(event: FocusEvent) {
-      const isFocusWithinTimeInputs = (
-        this.$refs.timeInputsFieldset as Node
-      ).contains(event.relatedTarget as Node);
-      if (isFocusWithinTimeInputs) {
-        // Don't reset the fields' input values if the user is still editing the
-        // start/end times
-        return;
-      }
-      this.inputStartTime = this.selectedInteraction.startTime;
-      this.inputEndTime = this.selectedInteraction.endTime;
-      console.log(
-        'onblur',
-        this.selectedInteraction.startTime,
-        this.inputStartTime,
-        this.selectedInteraction.endTime,
-        this.inputEndTime
-      );
-    },
   },
   watch: {
     inputStartTime(value: number) {
       if (this.inputStartTimeErrors.length === 0) {
         // eslint-disable-next-line vue/no-mutating-props
         this.selectedInteraction.startTime = value;
+      }
+      if (this.inputEndTimeErrors.length === 0) {
+        // eslint-disable-next-line vue/no-mutating-props
+        this.selectedInteraction.endTime = this.inputEndTime;
       }
     },
     'selectedInteraction.startTime': {
