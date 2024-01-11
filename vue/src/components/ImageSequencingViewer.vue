@@ -119,6 +119,16 @@ export default defineComponent({
 
     reset(): void {
       this.showResults = false;
+      this.shuffleImages();
+    },
+
+    shuffleImages() {
+      // Shuffle the images
+      // https://stackoverflow.com/a/46545530
+      this.images = this.images
+        .map((image) => ({ image: image, sort: Math.random() }))
+        .sort((image1, image2) => image1.sort - image2.sort)
+        .map(({ image }) => image);
     },
   },
   computed: {
@@ -138,6 +148,7 @@ export default defineComponent({
       handler() {
         console.log('watcher for this.task');
         this.images = [...this.task.images];
+        this.shuffleImages();
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
