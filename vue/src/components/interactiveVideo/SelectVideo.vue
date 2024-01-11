@@ -162,6 +162,13 @@ export default defineComponent({
     </div>
   </div>
   <form class="form default">
+    <!-- Prevent implicit submission of the form -->
+    <button
+      type="submit"
+      disabled
+      style="display: none"
+      aria-hidden="true"
+    ></button>
     <fieldset>
       <legend>{{ $gettext('Einstellungen') }}</legend>
       <label>
