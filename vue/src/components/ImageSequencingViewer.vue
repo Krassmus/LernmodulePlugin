@@ -4,7 +4,7 @@
       v-for="image in this.images"
       :key="image.uuid"
       class="imageContainer"
-      draggable="true"
+      :draggable="!this.showResults"
       @dragstart="startDragImage($event, image)"
       @dragover="onDragOver($event, image)"
       @drop="onDropImage($event, image)"
@@ -156,6 +156,7 @@ export default defineComponent({
 .imageRow {
   display: flex;
   flex-direction: row;
+  padding-bottom: 1em;
 }
 
 .imageContainer {
