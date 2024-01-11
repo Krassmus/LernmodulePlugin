@@ -38,6 +38,18 @@
       <TargetImage
         v-for="imagePair in this.task.imagePairs"
         class="targetImage"
+        :class="{
+          disabled:
+            this.imagesDraggedOntoTargets.hasOwnProperty(
+              imagePair.targetImage.uuid
+            ) &&
+            (this.draggedImageId || this.imageIdInteractedWith),
+          outlined:
+            !this.imagesDraggedOntoTargets.hasOwnProperty(
+              imagePair.targetImage.uuid
+            ) &&
+            (this.draggedImageId || this.imageIdInteractedWith),
+        }"
         :draggable-image="getImageDraggedOntoTarget(imagePair.targetImage.uuid)"
         :target-image="getImageById(imagePair.targetImage.uuid)"
         :isCorrect="this.isAnswerCorrect(imagePair.targetImage.uuid)"
@@ -385,6 +397,11 @@ export default defineComponent({
 .disabled {
   cursor: default;
   opacity: 25%;
+}
+
+.outlined {
+  cursor: pointer;
+  border: 2px dashed #dbe2e8;
 }
 
 .draggableImageContainer {
