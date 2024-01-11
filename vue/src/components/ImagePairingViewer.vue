@@ -39,11 +39,6 @@
         v-for="imagePair in this.task.imagePairs"
         class="targetImage"
         :class="{
-          disabled:
-            this.imagesDraggedOntoTargets.hasOwnProperty(
-              imagePair.targetImage.uuid
-            ) &&
-            (this.draggedImageId || this.imageIdInteractedWith),
           outlined:
             !this.imagesDraggedOntoTargets.hasOwnProperty(
               imagePair.targetImage.uuid
