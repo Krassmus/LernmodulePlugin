@@ -143,7 +143,11 @@ export default defineComponent({
     },
     onDragStartInteraction(event: DragEvent, interaction: Interaction) {
       console.log('dragStart');
-      event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
+      event.dataTransfer!.setDragImage(
+        event.target as Element,
+        -999999,
+        -999999
+      );
       this.dragState = {
         type: 'dragInteraction',
         interactionId: interaction.id,
