@@ -31,8 +31,11 @@ export default defineComponent({
     :class="{
       selected: editor?.selectedInteractionId.value === interaction.id,
     }"
-    @click="$emit('activateInteraction', interaction)"
+    @click="!this.editor && $emit('activateInteraction', interaction)"
   >
+    <div class="interaction-label">
+      {{ printTaskType(interaction.taskDefinition.task_type) }}
+    </div>
     <div
       class="icon-circle button"
       :class="iconForTaskType(interaction.taskDefinition.task_type)"
@@ -67,7 +70,10 @@ button.lmb-task-interaction {
   box-sizing: border-box;
 
   &.selected {
-    border: 4px solid blue;
+    > .interaction-label {
+      border: 2px solid #3c434e;
+      box-sizing: border-box;
+    }
   }
 
   > .icon-circle {
@@ -76,6 +82,22 @@ button.lmb-task-interaction {
     clip-path: circle();
     width: 3em;
     height: 3em;
+    &::before {
+      transform: translate(1.5em, 0.9em) scale(1.3);
+      filter: grayscale(1) contrast(1.5);
+    }
+  }
+  > .interaction-label {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 1.5em;
+    padding-left: 1.7em;
+    padding-right: 0.5em;
+    top: 0.1em;
+    white-space: nowrap;
+    height: 2.8em;
+    background: #e2e3e4;
   }
 }
 </style>
