@@ -36,6 +36,7 @@ export default defineComponent({
     <div class="interaction-label">
       {{ printTaskType(interaction.taskDefinition.task_type) }}
     </div>
+    <div class="icon-circle-border"></div>
     <div
       class="icon-circle button"
       :class="iconForTaskType(interaction.taskDefinition.task_type)"
@@ -69,19 +70,33 @@ button.lmb-task-interaction {
   cursor: pointer;
   box-sizing: border-box;
 
+  $border-width: 0.2em;
+  $circle-radius: 3em;
+
   &.selected {
     > .interaction-label {
-      border: 2px solid #3c434e;
-      box-sizing: border-box;
+      border: $border-width solid #3c434e;
+      margin-top: calc(-1 * $border-width);
+      margin-left: calc(-1 * $border-width);
+    }
+    .icon-circle-border {
+      shape-outside: circle();
+      clip-path: circle();
+      width: calc($circle-radius + 2 * $border-width);
+      height: calc($circle-radius + 2 * $border-width);
+      background: #3c434e;
     }
   }
 
   > .icon-circle {
+    position: absolute;
+    top: $border-width;
+    left: $border-width;
     background: #c3abd1;
     shape-outside: circle();
     clip-path: circle();
-    width: 3em;
-    height: 3em;
+    width: $circle-radius;
+    height: $circle-radius;
     &::before {
       transform: translate(1.5em, 0.9em) scale(1.3);
       filter: grayscale(1) contrast(1.5);
@@ -92,9 +107,9 @@ button.lmb-task-interaction {
     align-items: center;
     position: absolute;
     left: 1.5em;
-    padding-left: 1.7em;
+    padding-left: calc(2em + $border-width);
     padding-right: 0.5em;
-    top: 0.1em;
+    top: calc(0.1em + $border-width);
     white-space: nowrap;
     height: 2.8em;
     background: #e2e3e4;
