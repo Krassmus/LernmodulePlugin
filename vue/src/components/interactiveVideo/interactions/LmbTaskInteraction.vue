@@ -73,21 +73,6 @@ button.lmb-task-interaction {
   $border-width: 0.2em;
   $circle-radius: 3em;
 
-  &.selected {
-    > .interaction-label {
-      border: $border-width solid #3c434e;
-      margin-top: calc(-1 * $border-width);
-      margin-left: calc(-1 * $border-width);
-    }
-    .icon-circle-border {
-      shape-outside: circle();
-      clip-path: circle();
-      width: calc($circle-radius + 2 * $border-width);
-      height: calc($circle-radius + 2 * $border-width);
-      background: #3c434e;
-    }
-  }
-
   > .icon-circle {
     position: absolute;
     top: $border-width;
@@ -113,6 +98,22 @@ button.lmb-task-interaction {
     white-space: nowrap;
     height: 2.8em;
     background: #e2e3e4;
+    border-radius: 12px;
+  }
+
+  &.selected {
+    > .interaction-label {
+      border: $border-width solid #3c434e;
+      margin-top: calc(-1 * $border-width);
+      margin-left: calc(-1 * $border-width);
+    }
+    .icon-circle-border {
+      shape-outside: circle();
+      clip-path: circle();
+      width: calc($circle-radius + 2 * $border-width);
+      height: calc($circle-radius + 2 * $border-width);
+      background: #3c434e;
+    }
   }
 }
 </style>
