@@ -160,7 +160,6 @@ export default defineComponent({
       this.dragState = undefined;
     },
     onDragoverRoot(event: DragEvent) {
-      console.log('onDragoverRoot');
       if (this.dragState?.type === 'dragInteraction') {
         const rect = (this.$refs.root as HTMLElement).getBoundingClientRect();
         const clientDx = event.clientX - this.dragState.mouseStartPos[0];
