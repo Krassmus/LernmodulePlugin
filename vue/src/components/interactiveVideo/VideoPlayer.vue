@@ -249,7 +249,6 @@ export default defineComponent({
   left: 0;
   height: 100%;
   width: 100%;
-  background: magenta;
 }
 .video-player-interaction {
   position: absolute;
