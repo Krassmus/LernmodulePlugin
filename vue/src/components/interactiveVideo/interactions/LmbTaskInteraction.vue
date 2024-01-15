@@ -30,7 +30,9 @@ export default defineComponent({
     class="lmb-task-interaction"
     :class="{
       selected: editor?.selectedInteractionId.value === interaction.id,
+      editor: !!editor,
     }"
+    :data-hover-tooltip="printTaskType(interaction.taskDefinition.task_type)"
     @click="!this.editor && $emit('activateInteraction', interaction)"
   >
     <div class="interaction-label">
@@ -106,6 +108,7 @@ button.lmb-task-interaction {
   }
 
   &.selected {
+    z-index: 1;
     > .interaction-label {
       border: $border-width solid #3c434e;
       margin-top: calc(-1 * $border-width);
@@ -117,6 +120,26 @@ button.lmb-task-interaction {
       width: calc($circle-radius + 2 * $border-width);
       height: calc($circle-radius + 2 * $border-width);
       background: #3c434e;
+    }
+  }
+
+  &.editor {
+    &:hover::before {
+      content: attr(data-hover-tooltip);
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      position: absolute;
+      top: -2em;
+      height: 1em;
+      /* Center the tooltip over the circle with the icon */
+      transform: translateX(calc(-50% + $circle-radius / 2));
+      padding: 0.35em;
+      border-radius: 12px;
+      background: black;
+      color: white;
+      opacity: 0.9;
+      z-index: 2;
     }
   }
 }
