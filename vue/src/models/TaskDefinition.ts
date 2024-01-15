@@ -16,6 +16,8 @@ import { v4 } from 'uuid';
 import { z } from 'zod';
 import InteractiveVideoViewer from '@/components/InteractiveVideoViewer.vue';
 import InteractiveVideoEditor from '@/components/InteractiveVideoEditor.vue';
+import FindTheHotspotEditor from '@/components/FindTheHotspotEditor.vue';
+import FindTheHotspotViewer from '@/components/FindTheHotspotViewer.vue';
 
 export const feedbackSchema = z.object({
   percentage: z.number(),
@@ -41,6 +43,12 @@ export const dragTheWordsTaskSchema = z.object({
   feedback: z.array(feedbackSchema),
 });
 export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
+
+export const findTheHotspotTaskSchema = z.object({
+  task_type: z.literal('FindTheHotspot'),
+  template: z.string(),
+});
+export type FindTheHotspotTask = z.infer<typeof findTheHotspotTaskSchema>;
 
 export const markTheWordsTaskSchema = z.object({
   task_type: z.literal('MarkTheWords'),
@@ -171,6 +179,7 @@ export const taskDefinitionSchema = z.union([
   dragTheWordsTaskSchema,
   markTheWordsTaskSchema,
   memoryTaskSchema,
+  findTheHotspotTaskSchema,
   imagePairingTaskSchema,
   imageSequencingTaskSchema,
   interactiveVideoTaskSchema,
@@ -184,6 +193,7 @@ export const taskTypeSchema = z.union([
   dragTheWordsTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
+  findTheHotspotTaskSchema.shape.task_type,
   imagePairingTaskSchema.shape.task_type,
   imageSequencingTaskSchema.shape.task_type,
   interactiveVideoTaskSchema.shape.task_type,
@@ -215,6 +225,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           { percentage: 75, message: 'Sehr gut.' },
           { percentage: 100, message: 'Perfekt!' },
         ],
+      };
+    case 'FindTheHotspot':
+      return {
+        task_type: 'FindTheHotspot',
+        template: 'Moin',
       };
     case 'Question':
       return {
@@ -416,6 +431,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return MarkTheWordsViewer;
     case 'Memory':
       return MemoryViewer;
+    case 'FindTheHotspot':
+      return FindTheHotspotViewer;
     case 'ImagePairing':
       return ImagePairingViewer;
     case 'ImageSequencing':
@@ -439,6 +456,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return MarkTheWordsEditor;
     case 'Memory':
       return MemoryEditor;
+    case 'FindTheHotspot':
+      return FindTheHotspotEditor;
     case 'ImagePairing':
       return ImagePairingEditor;
     case 'ImageSequencing':
