@@ -190,6 +190,11 @@ export default defineComponent({
     :class="{ 'drag-in-progress': !!dragState }"
   >
     <div ref="container"></div>
+    <div
+      class="cancel-selection-overlay"
+      v-if="!!editor?.selectedInteractionId.value"
+      @click="editor!.selectInteraction(undefined)"
+    ></div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
         v-if="interaction.type === 'lmbTask'"
@@ -237,6 +242,14 @@ export default defineComponent({
 .video-player-root {
   position: relative;
   overflow: hidden;
+}
+.cancel-selection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: magenta;
 }
 .video-player-interaction {
   position: absolute;
