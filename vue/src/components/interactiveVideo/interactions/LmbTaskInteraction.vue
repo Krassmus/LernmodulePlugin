@@ -38,7 +38,7 @@ export default defineComponent({
     </div>
     <div class="icon-circle-border"></div>
     <div
-      class="icon-circle button"
+      class="icon-circle button no-hover-effect"
       :class="iconForTaskType(interaction.taskDefinition.task_type)"
     ></div>
   </button>
@@ -87,6 +87,10 @@ button.lmb-task-interaction {
       filter: grayscale(1) contrast(1.5);
     }
   }
+  &:hover > .icon-circle {
+    background: #e1d5e8;
+  }
+
   > .interaction-label {
     display: flex;
     align-items: center;

@@ -22,7 +22,8 @@
   }
 
   &.disabled,
-  &[disabled] {
+  &[disabled],
+  &.no-hover-effect {
     &:hover::before {
       @include background-icon($icon, $role);
     }
