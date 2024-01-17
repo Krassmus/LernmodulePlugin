@@ -296,7 +296,7 @@ export default defineComponent({
         this.dragState.time += dSeconds;
         const timeClamped = Math.max(
           0,
-          Math.min(interaction.endTime - 0.1, this.dragState.time)
+          Math.min(interaction.endTime - 1, this.dragState.time)
         );
         // TODO make undoable
         interaction.startTime = timeClamped;
@@ -310,7 +310,7 @@ export default defineComponent({
         const dSeconds = this.pixelsToSeconds(ev.movementX);
         this.dragState.time += dSeconds;
         const secondsClamped = Math.max(
-          interaction.startTime + 0.1,
+          interaction.startTime + 1,
           Math.min(this.videoMetadata.length, this.dragState.time)
         );
         // TODO make undoable
