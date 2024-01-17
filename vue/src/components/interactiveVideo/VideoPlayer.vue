@@ -99,7 +99,9 @@ export default defineComponent({
       // create and append the player element by hand to the DOM each time.
       const playerElement = document.createElement('video-js');
       playerElement.classList.add('video-js', 'vjs-fluid');
-      (this.$refs.container as HTMLDivElement).appendChild(playerElement);
+      (this.$refs.videoJsContainer as HTMLDivElement).appendChild(
+        playerElement
+      );
 
       // Create the player and set up event listeners
       this.player = videojs(
@@ -188,7 +190,7 @@ export default defineComponent({
     @dragover.capture="onDragoverRoot"
     :class="{ 'drag-in-progress': !!dragState }"
   >
-    <div ref="container"></div>
+    <div ref="videoJsContainer"></div>
     <div
       class="cancel-selection-overlay"
       v-if="!!editor?.selectedInteractionId.value"
