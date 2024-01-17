@@ -44,21 +44,6 @@ export default defineComponent({
       :class="iconForTaskType(interaction.taskDefinition.task_type)"
     ></div>
   </button>
-  <!--  <div-->
-  <!--    v-if="editor"-->
-  <!--    :class="{-->
-  <!--      selected: editor?.selectedInteractionId.value === interaction.id,-->
-  <!--    }"-->
-  <!--  >-->
-  <!--    {{ printTaskType(interaction.taskDefinition.task_type) }}-->
-  <!--  </div>-->
-  <!--  <button-->
-  <!--    v-else-->
-  <!--    type="button"-->
-  <!--    @click="$emit('activateInteraction', interaction)"-->
-  <!--  >-->
-  <!--    {{ printTaskType(interaction.taskDefinition.task_type) }}-->
-  <!--  </button>-->
 </template>
 
 <style scoped lang="scss">
