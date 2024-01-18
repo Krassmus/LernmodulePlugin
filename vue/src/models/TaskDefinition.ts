@@ -25,6 +25,13 @@ export const feedbackSchema = z.object({
 });
 export type Feedback = z.infer<typeof feedbackSchema>;
 
+export const imageSchema = z.object({
+  uuid: z.string(),
+  imageUrl: z.string(),
+  altText: z.string(),
+});
+export type Image = z.infer<typeof imageSchema>;
+
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
   template: z.string(),
@@ -46,7 +53,7 @@ export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 
 export const findTheHotspotTaskSchema = z.object({
   task_type: z.literal('FindTheHotspot'),
-  template: z.string(),
+  image: imageSchema,
 });
 export type FindTheHotspotTask = z.infer<typeof findTheHotspotTaskSchema>;
 
@@ -129,13 +136,6 @@ export const questionTaskSchema = z.object({
   }),
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
-
-export const imageSchema = z.object({
-  uuid: z.string(),
-  imageUrl: z.string(),
-  altText: z.string(),
-});
-export type Image = z.infer<typeof imageSchema>;
 
 export const imagePairSchema = z.object({
   uuid: z.string(),
@@ -253,7 +253,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FindTheHotspot':
       return {
         task_type: 'FindTheHotspot',
-        template: 'Moin',
+        image: {
+          uuid: v4(),
+          imageUrl: '',
+          altText: '',
+        },
       };
     case 'ImagePairing':
       return {

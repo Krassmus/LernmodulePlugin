@@ -1,6 +1,6 @@
 <template>
   <span>Find the Hotspot - Viewer</span><br />
-  <span>{{ this.task.template }}</span>
+  <img :src="this.task.image.imageUrl" />
 </template>
 
 <script lang="ts">
