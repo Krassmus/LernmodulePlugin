@@ -15,7 +15,7 @@ import {
 import LmbTaskInteraction from '@/components/interactiveVideo/interactions/LmbTaskInteraction.vue';
 import { printTaskType, viewerForTaskType } from '@/models/TaskDefinition';
 import { $gettext } from '../../language/gettext';
-import { createPopper, Instance } from '@popperjs/core';
+import { createPopper, Instance, VirtualElement } from '@popperjs/core';
 import type { StrictModifiers } from '@popperjs/core';
 
 type DragState =
@@ -106,6 +106,30 @@ export default defineComponent({
     },
   },
   methods: {
+    initializePopper() {
+      const getSelectedInteractionId = () => this.selectedInteractionId;
+      const virtualElement: VirtualElement = {
+        getBoundingClientRect(): DOMRect {
+          const interactionId = getSelectedInteractionId();
+          if (!interactionId) {
+            return new DOMRect();
+          }
+          const interactionElement = document.getElementById(
+            `interaction-${getSelectedInteractionId()}`
+          ) as HTMLElement;
+          if (!interactionElement) {
+            console.warn('No interaction element found');
+            return new DOMRect();
+          }
+          return interactionElement.getBoundingClientRect();
+        },
+      };
+
+      const tooltipElement = this.$refs
+        .selectedInteractionTooltip as HTMLElement;
+      console.log(virtualElement, tooltipElement);
+      popperInstance = createPopper(virtualElement, tooltipElement);
+    },
     $gettext,
     printTaskType,
     viewerForTaskType,
@@ -201,6 +225,7 @@ export default defineComponent({
   },
   mounted() {
     this.initializePlayer();
+    this.initializePopper();
   },
 });
 </script>
@@ -215,13 +240,23 @@ export default defineComponent({
     <div ref="videoJsContainer"></div>
     <div
       class="cancel-selection-overlay"
-      v-if="!!editor?.selectedInteractionId.value"
+      v-if="!!selectedInteractionId"
       @click="editor!.selectInteraction(undefined)"
     ></div>
+    <div
+      ref="selectedInteractionTooltip"
+      class="selected-interaction-tooltip"
+      :class="{
+        hidden: !selectedInteractionId,
+      }"
+    >
+      Tooltip
+    </div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
         v-if="interaction.type === 'lmbTask'"
         class="video-player-interaction"
+        :id="`interaction-${interaction.id}`"
         :style="{
           left: `${interaction.x * 100}%`,
           top: `${interaction.y * 100}%`,
@@ -267,6 +302,11 @@ export default defineComponent({
   position: relative;
 }
 .selected-interaction-tooltip {
+  position: absolute;
+  &.hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
   background: white;
   color: black;
   border-radius: 12px;
