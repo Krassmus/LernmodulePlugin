@@ -10,6 +10,7 @@
     "gettext:compile": "vue-gettext-compile"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "core-js": "^3.8.3",
     "d3-drag": "^3.0.0",
     "d3-selection": "^3.0.0",
