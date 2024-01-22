@@ -196,6 +196,7 @@ export default defineComponent({
         const clampedYFraction = Math.min(1, Math.max(0, yFraction));
         const id = this.dragState.interactionId;
         this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
+        popperInstance?.update();
       }
     },
   },
@@ -215,12 +216,22 @@ export default defineComponent({
     <div ref="videoJsContainer"></div>
     <div
       class="cancel-selection-overlay"
-      v-if="!!editor?.selectedInteractionId.value"
+      v-if="!!selectedInteractionId"
       @click="editor!.selectInteraction(undefined)"
     ></div>
+    <div
+      ref="selectedInteractionTooltip"
+      class="selected-interaction-tooltip"
+      :class="{
+        hidden: !selectedInteractionId,
+      }"
+    >
+      Tooltip
+    </div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
         v-if="interaction.type === 'lmbTask'"
+        :id="`interaction-${interaction.id}`"
         class="video-player-interaction"
         :style="{
           left: `${interaction.x * 100}%`,
@@ -267,6 +278,7 @@ export default defineComponent({
   position: relative;
 }
 .selected-interaction-tooltip {
+  position: absolute;
   background: white;
   color: black;
   border-radius: 12px;
