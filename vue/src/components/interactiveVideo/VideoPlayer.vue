@@ -183,7 +183,7 @@ export default defineComponent({
       console.log('dragEnd');
       this.dragState = undefined;
     },
-    onDragoverRelativeContainer(event: DragEvent) {
+    onDragoverRoot(event: DragEvent) {
       if (this.dragState?.type === 'dragInteraction') {
         const rect = (this.$refs.root as HTMLElement).getBoundingClientRect();
         const clientDx = event.clientX - this.dragState.mouseStartPos[0];
@@ -206,73 +206,55 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="video-player-root">
+  <div
+    class="video-player-root"
+    ref="root"
+    @dragover.capture="onDragoverRoot"
+    :class="{ 'drag-in-progress': !!dragState }"
+  >
+    <div ref="videoJsContainer"></div>
     <div
-      class="video-player-relative-container"
-      ref="root"
-      @dragover.capture="onDragoverRelativeContainer"
-      :class="{ 'drag-in-progress': !!dragState }"
-    >
+      class="cancel-selection-overlay"
+      v-if="!!editor?.selectedInteractionId.value"
+      @click="editor!.selectInteraction(undefined)"
+    ></div>
+    <template v-for="interaction in visibleInteractions" :key="interaction.id">
+      <LmbTaskInteraction
+        v-if="interaction.type === 'lmbTask'"
+        class="video-player-interaction"
+        :style="{
+          left: `${interaction.x * 100}%`,
+          top: `${interaction.y * 100}%`,
+        }"
+        :interaction="interaction"
+        :draggable="!!editor"
+        @pointerdown.capture="editor?.selectInteraction(interaction.id)"
+        @dragstart="onDragStartInteraction($event, interaction)"
+        @dragend="onDragEndInteraction($event, interaction)"
+        @activateInteraction="activateInteraction"
+      />
+    </template>
+    <Transition name="fade">
       <div
-        class="selected-interaction-tooltip"
-        ref="selectedInteractionTooltip"
+        v-if="activeInteraction?.type === 'lmbTask'"
+        class="active-interaction-container"
+        @click.self="closeInteraction"
       >
-        Tooltip
-      </div>
-      <div ref="videoJsContainer"></div>
-      <div
-        class="cancel-selection-overlay"
-        v-if="!!editor?.selectedInteractionId.value"
-        @click="editor!.selectInteraction(undefined)"
-      ></div>
-      <template
-        v-for="interaction in visibleInteractions"
-        :key="interaction.id"
-      >
-        <LmbTaskInteraction
-          v-if="interaction.type === 'lmbTask'"
-          class="video-player-interaction"
-          :id="`interaction-${interaction.id}`"
-          :style="{
-            left: `${interaction.x * 100}%`,
-            top: `${interaction.y * 100}%`,
-          }"
-          :interaction="interaction"
-          :draggable="!!editor"
-          @pointerdown.capture="editor?.selectInteraction(interaction.id)"
-          @dragstart="onDragStartInteraction($event, interaction)"
-          @dragend="onDragEndInteraction($event, interaction)"
-          @activateInteraction="activateInteraction"
-        />
-      </template>
-      <Transition name="fade">
-        <div
-          v-if="activeInteraction?.type === 'lmbTask'"
-          class="active-interaction-container"
-          @click.self="closeInteraction"
-        >
-          <div class="active-interaction">
-            <h1>
-              {{ printTaskType(activeInteraction.taskDefinition.task_type) }}
-            </h1>
-            <component
-              :is="
-                viewerForTaskType(activeInteraction.taskDefinition.task_type)
-              "
-              :task="activeInteraction.taskDefinition"
-            />
-            <button
-              type="button"
-              class="button cancel"
-              @click="closeInteraction"
-            >
-              {{ $gettext('Schließen') }}
-            </button>
-          </div>
+        <div class="active-interaction">
+          <h1>
+            {{ printTaskType(activeInteraction.taskDefinition.task_type) }}
+          </h1>
+          <component
+            :is="viewerForTaskType(activeInteraction.taskDefinition.task_type)"
+            :task="activeInteraction.taskDefinition"
+          />
+          <button type="button" class="button cancel" @click="closeInteraction">
+            {{ $gettext('Schließen') }}
+          </button>
         </div>
-        <div v-else-if="activeInteraction?.type === 'overlay'">Overlay</div>
-      </Transition>
-    </div>
+      </div>
+      <div v-else-if="activeInteraction?.type === 'overlay'">Overlay</div>
+    </Transition>
   </div>
 </template>
 
@@ -291,10 +273,6 @@ export default defineComponent({
   padding: 3px;
 }
 
-.video-player-relative-container {
-  position: relative;
-  overflow: hidden;
-}
 .cancel-selection-overlay {
   position: absolute;
   top: 0;
