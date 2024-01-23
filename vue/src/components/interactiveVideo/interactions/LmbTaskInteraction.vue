@@ -108,7 +108,7 @@ button.lmb-task-interaction {
     }
   }
 
-  &.editor {
+  &.editor:not(.selected) {
     &:hover::before {
       content: attr(data-hover-tooltip);
       display: flex;
