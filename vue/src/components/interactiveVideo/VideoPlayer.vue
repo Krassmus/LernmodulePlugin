@@ -61,12 +61,14 @@ export default defineComponent({
         popperInstance?.destroy();
         if (interactionId) {
           const interactionElement = document.getElementById(
-            `interaction-${interactionId}`
+            `interaction-${this.editor ? 'editor' : 'viewer'}-${interactionId}`
           ) as HTMLElement;
           const tooltipElement = this.$refs
             .selectedInteractionTooltip as HTMLElement;
           console.log(interactionElement, tooltipElement);
-          popperInstance = createPopper(interactionElement, tooltipElement);
+          popperInstance = createPopper(interactionElement, tooltipElement, {
+            placement: 'top',
+          });
         }
       },
     },
@@ -221,6 +223,7 @@ export default defineComponent({
     ></div>
     <div
       ref="selectedInteractionTooltip"
+      v-if="editor"
       class="selected-interaction-tooltip"
       :class="{
         hidden: !selectedInteractionId,
@@ -231,7 +234,7 @@ export default defineComponent({
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
         v-if="interaction.type === 'lmbTask'"
-        :id="`interaction-${interaction.id}`"
+        :id="`interaction-${editor ? 'editor' : 'viewer'}-${interaction.id}`"
         class="video-player-interaction"
         :style="{
           left: `${interaction.x * 100}%`,
