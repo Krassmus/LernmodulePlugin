@@ -17,6 +17,7 @@ import { printTaskType, viewerForTaskType } from '@/models/TaskDefinition';
 import { $gettext } from '../../language/gettext';
 import { createPopper, Instance } from '@popperjs/core';
 import type { StrictModifiers } from '@popperjs/core';
+import { v4 } from 'uuid';
 
 type DragState =
   | {
@@ -61,7 +62,7 @@ export default defineComponent({
         popperInstance?.destroy();
         if (interactionId) {
           const interactionElement = document.getElementById(
-            `interaction-${this.editor ? 'editor' : 'viewer'}-${interactionId}`
+            `interaction-${this.uid}-${interactionId}`
           ) as HTMLElement;
           const tooltipElement = this.$refs
             .selectedInteractionTooltip as HTMLElement;
@@ -74,6 +75,12 @@ export default defineComponent({
     },
   },
   computed: {
+    // A unique ID for this instance of VideoPlayer, so that we can refer
+    // to elements inside of it by ID when there are multiple VideoPlayers
+    // (e.g. viewer on one tab, editor on another tab).
+    uid(): string {
+      return v4();
+    },
     selectedInteractionId(): string | undefined {
       return this.editor?.selectedInteractionId.value;
     },
@@ -234,7 +241,7 @@ export default defineComponent({
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
         v-if="interaction.type === 'lmbTask'"
-        :id="`interaction-${editor ? 'editor' : 'viewer'}-${interaction.id}`"
+        :id="`interaction-${uid}-${interaction.id}`"
         class="video-player-interaction"
         :style="{
           left: `${interaction.x * 100}%`,
