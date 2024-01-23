@@ -66,9 +66,16 @@ export default defineComponent({
           ) as HTMLElement;
           const tooltipElement = this.$refs
             .selectedInteractionTooltip as HTMLElement;
-          console.log(interactionElement, tooltipElement);
           popperInstance = createPopper(interactionElement, tooltipElement, {
             placement: 'top',
+            modifiers: [
+              {
+                name: 'offset',
+                options: {
+                  offset: [0, 8],
+                },
+              },
+            ],
           });
         }
       },
@@ -244,6 +251,7 @@ export default defineComponent({
       <button type="button" @click="activateInteraction(selectedInteraction)">
         {{ $gettext('Vorschau') }}
       </button>
+      <div class="arrow" data-popper-arrow></div>
     </div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
@@ -301,6 +309,39 @@ export default defineComponent({
   color: black;
   border-radius: 12px;
   padding: 8px;
+  > .arrow,
+  > .arrow::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+  }
+
+  > .arrow {
+    visibility: hidden;
+  }
+
+  > .arrow::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+  }
+
+  &[data-popper-placement^='top'] > .arrow {
+    bottom: -4px;
+  }
+
+  &[data-popper-placement^='bottom'] > .arrow {
+    top: -4px;
+  }
+
+  &[data-popper-placement^='left'] > .arrow {
+    right: -4px;
+  }
+
+  &[data-popper-placement^='right'] > .arrow {
+    left: -4px;
+  }
 }
 
 .cancel-selection-overlay {
