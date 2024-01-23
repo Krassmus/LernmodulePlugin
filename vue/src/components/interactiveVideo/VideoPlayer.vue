@@ -81,6 +81,11 @@ export default defineComponent({
     uid(): string {
       return v4();
     },
+    selectedInteraction(): Interaction | undefined {
+      return this.task.interactions.find(
+        (i) => i.id === this.selectedInteractionId
+      );
+    },
     selectedInteractionId(): string | undefined {
       return this.editor?.selectedInteractionId.value;
     },
@@ -236,7 +241,9 @@ export default defineComponent({
         hidden: !selectedInteractionId,
       }"
     >
-      Tooltip
+      <button type="button" @click="activateInteraction(selectedInteraction)">
+        {{ $gettext('Vorschau') }}
+      </button>
     </div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
@@ -288,11 +295,12 @@ export default defineComponent({
   position: relative;
 }
 .selected-interaction-tooltip {
+  z-index: 2;
   position: absolute;
   background: white;
   color: black;
   border-radius: 12px;
-  padding: 3px;
+  padding: 8px;
 }
 
 .cancel-selection-overlay {
@@ -306,6 +314,7 @@ export default defineComponent({
   position: absolute;
 }
 .active-interaction-container {
+  z-index: 3;
   position: absolute;
   top: 0;
   left: 0;
