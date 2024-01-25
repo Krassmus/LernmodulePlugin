@@ -246,12 +246,9 @@ export default defineComponent({
       const startPercent = (startDeltaT / this.viewportWidthSeconds) * 100;
       const endDeltaT = interaction.endTime - this.viewportStart;
       const endPercent = (endDeltaT / this.viewportWidthSeconds) * 100;
-      const isSelected = interaction.id === this.selectedInteractionId;
       return {
         left: `${startPercent}%`,
         width: `${endPercent - startPercent}%`,
-        border: isSelected ? '3px solid black' : undefined,
-        zIndex: isSelected ? 1 : undefined,
       };
     },
     onClickInteraction(interaction: Interaction) {
@@ -398,6 +395,7 @@ export default defineComponent({
           v-for="interaction in task.interactions"
           :key="interaction.id"
           class="timeline-interaction"
+          :class="{ selected: selectedInteractionId === interaction.id }"
           :style="timelineInteractionStyle(interaction)"
           :draggable="!dragState"
           @click.stop="onClickInteraction(interaction)"
@@ -498,6 +496,16 @@ export default defineComponent({
       border: 2px solid darkgrey;
       background: #e7ebf1;
       cursor: default;
+
+      &.selected {
+        border: 3px solid black;
+        z-index: 1;
+      }
+
+      &:focus-within:not(.selected) {
+        border: 3px dashed lightgrey;
+        z-index: 2;
+      }
 
       .interaction-drag-handle {
         position: absolute;
