@@ -40,6 +40,13 @@
   @include button-with-icon(question, clickable, info_alt);
 }
 
+.small-button.visibility-visible {
+  @include button-with-icon(visibility-visible, clickable, info_alt);
+  &::before {
+    margin: unset;
+  }
+}
+
 // A button which is just an icon without text.
 .small-button.trash {
   @include button-with-icon(trash, clickable, info_alt);

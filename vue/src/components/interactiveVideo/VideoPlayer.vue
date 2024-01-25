@@ -268,9 +268,18 @@ export default defineComponent({
         hidden: !interactionForPopper,
       }"
     >
-      <button type="button" @click="activateInteraction(selectedInteraction)">
-        {{ $gettext('Vorschau') }}
-      </button>
+      <button
+        type="button"
+        class="small-button visibility-visible"
+        @click="activateInteraction(selectedInteraction)"
+        :title="$gettext('Vorschau')"
+      ></button>
+      <button
+        type="button"
+        class="small-button trash"
+        @click="editor?.deleteInteraction(selectedInteractionId)"
+        :title="$gettext('Löschen')"
+      ></button>
       <div class="arrow" data-popper-arrow></div>
     </div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">

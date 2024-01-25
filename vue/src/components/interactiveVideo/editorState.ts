@@ -18,6 +18,7 @@ export interface EditorState {
     clampedXFraction: number,
     clampedYFraction: number
   ): void;
+  deleteInteraction(interactionId: string): void;
 
   dragInteractionTimeline(id: string, startTime: number): void;
 }

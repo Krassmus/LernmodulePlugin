@@ -92,6 +92,7 @@ provide(editorStateSymbol, {
   selectInteraction,
   selectedInteractionId,
   dragInteraction,
+  deleteInteraction,
   dragInteractionTimeline,
 });
 
