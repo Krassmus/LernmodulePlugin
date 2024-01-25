@@ -335,6 +335,8 @@ export default defineComponent({
 .selected-interaction-tooltip {
   z-index: 2;
   position: absolute;
+  display: flex;
+  gap: 0.5em;
   background: white;
   color: black;
   border-radius: 12px;
