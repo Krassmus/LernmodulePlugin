@@ -333,6 +333,9 @@ export default defineComponent({
   position: relative;
 }
 .selected-interaction-tooltip {
+  &.hidden {
+    display: none;
+  }
   z-index: 2;
   position: absolute;
   display: flex;
@@ -385,6 +388,9 @@ export default defineComponent({
 }
 .video-player-interaction {
   position: absolute;
+  &:focus {
+    z-index: 2;
+  }
 }
 .active-interaction-container {
   z-index: 3;
