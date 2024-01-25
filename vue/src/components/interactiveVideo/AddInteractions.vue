@@ -31,6 +31,7 @@
     />
     <SelectedInteractionProperties
       v-if="selectedInteraction"
+      ref="selectedInteractionProperties"
       :selectedInteraction="selectedInteraction"
     />
   </div>
@@ -50,7 +51,7 @@
 </style>
 
 <script setup lang="ts">
-import { computed, defineProps, PropType, provide, ref } from 'vue';
+import { computed, defineProps, nextTick, PropType, provide, ref } from 'vue';
 import type {
   Interaction,
   InteractiveVideoTask,
@@ -80,6 +81,9 @@ const selectedInteractionId = ref<string | undefined>(undefined);
 const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
   undefined
 );
+const selectedInteractionProperties = ref<
+  InstanceType<typeof SelectedInteractionProperties> | undefined
+>(undefined);
 
 const taskTypes: Array<TaskDefinition['task_type']> = [
   'FillInTheBlanks',
@@ -91,6 +95,7 @@ const taskTypes: Array<TaskDefinition['task_type']> = [
 provide(editorStateSymbol, {
   selectInteraction,
   selectedInteractionId,
+  editInteraction,
   dragInteraction,
   deleteInteraction,
   dragInteractionTimeline,
@@ -104,6 +109,16 @@ const selectedInteraction = computed(() =>
 
 function selectInteraction(selectionId: string) {
   selectedInteractionId.value = selectionId;
+}
+function editInteraction(id: string) {
+  selectedInteractionId.value = id;
+  nextTick(() => {
+    const el = selectedInteractionProperties.value?.$el as HTMLElement;
+    el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  });
 }
 function onVideoMetadataChange(data: VideoMetadata) {
   videoMetadata.value = data;

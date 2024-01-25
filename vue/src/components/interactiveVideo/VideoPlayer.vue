@@ -206,6 +206,9 @@ export default defineComponent({
     closeInteraction() {
       this.activeInteraction = undefined;
     },
+    editInteraction(interaction: Interaction) {
+      this.editor!.editInteraction(interaction.id);
+    },
     onDragStartInteraction(event: DragEvent, interaction: Interaction) {
       console.log('dragStart');
       event.dataTransfer!.setDragImage(
@@ -273,6 +276,12 @@ export default defineComponent({
         class="small-button visibility-visible"
         @click="activateInteraction(selectedInteraction)"
         :title="$gettext('Vorschau')"
+      ></button>
+      <button
+        type="button"
+        class="small-button edit"
+        @click="editInteraction(selectedInteraction)"
+        :title="$gettext('Bearbeiten')"
       ></button>
       <button
         type="button"

@@ -13,6 +13,7 @@ export const editorStateSymbol = Symbol(
 export interface EditorState {
   selectedInteractionId: Ref<string | undefined>;
   selectInteraction(id: string): void;
+  editInteraction(id: string): void;
   dragInteraction(
     interactionId: string,
     clampedXFraction: number,

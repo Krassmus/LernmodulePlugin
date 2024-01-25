@@ -40,6 +40,13 @@
   @include button-with-icon(question, clickable, info_alt);
 }
 
+.small-button.edit {
+  @include button-with-icon(edit, clickable, info_alt);
+  &::before {
+    margin: unset;
+  }
+}
+
 .small-button.visibility-visible {
   @include button-with-icon(visibility-visible, clickable, info_alt);
   &::before {
