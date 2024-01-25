@@ -69,6 +69,7 @@ button.lmb-task-interaction {
     clip-path: circle();
     width: $circle-radius;
     height: $circle-radius;
+    /* Position the icon centered inside the circle */
     &::before {
       transform: translate(
           calc($circle-radius / 2),
@@ -109,6 +110,18 @@ button.lmb-task-interaction {
       width: calc($circle-radius + 2 * $border-width);
       height: calc($circle-radius + 2 * $border-width);
       background: #3c434e;
+    }
+  }
+
+  /* This provides a bigger, visible focus marker when the user tabs between
+   interactions using the keyboard or assistive device */
+  &:focus:not(.selected) {
+    > .icon-circle-border {
+      shape-outside: circle();
+      clip-path: circle();
+      width: calc($circle-radius + 2 * $border-width);
+      height: calc($circle-radius + 2 * $border-width);
+      background: transparent;
     }
   }
 
