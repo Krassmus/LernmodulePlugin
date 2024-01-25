@@ -70,7 +70,11 @@ button.lmb-task-interaction {
     width: $circle-radius;
     height: $circle-radius;
     &::before {
-      transform: translate(1.5em, 0.9em) scale(1.3);
+      transform: translate(
+          calc($circle-radius / 2),
+          calc($circle-radius / 2 - 0.6em)
+        )
+        scale(1.3);
       filter: grayscale(1) contrast(1.5);
     }
   }
@@ -82,12 +86,12 @@ button.lmb-task-interaction {
     display: flex;
     align-items: center;
     position: absolute;
-    left: 1.5em;
-    padding-left: calc(2em + $border-width);
+    left: calc($circle-radius / 2);
+    padding-left: calc($circle-radius / 2 + 0.5em + $border-width);
     padding-right: 0.5em;
     top: calc(0.1em + $border-width);
     white-space: nowrap;
-    height: 2.8em;
+    height: calc($circle-radius - 0.2em);
     background: #e2e3e4;
     border-radius: 12px;
   }
