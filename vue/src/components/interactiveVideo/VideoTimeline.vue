@@ -434,7 +434,7 @@ export default defineComponent({
         }"
       />
     </div>
-    <div style="white-space: pre-wrap">
+    <div style="white-space: pre-wrap; display: none">
       {{
         {
           zoomTransform,
