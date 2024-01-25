@@ -56,26 +56,34 @@ export default defineComponent({
       console.log('video prop changed', value);
       this.initializePlayer();
     },
-    selectedInteractionId: {
+    interactionForPopper: {
       immediate: true,
-      handler: function (interactionId: string | undefined) {
+      handler: function (interaction: Interaction | undefined) {
         popperInstance?.destroy();
-        if (interactionId) {
-          const interactionElement = document.getElementById(
-            `interaction-${this.uid}-${interactionId}`
-          ) as HTMLElement;
-          const tooltipElement = this.$refs
-            .selectedInteractionTooltip as HTMLElement;
-          popperInstance = createPopper(interactionElement, tooltipElement, {
-            placement: 'top',
-            modifiers: [
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, 8],
+        if (interaction) {
+          // Run on next tick, because we need to wait for the interactionElement
+          // to be rendered by Vue, in case it isn't yet visible at the moment this
+          // watcher is triggered.
+          // For example, if the user clicks on the timeline to jump to a point
+          // in the video where the currently selected interaction is visible,
+          // when it previously was not.
+          this.$nextTick(() => {
+            const interactionElement = document.getElementById(
+              `interaction-${this.uid}-${interaction.id}`
+            ) as HTMLElement;
+            const tooltipElement = this.$refs
+              .selectedInteractionTooltip as HTMLElement;
+            popperInstance = createPopper(interactionElement, tooltipElement, {
+              placement: 'top',
+              modifiers: [
+                {
+                  name: 'offset',
+                  options: {
+                    offset: [0, 8],
+                  },
                 },
-              },
-            ],
+              ],
+            });
           });
         }
       },
@@ -87,6 +95,18 @@ export default defineComponent({
     // (e.g. viewer on one tab, editor on another tab).
     uid(): string {
       return v4();
+    },
+    // Return the Interaction, if any, for which a popper tooltip should be shown
+    interactionForPopper(): Interaction | undefined {
+      // The popper should only be rendered if the selected interaction is visible.
+      if (
+        this.selectedInteraction &&
+        this.visibleInteractions.includes(this.selectedInteraction)
+      ) {
+        return this.selectedInteraction;
+      } else {
+        return undefined;
+      }
     },
     selectedInteraction(): Interaction | undefined {
       return this.task.interactions.find(
@@ -245,7 +265,7 @@ export default defineComponent({
       v-if="editor"
       class="selected-interaction-tooltip"
       :class="{
-        hidden: !selectedInteractionId,
+        hidden: !interactionForPopper,
       }"
     >
       <button type="button" @click="activateInteraction(selectedInteraction)">
