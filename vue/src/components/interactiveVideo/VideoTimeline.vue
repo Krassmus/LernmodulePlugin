@@ -470,6 +470,7 @@ export default defineComponent({
 
   .time-marker {
     position: absolute;
+    z-index: 2;
     top: 0;
     height: 5em;
     width: 2px;
