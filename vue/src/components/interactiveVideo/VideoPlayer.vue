@@ -294,6 +294,7 @@ export default defineComponent({
         :interaction="interaction"
         :draggable="!!editor"
         @pointerdown.capture="editor?.selectInteraction(interaction.id)"
+        @click="editor?.selectInteraction(interaction.id)"
         @dragstart="onDragStartInteraction($event, interaction)"
         @dragend="onDragEndInteraction($event, interaction)"
         @activateInteraction="activateInteraction"
