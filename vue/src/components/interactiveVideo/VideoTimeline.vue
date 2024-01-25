@@ -395,6 +395,7 @@ export default defineComponent({
           v-for="interaction in task.interactions"
           :key="interaction.id"
           class="timeline-interaction"
+          tabindex="0"
           :class="{ selected: selectedInteractionId === interaction.id }"
           :style="timelineInteractionStyle(interaction)"
           :draggable="!dragState"
