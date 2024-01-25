@@ -251,6 +251,7 @@ export default defineComponent({
         left: `${startPercent}%`,
         width: `${endPercent - startPercent}%`,
         border: isSelected ? '3px solid black' : undefined,
+        zIndex: isSelected ? 1 : undefined,
       };
     },
     onClickInteraction(interaction: Interaction) {
