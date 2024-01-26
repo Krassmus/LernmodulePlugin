@@ -1,18 +1,18 @@
 <template>
   <span>Find the Hotspot - Editor</span><br />
-  <ImageUpload @imageUploaded="onImageUploaded" />
+  <FileUpload @FileUploaded="onFileUploaded" />
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { FindTheHotspotTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
-import ImageUpload from '@/components/ImageUpload.vue';
+import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
 
 export default defineComponent({
   name: 'FindTheHotspotEditor',
-  components: { ImageUpload },
+  components: { FileUpload },
   props: {
     task: { type: Object as PropType<FindTheHotspotTask>, required: true },
   },
