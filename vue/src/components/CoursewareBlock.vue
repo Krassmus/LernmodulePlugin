@@ -1,12 +1,21 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { coursewareBlockStore, taskEditorStore } from '@/store';
-import { editorForTaskType, viewerForTaskType } from '@/models/TaskDefinition';
+import {
+  editorForTaskType,
+  showViewerAboveEditor,
+  viewerForTaskType,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'CoursewareBlock',
-  methods: { viewerForTaskType, $gettext, editorForTaskType },
+  methods: {
+    showViewerAboveEditor,
+    viewerForTaskType,
+    $gettext,
+    editorForTaskType,
+  },
   computed: {
     showEditingUI: () => coursewareBlockStore.showEditorUI,
     taskDefinition: () => taskEditorStore.taskDefinition,
@@ -19,12 +28,16 @@ export default defineComponent({
 
 <template>
   <component
+    v-if="!showEditingUI || showViewerAboveEditor(taskDefinition.task_type)"
     :is="viewerForTaskType(taskDefinition.task_type)"
     :task="taskDefinition"
     class="lernmodule-viewer"
   />
   <template v-if="showEditingUI">
-    <component :is="editorForTaskType(taskDefinition.task_type)" />
+    <component
+      :is="editorForTaskType(taskDefinition.task_type)"
+      :taskDefinition="taskDefinition"
+    />
     <div class="save-cancel-buttons">
       <button class="button accept" @click="saveBlock">
         {{ $gettext('Speichern') }}

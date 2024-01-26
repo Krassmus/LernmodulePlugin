@@ -6,19 +6,27 @@
     v-else
     ref="fileInput"
     type="file"
-    accept="image/*"
+    :accept="accept"
     @change="onInputChange"
   />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { uploadImage, UploadImageResponse } from '@/routes';
+import { uploadFile } from '@/routes';
 import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
-  name: 'ImageUpload',
-  emits: ['imageUploaded'],
+  name: 'FileUpload',
+  emits: ['fileUploaded'],
+  props: {
+    // The 'accept' property passed to the <input type="file"> element.  Default: 'image/*'
+    accept: {
+      type: String,
+      required: false,
+      default: 'image/*',
+    },
+  },
   data() {
     return {
       // Wenn dieser Promise vorhanden ist, heißt das, dass eine HTTP-Anfrage
@@ -28,10 +36,10 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onInputChange(event: InputEvent): void {
+    onInputChange(event: Event): void {
       if (this.uploadRequestPromise) {
         console.warn(
-          'ImageUpload: onInputChange fired while uploadRequestPromise is already defined.'
+          'FileUpload: onInputChange fired while uploadRequestPromise is already defined.'
         );
         return;
       }
@@ -39,13 +47,13 @@ export default defineComponent({
       const file = input.files?.item(0);
       if (!file) {
         console.warn(
-          'ImageUpload: onInputChange fired, but input.files[] is empty.'
+          'FileUpload: onInputChange fired, but input.files[] is empty.'
         );
         return;
       }
-      this.uploadRequestPromise = uploadImage(file)
+      this.uploadRequestPromise = uploadFile(file)
         .then((res) => {
-          this.$emit('imageUploaded', res.files[0].url);
+          this.$emit('fileUploaded', res.files[0]);
           this.uploadRequestPromise = undefined;
         })
         .catch((error) => {
