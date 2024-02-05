@@ -3,20 +3,24 @@ the Stud.IP core 5.4, rewritten in Typescript / Vue 3, removing its dependency
  on the core VueX 3.x store, allowing it to be used in our Vue 3 app. -->
 <template>
   <div class="cw-file-chooser">
-    <span v-translate>Ordner-Filter</span>
-    <FolderPicker allowUserFolders unchoose v-model="selectedFolderId" />
-    <span v-translate>Datei</span>
-    <select v-model="currentValue" @change="selectFile">
-      <option v-show="canBeEmpty" value="">
-        <translate>Keine Auswahl</translate>
-      </option>
-      <option v-for="(file, index) in files" :key="index" :value="file.id">
-        {{ file.name }}
-      </option>
-      <option v-show="files.length === 0" disabled>
-        <translate>Keine Dateien vorhanden</translate>
-      </option>
-    </select>
+    <label
+      >{{ $gettext('Ordner-Filter') }}
+      <FolderPicker allowUserFolders unchoose v-model="selectedFolderId" />
+    </label>
+    <label
+      >{{ $gettext('Datei') }}
+      <select v-model="currentValue" @change="selectFile">
+        <option v-show="canBeEmpty" value="">
+          <translate>Keine Auswahl</translate>
+        </option>
+        <option v-for="(file, index) in files" :key="index" :value="file.id">
+          {{ file.name }}
+        </option>
+        <option v-show="files.length === 0" disabled>
+          <translate>Keine Dateien vorhanden</translate>
+        </option>
+      </select>
+    </label>
   </div>
 </template>
 
@@ -24,6 +28,7 @@ the Stud.IP core 5.4, rewritten in Typescript / Vue 3, removing its dependency
 import FolderPicker from '@/components/interactiveVideo/FolderPicker.vue';
 import { mapActions, mapGetters } from 'vuex';
 import { defineComponent } from 'vue';
+import { $gettext } from '../../language/gettext';
 
 export default defineComponent({
   name: 'FilePicker',
@@ -55,6 +60,7 @@ export default defineComponent({
     },
   },
   methods: {
+    $gettext,
     ...mapActions({
       loadFileRef: 'file-refs/loadById',
       loadRelatedFileRefs: 'file-refs/loadRelated',
