@@ -87,7 +87,7 @@ export default {
       if (message.source !== this.$refs.lernmoduleIframe.contentWindow) {
         return; // Ignore the message -- it's not from our iframe
       }
-      if (message.data && message.data.hasOwnProperty('type')) {
+      if (message.data && message.data.hasOwn('type')) {
         switch (message.data.type) {
           case 'SaveCoursewareBlock':
             console.log(
