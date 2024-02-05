@@ -34,9 +34,10 @@ the Stud.IP core 5.4, rewritten in Typescript / Vue 3, removing its dependency
 import { defineComponent } from 'vue';
 import { Context } from '@/models/CoursewareBlockIframeMessages';
 import { coursewareBlockStore } from '@/store';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 interface Folder {
+  id: string;
   attributes: {
     'folder-type': string;
     'data-content': {
@@ -78,7 +79,7 @@ function filterCourseFolders(
     }
   });
 
-  function validateParentFolder(folder: Folder) {
+  function validateParentFolder(folder: Folder): boolean {
     let isValid = true;
     if (folder?.relationships?.parent) {
       let parentId = folder.relationships.parent.data.id;
@@ -95,7 +96,7 @@ function filterCourseFolders(
     return isValid;
   }
 
-  function hiddenParentFolderValidation(parentFolder) {
+  function hiddenParentFolderValidation(parentFolder: Folder): boolean {
     if (parentFolder.attributes['folder-type'] === 'HiddenFolder') {
       return false;
     } else if (parentFolder?.relationships?.parent) {
@@ -110,14 +111,18 @@ function filterCourseFolders(
 export default defineComponent({
   name: 'FolderPicker',
   props: {
-    value: String,
+    value: {
+      type: String,
+      required: false,
+      default: '',
+    },
     allowUserFolders: { type: Boolean, default: false },
     allowHomeworkFolders: { type: Boolean, default: false },
     unchoose: { type: Boolean, default: false },
   },
   data() {
     return {
-      currentValue: Object,
+      currentValue: '',
       textOptGroupCourse: this.$gettext('Dateibereich dieser Veranstaltung'),
       textOptGroupUser: this.$gettext('Persönlicher Dateibereich'),
     };
@@ -152,13 +157,13 @@ export default defineComponent({
       );
     },
     loadedUserFolders() {
-      let loadedUserFolders = [];
-      let UserFolders =
+      let loadedUserFolders: Folder[] = [];
+      let UserFolders: Folder[] =
         this.relatedFolders({
           parent: this.userObject,
           relationship: 'folders',
         }) ?? [];
-      UserFolders.forEach((folder) => {
+      UserFolders.forEach((folder: Folder) => {
         if (folder.attributes['folder-type'] === 'PublicFolder') {
           loadedUserFolders.push(folder);
         }
@@ -168,6 +173,10 @@ export default defineComponent({
     },
   },
   methods: {
+    ...mapActions({
+      _loadRelatedFolders: 'folders/loadRelated',
+    }),
+    // Typed shim for vuex action 'folders/loadRelated'
     loadRelatedFolders(params: {
       parent: {
         type: string;
@@ -177,9 +186,8 @@ export default defineComponent({
       options: {
         'page[limit]': number;
       };
-    }): void {
-      // todo vuex action 'folders/loadRelated'
-      throw new Error('not implemented');
+    }): Promise<unknown> {
+      return this._loadRelatedFolders(params);
     },
 
     changeSelection() {
@@ -203,7 +211,9 @@ export default defineComponent({
     },
 
     confirmSelectedFolder() {
-      const folders = this.loadedUserFolders.concat(this.loadedCourseFolders);
+      const folders: Folder[] = this.loadedUserFolders.concat(
+        this.loadedCourseFolders
+      );
 
       let folder = folders.find((folder) => folder.id === this.currentValue);
 
