@@ -22,9 +22,10 @@ the Stud.IP core 5.4, rewritten in Typescript / Vue 3, removing its dependency
 
 <script lang="ts">
 import FolderPicker from '@/components/interactiveVideo/FolderPicker.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'FilePicker',
   components: { FolderPicker },
   props: {
@@ -40,61 +41,32 @@ export default {
     return {
       currentValue: '',
       selectedFolderId: '',
-      files: [],
+      files: [] as any[],
     };
   },
   computed: {
-    // ...mapGetters({
-    //   fileRefById: 'file-refs/byId',
-    //   relatedFileRefs: 'file-refs/related',
-    //   urlHelper: 'urlHelper',
-    //   relatedTermOfUse: 'terms-of-use/related',
-    // }),
+    ...mapGetters({
+      fileRefById: 'file-refs/byId',
+      relatedFileRefs: 'file-refs/related',
+      relatedTermOfUse: 'terms-of-use/related',
+    }),
     userId(): string {
-      // TODO replace the vuex getter 'userId'
-      throw new Error('not implemented');
-      return '';
+      return window.STUDIP.USER_ID;
     },
   },
   methods: {
-    urlHelper() {
-      // TODO replace the vuex getter 'urlHelper'
-      throw new Error('not implemented');
-      return '';
-    },
-    relatedTermOfUse() {
-      // TODO replace the vuex getter 'terms-of-use/related'
-      throw new Error('not implemented');
-      return '';
-    },
-    relatedFileRefs() {
-      // TODO replace the vuex getter 'file-refs/related'
-      throw new Error('not implemented');
-      return '';
-    },
-    fileRefById() {
-      // TODO replace the vuex getter 'file-refs/byId'
-      throw new Error('not implemented');
-      return '';
-    },
-    loadFileRef(): void {
-      // TODO replace the VueX action 'file-refs/loadById'
-    },
-    loadRelatedFileRefs(): void {
-      // TODO replace the VueX action 'file-refs/loadRelated'
-    },
-    // ...mapActions({
-    //   loadFileRef: 'file-refs/loadById',
-    //   loadRelatedFileRefs: 'file-refs/loadRelated',
-    // }),
+    ...mapActions({
+      loadFileRef: 'file-refs/loadById',
+      loadRelatedFileRefs: 'file-refs/loadRelated',
+    }),
     selectFile() {
       this.$emit(
         'selectFile',
         this.files.find((file) => file.id === this.currentValue)
       );
     },
-    filterFiles(loadArray) {
-      const filterFile = (file) => {
+    filterFiles(loadArray: any[]) {
+      const filterFile = (file: any) => {
         let fileTermsOfUse = this.relatedTermOfUse({
           parent: file,
           relationship: 'terms-of-use',
@@ -158,7 +130,7 @@ export default {
         id: file.id,
         name: file.attributes.name,
         mime_type: file.attributes['mime-type'],
-        download_url: this.urlHelper.getURL(
+        download_url: window.STUDIP.URLHelper.getURL(
           'sendfile.php',
           { type: 0, file_id: file.id, file_name: file.attributes.name },
           true
@@ -171,19 +143,19 @@ export default {
       const options = { include: 'terms-of-use', 'page[limit]': 10000 };
       await this.loadRelatedFileRefs({ parent, relationship, options });
 
-      const files = this.relatedFileRefs({ parent, relationship });
-      this.files = this.filterFiles(files);
+      const fileRefs = this.relatedFileRefs({ parent, relationship });
+      this.files = this.filterFiles(fileRefs);
     },
   },
   async mounted() {
     console.log('mounted');
-    if (this.value != '') {
+    if (this.value !== '') {
       await this.loadFileRef({ id: this.value });
       const fileRef = this.fileRefById({ id: this.value });
 
       if (fileRef) {
         this.selectedFolderId = fileRef.relationships.parent.data.id;
-        this.currentValue = this.value;
+        this.currentValue = this.value ?? '';
       }
     }
   },
@@ -200,5 +172,5 @@ export default {
       }
     },
   },
-};
+});
 </script>

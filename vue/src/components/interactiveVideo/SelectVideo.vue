@@ -9,6 +9,7 @@ import FileUpload from '@/components/FileUpload.vue';
 import { UploadedFile } from '@/routes';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import FolderPicker from '@/components/interactiveVideo/FolderPicker.vue';
+import FilePicker from '@/components/interactiveVideo/FilePicker.vue';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -46,6 +47,8 @@ export default defineComponent({
       startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
       selectedFolderId: '',
+      selectedFile: undefined as unknown,
+      selectedFileId: '',
     };
   },
   watch: {
@@ -68,6 +71,10 @@ export default defineComponent({
     onClickUseCurrentTime() {
       this.taskDefinition.startAt = this.currentTime;
     },
+    updateCurrentFile(file: { id: string }) {
+      this.selectedFile = file;
+      this.selectedFileId = file.id;
+    },
     onSaveYoutubeVideo() {
       this.taskDefinition.video = {
         type: 'youtube',
@@ -86,13 +93,25 @@ export default defineComponent({
       };
     },
   },
-  components: { VideoTimeInput, FileUpload, VideoPlayer, FolderPicker },
+  components: {
+    VideoTimeInput,
+    FileUpload,
+    VideoPlayer,
+    FolderPicker,
+    FilePicker,
+  },
 });
 </script>
 
 <template>
   <FolderPicker allow-user-folders unchoose v-model="selectedFolderId" />
   <pre>{{ selectedFolderId }}</pre>
+  <FilePicker
+    v-model="selectedFileId"
+    is-video
+    @selectFile="updateCurrentFile"
+  />
+  <pre> {{ { selectedFile, selectedFileId } }}</pre>
   <div
     :class="{
       hidden: taskDefinition.video.type !== 'none',
