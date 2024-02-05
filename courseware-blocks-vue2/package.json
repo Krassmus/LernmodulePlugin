@@ -31,6 +31,7 @@
     "not IE <= 11"
   ],
   "dependencies": {
+    "@elan-ev/reststate-vuex": "^1.0.6",
     "axios": "^0.21.4",
     "iframe-resizer": "4.3.5",
     "vuex": "^3.6.2"
