@@ -123,6 +123,8 @@ export default defineComponent({
     };
   },
   computed: {
+    // TODO consider using https://stackoverflow.com/questions/77888245/passing-vuex-store-in-manually-mounted-vue-3-component
+    // if we want to try using VueX for this.
     context(): Context {
       // TODO replace the vuex getter 'context'
       throw new Error('not implemented');
