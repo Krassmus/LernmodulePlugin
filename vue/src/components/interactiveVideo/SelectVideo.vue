@@ -45,6 +45,7 @@ export default defineComponent({
       youtubeUrlInput: '',
       startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
+      selectedFolderId: '',
     };
   },
   watch: {
@@ -90,7 +91,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <FolderPicker />
+  <FolderPicker allow-user-folders unchoose v-model="selectedFolderId" />
+  <pre>{{ selectedFolderId }}</pre>
   <div
     :class="{
       hidden: taskDefinition.video.type !== 'none',
