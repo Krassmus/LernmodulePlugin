@@ -34,6 +34,7 @@ the Stud.IP core 5.4, rewritten in Typescript / Vue 3, removing its dependency
 import { defineComponent } from 'vue';
 import { Context } from '@/models/CoursewareBlockIframeMessages';
 import { coursewareBlockStore } from '@/store';
+import { mapGetters } from 'vuex';
 
 interface Folder {
   attributes: {
@@ -122,16 +123,12 @@ export default defineComponent({
     };
   },
   computed: {
-    // TODO consider using https://stackoverflow.com/questions/77888245/passing-vuex-store-in-manually-mounted-vue-3-component
-    // if we want to try using VueX for this.
+    ...mapGetters({
+      relatedFolders: 'folders/related',
+    }),
     context(): Context {
       // Replaces the vuex getter 'context'
       return coursewareBlockStore.studipContext;
-    },
-    relatedFolders(): Folder[] {
-      // TODO replace the vuex getter 'folders/related'
-      throw new Error('not implemented');
-      return [];
     },
     userId(): string {
       // Replaces the vuex getter 'userId'
