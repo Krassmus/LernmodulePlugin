@@ -37,6 +37,12 @@ const coursewareBlockPayloadSchema = z.union([
   }),
 ]);
 
+const contextSchema = z.object({
+  id: z.string(),
+  type: z.string(),
+});
+export type Context = z.infer<typeof contextSchema>;
+
 // Contains data which should be used to initialize the store for the Courseware block
 const initializeCoursewareBlockMessageSchema = z.object({
   type: z.literal('InitializeCoursewareBlock'),
@@ -47,6 +53,7 @@ const initializeCoursewareBlockMessageSchema = z.object({
   }),
   canEdit: z.boolean(),
   isTeacher: z.boolean(),
+  context: contextSchema,
 });
 // Contains data which should be used to initialize the store for the Courseware block
 export type InitializeMessage = z.infer<

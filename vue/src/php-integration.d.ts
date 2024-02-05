@@ -6,6 +6,7 @@ export {};
 declare global {
   interface Window {
     STUDIP: {
+      USER_ID: string;
       URLHelper: {
         getURL: (path: string) => string;
       };

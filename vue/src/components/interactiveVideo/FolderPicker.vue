@@ -32,6 +32,8 @@ the Stud.IP core 5.4, rewritten in Typescript / Vue 3, removing its dependency
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Context } from '@/models/CoursewareBlockIframeMessages';
+import { coursewareBlockStore } from '@/store';
 
 interface Folder {
   attributes: {
@@ -48,9 +50,6 @@ interface Folder {
       };
     };
   };
-}
-interface Context {
-  id: string;
 }
 
 function filterCourseFolders(
@@ -126,9 +125,8 @@ export default defineComponent({
     // TODO consider using https://stackoverflow.com/questions/77888245/passing-vuex-store-in-manually-mounted-vue-3-component
     // if we want to try using VueX for this.
     context(): Context {
-      // TODO replace the vuex getter 'context'
-      throw new Error('not implemented');
-      return '';
+      // Replaces the vuex getter 'context'
+      return coursewareBlockStore.studipContext;
     },
     relatedFolders(): Folder[] {
       // TODO replace the vuex getter 'folders/related'
@@ -136,9 +134,8 @@ export default defineComponent({
       return [];
     },
     userId(): string {
-      // TODO replace the vuex getter 'userId'
-      throw new Error('not implemented');
-      return '';
+      // Replaces the vuex getter 'userId'
+      return window.STUDIP.USER_ID;
     },
     courseObject() {
       return { type: 'courses', id: `${this.context.id}` };

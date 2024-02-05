@@ -87,7 +87,7 @@ export default {
       if (message.source !== this.$refs.lernmoduleIframe.contentWindow) {
         return; // Ignore the message -- it's not from our iframe
       }
-      if (message.data && message.data.hasOwn('type')) {
+      if (message.data && Object.hasOwn(message.data, 'type')) {
         switch (message.data.type) {
           case 'SaveCoursewareBlock':
             console.log(
@@ -121,7 +121,7 @@ export default {
         state,
       });
     },
-    onIframeLoad(event) {
+    onIframeLoad() {
       console.log('on iframe load');
       // Configure iFrameResize to resize the iframe to the height of the
       // #app element, which is marked with data-iframe-height, inside the iframe
@@ -137,6 +137,7 @@ export default {
         canEdit: this.canEdit,
         isTeacher: this.isTeacher,
         block: JSON.parse(JSON.stringify(this.block)),
+        context: this.$store.getters.context,
       });
 
       // Call onShowEditChange one time after load to initialize the 'editing'
