@@ -97,26 +97,13 @@ export default defineComponent({
     VideoTimeInput,
     FileUpload,
     VideoPlayer,
-    FolderPicker,
     FilePicker,
   },
 });
 </script>
 
 <template>
-  <FolderPicker allow-user-folders unchoose v-model="selectedFolderId" />
-  <pre>{{ selectedFolderId }}</pre>
-  <FilePicker
-    v-model="selectedFileId"
-    is-video
-    @selectFile="updateCurrentFile"
-  />
-  <pre> {{ { selectedFile, selectedFileId } }}</pre>
-  <div
-    :class="{
-      hidden: taskDefinition.video.type !== 'none',
-    }"
-  >
+  <template v-if="taskDefinition.video.type === 'none'">
     <p>
       {{
         $gettext(
@@ -125,40 +112,60 @@ export default defineComponent({
       }}
     </p>
     <div class="picker">
-      <div>
-        <label>
-          {{ $gettext('Video hochladen') }}
+      <form class="default">
+        <fieldset>
+          <legend>
+            {{ $gettext('Video hochladen') }}
+          </legend>
           <FileUpload
+            v-if="false"
             @file-uploaded="onUploadStudipVideo"
             :accept="'video/*'"
           />
-        </label>
-      </div>
-      <div class="separator" aria-hidden="true" role="presentation"></div>
-      <div>
-        <label>
-          {{ $gettext('Youtube-URL') }}
-          <input
-            class="youtube-url-input"
-            type="text"
-            v-model="youtubeUrlInput"
+          <FilePicker
+            v-model="selectedFileId"
+            is-video
+            @selectFile="updateCurrentFile"
           />
-        </label>
-        <div class="youtube-url-actions">
-          <button
-            class="button accept"
-            @click="onSaveYoutubeVideo"
-            :disabled="
-              taskDefinition.video.type === 'youtube' &&
-              taskDefinition.video.url === youtubeUrlInput
-            "
-          >
-            {{ $gettext('Übernehmen') }}
-          </button>
-        </div>
-      </div>
+          <div class="youtube-url-actions">
+            <button class="button accept" @click="onSaveUploadedFile">
+              {{ $gettext('Übernehmen') }}
+            </button>
+          </div>
+          <!--          <div style="white-space: pre-wrap">-->
+          <!--            {{ { selectedFile, selectedFileId } }}-->
+          <!--          </div>-->
+        </fieldset>
+      </form>
+      <form class="default">
+        <fieldset>
+          <legend>
+            {{ $gettext('Youtube-Video verwenden') }}
+          </legend>
+          <label>
+            {{ $gettext('Youtube-URL') }}
+            <input
+              class="youtube-url-input"
+              type="text"
+              v-model="youtubeUrlInput"
+            />
+          </label>
+          <div class="youtube-url-actions">
+            <button
+              class="button accept"
+              @click="onSaveYoutubeVideo"
+              :disabled="
+                taskDefinition.video.type === 'youtube' &&
+                taskDefinition.video.url === youtubeUrlInput
+              "
+            >
+              {{ $gettext('Übernehmen') }}
+            </button>
+          </div>
+        </fieldset>
+      </form>
     </div>
-  </div>
+  </template>
   <div class="video-preview" v-if="taskDefinition.video.type !== 'none'">
     <VideoPlayer
       ref="videoPlayer"
@@ -225,21 +232,29 @@ export default defineComponent({
 <style scoped lang="scss">
 .picker {
   display: grid;
-  grid-template-columns: 1fr 1px 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 0.5em;
-  .separator {
-    background: #d0d7e3;
-  }
   &.hidden {
     display: none;
   }
-}
-.youtube-url-actions {
-  display: flex;
-  justify-content: flex-end;
-  button.button {
-    margin-right: 0;
+  > form {
+    > fieldset {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .youtube-url-actions {
+        display: flex;
+        justify-content: flex-end;
+        button.button {
+          margin-right: 0.6em;
+          margin-bottom: 0;
+          margin-top: 0;
+        }
+      }
+    }
   }
+  padding-bottom: 1em;
 }
 .youtube-url-input {
   width: 100%;
