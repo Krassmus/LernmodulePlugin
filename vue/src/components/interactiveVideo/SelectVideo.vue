@@ -262,7 +262,6 @@ export default defineComponent({
   box-sizing: border-box;
 }
 .video-preview {
-  margin-top: 1em;
   .video-player {
     margin-bottom: 1em;
   }
