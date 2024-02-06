@@ -33,6 +33,13 @@ function formatSecondsToHhMmSs(time: number): string {
   return `${twoDigits(hours)}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
 }
 
+interface JsonApiFile {
+  id: string;
+  name: string;
+  mime_type: string;
+  download_url: string;
+}
+
 export default defineComponent({
   name: 'SelectVideo',
   props: {
@@ -47,7 +54,7 @@ export default defineComponent({
       startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
       selectedFolderId: '',
-      selectedFile: undefined as unknown,
+      selectedFile: undefined as JsonApiFile | undefined,
       selectedFileId: '',
     };
   },
@@ -71,7 +78,7 @@ export default defineComponent({
     onClickUseCurrentTime() {
       this.taskDefinition.startAt = this.currentTime;
     },
-    updateCurrentFile(file: { id: string }) {
+    updateCurrentFile(file: JsonApiFile) {
       this.selectedFile = file;
       this.selectedFileId = file.id;
     },
@@ -79,6 +86,19 @@ export default defineComponent({
       this.taskDefinition.video = {
         type: 'youtube',
         url: this.youtubeUrlInput,
+      };
+    },
+    onSaveUploadedFile() {
+      if (!this.selectedFile) {
+        return;
+      }
+      this.taskDefinition.video = {
+        type: 'studipFileReference',
+        file: {
+          name: this.selectedFile.name,
+          type: this.selectedFile.mime_type,
+          url: this.selectedFile.download_url,
+        },
       };
     },
     deleteVideo() {
@@ -128,7 +148,11 @@ export default defineComponent({
             @selectFile="updateCurrentFile"
           />
           <div class="youtube-url-actions">
-            <button class="button accept" @click="onSaveUploadedFile">
+            <button
+              type="button"
+              class="button accept"
+              @click="onSaveUploadedFile"
+            >
               {{ $gettext('Übernehmen') }}
             </button>
           </div>
@@ -152,6 +176,7 @@ export default defineComponent({
           </label>
           <div class="youtube-url-actions">
             <button
+              type="button"
               class="button accept"
               @click="onSaveYoutubeVideo"
               :disabled="
