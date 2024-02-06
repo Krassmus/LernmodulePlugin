@@ -51,44 +51,6 @@ export default defineComponent({
       activeInteraction: undefined as Interaction | undefined,
     };
   },
-  watch: {
-    'task.video': function (value) {
-      console.log('video prop changed', value);
-      this.initializePlayer();
-    },
-    interactionForPopper: {
-      immediate: true,
-      handler: function (interaction: Interaction | undefined) {
-        popperInstance?.destroy();
-        if (interaction) {
-          // Run on next tick, because we need to wait for the interactionElement
-          // to be rendered by Vue, in case it isn't yet visible at the moment this
-          // watcher is triggered.
-          // For example, if the user clicks on the timeline to jump to a point
-          // in the video where the currently selected interaction is visible,
-          // when it previously was not.
-          this.$nextTick(() => {
-            const interactionElement = document.getElementById(
-              `interaction-${this.uid}-${interaction.id}`
-            ) as HTMLElement;
-            const tooltipElement = this.$refs
-              .selectedInteractionTooltip as HTMLElement;
-            popperInstance = createPopper(interactionElement, tooltipElement, {
-              placement: 'top',
-              modifiers: [
-                {
-                  name: 'offset',
-                  options: {
-                    offset: [0, 8],
-                  },
-                },
-              ],
-            });
-          });
-        }
-      },
-    },
-  },
   computed: {
     // A unique ID for this instance of VideoPlayer, so that we can refer
     // to elements inside of it by ID when there are multiple VideoPlayers
@@ -144,6 +106,66 @@ export default defineComponent({
       return this.task.interactions.filter((i) => {
         return i.startTime <= this.time && i.endTime > this.time;
       });
+    },
+    // Computed property created so that we can register a watcher which triggers
+    // when either of these things changes.
+    timeAndVisibleInteractions(): [number, Interaction[]] {
+      return [this.time, this.visibleInteractions];
+    },
+  },
+  watch: {
+    'task.video': function (value) {
+      console.log('video prop changed', value);
+      this.initializePlayer();
+    },
+    // Handle pausing the video when an interaction becomes visible.
+    timeAndVisibleInteractions(
+      [newTime, newVisibleInteractions]: [number, Interaction[]],
+      [oldTime, oldVisibleInteractions]: [number, Interaction[]]
+    ): void {
+      const isPlayingForward = newTime > oldTime;
+      const newlyVisibleInteractionWithPause = newVisibleInteractions.find(
+        (i) => !oldVisibleInteractions.includes(i) && i.pauseWhenVisible
+      );
+      if (isPlayingForward && newlyVisibleInteractionWithPause) {
+        console.log(
+          'pausing for interaction: ',
+          newlyVisibleInteractionWithPause
+        );
+        this.player!.pause();
+      }
+    },
+    interactionForPopper: {
+      immediate: true,
+      handler: function (interaction: Interaction | undefined) {
+        popperInstance?.destroy();
+        if (interaction) {
+          // Run on next tick, because we need to wait for the interactionElement
+          // to be rendered by Vue, in case it isn't yet visible at the moment this
+          // watcher is triggered.
+          // For example, if the user clicks on the timeline to jump to a point
+          // in the video where the currently selected interaction is visible,
+          // when it previously was not.
+          this.$nextTick(() => {
+            const interactionElement = document.getElementById(
+              `interaction-${this.uid}-${interaction.id}`
+            ) as HTMLElement;
+            const tooltipElement = this.$refs
+              .selectedInteractionTooltip as HTMLElement;
+            popperInstance = createPopper(interactionElement, tooltipElement, {
+              placement: 'top',
+              modifiers: [
+                {
+                  name: 'offset',
+                  options: {
+                    offset: [0, 8],
+                  },
+                },
+              ],
+            });
+          });
+        }
+      },
     },
   },
   methods: {

@@ -23,6 +23,7 @@ const overlaySchema = z.object({
   x: z.number(), // Position, as a fraction of video width, between 0 and 1
   y: z.number(), // Position, as a fraction of video height, between 0 and 1
   text: z.string(), // Sanitized HTML from Wysiwyg editor
+  pauseWhenVisible: z.boolean().optional().default(true),
 });
 
 // LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
@@ -35,6 +36,7 @@ const lmbTaskInteractionSchema = z.object({
   x: z.number(), // Position, as a fraction of video width, between 0 and 1
   y: z.number(), // Position, as a fraction of video height, between 0 and 1
   taskDefinition: z.lazy(() => taskDefinitionSchemaMinusInteractiveVideo),
+  pauseWhenVisible: z.boolean().optional().default(true),
 });
 export type LmbTaskInteraction = z.infer<typeof lmbTaskInteractionSchema>;
 

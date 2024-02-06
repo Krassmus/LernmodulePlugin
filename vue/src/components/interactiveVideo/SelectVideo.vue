@@ -8,6 +8,8 @@ import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
 import { UploadedFile } from '@/routes';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
+import FolderPicker from '@/components/interactiveVideo/FolderPicker.vue';
+import FilePicker from '@/components/interactiveVideo/FilePicker.vue';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -31,6 +33,13 @@ function formatSecondsToHhMmSs(time: number): string {
   return `${twoDigits(hours)}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
 }
 
+interface JsonApiFile {
+  id: string;
+  name: string;
+  mime_type: string;
+  download_url: string;
+}
+
 export default defineComponent({
   name: 'SelectVideo',
   props: {
@@ -44,6 +53,9 @@ export default defineComponent({
       youtubeUrlInput: '',
       startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
+      selectedFolderId: '',
+      selectedFile: undefined as JsonApiFile | undefined,
+      selectedFileId: '',
     };
   },
   watch: {
@@ -66,10 +78,27 @@ export default defineComponent({
     onClickUseCurrentTime() {
       this.taskDefinition.startAt = this.currentTime;
     },
+    updateCurrentFile(file: JsonApiFile) {
+      this.selectedFile = file;
+      this.selectedFileId = file.id;
+    },
     onSaveYoutubeVideo() {
       this.taskDefinition.video = {
         type: 'youtube',
         url: this.youtubeUrlInput,
+      };
+    },
+    onSaveUploadedFile() {
+      if (!this.selectedFile) {
+        return;
+      }
+      this.taskDefinition.video = {
+        type: 'studipFileReference',
+        file: {
+          name: this.selectedFile.name,
+          type: this.selectedFile.mime_type,
+          url: this.selectedFile.download_url,
+        },
       };
     },
     deleteVideo() {
@@ -84,16 +113,17 @@ export default defineComponent({
       };
     },
   },
-  components: { VideoTimeInput, FileUpload, VideoPlayer },
+  components: {
+    VideoTimeInput,
+    FileUpload,
+    VideoPlayer,
+    FilePicker,
+  },
 });
 </script>
 
 <template>
-  <div
-    :class="{
-      hidden: taskDefinition.video.type !== 'none',
-    }"
-  >
+  <template v-if="taskDefinition.video.type === 'none'">
     <p>
       {{
         $gettext(
@@ -102,40 +132,70 @@ export default defineComponent({
       }}
     </p>
     <div class="picker">
-      <div>
-        <label>
-          {{ $gettext('Video hochladen') }}
-          <FileUpload
-            @file-uploaded="onUploadStudipVideo"
-            :accept="'video/*'"
-          />
-        </label>
-      </div>
-      <div class="separator" aria-hidden="true" role="presentation"></div>
-      <div>
-        <label>
-          {{ $gettext('Youtube-URL') }}
-          <input
-            class="youtube-url-input"
-            type="text"
-            v-model="youtubeUrlInput"
-          />
-        </label>
-        <div class="youtube-url-actions">
-          <button
-            class="button accept"
-            @click="onSaveYoutubeVideo"
-            :disabled="
-              taskDefinition.video.type === 'youtube' &&
-              taskDefinition.video.url === youtubeUrlInput
-            "
-          >
-            {{ $gettext('Übernehmen') }}
-          </button>
-        </div>
-      </div>
+      <form class="default">
+        <fieldset>
+          <legend>
+            {{ $gettext('Stud.IP-Video') }}
+          </legend>
+          <label>
+            {{ $gettext('Neues Video hochladen') }}
+            <FileUpload
+              @file-uploaded="onUploadStudipVideo"
+              :accept="'video/*'"
+            />
+          </label>
+          <label>
+            {{ $gettext('Vorhandenes Video auswählen') }}
+            <FilePicker
+              v-model="selectedFileId"
+              is-video
+              @selectFile="updateCurrentFile"
+            />
+          </label>
+          <div class="youtube-url-actions">
+            <button
+              type="button"
+              class="button accept"
+              @click="onSaveUploadedFile"
+            >
+              {{ $gettext('Übernehmen') }}
+            </button>
+          </div>
+          <!--          <div style="white-space: pre-wrap">-->
+          <!--            {{ { selectedFile, selectedFileId } }}-->
+          <!--          </div>-->
+        </fieldset>
+      </form>
+      <form class="default">
+        <fieldset>
+          <legend>
+            {{ $gettext('Youtube-Video') }}
+          </legend>
+          <label>
+            {{ $gettext('Youtube-URL') }}
+            <input
+              class="youtube-url-input"
+              type="text"
+              v-model="youtubeUrlInput"
+            />
+          </label>
+          <div class="youtube-url-actions">
+            <button
+              type="button"
+              class="button accept"
+              @click="onSaveYoutubeVideo"
+              :disabled="
+                taskDefinition.video.type === 'youtube' &&
+                taskDefinition.video.url === youtubeUrlInput
+              "
+            >
+              {{ $gettext('Übernehmen') }}
+            </button>
+          </div>
+        </fieldset>
+      </form>
     </div>
-  </div>
+  </template>
   <div class="video-preview" v-if="taskDefinition.video.type !== 'none'">
     <VideoPlayer
       ref="videoPlayer"
@@ -202,21 +262,29 @@ export default defineComponent({
 <style scoped lang="scss">
 .picker {
   display: grid;
-  grid-template-columns: 1fr 1px 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 0.5em;
-  .separator {
-    background: #d0d7e3;
-  }
   &.hidden {
     display: none;
   }
-}
-.youtube-url-actions {
-  display: flex;
-  justify-content: flex-end;
-  button.button {
-    margin-right: 0;
+  > form {
+    > fieldset {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .youtube-url-actions {
+        display: flex;
+        justify-content: flex-end;
+        button.button {
+          margin-right: 0.6em;
+          margin-bottom: 0;
+          margin-top: 0;
+        }
+      }
+    }
   }
+  padding-bottom: 1em;
 }
 .youtube-url-input {
   width: 100%;
@@ -224,7 +292,6 @@ export default defineComponent({
   box-sizing: border-box;
 }
 .video-preview {
-  margin-top: 1em;
   .video-player {
     margin-bottom: 1em;
   }

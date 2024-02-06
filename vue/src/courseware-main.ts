@@ -83,6 +83,7 @@ function initializeApp(initializeMessage: InitializeMessage) {
     );
     taskEditorStore.initializeCourseware(newTaskDefinition);
   }
+  coursewareBlockStore.setContext(initializeMessage.context);
   const app = createApp(CoursewareBlock);
   app.directive('model-undoable', modelUndoable);
   app.use(store);

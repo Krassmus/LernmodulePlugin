@@ -5,41 +5,43 @@
       "{{ printInteractionType(selectedInteraction) }}"
     </h3>
     <form v-if="selectedInteraction" class="default">
-      <fieldset ref="timeInputsFieldset">
+      <fieldset>
         <legend>
-          {{ $gettext('Zeitpunkt') }}
+          {{ $gettext('Einstellungen') }}
         </legend>
-        <label>
-          {{ $gettext('Start') }}
-          <VideoTimeInput
-            v-model="inputStartTime"
-            @update:error="(error) => (inputStartTimeFormatError = error)"
-            class="time-input"
-            :class="{
-              invalid: inputStartTimeErrors.length > 0,
-            }"
-            :aria-invalid="inputStartTimeErrors.length > 0"
-          />
-        </label>
-        <p
-          class="validation-error"
-          v-for="error in inputStartTimeErrors"
-          :key="error"
-        >
-          {{ error }}
-        </p>
-        <label>
-          {{ $gettext('Ende') }}
-          <VideoTimeInput
-            v-model="inputEndTime"
-            @update:error="(error) => (inputEndTimeFormatError = error)"
-            class="time-input"
-            :class="{
-              invalid: inputEndTimeErrors.length > 0,
-            }"
-            :aria-invalid="inputEndTimeErrors.length > 0"
-          />
-        </label>
+        <div class="start-and-end-time-inputs">
+          <label>
+            {{ $gettext('Start') }}
+            <VideoTimeInput
+              v-model="inputStartTime"
+              @update:error="(error) => (inputStartTimeFormatError = error)"
+              class="time-input"
+              :class="{
+                invalid: inputStartTimeErrors.length > 0,
+              }"
+              :aria-invalid="inputStartTimeErrors.length > 0"
+            />
+          </label>
+          <p
+            class="validation-error"
+            v-for="error in inputStartTimeErrors"
+            :key="error"
+          >
+            {{ error }}
+          </p>
+          <label>
+            {{ $gettext('Ende') }}
+            <VideoTimeInput
+              v-model="inputEndTime"
+              @update:error="(error) => (inputEndTimeFormatError = error)"
+              class="time-input"
+              :class="{
+                invalid: inputEndTimeErrors.length > 0,
+              }"
+              :aria-invalid="inputEndTimeErrors.length > 0"
+            />
+          </label>
+        </div>
         <p
           class="validation-error"
           v-for="error in inputEndTimeErrors"
@@ -47,6 +49,15 @@
         >
           {{ error }}
         </p>
+        <label>
+          <!-- TODO don't mutate props -- this should be undoable -->
+          <!-- eslint-disable vue/no-mutating-props -->
+          <input
+            type="checkbox"
+            v-model="selectedInteraction.pauseWhenVisible"
+          />
+          {{ $gettext('Video pausieren') }}
+        </label>
       </fieldset>
     </form>
     <KeepAlive>
@@ -189,6 +200,10 @@ export default defineComponent({
 <style scoped lang="scss">
 form.default .time-input {
   max-width: 12em;
+}
+.start-and-end-time-inputs {
+  display: flex;
+  gap: 1em;
 }
 .lmb-task-preview {
   margin-bottom: 1em;
