@@ -135,18 +135,23 @@ export default defineComponent({
       <form class="default">
         <fieldset>
           <legend>
-            {{ $gettext('Video hochladen') }}
+            {{ $gettext('Stud.IP-Video') }}
           </legend>
-          <FileUpload
-            v-if="false"
-            @file-uploaded="onUploadStudipVideo"
-            :accept="'video/*'"
-          />
-          <FilePicker
-            v-model="selectedFileId"
-            is-video
-            @selectFile="updateCurrentFile"
-          />
+          <label>
+            {{ $gettext('Neues Video hochladen') }}
+            <FileUpload
+              @file-uploaded="onUploadStudipVideo"
+              :accept="'video/*'"
+            />
+          </label>
+          <label>
+            {{ $gettext('Vorhandenes Video auswählen') }}
+            <FilePicker
+              v-model="selectedFileId"
+              is-video
+              @selectFile="updateCurrentFile"
+            />
+          </label>
           <div class="youtube-url-actions">
             <button
               type="button"
@@ -164,7 +169,7 @@ export default defineComponent({
       <form class="default">
         <fieldset>
           <legend>
-            {{ $gettext('Youtube-Video verwenden') }}
+            {{ $gettext('Youtube-Video') }}
           </legend>
           <label>
             {{ $gettext('Youtube-URL') }}
