@@ -251,18 +251,18 @@ export default defineComponent({
       const progressBarEls = playerElement.getElementsByClassName(
         'vjs-progress-holder'
       );
-      const progressBarEl = progressBarEls.item(0) as HTMLElement | undefined;
-      if (!progressBarEl) {
-        console.error('no progress bar');
+      const progressHolder = progressBarEls.item(0) as HTMLElement | undefined;
+      if (!progressHolder) {
+        console.error('no progress holder found');
       } else {
         const observer = new ResizeObserver((entries) => {
           console.log('observed');
           // TODO OffsetLeft is still not quite correct.
-          this.progressBarParameters.xOffsetPixels = progressBarEl.offsetLeft;
-          this.progressBarParameters.widthPixels = progressBarEl.clientWidth;
+          this.progressBarParameters.xOffsetPixels = progressHolder.offsetLeft;
+          this.progressBarParameters.widthPixels = progressHolder.clientWidth;
           console.log({ ...this.progressBarParameters });
         });
-        observer.observe(progressBarEl);
+        observer.observe(progressHolder);
       }
     },
     activateInteraction(interaction: Interaction) {
