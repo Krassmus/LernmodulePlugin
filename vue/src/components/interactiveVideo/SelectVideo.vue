@@ -8,8 +8,7 @@ import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
 import { UploadedFile } from '@/routes';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
-import FolderPicker from '@/components/interactiveVideo/FolderPicker.vue';
-import FilePicker from '@/components/interactiveVideo/FilePicker.vue';
+import FilePicker from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,

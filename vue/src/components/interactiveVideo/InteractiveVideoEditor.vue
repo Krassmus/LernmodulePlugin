@@ -4,8 +4,8 @@
 import { defineComponent, PropType } from 'vue';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
-import TabsComponent from '@/components/interactiveVideo/TabsComponent.vue';
-import TabComponent from '@/components/interactiveVideo/TabComponent.vue';
+import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
+import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
 import AddInteractions from '@/components/interactiveVideo/AddInteractions.vue';
 import SelectVideo from '@/components/interactiveVideo/SelectVideo.vue';
 
