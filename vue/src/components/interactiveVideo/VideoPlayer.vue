@@ -7,6 +7,7 @@ import 'videojs-youtube/dist/Youtube.min.js';
 import {
   Interaction,
   InteractiveVideoTask,
+  printInteractionType,
 } from '@/models/InteractiveVideoTask';
 import {
   EditorState,
@@ -174,6 +175,7 @@ export default defineComponent({
     },
   },
   methods: {
+    printInteractionType,
     $gettext,
     printTaskType,
     viewerForTaskType,
@@ -359,6 +361,7 @@ export default defineComponent({
       :key="interaction.id"
       :style="progressBarBreadcrumbStyle(interaction)"
       @click="onClickBreadcrumb(interaction)"
+      :title="printInteractionType(interaction)"
     />
     <div
       ref="selectedInteractionTooltip"
