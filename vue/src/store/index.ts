@@ -17,6 +17,7 @@ export const store = createStore({
   modules: {
     taskEditor: TaskEditorModule,
     coursewareBlock: CoursewareBlockModule,
+    // Dynamically generated store modules used to access Stud.IP's JSON API
     ...mapResourceModules({
       names: [
         'courses',
