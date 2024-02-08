@@ -49,12 +49,18 @@ export default defineComponent({
       time: 0,
       dragState: undefined as DragState,
       activeInteraction: undefined as Interaction | undefined,
+      progressBarParameters: {
+        widthPixels: 1,
+        xOffsetPixels: 0,
+      },
     };
   },
   computed: {
     timelineBreadcrumbStyle(): Partial<CSSStyleDeclaration> {
+      const progressPercentage = 300 / (this.player?.duration() ?? 1);
       return {
-        left: 'calc(8em + 5px)',
+        left: `calc(${this.progressBarParameters.xOffsetPixels}px +
+        ${this.progressBarParameters.widthPixels * progressPercentage}px)`,
       };
     },
     // A unique ID for this instance of VideoPlayer, so that we can refer
@@ -239,6 +245,25 @@ export default defineComponent({
           length: this.player!.duration(),
         });
       });
+
+      // Observe the progress bar -- we need to know its size and location
+      // in order to position our breadcrumbs correctly on top of it.
+      const progressBarEls = playerElement.getElementsByClassName(
+        'vjs-progress-holder'
+      );
+      const progressBarEl = progressBarEls.item(0) as HTMLElement | undefined;
+      if (!progressBarEl) {
+        console.error('no progress bar');
+      } else {
+        const observer = new ResizeObserver((entries) => {
+          console.log('observed');
+          // TODO OffsetLeft is still not quite correct.
+          this.progressBarParameters.xOffsetPixels = progressBarEl.offsetLeft;
+          this.progressBarParameters.widthPixels = progressBarEl.clientWidth;
+          console.log({ ...this.progressBarParameters });
+        });
+        observer.observe(progressBarEl);
+      }
     },
     activateInteraction(interaction: Interaction) {
       this.activeInteraction = interaction;
@@ -515,6 +540,7 @@ $progress-control-height: 3.5em;
     height: $progress-control-height;
     padding-top: 0.5em;
 
+    // Un-hide these elements -- they have display: none in videojs default css.
     .vjs-current-time {
       display: flex;
       padding: 0;
