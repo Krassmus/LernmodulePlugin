@@ -181,13 +181,9 @@ export default defineComponent({
           </label>
           <div class="youtube-url-actions">
             <button
-              type="button"
+              type="submit"
               class="button accept"
               @click="onSaveYoutubeVideo"
-              :disabled="
-                taskDefinition.video.type === 'youtube' &&
-                taskDefinition.video.url === youtubeUrlInput
-              "
             >
               {{ $gettext('Übernehmen') }}
             </button>
