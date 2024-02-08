@@ -158,7 +158,7 @@ export default defineComponent({
       // Calculate new translation in order to keep the point under the mouse
       // cursor stationary.
       // viewportWidthSeconds is recalculated (because it's a computed property)
-      // after zoomTransform.k is modified.
+      // after zoomTransform.k is modified in the previous block of code..
       const viewportWidth1 = this.viewportWidthSeconds;
       const viewportStart1 =
         t - ((t - viewportStart0) / viewportWidth0) * viewportWidth1;
