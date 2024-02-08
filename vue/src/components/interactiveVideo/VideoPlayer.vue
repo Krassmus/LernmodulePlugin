@@ -317,6 +317,10 @@ export default defineComponent({
         ${timeOffsetPx}px - 0.25em)`,
       };
     },
+    onClickBreadcrumb(interaction: Interaction): void {
+      this.editor?.selectInteraction(interaction.id);
+      this.player?.currentTime(interaction.startTime);
+    },
   },
   mounted() {
     this.initializePlayer();
@@ -345,6 +349,7 @@ export default defineComponent({
       v-for="interaction in task.interactions"
       :key="interaction.id"
       :style="progressBarBreadcrumbStyle(interaction)"
+      @click="onClickBreadcrumb(interaction)"
     />
     <div
       ref="selectedInteractionTooltip"
@@ -511,8 +516,8 @@ $progress-control-height: 3.5em;
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
+  right: 0;
+  bottom: 2.5em;
 }
 .video-player-interaction {
   position: absolute;
