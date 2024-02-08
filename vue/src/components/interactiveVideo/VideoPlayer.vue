@@ -344,7 +344,7 @@ export default defineComponent({
       v-if="!!selectedInteractionId"
       @click="editor!.selectInteraction(undefined)"
     ></div>
-    <div
+    <button
       class="progress-bar-breadcrumb"
       v-for="interaction in task.interactions"
       :key="interaction.id"
@@ -478,9 +478,18 @@ export default defineComponent({
 
 $progress-control-height: 3.5em;
 .progress-bar-breadcrumb {
+  /* CSS Reset for button styles */
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+  box-sizing: border-box;
+
   $radius: 0.5em;
   position: absolute;
-  bottom: calc($progress-control-height - 1.8em);
+  bottom: calc($progress-control-height - 1.7em);
   shape-outside: circle();
   clip-path: circle();
   width: $radius;
@@ -494,8 +503,22 @@ $progress-control-height: 3.5em;
     clip-path: circle();
     width: calc($radius - 2px);
     height: calc($radius - 2px);
-    transform: translate(1px, 1px);
+    transform: translate(1px, 0px);
     background-color: rgba(43, 51, 63, 1);
+  }
+
+  &:hover,
+  &:focus {
+    &::before {
+      background-color: white;
+    }
+  }
+  // Ensure that an outline is drawn when element is focused with the keyboard
+  &:focus {
+    clip-path: unset;
+    &::before {
+      border: 2px solid white;
+    }
   }
 }
 // Ensure that timeline breadcrumbs fade out just as the progress bar does
