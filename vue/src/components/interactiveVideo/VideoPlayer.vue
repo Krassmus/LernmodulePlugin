@@ -53,6 +53,7 @@ export default defineComponent({
         widthPixels: 1,
         xOffsetPixels: 0,
       },
+      progressBarObserver: undefined as ResizeObserver | undefined,
     };
   },
   computed: {
@@ -191,6 +192,7 @@ export default defineComponent({
     initializePlayer() {
       // If player has already been created, it must be destroyed before we
       // create a new one.
+      this.progressBarObserver?.disconnect();
       this.player?.dispose();
 
       // The dispose() method removes the player element from the dom, so we must
@@ -257,7 +259,7 @@ export default defineComponent({
       if (!progressHolder) {
         console.error('no progress holder found');
       } else {
-        const observer = new ResizeObserver((entries) => {
+        this.progressBarObserver = new ResizeObserver((entries) => {
           const root = this.$refs.root as HTMLElement;
           const rootLeft = root.getBoundingClientRect().x;
           const progressHolderLeft = progressHolder.getBoundingClientRect().x;
@@ -265,7 +267,7 @@ export default defineComponent({
           this.progressBarParameters.xOffsetPixels = offset;
           this.progressBarParameters.widthPixels = progressHolder.clientWidth;
         });
-        observer.observe(progressHolder);
+        this.progressBarObserver.observe(progressHolder);
       }
     },
     activateInteraction(interaction: Interaction) {
