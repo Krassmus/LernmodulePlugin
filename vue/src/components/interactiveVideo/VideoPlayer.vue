@@ -318,6 +318,9 @@ export default defineComponent({
   mounted() {
     this.initializePlayer();
   },
+  beforeUnmount() {
+    this.progressBarObserver?.disconnect();
+  },
 });
 </script>
 
