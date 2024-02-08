@@ -258,14 +258,12 @@ export default defineComponent({
         console.error('no progress holder found');
       } else {
         const observer = new ResizeObserver((entries) => {
-          console.log('observed');
           const root = this.$refs.root as HTMLElement;
           const rootLeft = root.getBoundingClientRect().x;
           const progressHolderLeft = progressHolder.getBoundingClientRect().x;
           const offset = progressHolderLeft - rootLeft;
           this.progressBarParameters.xOffsetPixels = offset;
           this.progressBarParameters.widthPixels = progressHolder.clientWidth;
-          console.log({ ...this.progressBarParameters });
         });
         observer.observe(progressHolder);
       }
