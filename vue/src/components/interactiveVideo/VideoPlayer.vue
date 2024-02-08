@@ -205,6 +205,20 @@ export default defineComponent({
             },
           ],
           controls: true,
+          controlBar: {
+            children: [
+              'playToggle',
+              'progressControl',
+              'currentTimeDisplay',
+              'timeDivider',
+              'durationDisplay',
+              'volumePanel',
+              'fullscreenToggle',
+            ],
+            volumePanel: {
+              inline: false,
+            },
+          },
           autoplay: this.task.autoplay && !this.editor,
         },
         this.onPlayerReady
@@ -420,13 +434,23 @@ $progress-control-height: 3.5em;
 .timeline-breadcrumb {
   $radius: 0.5em;
   position: absolute;
-  bottom: calc($progress-control-height - 2em);
+  bottom: calc($progress-control-height - 1.8em);
   shape-outside: circle();
   clip-path: circle();
   width: $radius;
   height: $radius;
-  border: 1px white solid;
+  background-color: white;
   cursor: pointer;
+  &::before {
+    display: block;
+    content: ' ';
+    shape-outside: circle();
+    clip-path: circle();
+    width: calc($radius - 2px);
+    height: calc($radius - 2px);
+    transform: translate(1px, 1px);
+    background-color: rgba(43, 51, 63, 1);
+  }
 }
 // Ensure that timeline breadcrumbs fade out just as the progress bar does
 // when the user is watching the video and not touching the controls
@@ -434,6 +458,11 @@ $progress-control-height: 3.5em;
   .timeline-breadcrumb {
     opacity: 0;
     transition: opacity 1s;
+  }
+}
+.video-player-root:not(:has(.vjs-has-started)) {
+  .timeline-breadcrumb {
+    display: none;
   }
 }
 
@@ -481,8 +510,25 @@ $progress-control-height: 3.5em;
 
 <style lang="scss">
 $progress-control-height: 3.5em;
-.video-player-root .video-js .vjs-control-bar {
-  height: $progress-control-height;
-  padding-top: 0.5em;
+.video-player-root .video-js {
+  .vjs-control-bar {
+    height: $progress-control-height;
+    padding-top: 0.5em;
+
+    .vjs-current-time {
+      display: flex;
+      padding: 0;
+    }
+    .vjs-time-divider {
+      display: inline;
+      min-width: fit-content;
+      padding-left: 0.5em;
+      padding-right: 0.5em;
+    }
+    .vjs-duration {
+      display: flex;
+      padding: 0;
+    }
+  }
 }
 </style>
