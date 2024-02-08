@@ -58,9 +58,11 @@ export default defineComponent({
   computed: {
     timelineBreadcrumbStyle(): Partial<CSSStyleDeclaration> {
       const progressPercentage = 300 / (this.player?.duration() ?? 1);
+      const timeOffsetPx =
+        this.progressBarParameters.widthPixels * progressPercentage;
       return {
         left: `calc(${this.progressBarParameters.xOffsetPixels}px +
-        ${this.progressBarParameters.widthPixels * progressPercentage}px)`,
+        ${timeOffsetPx}px - 0.25em)`,
       };
     },
     // A unique ID for this instance of VideoPlayer, so that we can refer
@@ -257,8 +259,11 @@ export default defineComponent({
       } else {
         const observer = new ResizeObserver((entries) => {
           console.log('observed');
-          // TODO OffsetLeft is still not quite correct.
-          this.progressBarParameters.xOffsetPixels = progressHolder.offsetLeft;
+          const root = this.$refs.root as HTMLElement;
+          const rootLeft = root.getBoundingClientRect().x;
+          const progressHolderLeft = progressHolder.getBoundingClientRect().x;
+          const offset = progressHolderLeft - rootLeft;
+          this.progressBarParameters.xOffsetPixels = offset;
           this.progressBarParameters.widthPixels = progressHolder.clientWidth;
           console.log({ ...this.progressBarParameters });
         });
