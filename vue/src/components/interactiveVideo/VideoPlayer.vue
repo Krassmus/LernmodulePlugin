@@ -52,6 +52,11 @@ export default defineComponent({
     };
   },
   computed: {
+    timelineBreadcrumbStyle(): Partial<CSSStyleDeclaration> {
+      return {
+        left: 'calc(8em + 5px)',
+      };
+    },
     // A unique ID for this instance of VideoPlayer, so that we can refer
     // to elements inside of it by ID when there are multiple VideoPlayers
     // (e.g. viewer on one tab, editor on another tab).
@@ -280,6 +285,7 @@ export default defineComponent({
     :class="{ 'drag-in-progress': !!dragState }"
   >
     <div ref="videoJsContainer"></div>
+    <div class="timeline-breadcrumb" :style="timelineBreadcrumbStyle" />
     <div
       class="cancel-selection-overlay"
       v-if="!!selectedInteractionId"
@@ -410,6 +416,27 @@ export default defineComponent({
   }
 }
 
+$progress-control-height: 3.5em;
+.timeline-breadcrumb {
+  $radius: 0.5em;
+  position: absolute;
+  bottom: calc($progress-control-height - 2em);
+  shape-outside: circle();
+  clip-path: circle();
+  width: $radius;
+  height: $radius;
+  border: 1px white solid;
+  cursor: pointer;
+}
+// Ensure that timeline breadcrumbs fade out just as the progress bar does
+// when the user is watching the video and not touching the controls
+.video-player-root:has(.vjs-has-started.vjs-user-inactive.vjs-playing) {
+  .timeline-breadcrumb {
+    opacity: 0;
+    transition: opacity 1s;
+  }
+}
+
 .cancel-selection-overlay {
   position: absolute;
   top: 0;
@@ -449,5 +476,13 @@ export default defineComponent({
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+</style>
+
+<style lang="scss">
+$progress-control-height: 3.5em;
+.video-player-root .video-js .vjs-control-bar {
+  height: $progress-control-height;
+  padding-top: 0.5em;
 }
 </style>
