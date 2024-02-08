@@ -57,15 +57,6 @@ export default defineComponent({
     };
   },
   computed: {
-    timelineBreadcrumbStyle(): Partial<CSSStyleDeclaration> {
-      const progressPercentage = 300 / (this.player?.duration() ?? 1);
-      const timeOffsetPx =
-        this.progressBarParameters.widthPixels * progressPercentage;
-      return {
-        left: `calc(${this.progressBarParameters.xOffsetPixels}px +
-        ${timeOffsetPx}px - 0.25em)`,
-      };
-    },
     // A unique ID for this instance of VideoPlayer, so that we can refer
     // to elements inside of it by ID when there are multiple VideoPlayers
     // (e.g. viewer on one tab, editor on another tab).
@@ -314,6 +305,18 @@ export default defineComponent({
         popperInstance?.update();
       }
     },
+    timelineBreadcrumbStyle(
+      interaction: Interaction
+    ): Partial<CSSStyleDeclaration> {
+      const progressPercentage =
+        interaction.startTime / (this.player?.duration() ?? 1);
+      const timeOffsetPx =
+        this.progressBarParameters.widthPixels * progressPercentage;
+      return {
+        left: `calc(${this.progressBarParameters.xOffsetPixels}px +
+        ${timeOffsetPx}px - 0.25em)`,
+      };
+    },
   },
   mounted() {
     this.initializePlayer();
@@ -332,12 +335,17 @@ export default defineComponent({
     :class="{ 'drag-in-progress': !!dragState }"
   >
     <div ref="videoJsContainer"></div>
-    <div class="timeline-breadcrumb" :style="timelineBreadcrumbStyle" />
     <div
       class="cancel-selection-overlay"
       v-if="!!selectedInteractionId"
       @click="editor!.selectInteraction(undefined)"
     ></div>
+    <div
+      class="timeline-breadcrumb"
+      v-for="interaction in task.interactions"
+      :key="interaction.id"
+      :style="timelineBreadcrumbStyle(interaction)"
+    />
     <div
       ref="selectedInteractionTooltip"
       v-if="editor"
