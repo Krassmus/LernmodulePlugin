@@ -318,8 +318,17 @@ export default defineComponent({
       };
     },
     onClickBreadcrumb(interaction: Interaction): void {
-      this.editor?.selectInteraction(interaction.id);
       this.player?.currentTime(interaction.startTime);
+      this.editor?.selectInteraction(interaction.id);
+      // Give keyboard focus to the interaction whose breadcrumb was clicked.
+      this.player!.one('seeked', () => {
+        const interactionElement = document.getElementById(
+          `interaction-${this.uid}-${interaction.id}`
+        ) as HTMLElement;
+        interactionElement.focus({
+          focusVisible: true,
+        } as any);
+      });
     },
   },
   mounted() {
