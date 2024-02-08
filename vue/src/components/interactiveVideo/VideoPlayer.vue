@@ -305,7 +305,7 @@ export default defineComponent({
         popperInstance?.update();
       }
     },
-    timelineBreadcrumbStyle(
+    progressBarBreadcrumbStyle(
       interaction: Interaction
     ): Partial<CSSStyleDeclaration> {
       const progressPercentage =
@@ -341,10 +341,10 @@ export default defineComponent({
       @click="editor!.selectInteraction(undefined)"
     ></div>
     <div
-      class="timeline-breadcrumb"
+      class="progress-bar-breadcrumb"
       v-for="interaction in task.interactions"
       :key="interaction.id"
-      :style="timelineBreadcrumbStyle(interaction)"
+      :style="progressBarBreadcrumbStyle(interaction)"
     />
     <div
       ref="selectedInteractionTooltip"
@@ -472,7 +472,7 @@ export default defineComponent({
 }
 
 $progress-control-height: 3.5em;
-.timeline-breadcrumb {
+.progress-bar-breadcrumb {
   $radius: 0.5em;
   position: absolute;
   bottom: calc($progress-control-height - 1.8em);
@@ -496,13 +496,13 @@ $progress-control-height: 3.5em;
 // Ensure that timeline breadcrumbs fade out just as the progress bar does
 // when the user is watching the video and not touching the controls
 .video-player-root:has(.vjs-has-started.vjs-user-inactive.vjs-playing) {
-  .timeline-breadcrumb {
+  .progress-bar-breadcrumb {
     opacity: 0;
     transition: opacity 1s;
   }
 }
 .video-player-root:not(:has(.vjs-has-started)) {
-  .timeline-breadcrumb {
+  .progress-bar-breadcrumb {
     display: none;
   }
 }
