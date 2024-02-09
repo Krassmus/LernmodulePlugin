@@ -38,8 +38,7 @@ export default defineComponent({
           .map((value) => value)
           .sort((a, b) => b.percentage - a.percentage);
       }
-
-      return {} as Feedback[];
+      return [];
     },
 
     feedbackMessage(): string | undefined {
