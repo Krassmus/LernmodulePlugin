@@ -1,6 +1,6 @@
 <template>
   <span>Find the Hotspot - Editor</span><br />
-  <FileUpload @FileUploaded="onFileUploaded" />
+  <FileUpload @fileUploaded="onImageUploaded" />
 </template>
 
 <script lang="ts">
@@ -9,20 +9,24 @@ import { FindTheHotspotTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
+import { UploadedFile } from '@/routes';
 
 export default defineComponent({
   name: 'FindTheHotspotEditor',
   components: { FileUpload },
   props: {
-    task: { type: Object as PropType<FindTheHotspotTask>, required: true },
+    taskDefinition: {
+      type: Object as PropType<FindTheHotspotTask>,
+      required: true,
+    },
   },
   data() {
     return {};
   },
   methods: {
-    onImageUploaded(imageUrl: string): void {
+    onImageUploaded(file: UploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.image.imageUrl = imageUrl;
+        draft.image.imageUrl = file.url;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
@@ -31,7 +35,6 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as FindTheHotspotTask,
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },
