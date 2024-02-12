@@ -396,11 +396,10 @@ export default defineComponent({
         <div
           v-for="interaction in task.interactions"
           :key="interaction.id"
-          class="timeline-interaction button"
+          class="timeline-interaction"
           tabindex="0"
           :class="{
             selected: selectedInteractionId === interaction.id,
-            [iconForInteraction(interaction)]: true,
           }"
           :style="timelineInteractionStyle(interaction)"
           :draggable="!dragState"
@@ -408,15 +407,20 @@ export default defineComponent({
           @dragstart="onDragStartInteraction($event, interaction)"
           @dragend="onDragEndInteraction($event, interaction)"
         >
-          <div class="timeline-interaction-label">
-            {{ printInteractionType(interaction) }}
+          <div
+            class="overflow-container button"
+            :class="iconForInteraction(interaction)"
+          >
+            <div class="timeline-interaction-label">
+              {{ printInteractionType(interaction) }}
+            </div>
+            <button
+              type="button"
+              class="small-button trash delete-interaction"
+              @click="$emit('deleteInteraction', interaction.id)"
+              :title="$gettext('Löschen')"
+            ></button>
           </div>
-          <button
-            type="button"
-            class="small-button trash delete-interaction"
-            @click="$emit('deleteInteraction', interaction.id)"
-            :title="$gettext('Löschen')"
-          ></button>
           <div
             class="interaction-drag-handle start"
             @pointerdown="onPointerDownInteractionStart($event, interaction)"
@@ -504,20 +508,26 @@ export default defineComponent({
       border: 2px solid darkgrey;
       background: var(--content-color-20);
       cursor: default;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+
+      .overflow-container {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        &::before {
+          position: absolute;
+          left: 50%;
+          top: calc(50% - 16px);
+        }
+      }
 
       .timeline-interaction-label {
         overflow: hidden;
         text-overflow: ellipsis;
         text-align: center;
-      }
-
-      &::before {
-        position: absolute;
-        left: 50%;
-        top: calc(50% - 16px);
       }
 
       &.selected {
