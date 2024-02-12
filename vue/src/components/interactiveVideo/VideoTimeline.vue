@@ -112,6 +112,15 @@ export default defineComponent({
     },
   },
   computed: {
+    visibleInteractions(): Interaction[] {
+      const visibleInteractions: Interaction[] = [];
+      for (let i of this.task.interactions) {
+        if (i.startTime < this.viewportEnd && i.endTime > this.viewportStart) {
+          visibleInteractions.push(i);
+        }
+      }
+      return visibleInteractions;
+    },
     viewportWidthSeconds(): number {
       const secondsPerEm = 0.5 / this.zoomTransform.k;
       return this.viewportWidthEm * secondsPerEm;
@@ -394,7 +403,7 @@ export default defineComponent({
     >
       <div class="timeline-interactions">
         <div
-          v-for="interaction in task.interactions"
+          v-for="interaction in visibleInteractions"
           :key="interaction.id"
           class="timeline-interaction"
           tabindex="0"
