@@ -1,6 +1,7 @@
 // Types for the Interactive Video task type.
 import { z } from 'zod';
 import {
+  iconForTaskType,
   printTaskType,
   taskDefinitionSchemaMinusInteractiveVideo,
 } from '@/models/TaskDefinition';
@@ -76,5 +77,14 @@ export function printInteractionType(interaction: Interaction): string {
       return printTaskType(interaction.taskDefinition.task_type);
     case 'overlay':
       return $gettext('Einblendung');
+  }
+}
+
+export function iconForInteraction(interaction: Interaction): string {
+  switch (interaction.type) {
+    case 'overlay':
+      return 'trash';
+    case 'lmbTask':
+      return iconForTaskType(interaction.taskDefinition.task_type);
   }
 }

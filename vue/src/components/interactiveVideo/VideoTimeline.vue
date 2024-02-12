@@ -9,6 +9,7 @@ import {
 import { VideoMetadata } from '@/components/interactiveVideo/events';
 import { throttle } from 'lodash';
 import {
+  iconForInteraction,
   Interaction,
   InteractiveVideoTask,
   printInteractionType,
@@ -138,6 +139,7 @@ export default defineComponent({
     },
   },
   methods: {
+    iconForInteraction,
     printInteractionType,
     $gettext,
     onWheel(event: WheelEvent) {
@@ -394,16 +396,21 @@ export default defineComponent({
         <div
           v-for="interaction in task.interactions"
           :key="interaction.id"
-          class="timeline-interaction"
+          class="timeline-interaction button"
           tabindex="0"
-          :class="{ selected: selectedInteractionId === interaction.id }"
+          :class="{
+            selected: selectedInteractionId === interaction.id,
+            [iconForInteraction(interaction)]: true,
+          }"
           :style="timelineInteractionStyle(interaction)"
           :draggable="!dragState"
           @click.stop="onClickInteraction(interaction)"
           @dragstart="onDragStartInteraction($event, interaction)"
           @dragend="onDragEndInteraction($event, interaction)"
         >
-          {{ printInteractionType(interaction) }}
+          <div class="timeline-interaction-label">
+            {{ printInteractionType(interaction) }}
+          </div>
           <button
             type="button"
             class="small-button trash delete-interaction"
@@ -495,8 +502,23 @@ export default defineComponent({
       height: 100%;
       box-sizing: border-box;
       border: 2px solid darkgrey;
-      background: #e7ebf1;
+      background: var(--content-color-20);
       cursor: default;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      .timeline-interaction-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+      }
+
+      &::before {
+        position: absolute;
+        left: 50%;
+        top: calc(50% - 16px);
+      }
 
       &.selected {
         border: 3px solid black;
@@ -508,6 +530,10 @@ export default defineComponent({
         z-index: 2;
       }
 
+      &:hover {
+        background: var(--content-color-40);
+      }
+
       .interaction-drag-handle {
         position: absolute;
         top: 0;
@@ -515,7 +541,7 @@ export default defineComponent({
         width: 5px;
         cursor: ew-resize;
         &.start {
-          left: -1px;
+          left: -3px;
         }
         &.end {
           right: -4px;
@@ -527,6 +553,10 @@ export default defineComponent({
         top: 0;
         right: 0;
         padding: 0;
+        display: none;
+      }
+      &.selected button.delete-interaction {
+        display: block;
       }
     }
   }
