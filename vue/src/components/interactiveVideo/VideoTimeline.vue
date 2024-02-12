@@ -397,23 +397,22 @@ export default defineComponent({
           v-for="interaction in task.interactions"
           :key="interaction.id"
           class="timeline-interaction"
-          tabindex="0"
           :class="{
             selected: selectedInteractionId === interaction.id,
           }"
           :style="timelineInteractionStyle(interaction)"
           :draggable="!dragState"
-          @click.stop="onClickInteraction(interaction)"
           @dragstart="onDragStartInteraction($event, interaction)"
           @dragend="onDragEndInteraction($event, interaction)"
         >
-          <div
-            class="overflow-container button"
-            :class="iconForInteraction(interaction)"
-          >
-            <div class="timeline-interaction-label">
+          <div class="overflow-container">
+            <button
+              @click.stop="onClickInteraction(interaction)"
+              class="button select-interaction"
+              :class="iconForInteraction(interaction)"
+            >
               {{ printInteractionType(interaction) }}
-            </div>
+            </button>
             <button
               type="button"
               class="small-button trash delete-interaction"
@@ -514,6 +513,25 @@ export default defineComponent({
         height: 100%;
         width: 100%;
         overflow: hidden;
+      }
+
+      button.select-interaction {
+        /* CSS Reset for button styles */
+        padding: 0;
+        border: none;
+        font: inherit;
+        color: inherit;
+        background-color: transparent;
+        cursor: pointer;
+        box-sizing: border-box;
+        // Remove stud.ip 'button' class margin
+        margin: 0;
+
+        height: 100%;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
@@ -522,12 +540,6 @@ export default defineComponent({
           left: 50%;
           top: calc(50% - 16px);
         }
-      }
-
-      .timeline-interaction-label {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-align: center;
       }
 
       &.selected {
