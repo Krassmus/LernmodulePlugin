@@ -153,7 +153,7 @@ export default defineComponent({
       const exp = Math.exp(dy);
       const newK = this.zoomTransform.k * exp;
       // Prevent zooming too far in/out
-      this.zoomTransform.k = Math.max(0.02, Math.min(5, newK));
+      this.zoomTransform.k = Math.max(0.005, Math.min(5, newK));
 
       // Calculate new translation in order to keep the point under the mouse
       // cursor stationary.
