@@ -115,7 +115,17 @@ export default defineComponent({
     visibleInteractions(): Interaction[] {
       const visibleInteractions: Interaction[] = [];
       for (let i of this.task.interactions) {
-        if (i.startTime < this.viewportEnd && i.endTime > this.viewportStart) {
+        const isWithinViewport =
+          i.startTime < this.viewportEnd && i.endTime > this.viewportStart;
+        // An Interaction element should not suddenly disappear if it is dragged
+        // outside of the timeline viewport. That would cause the drag-drop
+        // interaction to unexpectedly end in a confusing way.
+        const isBeingDragged =
+          (this.dragState?.type === 'interaction' ||
+            this.dragState?.type === 'interactionStart' ||
+            this.dragState?.type === 'interactionEnd') &&
+          this.dragState.id === i.id;
+        if (isWithinViewport || isBeingDragged) {
           visibleInteractions.push(i);
         }
       }
