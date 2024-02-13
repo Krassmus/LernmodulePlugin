@@ -563,12 +563,12 @@ export default defineComponent({
       }
 
       &.selected {
-        border: 3px solid black;
+        border: 2px solid black;
         z-index: 1;
       }
 
       &:focus-within:not(.selected) {
-        border: 3px dashed lightgrey;
+        border: 3px dashed var(--content-color-80);
         z-index: 2;
       }
 
