@@ -326,12 +326,15 @@ export default defineComponent({
       this.editor?.selectInteraction(interaction.id);
       // Give keyboard focus to the interaction whose breadcrumb was clicked.
       this.player!.one('seeked', () => {
-        const interactionElement = document.getElementById(
-          `interaction-${this.uid}-${interaction.id}`
-        ) as HTMLElement;
-        interactionElement.focus({
-          focusVisible: true,
-        } as any);
+        // Need to wait one Vue 'tick' so that the interaction element appears.
+        this.$nextTick(() => {
+          const interactionElement = document.getElementById(
+            `interaction-${this.uid}-${interaction.id}`
+          ) as HTMLElement;
+          interactionElement.focus({
+            focusVisible: true,
+          } as any);
+        });
       });
     },
   },
