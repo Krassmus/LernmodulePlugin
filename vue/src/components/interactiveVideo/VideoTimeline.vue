@@ -263,10 +263,11 @@ export default defineComponent({
       };
     },
     onClickInteraction(interaction: Interaction) {
+      console.log('onClickInteraction');
       this.$emit('clickInteraction', interaction);
     },
-    onDragStartInteraction(event: DragEvent, interaction: Interaction) {
-      event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
+    onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
+      console.log('onPointerDownInteraction');
       const interactionLength = interaction.endTime - interaction.startTime;
       this.dragState = {
         type: 'interaction',
@@ -275,10 +276,33 @@ export default defineComponent({
         interactionStartTime: interaction.startTime,
         interactionDuration: interactionLength,
       };
+      (event.target as HTMLElement).setPointerCapture(event.pointerId);
       this.editor!.selectInteraction(interaction.id);
     },
-    onDragEndInteraction(event: DragEvent, interaction: Interaction) {
+    onPointerMoveInteraction(event: PointerEvent, interaction: Interaction) {
+      if (
+        this.dragState?.type === 'interaction' &&
+        this.dragState.id === interaction.id
+      ) {
+        const mouseDx = event.clientX - this.dragState.mouseStartPos[0];
+        const rect = (
+          this.$refs.timelineAxis as HTMLElement
+        ).getBoundingClientRect();
+        const secondsPerPixel = this.viewportWidthSeconds / rect.width;
+        const dSeconds = mouseDx * secondsPerPixel;
+        const seconds = this.dragState.interactionStartTime + dSeconds;
+        // Prevent from dragging so far that the endTime > video length
+        const maxTime =
+          this.videoMetadata.length - this.dragState.interactionDuration;
+        const secondsClamped = Math.max(0, Math.min(maxTime, seconds));
+        const id = this.dragState.id;
+        this.editor?.dragInteractionTimeline(id, secondsClamped);
+      }
+    },
+    onPointerUpInteraction(event: PointerEvent, interaction: Interaction) {
+      console.log('onPointerUpInteraction');
       this.dragState = undefined;
+      (event.target as HTMLElement).releasePointerCapture(event.pointerId);
     },
     onPointerDownInteractionStart(ev: PointerEvent, interaction: Interaction) {
       this.dragState = {
@@ -347,20 +371,6 @@ export default defineComponent({
         e.preventDefault(); // Stop ghost image from flying back after drop
         const time = this.xCoordinateToTime(e.clientX);
         this.emitTimelineSeekThrottled(time);
-      } else if (this.dragState?.type === 'interaction') {
-        const mouseDx = e.clientX - this.dragState.mouseStartPos[0];
-        const rect = (
-          this.$refs.timelineAxis as HTMLElement
-        ).getBoundingClientRect();
-        const secondsPerPixel = this.viewportWidthSeconds / rect.width;
-        const dSeconds = mouseDx * secondsPerPixel;
-        const seconds = this.dragState.interactionStartTime + dSeconds;
-        // Prevent from dragging so far that the endTime > video length
-        const maxTime =
-          this.videoMetadata.length - this.dragState.interactionDuration;
-        const secondsClamped = Math.max(0, Math.min(maxTime, seconds));
-        const id = this.dragState.id;
-        this.editor?.dragInteractionTimeline(id, secondsClamped);
       }
     },
     emitTimelineSeekThrottled: throttle(function emitTimelineSeek(
@@ -410,23 +420,24 @@ export default defineComponent({
             selected: selectedInteractionId === interaction.id,
           }"
           :style="timelineInteractionStyle(interaction)"
-          :draggable="!dragState"
-          @dragstart="onDragStartInteraction($event, interaction)"
-          @dragend="onDragEndInteraction($event, interaction)"
         >
           <div class="overflow-container">
             <button
-              @click.stop="onClickInteraction(interaction)"
+              type="button"
               class="button select-interaction"
               :class="iconForInteraction(interaction)"
+              @click.stop="onClickInteraction(interaction)"
+              @pointerdown="onPointerDownInteraction($event, interaction)"
+              @pointermove="onPointerMoveInteraction($event, interaction)"
+              @pointerup="onPointerUpInteraction($event, interaction)"
             >
               {{ printInteractionType(interaction) }}
             </button>
             <button
               type="button"
               class="small-button trash delete-interaction"
-              @click="$emit('deleteInteraction', interaction.id)"
               :title="$gettext('Löschen')"
+              @click="$emit('deleteInteraction', interaction.id)"
             ></button>
           </div>
           <div
