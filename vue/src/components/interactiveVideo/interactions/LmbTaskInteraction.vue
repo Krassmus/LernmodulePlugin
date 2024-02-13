@@ -80,7 +80,7 @@ button.lmb-task-interaction {
     }
   }
   &:hover > .icon-circle {
-    background: #e1d5e8;
+    background: var(--dark-violet-20);
   }
 
   > .interaction-label {
@@ -93,14 +93,14 @@ button.lmb-task-interaction {
     top: calc(0.1em + $border-width);
     white-space: nowrap;
     height: calc($circle-radius - 0.2em);
-    background: #e2e3e4;
+    background: var(--dark-gray-color-15);
     border-radius: 12px;
   }
 
   &.selected {
     z-index: 1;
     > .interaction-label {
-      border: $border-width solid #3c434e;
+      border: $border-width solid var(--base-gray);
       margin-top: calc(-1 * $border-width);
       margin-left: calc(-1 * $border-width);
     }
@@ -109,7 +109,7 @@ button.lmb-task-interaction {
       clip-path: circle();
       width: calc($circle-radius + 2 * $border-width);
       height: calc($circle-radius + 2 * $border-width);
-      background: #3c434e;
+      background: var(--base-gray);
     }
   }
 
@@ -125,8 +125,10 @@ button.lmb-task-interaction {
     }
   }
 
+  // Display a tooltip when hovered or focused.
   &.editor:not(.selected) {
-    &:hover::before {
+    &:hover::before,
+    &:focus::before {
       content: attr(data-hover-tooltip);
       display: flex;
       align-items: center;
@@ -138,8 +140,8 @@ button.lmb-task-interaction {
       transform: translateX(calc(-50% + $circle-radius / 2));
       padding: 0.35em;
       border-radius: 12px;
-      background: black;
-      color: white;
+      background: white;
+      color: black;
       opacity: 0.9;
       z-index: 2;
     }
