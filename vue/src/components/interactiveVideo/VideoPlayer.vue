@@ -223,6 +223,8 @@ export default defineComponent({
             },
           },
           autoplay: this.task.autoplay && !this.editor,
+          // Major browsers block autoplay unless the video is muted.
+          muted: this.task.autoplay && !this.editor,
         },
         this.onPlayerReady
       );
