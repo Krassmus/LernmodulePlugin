@@ -433,11 +433,16 @@ export default defineComponent({
             >
               {{ printInteractionType(interaction) }}
             </button>
+            <!--  The delete button is hidden (v-if) unless you can see the end
+            of the interaction within the timeline viewport, because otherwise,
+            you can 'tab' over to it while it's off screen, and that causes a
+            visual glitch, as the button is automatically scrolled into view. -->
             <button
               type="button"
               class="small-button trash delete-interaction"
               :title="$gettext('Löschen')"
               @click="$emit('deleteInteraction', interaction.id)"
+              v-if="interaction.endTime < viewportEnd"
             ></button>
           </div>
           <div
