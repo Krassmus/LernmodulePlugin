@@ -441,7 +441,9 @@ export default defineComponent({
               @pointermove="onPointerMoveInteraction($event, interaction)"
               @pointerup="onPointerUpInteraction($event, interaction)"
             >
-              {{ printInteractionType(interaction) }}
+              <span class="timeline-interaction-label">
+                {{ printInteractionType(interaction) }}
+              </span>
             </button>
             <!--  The delete button is hidden (v-if) unless you can see the end
             of the interaction within the timeline viewport, because otherwise,
@@ -575,6 +577,12 @@ export default defineComponent({
           left: 50%;
           top: calc(50% - 16px);
         }
+      }
+      .timeline-interaction-label {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
       }
 
       &.selected {
