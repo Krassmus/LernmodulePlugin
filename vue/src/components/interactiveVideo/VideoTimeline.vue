@@ -142,8 +142,7 @@ export default defineComponent({
       return this.viewportStart + this.viewportWidthSeconds;
     },
     positionForTimeMarker(): string {
-      const deltaT = this.currentTime - this.viewportStart;
-      return `${(deltaT / this.viewportWidthSeconds) * 100}%`;
+      return `${this.secondsToTimelinePercentage(this.currentTime)}%`;
     },
     axisScale(): number[] {
       const points = 25;
@@ -161,6 +160,17 @@ export default defineComponent({
     iconForInteraction,
     printInteractionType,
     $gettext,
+    secondsToTimelinePercentage(seconds: number): number {
+      const deltaT = seconds - this.viewportStart;
+      return (deltaT / this.viewportWidthSeconds) * 100;
+    },
+    interactionMarkerStyle(
+      interaction: Interaction
+    ): Partial<CSSStyleDeclaration> {
+      return {
+        left: `${this.secondsToTimelinePercentage(interaction.startTime)}%`,
+      };
+    },
     onWheel(event: WheelEvent) {
       event.preventDefault(); // Prevent scrolling page up/down
 
@@ -412,6 +422,13 @@ export default defineComponent({
           }"
         ></div>
       </div>
+      <button
+        v-for="interaction in visibleInteractions"
+        :key="interaction.id"
+        class="interaction-marker"
+        :style="interactionMarkerStyle(interaction)"
+        @click="onClickInteraction(interaction)"
+      ></button>
     </div>
     <div
       class="timeline"
@@ -641,6 +658,7 @@ export default defineComponent({
 }
 
 .timeline-axis {
+  position: relative;
   top: 0;
   display: flex;
   justify-content: space-between;
@@ -663,6 +681,47 @@ export default defineComponent({
       height: 1em;
       &.major {
         height: 1.5em;
+      }
+    }
+  }
+  .interaction-marker {
+    /* CSS Reset for button styles */
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    $radius: 0.85em;
+    position: absolute;
+    bottom: 0.5em;
+    shape-outside: circle();
+    clip-path: circle();
+    width: $radius;
+    height: $radius;
+    background-color: black;
+    &::after {
+      display: block;
+      content: ' ';
+      shape-outside: circle();
+      clip-path: circle();
+      width: calc($radius - 2px);
+      height: calc($radius - 2px);
+      transform: translate(1px, 0px);
+      background-color: var(--content-color-20);
+    }
+
+    &:hover {
+      &::after {
+        background-color: black;
+      }
+    }
+    // Ensure that an outline is drawn when element is focused with the keyboard
+    &:focus-visible {
+      clip-path: unset;
+      &::after {
+        border: 2px solid black;
       }
     }
   }

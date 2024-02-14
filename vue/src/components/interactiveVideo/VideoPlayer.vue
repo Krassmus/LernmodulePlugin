@@ -540,7 +540,7 @@ $progress-control-height: 3.5em;
     }
   }
   // Ensure that an outline is drawn when element is focused with the keyboard
-  &:focus {
+  &:focus-visible {
     clip-path: unset;
     &::before {
       border: 2px solid white;
