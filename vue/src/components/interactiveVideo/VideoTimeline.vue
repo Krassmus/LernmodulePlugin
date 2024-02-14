@@ -540,8 +540,6 @@ export default defineComponent({
     .timeline-interaction {
       position: absolute;
       height: 100%;
-      box-sizing: border-box;
-      border: 2px solid darkgrey;
       background: var(--content-color-20);
       cursor: default;
 
@@ -555,7 +553,6 @@ export default defineComponent({
       button.select-interaction {
         /* CSS Reset for button styles */
         padding: 0;
-        border: none;
         font: inherit;
         color: inherit;
         background-color: transparent;
@@ -569,6 +566,9 @@ export default defineComponent({
         min-width: 0;
         overflow: hidden;
 
+        box-sizing: border-box;
+        border: 2px solid darkgrey;
+
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
@@ -577,22 +577,35 @@ export default defineComponent({
           left: 50%;
           top: calc(50% - 16px);
         }
-      }
-      .timeline-interaction-label {
-        width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-align: center;
+
+        .timeline-interaction-label {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: center;
+        }
       }
 
       &.selected {
-        border: 2px solid black;
         z-index: 1;
+        button.select-interaction {
+          border: 2px solid black;
+          &:focus-visible {
+            outline: none;
+            border-style: dashed;
+          }
+        }
       }
-
-      &:focus-within:not(.selected) {
-        border: 3px dashed var(--content-color-80);
-        z-index: 2;
+      &:not(.selected) {
+        &:has(button:focus-visible) {
+          z-index: 2;
+        }
+        button.select-interaction {
+          &:focus-visible {
+            outline: none;
+            border: 2px dashed var(--content-color-80);
+          }
+        }
       }
 
       &:hover {
