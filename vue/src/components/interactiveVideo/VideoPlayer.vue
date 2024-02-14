@@ -338,10 +338,12 @@ export default defineComponent({
           // Need to wait one Vue 'tick' so that the interaction element appears.
           this.$nextTick(focusInteraction);
         });
-        this.player!.currentTime(interaction.startTime);
       } else {
         // The interaction is already visible. Focus it immediately.
         focusInteraction();
+      }
+      if (this.player!.currentTime() !== interaction.startTime) {
+        this.player!.currentTime(interaction.startTime);
       }
     },
   },
