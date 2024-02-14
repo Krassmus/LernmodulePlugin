@@ -1,7 +1,7 @@
 pluginname=LernmodulePlugin
 pluginclassname=LernmodulePlugin
 pluginclassname=LernmoduleCoursewareBlocksPlugin
-version=2.6.3
+version=3.0.0
 origin=RasmusFuhse
 studipMinVersion=4.0
 summary=Lernmodule in Stud.IP
