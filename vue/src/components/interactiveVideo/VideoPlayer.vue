@@ -322,20 +322,27 @@ export default defineComponent({
       };
     },
     onClickBreadcrumb(interaction: Interaction): void {
-      this.player?.currentTime(interaction.startTime);
       this.editor?.selectInteraction(interaction.id);
       // Give keyboard focus to the interaction whose breadcrumb was clicked.
-      this.player!.one('seeked', () => {
-        // Need to wait one Vue 'tick' so that the interaction element appears.
-        this.$nextTick(() => {
-          const interactionElement = document.getElementById(
-            `interaction-${this.uid}-${interaction.id}`
-          ) as HTMLElement;
-          interactionElement.focus({
-            focusVisible: true,
-          } as any);
+      const focusInteraction = () => {
+        const interactionElement = document.getElementById(
+          `interaction-${this.uid}-${interaction.id}`
+        ) as HTMLElement;
+        interactionElement.focus({
+          focusVisible: true,
+        } as any);
+      };
+      if (!this.visibleInteractions.includes(interaction)) {
+        // Wait for player to seek so the interaction becomes visible
+        this.player!.one('seeked', () => {
+          // Need to wait one Vue 'tick' so that the interaction element appears.
+          this.$nextTick(focusInteraction);
         });
-      });
+        this.player!.currentTime(interaction.startTime);
+      } else {
+        // The interaction is already visible. Focus it immediately.
+        focusInteraction();
+      }
     },
   },
   mounted() {
