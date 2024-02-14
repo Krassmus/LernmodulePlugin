@@ -409,7 +409,7 @@ export default defineComponent({
     <div
       class="timeline-axis"
       ref="timelineAxis"
-      @pointerdown.capture="onPointerDownAxis"
+      @pointerdown="onPointerDownAxis"
     >
       <div class="tick" v-for="(point, index) in axisScale" :key="index">
         <div class="tick-label">
@@ -427,7 +427,11 @@ export default defineComponent({
         :key="interaction.id"
         class="interaction-marker"
         :style="interactionMarkerStyle(interaction)"
-        @click="onClickInteraction(interaction)"
+        @pointerdown.stop
+        @click.stop="
+          onClickInteraction(interaction);
+          $emit('timelineSeek', interaction.startTime);
+        "
       ></button>
     </div>
     <div
