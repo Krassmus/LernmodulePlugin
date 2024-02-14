@@ -581,7 +581,7 @@ $progress-control-height: 3.5em;
     right: 1em;
     background: white;
     padding: 1em;
-    overflow: scroll;
+    overflow: auto;
   }
 }
 .fade-enter-active,
