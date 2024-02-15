@@ -9,7 +9,7 @@ hide/show its editing UI, and so on.
 -->
 <template>
   <component
-    class="cw-lernmodule-block"
+    class="cw-lernmodule-block cw-block"
     :is="coursewarePluginComponents.CoursewareDefaultBlock"
     ref="defaultBlock"
     :block="block"
