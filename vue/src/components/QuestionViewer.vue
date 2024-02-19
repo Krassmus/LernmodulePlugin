@@ -137,7 +137,6 @@ export default defineComponent({
       isSubmitted: false,
       showSolutions: false,
       showFeedback: false,
-      shaking: false,
     };
   },
   methods: {
@@ -156,11 +155,7 @@ export default defineComponent({
     selectAnswer(answer: QuestionAnswer): void {
       if (this.isSubmitted) return;
 
-      if (this.selectedAnswers[answer.text]) {
-        this.selectedAnswers[answer.text] = false;
-      } else {
-        this.selectedAnswers[answer.text] = true;
-      }
+      this.selectedAnswers[answer.text] = !this.selectedAnswers[answer.text];
     },
     classForAnswer(answer: QuestionAnswer): string {
       if (this.showSolutions) {
@@ -197,12 +192,6 @@ export default defineComponent({
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
-    },
-    shakeit() {
-      this.shaking = true;
-      setTimeout(() => {
-        this.shaking = false;
-      }, 1500);
     },
   },
   computed: {
@@ -244,11 +233,10 @@ export default defineComponent({
     answers(): QuestionAnswer[] {
       if (this.task.randomOrder) {
         // https://stackoverflow.com/a/46545530
-        let randomizedAnswers = this.task.answers
+        return this.task.answers
           .map((value) => ({ value, sort: Math.random() }))
           .sort((a, b) => a.sort - b.sort)
           .map(({ value }) => value);
-        return randomizedAnswers;
       } else {
         return this.task.answers;
       }
@@ -257,11 +245,7 @@ export default defineComponent({
       return this.task.showSolutionsAllowed && this.isSubmitted;
     },
     reachedMaxPoints(): boolean {
-      if (this.points === this.maxPoints) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.points === this.maxPoints;
     },
   },
 });
