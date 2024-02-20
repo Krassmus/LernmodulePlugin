@@ -1,10 +1,18 @@
 <template>
   <div class="h5pFeedbackContainer">
     <div class="h5pFeedbackContainerTop">
-      <label for="score" class="h5pFeedbackText">
+      <div class="h5pFeedbackText">
         {{ resultMessage }}
-      </label>
-      <meter id="score" min="0" :max="maxPoints" :value="achievedPoints" />
+      </div>
+      <meter
+        id="score"
+        min="0"
+        :low="lowNumber"
+        :high="highNumber"
+        :optimum="maxPoints"
+        :max="maxPoints"
+        :value="achievedPoints"
+      />
     </div>
     <div v-if="feedbackMessage" class="h5pFeedbackText">
       {{ feedbackMessage }}
@@ -32,6 +40,16 @@ export default defineComponent({
   mounted() {},
   methods: {},
   computed: {
+    lowNumber(): Number {
+      if (this.maxPoints) return this.maxPoints / 3;
+      return 0;
+    },
+
+    highNumber(): Number {
+      if (this.maxPoints) return (this.maxPoints * 2) / 3;
+      return 0;
+    },
+
     feedbackSortedByScore(): Feedback[] {
       if (this.feedback) {
         return this.feedback
@@ -100,12 +118,18 @@ meter {
   -moz-appearance: none;
   appearance: none;
 
-  width: 100%;
+  width: 15em;
   height: 30px;
 
   /* For Firefox */
-  background: #eee;
+  background: #fff;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) inset;
-  border-radius: 3px;
+  border-radius: 1.5em;
+
+  display: -webkit-inline-flex;
+  max-width: 100%;
+  padding: 0.625em;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 </style>
