@@ -167,6 +167,7 @@ export const imageSequencingTaskSchema = z.object({
     solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
+  feedback: z.array(feedbackSchema),
 });
 export type ImageSequencingTask = z.infer<typeof imageSequencingTaskSchema>;
 
@@ -310,11 +311,17 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           },
         ],
         strings: {
-          checkButton: 'Antworten überprüfen',
+          checkButton: 'Reihenfolge überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+          resultMessage: ':correct von :total Bildern richtig sortiert.',
         },
+        feedback: [
+          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+          { percentage: 50, message: 'Gut.' },
+          { percentage: 75, message: 'Sehr gut.' },
+          { percentage: 100, message: 'Perfekt!' },
+        ],
       };
     case 'InteractiveVideo':
       return {

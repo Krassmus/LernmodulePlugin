@@ -93,6 +93,7 @@ export default defineComponent({
 
 .h5pFeedbackContainer {
   margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .h5pFeedbackContainerTop {
@@ -131,5 +132,28 @@ meter {
   padding: 0.625em;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
+}
+
+meter::-webkit-meter-bar {
+  background: none; /* Required to get rid of the default background property */
+  background-color: whiteSmoke;
+  box-shadow: 0 5px 5px -5px #333 inset;
+}
+
+meter::-webkit-meter-optimum-value {
+  box-shadow: 0 5px 5px -5px #999 inset;
+  background-image: linear-gradient(
+    90deg,
+    #8bcf69 5%,
+    #e6d450 5%,
+    #e6d450 15%,
+    #f28f68 15%,
+    #f28f68 55%,
+    #cf82bf 55%,
+    #cf82bf 95%,
+    #719fd1 95%,
+    #719fd1 100%
+  );
+  background-size: 100% 100%;
 }
 </style>

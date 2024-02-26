@@ -22,6 +22,13 @@
       }}</span>
     </div>
   </div>
+  <FeedbackElement
+    v-if="showResults"
+    :achievedPoints="correctAnswers"
+    :maxPoints="maxPoints"
+    :resultMessage="resultMessage"
+    :feedback="task.feedback"
+  />
   <button
     v-if="!this.showResults"
     type="button"
@@ -38,7 +45,6 @@
   >
     {{ this.task.strings.retryButton }}
   </button>
-  <span class="results" v-if="showResults">{{ this.correctAnswers }}</span>
 </template>
 
 <script lang="ts">
@@ -46,10 +52,14 @@ import { defineComponent, PropType } from 'vue';
 import { Image, ImageSequencingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
+import FeedbackElement from '@/components/FeedbackElement.vue';
+import { round } from 'lodash';
 
 export default defineComponent({
   name: 'ImageSequencingViewer',
-  components: {},
+  components: {
+    FeedbackElement,
+  },
   props: {
     task: {
       type: Object as PropType<ImageSequencingTask>,
@@ -133,7 +143,7 @@ export default defineComponent({
   },
   computed: {
     taskDefinition: () => taskEditorStore.taskDefinition as ImageSequencingTask,
-    correctAnswers() {
+    correctAnswers(): Number {
       let correctAnswers = 0;
       for (let i = 0; i < this.task.images.length; i++) {
         if (this.task.images[i].uuid === this.images[i].uuid) {
@@ -141,6 +151,22 @@ export default defineComponent({
         }
       }
       return correctAnswers;
+    },
+    maxPoints(): Number {
+      return this.task.images.length;
+    },
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.correctAnswers.toString()
+      );
+
+      resultMessage = resultMessage.replace(
+        ':total',
+        this.maxPoints.toString()
+      );
+
+      return resultMessage;
     },
   },
   watch: {
