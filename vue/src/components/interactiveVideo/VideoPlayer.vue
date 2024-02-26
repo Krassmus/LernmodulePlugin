@@ -300,15 +300,25 @@ export default defineComponent({
         this.dragState?.type === 'dragInteraction' &&
         this.dragState.interactionId === interaction.id
       ) {
-        const rect = (this.$refs.root as HTMLElement).getBoundingClientRect();
+        const rootRect = (
+          this.$refs.root as HTMLElement
+        ).getBoundingClientRect();
+        const interactionEl = event.currentTarget as HTMLElement;
+
         const clientDx = event.clientX - this.dragState.mouseStartPos[0];
-        const dxFraction = clientDx / rect.width;
+        const dxFraction = clientDx / rootRect.width;
         const xFraction = this.dragState.interactionStartPos[0] + dxFraction;
-        const clampedXFraction = Math.min(1, Math.max(0, xFraction));
+        const interactionWidth = interactionEl.clientWidth / rootRect.width;
+        const maxX = 1 - interactionWidth;
+        const clampedXFraction = Math.min(maxX, Math.max(0, xFraction));
+
         const clientDy = event.clientY - this.dragState.mouseStartPos[1];
-        const dyFraction = clientDy / rect.height;
+        const dyFraction = clientDy / rootRect.height;
         const yFraction = this.dragState.interactionStartPos[1] + dyFraction;
-        const clampedYFraction = Math.min(1, Math.max(0, yFraction));
+        const interactionHeight = interactionEl.clientHeight / rootRect.height;
+        const maxY = 1 - interactionHeight;
+        const clampedYFraction = Math.min(maxY, Math.max(0, yFraction));
+
         const id = this.dragState.interactionId;
         this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
         popperInstance?.update();
