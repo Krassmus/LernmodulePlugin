@@ -58,8 +58,9 @@ export default defineComponent({
       white-space: nowrap;
       position: absolute;
       top: -2em;
+      left: 50%;
+      transform: translateX(-50%);
       height: 1em;
-      /* Center the tooltip over the circle with the icon */
       padding: 0.35em;
       border-radius: 12px;
       background: white;

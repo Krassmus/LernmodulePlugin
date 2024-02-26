@@ -135,9 +135,9 @@ button.lmb-task-interaction {
       white-space: nowrap;
       position: absolute;
       top: -2em;
-      height: 1em;
       /* Center the tooltip over the circle with the icon */
       transform: translateX(calc(-50% + $circle-radius / 2));
+      height: 1em;
       padding: 0.35em;
       border-radius: 12px;
       background: white;
