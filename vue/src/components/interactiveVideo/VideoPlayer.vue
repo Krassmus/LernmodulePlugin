@@ -276,26 +276,30 @@ export default defineComponent({
     editInteraction(interaction: Interaction) {
       this.editor!.editInteraction(interaction.id);
     },
-    onDragStartInteraction(event: DragEvent, interaction: Interaction) {
-      console.log('dragStart');
-      event.dataTransfer!.setDragImage(
-        event.target as Element,
-        -999999,
-        -999999
-      );
+    onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
+      console.log('onPointerDownInteraction');
+      if (!this.editor) {
+        return;
+      }
+      this.editor.selectInteraction(interaction.id);
       this.dragState = {
         type: 'dragInteraction',
         interactionId: interaction.id,
         mouseStartPos: [event.clientX, event.clientY],
         interactionStartPos: [interaction.x, interaction.y],
       };
+      (event.target as HTMLElement).setPointerCapture(event.pointerId);
     },
-    onDragEndInteraction(event: DragEvent, interaction: Interaction) {
-      console.log('dragEnd');
+    onPointerUpInteraction(event: PointerEvent, interaction: Interaction) {
+      console.log('onPointerUpInteraction');
       this.dragState = undefined;
+      (event.target as HTMLElement).releasePointerCapture(event.pointerId);
     },
-    onDragoverRoot(event: DragEvent) {
-      if (this.dragState?.type === 'dragInteraction') {
+    onPointerMoveInteraction(event: PointerEvent, interaction: Interaction) {
+      if (
+        this.dragState?.type === 'dragInteraction' &&
+        this.dragState.interactionId === interaction.id
+      ) {
         const rect = (this.$refs.root as HTMLElement).getBoundingClientRect();
         const clientDx = event.clientX - this.dragState.mouseStartPos[0];
         const dxFraction = clientDx / rect.width;
@@ -361,7 +365,6 @@ export default defineComponent({
   <div
     class="video-player-root"
     ref="root"
-    @dragover.capture="onDragoverRoot"
     :class="{ 'drag-in-progress': !!dragState }"
   >
     <div ref="videoJsContainer"></div>
@@ -417,11 +420,10 @@ export default defineComponent({
           top: `${interaction.y * 100}%`,
         }"
         :interaction="interaction"
-        :draggable="!!editor"
-        @pointerdown.capture="editor?.selectInteraction(interaction.id)"
         @click="editor?.selectInteraction(interaction.id)"
-        @dragstart="onDragStartInteraction($event, interaction)"
-        @dragend="onDragEndInteraction($event, interaction)"
+        @pointerdown="onPointerDownInteraction($event, interaction)"
+        @pointermove="onPointerMoveInteraction($event, interaction)"
+        @pointerup="onPointerUpInteraction($event, interaction)"
         @activateInteraction="activateInteraction"
       />
       <OverlayInteraction
@@ -435,11 +437,10 @@ export default defineComponent({
           height: `${interaction.height * 100}%`,
         }"
         :interaction="interaction"
-        :draggable="!!editor"
-        @pointerdown.capture="editor?.selectInteraction(interaction.id)"
         @click="editor?.selectInteraction(interaction.id)"
-        @dragstart="onDragStartInteraction($event, interaction)"
-        @dragend="onDragEndInteraction($event, interaction)"
+        @pointerdown="onPointerDownInteraction($event, interaction)"
+        @pointermove="onPointerMoveInteraction($event, interaction)"
+        @pointerup="onPointerUpInteraction($event, interaction)"
       />
     </template>
     <Transition name="fade">
