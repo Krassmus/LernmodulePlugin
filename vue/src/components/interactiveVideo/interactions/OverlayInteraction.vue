@@ -23,8 +23,14 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="editor">Edited overlay</div>
-  <div v-else>Viewer overlay</div>
+  <div v-if="editor" class="overlay editor">Edited overlay</div>
+  <div v-else class="overlay viewer">Viewer overlay</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.overlay {
+  background: var(--dark-gray-color-15);
+  border-radius: 10px;
+  padding: 0.5em;
+}
+</style>

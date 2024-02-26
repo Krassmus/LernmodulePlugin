@@ -429,7 +429,6 @@ export default defineComponent({
         :id="`interaction-${uid}-${interaction.id}`"
         class="video-player-interaction"
         :style="{
-          background: 'magenta',
           left: `${interaction.x * 100}%`,
           top: `${interaction.y * 100}%`,
           width: `${interaction.width * 100}%`,
