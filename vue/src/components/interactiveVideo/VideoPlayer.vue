@@ -422,19 +422,12 @@ export default defineComponent({
     </div>
     <template v-for="interaction in visibleInteractions" :key="interaction.id">
       <LmbTaskInteraction
+        v-if="interaction.type === 'lmbTask'"
         :id="`interaction-${uid}-${interaction.id}`"
         class="video-player-interaction"
         :style="{
           left: `${interaction.x * 100}%`,
           top: `${interaction.y * 100}%`,
-          width:
-            interaction.type === 'overlay'
-              ? `${interaction.width * 100}%`
-              : undefined,
-          height:
-            interaction.type === 'overlay'
-              ? `${interaction.height * 100}%`
-              : undefined,
         }"
         :interaction="interaction"
         @click="editor?.selectInteraction(interaction.id)"
@@ -442,6 +435,22 @@ export default defineComponent({
         @pointermove="onPointerMoveInteraction($event, interaction)"
         @pointerup="onPointerUpInteraction($event, interaction)"
         @activateInteraction="activateInteraction"
+      />
+      <OverlayInteraction
+        v-else-if="interaction.type === 'overlay'"
+        :id="`interaction-${uid}-${interaction.id}`"
+        class="video-player-interaction"
+        :style="{
+          left: `${interaction.x * 100}%`,
+          top: `${interaction.y * 100}%`,
+          width: `${interaction.width * 100}%`,
+          height: `${interaction.height * 100}%`,
+        }"
+        :interaction="interaction"
+        @click="editor?.selectInteraction(interaction.id)"
+        @pointerdown="onPointerDownInteraction($event, interaction)"
+        @pointermove="onPointerMoveInteraction($event, interaction)"
+        @pointerup="onPointerUpInteraction($event, interaction)"
       />
     </template>
     <Transition name="fade">
