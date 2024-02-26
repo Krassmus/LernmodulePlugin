@@ -390,6 +390,7 @@ export default defineComponent({
         class="small-button visibility-visible"
         @click="activateInteraction(selectedInteraction)"
         :title="$gettext('Vorschau')"
+        v-if="selectedInteraction?.type === 'lmbTask'"
       ></button>
       <button
         type="button"
@@ -422,6 +423,26 @@ export default defineComponent({
         @dragend="onDragEndInteraction($event, interaction)"
         @activateInteraction="activateInteraction"
       />
+      <div
+        v-else-if="interaction.type === 'overlay'"
+        :id="`interaction-${uid}-${interaction.id}`"
+        class="video-player-interaction"
+        :style="{
+          background: 'magenta',
+          left: `${interaction.x * 100}%`,
+          top: `${interaction.y * 100}%`,
+          width: `${interaction.width * 100}%`,
+          height: `${interaction.height * 100}%`,
+        }"
+        :interaction="interaction"
+        :draggable="!!editor"
+        @pointerdown.capture="editor?.selectInteraction(interaction.id)"
+        @click="editor?.selectInteraction(interaction.id)"
+        @dragstart="onDragStartInteraction($event, interaction)"
+        @dragend="onDragEndInteraction($event, interaction)"
+      >
+        {{ interaction.text }}
+      </div>
     </template>
     <Transition name="fade">
       <div
@@ -442,7 +463,6 @@ export default defineComponent({
           </button>
         </div>
       </div>
-      <div v-else-if="activeInteraction?.type === 'overlay'">Overlay</div>
     </Transition>
   </div>
 </template>

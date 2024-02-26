@@ -23,9 +23,12 @@ const overlaySchema = z.object({
   endTime: z.number(), // Seconds
   x: z.number(), // Position, as a fraction of video width, between 0 and 1
   y: z.number(), // Position, as a fraction of video height, between 0 and 1
+  width: z.number(), // Width, as a fraction of video width, between 0 and 1
+  height: z.number(), // Height, as a fraction of video width, between 0 and 1
   text: z.string(), // Sanitized HTML from Wysiwyg editor
   pauseWhenVisible: z.boolean().optional().default(true),
 });
+export type OverlayInteraction = z.infer<typeof overlaySchema>;
 
 // LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
 // point in the video for the student to solve.

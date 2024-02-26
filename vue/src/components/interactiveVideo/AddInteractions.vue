@@ -8,13 +8,16 @@
       @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
     />
     <div class="insert-interactions-buttons">
+      <button type="button" class="button tan3" @click="insertOverlay">
+        {{ $gettext('Overlay') }}
+      </button>
       <button
         v-for="taskType in taskTypes"
         :key="taskType"
         type="button"
         class="button"
         :class="iconForTaskType(taskType)"
-        @click="insertInteraction(taskType)"
+        @click="insertLmbTaskInteraction(taskType)"
       >
         {{ printTaskType(taskType) }}
       </button>
@@ -55,6 +58,7 @@ import { computed, defineProps, nextTick, PropType, provide, ref } from 'vue';
 import type {
   Interaction,
   InteractiveVideoTask,
+  OverlayInteraction,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
@@ -68,6 +72,7 @@ import {
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 import { editorStateSymbol } from '@/components/interactiveVideo/editorState';
+import { $gettext } from '../../language/gettext';
 
 const props = defineProps({
   taskDefinition: {
@@ -130,8 +135,27 @@ function onTimelineSeek(time: number) {
   console.log('onTImelineSeek', time);
   videoPlayer.value!.player!.currentTime(time);
 }
-function insertInteraction(type: TaskDefinition['task_type']) {
-  console.log('insertInteraction', type);
+function insertOverlay() {
+  const interaction: OverlayInteraction = {
+    type: 'overlay',
+    id: v4(),
+    startTime: currentTime.value,
+    endTime: Math.min(videoMetadata.value.length, currentTime.value + 10),
+    x: 0.4,
+    y: 0.4,
+    width: 0.2,
+    height: 0.2,
+    text: $gettext('Overlay'),
+    pauseWhenVisible: true,
+  };
+  // TODO make undoable ?
+  // eslint-disable-next-line vue/no-mutating-props
+  props.taskDefinition.interactions.push(interaction);
+  selectedInteractionId.value = interaction.id;
+}
+
+function insertLmbTaskInteraction(type: TaskDefinition['task_type']) {
+  console.log('insertLmbTaskInteraction', type);
   const task = newTask(type);
   const interaction: Interaction = {
     type: 'lmbTask',
@@ -141,6 +165,7 @@ function insertInteraction(type: TaskDefinition['task_type']) {
     endTime: Math.min(videoMetadata.value.length, currentTime.value + 10),
     x: 0.5,
     y: 0.5,
+    pauseWhenVisible: true,
   };
   // TODO make undoable ?
   // eslint-disable-next-line vue/no-mutating-props

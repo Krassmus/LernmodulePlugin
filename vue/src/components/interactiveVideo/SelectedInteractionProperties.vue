@@ -60,26 +60,26 @@
         </label>
       </fieldset>
     </form>
-    <KeepAlive>
-      <component
-        v-if="selectedInteraction.type === 'lmbTask'"
-        :key="`${selectedInteraction.id}-editor`"
-        :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
-        :taskDefinition="selectedInteraction.taskDefinition"
-      />
-    </KeepAlive>
-    <h3>
-      {{ $gettext('Vorschau') }}
-    </h3>
-    <KeepAlive>
-      <component
-        v-if="selectedInteraction.type === 'lmbTask'"
-        class="lmb-task-preview"
-        :key="`${selectedInteraction.id}-viewer`"
-        :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
-        :task="selectedInteraction.taskDefinition"
-      />
-    </KeepAlive>
+    <template v-if="selectedInteraction.type === 'lmbTask'">
+      <KeepAlive>
+        <component
+          :key="`${selectedInteraction.id}-editor`"
+          :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
+          :taskDefinition="selectedInteraction.taskDefinition"
+        />
+      </KeepAlive>
+      <h3>
+        {{ $gettext('Vorschau') }}
+      </h3>
+      <KeepAlive>
+        <component
+          class="lmb-task-preview"
+          :key="`${selectedInteraction.id}-viewer`"
+          :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
+          :task="selectedInteraction.taskDefinition"
+        />
+      </KeepAlive>
+    </template>
   </div>
 </template>
 <script lang="ts">
