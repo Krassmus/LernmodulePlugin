@@ -23,8 +23,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="editor" class="overlay editor">Edited overlay</div>
-  <div v-else class="overlay viewer">Viewer overlay</div>
+  <div
+    class="overlay"
+    :class="{
+      selected: editor?.selectedInteractionId.value === interaction.id,
+      editor: !!editor,
+    }"
+  >
+    {{ editor ? 'Edited overlay' : 'Viewed overlay' }}
+  </div>
 </template>
 
 <style scoped>
@@ -32,5 +39,9 @@ export default defineComponent({
   background: var(--dark-gray-color-15);
   border-radius: 10px;
   padding: 0.5em;
+
+  &.selected {
+    border: 0.2em solid black;
+  }
 }
 </style>
