@@ -387,19 +387,6 @@ export default defineComponent({
 
       return resultMessage;
     },
-    feedbackMessage(): string | undefined {
-      const percentageCorrect = round(
-        (this.correctAnswers / this.blanks.length) * 100
-      );
-
-      for (const feedback of this.feedbackSortedByScore) {
-        if (percentageCorrect >= feedback.percentage) {
-          return feedback.message;
-        }
-      }
-
-      return undefined;
-    },
     feedbackSortedByScore(): Feedback[] {
       return this.task.feedback
         .map((value) => value)
