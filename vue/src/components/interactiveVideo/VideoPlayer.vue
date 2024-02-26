@@ -19,6 +19,7 @@ import { $gettext } from '../../language/gettext';
 import { createPopper, Instance } from '@popperjs/core';
 import type { StrictModifiers } from '@popperjs/core';
 import { v4 } from 'uuid';
+import OverlayInteraction from '@/components/interactiveVideo/interactions/OverlayInteraction.vue';
 
 type DragState =
   | {
@@ -32,7 +33,7 @@ type DragState =
 let popperInstance: Instance | undefined;
 export default defineComponent({
   name: 'VideoPlayer',
-  components: { LmbTaskInteraction },
+  components: { OverlayInteraction, LmbTaskInteraction },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),
@@ -423,7 +424,7 @@ export default defineComponent({
         @dragend="onDragEndInteraction($event, interaction)"
         @activateInteraction="activateInteraction"
       />
-      <div
+      <OverlayInteraction
         v-else-if="interaction.type === 'overlay'"
         :id="`interaction-${uid}-${interaction.id}`"
         class="video-player-interaction"
@@ -440,9 +441,7 @@ export default defineComponent({
         @click="editor?.selectInteraction(interaction.id)"
         @dragstart="onDragStartInteraction($event, interaction)"
         @dragend="onDragEndInteraction($event, interaction)"
-      >
-        {{ interaction.text }}
-      </div>
+      />
     </template>
     <Transition name="fade">
       <div
