@@ -6,10 +6,11 @@ import {
 } from '@/components/interactiveVideo/editorState';
 import { Interaction, LmbTaskInteraction } from '@/models/InteractiveVideoTask';
 import { iconForTaskType, printTaskType } from '../../../models/TaskDefinition';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'LmbTaskInteraction',
-  methods: { iconForTaskType, printTaskType },
+  methods: { $gettext, iconForTaskType, printTaskType },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),
@@ -17,7 +18,7 @@ export default defineComponent({
   },
   props: {
     interaction: {
-      type: Object as PropType<LmbTaskInteraction>,
+      type: Object as PropType<Interaction>,
       required: true,
     },
   },
@@ -26,8 +27,9 @@ export default defineComponent({
 
 <template>
   <button
+    v-if="interaction.type === 'lmbTask'"
     type="button"
-    class="lmb-task-interaction"
+    class="interaction lmb-task-interaction"
     :class="{
       selected: editor?.selectedInteractionId.value === interaction.id,
       editor: !!editor,
@@ -44,10 +46,34 @@ export default defineComponent({
       :class="iconForTaskType(interaction.taskDefinition.task_type)"
     ></div>
   </button>
+  <div
+    v-else-if="interaction.type === 'overlay'"
+    class="interaction overlay"
+    :class="{
+      selected: editor?.selectedInteractionId.value === interaction.id,
+      editor: !!editor,
+    }"
+    :data-hover-tooltip="$gettext('Overlay')"
+  >
+    {{ editor ? 'Edited overlay' : 'Viewed overlay' }}
+  </div>
 </template>
 
 <style scoped lang="scss">
+$border-width: 0.2em;
+
+div.overlay {
+  background: var(--dark-gray-color-15);
+  border-radius: 10px;
+  padding: 0.5em;
+
+  &.selected {
+    border: $border-width solid black;
+  }
+}
+
 button.lmb-task-interaction {
+  $circle-radius: 3em;
   /* CSS Reset for button styles */
   padding: 0;
   border: none;
@@ -56,9 +82,6 @@ button.lmb-task-interaction {
   background-color: transparent;
   cursor: pointer;
   box-sizing: border-box;
-
-  $border-width: 0.2em;
-  $circle-radius: 3em;
 
   > .icon-circle {
     position: absolute;
@@ -124,27 +147,27 @@ button.lmb-task-interaction {
       background: transparent;
     }
   }
+}
 
-  // Display a tooltip when hovered or focused.
-  &.editor:not(.selected) {
-    &:hover::before,
-    &:focus::before {
-      content: attr(data-hover-tooltip);
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-      position: absolute;
-      top: -2em;
-      height: 1em;
-      /* Center the tooltip over the circle with the icon */
-      transform: translateX(calc(-50% + $circle-radius / 2));
-      padding: 0.35em;
-      border-radius: 12px;
-      background: white;
-      color: black;
-      opacity: 0.9;
-      z-index: 2;
-    }
+// Display a tooltip when hovered or focused.
+.interaction.editor:not(.selected) {
+  &:hover::before,
+  &:focus::before {
+    content: attr(data-hover-tooltip);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    position: absolute;
+    top: -2em;
+    height: 1em;
+    /* Center the tooltip over the circle with the icon */
+    transform: translateX(calc(-50% + $circle-radius / 2));
+    padding: 0.35em;
+    border-radius: 12px;
+    background: white;
+    color: black;
+    opacity: 0.9;
+    z-index: 2;
   }
 }
 </style>
