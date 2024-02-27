@@ -48,6 +48,11 @@ export default defineComponent({
     border: 0.2em solid black;
   }
 
+  &.editor {
+    // Prevent annoying text selection when dragging/dropping the overlay
+    user-select: none;
+  }
+
   // Display a tooltip when hovered or focused.
   &.editor:not(.selected) {
     &:hover::before,
