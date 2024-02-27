@@ -20,6 +20,7 @@ declare global {
         getEditor: (
           element: Element
         ) => (Editor & { getData(): string }) | undefined;
+        hasEditor: (element: Element) => boolean;
       };
       wysiwyg_enabled: boolean;
       INSTALLED_LANGUAGES: { [name: string]: InstalledLanguage };

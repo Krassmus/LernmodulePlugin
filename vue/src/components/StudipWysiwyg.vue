@@ -22,13 +22,30 @@ export default defineComponent({
     };
   },
   mounted() {
-    let ckeInit = this.initCKE();
+    console.log('mounted studipwysiwyg');
+    const textAreaElement = this.$refs.studip_wysiwyg as HTMLTextAreaElement;
+    const hasEditor = window.STUDIP.wysiwyg.hasEditor(textAreaElement)!;
+    if (hasEditor) {
+      console.log('Not mounting ckeditor again. Already has editor');
+      return;
+    }
+    const ckeInit = this.initCKE();
     if (!ckeInit) {
       this.fallbackActive = true;
     }
   },
+  beforeUnmount() {
+    console.log('beforeUnmount');
+    const textAreaElement = this.$refs.studip_wysiwyg as HTMLTextAreaElement;
+    const editor = window.STUDIP.wysiwyg.getEditor(textAreaElement)!;
+    if (editor) {
+      // console.log('destroying editor');
+      // editor.destroy();
+    }
+  },
   methods: {
     initCKE() {
+      console.log('initCKE');
       if (!window.STUDIP.wysiwyg_enabled) {
         return false;
       }
@@ -36,7 +53,7 @@ export default defineComponent({
       // Process the jQuery event 'wysiwyg.load' which is triggered asynchronously
       // after the wysiwyg editor is mounted using the 'replace()' method.
       textAreaElement.onload = (event: any) => {
-        console.info('load');
+        console.info('onload textAreaElement');
         let ckeditor = window.STUDIP.wysiwyg.getEditor(textAreaElement)!;
         ckeditor.model.document.on('change:data', () => {
           const data = ckeditor.getData();
@@ -72,6 +89,7 @@ export default defineComponent({
       };
       // This asynchronous method does not return a promise.  Instead, it fires
       // a 'load' event, which is processed in the above event handler. >:|
+      console.log('Calling wysiwyg.replace');
       window.STUDIP.wysiwyg.replace(textAreaElement);
       return true;
     },
