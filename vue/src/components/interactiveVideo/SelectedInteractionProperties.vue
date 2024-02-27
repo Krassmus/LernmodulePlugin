@@ -60,7 +60,10 @@
         </label>
       </fieldset>
     </form>
-    <template v-if="selectedInteraction.type === 'lmbTask'">
+    <template v-if="selectedInteraction.type === 'overlay'">
+      <StudipWysiwyg v-model="selectedInteraction.text" />
+    </template>
+    <template v-else-if="selectedInteraction.type === 'lmbTask'">
       <KeepAlive>
         <component
           :key="`${selectedInteraction.id}-editor`"
@@ -95,10 +98,11 @@ import {
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
+import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
 export default defineComponent({
   name: 'SelectedInteractionProperties',
-  components: { VideoTimeInput },
+  components: { VideoTimeInput, StudipWysiwyg },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),

@@ -32,9 +32,8 @@ export default defineComponent({
       editor: !!editor,
     }"
     :data-hover-tooltip="$gettext('Overlay')"
-  >
-    {{ editor ? 'Edited overlay' : 'Viewed overlay' }}
-  </div>
+    v-html="interaction.text"
+  ></div>
 </template>
 
 <style scoped lang="scss">
@@ -42,6 +41,7 @@ export default defineComponent({
   background: var(--dark-gray-color-15);
   border-radius: 10px;
   padding: 0.5em;
+  overflow: hidden;
 
   &.selected {
     z-index: 1;
