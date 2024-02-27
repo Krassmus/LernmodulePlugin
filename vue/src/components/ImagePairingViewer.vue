@@ -64,6 +64,15 @@
     </div>
   </div>
   <br />
+
+  <FeedbackElement
+    v-if="showResults"
+    :achievedPoints="correctAnswers"
+    :maxPoints="maxPoints"
+    :resultMessage="resultMessage"
+    :feedback="task.feedback"
+  />
+
   <button
     v-if="!this.showResults"
     type="button"
@@ -86,6 +95,7 @@
 import { defineComponent, PropType } from 'vue';
 import { Image, ImagePairingTask } from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
+import FeedbackElement from '@/components/FeedbackElement.vue';
 
 type Uuid = string;
 
@@ -93,6 +103,7 @@ export default defineComponent({
   name: 'ImagePairingViewer',
   components: {
     TargetImage,
+    FeedbackElement,
   },
   props: {
     task: {
@@ -349,6 +360,32 @@ export default defineComponent({
         imagesById[imagePair.targetImage.uuid] = imagePair.targetImage;
       }
       return imagesById;
+    },
+
+    correctAnswers(): number {
+      let correctAnswers = 0;
+      for (const imagePair of this.task.imagePairs) {
+        if (this.isAnswerCorrect(imagePair.targetImage.uuid)) correctAnswers++;
+      }
+      return correctAnswers;
+    },
+
+    maxPoints(): number {
+      return this.task.imagePairs.length;
+    },
+
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.correctAnswers.toString()
+      );
+
+      resultMessage = resultMessage.replace(
+        ':total',
+        this.maxPoints.toString()
+      );
+
+      return resultMessage;
     },
   },
 });

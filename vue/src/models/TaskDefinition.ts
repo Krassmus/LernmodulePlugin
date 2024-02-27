@@ -155,6 +155,7 @@ export const imagePairingTaskSchema = z.object({
     solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
+  feedback: z.array(feedbackSchema),
 });
 export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
 
@@ -297,8 +298,14 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+          resultMessage: ':correct von :total Bilder richtig zugeordnet.',
         },
+        feedback: [
+          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+          { percentage: 50, message: 'Gut.' },
+          { percentage: 75, message: 'Sehr gut.' },
+          { percentage: 100, message: 'Perfekt!' },
+        ],
       };
     case 'ImageSequencing':
       return {
