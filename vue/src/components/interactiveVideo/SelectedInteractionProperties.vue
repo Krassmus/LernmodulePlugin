@@ -61,14 +61,9 @@
       </fieldset>
     </form>
     <template v-if="selectedInteraction.type === 'overlay'">
-      <KeepAlive>
-        <StudipWysiwyg
-          :key="`${selectedInteraction.id}-overlay-wysiwyg`"
-          v-model="selectedInteraction.text"
-        />
-      </KeepAlive>
+      <StudipWysiwyg v-model="selectedInteraction.text" />
     </template>
-    <template v-if="selectedInteraction.type === 'lmbTask'">
+    <template v-else-if="selectedInteraction.type === 'lmbTask'">
       <KeepAlive>
         <component
           :key="`${selectedInteraction.id}-editor`"
