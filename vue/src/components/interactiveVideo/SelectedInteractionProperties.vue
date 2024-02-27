@@ -5,7 +5,7 @@
       "{{ printInteractionType(selectedInteraction) }}"
     </h3>
     <form v-if="selectedInteraction" class="default">
-      <fieldset>
+      <fieldset class="collapsable">
         <legend>
           {{ $gettext('Einstellungen') }}
         </legend>
