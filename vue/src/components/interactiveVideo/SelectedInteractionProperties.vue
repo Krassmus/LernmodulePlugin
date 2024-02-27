@@ -61,7 +61,20 @@
       </fieldset>
     </form>
     <template v-if="selectedInteraction.type === 'overlay'">
-      <StudipWysiwyg v-model="selectedInteraction.text" />
+      <!-- Oddly, if this KeepAlive is not wrapped in a div,
+            it seems not to work.
+            WYSIWYG editors pile up on top of each other as one alternates
+            between selecting an overlay and selecting any other interaction.
+            I don't entirely understand it, but this is my workaround for
+            the issue. -Ann -->
+      <div>
+        <KeepAlive>
+          <StudipWysiwyg
+            :key="`${selectedInteraction.id}-overlay-wysiwyg`"
+            v-model="selectedInteraction.text"
+          />
+        </KeepAlive>
+      </div>
     </template>
     <template v-else-if="selectedInteraction.type === 'lmbTask'">
       <KeepAlive>
