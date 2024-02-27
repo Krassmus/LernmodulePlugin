@@ -4,7 +4,9 @@
       <div class="h5pFeedbackText">
         {{ resultMessage }}
       </div>
+
       <meter
+        v-if="maxPoints"
         id="score"
         min="0"
         :low="lowNumber"
@@ -13,6 +15,7 @@
         :max="maxPoints"
         :value="achievedPoints"
       />
+      <div v-else>{{ achievedPoints }}</div>
     </div>
     <div v-if="feedbackMessage" class="h5pFeedbackText">
       {{ feedbackMessage }}
