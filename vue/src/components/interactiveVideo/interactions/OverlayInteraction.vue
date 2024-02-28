@@ -33,14 +33,16 @@ export default defineComponent({
     }"
     :data-hover-tooltip="$gettext('Overlay')"
   >
-    <div class="resize-handle left" />
-    <div class="resize-handle top-left" />
-    <div class="resize-handle top" />
-    <div class="resize-handle top-right" />
-    <div class="resize-handle right" />
-    <div class="resize-handle bottom-right" />
-    <div class="resize-handle bottom" />
-    <div class="resize-handle bottom-left" />
+    <template v-if="editor">
+      <div class="resize-handle left" />
+      <div class="resize-handle top-left" />
+      <div class="resize-handle top" />
+      <div class="resize-handle top-right" />
+      <div class="resize-handle right" />
+      <div class="resize-handle bottom-right" />
+      <div class="resize-handle bottom" />
+      <div class="resize-handle bottom-left" />
+    </template>
     <div class="overlay-content" v-html="interaction.text" />
   </div>
 </template>
