@@ -28,6 +28,13 @@ type DragState =
       mouseStartPos: [number, number]; // clientX, clientY
       interactionStartPos: [number, number]; // fraction x, fraction y
     }
+  | {
+      type: 'resizeInteraction';
+      interactionId: string;
+      mouseStartPos: [number, number]; // clientX, clientY
+      interactionStartPos: [number, number]; // fraction x, fraction y
+      handle: string;
+    }
   | undefined;
 
 let popperInstance: Instance | undefined;
@@ -276,6 +283,76 @@ export default defineComponent({
     editInteraction(interaction: Interaction) {
       this.editor!.editInteraction(interaction.id);
     },
+    onPointerDownResizeHandle(payload: {
+      event: PointerEvent;
+      handle: string;
+      interaction: Interaction;
+    }) {
+      console.log('onPointerDownResizeHandle');
+      if (!this.editor) {
+        return;
+      }
+      const { event, handle, interaction } = payload;
+      this.editor.selectInteraction(interaction.id);
+      this.dragState = {
+        type: 'resizeInteraction',
+        interactionId: interaction.id,
+        mouseStartPos: [event.clientX, event.clientY],
+        interactionStartPos: [interaction.x, interaction.y],
+        handle,
+      };
+      (event.target as HTMLElement).setPointerCapture(event.pointerId);
+    },
+    onPointerUpResizeHandle(payload: {
+      event: PointerEvent;
+      handle: string;
+      interaction: Interaction;
+    }) {
+      console.log('onPointerUpResizeHandle');
+      this.dragState = undefined;
+      (payload.event.target as HTMLElement).releasePointerCapture(
+        payload.event.pointerId
+      );
+    },
+    onPointerMoveResizeHandle(payload: {
+      event: PointerEvent;
+      handle: string;
+      interaction: Interaction;
+    }) {
+      const { event, handle, interaction } = payload;
+      if (
+        this.dragState?.type === 'resizeInteraction' &&
+        this.dragState.interactionId === interaction.id
+      ) {
+        console.log('onPointerMoveResizeHandle');
+        const rootRect = (
+          this.$refs.root as HTMLElement
+        ).getBoundingClientRect();
+        const interactionEl = document.getElementById(
+          `interaction-${this.uid}-${interaction.id}`
+        ) as HTMLElement;
+        return;
+        // TODO implement resizing
+
+        // const clientDx = event.clientX - this.dragState.mouseStartPos[0];
+        // const dxFraction = clientDx / rootRect.width;
+        // const xFraction = this.dragState.interactionStartPos[0] + dxFraction;
+        // const interactionWidth = interactionEl.clientWidth / rootRect.width;
+        // const maxX = 1 - interactionWidth;
+        // const clampedXFraction = Math.min(maxX, Math.max(0, xFraction));
+        //
+        // const clientDy = event.clientY - this.dragState.mouseStartPos[1];
+        // const dyFraction = clientDy / rootRect.height;
+        // const yFraction = this.dragState.interactionStartPos[1] + dyFraction;
+        // const interactionHeight = interactionEl.clientHeight / rootRect.height;
+        // const maxY = 1 - interactionHeight;
+        // const clampedYFraction = Math.min(maxY, Math.max(0, yFraction));
+        //
+        // const id = this.dragState.interactionId;
+        // this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
+        // popperInstance?.update();
+      }
+    },
     onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
       console.log('onPointerDownInteraction');
       if (!this.editor) {
@@ -451,6 +528,9 @@ export default defineComponent({
         @pointerdown="onPointerDownInteraction($event, interaction)"
         @pointermove="onPointerMoveInteraction($event, interaction)"
         @pointerup="onPointerUpInteraction($event, interaction)"
+        @pointerDownResizeHandle="onPointerDownResizeHandle"
+        @pointerMoveResizeHandle="onPointerMoveResizeHandle"
+        @pointerUpResizeHandle="onPointerUpResizeHandle"
       />
     </template>
     <Transition name="fade">

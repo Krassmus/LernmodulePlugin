@@ -9,10 +9,47 @@ import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'OverlayInteraction',
-  methods: { $gettext },
+  methods: {
+    $gettext,
+    onPointerDownResizeHandle(event: PointerEvent, handle: string) {
+      this.$emit('pointerDownResizeHandle', {
+        event,
+        handle,
+        interaction: this.interaction,
+      });
+    },
+    onPointerMoveResizeHandle(event: PointerEvent, handle: string) {
+      this.$emit('pointerMoveResizeHandle', {
+        event,
+        handle,
+        interaction: this.interaction,
+      });
+    },
+    onPointerUpResizeHandle(event: PointerEvent, handle: string) {
+      this.$emit('pointerUpResizeHandle', {
+        event,
+        handle,
+        interaction: this.interaction,
+      });
+    },
+  },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),
+    };
+  },
+  data() {
+    return {
+      resizeHandles: [
+        'left',
+        'top-left',
+        'top',
+        'top-right',
+        'right',
+        'bottom-right',
+        'bottom',
+        'bottom-left',
+      ],
     };
   },
   props: {
@@ -34,14 +71,15 @@ export default defineComponent({
     :data-hover-tooltip="$gettext('Overlay')"
   >
     <template v-if="editor">
-      <div class="resize-handle left" />
-      <div class="resize-handle top-left" />
-      <div class="resize-handle top" />
-      <div class="resize-handle top-right" />
-      <div class="resize-handle right" />
-      <div class="resize-handle bottom-right" />
-      <div class="resize-handle bottom" />
-      <div class="resize-handle bottom-left" />
+      <div
+        v-for="handle in resizeHandles"
+        :key="handle"
+        class="resize-handle"
+        :class="handle"
+        @pointerdown.stop="onPointerDownResizeHandle($event, handle)"
+        @pointermove.stop="onPointerMoveResizeHandle($event, handle)"
+        @pointerup.stop="onPointerUpResizeHandle($event, handle)"
+      />
     </template>
     <div class="overlay-content" v-html="interaction.text" />
   </div>
