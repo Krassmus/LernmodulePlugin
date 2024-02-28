@@ -61,20 +61,20 @@
       </fieldset>
     </form>
     <template v-if="selectedInteraction.type === 'overlay'">
-      <!-- Oddly, if this KeepAlive is not wrapped in a div,
-            it seems not to work.
-            WYSIWYG editors pile up on top of each other as one alternates
-            between selecting an overlay and selecting any other interaction.
-            I don't entirely understand it, but this is my workaround for
-            the issue. -Ann -->
-      <div>
-        <KeepAlive>
+      <!-- Oddly, if this StudipWysiwyg is not wrapped in a div, it seems not to
+      work correctly. It keeps firing its mounted() function when hidden/shown,
+      (e.g. when you alternate between selecting an overlay and selecting another
+      Interaction), and it leads to many instances of the WYSIWYG editor
+      appearing next to each other.
+      I don't entirely understand it, but this is my workaround for the issue. -Ann -->
+      <KeepAlive>
+        <div>
           <StudipWysiwyg
             :key="`${selectedInteraction.id}-overlay-wysiwyg`"
             v-model="selectedInteraction.text"
           />
-        </KeepAlive>
-      </div>
+        </div>
+      </KeepAlive>
     </template>
     <template v-else-if="selectedInteraction.type === 'lmbTask'">
       <KeepAlive>
