@@ -1,6 +1,7 @@
 <!-- This is the template for the iframe where our Vue 3 code is embedded inside of our Vue 2 Courseware block component.
   In the future, this can be refactored and removed when Courseware
-  is finally updated to Vue 3. -->
+  is finally updated to Vue 3.
+  It is called editor.php but applies for the "read" mode in Courseware as well.-->
 
 <!--  Hide all of Stud.IP's layout elements and remove extraneous padding.-->
 <style>
@@ -18,6 +19,12 @@
         grid-row: 1/3 !important;
     }
 </style>
+
+<!-- Make all links open in a new tab, unless otherwise specified.
+This prevents the issue where users click on links inside of our Courseware
+blocks and it, confusingly, opens the link inside of our iframe in place of
+the block. -->
+<base target="_blank" />
 
 <!-- data-iframe-height indicates that this element determines the height
 that the iframe should be resized to by the iFrameSizer library -->
