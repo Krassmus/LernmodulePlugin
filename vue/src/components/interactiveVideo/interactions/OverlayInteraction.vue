@@ -32,16 +32,24 @@ export default defineComponent({
       editor: !!editor,
     }"
     :data-hover-tooltip="$gettext('Overlay')"
-    v-html="interaction.text"
-  ></div>
+  >
+    <div class="overlay-content" v-html="interaction.text" />
+  </div>
 </template>
 
 <style scoped lang="scss">
 .overlay {
   background: var(--dark-gray-color-15);
+  box-sizing: border-box;
   border-radius: 10px;
   padding: 0.5em;
-  overflow: hidden;
+  position: relative;
+
+  .overlay-content {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
 
   &.selected {
     z-index: 1;
