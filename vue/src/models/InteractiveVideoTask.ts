@@ -86,7 +86,7 @@ export function printInteractionType(interaction: Interaction): string {
 export function iconForInteraction(interaction: Interaction): string {
   switch (interaction.type) {
     case 'overlay':
-      return 'trash';
+      return 'tan3';
     case 'lmbTask':
       return iconForTaskType(interaction.taskDefinition.task_type);
   }

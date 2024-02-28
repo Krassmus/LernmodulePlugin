@@ -33,6 +33,14 @@ export default defineComponent({
     }"
     :data-hover-tooltip="$gettext('Overlay')"
   >
+    <div class="resize-handle left" />
+    <div class="resize-handle top-left" />
+    <div class="resize-handle top" />
+    <div class="resize-handle top-right" />
+    <div class="resize-handle right" />
+    <div class="resize-handle bottom-right" />
+    <div class="resize-handle bottom" />
+    <div class="resize-handle bottom-left" />
     <div class="overlay-content" v-html="interaction.text" />
   </div>
 </template>
@@ -49,6 +57,68 @@ export default defineComponent({
     height: 100%;
     width: 100%;
     overflow: hidden;
+  }
+
+  .resize-handle {
+    $size: 8px;
+    position: absolute;
+    background: cornflowerblue;
+    &.top {
+      cursor: ns-resize;
+      top: 0;
+      left: $size;
+      right: $size;
+      height: $size;
+    }
+    &.top-right {
+      cursor: nesw-resize;
+      top: 0;
+      right: 0;
+      height: $size;
+      width: $size;
+    }
+    &.right {
+      cursor: ew-resize;
+      top: $size;
+      bottom: $size;
+      right: 0;
+      width: $size;
+    }
+    &.bottom-right {
+      cursor: nwse-resize;
+      bottom: 0;
+      right: 0;
+      width: $size;
+      height: $size;
+    }
+    &.bottom {
+      cursor: ns-resize;
+      bottom: 0;
+      left: $size;
+      right: $size;
+      height: $size;
+    }
+    &.bottom-left {
+      cursor: nesw-resize;
+      bottom: 0;
+      left: 0;
+      width: $size;
+      height: $size;
+    }
+    &.left {
+      cursor: ew-resize;
+      top: $size;
+      bottom: $size;
+      left: 0;
+      width: $size;
+    }
+    &.top-left {
+      cursor: nwse-resize;
+      top: 0;
+      left: 0;
+      height: $size;
+      width: $size;
+    }
   }
 
   &.selected {
