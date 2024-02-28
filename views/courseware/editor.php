@@ -1,7 +1,8 @@
 <!-- This is the template for the iframe where our Vue 3 code is embedded inside of our Vue 2 Courseware block component.
   In the future, this can be refactored and removed when Courseware
   is finally updated to Vue 3.
-  It is called editor.php but applies for the "read" mode in Courseware as well.-->
+  It is called editor.php, but applies for the "read" mode in Courseware as well.
+  (Sorry for the confusing file name -Ann) -->
 
 <!--  Hide all of Stud.IP's layout elements and remove extraneous padding.-->
 <style>
