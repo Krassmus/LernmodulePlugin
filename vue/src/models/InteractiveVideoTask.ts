@@ -91,3 +91,15 @@ export function iconForInteraction(interaction: Interaction): string {
       return iconForTaskType(interaction.taskDefinition.task_type);
   }
 }
+
+export const resizeHandles = [
+  'left',
+  'top-left',
+  'top',
+  'top-right',
+  'right',
+  'bottom-right',
+  'bottom',
+  'bottom-left',
+] as const;
+export type ResizeHandle = typeof resizeHandles[number];

@@ -102,6 +102,7 @@ provide(editorStateSymbol, {
   selectedInteractionId,
   editInteraction,
   dragInteraction,
+  resizeOverlay,
   deleteInteraction,
   dragInteractionTimeline,
 });
@@ -189,6 +190,26 @@ function dragInteraction(id: string, xFraction: number, yFraction: number) {
   // TODO make undoable ?
   interaction.x = xFraction;
   interaction.y = yFraction;
+}
+function resizeOverlay(
+  id: string,
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) {
+  console.log('resizeOverlay', id, x, y, width, height);
+  const interaction = props.taskDefinition?.interactions.find(
+    (i) => i.id === id
+  );
+  if (!interaction) {
+    throw new Error(`Interaction with id ${id} not found`);
+  }
+  // TODO make undoable ?
+  interaction.x = x;
+  interaction.y = y;
+  interaction.width = width;
+  interaction.height = height;
 }
 function dragInteractionTimeline(id: string, startTime: number) {
   const interaction = props.taskDefinition?.interactions.find(

@@ -8,6 +8,7 @@ import {
   Interaction,
   InteractiveVideoTask,
   printInteractionType,
+  ResizeHandle,
 } from '@/models/InteractiveVideoTask';
 import {
   EditorState,
@@ -20,6 +21,7 @@ import { createPopper, Instance } from '@popperjs/core';
 import type { StrictModifiers } from '@popperjs/core';
 import { v4 } from 'uuid';
 import OverlayInteraction from '@/components/interactiveVideo/interactions/OverlayInteraction.vue';
+import { OverlayInteraction as OverlayInteractionType } from '@/models/InteractiveVideoTask';
 
 type DragState =
   | {
@@ -33,6 +35,7 @@ type DragState =
       interactionId: string;
       mouseStartPos: [number, number]; // clientX, clientY
       interactionStartPos: [number, number]; // fraction x, fraction y
+      interactionStartSize: [number, number]; // fraction x, fraction y
       handle: string;
     }
   | undefined;
@@ -285,8 +288,8 @@ export default defineComponent({
     },
     onPointerDownResizeHandle(payload: {
       event: PointerEvent;
-      handle: string;
-      interaction: Interaction;
+      handle: ResizeHandle;
+      interaction: OverlayInteractionType;
     }) {
       console.log('onPointerDownResizeHandle');
       if (!this.editor) {
@@ -299,13 +302,14 @@ export default defineComponent({
         interactionId: interaction.id,
         mouseStartPos: [event.clientX, event.clientY],
         interactionStartPos: [interaction.x, interaction.y],
+        interactionStartSize: [interaction.width, interaction.height],
         handle,
       };
       (event.target as HTMLElement).setPointerCapture(event.pointerId);
     },
     onPointerUpResizeHandle(payload: {
       event: PointerEvent;
-      handle: string;
+      handle: ResizeHandle;
       interaction: Interaction;
     }) {
       console.log('onPointerUpResizeHandle');
@@ -316,41 +320,127 @@ export default defineComponent({
     },
     onPointerMoveResizeHandle(payload: {
       event: PointerEvent;
-      handle: string;
-      interaction: Interaction;
+      handle: ResizeHandle;
+      interaction: OverlayInteractionType;
     }) {
-      const { event, handle, interaction } = payload;
+      const {
+        event,
+        handle,
+        interaction: { id: interactionId },
+      } = payload;
       if (
         this.dragState?.type === 'resizeInteraction' &&
-        this.dragState.interactionId === interaction.id
+        this.dragState.interactionId === interactionId
       ) {
-        console.log('onPointerMoveResizeHandle');
+        console.log('onPointerMoveResizeHandle', handle);
+        const interaction = this.task.interactions.find(
+          (i) => i.id === interactionId
+        ) as OverlayInteractionType; // TODO handle case where not found
         const rootRect = (
           this.$refs.root as HTMLElement
         ).getBoundingClientRect();
         const interactionEl = document.getElementById(
           `interaction-${this.uid}-${interaction.id}`
         ) as HTMLElement;
-        return;
-        // TODO implement resizing
 
-        // const clientDx = event.clientX - this.dragState.mouseStartPos[0];
-        // const dxFraction = clientDx / rootRect.width;
+        // TODO implement resizing
+        const {
+          interactionStartPos: [xInitial, yInitial],
+          interactionStartSize: [widthInitial, heightInitial],
+        } = this.dragState;
+        let newX = xInitial;
+        let newWidth = widthInitial;
+        let newY = yInitial;
+        let newHeight = heightInitial;
+
+        // Convert mouse movement in pixels to fractions of root rect width/height
+        const clientDx = event.clientX - this.dragState.mouseStartPos[0];
+        const xFraction = event.clientX / rootRect.width;
+        const dxFraction = clientDx / rootRect.width;
+        const clientDy = event.clientY - this.dragState.mouseStartPos[1];
+        const dyFraction = clientDy / rootRect.height;
+
+        // TODO clamping
         // const xFraction = this.dragState.interactionStartPos[0] + dxFraction;
         // const interactionWidth = interactionEl.clientWidth / rootRect.width;
         // const maxX = 1 - interactionWidth;
         // const clampedXFraction = Math.min(maxX, Math.max(0, xFraction));
+
+        if (
+          handle === 'left' ||
+          handle === 'top-left' ||
+          handle === 'bottom-left'
+        ) {
+          if (xFraction > xInitial + widthInitial) {
+            newX = xInitial + widthInitial;
+            newWidth = xFraction - newX;
+          } else {
+            newX = xInitial + dxFraction;
+            newWidth = widthInitial - dxFraction;
+          }
+        }
+        // } else if (
+        //   handle === 'right' ||
+        //   handle === 'top-right' ||
+        //   handle === 'bottom-right'
+        // ) {
+        //   if (pointer[0] < interaction.x) {
+        //     newX = pointer[0];
+        //     newWidth = interaction.x - pointer[0];
+        //   } else {
+        //     newX = interaction.x;
+        //     newWidth = interaction.width + pointerDx;
+        //   }
+        // }
         //
-        // const clientDy = event.clientY - this.dragState.mouseStartPos[1];
-        // const dyFraction = clientDy / rootRect.height;
-        // const yFraction = this.dragState.interactionStartPos[1] + dyFraction;
-        // const interactionHeight = interactionEl.clientHeight / rootRect.height;
-        // const maxY = 1 - interactionHeight;
-        // const clampedYFraction = Math.min(maxY, Math.max(0, yFraction));
-        //
-        // const id = this.dragState.interactionId;
-        // this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
-        // popperInstance?.update();
+        // if (
+        //   handle === 'top-left' ||
+        //   handle === 'top' ||
+        //   handle === 'top-right'
+        // ) {
+        //   if (pointer[1] > interaction.y + interaction.height) {
+        //     newY = interaction.y + interaction.height;
+        //     newHeight = pointer[1] - newY;
+        //   } else {
+        //     newY = interaction.y + pointerDy;
+        //     newHeight = interaction.height - pointerDy;
+        //   }
+        // } else if (
+        //   handle === 'bottom-left' ||
+        //   handle === 'bottom' ||
+        //   handle === 'bottom-right'
+        // ) {
+        //   if (pointer[1] < interaction.y) {
+        //     newY = pointer[1];
+        //     newHeight = interaction.y - pointer[1];
+        //   } else {
+        //     newY = interaction.y;
+        //     newHeight = interaction.height + pointerDy;
+        //   }
+        // }
+
+        let filteredValues = {
+          height: interaction.height,
+          width: interaction.width,
+          x: interaction.x,
+          y: interaction.y,
+        };
+        if (newHeight > 0.05) {
+          filteredValues.height = newHeight;
+          filteredValues.y = newY;
+        }
+        if (newWidth > 0.05) {
+          filteredValues.width = newWidth;
+          filteredValues.x = newX;
+        }
+        this.editor!.resizeOverlay(
+          interaction.id,
+          filteredValues.x,
+          filteredValues.y,
+          filteredValues.width,
+          filteredValues.height
+        );
+        popperInstance?.update();
       }
     },
     onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
