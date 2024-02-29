@@ -102,7 +102,7 @@ export default defineComponent({
   .resize-handle {
     $size: 8px;
     position: absolute;
-    background: cornflowerblue;
+    //background: cornflowerblue;
     &.top {
       cursor: ns-resize;
       top: 0;
