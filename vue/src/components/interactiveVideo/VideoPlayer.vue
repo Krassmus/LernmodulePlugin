@@ -415,26 +415,24 @@ export default defineComponent({
           }
         }
 
-        let filteredValues = {
-          height: interaction.height,
-          width: interaction.width,
-          x: interaction.x,
-          y: interaction.y,
-        };
-        if (newHeight > 0.05) {
-          filteredValues.height = newHeight;
-          filteredValues.y = newY;
+        let filteredHeight = interaction.height,
+          filteredWidth = interaction.width,
+          filteredX = interaction.x,
+          filteredY = interaction.y;
+        if (newHeight > 0.05 && newY >= 0 && newY + newHeight <= 1) {
+          filteredHeight = newHeight;
+          filteredY = newY;
         }
-        if (newWidth > 0.05) {
-          filteredValues.width = newWidth;
-          filteredValues.x = newX;
+        if (newWidth > 0.05 && newX >= 0 && newX + newWidth <= 1) {
+          filteredWidth = newWidth;
+          filteredX = newX;
         }
         this.editor!.resizeOverlay(
           interaction.id,
-          filteredValues.x,
-          filteredValues.y,
-          filteredValues.width,
-          filteredValues.height
+          filteredX,
+          filteredY,
+          filteredWidth,
+          filteredHeight
         );
         popperInstance?.update();
       }
