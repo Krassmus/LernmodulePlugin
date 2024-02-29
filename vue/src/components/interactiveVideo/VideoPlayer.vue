@@ -323,19 +323,12 @@ export default defineComponent({
       handle: ResizeHandle;
       interaction: OverlayInteractionType;
     }) {
-      const {
-        event,
-        handle,
-        interaction: { id: interactionId },
-      } = payload;
+      const { event, handle, interaction } = payload;
       if (
         this.dragState?.type === 'resizeInteraction' &&
-        this.dragState.interactionId === interactionId
+        this.dragState.interactionId === interaction.id
       ) {
         console.log('onPointerMoveResizeHandle', handle);
-        const interaction = this.task.interactions.find(
-          (i) => i.id === interactionId
-        ) as OverlayInteractionType; // TODO handle case where not found
         const rootRect = (
           this.$refs.root as HTMLElement
         ).getBoundingClientRect();
@@ -354,11 +347,13 @@ export default defineComponent({
         let newHeight = heightInitial;
 
         // Convert mouse movement in pixels to fractions of root rect width/height
-        const clientDx = event.clientX - this.dragState.mouseStartPos[0];
-        const xFraction = event.clientX / rootRect.width;
-        const dxFraction = clientDx / rootRect.width;
-        const clientDy = event.clientY - this.dragState.mouseStartPos[1];
-        const dyFraction = clientDy / rootRect.height;
+        const xPointer = event.clientX / rootRect.width;
+        const dxPointerPixels = event.clientX - this.dragState.mouseStartPos[0];
+        const dxPointer = dxPointerPixels / rootRect.width;
+
+        const yPointer = event.clientY / rootRect.height;
+        const dyPointerPixels = event.clientY - this.dragState.mouseStartPos[1];
+        const dyPointer = dyPointerPixels / rootRect.height;
 
         // TODO clamping
         // const xFraction = this.dragState.interactionStartPos[0] + dxFraction;
@@ -366,58 +361,59 @@ export default defineComponent({
         // const maxX = 1 - interactionWidth;
         // const clampedXFraction = Math.min(maxX, Math.max(0, xFraction));
 
+        // Horizontal resizing
         if (
           handle === 'left' ||
           handle === 'top-left' ||
           handle === 'bottom-left'
         ) {
-          if (xFraction > xInitial + widthInitial) {
+          if (xPointer > xInitial + widthInitial) {
             newX = xInitial + widthInitial;
-            newWidth = xFraction - newX;
+            newWidth = xPointer - newX;
           } else {
-            newX = xInitial + dxFraction;
-            newWidth = widthInitial - dxFraction;
+            newX = xInitial + dxPointer;
+            newWidth = widthInitial - dxPointer;
+          }
+        } else if (
+          handle === 'right' ||
+          handle === 'top-right' ||
+          handle === 'bottom-right'
+        ) {
+          if (xPointer < xInitial) {
+            newX = xPointer;
+            newWidth = xInitial - xPointer;
+          } else {
+            newX = xInitial;
+            newWidth = widthInitial + dxPointer;
           }
         }
-        // } else if (
-        //   handle === 'right' ||
-        //   handle === 'top-right' ||
-        //   handle === 'bottom-right'
-        // ) {
-        //   if (pointer[0] < interaction.x) {
-        //     newX = pointer[0];
-        //     newWidth = interaction.x - pointer[0];
-        //   } else {
-        //     newX = interaction.x;
-        //     newWidth = interaction.width + pointerDx;
-        //   }
-        // }
-        //
-        // if (
-        //   handle === 'top-left' ||
-        //   handle === 'top' ||
-        //   handle === 'top-right'
-        // ) {
-        //   if (pointer[1] > interaction.y + interaction.height) {
-        //     newY = interaction.y + interaction.height;
-        //     newHeight = pointer[1] - newY;
-        //   } else {
-        //     newY = interaction.y + pointerDy;
-        //     newHeight = interaction.height - pointerDy;
-        //   }
-        // } else if (
-        //   handle === 'bottom-left' ||
-        //   handle === 'bottom' ||
-        //   handle === 'bottom-right'
-        // ) {
-        //   if (pointer[1] < interaction.y) {
-        //     newY = pointer[1];
-        //     newHeight = interaction.y - pointer[1];
-        //   } else {
-        //     newY = interaction.y;
-        //     newHeight = interaction.height + pointerDy;
-        //   }
-        // }
+
+        // Vertical resizing
+        if (
+          handle === 'top-left' ||
+          handle === 'top' ||
+          handle === 'top-right'
+        ) {
+          if (yPointer > yInitial + heightInitial) {
+            newY = yInitial + heightInitial;
+            newHeight = yPointer - newY;
+          } else {
+            newY = yInitial + dyPointer;
+            newHeight = heightInitial - dyPointer;
+          }
+        } else if (
+          handle === 'bottom-left' ||
+          handle === 'bottom' ||
+          handle === 'bottom-right'
+        ) {
+          if (yPointer < yInitial) {
+            newY = yPointer;
+            newHeight = yInitial - yPointer;
+          } else {
+            newY = yInitial;
+            newHeight = heightInitial + dyPointer;
+          }
+        }
 
         let filteredValues = {
           height: interaction.height,
