@@ -8,9 +8,12 @@
       @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
     />
     <div class="insert-interactions-buttons">
-      <button type="button" class="button tan3" @click="insertOverlay">
-        {{ $gettext('Overlay') }}
-      </button>
+      <button
+        type="button"
+        class="button tan3"
+        @click="insertOverlay"
+        :title="$gettext('Overlay')"
+      ></button>
       <button
         v-for="taskType in taskTypes"
         :key="taskType"
@@ -18,9 +21,8 @@
         class="button"
         :class="iconForTaskType(taskType)"
         @click="insertLmbTaskInteraction(taskType)"
-      >
-        {{ printTaskType(taskType) }}
-      </button>
+        :title="printTaskType(taskType)"
+      ></button>
     </div>
     <VideoTimeline
       class="video-timeline"
@@ -41,6 +43,12 @@
 </template>
 
 <style scoped lang="scss">
+.insert-interactions-buttons button {
+  // Make the buttons into little squares so a lot of them will fit next to each
+  // other in one row.
+  min-width: unset;
+  width: 0;
+}
 .add-interactions-root {
   overflow: hidden;
 }
