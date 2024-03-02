@@ -98,6 +98,39 @@ export default defineComponent({
     width: 100%;
     overflow: hidden;
   }
+  &.editor .overlay-content {
+    // Prevent accidentally selecting text, activating links or "dragging"
+    // embedded images when dragging/dropping the overlay in the editor
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &.selected {
+    z-index: 1;
+    border: 0.2em solid black;
+  }
+
+  // Display a tooltip when hovered or focused.
+  &.editor:not(.selected) {
+    &:hover::before,
+    &:focus::before {
+      content: attr(data-hover-tooltip);
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      position: absolute;
+      top: -2em;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 1em;
+      padding: 0.35em;
+      border-radius: 12px;
+      background: white;
+      color: black;
+      opacity: 0.9;
+      z-index: 2;
+    }
+  }
 
   .resize-handle {
     $size: 8px;
@@ -158,38 +191,6 @@ export default defineComponent({
       left: 0;
       height: $size;
       width: $size;
-    }
-  }
-
-  &.selected {
-    z-index: 1;
-    border: 0.2em solid black;
-  }
-
-  &.editor {
-    // Prevent annoying text selection when dragging/dropping the overlay
-    user-select: none;
-  }
-
-  // Display a tooltip when hovered or focused.
-  &.editor:not(.selected) {
-    &:hover::before,
-    &:focus::before {
-      content: attr(data-hover-tooltip);
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-      position: absolute;
-      top: -2em;
-      left: 50%;
-      transform: translateX(-50%);
-      height: 1em;
-      padding: 0.35em;
-      border-radius: 12px;
-      background: white;
-      color: black;
-      opacity: 0.9;
-      z-index: 2;
     }
   }
 }
