@@ -98,6 +98,11 @@ export default defineComponent({
     width: 100%;
     overflow: hidden;
   }
+
+  &.editor {
+    cursor: pointer;
+  }
+
   &.editor .overlay-content {
     // Prevent accidentally selecting text, activating links or "dragging"
     // embedded images when dragging/dropping the overlay in the editor
