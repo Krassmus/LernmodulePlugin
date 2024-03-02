@@ -470,15 +470,17 @@ export default defineComponent({
         const dxFraction = clientDx / rootRect.width;
         const xFraction = this.dragState.interactionStartPos[0] + dxFraction;
         const interactionWidth = interactionEl.clientWidth / rootRect.width;
-        const maxX = 1 - interactionWidth;
-        const clampedXFraction = Math.min(maxX, Math.max(0, xFraction));
+        const minX = 0.05 - interactionWidth;
+        const maxX = 0.95;
+        const clampedXFraction = Math.min(maxX, Math.max(minX, xFraction));
 
         const clientDy = event.clientY - this.dragState.mouseStartPos[1];
         const dyFraction = clientDy / rootRect.height;
         const yFraction = this.dragState.interactionStartPos[1] + dyFraction;
         const interactionHeight = interactionEl.clientHeight / rootRect.height;
-        const maxY = 1 - interactionHeight;
-        const clampedYFraction = Math.min(maxY, Math.max(0, yFraction));
+        const minY = 0.05 - interactionHeight;
+        const maxY = 0.95;
+        const clampedYFraction = Math.min(maxY, Math.max(minY, yFraction));
 
         const id = this.dragState.interactionId;
         this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
@@ -647,6 +649,7 @@ export default defineComponent({
 
 .video-player-root {
   position: relative;
+  overflow: hidden;
 }
 .selected-interaction-tooltip {
   &.hidden {
@@ -659,6 +662,7 @@ export default defineComponent({
   background: white;
   color: black;
   border-radius: 12px;
+  border: 2px solid black;
   padding: 8px;
   > .arrow,
   > .arrow::before {
@@ -802,6 +806,9 @@ $progress-control-height: 3.5em;
   .vjs-control-bar {
     height: $progress-control-height;
     padding-top: 0.5em;
+    // Make sure the video controls are not hidden by any Interactions the
+    // teacher/content creator has placed
+    z-index: 3;
 
     // Un-hide these elements -- they have display: none in videojs default css.
     .vjs-current-time {
