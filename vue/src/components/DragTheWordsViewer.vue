@@ -142,7 +142,6 @@ export default defineComponent({
       // Map from Blank IDs to Answer IDs
       userInputs: {} as Record<Uuid, Uuid>,
       submittedAnswers: null as Record<Uuid, Uuid> | null,
-      debug: false,
       userWantsToSeeSolutions: false,
       draggedAnswerId: undefined as Uuid | undefined,
       draggedSourceId: undefined as Uuid | undefined,
