@@ -571,8 +571,12 @@ export default defineComponent({
         // The interaction is already visible. Focus it immediately.
         focusInteraction();
       }
-      if (this.player!.currentTime() !== interaction.startTime) {
-        this.player!.currentTime(interaction.startTime);
+      // Skip to a time just slightly ahead of the point where the interaction
+      // appears.  This is necessary to avoid off-by-one-frame errors
+      const delta = 0.2;
+      const difference = this.player!.currentTime()! - interaction.startTime;
+      if (difference < 0 || difference > delta) {
+        this.player!.currentTime(interaction.startTime + delta / 2);
       }
     },
   },

@@ -440,7 +440,7 @@ export default defineComponent({
         @pointerdown.stop
         @click.stop="
           onClickInteraction(interaction);
-          $emit('timelineSeek', interaction.startTime);
+          $emit('timelineSeek', interaction.startTime + 0.1);
         "
       ></button>
     </div>
