@@ -761,6 +761,7 @@ $progress-control-height: 3.5em;
   cursor: pointer;
   box-sizing: border-box;
 
+  z-index: 3;
   $radius: 0.5em;
   position: absolute;
   bottom: calc($progress-control-height - 1.7em);
