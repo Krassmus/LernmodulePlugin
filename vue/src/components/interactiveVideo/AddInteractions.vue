@@ -110,6 +110,7 @@ import {
 import { v4 } from 'uuid';
 import { editorStateSymbol } from '@/components/interactiveVideo/editorState';
 import { $gettext } from '../../language/gettext';
+import { printInteractionType } from '@/models/InteractiveVideoTask';
 
 const props = defineProps({
   taskDefinition: {
@@ -227,6 +228,17 @@ function insertLmbTaskInteraction(type: TaskDefinition['task_type']) {
 }
 function deleteInteraction(id: string) {
   console.log('deleteInteraction', id);
+  const interaction = props.taskDefinition.interactions.find(
+    (i) => i.id === id
+  );
+  const prompt = $gettext('%{ interaction } löschen', {
+    interaction: printInteractionType(interaction),
+  });
+  const confirmed = window.confirm(prompt);
+  if (!confirmed) {
+    console.info('Delete prompt canceled by user');
+    return;
+  }
   const index = props.taskDefinition.interactions.findIndex((i) => i.id === id);
   // TODO make undoable... Don't want to delete a whole task permanently with no undo
   // eslint-disable-next-line vue/no-mutating-props
