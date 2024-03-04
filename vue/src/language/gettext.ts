@@ -19,6 +19,8 @@ const gettextPlugin = createGettext({
 // being printed excessively often (sometimes 1000s of times per second) during
 // certain UI interactions, e.g. when dragging interactions around on top of
 // the video in the Interactive Video Editor.
-const $gettext = memoize(gettextPlugin.$gettext);
+const $gettext = memoize(gettextPlugin.$gettext, (...args) =>
+  JSON.stringify(args)
+);
 
 export { gettextPlugin, $gettext };
