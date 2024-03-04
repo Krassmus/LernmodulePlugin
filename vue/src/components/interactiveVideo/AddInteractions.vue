@@ -13,7 +13,11 @@
           type="button"
           class="button tan3"
           @click="insertOverlay"
-          :title="$gettext('Overlay')"
+          :title="
+            $gettext('%{ interactionType } einfügen', {
+              interactionType: $gettext('Einblendung'),
+            })
+          "
         ></button>
         <button
           v-for="taskType in taskTypes"
@@ -22,7 +26,11 @@
           class="button"
           :class="iconForTaskType(taskType)"
           @click="insertLmbTaskInteraction(taskType)"
-          :title="printTaskType(taskType)"
+          :title="
+            $gettext('%{ interactionType } einfügen', {
+              interactionType: printTaskType(taskType),
+            })
+          "
         ></button>
       </div>
       <div class="video-controls">
