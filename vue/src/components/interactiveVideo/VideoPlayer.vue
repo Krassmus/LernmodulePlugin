@@ -59,6 +59,7 @@ export default defineComponent({
     return {
       player: null as Player | null,
       time: 0,
+      isPlaying: false,
       dragState: undefined as DragState,
       activeInteraction: undefined as Interaction | undefined,
       progressBarParameters: {
@@ -140,7 +141,7 @@ export default defineComponent({
       [newTime, newVisibleInteractions]: [number, Interaction[]],
       [oldTime, oldVisibleInteractions]: [number, Interaction[]]
     ): void {
-      const isPlayingForward = newTime > oldTime;
+      const isPlayingForward = this.isPlaying && newTime > oldTime;
       const newlyVisibleInteractionWithPause = newVisibleInteractions.find(
         (i) => !oldVisibleInteractions.includes(i) && i.pauseWhenVisible
       );
@@ -254,6 +255,12 @@ export default defineComponent({
         this.$emit('metadataChange', {
           length: this.player!.duration(),
         });
+      });
+      this.player.on('playing', () => {
+        this.isPlaying = true;
+      });
+      this.player.on(['waiting', 'pause'], () => {
+        this.isPlaying = false;
       });
 
       // Observe the progress bar -- we need to know its size and location
