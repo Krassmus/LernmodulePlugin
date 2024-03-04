@@ -58,7 +58,11 @@ export default defineComponent({
   data() {
     return {
       player: null as Player | null,
+      // The time the video player is seeked to
       time: 0,
+      // The time reached by the user watching the video without seeking.
+      // This is used to enforce the setting 'disable navigation'.
+      playedTime: 0,
       isPlaying: false,
       dragState: undefined as DragState,
       activeInteraction: undefined as Interaction | undefined,
@@ -245,9 +249,14 @@ export default defineComponent({
         if (time) {
           this.$emit('timeupdate', time);
           this.time = time;
+          if (this.isPlaying && !this.player!.paused()!) {
+            // Track how far the user has "watched" the video without seeking
+            this.playedTime = Math.max(this.playedTime, time);
+          }
         }
       });
       this.player.on('loadedmetadata', () => {
+        this.playedTime = this.task.startAt;
         this.player!.currentTime(this.task.startAt);
         if (this.task.autoplay && !this.editor) {
           this.player!.play();
@@ -261,6 +270,32 @@ export default defineComponent({
       });
       this.player.on(['waiting', 'pause'], () => {
         this.isPlaying = false;
+      });
+      this.player.on('seeking', () => {
+        // Enforce disabled navigation
+        if (
+          !this.editor &&
+          (this.task.disableNavigation === 'forward disabled' ||
+            this.task.disableNavigation === 'forward and backward disabled')
+        ) {
+          // Prevent forward navigation
+          if (this.playedTime < this.player!.currentTime()!) {
+            this.player!.currentTime(this.playedTime);
+          }
+        }
+      });
+      this.player.on('seeked', () => {
+        // Enforce disabled navigation
+        if (
+          !this.editor &&
+          (this.task.disableNavigation === 'forward disabled' ||
+            this.task.disableNavigation === 'forward and backward disabled')
+        ) {
+          // Prevent forward navigation
+          if (this.playedTime < this.player!.currentTime()!) {
+            this.player!.currentTime(this.playedTime);
+          }
+        }
       });
 
       // Observe the progress bar -- we need to know its size and location
