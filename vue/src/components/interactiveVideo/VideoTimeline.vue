@@ -171,7 +171,10 @@ export default defineComponent({
         left: `${this.secondsToTimelinePercentage(interaction.startTime)}%`,
       };
     },
-    zoom(time: number, delta: number) {
+    zoom(delta: number, time?: number) {
+      if (!time) {
+        time = (this.viewportStart + this.viewportEnd) / 2;
+      }
       // Save information needed to recalculate 't' (translate) parameter after zoom
       const viewportStart0 = this.zoomTransform.t;
       const viewportWidth0 = this.viewportWidthSeconds;
@@ -195,7 +198,8 @@ export default defineComponent({
     onWheel(event: WheelEvent) {
       event.preventDefault(); // Prevent scrolling page up/down
       const t = this.xCoordinateToTime(event.clientX);
-      this.zoom(t, -event.deltaY / 1000);
+      const delta = -event.deltaY / 1000;
+      this.zoom(delta, t);
     },
     constrainZoomTranslate(t: number): number {
       return Math.max(0, Math.min(this.videoMetadata.length, t));

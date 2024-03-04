@@ -7,25 +7,46 @@
       @metadataChange="onVideoMetadataChange"
       @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
     />
-    <div class="insert-interactions-buttons">
-      <button
-        type="button"
-        class="button tan3"
-        @click="insertOverlay"
-        :title="$gettext('Overlay')"
-      ></button>
-      <button
-        v-for="taskType in taskTypes"
-        :key="taskType"
-        type="button"
-        class="button"
-        :class="iconForTaskType(taskType)"
-        @click="insertLmbTaskInteraction(taskType)"
-        :title="printTaskType(taskType)"
-      ></button>
+    <div class="toolbar-under-video">
+      <div class="insert-interactions-buttons">
+        <button
+          type="button"
+          class="button tan3"
+          @click="insertOverlay"
+          :title="$gettext('Overlay')"
+        ></button>
+        <button
+          v-for="taskType in taskTypes"
+          :key="taskType"
+          type="button"
+          class="button"
+          :class="iconForTaskType(taskType)"
+          @click="insertLmbTaskInteraction(taskType)"
+          :title="printTaskType(taskType)"
+        ></button>
+      </div>
+      <div class="video-controls">
+        <button
+          type="button"
+          class="button zoom-in"
+          :title="$gettext('Vergrößern')"
+          @click="onClickZoomIn"
+        ></button>
+        <button
+          type="button"
+          class="button zoom-out"
+          :title="$gettext('Verkleinern')"
+          @click="onClickZoomOut"
+        ></button>
+        <!--        <button type="button" class="button play"></button>-->
+        <!--        <button type="button" class="button pause"></button>-->
+        <!--        <button type="button" class="button stop"></button>-->
+      </div>
     </div>
+
     <VideoTimeline
       class="video-timeline"
+      ref="videoTimeline"
       :task="taskDefinition"
       :currentTime="currentTime"
       :videoMetadata="videoMetadata"
@@ -43,7 +64,12 @@
 </template>
 
 <style scoped lang="scss">
-.insert-interactions-buttons button {
+.toolbar-under-video {
+  display: flex;
+  justify-content: space-between;
+}
+.insert-interactions-buttons button,
+.video-controls button {
   // Make the buttons into little squares so a lot of them will fit next to each
   // other in one row.
   min-width: unset;
@@ -92,6 +118,9 @@ const currentTime = ref(0);
 const videoMetadata = ref<VideoMetadata>({ length: 1 });
 const selectedInteractionId = ref<string | undefined>(undefined);
 const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
+  undefined
+);
+const videoTimeline = ref<InstanceType<typeof VideoTimeline> | undefined>(
   undefined
 );
 const selectedInteractionProperties = ref<
@@ -143,6 +172,12 @@ function onTimeUpdate(time: number) {
 function onTimelineSeek(time: number) {
   console.log('onTImelineSeek', time);
   videoPlayer.value!.player!.currentTime(time);
+}
+function onClickZoomIn() {
+  videoTimeline.value!.zoom(0.18);
+}
+function onClickZoomOut() {
+  videoTimeline.value!.zoom(-0.18);
 }
 function insertOverlay() {
   const interaction: OverlayInteraction = {
