@@ -328,7 +328,6 @@ export default defineComponent({
         this.dragState?.type === 'resizeInteraction' &&
         this.dragState.interactionId === interaction.id
       ) {
-        console.log('onPointerMoveResizeHandle', handle);
         const rootRect = (
           this.$refs.root as HTMLElement
         ).getBoundingClientRect();
@@ -354,12 +353,6 @@ export default defineComponent({
         const yPointer = event.clientY / rootRect.height;
         const dyPointerPixels = event.clientY - this.dragState.mouseStartPos[1];
         const dyPointer = dyPointerPixels / rootRect.height;
-
-        // TODO clamping
-        // const xFraction = this.dragState.interactionStartPos[0] + dxFraction;
-        // const interactionWidth = interactionEl.clientWidth / rootRect.width;
-        // const maxX = 1 - interactionWidth;
-        // const clampedXFraction = Math.min(maxX, Math.max(0, xFraction));
 
         // Horizontal resizing
         if (
@@ -415,18 +408,34 @@ export default defineComponent({
           }
         }
 
+        // Prevent shrinking the interaction below a minimum size
         let filteredHeight = interaction.height,
           filteredWidth = interaction.width,
           filteredX = interaction.x,
           filteredY = interaction.y;
-        if (newHeight > 0.05 && newY >= 0 && newY + newHeight <= 1) {
+        if (newHeight > 0.05) {
           filteredHeight = newHeight;
           filteredY = newY;
         }
-        if (newWidth > 0.05 && newX >= 0 && newX + newWidth <= 1) {
+        if (newWidth > 0.05) {
           filteredWidth = newWidth;
           filteredX = newX;
         }
+
+        // Prevent moving the interaction completely off screen
+        const isOffscreenX =
+          filteredX > 0.95 || filteredX + filteredWidth < 0.05;
+        const isOffscreenY =
+          filteredY > 0.95 || filteredY + filteredHeight < 0.05;
+        if (isOffscreenX) {
+          filteredX = interaction.x;
+          filteredWidth = interaction.width;
+        }
+        if (isOffscreenY) {
+          filteredY = interaction.y;
+          filteredHeight = interaction.height;
+        }
+
         this.editor!.resizeOverlay(
           interaction.id,
           filteredX,

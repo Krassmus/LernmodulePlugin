@@ -206,7 +206,6 @@ function resizeOverlay(
   width: number,
   height: number
 ) {
-  console.log('resizeOverlay', id, x, y, width, height);
   const interaction = props.taskDefinition?.interactions.find(
     (i) => i.id === id
   );
