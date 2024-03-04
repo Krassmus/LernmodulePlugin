@@ -38,9 +38,12 @@
           :title="$gettext('Verkleinern')"
           @click="onClickZoomOut"
         ></button>
-        <!--        <button type="button" class="button play"></button>-->
-        <!--        <button type="button" class="button pause"></button>-->
-        <!--        <button type="button" class="button stop"></button>-->
+        <button type="button" class="button play" @click="onClickPlay"></button>
+        <button
+          type="button"
+          class="button pause"
+          @click="onClickPause"
+        ></button>
       </div>
     </div>
 
@@ -178,6 +181,12 @@ function onClickZoomIn() {
 }
 function onClickZoomOut() {
   videoTimeline.value!.zoom(-0.18);
+}
+function onClickPlay() {
+  videoPlayer.value!.player!.play();
+}
+function onClickPause() {
+  videoPlayer.value!.player!.pause();
 }
 function insertOverlay() {
   const interaction: OverlayInteraction = {
