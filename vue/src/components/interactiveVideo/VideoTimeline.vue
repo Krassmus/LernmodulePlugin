@@ -171,17 +171,13 @@ export default defineComponent({
         left: `${this.secondsToTimelinePercentage(interaction.startTime)}%`,
       };
     },
-    onWheel(event: WheelEvent) {
-      event.preventDefault(); // Prevent scrolling page up/down
-
+    zoom(time: number, delta: number) {
       // Save information needed to recalculate 't' (translate) parameter after zoom
       const viewportStart0 = this.zoomTransform.t;
       const viewportWidth0 = this.viewportWidthSeconds;
-      const t = this.xCoordinateToTime(event.clientX);
 
       // Calculate new zoom level
-      const dy = -event.deltaY / 1000;
-      const exp = Math.exp(dy);
+      const exp = Math.exp(delta);
       const newK = this.zoomTransform.k * exp;
       // Prevent zooming too far in/out
       this.zoomTransform.k = Math.max(0.005, Math.min(5, newK));
@@ -192,9 +188,14 @@ export default defineComponent({
       // after zoomTransform.k is modified in the previous block of code..
       const viewportWidth1 = this.viewportWidthSeconds;
       const viewportStart1 =
-        t - ((t - viewportStart0) / viewportWidth0) * viewportWidth1;
+        time - ((time - viewportStart0) / viewportWidth0) * viewportWidth1;
       // Prevent panning before video start or after video end
       this.zoomTransform.t = this.constrainZoomTranslate(viewportStart1);
+    },
+    onWheel(event: WheelEvent) {
+      event.preventDefault(); // Prevent scrolling page up/down
+      const t = this.xCoordinateToTime(event.clientX);
+      this.zoom(t, -event.deltaY / 1000);
     },
     constrainZoomTranslate(t: number): number {
       return Math.max(0, Math.min(this.videoMetadata.length, t));
