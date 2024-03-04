@@ -271,30 +271,30 @@ export default defineComponent({
       this.player.on(['waiting', 'pause'], () => {
         this.isPlaying = false;
       });
-      this.player.on('seeking', () => {
-        // Enforce disabled navigation
-        if (
-          !this.editor &&
-          (this.task.disableNavigation === 'forward disabled' ||
-            this.task.disableNavigation === 'forward and backward disabled')
-        ) {
+
+      const enforceDisabledNavigation = () => {
+        if (this.task.disableNavigation === 'forward disabled') {
           // Prevent forward navigation
-          if (this.playedTime < this.player!.currentTime()!) {
+          if (this.player!.currentTime()! - this.playedTime > 0.5) {
+            this.player!.currentTime(this.playedTime);
+          }
+        } else if (
+          this.task.disableNavigation === 'forward and backward disabled'
+        ) {
+          // Prevent all navigation
+          if (Math.abs(this.player!.currentTime()! - this.playedTime) > 0.5) {
             this.player!.currentTime(this.playedTime);
           }
         }
+      };
+      this.player.on('seeking', () => {
+        if (!this.editor) {
+          enforceDisabledNavigation();
+        }
       });
       this.player.on('seeked', () => {
-        // Enforce disabled navigation
-        if (
-          !this.editor &&
-          (this.task.disableNavigation === 'forward disabled' ||
-            this.task.disableNavigation === 'forward and backward disabled')
-        ) {
-          // Prevent forward navigation
-          if (this.playedTime < this.player!.currentTime()!) {
-            this.player!.currentTime(this.playedTime);
-          }
+        if (!this.editor) {
+          enforceDisabledNavigation();
         }
       });
 
