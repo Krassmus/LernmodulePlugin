@@ -288,6 +288,11 @@ export default defineComponent({
     },
     onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
       console.log('onPointerDownInteraction');
+      if (event.button !== 0) {
+        // Prevent unintentionally selecting interaction when dragging to
+        // scroll around in the timeline
+        return;
+      }
       const interactionLength = interaction.endTime - interaction.startTime;
       this.dragState = {
         type: 'interaction',
