@@ -70,6 +70,13 @@ export const interactiveVideoTaskSchema = z.object({
   ]),
   autoplay: z.boolean().optional().default(false),
   startAt: z.number().optional().default(0),
+  disableNavigation: z
+    .union([
+      z.literal('not disabled'),
+      z.literal('forward disabled'),
+      z.literal('forward and backward disabled'),
+    ])
+    .default('not disabled'),
   interactions: z.array(interactiveVideoInteractionSchema),
 });
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
