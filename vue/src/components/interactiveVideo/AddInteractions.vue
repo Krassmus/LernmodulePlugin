@@ -46,10 +46,16 @@
           :title="$gettext('Verkleinern')"
           @click="onClickZoomOut"
         ></button>
-        <button type="button" class="button play" @click="onClickPlay"></button>
+        <button
+          type="button"
+          class="button play"
+          :title="$gettext('Abspielen')"
+          @click="onClickPlay"
+        ></button>
         <button
           type="button"
           class="button pause"
+          :title="$gettext('Pausieren')"
           @click="onClickPause"
         ></button>
       </div>
