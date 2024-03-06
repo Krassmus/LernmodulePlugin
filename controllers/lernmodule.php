@@ -2,8 +2,8 @@
 
 class LernmoduleController extends PluginController
 {
-
-    public function before_filter(&$action, &$args) {
+    public function before_filter(&$action, &$args)
+    {
         parent::before_filter($action, $args);
         if (Navigation::hasItem("/course/lernmodule")) {
             Navigation::getItem("/course/lernmodule")->setImage(
@@ -286,10 +286,12 @@ class LernmoduleController extends PluginController
             $old_message = $this->attempt->customdata
                 ? $this->attempt->customdata->getArrayCopy()
                 : array();
-            $message['properties'] = array_merge((array) $old_message['properties'], (array) $message['properties']);
-            foreach ((array) $old_message['points'] as $class => $value) {
-                if ($message['points'][$class] < $value) {
-                    $message['points'][$class] = $value;
+            $message['properties'] = array_merge((array)($old_message['properties'] ?? []), (array)($message['properties'] ?? []));
+            if (!empty($old_message['points'])) {
+                foreach ((array)$old_message['points'] as $class => $value) {
+                    if ($message['points'][$class] < $value) {
+                        $message['points'][$class] = $value;
+                    }
                 }
             }
             $this->attempt->customdata = $message;

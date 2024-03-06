@@ -62,47 +62,44 @@
 
                 <h2><?= dgettext("lernmoduleplugin","Dauer des Lernmoduls") ?></h2>
 
-        <div id="timeline"></div>
-        <script>
-          jQuery(async function() {
-            var Chartist = await STUDIP.loadChunk('chartist');
-            var data = {
-              // A labels array that can contain any sort of values
-              labels: <?= json_encode($range) ?>,
-              // Our series array that contains series objects or in this case series data arrays
-              series: [
-                  <?= json_encode($unsuccessful['result']) ?>,
-                  <?= json_encode($successful['result']) ?>
-              ]
-            };
+                <div id="timeline"></div>
+                <script>
+                    jQuery(async function() {
+                        var Chartist = await STUDIP.loadChunk('chartist');
+                        var data = {
+                            // A labels array that can contain any sort of values
+                            labels: <?= json_encode($range) ?>,
+                            // Our series array that contains series objects or in this case series data arrays
+                            series: [
+                                <?= json_encode($unsuccessful['result']) ?>,
+                                <?= json_encode($successful['result']) ?>
+                            ]
+                        };
 
-            var options = {
-              width: '100%',
-              height: '200px',
-              // Remove this configuration to see that chart rendered with cardinal spline interpolation
-              // Sometimes, on large jumps in data values, it's better to use simple smoothing.
-              lineSmooth: Chartist.Interpolation.none(),
-              fullWidth: true,
-              chartPadding: {
-                right: 20
-              },
-              low: 0
-            };
-            new Chartist.Line('#timeline', data, options);
-          });
-        </script>
-        <p><?= dgettext(
-        "lernmoduleplugin",
-        "Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen Durchläufe, orange die nicht erfolgreichen."
-    ) ?></p>
+                        var options = {
+                            width: '100%',
+                            height: '200px',
+                            // Remove this configuration to see that chart rendered with cardinal spline interpolation
+                            // Sometimes, on large jumps in data values, it's better to use simple smoothing.
+                            lineSmooth: Chartist.Interpolation.none(),
+                            fullWidth: true,
+                            chartPadding: {
+                                right: 20
+                            },
+                            low: 0
+                        };
+                        new Chartist.Line('#timeline', data, options);
+                    });
+                </script>
+                <p><?= dgettext("lernmoduleplugin","Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen Durchläufe, orange die nicht erfolgreichen.") ?></p>
 
-          <? if (is_a($module, "CustomLernmodul")) : ?>
-              <? $template = $module->getEvaluationTemplate(Context::get()->id) ?>
-              <? if ($template) : ?>
-                  <?= $template->render() ?>
-              <? endif ?>
-          <? endif ?>
-      </fieldset>
+            <? if (is_a($module, "CustomLernmodul")) : ?>
+                <? $template = $module->getEvaluationTemplate(Context::get()->id) ?>
+                <? if ($template) : ?>
+                    <?= $template->render() ?>
+                <? endif ?>
+            <? endif ?>
+        </fieldset>
     <? endif ?>
 
     <? if ($data && count($data)) : ?>

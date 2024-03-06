@@ -197,6 +197,7 @@
         <? if (!$module->isNew() && is_a($module, "CustomLernmodul")) : ?>
             <? $template = $module->getEditTemplate() ?>
             <? if ($template) : ?>
+                <!-- Provide a couple of values used in Vue.js Lernmodule -->
                 <? $template->set_attribute('controller', $controller); ?>
                 <? $template->set_attribute('plugin', $plugin); ?>
                 <?= $template->render() ?>

@@ -4,8 +4,8 @@ if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
     $GLOBALS['FILESYSTEM_UTF8'] = true;
 }
 
-class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
-{
+class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin {
+
     public function __construct()
     {
         parent::__construct();

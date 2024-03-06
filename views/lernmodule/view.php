@@ -4,8 +4,9 @@
 
 <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
-<?php
-$template = $mod->getViewerTemplate($attempt, $game_attendence);
+<?
+$template = $mod->getViewerTemplate($attempt, $game_attendence ?? null);
+// Set attributes used in Vue.js Lernmodule
 if ($template) {
     $template->set_attribute('plugin', $plugin);
     $template->set_attribute(
@@ -23,8 +24,7 @@ if ($template) {
 }
 echo $template->render();
 ?>
-
-  <script>
+<script>
     if (!STUDIP.Lernmodule) {
         STUDIP.Lernmodule = {};
     }
@@ -34,7 +34,7 @@ echo $template->render();
         'customData': STUDIP.Lernmodule.attemptCustomData
       };
     };
-  </script>
+</script>
 
 <?
 if (Context::get() && $GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
