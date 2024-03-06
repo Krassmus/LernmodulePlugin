@@ -439,7 +439,7 @@ class LernmoduleController extends PluginController
     }
 
     /**
-     * Dialog to select the way a lernmodule should be added (url, upload or h5p-editor (or OER-marketplace)
+     * Dialog to select the way a lernmodule should be added (url, upload or h5p-editor (or OER-marketplace) (or Vue.js-Lernmodul)
      * @throws AccessDeniedException
      */
     public function add_action()
