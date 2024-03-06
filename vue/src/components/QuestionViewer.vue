@@ -83,19 +83,11 @@
       {{ this.task.strings.checkButton }}
     </button>
 
-    <div v-if="isSubmitted">
-      <label for="score" style="display: block"
-        >{{ points }} {{ $gettext('von') }} {{ maxPoints }}
-        {{ $gettext('Punkte') }}.</label
-      >
-      <meter id="score" min="0" :max="maxPoints" :value="points" />
-      <img
-        v-if="reachedMaxPoints"
-        :src="urlForIcon('star')"
-        width="36"
-        height="36"
-      />
-    </div>
+    <FeedbackElement
+      v-if="isSubmitted"
+      :achieved-points="points"
+      :max-points="maxPoints"
+    />
 
     <div class="retry-and-show-solutions-buttons">
       <button
@@ -121,6 +113,7 @@
 import { defineComponent, PropType } from 'vue';
 import { QuestionAnswer, QuestionTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
+import FeedbackElement from '@/components/FeedbackElement.vue';
 
 export default defineComponent({
   name: 'QuestionViewer',
@@ -130,13 +123,13 @@ export default defineComponent({
       required: true,
     },
   },
+  components: { FeedbackElement },
   data() {
     return {
       selectedAnswers: {} as Record<string, boolean>,
       selectedAnswer: this.task.answers[0],
       isSubmitted: false,
       showSolutions: false,
-      showFeedback: false,
     };
   },
   methods: {
@@ -188,11 +181,6 @@ export default defineComponent({
         return 'answer';
       }
     },
-    urlForIcon(iconName: string) {
-      return (
-        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
-      );
-    },
   },
   computed: {
     maxPoints(): number {
@@ -243,9 +231,6 @@ export default defineComponent({
     },
     showSolutionsButton(): boolean {
       return this.task.showSolutionsAllowed && this.isSubmitted;
-    },
-    reachedMaxPoints(): boolean {
-      return this.points === this.maxPoints;
     },
   },
 });

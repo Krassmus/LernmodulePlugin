@@ -4,17 +4,23 @@
       <div class="h5pFeedbackText">
         {{ resultMessage }}
       </div>
-
-      <meter
-        v-if="maxPoints"
-        id="score"
-        min="0"
-        :low="lowNumber"
-        :high="highNumber"
-        :optimum="maxPoints"
-        :max="maxPoints"
-        :value="achievedPoints"
-      />
+      <template v-if="maxPoints">
+        <meter
+          id="score"
+          min="0"
+          :low="lowNumber"
+          :high="highNumber"
+          :optimum="maxPoints"
+          :max="maxPoints"
+          :value="achievedPoints"
+        />
+        <img
+          v-if="achievedMaxPoints"
+          :src="urlForIcon('star')"
+          width="36"
+          height="36"
+        />
+      </template>
       <div v-else>{{ achievedPoints }}</div>
     </div>
     <div v-if="feedbackMessage" class="h5pFeedbackText">
@@ -41,7 +47,13 @@ export default defineComponent({
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {
+    urlForIcon(iconName: string) {
+      return (
+        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
+      );
+    },
+  },
   computed: {
     lowNumber(): Number {
       if (this.maxPoints) return this.maxPoints / 3;
@@ -81,6 +93,10 @@ export default defineComponent({
       }
 
       return undefined;
+    },
+
+    achievedMaxPoints(): boolean {
+      return this.achievedPoints === this.maxPoints;
     },
   },
 });

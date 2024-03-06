@@ -49,6 +49,14 @@
       </div>
     </div>
 
+    <FeedbackElement
+      v-if="showResults"
+      :achieved-points="correctAnswers"
+      :max-points="maxPoints"
+      :feedback="task.feedback"
+      :result-message="resultMessage"
+    />
+
     <div class="h5pFeedbackContainer">
       <div class="h5pFeedbackContainerTop">
         <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
@@ -59,17 +67,6 @@
                   'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
                 )
           }}
-        </div>
-        <div v-if="showResults && feedbackMessage" class="h5pFeedbackText">
-          {{ this.feedbackMessage }}
-        </div>
-      </div>
-      <div class="h5pFeedbackContainerCenter">
-        <div v-if="showResults">
-          <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
-          <label for="score" class="h5pFeedbackText">
-            {{ this.resultMessage }}
-          </label>
         </div>
       </div>
       <div class="h5pFeedbackContainerBottom">
@@ -105,6 +102,7 @@ import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual, round } from 'lodash';
 import { $gettext } from '@/language/gettext';
+import FeedbackElement from '@/components/FeedbackElement.vue';
 
 type DragTheWordsElement = Blank | StaticText;
 
@@ -130,7 +128,7 @@ type Uuid = string;
 
 export default defineComponent({
   name: 'DragTheWordsViewer',
-  components: {},
+  components: { FeedbackElement },
   props: {
     task: {
       type: Object as PropType<DragTheWordsTask>,
@@ -142,7 +140,6 @@ export default defineComponent({
       // Map from Blank IDs to Answer IDs
       userInputs: {} as Record<Uuid, Uuid>,
       submittedAnswers: null as Record<Uuid, Uuid> | null,
-      debug: false,
       userWantsToSeeSolutions: false,
       draggedAnswerId: undefined as Uuid | undefined,
       draggedSourceId: undefined as Uuid | undefined,
@@ -491,26 +488,6 @@ export default defineComponent({
       );
 
       return resultMessage;
-    },
-
-    feedbackMessage(): string | undefined {
-      const percentageCorrect = round(
-        (this.correctAnswers / this.blanks.length) * 100
-      );
-
-      for (const feedback of this.feedbackSortedByScore) {
-        if (percentageCorrect >= feedback.percentage) {
-          return feedback.message;
-        }
-      }
-
-      return undefined;
-    },
-
-    feedbackSortedByScore(): Feedback[] {
-      return this.task.feedback
-        .map((value) => value)
-        .sort((a, b) => b.percentage - a.percentage);
     },
   },
 });
