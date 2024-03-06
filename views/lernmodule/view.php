@@ -1,8 +1,8 @@
-<?php if (trim($course_connection['infotext'])) : ?>
-  <div class="lernmodule_infotext"><?= formatReady($course_connection['infotext']) ?></div>
-<?php endif ?>
+<? if (trim($course_connection['infotext'])) : ?>
+    <div class="lernmodule_infotext"><?= formatReady($course_connection['infotext']) ?></div>
+<? endif ?>
 
-  <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
+<input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
 <?php
 $template = $mod->getViewerTemplate($attempt, $game_attendence);
@@ -36,9 +36,8 @@ echo $template->render();
     };
   </script>
 
-<?php
-Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));
-if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+<?
+if (Context::get() && $GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
     $actions = Sidebar::Get()->getWidget("actions");
     $add = false;
     if (!$actions) {
@@ -46,25 +45,26 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
         $add = true;
     }
     $actions->addLink(
-        dgettext("lernmoduleplugin", "Abspieloptionen bearbeiten"),
-        PluginEngine::getURL($plugin, array(), "lernmodule/edit/" . $mod->getId()),
+        dgettext("lernmoduleplugin","Abspieloptionen bearbeiten"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/edit/".$mod->getId()),
         Icon::create("edit", "clickable")
+
     );
     $actions->addLink(
-        dgettext("lernmoduleplugin", "Lernmodul in Veranstaltung verschieben oder kopieren"),
+        dgettext("lernmoduleplugin","Lernmodul in Veranstaltung verschieben oder kopieren"),
         PluginEngine::getURL($plugin, array(), "lernmodule/move/" . $mod->getId()),
         Icon::create("seminar+move_up", "clickable"),
         array("data-dialog" => 1)
     );
     if ($mod->getDownloadURL()) {
         $actions->addLink(
-            dgettext("lernmoduleplugin", "Lernmodul herunterladen"),
+            dgettext("lernmoduleplugin","Lernmodul herunterladen"),
             $mod->getDownloadURL(),
             Icon::create("download", "clickable")
         );
         if (class_exists("LernMarktplatz")) {
             $actions->addLink(
-                dgettext("lernmoduleplugin", "Auf Lernmarktplatz veröffentlichen"),
+                dgettext("lernmoduleplugin","Auf Lernmarktplatz veröffentlichen"),
                 PluginEngine::getURL($plugin, array(), "lernmodule/publish/" . $mod->getId()),
                 Icon::create("service", "clickable"),
                 array("data-dialog" => 1)
@@ -79,19 +79,14 @@ if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
 $views = new ViewsWidget();
 $views->addLink(
     $mod['name'],
-    PluginEngine::getURL($plugin, array(), "lernmodule/view/" . $mod->getId()),
+    PluginEngine::getURL($plugin, array(), "lernmodule/view/".$mod->getId()),
     null,
     array()
 )->setActive(true);
-if ($course_connection['evaluation_for_students'] || $GLOBALS['perm']->have_studip_perm(
-    "tutor",
-    $course_connection['seminar_id']
-)) {
+if ($course_connection['evaluation_for_students'] || ($course_connection['seminar_id'] && $GLOBALS['perm']->have_studip_perm("tutor", $course_connection['seminar_id']))) {
     $views->addLink(
-        dgettext("lernmoduleplugin", "Auswertung"),
-        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId()),
-        null,
-        array()
+        dgettext("lernmoduleplugin","Auswertung"),
+        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/" . $mod->getId())
     );
 }
 

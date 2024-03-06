@@ -89,7 +89,7 @@
         <label>
             <?= dgettext("lernmoduleplugin","Infotext über dem Lernmodul") ?>
             <textarea class="add_toolbar wysiwyg"
-                      name="modulecourse[infotext]"><?= formatReady($modulecourse['infotext']) ?></textarea>
+                      name="modulecourse[infotext]"><?= formatReady($modulecourse['infotext'] ?? '') ?></textarea>
         </label>
 
         <? if (!$module->isNew()) : ?>
@@ -157,19 +157,19 @@
 
         <label>
             <input type="hidden" name="modulecourse[anonymous_attempts]" value="0">
-            <input type="checkbox" name="modulecourse[anonymous_attempts]" value="1"<?= $modulecourse['anonymous_attempts'] ? " checked" : "" ?>>
+            <input type="checkbox" name="modulecourse[anonymous_attempts]" value="1"<?= !empty($modulecourse['anonymous_attempts']) ? " checked" : "" ?>>
             <?= dgettext("lernmoduleplugin","Nutzer sollen anonym teilnehmen") ?>
         </label>
 
         <label>
             <input type="hidden" name="modulecourse[evaluation_for_students]" value="0">
-            <input type="checkbox" name="modulecourse[evaluation_for_students]" value="1"<?= $modulecourse['evaluation_for_students'] ? " checked" : "" ?>>
+            <input type="checkbox" name="modulecourse[evaluation_for_students]" value="1"<?= !empty($modulecourse['evaluation_for_students']) ? " checked" : "" ?>>
             <?= dgettext("lernmoduleplugin","Nutzer dürfen die Auswertung sehen") ?>
         </label>
 
         <label>
             <?= dgettext("lernmoduleplugin","Abspielen ab") ?>
-            <input type="text" id="modulecourse_starttime" name="modulecourse[starttime]" value="<?= $modulecourse['starttime'] ? date("d.m.Y H:i", $modulecourse['starttime']) : "jederzeit" ?>"  data-datetime-picker>
+            <input type="text" id="modulecourse_starttime" name="modulecourse[starttime]" value="<?= !empty($modulecourse['starttime']) ? date("d.m.Y H:i", $modulecourse['starttime']) : "jederzeit" ?>"  data-datetime-picker>
         </label>
 
         <? if (class_exists('\\Grading\\Definition')) : ?>
@@ -180,7 +180,7 @@
                     <select name="modulecourse[gradebook_definition]">
                         <option></option>
                         <? foreach ($gradebook_definitions as $definition) : ?>
-                        <option value="<?= htmlReady($definition->getId()) ?>"<?= $modulecourse['gradebook_definition'] == $definition->getId() ? " selected" : "" ?>>
+                        <option value="<?= htmlReady($definition->getId()) ?>"<?= !empty($modulecourse['gradebook_definition'] ) && $modulecourse['gradebook_definition'] == $definition->getId() ? " selected" : "" ?>>
                             <?= htmlReady($definition['name']) ?>
                         </option>
                         <? endforeach ?>
@@ -252,15 +252,11 @@ if (!$module->isNew()) {
     $views = new ViewsWidget();
     $views->addLink(
         $module['name'],
-        PluginEngine::getURL($plugin, array(), "lernmodule/view/".$module->getId()),
-        null,
-        array()
+        PluginEngine::getURL($plugin, array(), "lernmodule/view/".$module->getId())
     );
     $views->addLink(
         dgettext("lernmoduleplugin","Auswertung"),
-        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$module->getId()),
-        null,
-        array()
+        PluginEngine::getURL($plugin, array(), "lernmodule/evaluation/".$module->getId())
     );
 
     Sidebar::Get()->addWidget($views);

@@ -20,7 +20,7 @@
         margin: 10px;
         border: white solid 4px;
         box-shadow: rgba(0,0,0,0.3) 0px 0px 7px;
-        background-color: @content-color;
+        background-color: $content-color;
         display: flex;
         justify-content: flex-end;
         align-items: flex-start;
@@ -74,7 +74,7 @@
         }
 
         &.dragover {
-            box-shadow: @yellow 0px 0px 12px;
+            box-shadow: $yellow 0px 0px 12px;
             .shadow {
                 opacity: 0.3;
                 transition: opacity 300ms;
@@ -98,23 +98,23 @@
     the default rules applied by Chartist.  See my comment in git commit 580adca6. -Ann
  */
 .ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
-    stroke: @orange !important;
+    stroke: $orange !important;
 }
 .ct-series-b .ct-bar, .ct-series-b .ct-line, .ct-series-b .ct-point, .ct-series-b .ct-slice-donut {
-    stroke: @base-color-80 !important;
+    stroke: $base-color-80 !important;
 }
 .ct-series-dominant-a .ct-bar, .ct-series-dominant-a .ct-line, .ct-series-dominant-a .ct-point, .ct-series-dominant-a .ct-slice-donut {
-    stroke: @base-color-80 !important;
+    stroke: $base-color-80 !important;
 }
 
 .lernmodule_infotext {
-    border: thin solid @content-color-60;
+    border: thin solid $content-color-60;
     padding: 10px;
     margin-bottom: 20px;
 }
 
 label.file-upload.hovered {
-    background-color: @activity-color;
+    background-color: $activity-color;
 }
 
 .admin_libraries {
@@ -139,6 +139,6 @@ label.file-upload.hovered {
     justify-content: center;
 
     &:fullscreen {
-        background-color: @light-gray-color-20;
+        background-color: $light-gray-color-20;
     }
 }

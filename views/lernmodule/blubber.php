@@ -10,5 +10,3 @@
         <?= \Studip\LinkButton::create(dgettext("lernmoduleplugin","Nicht mehr nachfragen"), "#", array('onClick' => "STUDIP.Lernmodule.dont_blubber = true; STUDIP.Dialog.close(); return false;")) ?>
     </div>
 </form>
-<?
-Sidebar::Get()->setImage(Assets::image_path("sidebar/learnmodule-sidebar.png"));

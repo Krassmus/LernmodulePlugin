@@ -2,12 +2,6 @@
 
 class H5peditorController extends PluginController
 {
-
-    public function before_filter(&$action, &$args)
-    {
-        parent::before_filter($action, $args);
-    }
-
     public function edit_action($module_id = null)
     {
         if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
@@ -56,11 +50,11 @@ class H5peditorController extends PluginController
             $this->params = array(
                 "params" => json_decode(file_get_contents($this->mod->getPath()."/content/content.json"), true),
                 "metadata" => array(
-                    'title' => $h5p_json['title'],
-                    'license' => $h5p_json['license'],
-                    'authors' => $h5p_json['authors'],
-                    'extraTitle' => $h5p_json['title'],
-                    'changes' => $h5p_json['changes']
+                    'title' => $h5p_json['title'] ?? '',
+                    'license' => $h5p_json['license'] ?? '',
+                    'authors' => $h5p_json['authors'] ?? '',
+                    'extraTitle' => $h5p_json['title'] ?? '',
+                    'changes' => $h5p_json['changes'] ?? ''
                 )
             );
         }
@@ -117,7 +111,7 @@ class H5peditorController extends PluginController
             ),
             'saveFreq' => 2,
             'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
-            'libraryUrl' => H5PLernmodul::getH5pLibURL(), //needed to fetch the library.json via ajax-request
+            'libraryUrl' => H5pLernmodul::getH5pLibURL(), //needed to fetch the library.json via ajax-request
             'l10n' => array(
                 'H5P' => array(
                     'fullscreen' => dgettext("lernmoduleplugin","Vollbild"),
@@ -902,25 +896,25 @@ class H5peditorController extends PluginController
             );
             $h5p_json = json_decode(file_get_contents($this->mod->getPath()."/h5p.json"), true);
             if ($h5p_json) {
-                if ($h5p_json['license']) {
+                if (!empty($h5p_json['license'])) {
                     $settings['metadata']['license'] = $h5p_json['license'];
                 }
-                if ($h5p_json['authors']) {
+                if (!empty($h5p_json['authors'])) {
                     $settings['metadata']['authors'] = (array)$h5p_json['authors'];
                 }
-                if ($h5p_json['changes']) {
+                if (!empty($h5p_json['changes'])) {
                     $settings['metadata']['changes'] = (array)$h5p_json['changes'];
                 }
-                if ($h5p_json['yearFrom']) {
+                if (!empty($h5p_json['yearFrom'])) {
                     $settings['metadata']['yearFrom'] = $h5p_json['yearFrom'];
                 }
-                if ($h5p_json['yearTo']) {
+                if (!empty($h5p_json['yearTo'])) {
                     $settings['metadata']['yearTo'] = $h5p_json['yearTo'];
                 }
-                if ($h5p_json['source']) {
+                if (!empty($h5p_json['source'])) {
                     $settings['metadata']['source'] = $h5p_json['source'];
                 }
-                if ($h5p_json['licenseExtras']) {
+                if (!empty($h5p_json['licenseExtras'])) {
                     $settings['metadata']['licenseExtras'] = $h5p_json['licenseExtras'];
                 }
             }
@@ -943,7 +937,7 @@ class H5peditorController extends PluginController
             $lib_ids = array();
             $library = json_decode(file_get_contents($main_library->getPath() . "/library.json"), true);
 
-            $dependencies = (array) $library['editorDependencies'];
+            $dependencies = (array)($library['editorDependencies'] ?? []);
 
             foreach ($dependencies as $dependency) {
                 $lib = H5PLib::findVersion($dependency['machineName'], $dependency['majorVersion'], $dependency['minorVersion']);
@@ -1000,10 +994,10 @@ class H5peditorController extends PluginController
             foreach ($libs as $lib) {
                 if ($lib) {
                     foreach ($lib->getFiles("js", true) as $js) {
-                        $javascripts[] = H5PLernmodul::getH5pLibURL() . "/" . $js;
+                        $javascripts[] = H5pLernmodul::getH5pLibURL() . "/" . $js;
                     }
                     foreach ($lib->getFiles("css", true) as $style) {
-                        $css[] = H5PLernmodul::getH5pLibURL() . "/" . $style;
+                        $css[] = H5pLernmodul::getH5pLibURL() . "/" . $style;
                     }
                 }
 
@@ -1037,6 +1031,7 @@ class H5peditorController extends PluginController
                     $libs[] = $lib;
                 }
             }
+            $output = [];
             foreach ($libs as $lib) {
                 $data = $lib->getLibraryData();
                 $output[] = array(
@@ -1094,7 +1089,7 @@ class H5peditorController extends PluginController
         } elseif ($cmd === "files") {
             //upload files ...
             $_FILES['file'];
-            $mod = H5PLernmodul::find(Request::get("module_id"));
+            $mod = H5pLernmodul::find(Request::get("module_id"));
             if (!$mod) {
                 throw new Exception(_("Modul existiert nicht. Kann Datei nicht hochladen."));
             }

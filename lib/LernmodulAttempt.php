@@ -5,14 +5,23 @@ class LernmodulAttempt extends SimpleORMap {
     static public function getByModule($module_id, $user_id = null)
     {
         $user_id || $user_id = $GLOBALS['user']->id;
-        $attempt = self::findOneBySQL("user_id = :user_id AND module_id = :module_id", array(
-            'user_id' => $user_id,
-            'module_id' => $module_id
-        ));
-        if (!$attempt) {
+        $coursemod = LernmodulCourse::findOneBySQL('module_id = :module_id AND seminar_id = :course_id', [
+            'module_id' => $module_id,
+            'course_id' => Context::getId()
+        ]);
+        if ($coursemod['anonymous_attempts']) {
             $attempt = new LernmodulAttempt();
-            $attempt['user_id'] = $user_id;
             $attempt['module_id'] = $module_id;
+        } else {
+            $attempt = self::findOneBySQL("user_id = :user_id AND module_id = :module_id", array(
+                'user_id' => $user_id,
+                'module_id' => $module_id
+            ));
+            if (!$attempt) {
+                $attempt = new LernmodulAttempt();
+                $attempt['user_id'] = $user_id;
+                $attempt['module_id'] = $module_id;
+            }
         }
         $attempt->store();
         return $attempt;

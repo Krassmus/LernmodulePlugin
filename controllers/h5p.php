@@ -61,6 +61,7 @@ class H5pController extends PluginController
             if ($_FILES['file']['size'] > 0) {
                 $tmp_path = $GLOBALS['TMP_PATH']."/h5p_libs_".uniqid();
                 $success = \Studip\ZipArchive::extractToPath($_FILES['file']['tmp_name'], $tmp_path);
+                $libs_name = array();
                 if ($success) {
                     $lib_paths = array();
                     if (file_exists($tmp_path ."/library.json")) {
@@ -75,7 +76,7 @@ class H5pController extends PluginController
                             }
                         }
                     }
-                    $libs_name = array();
+
                     foreach ($lib_paths as $lib_path) {
                         $json = json_decode(file_get_contents($lib_path."/library.json"), true);
                         $lib_is_new = false;
@@ -254,10 +255,10 @@ class H5pController extends PluginController
         $this->integration = $this->get_h5p_settings();
 
         foreach ($this->mod->getCSSFiles() as $css) {
-            $this->styles[] = H5PLernmodul::getH5pLibURL()."/".$css;
+            $this->styles[] = H5pLernmodul::getH5pLibURL()."/".$css;
         }
         foreach ($this->mod->getJSFiles() as $js) {
-            $this->scripts[] = H5PLernmodul::getH5pLibURL()."/".$js;
+            $this->scripts[] = H5pLernmodul::getH5pLibURL()."/".$js;
         }
     }
 
@@ -279,7 +280,7 @@ class H5pController extends PluginController
             ),
             'saveFreq' => 2,
             'siteUrl' => $GLOBALS['ABSOLUTE_URI_STUDIP'],
-            'libraryUrl' => H5PLernmodul::getH5pLibURL(), //needed to fetch the library.json via ajax-request
+            'libraryUrl' => H5pLernmodul::getH5pLibURL(), //needed to fetch the library.json via ajax-request
             'l10n' => array(
                 'H5P' => array(
                     'fullscreen' => dgettext("lernmoduleplugin","Vollbild"),
@@ -350,9 +351,9 @@ class H5pController extends PluginController
             'mail' => $GLOBALS['user']->email
         );
         $libraryname = $library['name']." ".$library['major_version'].".".$library['minor_version'];
-        $this->attempt;
+
         $userdata = $this->attempt['customdata'] ? $this->attempt['customdata']->getArrayCopy() : array();
-        $userdata = $userdata['h5pstate'] ? json_encode((array) $userdata['h5pstate']) : "{}";
+        $userdata = !empty($userdata['h5pstate']) ? json_encode((array)($userdata['h5pstate'] ?? [])) : "{}";
         $settings['contents'] = array(
             "cid-" . $this->mod->getId() => array(
                 'library' => $libraryname, //name of the runnable library with space instead of minus
