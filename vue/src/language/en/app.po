@@ -31,7 +31,7 @@ msgstr "Add card"
 
 #: src/components/interactiveVideo/InteractiveVideoEditor.vue:3
 msgid "1. Video auswählen"
-msgstr ""
+msgstr "1. Select video"
 
 #: src/components/interactiveVideo/InteractiveVideoEditor.vue:7
 #, fuzzy
@@ -54,7 +54,7 @@ msgstr "automatically after entry"
 #: src/components/interactiveVideo/SelectVideo.vue:37
 #: src/components/interactiveVideo/SelectVideo.vue:87
 msgid "Aktuelle Position setzen"
-msgstr ""
+msgstr "Set to current position"
 
 #: src/components/DragTheWordsViewer.vue:34
 #: src/components/DragTheWordsViewer.vue:35
@@ -89,7 +89,7 @@ msgstr "Alternative text"
 #: src/components/interactiveVideo/SelectVideo.vue:33
 #: src/components/interactiveVideo/SelectVideo.vue:83
 msgid "Anfangen um"
-msgstr ""
+msgstr "Start at"
 
 #: src/components/DragTheWordsEditor.vue:35
 #: src/components/DragTheWordsEditor.vue:36
@@ -110,7 +110,7 @@ msgstr "Select task type:"
 
 #: src/components/MemoryViewer.vue:6 src/components/MemoryViewer.vue:7
 msgid "Aufgedeckte Paare:"
-msgstr ""
+msgstr "Pairs revealed:"
 
 #: src/components/interactiveVideo/SelectVideo.vue:104
 #: src/components/interactiveVideo/SelectVideo.vue:109
@@ -131,7 +131,7 @@ msgstr "automatically after entry"
 
 #: src/components/interactiveVideo/VideoPlayer.vue:44
 msgid "Bearbeiten"
-msgstr ""
+msgstr "Edit"
 
 #: src/components/FillInTheBlanksEditor.vue:137
 #: src/components/FillInTheBlanksEditor.vue:141
@@ -167,22 +167,22 @@ msgstr "Image"
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:192
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:206
 msgid "Das eingegebene Wert muss größer als 0 sein."
-msgstr ""
+msgstr "The value entered must be greater than 0."
 
 #: src/components/EditedImagePair.vue:13 src/components/EditedImagePair.vue:14
 #: src/components/EditedImagePair.vue:22
 msgid "Das Zielbild"
-msgstr ""
+msgstr "The target image"
 
 #: src/components/EditedImagePair.vue:5 src/components/EditedImagePair.vue:6
 msgid "Das zu ziehende Bild"
-msgstr ""
+msgstr "The image that should be dragged"
 
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:5
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:6
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:7
 msgid "Datei"
-msgstr ""
+msgstr "File"
 
 #: src/components/FileUpload.vue:2 src/components/FileUpload.vue:3
 msgid "Datei wird hochgeladen"
@@ -190,17 +190,18 @@ msgstr "File is being uploaded"
 
 #: src/components/courseware-components-ported-to-vue3/FolderPicker.vue:126
 msgid "Dateibereich dieser Veranstaltung"
-msgstr ""
+msgstr "This course's file area"
 
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:195
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:209
 msgid "Der Startpunkt muss vor dem Endpunkt sein."
-msgstr ""
+msgstr "The start point must be before the end point."
 
 #: src/components/interactiveVideo/VideoTimeInput.vue:102
 msgid ""
 "Die Startposition muss der Syntax HH;MM;SS oder HH;MM;SS;SS entsprechen."
 msgstr ""
+"The start position must be entered using the syntax HH;MM;SS or HH;MM;SS;SS."
 
 #: src/components/DragTheWordsEditor.vue:3
 #: src/components/DragTheWordsEditor.vue:4
@@ -208,11 +209,11 @@ msgstr ""
 #: src/components/LernmoduleEditor.vue:45
 #: src/components/LernmoduleEditor.vue:49
 msgid "Drag the Words"
-msgstr ""
+msgstr "Drag the Words"
 
 #: src/models/TaskDefinition.ts:515
 msgid "Drag The Words"
-msgstr ""
+msgstr "Drag the Words"
 
 #: src/components/interactiveVideo/AddInteractions.vue:14
 #: src/components/interactiveVideo/AddInteractions.vue:18
@@ -221,7 +222,7 @@ msgstr ""
 #: src/components/interactiveVideo/AddInteractions.vue:8
 #: src/models/InteractiveVideoTask.ts:89
 msgid "Einblendung"
-msgstr ""
+msgstr "Overlay"
 
 #: src/components/DragTheWordsEditor.vue:14
 #: src/components/DragTheWordsEditor.vue:15
@@ -244,7 +245,7 @@ msgstr "Settings"
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:23
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:33
 msgid "Ende"
-msgstr ""
+msgstr "End"
 
 #: src/components/FillInTheBlanksEditor.vue:224
 msgid "Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt."
@@ -747,6 +748,14 @@ msgstr "Show answers in a random order"
 #: src/components/interactiveVideo/VideoTimeline.vue:30
 msgid "Zu %{ interaction } springen"
 msgstr ""
+
+#: src/components/FillInTheBlanksEditor.vue:3
+#: src/components/FillInTheBlanksEditor.vue:4
+#: src/components/LernmoduleEditor.vue:27
+#: src/components/LernmoduleEditor.vue:41
+#: src/components/LernmoduleEditor.vue:45
+msgid "Fill in the Blanks"
+msgstr "Fill in the Blanks"
 
 #~ msgid "Punkte"
 #~ msgstr "Points"
