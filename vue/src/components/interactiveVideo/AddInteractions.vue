@@ -11,7 +11,7 @@
       <div class="insert-interactions-buttons">
         <button
           type="button"
-          class="button tan3"
+          class="button item"
           @click="insertOverlay"
           :title="
             $gettext('%{ interactionType } einfügen', {
@@ -213,7 +213,7 @@ function insertOverlay() {
     y: 0.4,
     width: 0.2,
     height: 0.2,
-    text: $gettext('Overlay'),
+    text: $gettext('Einblendung'),
     pauseWhenVisible: true,
   };
   // TODO make undoable ?

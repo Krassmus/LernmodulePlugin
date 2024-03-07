@@ -39,6 +39,9 @@
 .button.question {
   @include button-with-icon(question, clickable, info_alt);
 }
+.button.item {
+  @include button-with-icon(item, clickable, info_alt);
+}
 .button.play {
   @include button-with-icon(play, clickable, info_alt);
 }
