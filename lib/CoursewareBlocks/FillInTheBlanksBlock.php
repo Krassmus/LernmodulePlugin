@@ -20,7 +20,7 @@ class FillInTheBlanksBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'LMB - Fill in the Blanks');
+        return dgettext('lernmoduleplugin', 'LMB - Fill In The Blanks');
     }
 
     public static function getDescription(): string

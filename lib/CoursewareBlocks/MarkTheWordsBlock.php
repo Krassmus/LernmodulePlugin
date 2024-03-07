@@ -20,7 +20,7 @@ class MarkTheWordsBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'LMB - Mark the Words');
+        return dgettext('lernmoduleplugin', 'LMB - Mark The Words');
     }
 
     public static function getDescription(): string

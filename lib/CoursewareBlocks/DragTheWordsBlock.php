@@ -20,7 +20,7 @@ class DragTheWordsBlock extends BlockType
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'LMB - Drag the Words');
+        return dgettext('lernmoduleplugin', 'LMB - Drag The Words');
     }
 
     public static function getDescription(): string

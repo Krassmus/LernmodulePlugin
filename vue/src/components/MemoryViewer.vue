@@ -4,13 +4,13 @@
 
     <div>
       {{
-        $gettext('Aufgedeckte Paare:') +
-        ' ' +
-        this.amountOfPairsSolved +
-        ' ' +
-        $gettext('von') +
-        ' ' +
-        this.totalAmountOfPairs
+        $gettext(
+          'Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }',
+          {
+            amountOfPairsSolved: this.amountOfPairsSolved.toString(),
+            totalAmountOfPairs: this.totalAmountOfPairs.toString(),
+          }
+        )
       }}
     </div>
     <div class="h5pMemoryGame">

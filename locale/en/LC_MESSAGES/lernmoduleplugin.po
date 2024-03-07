@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-05 17:28+0200\n"
-"PO-Revision-Date: 2023-06-05 16:13+0000\n"
+"PO-Revision-Date: 2024-03-07 14:59+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/"
 "rasmusfuhse-lernmoduleplugin/php/en/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 5.3.1\n"
 
 #: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:23
 msgid "Lückentext (H5P)"
@@ -658,7 +658,7 @@ msgstr ""
 
 #: ../controllers/h5peditor.php:133 ../controllers/h5p.php:295
 msgid "Schließen"
-msgstr ""
+msgstr "Close"
 
 #: ../controllers/h5peditor.php:134 ../controllers/h5peditor.php:227
 #: ../controllers/h5peditor.php:476 ../controllers/h5p.php:296
