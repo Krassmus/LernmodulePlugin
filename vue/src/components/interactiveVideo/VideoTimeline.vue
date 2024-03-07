@@ -9,6 +9,7 @@ import {
 import { VideoMetadata } from '@/components/interactiveVideo/events';
 import { throttle } from 'lodash';
 import {
+  iconForInteraction,
   Interaction,
   InteractiveVideoTask,
   printInteractionType,
@@ -111,6 +112,25 @@ export default defineComponent({
     },
   },
   computed: {
+    visibleInteractions(): Interaction[] {
+      const visibleInteractions: Interaction[] = [];
+      for (let i of this.task.interactions) {
+        const isWithinViewport =
+          i.startTime < this.viewportEnd && i.endTime > this.viewportStart;
+        // An Interaction element should not suddenly disappear if it is dragged
+        // outside of the timeline viewport. That would cause the drag-drop
+        // interaction to unexpectedly end in a confusing way.
+        const isBeingDragged =
+          (this.dragState?.type === 'interaction' ||
+            this.dragState?.type === 'interactionStart' ||
+            this.dragState?.type === 'interactionEnd') &&
+          this.dragState.id === i.id;
+        if (isWithinViewport || isBeingDragged) {
+          visibleInteractions.push(i);
+        }
+      }
+      return visibleInteractions;
+    },
     viewportWidthSeconds(): number {
       const secondsPerEm = 0.5 / this.zoomTransform.k;
       return this.viewportWidthEm * secondsPerEm;
@@ -122,8 +142,7 @@ export default defineComponent({
       return this.viewportStart + this.viewportWidthSeconds;
     },
     positionForTimeMarker(): string {
-      const deltaT = this.currentTime - this.viewportStart;
-      return `${(deltaT / this.viewportWidthSeconds) * 100}%`;
+      return `${this.secondsToTimelinePercentage(this.currentTime)}%`;
     },
     axisScale(): number[] {
       const points = 25;
@@ -138,32 +157,49 @@ export default defineComponent({
     },
   },
   methods: {
+    iconForInteraction,
     printInteractionType,
     $gettext,
-    onWheel(event: WheelEvent) {
-      event.preventDefault(); // Prevent scrolling page up/down
-
+    secondsToTimelinePercentage(seconds: number): number {
+      const deltaT = seconds - this.viewportStart;
+      return (deltaT / this.viewportWidthSeconds) * 100;
+    },
+    interactionMarkerStyle(
+      interaction: Interaction
+    ): Partial<CSSStyleDeclaration> {
+      return {
+        left: `${this.secondsToTimelinePercentage(interaction.startTime)}%`,
+      };
+    },
+    zoom(delta: number, time?: number) {
+      if (!time) {
+        time = (this.viewportStart + this.viewportEnd) / 2;
+      }
       // Save information needed to recalculate 't' (translate) parameter after zoom
       const viewportStart0 = this.zoomTransform.t;
       const viewportWidth0 = this.viewportWidthSeconds;
-      const t = this.xCoordinateToTime(event.clientX);
 
       // Calculate new zoom level
-      const dy = -event.deltaY / 1000;
-      const exp = Math.exp(dy);
+      const exp = Math.exp(delta);
       const newK = this.zoomTransform.k * exp;
       // Prevent zooming too far in/out
-      this.zoomTransform.k = Math.max(0.02, Math.min(5, newK));
+      this.zoomTransform.k = Math.max(0.005, Math.min(5, newK));
 
       // Calculate new translation in order to keep the point under the mouse
       // cursor stationary.
       // viewportWidthSeconds is recalculated (because it's a computed property)
-      // after zoomTransform.k is modified.
+      // after zoomTransform.k is modified in the previous block of code..
       const viewportWidth1 = this.viewportWidthSeconds;
       const viewportStart1 =
-        t - ((t - viewportStart0) / viewportWidth0) * viewportWidth1;
+        time - ((time - viewportStart0) / viewportWidth0) * viewportWidth1;
       // Prevent panning before video start or after video end
       this.zoomTransform.t = this.constrainZoomTranslate(viewportStart1);
+    },
+    onWheel(event: WheelEvent) {
+      event.preventDefault(); // Prevent scrolling page up/down
+      const t = this.xCoordinateToTime(event.clientX);
+      const delta = -event.deltaY / 1000;
+      this.zoom(delta, t);
     },
     constrainZoomTranslate(t: number): number {
       return Math.max(0, Math.min(this.videoMetadata.length, t));
@@ -246,18 +282,22 @@ export default defineComponent({
       const startPercent = (startDeltaT / this.viewportWidthSeconds) * 100;
       const endDeltaT = interaction.endTime - this.viewportStart;
       const endPercent = (endDeltaT / this.viewportWidthSeconds) * 100;
-      const isSelected = interaction.id === this.selectedInteractionId;
       return {
         left: `${startPercent}%`,
         width: `${endPercent - startPercent}%`,
-        border: isSelected ? '3px solid black' : undefined,
       };
     },
     onClickInteraction(interaction: Interaction) {
+      console.log('onClickInteraction');
       this.$emit('clickInteraction', interaction);
     },
-    onDragStartInteraction(event: DragEvent, interaction: Interaction) {
-      event.dataTransfer!.setDragImage(event.target as Element, -99999, -99999);
+    onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
+      console.log('onPointerDownInteraction');
+      if (event.button !== 0) {
+        // Prevent unintentionally selecting interaction when dragging to
+        // scroll around in the timeline
+        return;
+      }
       const interactionLength = interaction.endTime - interaction.startTime;
       this.dragState = {
         type: 'interaction',
@@ -266,10 +306,33 @@ export default defineComponent({
         interactionStartTime: interaction.startTime,
         interactionDuration: interactionLength,
       };
+      (event.target as HTMLElement).setPointerCapture(event.pointerId);
       this.editor!.selectInteraction(interaction.id);
     },
-    onDragEndInteraction(event: DragEvent, interaction: Interaction) {
+    onPointerMoveInteraction(event: PointerEvent, interaction: Interaction) {
+      if (
+        this.dragState?.type === 'interaction' &&
+        this.dragState.id === interaction.id
+      ) {
+        const mouseDx = event.clientX - this.dragState.mouseStartPos[0];
+        const rect = (
+          this.$refs.timelineAxis as HTMLElement
+        ).getBoundingClientRect();
+        const secondsPerPixel = this.viewportWidthSeconds / rect.width;
+        const dSeconds = mouseDx * secondsPerPixel;
+        const seconds = this.dragState.interactionStartTime + dSeconds;
+        // Prevent from dragging so far that the endTime > video length
+        const maxTime =
+          this.videoMetadata.length - this.dragState.interactionDuration;
+        const secondsClamped = Math.max(0, Math.min(maxTime, seconds));
+        const id = this.dragState.id;
+        this.editor?.dragInteractionTimeline(id, secondsClamped);
+      }
+    },
+    onPointerUpInteraction(event: PointerEvent, interaction: Interaction) {
+      console.log('onPointerUpInteraction');
       this.dragState = undefined;
+      (event.target as HTMLElement).releasePointerCapture(event.pointerId);
     },
     onPointerDownInteractionStart(ev: PointerEvent, interaction: Interaction) {
       this.dragState = {
@@ -296,7 +359,7 @@ export default defineComponent({
         this.dragState.time += dSeconds;
         const timeClamped = Math.max(
           0,
-          Math.min(interaction.endTime - 0.1, this.dragState.time)
+          Math.min(interaction.endTime - 1, this.dragState.time)
         );
         // TODO make undoable
         interaction.startTime = timeClamped;
@@ -310,7 +373,7 @@ export default defineComponent({
         const dSeconds = this.pixelsToSeconds(ev.movementX);
         this.dragState.time += dSeconds;
         const secondsClamped = Math.max(
-          interaction.startTime + 0.1,
+          interaction.startTime + 1,
           Math.min(this.videoMetadata.length, this.dragState.time)
         );
         // TODO make undoable
@@ -338,20 +401,6 @@ export default defineComponent({
         e.preventDefault(); // Stop ghost image from flying back after drop
         const time = this.xCoordinateToTime(e.clientX);
         this.emitTimelineSeekThrottled(time);
-      } else if (this.dragState?.type === 'interaction') {
-        const mouseDx = e.clientX - this.dragState.mouseStartPos[0];
-        const rect = (
-          this.$refs.timelineAxis as HTMLElement
-        ).getBoundingClientRect();
-        const secondsPerPixel = this.viewportWidthSeconds / rect.width;
-        const dSeconds = mouseDx * secondsPerPixel;
-        const seconds = this.dragState.interactionStartTime + dSeconds;
-        // Prevent from dragging so far that the endTime > video length
-        const maxTime =
-          this.videoMetadata.length - this.dragState.interactionDuration;
-        const secondsClamped = Math.max(0, Math.min(maxTime, seconds));
-        const id = this.dragState.id;
-        this.editor?.dragInteractionTimeline(id, secondsClamped);
       }
     },
     emitTimelineSeekThrottled: throttle(function emitTimelineSeek(
@@ -370,7 +419,7 @@ export default defineComponent({
     <div
       class="timeline-axis"
       ref="timelineAxis"
-      @pointerdown.capture="onPointerDownAxis"
+      @pointerdown="onPointerDownAxis"
     >
       <div class="tick" v-for="(point, index) in axisScale" :key="index">
         <div class="tick-label">
@@ -383,6 +432,22 @@ export default defineComponent({
           }"
         ></div>
       </div>
+      <button
+        v-for="interaction in visibleInteractions"
+        :key="interaction.id"
+        class="interaction-marker"
+        :style="interactionMarkerStyle(interaction)"
+        @pointerdown.stop
+        @click.stop="
+          onClickInteraction(interaction);
+          $emit('timelineSeek', interaction.startTime + 0.1);
+        "
+        :title="
+          $gettext('Zu %{ interaction } springen', {
+            interaction: printInteractionType(interaction),
+          })
+        "
+      ></button>
     </div>
     <div
       class="timeline"
@@ -394,22 +459,41 @@ export default defineComponent({
     >
       <div class="timeline-interactions">
         <div
-          v-for="interaction in task.interactions"
+          v-for="interaction in visibleInteractions"
           :key="interaction.id"
           class="timeline-interaction"
+          :class="{
+            selected: selectedInteractionId === interaction.id,
+          }"
           :style="timelineInteractionStyle(interaction)"
-          :draggable="!dragState"
-          @click.stop="onClickInteraction(interaction)"
-          @dragstart="onDragStartInteraction($event, interaction)"
-          @dragend="onDragEndInteraction($event, interaction)"
+          :title="printInteractionType(interaction)"
         >
-          {{ printInteractionType(interaction) }}
-          <button
-            type="button"
-            class="small-button trash delete-interaction"
-            @click="$emit('deleteInteraction', interaction.id)"
-            :title="$gettext('Löschen')"
-          ></button>
+          <div class="overflow-container">
+            <button
+              type="button"
+              class="button select-interaction"
+              :class="iconForInteraction(interaction)"
+              @click.stop="onClickInteraction(interaction)"
+              @pointerdown="onPointerDownInteraction($event, interaction)"
+              @pointermove="onPointerMoveInteraction($event, interaction)"
+              @pointerup="onPointerUpInteraction($event, interaction)"
+            >
+              <span class="timeline-interaction-label">
+                {{ printInteractionType(interaction) }}
+              </span>
+            </button>
+            <!--  The delete button is hidden (v-if) unless you can see the end
+            of the interaction within the timeline viewport, because otherwise,
+            you can 'tab' over to it while it's off screen, and that causes a
+            visual glitch, as the button is automatically scrolled into view. -->
+            <button
+              type="button"
+              class="small-button trash delete-interaction"
+              :title="$gettext('Löschen')"
+              @click="$emit('deleteInteraction', interaction.id)"
+              v-if="interaction.endTime < viewportEnd"
+            ></button>
+          </div>
           <div
             class="interaction-drag-handle start"
             @pointerdown="onPointerDownInteractionStart($event, interaction)"
@@ -434,7 +518,7 @@ export default defineComponent({
         }"
       />
     </div>
-    <div style="white-space: pre-wrap">
+    <div style="white-space: pre-wrap; display: none">
       {{
         {
           zoomTransform,
@@ -469,6 +553,7 @@ export default defineComponent({
 
   .time-marker {
     position: absolute;
+    z-index: 2;
     top: 0;
     height: 5em;
     width: 2px;
@@ -492,10 +577,77 @@ export default defineComponent({
     .timeline-interaction {
       position: absolute;
       height: 100%;
-      box-sizing: border-box;
-      border: 2px solid darkgrey;
-      background: #e7ebf1;
+      background: var(--content-color-20);
       cursor: default;
+
+      .overflow-container {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      button.select-interaction {
+        /* CSS Reset for button styles */
+        padding: 0;
+        font: inherit;
+        color: inherit;
+        background-color: transparent;
+        cursor: pointer;
+        box-sizing: border-box;
+        // Remove stud.ip 'button' class margin
+        margin: 0;
+
+        height: 100%;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+
+        box-sizing: border-box;
+        border: 2px solid darkgrey;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        &::before {
+          position: absolute;
+          left: 50%;
+          top: calc(50% - 16px);
+        }
+
+        .timeline-interaction-label {
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: center;
+        }
+      }
+
+      &.selected {
+        z-index: 1;
+        button.select-interaction {
+          border: 2px solid black;
+          &:focus-visible {
+            outline: none;
+            border-style: dashed;
+          }
+        }
+      }
+      &:not(.selected) {
+        &:has(button:focus-visible) {
+          z-index: 2;
+        }
+        button.select-interaction {
+          &:focus-visible {
+            outline: none;
+            border: 2px dashed var(--content-color-80);
+          }
+        }
+      }
+
+      &:hover {
+        background: var(--content-color-40);
+      }
 
       .interaction-drag-handle {
         position: absolute;
@@ -504,7 +656,7 @@ export default defineComponent({
         width: 5px;
         cursor: ew-resize;
         &.start {
-          left: -1px;
+          left: -3px;
         }
         &.end {
           right: -4px;
@@ -516,12 +668,17 @@ export default defineComponent({
         top: 0;
         right: 0;
         padding: 0;
+        display: none;
+      }
+      &.selected button.delete-interaction {
+        display: block;
       }
     }
   }
 }
 
 .timeline-axis {
+  position: relative;
   top: 0;
   display: flex;
   justify-content: space-between;
@@ -544,6 +701,47 @@ export default defineComponent({
       height: 1em;
       &.major {
         height: 1.5em;
+      }
+    }
+  }
+  .interaction-marker {
+    /* CSS Reset for button styles */
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    $radius: 0.85em;
+    position: absolute;
+    bottom: 0.5em;
+    shape-outside: circle();
+    clip-path: circle();
+    width: $radius;
+    height: $radius;
+    background-color: black;
+    &::after {
+      display: block;
+      content: ' ';
+      shape-outside: circle();
+      clip-path: circle();
+      width: calc($radius - 2px);
+      height: calc($radius - 2px);
+      transform: translate(1px, 0px);
+      background-color: var(--content-color-20);
+    }
+
+    &:hover {
+      &::after {
+        background-color: black;
+      }
+    }
+    // Ensure that an outline is drawn when element is focused with the keyboard
+    &:focus-visible {
+      clip-path: unset;
+      &::after {
+        border: 2px solid black;
       }
     }
   }

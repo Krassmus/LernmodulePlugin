@@ -1,9 +1,14 @@
 import { Action, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { taskEditorStore } from '@/store';
+import { Context } from '@/models/CoursewareBlockIframeMessages';
 
 @Module({ name: 'coursewareBlock' })
 export class CoursewareBlockModule extends VuexModule {
   showEditorUI: boolean = false;
+  studipContext: Context = {
+    id: '',
+    type: '',
+  };
 
   // Toggle whether to show the editing UI in the courseware block.
   // This should be triggered via messages posted to the iframe.
@@ -38,5 +43,10 @@ export class CoursewareBlockModule extends VuexModule {
     window.parent.postMessage({
       type: 'CancelEditingCoursewareBlock',
     });
+  }
+
+  @Mutation
+  setContext(context: Context) {
+    this.studipContext = context;
   }
 }

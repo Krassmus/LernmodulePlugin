@@ -15,6 +15,21 @@ export default defineComponent({
   name: 'studip-wysiwyg',
   props: {
     modelValue: String,
+    forceSoftBreaks: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    removeWrappingPTag: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    disableAutoformat: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
@@ -40,35 +55,43 @@ export default defineComponent({
         let ckeditor = window.STUDIP.wysiwyg.getEditor(textAreaElement)!;
         ckeditor.model.document.on('change:data', () => {
           const data = ckeditor.getData();
-          // Remove the <p> tag wrapping the editor's contents.
-          // These tags are inserted automatically by CKEditor5.
-          // It appears to be a WONTFIX on their end.
-          // See https://github.com/ckeditor/ckeditor5/issues/1537
-          const removedPTagsText = data
-            .replace(/<p>(.*?)/, '$1')
-            .replace(/(.*?)<\/p>/, '$1');
-          this.$emit('update:modelValue', removedPTagsText);
+          if (this.removeWrappingPTag) {
+            // Remove the <p> tag wrapping the editor's contents.
+            // These tags are inserted automatically by CKEditor5.
+            // It appears to be a WONTFIX on their end.
+            // See https://github.com/ckeditor/ckeditor5/issues/1537
+            const removedPTagsText = data
+              .replace(/<p>(.*?)/, '$1')
+              .replace(/(.*?)<\/p>/, '$1');
+            this.$emit('update:modelValue', removedPTagsText);
+          } else {
+            this.$emit('update:modelValue', data);
+          }
         });
-        // Override 'enter' to insert <br /> instead of <p></p> in the editor.
-        // This produces HTML which is more easily parsed in our various learning tasks.
-        // Source: https://github.com/ckeditor/ckeditor5/issues/1141#issuecomment-403403526
         ckeditor.editing.view.document.on(
           'enter',
           (evt, data) => {
-            ckeditor.execute('shiftEnter');
-            data.preventDefault();
-            evt.stop();
+            if (this.forceSoftBreaks) {
+              // Override 'enter' to insert <br /> instead of <p></p> in the editor.
+              // This produces HTML which is more easily parsed in our various learning tasks.
+              // Source: https://github.com/ckeditor/ckeditor5/issues/1141#issuecomment-403403526
+              ckeditor.execute('shiftEnter');
+              data.preventDefault();
+              evt.stop();
+            }
           },
           { priority: 'high' }
         );
-        // Disable the autoformat plugin so that *asterisks* surrounding text
-        // are not automatically converted into italic formatting.
-        // We use this syntax in the editor for various tasks, such as Fill In The Blanks.
-        // (It might be nicer to disable this using 'removePlugins' option in
-        // the config for CKEditor5, but the interface of STUDIP.wysiwyg.replace()
-        // does not allow us to alter the CKEditor5 config.)
-        const autoformat = ckeditor.plugins.get('Autoformat');
-        (autoformat as unknown as { isEnabled: boolean }).isEnabled = false;
+        if (this.disableAutoformat) {
+          // Disable the autoformat plugin so that *asterisks* surrounding text
+          // are not automatically converted into italic formatting.
+          // We use this syntax in the editor for various tasks, such as Fill In The Blanks.
+          // (It might be nicer to disable this using 'removePlugins' option in
+          // the config for CKEditor5, but the interface of STUDIP.wysiwyg.replace()
+          // does not allow us to alter the CKEditor5 config.)
+          const autoformat = ckeditor.plugins.get('Autoformat');
+          (autoformat as unknown as { isEnabled: boolean }).isEnabled = false;
+        }
       };
       // This asynchronous method does not return a promise.  Instead, it fires
       // a 'load' event, which is processed in the above event handler. >:|

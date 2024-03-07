@@ -4,7 +4,7 @@
       v-for="image in this.images"
       :key="image.uuid"
       class="imageContainer"
-      draggable="true"
+      :draggable="!this.showResults"
       @dragstart="startDragImage($event, image)"
       @dragover="onDragOver($event, image)"
       @drop="onDropImage($event, image)"
@@ -22,6 +22,13 @@
       }}</span>
     </div>
   </div>
+  <FeedbackElement
+    v-if="showResults"
+    :achievedPoints="correctAnswers"
+    :maxPoints="maxPoints"
+    :resultMessage="resultMessage"
+    :feedback="task.feedback"
+  />
   <button
     v-if="!this.showResults"
     type="button"
@@ -45,10 +52,14 @@ import { defineComponent, PropType } from 'vue';
 import { Image, ImageSequencingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
+import FeedbackElement from '@/components/FeedbackElement.vue';
+import { round } from 'lodash';
 
 export default defineComponent({
   name: 'ImageSequencingViewer',
-  components: {},
+  components: {
+    FeedbackElement,
+  },
   props: {
     task: {
       type: Object as PropType<ImageSequencingTask>,
@@ -81,30 +92,12 @@ export default defineComponent({
     },
 
     onDropImage(event: DragEvent, image: Image): void {
-      if (this.imageInteractedWith) {
-        const fromIndex = this.images.indexOf(this.imageInteractedWith);
-        const toIndex = this.images.indexOf(image);
-
-        console.log(
-          'Dropped image',
-          this.imageInteractedWith?.altText,
-          '(',
-          fromIndex,
-          ') on target',
-          image.altText,
-          '(',
-          toIndex,
-          ')'
-        );
-
-        this.moveInArray(this.images, fromIndex, toIndex);
-
-        this.imageInteractedWith = undefined;
-      }
+      console.log('Dropped image', this.imageInteractedWith?.altText);
+      this.imageInteractedWith = undefined;
     },
 
     onDragOver(event: DragEvent, image: Image): void {
-      if (this.imageInteractedWith) {
+      if (this.imageInteractedWith && this.imageInteractedWith != image) {
         const fromIndex = this.images.indexOf(this.imageInteractedWith);
         const toIndex = this.images.indexOf(image);
 
@@ -136,16 +129,52 @@ export default defineComponent({
 
     reset(): void {
       this.showResults = false;
+      this.shuffleImages();
+    },
+
+    shuffleImages() {
+      // Shuffle the images
+      // https://stackoverflow.com/a/46545530
+      this.images = this.images
+        .map((image) => ({ image: image, sort: Math.random() }))
+        .sort((image1, image2) => image1.sort - image2.sort)
+        .map(({ image }) => image);
     },
   },
   computed: {
     taskDefinition: () => taskEditorStore.taskDefinition as ImageSequencingTask,
+    correctAnswers(): Number {
+      let correctAnswers = 0;
+      for (let i = 0; i < this.task.images.length; i++) {
+        if (this.task.images[i].uuid === this.images[i].uuid) {
+          correctAnswers++;
+        }
+      }
+      return correctAnswers;
+    },
+    maxPoints(): Number {
+      return this.task.images.length;
+    },
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.correctAnswers.toString()
+      );
+
+      resultMessage = resultMessage.replace(
+        ':total',
+        this.maxPoints.toString()
+      );
+
+      return resultMessage;
+    },
   },
   watch: {
     task: {
       handler() {
         console.log('watcher for this.task');
-        this.images = this.task.images;
+        this.images = [...this.task.images];
+        this.shuffleImages();
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
@@ -164,6 +193,7 @@ export default defineComponent({
 .imageRow {
   display: flex;
   flex-direction: row;
+  padding-bottom: 1em;
 }
 
 .imageContainer {
@@ -184,5 +214,6 @@ export default defineComponent({
 
 .imageDescription {
   margin-top: 6px;
+  font-size: 18px;
 }
 </style>

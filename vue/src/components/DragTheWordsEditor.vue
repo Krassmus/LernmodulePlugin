@@ -16,7 +16,13 @@
         </button>
         <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
-      <studip-wysiwyg v-model="taskDefinition.template" ref="wysiwyg" />
+      <studip-wysiwyg
+        v-model="taskDefinition.template"
+        ref="wysiwyg"
+        force-soft-breaks
+        remove-wrapping-p-tag
+        disable-autoformat
+      />
     </fieldset>
 
     <fieldset class="collapsable collapsed">

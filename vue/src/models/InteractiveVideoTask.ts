@@ -1,6 +1,7 @@
 // Types for the Interactive Video task type.
 import { z } from 'zod';
 import {
+  iconForTaskType,
   printTaskType,
   taskDefinitionSchemaMinusInteractiveVideo,
 } from '@/models/TaskDefinition';
@@ -22,8 +23,12 @@ const overlaySchema = z.object({
   endTime: z.number(), // Seconds
   x: z.number(), // Position, as a fraction of video width, between 0 and 1
   y: z.number(), // Position, as a fraction of video height, between 0 and 1
+  width: z.number(), // Width, as a fraction of video width, between 0 and 1
+  height: z.number(), // Height, as a fraction of video width, between 0 and 1
   text: z.string(), // Sanitized HTML from Wysiwyg editor
+  pauseWhenVisible: z.boolean().optional().default(true),
 });
+export type OverlayInteraction = z.infer<typeof overlaySchema>;
 
 // LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
 // point in the video for the student to solve.
@@ -35,6 +40,7 @@ const lmbTaskInteractionSchema = z.object({
   x: z.number(), // Position, as a fraction of video width, between 0 and 1
   y: z.number(), // Position, as a fraction of video height, between 0 and 1
   taskDefinition: z.lazy(() => taskDefinitionSchemaMinusInteractiveVideo),
+  pauseWhenVisible: z.boolean().optional().default(true),
 });
 export type LmbTaskInteraction = z.infer<typeof lmbTaskInteractionSchema>;
 
@@ -64,6 +70,13 @@ export const interactiveVideoTaskSchema = z.object({
   ]),
   autoplay: z.boolean().optional().default(false),
   startAt: z.number().optional().default(0),
+  disableNavigation: z
+    .union([
+      z.literal('not disabled'),
+      z.literal('forward disabled'),
+      z.literal('forward and backward disabled'),
+    ])
+    .default('not disabled'),
   interactions: z.array(interactiveVideoInteractionSchema),
 });
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
@@ -76,3 +89,24 @@ export function printInteractionType(interaction: Interaction): string {
       return $gettext('Einblendung');
   }
 }
+
+export function iconForInteraction(interaction: Interaction): string {
+  switch (interaction.type) {
+    case 'overlay':
+      return 'item';
+    case 'lmbTask':
+      return iconForTaskType(interaction.taskDefinition.task_type);
+  }
+}
+
+export const resizeHandles = [
+  'left',
+  'top-left',
+  'top',
+  'top-right',
+  'right',
+  'bottom-right',
+  'bottom',
+  'bottom-left',
+] as const;
+export type ResizeHandle = typeof resizeHandles[number];

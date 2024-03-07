@@ -1,4 +1,4 @@
-<? if (LernmodulePlugin::mayEditSandbox() && !$module['url']) : ?>
+<? if (LernmodulePlugin::mayEditSandbox()) : ?>
     <label>
         <input type="hidden" name="module[sandbox]" value="0">
         <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?> onChange="jQuery('#edit_end_file').toggle(!this.checked);">

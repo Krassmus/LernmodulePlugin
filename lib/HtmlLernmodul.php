@@ -9,6 +9,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
 
     public function afterInstall()
     {
+        $data = [];
         if ($this['customdata']) {
             $data = $this['customdata']->getArrayCopy();
         }
@@ -90,9 +91,11 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         foreach ($attempts as $attempt) {
             if ($attempt['customdata']) {
                 $data = $attempt['customdata']->getArrayCopy();
-                foreach ((array)$data['points'] as $pointclass => $value) {
-                    if (!in_array($pointclass, $pointclasses)) {
-                        $pointclasses[] = $pointclass;
+                if (!empty($data['points'])) {
+                    foreach ((array)$data['points'] as $pointclass => $value) {
+                        if (!in_array($pointclass, $pointclasses)) {
+                            $pointclasses[] = $pointclass;
+                        }
                     }
                 }
             }

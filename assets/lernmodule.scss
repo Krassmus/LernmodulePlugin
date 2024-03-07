@@ -1,0 +1,144 @@
+.moduleoverview {
+    display: flex;
+    flex-wrap: wrap;
+    &.singlecolumn {
+        max-width: 350px;
+    }
+    .orderbox {
+        display: inline-flex;
+        &.almostdropping {
+            min-width: 320px;
+        }
+    }
+    .module {
+        height: 100px;
+        width: 300px;
+        min-height: 100px;
+        min-width: 300px;
+        max-height: 100px;
+        max-width: 300px;
+        margin: 10px;
+        border: white solid 4px;
+        box-shadow: rgba(0,0,0,0.3) 0px 0px 7px;
+        background-color: $content-color;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
+        flex-direction: column;
+        font-size: 1.2em;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+        background-position: center center;
+        &[data-url] {
+            cursor: pointer;
+        }
+        .crown {
+            background: white;
+            border-radius: 20px;
+            display: inline-block;
+            height: 30px;
+            width: 30px;
+            text-align: center;
+            line-height: 27px;
+            margin-bottom: 20px;
+            margin-left: 8px;
+        }
+        .shadow {
+            transition: opacity 300ms;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: calc(100% - 20px);
+            text-align: right;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+            -webkit-backdrop-filter: blur(1px);
+            backdrop-filter: blur(1px);
+            max-height: 45px;
+            min-height: 45px;
+            overflow: hidden;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            > a:link, > a:hover, > a:visited {
+                color: white;
+                text-align: right;
+                text-shadow: rgba(0,0,0,0.3) 0px 0px 8px;
+                margin-left: 5px;
+            }
+            .mover {
+                cursor: move;
+                flex-shrink: 0;
+            }
+            nav {
+                position: absolute;
+            }
+        }
+
+        &.dragover {
+            box-shadow: $yellow 0px 0px 12px;
+            .shadow {
+                opacity: 0.3;
+                transition: opacity 300ms;
+            }
+        }
+    }
+}
+
+#blockcontainer {
+    .block {
+        margin-bottom: 30px;
+    }
+}
+
+.blockmover {
+    cursor: move;
+}
+
+/**
+    I have added !important to these three rules so that they will override
+    the default rules applied by Chartist.  See my comment in git commit 580adca6. -Ann
+ */
+.ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut {
+    stroke: $orange !important;
+}
+.ct-series-b .ct-bar, .ct-series-b .ct-line, .ct-series-b .ct-point, .ct-series-b .ct-slice-donut {
+    stroke: $base-color-80 !important;
+}
+.ct-series-dominant-a .ct-bar, .ct-series-dominant-a .ct-line, .ct-series-dominant-a .ct-point, .ct-series-dominant-a .ct-slice-donut {
+    stroke: $base-color-80 !important;
+}
+
+.lernmodule_infotext {
+    border: thin solid $content-color-60;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+label.file-upload.hovered {
+    background-color: $activity-color;
+}
+
+.admin_libraries {
+    .allowed, .allowed_in_editor, .simple_view_success {
+        > .unchecked {
+            display: none;
+        }
+        &.notyet {
+            > .unchecked {
+                display: inline-block;
+            }
+            > .checked {
+                display: none;
+            }
+        }
+    }
+}
+
+#fullscreen_container:fullscreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:fullscreen {
+        background-color: $light-gray-color-20;
+    }
+}

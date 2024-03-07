@@ -14,16 +14,25 @@ import ImageSequencingViewer from '@/components/ImageSequencingViewer.vue';
 import ImageSequencingEditor from '@/components/ImageSequencingEditor.vue';
 import { v4 } from 'uuid';
 import { z } from 'zod';
-import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
-import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
+import FindTheHotspotEditor from '@/components/FindTheHotspotEditor.vue';
+import FindTheHotspotViewer from '@/components/FindTheHotspotViewer.vue';
 import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
+import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
+import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
 
 export const feedbackSchema = z.object({
   percentage: z.number(),
   message: z.string(),
 });
 export type Feedback = z.infer<typeof feedbackSchema>;
+
+export const imageSchema = z.object({
+  uuid: z.string(),
+  imageUrl: z.string(),
+  altText: z.string(),
+});
+export type Image = z.infer<typeof imageSchema>;
 
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
@@ -43,6 +52,12 @@ export const dragTheWordsTaskSchema = z.object({
   feedback: z.array(feedbackSchema),
 });
 export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
+
+export const findTheHotspotTaskSchema = z.object({
+  task_type: z.literal('FindTheHotspot'),
+  image: imageSchema,
+});
+export type FindTheHotspotTask = z.infer<typeof findTheHotspotTaskSchema>;
 
 export const markTheWordsTaskSchema = z.object({
   task_type: z.literal('MarkTheWords'),
@@ -124,13 +139,6 @@ export const questionTaskSchema = z.object({
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
-export const imageSchema = z.object({
-  uuid: z.string(),
-  imageUrl: z.string(),
-  altText: z.string(),
-});
-export type Image = z.infer<typeof imageSchema>;
-
 export const imagePairSchema = z.object({
   uuid: z.string(),
   draggableImage: imageSchema,
@@ -147,6 +155,7 @@ export const imagePairingTaskSchema = z.object({
     solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
+  feedback: z.array(feedbackSchema),
 });
 export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
 
@@ -159,18 +168,20 @@ export const imageSequencingTaskSchema = z.object({
     solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
+  feedback: z.array(feedbackSchema),
 });
 export type ImageSequencingTask = z.infer<typeof imageSequencingTaskSchema>;
 
 export const taskDefinitionSchema = z.union([
-  fillInTheBlanksTaskSchema,
-  questionTaskSchema,
   dragTheWordsTaskSchema,
-  markTheWordsTaskSchema,
-  memoryTaskSchema,
+  fillInTheBlanksTaskSchema,
+  findTheHotspotTaskSchema,
   imagePairingTaskSchema,
   imageSequencingTaskSchema,
   interactiveVideoTaskSchema,
+  markTheWordsTaskSchema,
+  memoryTaskSchema,
+  questionTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 
@@ -181,30 +192,56 @@ export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 // but I later ran into hard-to-resolve typechecking errors when I started to
 // use .optional() inside of schemas. I decided this is the better option for now. -Ann
 export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
-  fillInTheBlanksTaskSchema,
-  questionTaskSchema,
   dragTheWordsTaskSchema,
-  markTheWordsTaskSchema,
-  memoryTaskSchema,
+  fillInTheBlanksTaskSchema,
+  findTheHotspotTaskSchema,
   imagePairingTaskSchema,
   imageSequencingTaskSchema,
+  markTheWordsTaskSchema,
+  memoryTaskSchema,
+  questionTaskSchema,
 ]);
 
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
 export const taskTypeSchema = z.union([
-  fillInTheBlanksTaskSchema.shape.task_type,
-  questionTaskSchema.shape.task_type,
   dragTheWordsTaskSchema.shape.task_type,
-  markTheWordsTaskSchema.shape.task_type,
-  memoryTaskSchema.shape.task_type,
+  fillInTheBlanksTaskSchema.shape.task_type,
+  findTheHotspotTaskSchema.shape.task_type,
   imagePairingTaskSchema.shape.task_type,
   imageSequencingTaskSchema.shape.task_type,
   interactiveVideoTaskSchema.shape.task_type,
+  markTheWordsTaskSchema.shape.task_type,
+  memoryTaskSchema.shape.task_type,
+  questionTaskSchema.shape.task_type,
 ]);
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
   switch (type) {
+    case 'DragTheWords':
+      return {
+        task_type: 'DragTheWords',
+        template: 'Drag the *words* to the matching *gaps*.',
+        retryAllowed: true,
+        showSolutionsAllowed: true,
+        instantFeedback: false,
+        allBlanksMustBeFilledForSolutions: false,
+        alphabeticOrder: false,
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          fillInAllBlanksMessage:
+            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
+          resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
+        },
+        feedback: [
+          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+          { percentage: 50, message: 'Gut.' },
+          { percentage: 75, message: 'Sehr gut.' },
+          { percentage: 100, message: 'Perfekt!' },
+        ],
+      };
     case 'FillInTheBlanks':
       return {
         task_type: 'FillInTheBlanks',
@@ -229,6 +266,111 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           { percentage: 75, message: 'Sehr gut.' },
           { percentage: 100, message: 'Perfekt!' },
         ],
+      };
+    case 'FindTheHotspot':
+      return {
+        task_type: 'FindTheHotspot',
+        image: {
+          uuid: v4(),
+          imageUrl: '',
+          altText: '',
+        },
+      };
+    case 'ImagePairing':
+      return {
+        task_type: 'ImagePairing',
+        imagePairs: [
+          {
+            uuid: v4(),
+            draggableImage: {
+              uuid: v4(),
+              imageUrl: '',
+              altText: '',
+            },
+            targetImage: {
+              uuid: v4(),
+              imageUrl: '',
+              altText: '',
+            },
+          },
+        ],
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Bilder richtig zugeordnet.',
+        },
+        feedback: [
+          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+          { percentage: 50, message: 'Gut.' },
+          { percentage: 75, message: 'Sehr gut.' },
+          { percentage: 100, message: 'Perfekt!' },
+        ],
+      };
+    case 'ImageSequencing':
+      return {
+        task_type: 'ImageSequencing',
+        images: [
+          {
+            uuid: v4(),
+            imageUrl: '',
+            altText: '',
+          },
+        ],
+        strings: {
+          checkButton: 'Reihenfolge überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Bildern richtig sortiert.',
+        },
+        feedback: [
+          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+          { percentage: 50, message: 'Gut.' },
+          { percentage: 75, message: 'Sehr gut.' },
+          { percentage: 100, message: 'Perfekt!' },
+        ],
+      };
+    case 'InteractiveVideo':
+      return {
+        task_type: 'InteractiveVideo',
+        interactions: [],
+        video: {
+          type: 'none',
+        },
+        autoplay: false,
+        startAt: 0,
+        disableNavigation: 'not disabled',
+      };
+    case 'MarkTheWords':
+      return {
+        task_type: 'MarkTheWords',
+        template:
+          '*The* moon is our natural satellite, *i.e.* it revolves around the *Earth*!',
+        retryAllowed: true,
+        showSolutionsAllowed: true,
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+        },
+      };
+    case 'Memory':
+      return {
+        task_type: 'Memory',
+        cards: [
+          {
+            uuid: v4(),
+            imageUrl: '',
+            altText: '',
+          },
+        ],
+        strings: {
+          checkButton: 'Antworten überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+        },
       };
     case 'Question':
       return {
@@ -312,113 +454,6 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           solutionsButton: 'Lösungen anzeigen',
         },
       };
-    case 'DragTheWords':
-      return {
-        task_type: 'DragTheWords',
-        template: 'Drag the *words* to the matching *gaps*.',
-        retryAllowed: true,
-        showSolutionsAllowed: true,
-        instantFeedback: false,
-        allBlanksMustBeFilledForSolutions: false,
-        alphabeticOrder: false,
-        strings: {
-          checkButton: 'Antworten überprüfen',
-          retryButton: 'Erneut versuchen',
-          solutionsButton: 'Lösungen anzeigen',
-          fillInAllBlanksMessage:
-            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
-          resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
-        },
-        feedback: [
-          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
-          { percentage: 50, message: 'Gut.' },
-          { percentage: 75, message: 'Sehr gut.' },
-          { percentage: 100, message: 'Perfekt!' },
-        ],
-      };
-    case 'MarkTheWords':
-      return {
-        task_type: 'MarkTheWords',
-        template:
-          '*The* moon is our natural satellite, *i.e.* it revolves around the *Earth*!',
-        retryAllowed: true,
-        showSolutionsAllowed: true,
-        strings: {
-          checkButton: 'Antworten überprüfen',
-          retryButton: 'Erneut versuchen',
-          solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
-        },
-      };
-    case 'Memory':
-      return {
-        task_type: 'Memory',
-        cards: [
-          {
-            uuid: v4(),
-            imageUrl: '',
-            altText: '',
-          },
-        ],
-        strings: {
-          checkButton: 'Antworten überprüfen',
-          retryButton: 'Erneut versuchen',
-          solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
-        },
-      };
-    case 'ImagePairing':
-      return {
-        task_type: 'ImagePairing',
-        imagePairs: [
-          {
-            uuid: v4(),
-            draggableImage: {
-              uuid: v4(),
-              imageUrl: '',
-              altText: '',
-            },
-            targetImage: {
-              uuid: v4(),
-              imageUrl: '',
-              altText: '',
-            },
-          },
-        ],
-        strings: {
-          checkButton: 'Antworten überprüfen',
-          retryButton: 'Erneut versuchen',
-          solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
-        },
-      };
-    case 'ImageSequencing':
-      return {
-        task_type: 'ImageSequencing',
-        images: [
-          {
-            uuid: v4(),
-            imageUrl: '',
-            altText: '',
-          },
-        ],
-        strings: {
-          checkButton: 'Antworten überprüfen',
-          retryButton: 'Erneut versuchen',
-          solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
-        },
-      };
-    case 'InteractiveVideo':
-      return {
-        task_type: 'InteractiveVideo',
-        interactions: [],
-        video: {
-          type: 'none',
-        },
-        autoplay: false,
-        startAt: 0,
-      };
     default:
       throw new Error('Unimplemented type: ' + type);
   }
@@ -426,22 +461,24 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
 
 export function viewerForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
-    case 'FillInTheBlanks':
-      return FillInTheBlanksViewer;
-    case 'Question':
-      return QuestionViewer;
     case 'DragTheWords':
       return DragTheWordsViewer;
-    case 'MarkTheWords':
-      return MarkTheWordsViewer;
-    case 'Memory':
-      return MemoryViewer;
+    case 'FillInTheBlanks':
+      return FillInTheBlanksViewer;
+    case 'FindTheHotspot':
+      return FindTheHotspotViewer;
     case 'ImagePairing':
       return ImagePairingViewer;
     case 'ImageSequencing':
       return ImageSequencingViewer;
     case 'InteractiveVideo':
       return InteractiveVideoViewer;
+    case 'MarkTheWords':
+      return MarkTheWordsViewer;
+    case 'Memory':
+      return MemoryViewer;
+    case 'Question':
+      return QuestionViewer;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -449,22 +486,24 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
 
 export function editorForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
-    case 'FillInTheBlanks':
-      return FillInTheBlanksEditor;
-    case 'Question':
-      return QuestionEditor;
     case 'DragTheWords':
       return DragTheWordsEditor;
-    case 'MarkTheWords':
-      return MarkTheWordsEditor;
-    case 'Memory':
-      return MemoryEditor;
+    case 'FillInTheBlanks':
+      return FillInTheBlanksEditor;
+    case 'FindTheHotspot':
+      return FindTheHotspotEditor;
     case 'ImagePairing':
       return ImagePairingEditor;
     case 'ImageSequencing':
       return ImageSequencingEditor;
     case 'InteractiveVideo':
       return InteractiveVideoEditor;
+    case 'MarkTheWords':
+      return MarkTheWordsEditor;
+    case 'Memory':
+      return MemoryEditor;
+    case 'Question':
+      return QuestionEditor;
     default:
       throw new Error('Unimplemented task type: ' + type);
   }
@@ -472,22 +511,24 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
 
 export function printTaskType(type: TaskDefinition['task_type']): string {
   switch (type) {
-    case 'ImageSequencing':
-      return $gettext('Image Sequencing');
-    case 'Memory':
-      return $gettext('Memory');
-    case 'FillInTheBlanks':
-      return $gettext('Fill In The Blanks');
-    case 'Question':
-      return $gettext('Question');
     case 'DragTheWords':
       return $gettext('Drag The Words');
-    case 'MarkTheWords':
-      return $gettext('Mark The Words');
+    case 'FillInTheBlanks':
+      return $gettext('Fill In The Blanks');
+    case 'FindTheHotspot':
+      return $gettext('Find The Hotspot');
     case 'ImagePairing':
       return $gettext('Image Pairing');
+    case 'ImageSequencing':
+      return $gettext('Image Sequencing');
     case 'InteractiveVideo':
       return $gettext('Interactive Video');
+    case 'MarkTheWords':
+      return $gettext('Mark The Words');
+    case 'Memory':
+      return $gettext('Memory');
+    case 'Question':
+      return $gettext('Question');
   }
 }
 
@@ -499,4 +540,26 @@ export function showViewerAboveEditor(
   type: TaskDefinition['task_type']
 ): boolean {
   return type !== 'InteractiveVideo';
+}
+
+export function iconForTaskType(type: TaskDefinition['task_type']): string {
+  switch (type) {
+    case 'Memory':
+      break;
+    case 'FillInTheBlanks':
+      return 'file-office';
+    case 'Question':
+      return 'question';
+    case 'DragTheWords':
+      return 'tan3';
+    case 'MarkTheWords':
+      return 'tan3';
+    case 'ImagePairing':
+      break;
+    case 'ImageSequencing':
+      break;
+    case 'InteractiveVideo':
+      break;
+  }
+  return 'question';
 }

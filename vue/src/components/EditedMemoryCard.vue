@@ -5,7 +5,7 @@
       <div>
         <h4>{{ $gettext('Bild') }}</h4>
         <EditedMemoryCardImage v-if="card.imageUrl" :card="card" />
-        <FileUpload v-else @file-uploaded="onImageUploaded" />
+        <FileUpload v-else @file-uploaded="onFileUploaded" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -23,7 +23,6 @@
 import { defineComponent, PropType } from 'vue';
 import { MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
-import ImageUpload from '@/components/ImageUpload.vue';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';

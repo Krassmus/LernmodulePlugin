@@ -53,13 +53,6 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $this->addBlockIconCSS('fill-in-the-blanks', 'file-office');
         $this->addBlockIconCSS('memory', 'content2');
         $this->addStylesheet('assets/courseware-block/icons-variables.scss');
-
-        // Add CSS to make the vue3 courseware block's 'draggable' handle look right in Stud.IP 5.4
-        \PageLayout::addStyle(
-            '.cw-block-item-sortable > .cw-lernmodule-block {
-               margin-top: -38px;
-        }'
-        );
     }
 
     /**
@@ -94,8 +87,8 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\ImagePairingBlock::class;
+//        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
+//        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\ImagePairingBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
 
         return $otherBlockTypes;

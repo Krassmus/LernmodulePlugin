@@ -157,6 +157,7 @@ class Lernmodul extends SimpleORMap
 
     public function scanForFiletypes($filetypes = array(), $path = null, $all = false)
     {
+        $reduce = null;
         if (!$path) {
             $path = $this->getPath();
             $reduce = strlen($path) + 1;

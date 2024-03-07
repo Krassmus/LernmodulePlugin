@@ -2,6 +2,7 @@
 
 class ParticipantsController extends PluginController
 {
+
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);

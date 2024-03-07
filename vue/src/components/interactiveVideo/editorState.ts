@@ -13,11 +13,20 @@ export const editorStateSymbol = Symbol(
 export interface EditorState {
   selectedInteractionId: Ref<string | undefined>;
   selectInteraction(id: string): void;
+  editInteraction(id: string): void;
   dragInteraction(
     interactionId: string,
     clampedXFraction: number,
     clampedYFraction: number
   ): void;
+  resizeOverlay(
+    id: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): void;
+  deleteInteraction(interactionId: string): void;
 
   dragInteractionTimeline(id: string, startTime: number): void;
 }

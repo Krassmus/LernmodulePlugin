@@ -25,30 +25,24 @@
       </template>
     </template>
 
+    <FeedbackElement
+      v-if="showResults"
+      :achievedPoints="correctAnswers"
+      :maxPoints="maxPoints"
+      :resultMessage="resultMessage"
+      :feedback="task.feedback"
+    />
     <div class="h5pFeedbackContainer">
-      <div class="h5pFeedbackContainerTop">
-        <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
-          {{
-            task.strings.fillInAllBlanksMessage
-              ? task.strings.fillInAllBlanksMessage
-              : $gettext(
-                  'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
-                )
-          }}
-        </div>
+      <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
+        {{
+          task.strings.fillInAllBlanksMessage
+            ? task.strings.fillInAllBlanksMessage
+            : $gettext(
+                'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+              )
+        }}
+      </div>
 
-        <div v-if="showResults && feedbackMessage" class="h5pFeedbackText">
-          {{ feedbackMessage }}
-        </div>
-      </div>
-      <div class="h5pFeedbackContainerCenter">
-        <div v-if="showResults">
-          <meter id="score" min="0" :max="maxPoints" :value="correctAnswers" />
-          <label for="score" class="h5pFeedbackText">
-            {{ resultMessage }}
-          </label>
-        </div>
-      </div>
       <div class="h5pFeedbackContainerBottom">
         <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
           {{ task.strings.checkButton }}
@@ -73,17 +67,6 @@
         </template>
       </div>
     </div>
-
-    <div v-if="debug">
-      userInputs:
-      <pre>{{ userInputs }}</pre>
-      submittedAnswers:
-      <pre>{{ submittedAnswers }}</pre>
-      Split template:
-      <pre>{{ splitTemplate }}</pre>
-      Parsed template:
-      <pre>{{ parsedTemplate }}</pre>
-    </div>
   </div>
 </template>
 
@@ -93,6 +76,7 @@ import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual, round } from 'lodash';
 import { $gettext } from '@/language/gettext';
+import FeedbackElement from '@/components/FeedbackElement.vue';
 
 type FillInTheBlanksElement = Blank | StaticText;
 type Blank = {
@@ -112,6 +96,9 @@ const dljs = require('damerau-levenshtein-js');
 
 export default defineComponent({
   name: 'FillInTheBlanksViewer',
+  components: {
+    FeedbackElement,
+  },
   props: {
     task: {
       type: Object as PropType<FillInTheBlanksTask>,
@@ -122,7 +109,6 @@ export default defineComponent({
     return {
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
-      debug: false,
       userWantsToSeeSolutions: false,
     };
   },
@@ -400,19 +386,6 @@ export default defineComponent({
       );
 
       return resultMessage;
-    },
-    feedbackMessage(): string | undefined {
-      const percentageCorrect = round(
-        (this.correctAnswers / this.blanks.length) * 100
-      );
-
-      for (const feedback of this.feedbackSortedByScore) {
-        if (percentageCorrect >= feedback.percentage) {
-          return feedback.message;
-        }
-      }
-
-      return undefined;
     },
     feedbackSortedByScore(): Feedback[] {
       return this.task.feedback

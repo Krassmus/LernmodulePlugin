@@ -5,43 +5,43 @@
       "{{ printInteractionType(selectedInteraction) }}"
     </h3>
     <form v-if="selectedInteraction" class="default">
-      <fieldset ref="timeInputsFieldset">
+      <fieldset class="collapsable">
         <legend>
-          {{ $gettext('Zeitpunkt') }}
+          {{ $gettext('Einstellungen') }}
         </legend>
-        <label>
-          {{ $gettext('Start') }}
-          <input
-            type="number"
-            v-model.number="inputStartTime"
-            class="time-input"
-            :class="{
-              invalid: inputStartTimeErrors.length > 0,
-            }"
-            :aria-invalid="inputStartTimeErrors.length > 0"
-            @blur="onBlurTimeInputs"
-          />
-        </label>
-        <p
-          class="validation-error"
-          v-for="error in inputStartTimeErrors"
-          :key="error"
-        >
-          {{ error }}
-        </p>
-        <label>
-          {{ $gettext('Ende') }}
-          <input
-            type="number"
-            v-model.number="inputEndTime"
-            class="time-input"
-            :class="{
-              invalid: inputEndTimeErrors.length > 0,
-            }"
-            :aria-invalid="inputEndTimeErrors.length > 0"
-            @blur="onBlurTimeInputs"
-          />
-        </label>
+        <div class="start-and-end-time-inputs">
+          <label>
+            {{ $gettext('Start') }}
+            <VideoTimeInput
+              v-model="inputStartTime"
+              @update:error="(error) => (inputStartTimeFormatError = error)"
+              class="time-input"
+              :class="{
+                invalid: inputStartTimeErrors.length > 0,
+              }"
+              :aria-invalid="inputStartTimeErrors.length > 0"
+            />
+          </label>
+          <p
+            class="validation-error"
+            v-for="error in inputStartTimeErrors"
+            :key="error"
+          >
+            {{ error }}
+          </p>
+          <label>
+            {{ $gettext('Ende') }}
+            <VideoTimeInput
+              v-model="inputEndTime"
+              @update:error="(error) => (inputEndTimeFormatError = error)"
+              class="time-input"
+              :class="{
+                invalid: inputEndTimeErrors.length > 0,
+              }"
+              :aria-invalid="inputEndTimeErrors.length > 0"
+            />
+          </label>
+        </div>
         <p
           class="validation-error"
           v-for="error in inputEndTimeErrors"
@@ -49,28 +49,53 @@
         >
           {{ error }}
         </p>
+        <label>
+          <!-- TODO don't mutate props -- this should be undoable -->
+          <!-- eslint-disable vue/no-mutating-props -->
+          <input
+            type="checkbox"
+            v-model="selectedInteraction.pauseWhenVisible"
+          />
+          {{ $gettext('Video pausieren') }}
+        </label>
       </fieldset>
     </form>
-    <KeepAlive>
-      <component
-        v-if="selectedInteraction.type === 'lmbTask'"
-        :key="`${selectedInteraction.id}-editor`"
-        :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
-        :taskDefinition="selectedInteraction.taskDefinition"
-      />
-    </KeepAlive>
-    <h3>
-      {{ $gettext('Vorschau') }}
-    </h3>
-    <KeepAlive>
-      <component
-        v-if="selectedInteraction.type === 'lmbTask'"
-        class="lmb-task-preview"
-        :key="`${selectedInteraction.id}-viewer`"
-        :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
-        :task="selectedInteraction.taskDefinition"
-      />
-    </KeepAlive>
+    <template v-if="selectedInteraction.type === 'overlay'">
+      <!-- Oddly, if this StudipWysiwyg is not wrapped in a div, it seems not to
+      work correctly. It keeps firing its mounted() function when hidden/shown,
+      (e.g. when you alternate between selecting an overlay and selecting another
+      Interaction), and it leads to many instances of the WYSIWYG editor
+      appearing next to each other.
+      I don't entirely understand it, but this is my workaround for the issue. -Ann -->
+      <KeepAlive>
+        <div>
+          <StudipWysiwyg
+            :key="`${selectedInteraction.id}-overlay-wysiwyg`"
+            v-model="selectedInteraction.text"
+          />
+        </div>
+      </KeepAlive>
+    </template>
+    <template v-else-if="selectedInteraction.type === 'lmbTask'">
+      <KeepAlive>
+        <component
+          :key="`${selectedInteraction.id}-editor`"
+          :is="editorForTaskType(selectedInteraction.taskDefinition.task_type)"
+          :taskDefinition="selectedInteraction.taskDefinition"
+        />
+      </KeepAlive>
+      <h3>
+        {{ $gettext('Vorschau') }}
+      </h3>
+      <KeepAlive>
+        <component
+          class="lmb-task-preview"
+          :key="`${selectedInteraction.id}-viewer`"
+          :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
+          :task="selectedInteraction.taskDefinition"
+        />
+      </KeepAlive>
+    </template>
   </div>
 </template>
 <script lang="ts">
@@ -85,9 +110,12 @@ import {
   EditorState,
   editorStateSymbol,
 } from '@/components/interactiveVideo/editorState';
+import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
+import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
 export default defineComponent({
   name: 'SelectedInteractionProperties',
+  components: { VideoTimeInput, StudipWysiwyg },
   setup() {
     return {
       editor: inject<EditorState>(editorStateSymbol),
@@ -101,8 +129,10 @@ export default defineComponent({
   },
   data() {
     return {
-      inputStartTime: NaN,
-      inputEndTime: NaN,
+      inputStartTime: 0,
+      inputStartTimeFormatError: undefined as Error | undefined,
+      inputEndTime: 1,
+      inputEndTimeFormatError: undefined as Error | undefined,
     };
   },
   methods: {
@@ -110,31 +140,16 @@ export default defineComponent({
     $gettext,
     printInteractionType,
     editorForTaskType,
-    onBlurTimeInputs(event: FocusEvent) {
-      const isFocusWithinTimeInputs = (
-        this.$refs.timeInputsFieldset as Node
-      ).contains(event.relatedTarget as Node);
-      if (isFocusWithinTimeInputs) {
-        // Don't reset the fields' input values if the user is still editing the
-        // start/end times
-        return;
-      }
-      this.inputStartTime = this.selectedInteraction.startTime;
-      this.inputEndTime = this.selectedInteraction.endTime;
-      console.log(
-        'onblur',
-        this.selectedInteraction.startTime,
-        this.inputStartTime,
-        this.selectedInteraction.endTime,
-        this.inputEndTime
-      );
-    },
   },
   watch: {
     inputStartTime(value: number) {
       if (this.inputStartTimeErrors.length === 0) {
         // eslint-disable-next-line vue/no-mutating-props
         this.selectedInteraction.startTime = value;
+      }
+      if (this.inputEndTimeErrors.length === 0) {
+        // eslint-disable-next-line vue/no-mutating-props
+        this.selectedInteraction.endTime = this.inputEndTime;
       }
     },
     'selectedInteraction.startTime': {
@@ -170,8 +185,8 @@ export default defineComponent({
   computed: {
     inputStartTimeErrors(): string[] {
       const errors: string[] = [];
-      if (!(typeof this.inputStartTime === 'number')) {
-        errors.push($gettext('Das eingegebene Wert muss eine Nummer sein.'));
+      if (this.inputStartTimeFormatError) {
+        errors.push(this.inputStartTimeFormatError.message);
       }
       if (this.inputStartTime < 0) {
         errors.push($gettext('Das eingegebene Wert muss größer als 0 sein.'));
@@ -184,8 +199,8 @@ export default defineComponent({
     },
     inputEndTimeErrors(): string[] {
       const errors: string[] = [];
-      if (!(typeof this.inputEndTime === 'number')) {
-        errors.push($gettext('Das eingegebene Wert muss eine Nummer sein.'));
+      if (this.inputEndTimeFormatError) {
+        errors.push(this.inputEndTimeFormatError.message);
       }
       if (this.inputEndTime < 0) {
         errors.push($gettext('Das eingegebene Wert muss größer als 0 sein.'));
@@ -202,6 +217,10 @@ export default defineComponent({
 <style scoped lang="scss">
 form.default .time-input {
   max-width: 12em;
+}
+.start-and-end-time-inputs {
+  display: flex;
+  gap: 1em;
 }
 .lmb-task-preview {
   margin-bottom: 1em;

@@ -92,7 +92,7 @@ class H5peditor {
 
     $libraries = $this->storage->getLibraries(!isset($libraries) ? NULL : $libraries);
 
-    if ($this->h5p->development_mode & H5PDevelopment::MODE_LIBRARY) {
+    if (class_exists('H5PDevelopment') && $this->h5p->development_mode && H5PDevelopment::MODE_LIBRARY) {
       $devLibs = $this->h5p->h5pD->getLibraries();
     }
 
@@ -299,7 +299,8 @@ class H5peditor {
    * TODO: Consider moving to core.
    */
   public function getLibraryLanguage($machineName, $majorVersion, $minorVersion, $languageCode) {
-    if ($this->h5p->development_mode & H5PDevelopment::MODE_LIBRARY) {
+      $language = false;
+    if (class_exists('H5PDevelopment') && $this->h5p->development_mode && H5PDevelopment::MODE_LIBRARY) {
       // Try to get language development library first.
       $language = $this->h5p->h5pD->getLanguage($machineName, $majorVersion, $minorVersion, $languageCode);
     }

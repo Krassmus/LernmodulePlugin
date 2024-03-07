@@ -22,7 +22,8 @@
   }
 
   &.disabled,
-  &[disabled] {
+  &[disabled],
+  &.no-hover-effect {
     &:hover::before {
       @include background-icon($icon, $role);
     }
@@ -37,6 +38,38 @@
 }
 .button.question {
   @include button-with-icon(question, clickable, info_alt);
+}
+.button.item {
+  @include button-with-icon(item, clickable, info_alt);
+}
+.button.play {
+  @include button-with-icon(play, clickable, info_alt);
+}
+.button.pause {
+  @include button-with-icon(pause, clickable, info_alt);
+}
+.button.stop {
+  @include button-with-icon(stop, clickable, info_alt);
+}
+.button.zoom-in {
+  @include button-with-icon(zoom-in, clickable, info_alt);
+}
+.button.zoom-out {
+  @include button-with-icon(zoom-out, clickable, info_alt);
+}
+
+.small-button.edit {
+  @include button-with-icon(edit, clickable, info_alt);
+  &::before {
+    margin: unset;
+  }
+}
+
+.small-button.visibility-visible {
+  @include button-with-icon(visibility-visible, clickable, info_alt);
+  &::before {
+    margin: unset;
+  }
 }
 
 // A button which is just an icon without text.

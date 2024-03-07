@@ -6,8 +6,13 @@ export {};
 declare global {
   interface Window {
     STUDIP: {
+      USER_ID: string;
       URLHelper: {
-        getURL: (path: string) => string;
+        getURL: (
+          path: string,
+          param_object?: any,
+          ignore_params?: boolean
+        ) => string;
       };
       wysiwyg: {
         replace: (element: Element) => void;

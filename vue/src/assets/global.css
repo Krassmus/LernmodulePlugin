@@ -43,34 +43,3 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 .h5pButton:last-child {
   margin-right: 0;
 }
-
-.h5pFeedbackContainer {
-  margin-top: 0.5em;
-}
-
-.h5pFeedbackContainerTop {
-}
-
-.h5pFeedbackContainerCenter {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.h5pFeedbackContainerBottom {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1em;
-}
-
-.h5pFeedbackText {
-  font-size: 1em;
-  margin-left: 0.5em;
-}
-
-meter {
-  display: block;
-  width: 300px;
-}
