@@ -285,7 +285,8 @@ msgstr "Feedback when not selected"
 msgid "Fill In The Blanks"
 msgstr "Fill In The Blanks"
 
-#: src/models/TaskDefinition.ts:519
+#: src/components/LernmoduleEditor.vue:29
+#: src/components/LernmoduleEditor.vue:43 src/models/TaskDefinition.ts:519
 msgid "Find The Hotspot"
 msgstr "Find The Hotspot"
 
@@ -443,7 +444,11 @@ msgstr "Add gap"
 msgid "manuell per Button"
 msgstr "manually via button"
 
-#: src/models/TaskDefinition.ts:527
+#: src/components/LernmoduleEditor.vue:32
+#: src/components/LernmoduleEditor.vue:46
+#: src/components/LernmoduleEditor.vue:50
+#: src/components/MarkTheWordsEditor.vue:3
+#: src/components/MarkTheWordsEditor.vue:4 src/models/TaskDefinition.ts:527
 msgid "Mark The Words"
 msgstr "Mark The Words"
 
@@ -729,39 +734,20 @@ msgstr "Show answers in a random order"
 msgid "Zu %{ interaction } springen"
 msgstr "Jump to %{ interaction }"
 
-#: src/components/MemoryViewer.vue:6 src/components/MemoryViewer.vue:7
-msgid "Aufgedeckte Paare:"
-msgstr "Pairs revealed:"
+#~ msgid "Aufgedeckte Paare:"
+#~ msgstr "Pairs revealed:"
 
-#: src/components/FillInTheBlanksEditor.vue:3
-#: src/components/FillInTheBlanksEditor.vue:4
-#: src/components/LernmoduleEditor.vue:27
-#: src/components/LernmoduleEditor.vue:41
-#: src/components/LernmoduleEditor.vue:45
-msgid "Fill in the Blanks"
-msgstr "Fill in the Blanks"
+#~ msgid "Fill in the Blanks"
+#~ msgstr "Fill in the Blanks"
 
-#: src/components/LernmoduleEditor.vue:29
-#: src/components/LernmoduleEditor.vue:43
-msgid "Find the Hotspot"
-msgstr "Find the Hotspot"
+#~ msgid "Find the Hotspot"
+#~ msgstr "Find the Hotspot"
 
-#: src/components/LernmoduleEditor.vue:32
-#: src/components/LernmoduleEditor.vue:46
-#: src/components/LernmoduleEditor.vue:50
-#: src/components/MarkTheWordsEditor.vue:3
-#: src/components/MarkTheWordsEditor.vue:4
-msgid "Mark the Words"
-msgstr "Mark the Words"
+#~ msgid "Mark the Words"
+#~ msgstr "Mark the Words"
 
-#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:4
-#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:8
-msgid "Overlay"
-msgstr "Overlay"
-
-#: src/components/MemoryViewer.vue:10 src/components/MemoryViewer.vue:11
-msgid "von"
-msgstr ""
+#~ msgid "Overlay"
+#~ msgstr "Overlay"
 
 #~ msgid "Punkte"
 #~ msgstr "Points"
