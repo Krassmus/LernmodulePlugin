@@ -46,7 +46,7 @@
       </option>
       <!--      <option value="FindTheHotspot">{{ $gettext('Find The Hotspot') }}</option>-->
       <option value="Question">{{ $gettext('Question') }}</option>
-      <option value="DragTheWords">{{ $gettext('Drag the Words') }}</option>
+      <option value="DragTheWords">{{ $gettext('Drag The Words') }}</option>
       <option value="MarkTheWords">{{ $gettext('Mark The Words') }}</option>
       <!--      <option value="ImagePairing">{{ $gettext('Image Pairing') }}</option>-->
       <!--      <option value="ImageSequencing">-->
