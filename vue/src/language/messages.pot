@@ -102,7 +102,7 @@ msgstr ""
 
 #: src/components/MemoryViewer.vue:6
 #: src/components/MemoryViewer.vue:7
-msgid "Aufgedeckte Paare:"
+msgid "Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
 msgstr ""
 
 #: src/components/interactiveVideo/SelectVideo.vue:104
@@ -212,6 +212,8 @@ msgstr ""
 #: src/components/interactiveVideo/AddInteractions.vue:216
 #: src/components/interactiveVideo/AddInteractions.vue:7
 #: src/components/interactiveVideo/AddInteractions.vue:8
+#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:4
+#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:8
 #: src/models/InteractiveVideoTask.ts:89
 msgid "Einblendung"
 msgstr ""
@@ -283,9 +285,6 @@ msgstr ""
 
 #: src/components/LernmoduleEditor.vue:29
 #: src/components/LernmoduleEditor.vue:43
-msgid "Find the Hotspot"
-msgstr ""
-
 #: src/models/TaskDefinition.ts:519
 msgid "Find The Hotspot"
 msgstr ""
@@ -448,9 +447,6 @@ msgstr ""
 #: src/components/LernmoduleEditor.vue:50
 #: src/components/MarkTheWordsEditor.vue:3
 #: src/components/MarkTheWordsEditor.vue:4
-msgid "Mark the Words"
-msgstr ""
-
 #: src/models/TaskDefinition.ts:527
 msgid "Mark The Words"
 msgstr ""
@@ -538,11 +534,6 @@ msgstr ""
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:2
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:3
 msgid "Ordner-Filter"
-msgstr ""
-
-#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:4
-#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:8
-msgid "Overlay"
 msgstr ""
 
 #: src/components/interactiveVideo/AddInteractions.vue:58
@@ -683,11 +674,6 @@ msgstr ""
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:36
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:56
 msgid "Video pausieren"
-msgstr ""
-
-#: src/components/MemoryViewer.vue:10
-#: src/components/MemoryViewer.vue:11
-msgid "von"
 msgstr ""
 
 #: src/components/interactiveVideo/SelectVideo.vue:20

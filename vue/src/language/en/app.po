@@ -109,8 +109,8 @@ msgid "Aufgabentyp auswählen:"
 msgstr "Select task type:"
 
 #: src/components/MemoryViewer.vue:6 src/components/MemoryViewer.vue:7
-msgid "Aufgedeckte Paare:"
-msgstr "Pairs revealed:"
+msgid "Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
+msgstr ""
 
 #: src/components/interactiveVideo/SelectVideo.vue:104
 #: src/components/interactiveVideo/SelectVideo.vue:109
@@ -220,6 +220,8 @@ msgstr "Drag the Words"
 #: src/components/interactiveVideo/AddInteractions.vue:216
 #: src/components/interactiveVideo/AddInteractions.vue:7
 #: src/components/interactiveVideo/AddInteractions.vue:8
+#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:4
+#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:8
 #: src/models/InteractiveVideoTask.ts:89
 msgid "Einblendung"
 msgstr "Overlay"
@@ -284,11 +286,7 @@ msgid "Fill In The Blanks"
 msgstr ""
 
 #: src/components/LernmoduleEditor.vue:29
-#: src/components/LernmoduleEditor.vue:43
-msgid "Find the Hotspot"
-msgstr ""
-
-#: src/models/TaskDefinition.ts:519
+#: src/components/LernmoduleEditor.vue:43 src/models/TaskDefinition.ts:519
 msgid "Find The Hotspot"
 msgstr ""
 
@@ -450,11 +448,7 @@ msgstr "manually via button"
 #: src/components/LernmoduleEditor.vue:46
 #: src/components/LernmoduleEditor.vue:50
 #: src/components/MarkTheWordsEditor.vue:3
-#: src/components/MarkTheWordsEditor.vue:4
-msgid "Mark the Words"
-msgstr ""
-
-#: src/models/TaskDefinition.ts:527
+#: src/components/MarkTheWordsEditor.vue:4 src/models/TaskDefinition.ts:527
 msgid "Mark The Words"
 msgstr ""
 
@@ -542,11 +536,6 @@ msgstr ""
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:2
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:3
 msgid "Ordner-Filter"
-msgstr ""
-
-#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:4
-#: src/components/interactiveVideo/interactions/OverlayInteraction.vue:8
-msgid "Overlay"
 msgstr ""
 
 #: src/components/interactiveVideo/AddInteractions.vue:58
@@ -679,10 +668,6 @@ msgstr "Delete image"
 msgid "Video pausieren"
 msgstr "Delete image"
 
-#: src/components/MemoryViewer.vue:10 src/components/MemoryViewer.vue:11
-msgid "von"
-msgstr ""
-
 #: src/components/interactiveVideo/SelectVideo.vue:20
 #: src/components/interactiveVideo/SelectVideo.vue:21
 #: src/components/interactiveVideo/SelectVideo.vue:24
@@ -749,13 +734,11 @@ msgstr "Show answers in a random order"
 msgid "Zu %{ interaction } springen"
 msgstr ""
 
-#: src/components/FillInTheBlanksEditor.vue:3
-#: src/components/FillInTheBlanksEditor.vue:4
-#: src/components/LernmoduleEditor.vue:27
-#: src/components/LernmoduleEditor.vue:41
-#: src/components/LernmoduleEditor.vue:45
-msgid "Fill in the Blanks"
-msgstr "Fill in the Blanks"
+#~ msgid "Aufgedeckte Paare:"
+#~ msgstr "Pairs revealed:"
+
+#~ msgid "Fill in the Blanks"
+#~ msgstr "Fill in the Blanks"
 
 #~ msgid "Punkte"
 #~ msgstr "Points"
