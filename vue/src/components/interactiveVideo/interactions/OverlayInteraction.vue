@@ -68,7 +68,7 @@ export default defineComponent({
       selected: editor?.selectedInteractionId.value === interaction.id,
       editor: !!editor,
     }"
-    :data-hover-tooltip="$gettext('Overlay')"
+    :data-hover-tooltip="$gettext('Einblendung')"
   >
     <template v-if="editor">
       <div

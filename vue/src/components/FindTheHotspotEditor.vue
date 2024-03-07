@@ -1,5 +1,5 @@
 <template>
-  <span>Find the Hotspot - Editor</span><br />
+  <span>Find The Hotspot - Editor</span><br />
   <FileUpload @fileUploaded="onImageUploaded" />
 </template>
 

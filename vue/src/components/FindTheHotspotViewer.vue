@@ -1,5 +1,5 @@
 <template>
-  <span>Find the Hotspot - Viewer</span><br />
+  <span>Find The Hotspot - Viewer</span><br />
   <img :src="this.task.image.imageUrl" />
 </template>
 
