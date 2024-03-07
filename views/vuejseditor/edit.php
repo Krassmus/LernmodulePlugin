@@ -26,6 +26,7 @@
   <script src="<?= $plugin->getPluginUrl() . '/vue/dist/js/chunk-vendors.js' ?>"></script>
   <script src="<?= $plugin->getPluginUrl() . '/vue/dist/js/chunk-common.js' ?>"></script>
   <link rel="stylesheet" href="<?= $plugin->getPluginUrl() . '/vue/dist/css/editor.css' ?>"></link>
+  <link rel="stylesheet" href="<?= $plugin->getPluginUrl() . '/vue/dist/css/chunk-common.css' ?>"></link>
 <?php endif ?>
 
 <?php

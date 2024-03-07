@@ -59,4 +59,5 @@ that the iframe should be resized to by the iFrameSizer library -->
   <script src="<?= $plugin->getPluginUrl() . '/vue/dist/js/chunk-common.js' ?>"></script>
   <link rel="stylesheet"
         href="<?= $plugin->getPluginUrl() . '/vue/dist/css/courseware.css' ?>"></link>
+  <link rel="stylesheet" href="<?= $plugin->getPluginUrl() . '/vue/dist/css/chunk-common.css' ?>"></link>
 <?php endif ?>
