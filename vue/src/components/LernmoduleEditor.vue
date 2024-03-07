@@ -13,8 +13,8 @@
         >{{ saveStatusText }}</span
       >
     </li>
-    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">Undo</li>
-    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">Redo</li>
+    <!--    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">Undo</li>-->
+    <!--    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">Redo</li>-->
   </teleport>
 
   <form class="default">
@@ -44,14 +44,14 @@
       <option value="FillInTheBlanks">
         {{ $gettext('Fill in the Blanks') }}
       </option>
-      <option value="FindTheHotspot">{{ $gettext('Find the Hotspot') }}</option>
+      <!--      <option value="FindTheHotspot">{{ $gettext('Find the Hotspot') }}</option>-->
       <option value="Question">{{ $gettext('Question') }}</option>
       <option value="DragTheWords">{{ $gettext('Drag the Words') }}</option>
       <option value="MarkTheWords">{{ $gettext('Mark the Words') }}</option>
-      <option value="ImagePairing">{{ $gettext('Image Pairing') }}</option>
-      <option value="ImageSequencing">
-        {{ $gettext('Image Sequencing') }}
-      </option>
+      <!--      <option value="ImagePairing">{{ $gettext('Image Pairing') }}</option>-->
+      <!--      <option value="ImageSequencing">-->
+      <!--        {{ $gettext('Image Sequencing') }}-->
+      <!--      </option>-->
     </select>
   </div>
 
