@@ -42,7 +42,7 @@
       style="margin-left: 0.5em"
     >
       <option value="FillInTheBlanks">
-        {{ $gettext('Fill in the Blanks') }}
+        {{ $gettext('Fill In The Blanks') }}
       </option>
       <!--      <option value="FindTheHotspot">{{ $gettext('Find the Hotspot') }}</option>-->
       <option value="Question">{{ $gettext('Question') }}</option>

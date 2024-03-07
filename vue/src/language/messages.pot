@@ -277,9 +277,6 @@ msgstr ""
 #: src/components/LernmoduleEditor.vue:27
 #: src/components/LernmoduleEditor.vue:41
 #: src/components/LernmoduleEditor.vue:45
-msgid "Fill in the Blanks"
-msgstr ""
-
 #: src/models/TaskDefinition.ts:517
 msgid "Fill In The Blanks"
 msgstr ""
