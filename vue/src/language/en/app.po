@@ -1,21 +1,20 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: uol 5.1\n"
-"PO-Revision-Date: 2023-06-05 16:50+0000\n"
+"PO-Revision-Date: 2024-03-07 14:59+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/rasmusfuhse-"
-"lernmoduleplugin/js/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/"
+"rasmusfuhse-lernmoduleplugin/js/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 5.3.1\n"
 
 #: src/components/interactiveVideo/AddInteractions.vue:248
-#, fuzzy
 msgid "%{ interaction } löschen"
-msgstr "Delete image"
+msgstr "Delete %{ interaction }"
 
 #: src/components/interactiveVideo/AddInteractions.vue:11
 #: src/components/interactiveVideo/AddInteractions.vue:12
@@ -25,18 +24,16 @@ msgstr "Delete image"
 #: src/components/interactiveVideo/AddInteractions.vue:30
 #: src/components/interactiveVideo/AddInteractions.vue:6
 #: src/components/interactiveVideo/AddInteractions.vue:7
-#, fuzzy
 msgid "%{ interactionType } einfügen"
-msgstr "Add card"
+msgstr "Insert %{ interactionType }"
 
 #: src/components/interactiveVideo/InteractiveVideoEditor.vue:3
 msgid "1. Video auswählen"
 msgstr "1. Select video"
 
 #: src/components/interactiveVideo/InteractiveVideoEditor.vue:7
-#, fuzzy
 msgid "2. Interaktionen hinzufügen"
-msgstr "Add card"
+msgstr "2. Add interactions"
 
 #: src/components/CoursewareBlock.vue:10 src/components/CoursewareBlock.vue:15
 #: src/components/CoursewareBlock.vue:18 src/components/CoursewareBlock.vue:9
@@ -44,9 +41,8 @@ msgid "Abbrechen"
 msgstr "Cancel"
 
 #: src/components/interactiveVideo/AddInteractions.vue:52
-#, fuzzy
 msgid "Abspielen"
-msgstr "automatically after entry"
+msgstr "Play"
 
 #: src/components/interactiveVideo/SelectVideo.vue:113
 #: src/components/interactiveVideo/SelectVideo.vue:118
@@ -110,15 +106,14 @@ msgstr "Select task type:"
 
 #: src/components/MemoryViewer.vue:6 src/components/MemoryViewer.vue:7
 msgid "Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
-msgstr ""
+msgstr "Pairs revealed: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
 
 #: src/components/interactiveVideo/SelectVideo.vue:104
 #: src/components/interactiveVideo/SelectVideo.vue:109
 #: src/components/interactiveVideo/SelectVideo.vue:28
 #: src/components/interactiveVideo/SelectVideo.vue:78
-#, fuzzy
 msgid "Automatisch abspielen"
-msgstr "automatically after entry"
+msgstr "Auto-play"
 
 #: src/components/DragTheWordsEditor.vue:23
 #: src/components/DragTheWordsEditor.vue:24
@@ -149,9 +144,8 @@ msgstr "Image"
 #: src/components/ImageSequencingEditor.vue:13
 #: src/components/ImageSequencingEditor.vue:14
 #: src/components/ImageSequencingEditor.vue:24
-#, fuzzy
 msgid "Bild hinzufügen"
-msgstr "Add card"
+msgstr "Add image"
 
 #: src/components/EditedMemoryCardImage.vue:3
 #: src/components/EditedMemoryCardImage.vue:4
@@ -160,9 +154,8 @@ msgstr "Delete image"
 
 #: src/components/ImageSequencingEditorImage.vue:5
 #: src/components/ImageSequencingEditorImage.vue:6
-#, fuzzy
 msgid "Das Bild"
-msgstr "Image"
+msgstr "The image"
 
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:192
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:206
@@ -411,9 +404,8 @@ msgstr "Upload a video or paste in a link to a Youtube video."
 #: src/components/interactiveVideo/VideoPlayer.vue:50
 #: src/components/interactiveVideo/VideoTimeline.vue:76
 #: src/components/QuestionEditor.vue:36
-#, fuzzy
 msgid "Löschen"
-msgstr "Delete image"
+msgstr "Delete"
 
 #: src/components/DragTheWordsEditor.vue:54
 #: src/components/DragTheWordsEditor.vue:55
@@ -480,9 +472,8 @@ msgid "Mehrere Versuche erlauben"
 msgstr "Allow multiple attempts"
 
 #: src/models/TaskDefinition.ts:529
-#, fuzzy
 msgid "Memory"
-msgstr "Memory game"
+msgstr "Memory"
 
 #: src/components/FillInTheBlanksEditor.vue:107
 #: src/components/FillInTheBlanksEditor.vue:108
@@ -521,9 +512,8 @@ msgstr "New range"
 
 #: src/components/interactiveVideo/SelectVideo.vue:16
 #: src/components/interactiveVideo/SelectVideo.vue:17
-#, fuzzy
 msgid "Neues Video hochladen"
-msgstr "File is being uploaded"
+msgstr "Upload new video"
 
 #: src/components/interactiveVideo/SelectVideo.vue:124
 #: src/components/interactiveVideo/SelectVideo.vue:129
@@ -657,16 +647,14 @@ msgstr "Zoom out"
 #: src/components/interactiveVideo/SelectVideo.vue:66
 #: src/components/interactiveVideo/SelectVideo.vue:86
 #: src/components/interactiveVideo/SelectVideo.vue:92
-#, fuzzy
 msgid "Video löschen"
-msgstr "Delete image"
+msgstr "Delete video"
 
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:35
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:36
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:56
-#, fuzzy
 msgid "Video pausieren"
-msgstr "Delete image"
+msgstr "Pause video"
 
 #: src/components/interactiveVideo/SelectVideo.vue:20
 #: src/components/interactiveVideo/SelectVideo.vue:21
