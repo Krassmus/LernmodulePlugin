@@ -200,9 +200,6 @@ msgstr ""
 #: src/components/LernmoduleEditor.vue:31
 #: src/components/LernmoduleEditor.vue:45
 #: src/components/LernmoduleEditor.vue:49
-msgid "Drag the Words"
-msgstr ""
-
 #: src/models/TaskDefinition.ts:515
 msgid "Drag The Words"
 msgstr ""
