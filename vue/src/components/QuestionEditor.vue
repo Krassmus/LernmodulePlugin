@@ -7,7 +7,12 @@
     <fieldset>
       <legend>{{ $gettext('Question') }}</legend>
       <label>
-        <studip-wysiwyg v-model="taskDefinition.question" />
+        <studip-wysiwyg
+          v-model="taskDefinition.question"
+          force-soft-breaks
+          remove-wrapping-p-tag
+          disable-autoformat
+        />
       </label>
       <fieldset
         class="collapsable collapsed"
