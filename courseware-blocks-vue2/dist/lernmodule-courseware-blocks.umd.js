@@ -91,199 +91,1850 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "fae3");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js":
-/*!**********************************************************************************!*\
-  !*** ./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js ***!
-  \**********************************************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _setPublicPath__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPublicPath */ \"./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js\");\n/* harmony import */ var _entry__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ~entry */ \"./src/register-courseware-blocks.js\");\n/* empty/unused harmony star reexport */\n\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js?");
-
-/***/ }),
-
-/***/ "./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js ***!
-  \***************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n// This file is imported into lib/wc client bundles.\n\nif (typeof window !== 'undefined') {\n  var currentScript = window.document.currentScript\n  if (false) { var getCurrentScript; }\n\n  var src = currentScript && currentScript.src.match(/(.+\\/)[^/]+\\.js(\\?.*)?$/)\n  if (src) {\n    __webpack_require__.p = src[1] // eslint-disable-line\n  }\n}\n\n// Indicate to webpack that this file can be concatenated\n/* harmony default export */ __webpack_exports__[\"default\"] = (null);\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js?");
-
-/***/ }),
-
-/***/ "./node_modules/cache-loader/dist/cjs.js?!./node_modules/babel-loader/lib/index.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var iframe_resizer_js_iframeResizer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! iframe-resizer/js/iframeResizer */ \"./node_modules/iframe-resizer/js/iframeResizer.js\");\n/* harmony import */ var iframe_resizer_js_iframeResizer__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(iframe_resizer_js_iframeResizer__WEBPACK_IMPORTED_MODULE_0__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  name: 'LernmoduleCoursewareBlockBase',\n  inject: ['coursewarePluginComponents'],\n  props: {\n    block: {\n      type: Object,\n      required: true\n    },\n    canEdit: {\n      type: Boolean,\n      required: true\n    },\n    isTeacher: {\n      type: Boolean,\n      required: true\n    }\n  },\n  computed: {\n    iframeUrl() {\n      return window.STUDIP.LernmoduleCoursewareBlocksPlugin.editorUrl;\n    },\n    isBlockInitialized() {\n      return this.block.attributes.payload.initialized;\n    }\n  },\n  created() {\n    window.addEventListener('message', this.onWindowMessage);\n  },\n  beforeDestroy() {\n    window.removeEventListener('message', this.onWindowMessage);\n  },\n  methods: {\n    // Handle messages posted to our window from our iframe\n    onWindowMessage(message) {\n      if (message.source !== this.$refs.lernmoduleIframe.contentWindow) {\n        return; // Ignore the message -- it's not from our iframe\n      }\n\n      if (message.data && Object.hasOwn(message.data, 'type')) {\n        switch (message.data.type) {\n          case 'SaveCoursewareBlock':\n            console.log('got message posted to window: ', message, 'saving courseware block. taskDefinition: ', message.data.taskDefinition);\n            this.storeBlock(message.data.taskDefinition);\n            break;\n          case 'CancelEditingCoursewareBlock':\n            console.log('got message posted to window: ', message, 'canceling editing.');\n            // close the edit menu\n            this.$refs.defaultBlock.closeEdit();\n            // Reload the iframe (this causes the state of the block to reset to how\n            // it is on the server, discarding user's unsaved changes).\n            this.$refs.lernmoduleIframe.contentWindow.location.reload();\n            break;\n        }\n      }\n    },\n    // Pass the child CoursewareDefaultBlock's editing state on to our iFrame.\n    // This lets our Vue 3 component know whether to hide/show its editing UI\n    onShowEditChange(state) {\n      this.$refs.lernmoduleIframe.contentWindow.postMessage({\n        type: 'ShowEditChange',\n        state\n      });\n    },\n    onIframeLoad() {\n      console.log('on iframe load');\n      // Configure iFrameResize to resize the iframe to the height of the\n      // #app element, which is marked with data-iframe-height, inside the iframe\n      iframe_resizer_js_iframeResizer__WEBPACK_IMPORTED_MODULE_0___default()({\n        heightCalculationMethod: 'taggedElement'\n      }, this.$refs.lernmoduleIframe);\n\n      // Send message to initialize the Vue 3 courseware block's store\n      this.$refs.lernmoduleIframe.contentWindow.postMessage({\n        type: 'InitializeCoursewareBlock',\n        ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,\n        canEdit: this.canEdit,\n        isTeacher: this.isTeacher,\n        block: JSON.parse(JSON.stringify(this.block)),\n        context: this.$store.getters.context\n      });\n\n      // Call onShowEditChange one time after load to initialize the 'editing'\n      // state in our Vue 3 component\n      console.log('iframe loaded, calling onShowEditChange...');\n      this.onShowEditChange(this.$refs.defaultBlock.showEdit);\n    },\n    storeBlock(taskDefinition) {\n      const attributes = {\n        ...this.block.attributes,\n        payload: {\n          initialized: true,\n          task_json: taskDefinition\n        }\n      };\n      this.$store.dispatch('updateBlockInContainer', {\n        attributes,\n        blockId: this.block.id,\n        containerId: this.block.relationships.container.data.id\n      }).then(() => {\n        // close the edit menu\n        this.$refs.defaultBlock.displayFeature(false);\n      });\n    }\n  }\n});\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/components/LernmoduleCoursewareBlockBase.vue?./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options");
-
-/***/ }),
-
-/***/ "./node_modules/cache-loader/dist/cjs.js?{\"cacheDirectory\":\"node_modules/.cache/vue-loader\",\"cacheIdentifier\":\"907b46f0-vue-loader-template\"}!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=1a9fb336&":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"907b46f0-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=1a9fb336& ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function () {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(_vm.coursewarePluginComponents.CoursewareDefaultBlock, {\n    ref: \"defaultBlock\",\n    tag: \"component\",\n    staticClass: \"cw-lernmodule-block cw-block\",\n    attrs: {\n      block: _vm.block,\n      canEdit: _vm.canEdit,\n      isTeacher: _vm.isTeacher,\n      preview: true,\n      defaultGrade: false,\n    },\n    on: { storeEdit: _vm.storeBlock, showEdit: _vm.onShowEditChange },\n    scopedSlots: _vm._u([\n      {\n        key: \"content\",\n        fn: function () {\n          return [\n            false\n              ? undefined\n              : _vm._e(),\n            _c(\"iframe\", {\n              ref: \"lernmoduleIframe\",\n              staticClass: \"lernmodule-iframe\",\n              attrs: { src: _vm.iframeUrl },\n              on: { load: _vm.onIframeLoad },\n            }),\n          ]\n        },\n        proxy: true,\n      },\n    ]),\n  })\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/components/LernmoduleCoursewareBlockBase.vue?./node_modules/cache-loader/dist/cjs.js?%7B%22cacheDirectory%22:%22node_modules/.cache/vue-loader%22,%22cacheIdentifier%22:%22907b46f0-vue-loader-template%22%7D!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options");
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/cjs.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css&":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??ref--7-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-oneOf-1-2!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css& ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
+/***/ "0363":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("// Imports\nvar ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\nexports = ___CSS_LOADER_API_IMPORT___(false);\n// Module\nexports.push([module.i, \"\\n.lernmodule-iframe {\\n  width: 1px;\\n  min-width: 100%;\\n  border: none;\\n}\\n/* Hide CoursewareDefaultBlock's 'edit' section */\\n.cw-default-block.cw-lernmodule-block .cw-block-edit {\\n  display: none;\\n}\\n\", \"\"]);\n// Exports\nmodule.exports = exports;\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/components/LernmoduleCoursewareBlockBase.vue?./node_modules/css-loader/dist/cjs.js??ref--7-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-oneOf-1-2!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options");
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+ * File: iframeResizer.js
+ * Desc: Force iframes to size to content.
+ * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.
+ * Doc: https://github.com/davidjbradshaw/iframe-resizer
+ * Author: David J. Bradshaw - dave@bradshaw.net
+ * Contributor: Jure Mav - jure.mav@gmail.com
+ * Contributor: Reed Dadoune - reed@dadoune.com
+ */
+
+// eslint-disable-next-line sonarjs/cognitive-complexity, no-shadow-restricted-names
+;(function (undefined) {
+  if (typeof window === 'undefined') return // don't run for server side render
+
+  var count = 0,
+    logEnabled = false,
+    hiddenCheckEnabled = false,
+    msgHeader = 'message',
+    msgHeaderLen = msgHeader.length,
+    msgId = '[iFrameSizer]', // Must match iframe msg ID
+    msgIdLen = msgId.length,
+    pagePosition = null,
+    requestAnimationFrame = window.requestAnimationFrame,
+    resetRequiredMethods = Object.freeze({
+      max: 1,
+      scroll: 1,
+      bodyScroll: 1,
+      documentElementScroll: 1
+    }),
+    settings = {},
+    timer = null,
+    defaults = Object.freeze({
+      autoResize: true,
+      bodyBackground: null,
+      bodyMargin: null,
+      bodyMarginV1: 8,
+      bodyPadding: null,
+      checkOrigin: true,
+      inPageLinks: false,
+      enablePublicMethods: true,
+      heightCalculationMethod: 'bodyOffset',
+      id: 'iFrameResizer',
+      interval: 32,
+      log: false,
+      maxHeight: Infinity,
+      maxWidth: Infinity,
+      minHeight: 0,
+      minWidth: 0,
+      mouseEvents: true,
+      resizeFrom: 'parent',
+      scrolling: false,
+      sizeHeight: true,
+      sizeWidth: false,
+      warningTimeout: 5000,
+      tolerance: 0,
+      widthCalculationMethod: 'scroll',
+      onClose: function () {
+        return true
+      },
+      onClosed: function () {},
+      onInit: function () {},
+      onMessage: function () {
+        warn('onMessage function not defined')
+      },
+      onMouseEnter: function () {},
+      onMouseLeave: function () {},
+      onResized: function () {},
+      onScroll: function () {
+        return true
+      }
+    })
+
+  function getMutationObserver() {
+    return (
+      window.MutationObserver ||
+      window.WebKitMutationObserver ||
+      window.MozMutationObserver
+    )
+  }
+
+  function addEventListener(el, evt, func) {
+    el.addEventListener(evt, func, false)
+  }
+
+  function removeEventListener(el, evt, func) {
+    el.removeEventListener(evt, func, false)
+  }
+
+  function setupRequestAnimationFrame() {
+    var vendors = ['moz', 'webkit', 'o', 'ms']
+    var x
+
+    // Remove vendor prefixing if prefixed and break early if not
+    for (x = 0; x < vendors.length && !requestAnimationFrame; x += 1) {
+      requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
+    }
+
+    if (requestAnimationFrame) {
+      // Firefox extension content-scripts have a globalThis object that is not the same as window.
+      // Binding `requestAnimationFrame` to window allows the function to work and prevents errors
+      // being thrown when run in that context, and should be a no-op in every other context.
+      requestAnimationFrame = requestAnimationFrame.bind(window)
+    } else {
+      log('setup', 'RequestAnimationFrame not supported')
+    }
+  }
+
+  function getMyID(iframeId) {
+    var retStr = 'Host page: ' + iframeId
+
+    if (window.top !== window.self) {
+      retStr =
+        window.parentIFrame && window.parentIFrame.getId
+          ? window.parentIFrame.getId() + ': ' + iframeId
+          : 'Nested host page: ' + iframeId
+    }
+
+    return retStr
+  }
+
+  function formatLogHeader(iframeId) {
+    return msgId + '[' + getMyID(iframeId) + ']'
+  }
+
+  function isLogEnabled(iframeId) {
+    return settings[iframeId] ? settings[iframeId].log : logEnabled
+  }
+
+  function log(iframeId, msg) {
+    output('log', iframeId, msg, isLogEnabled(iframeId))
+  }
+
+  function info(iframeId, msg) {
+    output('info', iframeId, msg, isLogEnabled(iframeId))
+  }
+
+  function warn(iframeId, msg) {
+    output('warn', iframeId, msg, true)
+  }
+
+  function output(type, iframeId, msg, enabled) {
+    if (true === enabled && 'object' === typeof window.console) {
+      // eslint-disable-next-line no-console
+      console[type](formatLogHeader(iframeId), msg)
+    }
+  }
+
+  function iFrameListener(event) {
+    function resizeIFrame() {
+      function resize() {
+        setSize(messageData)
+        setPagePosition(iframeId)
+        on('onResized', messageData)
+      }
+
+      ensureInRange('Height')
+      ensureInRange('Width')
+
+      syncResize(resize, messageData, 'init')
+    }
+
+    function processMsg() {
+      var data = msg.slice(msgIdLen).split(':')
+      var height = data[1] ? parseInt(data[1], 10) : 0
+      var iframe = settings[data[0]] && settings[data[0]].iframe
+      var compStyle = getComputedStyle(iframe)
+
+      return {
+        iframe: iframe,
+        id: data[0],
+        height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),
+        width: data[2],
+        type: data[3]
+      }
+    }
+
+    function getPaddingEnds(compStyle) {
+      if (compStyle.boxSizing !== 'border-box') {
+        return 0
+      }
+      var top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0
+      var bot = compStyle.paddingBottom
+        ? parseInt(compStyle.paddingBottom, 10)
+        : 0
+      return top + bot
+    }
+
+    function getBorderEnds(compStyle) {
+      if (compStyle.boxSizing !== 'border-box') {
+        return 0
+      }
+      var top = compStyle.borderTopWidth
+        ? parseInt(compStyle.borderTopWidth, 10)
+        : 0
+      var bot = compStyle.borderBottomWidth
+        ? parseInt(compStyle.borderBottomWidth, 10)
+        : 0
+      return top + bot
+    }
+
+    function ensureInRange(Dimension) {
+      var max = Number(settings[iframeId]['max' + Dimension]),
+        min = Number(settings[iframeId]['min' + Dimension]),
+        dimension = Dimension.toLowerCase(),
+        size = Number(messageData[dimension])
+
+      log(iframeId, 'Checking ' + dimension + ' is in range ' + min + '-' + max)
+
+      if (size < min) {
+        size = min
+        log(iframeId, 'Set ' + dimension + ' to min value')
+      }
+
+      if (size > max) {
+        size = max
+        log(iframeId, 'Set ' + dimension + ' to max value')
+      }
+
+      messageData[dimension] = '' + size
+    }
+
+    function isMessageFromIFrame() {
+      function checkAllowedOrigin() {
+        function checkList() {
+          var i = 0,
+            retCode = false
+
+          log(
+            iframeId,
+            'Checking connection is from allowed list of origins: ' +
+              checkOrigin
+          )
+
+          for (; i < checkOrigin.length; i++) {
+            if (checkOrigin[i] === origin) {
+              retCode = true
+              break
+            }
+          }
+          return retCode
+        }
+
+        function checkSingle() {
+          var remoteHost = settings[iframeId] && settings[iframeId].remoteHost
+          log(iframeId, 'Checking connection is from: ' + remoteHost)
+          return origin === remoteHost
+        }
+
+        return checkOrigin.constructor === Array ? checkList() : checkSingle()
+      }
+
+      var origin = event.origin,
+        checkOrigin = settings[iframeId] && settings[iframeId].checkOrigin
+
+      if (checkOrigin && '' + origin !== 'null' && !checkAllowedOrigin()) {
+        throw new Error(
+          'Unexpected message received from: ' +
+            origin +
+            ' for ' +
+            messageData.iframe.id +
+            '. Message was: ' +
+            event.data +
+            '. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.'
+        )
+      }
+
+      return true
+    }
+
+    function isMessageForUs() {
+      return (
+        msgId === ('' + msg).slice(0, msgIdLen) &&
+        msg.slice(msgIdLen).split(':')[0] in settings
+      ) // ''+Protects against non-string msg
+    }
+
+    function isMessageFromMetaParent() {
+      // Test if this message is from a parent above us. This is an ugly test, however, updating
+      // the message format would break backwards compatibility.
+      var retCode = messageData.type in { true: 1, false: 1, undefined: 1 }
+
+      if (retCode) {
+        log(iframeId, 'Ignoring init message from meta parent page')
+      }
+
+      return retCode
+    }
+
+    function getMsgBody(offset) {
+      return msg.slice(msg.indexOf(':') + msgHeaderLen + offset)
+    }
+
+    function forwardMsgFromIFrame(msgBody) {
+      log(
+        iframeId,
+        'onMessage passed: {iframe: ' +
+          messageData.iframe.id +
+          ', message: ' +
+          msgBody +
+          '}'
+      )
+
+      on('onMessage', {
+        iframe: messageData.iframe,
+        message: JSON.parse(msgBody)
+      })
+
+      log(iframeId, '--')
+    }
+
+    function getPageInfo() {
+      var bodyPosition = document.body.getBoundingClientRect(),
+        iFramePosition = messageData.iframe.getBoundingClientRect()
+
+      return JSON.stringify({
+        iframeHeight: iFramePosition.height,
+        iframeWidth: iFramePosition.width,
+        clientHeight: Math.max(
+          document.documentElement.clientHeight,
+          window.innerHeight || 0
+        ),
+        clientWidth: Math.max(
+          document.documentElement.clientWidth,
+          window.innerWidth || 0
+        ),
+        offsetTop: parseInt(iFramePosition.top - bodyPosition.top, 10),
+        offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),
+        scrollTop: window.pageYOffset,
+        scrollLeft: window.pageXOffset,
+        documentHeight: document.documentElement.clientHeight,
+        documentWidth: document.documentElement.clientWidth,
+        windowHeight: window.innerHeight,
+        windowWidth: window.innerWidth
+      })
+    }
+
+    function sendPageInfoToIframe(iframe, iframeId) {
+      function debouncedTrigger() {
+        trigger('Send Page Info', 'pageInfo:' + getPageInfo(), iframe, iframeId)
+      }
+      debounceFrameEvents(debouncedTrigger, 32, iframeId)
+    }
+
+    function startPageInfoMonitor() {
+      function setListener(type, func) {
+        function sendPageInfo() {
+          if (settings[id]) {
+            sendPageInfoToIframe(settings[id].iframe, id)
+          } else {
+            stop()
+          }
+        }
+
+        ;['scroll', 'resize'].forEach(function (evt) {
+          log(id, type + evt + ' listener for sendPageInfo')
+          func(window, evt, sendPageInfo)
+        })
+      }
+
+      function stop() {
+        setListener('Remove ', removeEventListener)
+      }
+
+      function start() {
+        setListener('Add ', addEventListener)
+      }
+
+      var id = iframeId // Create locally scoped copy of iFrame ID
+
+      start()
+
+      if (settings[id]) {
+        settings[id].stopPageInfo = stop
+      }
+    }
+
+    function stopPageInfoMonitor() {
+      if (settings[iframeId] && settings[iframeId].stopPageInfo) {
+        settings[iframeId].stopPageInfo()
+        delete settings[iframeId].stopPageInfo
+      }
+    }
+
+    function checkIFrameExists() {
+      var retBool = true
+
+      if (null === messageData.iframe) {
+        warn(iframeId, 'IFrame (' + messageData.id + ') not found')
+        retBool = false
+      }
+      return retBool
+    }
+
+    function getElementPosition(target) {
+      var iFramePosition = target.getBoundingClientRect()
+
+      getPagePosition(iframeId)
+
+      return {
+        x: Math.floor(Number(iFramePosition.left) + Number(pagePosition.x)),
+        y: Math.floor(Number(iFramePosition.top) + Number(pagePosition.y))
+      }
+    }
+
+    function scrollRequestFromChild(addOffset) {
+      /* istanbul ignore next */ // Not testable in Karma
+      function reposition() {
+        pagePosition = newPosition
+        scrollTo()
+        log(iframeId, '--')
+      }
+
+      function calcOffset() {
+        return {
+          x: Number(messageData.width) + offset.x,
+          y: Number(messageData.height) + offset.y
+        }
+      }
+
+      function scrollParent() {
+        if (window.parentIFrame) {
+          window.parentIFrame['scrollTo' + (addOffset ? 'Offset' : '')](
+            newPosition.x,
+            newPosition.y
+          )
+        } else {
+          warn(
+            iframeId,
+            'Unable to scroll to requested position, window.parentIFrame not found'
+          )
+        }
+      }
+
+      var offset = addOffset
+          ? getElementPosition(messageData.iframe)
+          : { x: 0, y: 0 },
+        newPosition = calcOffset()
+
+      log(
+        iframeId,
+        'Reposition requested from iFrame (offset x:' +
+          offset.x +
+          ' y:' +
+          offset.y +
+          ')'
+      )
+
+      if (window.top === window.self) {
+        reposition()
+      } else {
+        scrollParent()
+      }
+    }
+
+    function scrollTo() {
+      if (false === on('onScroll', pagePosition)) {
+        unsetPagePosition()
+      } else {
+        setPagePosition(iframeId)
+      }
+    }
+
+    function findTarget(location) {
+      function jumpToTarget() {
+        var jumpPosition = getElementPosition(target)
+
+        log(
+          iframeId,
+          'Moving to in page link (#' +
+            hash +
+            ') at x: ' +
+            jumpPosition.x +
+            ' y: ' +
+            jumpPosition.y
+        )
+        pagePosition = {
+          x: jumpPosition.x,
+          y: jumpPosition.y
+        }
+
+        scrollTo()
+        log(iframeId, '--')
+      }
+
+      function jumpToParent() {
+        if (window.parentIFrame) {
+          window.parentIFrame.moveToAnchor(hash)
+        } else {
+          log(
+            iframeId,
+            'In page link #' +
+              hash +
+              ' not found and window.parentIFrame not found'
+          )
+        }
+      }
+
+      var hash = location.split('#')[1] || '',
+        hashData = decodeURIComponent(hash),
+        target =
+          document.getElementById(hashData) ||
+          document.getElementsByName(hashData)[0]
+
+      if (target) {
+        jumpToTarget()
+      } else if (window.top === window.self) {
+        log(iframeId, 'In page link #' + hash + ' not found')
+      } else {
+        jumpToParent()
+      }
+    }
+
+    function onMouse(event) {
+      var mousePos = {}
+
+      if (Number(messageData.width) === 0 && Number(messageData.height) === 0) {
+        var data = getMsgBody(9).split(':')
+        mousePos = {
+          x: data[1],
+          y: data[0]
+        }
+      } else {
+        mousePos = {
+          x: messageData.width,
+          y: messageData.height
+        }
+      }
+
+      on(event, {
+        iframe: messageData.iframe,
+        screenX: Number(mousePos.x),
+        screenY: Number(mousePos.y),
+        type: messageData.type
+      })
+    }
+
+    function on(funcName, val) {
+      return chkEvent(iframeId, funcName, val)
+    }
+
+    function actionMsg() {
+      if (settings[iframeId] && settings[iframeId].firstRun) firstRun()
+
+      switch (messageData.type) {
+        case 'close': {
+          closeIFrame(messageData.iframe)
+          break
+        }
+
+        case 'message': {
+          forwardMsgFromIFrame(getMsgBody(6))
+          break
+        }
+
+        case 'mouseenter': {
+          onMouse('onMouseEnter')
+          break
+        }
+
+        case 'mouseleave': {
+          onMouse('onMouseLeave')
+          break
+        }
+
+        case 'autoResize': {
+          settings[iframeId].autoResize = JSON.parse(getMsgBody(9))
+          break
+        }
+
+        case 'scrollTo': {
+          scrollRequestFromChild(false)
+          break
+        }
+
+        case 'scrollToOffset': {
+          scrollRequestFromChild(true)
+          break
+        }
+
+        case 'pageInfo': {
+          sendPageInfoToIframe(
+            settings[iframeId] && settings[iframeId].iframe,
+            iframeId
+          )
+          startPageInfoMonitor()
+          break
+        }
+
+        case 'pageInfoStop': {
+          stopPageInfoMonitor()
+          break
+        }
+
+        case 'inPageLink': {
+          findTarget(getMsgBody(9))
+          break
+        }
+
+        case 'reset': {
+          resetIFrame(messageData)
+          break
+        }
+
+        case 'init': {
+          resizeIFrame()
+          on('onInit', messageData.iframe)
+          break
+        }
+
+        default: {
+          if (
+            Number(messageData.width) === 0 &&
+            Number(messageData.height) === 0
+          ) {
+            warn(
+              'Unsupported message received (' +
+                messageData.type +
+                '), this is likely due to the iframe containing a later ' +
+                'version of iframe-resizer than the parent page'
+            )
+          } else {
+            resizeIFrame()
+          }
+        }
+      }
+    }
+
+    function hasSettings(iframeId) {
+      var retBool = true
+
+      if (!settings[iframeId]) {
+        retBool = false
+        warn(
+          messageData.type +
+            ' No settings for ' +
+            iframeId +
+            '. Message was: ' +
+            msg
+        )
+      }
+
+      return retBool
+    }
+
+    function iFrameReadyMsgReceived() {
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+      for (var iframeId in settings) {
+        trigger(
+          'iFrame requested init',
+          createOutgoingMsg(iframeId),
+          settings[iframeId].iframe,
+          iframeId
+        )
+      }
+    }
+
+    function firstRun() {
+      if (settings[iframeId]) {
+        settings[iframeId].firstRun = false
+      }
+    }
+
+    var msg = event.data,
+      messageData = {},
+      iframeId = null
+
+    if ('[iFrameResizerChild]Ready' === msg) {
+      iFrameReadyMsgReceived()
+    } else if (isMessageForUs()) {
+      messageData = processMsg()
+      iframeId = messageData.id
+      if (settings[iframeId]) {
+        settings[iframeId].loaded = true
+      }
+
+      if (!isMessageFromMetaParent() && hasSettings(iframeId)) {
+        log(iframeId, 'Received: ' + msg)
+
+        if (checkIFrameExists() && isMessageFromIFrame()) {
+          actionMsg()
+        }
+      }
+    } else {
+      info(iframeId, 'Ignored: ' + msg)
+    }
+  }
+
+  function chkEvent(iframeId, funcName, val) {
+    var func = null,
+      retVal = null
+
+    if (settings[iframeId]) {
+      func = settings[iframeId][funcName]
+
+      if ('function' === typeof func) {
+        retVal = func(val)
+      } else {
+        throw new TypeError(
+          funcName + ' on iFrame[' + iframeId + '] is not a function'
+        )
+      }
+    }
+
+    return retVal
+  }
+
+  function removeIframeListeners(iframe) {
+    var iframeId = iframe.id
+    delete settings[iframeId]
+  }
+
+  function closeIFrame(iframe) {
+    var iframeId = iframe.id
+    if (chkEvent(iframeId, 'onClose', iframeId) === false) {
+      log(iframeId, 'Close iframe cancelled by onClose event')
+      return
+    }
+    log(iframeId, 'Removing iFrame: ' + iframeId)
+
+    try {
+      // Catch race condition error with React
+      if (iframe.parentNode) {
+        iframe.parentNode.removeChild(iframe)
+      }
+    } catch (error) {
+      warn(error)
+    }
+
+    chkEvent(iframeId, 'onClosed', iframeId)
+    log(iframeId, '--')
+    removeIframeListeners(iframe)
+  }
+
+  function getPagePosition(iframeId) {
+    if (null === pagePosition) {
+      pagePosition = {
+        x:
+          window.pageXOffset === undefined
+            ? document.documentElement.scrollLeft
+            : window.pageXOffset,
+        y:
+          window.pageYOffset === undefined
+            ? document.documentElement.scrollTop
+            : window.pageYOffset
+      }
+      log(
+        iframeId,
+        'Get page position: ' + pagePosition.x + ',' + pagePosition.y
+      )
+    }
+  }
+
+  function setPagePosition(iframeId) {
+    if (null !== pagePosition) {
+      window.scrollTo(pagePosition.x, pagePosition.y)
+      log(
+        iframeId,
+        'Set page position: ' + pagePosition.x + ',' + pagePosition.y
+      )
+      unsetPagePosition()
+    }
+  }
+
+  function unsetPagePosition() {
+    pagePosition = null
+  }
+
+  function resetIFrame(messageData) {
+    function reset() {
+      setSize(messageData)
+      trigger('reset', 'reset', messageData.iframe, messageData.id)
+    }
+
+    log(
+      messageData.id,
+      'Size reset requested by ' +
+        ('init' === messageData.type ? 'host page' : 'iFrame')
+    )
+    getPagePosition(messageData.id)
+    syncResize(reset, messageData, 'reset')
+  }
+
+  function setSize(messageData) {
+    function setDimension(dimension) {
+      if (!messageData.id) {
+        log('undefined', 'messageData id not set')
+        return
+      }
+      messageData.iframe.style[dimension] = messageData[dimension] + 'px'
+      log(
+        messageData.id,
+        'IFrame (' +
+          iframeId +
+          ') ' +
+          dimension +
+          ' set to ' +
+          messageData[dimension] +
+          'px'
+      )
+    }
+
+    function chkZero(dimension) {
+      // FireFox sets dimension of hidden iFrames to zero.
+      // So if we detect that set up an event to check for
+      // when iFrame becomes visible.
+
+      /* istanbul ignore next */ // Not testable in PhantomJS
+      if (!hiddenCheckEnabled && '0' === messageData[dimension]) {
+        hiddenCheckEnabled = true
+        log(iframeId, 'Hidden iFrame detected, creating visibility listener')
+        fixHiddenIFrames()
+      }
+    }
+
+    function processDimension(dimension) {
+      setDimension(dimension)
+      chkZero(dimension)
+    }
+
+    var iframeId = messageData.iframe.id
+
+    if (settings[iframeId]) {
+      if (settings[iframeId].sizeHeight) {
+        processDimension('height')
+      }
+      if (settings[iframeId].sizeWidth) {
+        processDimension('width')
+      }
+    }
+  }
+
+  function syncResize(func, messageData, doNotSync) {
+    /* istanbul ignore if */ // Not testable in PhantomJS
+    if (
+      doNotSync !== messageData.type &&
+      requestAnimationFrame &&
+      // including check for jasmine because had trouble getting spy to work in unit test using requestAnimationFrame
+      !window.jasmine
+    ) {
+      log(messageData.id, 'Requesting animation frame')
+      requestAnimationFrame(func)
+    } else {
+      func()
+    }
+  }
+
+  function trigger(calleeMsg, msg, iframe, id, noResponseWarning) {
+    function postMessageToIFrame() {
+      var target = settings[id] && settings[id].targetOrigin
+      log(
+        id,
+        '[' +
+          calleeMsg +
+          '] Sending msg to iframe[' +
+          id +
+          '] (' +
+          msg +
+          ') targetOrigin: ' +
+          target
+      )
+      iframe.contentWindow.postMessage(msgId + msg, target)
+    }
+
+    function iFrameNotFound() {
+      warn(id, '[' + calleeMsg + '] IFrame(' + id + ') not found')
+    }
+
+    function chkAndSend() {
+      if (
+        iframe &&
+        'contentWindow' in iframe &&
+        null !== iframe.contentWindow
+      ) {
+        // Null test for PhantomJS
+        postMessageToIFrame()
+      } else {
+        iFrameNotFound()
+      }
+    }
+
+    function warnOnNoResponse() {
+      function warning() {
+        if (settings[id] && !settings[id].loaded && !errorShown) {
+          errorShown = true
+          warn(
+            id,
+            'IFrame has not responded within ' +
+              settings[id].warningTimeout / 1000 +
+              ' seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame. This message can be ignored if everything is working, or you can set the warningTimeout option to a higher value or zero to suppress this warning.'
+          )
+        }
+      }
+
+      if (
+        !!noResponseWarning &&
+        settings[id] &&
+        !!settings[id].warningTimeout
+      ) {
+        settings[id].msgTimeout = setTimeout(
+          warning,
+          settings[id].warningTimeout
+        )
+      }
+    }
+
+    var errorShown = false
+
+    id = id || iframe.id
+
+    if (settings[id]) {
+      chkAndSend()
+      warnOnNoResponse()
+    }
+  }
+
+  function createOutgoingMsg(iframeId) {
+    return (
+      iframeId +
+      ':' +
+      settings[iframeId].bodyMarginV1 +
+      ':' +
+      settings[iframeId].sizeWidth +
+      ':' +
+      settings[iframeId].log +
+      ':' +
+      settings[iframeId].interval +
+      ':' +
+      settings[iframeId].enablePublicMethods +
+      ':' +
+      settings[iframeId].autoResize +
+      ':' +
+      settings[iframeId].bodyMargin +
+      ':' +
+      settings[iframeId].heightCalculationMethod +
+      ':' +
+      settings[iframeId].bodyBackground +
+      ':' +
+      settings[iframeId].bodyPadding +
+      ':' +
+      settings[iframeId].tolerance +
+      ':' +
+      settings[iframeId].inPageLinks +
+      ':' +
+      settings[iframeId].resizeFrom +
+      ':' +
+      settings[iframeId].widthCalculationMethod +
+      ':' +
+      settings[iframeId].mouseEvents
+    )
+  }
+
+  function isNumber(value) {
+    return typeof value === 'number'
+  }
+
+  function setupIFrame(iframe, options) {
+    function setLimits() {
+      function addStyle(style) {
+        var styleValue = settings[iframeId][style]
+        if (Infinity !== styleValue && 0 !== styleValue) {
+          iframe.style[style] = isNumber(styleValue)
+            ? styleValue + 'px'
+            : styleValue
+          log(iframeId, 'Set ' + style + ' = ' + iframe.style[style])
+        }
+      }
+
+      function chkMinMax(dimension) {
+        if (
+          settings[iframeId]['min' + dimension] >
+          settings[iframeId]['max' + dimension]
+        ) {
+          throw new Error(
+            'Value for min' +
+              dimension +
+              ' can not be greater than max' +
+              dimension
+          )
+        }
+      }
+
+      chkMinMax('Height')
+      chkMinMax('Width')
+
+      addStyle('maxHeight')
+      addStyle('minHeight')
+      addStyle('maxWidth')
+      addStyle('minWidth')
+    }
+
+    function newId() {
+      var id = (options && options.id) || defaults.id + count++
+      if (null !== document.getElementById(id)) {
+        id += count++
+      }
+      return id
+    }
+
+    function ensureHasId(iframeId) {
+      if (typeof iframeId !== 'string') {
+        throw new TypeError('Invaild id for iFrame. Expected String')
+      }
+
+      if ('' === iframeId) {
+        // eslint-disable-next-line no-multi-assign
+        iframe.id = iframeId = newId()
+        logEnabled = (options || {}).log
+        log(
+          iframeId,
+          'Added missing iframe ID: ' + iframeId + ' (' + iframe.src + ')'
+        )
+      }
+
+      return iframeId
+    }
+
+    function setScrolling() {
+      log(
+        iframeId,
+        'IFrame scrolling ' +
+          (settings[iframeId] && settings[iframeId].scrolling
+            ? 'enabled'
+            : 'disabled') +
+          ' for ' +
+          iframeId
+      )
+      iframe.style.overflow =
+        false === (settings[iframeId] && settings[iframeId].scrolling)
+          ? 'hidden'
+          : 'auto'
+      switch (settings[iframeId] && settings[iframeId].scrolling) {
+        case 'omit': {
+          break
+        }
+
+        case true: {
+          iframe.scrolling = 'yes'
+          break
+        }
+
+        case false: {
+          iframe.scrolling = 'no'
+          break
+        }
+
+        default: {
+          iframe.scrolling = settings[iframeId]
+            ? settings[iframeId].scrolling
+            : 'no'
+        }
+      }
+    }
+
+    // The V1 iFrame script expects an int, where as in V2 expects a CSS
+    // string value such as '1px 3em', so if we have an int for V2, set V1=V2
+    // and then convert V2 to a string PX value.
+    function setupBodyMarginValues() {
+      if (
+        'number' ===
+          typeof (settings[iframeId] && settings[iframeId].bodyMargin) ||
+        '0' === (settings[iframeId] && settings[iframeId].bodyMargin)
+      ) {
+        settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin
+        settings[iframeId].bodyMargin =
+          '' + settings[iframeId].bodyMargin + 'px'
+      }
+    }
+
+    function checkReset() {
+      // Reduce scope of firstRun to function, because IE8's JS execution
+      // context stack is borked and this value gets externally
+      // changed midway through running this function!!!
+      var firstRun = settings[iframeId] && settings[iframeId].firstRun,
+        resetRequertMethod =
+          settings[iframeId] &&
+          settings[iframeId].heightCalculationMethod in resetRequiredMethods
+
+      if (!firstRun && resetRequertMethod) {
+        resetIFrame({ iframe: iframe, height: 0, width: 0, type: 'init' })
+      }
+    }
+
+    function setupIFrameObject() {
+      if (settings[iframeId]) {
+        settings[iframeId].iframe.iFrameResizer = {
+          close: closeIFrame.bind(null, settings[iframeId].iframe),
+
+          removeListeners: removeIframeListeners.bind(
+            null,
+            settings[iframeId].iframe
+          ),
+
+          resize: trigger.bind(
+            null,
+            'Window resize',
+            'resize',
+            settings[iframeId].iframe
+          ),
+
+          moveToAnchor: function (anchor) {
+            trigger(
+              'Move to anchor',
+              'moveToAnchor:' + anchor,
+              settings[iframeId].iframe,
+              iframeId
+            )
+          },
+
+          sendMessage: function (message) {
+            message = JSON.stringify(message)
+            trigger(
+              'Send Message',
+              'message:' + message,
+              settings[iframeId].iframe,
+              iframeId
+            )
+          }
+        }
+      }
+    }
+
+    // We have to call trigger twice, as we can not be sure if all
+    // iframes have completed loading when this code runs. The
+    // event listener also catches the page changing in the iFrame.
+    function init(msg) {
+      function iFrameLoaded() {
+        trigger('iFrame.onload', msg, iframe, undefined, true)
+        checkReset()
+      }
+
+      function createDestroyObserver(MutationObserver) {
+        if (!iframe.parentNode) {
+          return
+        }
+
+        var destroyObserver = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            var removedNodes = Array.prototype.slice.call(mutation.removedNodes) // Transform NodeList into an Array
+            removedNodes.forEach(function (removedNode) {
+              if (removedNode === iframe) {
+                closeIFrame(iframe)
+              }
+            })
+          })
+        })
+        destroyObserver.observe(iframe.parentNode, {
+          childList: true
+        })
+      }
+
+      var MutationObserver = getMutationObserver()
+      if (MutationObserver) {
+        createDestroyObserver(MutationObserver)
+      }
+
+      addEventListener(iframe, 'load', iFrameLoaded)
+      trigger('init', msg, iframe, undefined, true)
+    }
+
+    function checkOptions(options) {
+      if ('object' !== typeof options) {
+        throw new TypeError('Options is not an object')
+      }
+    }
+
+    function copyOptions(options) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (var option in defaults) {
+        if (Object.prototype.hasOwnProperty.call(defaults, option)) {
+          settings[iframeId][option] = Object.prototype.hasOwnProperty.call(
+            options,
+            option
+          )
+            ? options[option]
+            : defaults[option]
+        }
+      }
+    }
+
+    function getTargetOrigin(remoteHost) {
+      return '' === remoteHost ||
+        null !== remoteHost.match(/^(about:blank|javascript:|file:\/\/)/)
+        ? '*'
+        : remoteHost
+    }
+
+    function depricate(key) {
+      var splitName = key.split('Callback')
+
+      if (splitName.length === 2) {
+        var name =
+          'on' + splitName[0].charAt(0).toUpperCase() + splitName[0].slice(1)
+        this[name] = this[key]
+        delete this[key]
+        warn(
+          iframeId,
+          "Deprecated: '" +
+            key +
+            "' has been renamed '" +
+            name +
+            "'. The old method will be removed in the next major version."
+        )
+      }
+    }
+
+    function processOptions(options) {
+      options = options || {}
+
+      settings[iframeId] = Object.create(null) // Protect against prototype attacks
+      settings[iframeId].iframe = iframe
+      settings[iframeId].firstRun = true
+      settings[iframeId].remoteHost =
+        iframe.src && iframe.src.split('/').slice(0, 3).join('/')
+
+      checkOptions(options)
+      Object.keys(options).forEach(depricate, options)
+      copyOptions(options)
+
+      if (settings[iframeId]) {
+        settings[iframeId].targetOrigin =
+          true === settings[iframeId].checkOrigin
+            ? getTargetOrigin(settings[iframeId].remoteHost)
+            : '*'
+      }
+    }
+
+    function beenHere() {
+      return iframeId in settings && 'iFrameResizer' in iframe
+    }
+
+    var iframeId = ensureHasId(iframe.id)
+
+    if (beenHere()) {
+      warn(iframeId, 'Ignored iFrame, already setup.')
+    } else {
+      processOptions(options)
+      setScrolling()
+      setLimits()
+      setupBodyMarginValues()
+      init(createOutgoingMsg(iframeId))
+      setupIFrameObject()
+    }
+  }
+
+  function debouce(fn, time) {
+    if (null === timer) {
+      timer = setTimeout(function () {
+        timer = null
+        fn()
+      }, time)
+    }
+  }
+
+  var frameTimer = {}
+  function debounceFrameEvents(fn, time, frameId) {
+    if (!frameTimer[frameId]) {
+      frameTimer[frameId] = setTimeout(function () {
+        frameTimer[frameId] = null
+        fn()
+      }, time)
+    }
+  }
+
+  // Not testable in PhantomJS
+  /* istanbul ignore next */
+
+  function fixHiddenIFrames() {
+    function checkIFrames() {
+      function checkIFrame(settingId) {
+        function chkDimension(dimension) {
+          return (
+            '0px' ===
+            (settings[settingId] && settings[settingId].iframe.style[dimension])
+          )
+        }
+
+        function isVisible(el) {
+          return null !== el.offsetParent
+        }
+
+        if (
+          settings[settingId] &&
+          isVisible(settings[settingId].iframe) &&
+          (chkDimension('height') || chkDimension('width'))
+        ) {
+          trigger(
+            'Visibility change',
+            'resize',
+            settings[settingId].iframe,
+            settingId
+          )
+        }
+      }
+
+      Object.keys(settings).forEach(function (key) {
+        checkIFrame(key)
+      })
+    }
+
+    function mutationObserved(mutations) {
+      log(
+        'window',
+        'Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type
+      )
+      debouce(checkIFrames, 16)
+    }
+
+    function createMutationObserver() {
+      var target = document.querySelector('body'),
+        config = {
+          attributes: true,
+          attributeOldValue: false,
+          characterData: true,
+          characterDataOldValue: false,
+          childList: true,
+          subtree: true
+        },
+        observer = new MutationObserver(mutationObserved)
+
+      observer.observe(target, config)
+    }
+
+    var MutationObserver = getMutationObserver()
+    if (MutationObserver) {
+      createMutationObserver()
+    }
+  }
+
+  function resizeIFrames(event) {
+    function resize() {
+      sendTriggerMsg('Window ' + event, 'resize')
+    }
+
+    log('window', 'Trigger event: ' + event)
+    debouce(resize, 16)
+  }
+
+  // Not testable in PhantomJS
+  /* istanbul ignore next */
+  function tabVisible() {
+    function resize() {
+      sendTriggerMsg('Tab Visible', 'resize')
+    }
+
+    if ('hidden' !== document.visibilityState) {
+      log('document', 'Trigger event: Visibility change')
+      debouce(resize, 16)
+    }
+  }
+
+  function sendTriggerMsg(eventName, event) {
+    function isIFrameResizeEnabled(iframeId) {
+      return (
+        settings[iframeId] &&
+        'parent' === settings[iframeId].resizeFrom &&
+        settings[iframeId].autoResize &&
+        !settings[iframeId].firstRun
+      )
+    }
+
+    Object.keys(settings).forEach(function (iframeId) {
+      if (isIFrameResizeEnabled(iframeId)) {
+        trigger(eventName, event, settings[iframeId].iframe, iframeId)
+      }
+    })
+  }
+
+  function setupEventListeners() {
+    addEventListener(window, 'message', iFrameListener)
+
+    addEventListener(window, 'resize', function () {
+      resizeIFrames('resize')
+    })
+
+    addEventListener(document, 'visibilitychange', tabVisible)
+
+    addEventListener(document, '-webkit-visibilitychange', tabVisible)
+  }
+
+  function factory() {
+    function init(options, element) {
+      function chkType() {
+        if (!element.tagName) {
+          throw new TypeError('Object is not a valid DOM element')
+        } else if ('IFRAME' !== element.tagName.toUpperCase()) {
+          throw new TypeError(
+            'Expected <IFRAME> tag, found <' + element.tagName + '>'
+          )
+        }
+      }
+
+      if (element) {
+        chkType()
+        setupIFrame(element, options)
+        iFrames.push(element)
+      }
+    }
+
+    function warnDeprecatedOptions(options) {
+      if (options && options.enablePublicMethods) {
+        warn(
+          'enablePublicMethods option has been removed, public methods are now always available in the iFrame'
+        )
+      }
+    }
+
+    var iFrames
+
+    setupRequestAnimationFrame()
+    setupEventListeners()
+
+    return function iFrameResizeF(options, target) {
+      iFrames = [] // Only return iFrames past in on this call
+
+      warnDeprecatedOptions(options)
+
+      switch (typeof target) {
+        case 'undefined':
+        case 'string': {
+          Array.prototype.forEach.call(
+            document.querySelectorAll(target || 'iframe'),
+            init.bind(undefined, options)
+          )
+          break
+        }
+
+        case 'object': {
+          init(options, target)
+          break
+        }
+
+        default: {
+          throw new TypeError('Unexpected data type (' + typeof target + ')')
+        }
+      }
+
+      return iFrames
+    }
+  }
+
+  function createJQueryPublicMethod($) {
+    if (!$.fn) {
+      info('', 'Unable to bind to jQuery, it is not fully loaded.')
+    } else if (!$.fn.iFrameResize) {
+      $.fn.iFrameResize = function $iFrameResizeF(options) {
+        function init(index, element) {
+          setupIFrame(element, options)
+        }
+
+        return this.filter('iframe').each(init).end()
+      }
+    }
+  }
+
+  if (window.jQuery !== undefined) {
+    createJQueryPublicMethod(window.jQuery)
+  }
+
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
+  } else {}
+  window.iFrameResize = window.iFrameResize || factory()
+})()
+
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/runtime/api.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/css-loader/dist/runtime/api.js ***!
-  \*****************************************************/
-/*! no static exports found */
+/***/ "6d6a":
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-eval("\n\n/*\n  MIT License http://www.opensource.org/licenses/mit-license.php\n  Author Tobias Koppers @sokra\n*/\n// css base code, injected by the css-loader\n// eslint-disable-next-line func-names\nmodule.exports = function (useSourceMap) {\n  var list = []; // return the list of modules as css string\n\n  list.toString = function toString() {\n    return this.map(function (item) {\n      var content = cssWithMappingToString(item, useSourceMap);\n\n      if (item[2]) {\n        return \"@media \".concat(item[2], \" {\").concat(content, \"}\");\n      }\n\n      return content;\n    }).join('');\n  }; // import a list of modules into the list\n  // eslint-disable-next-line func-names\n\n\n  list.i = function (modules, mediaQuery, dedupe) {\n    if (typeof modules === 'string') {\n      // eslint-disable-next-line no-param-reassign\n      modules = [[null, modules, '']];\n    }\n\n    var alreadyImportedModules = {};\n\n    if (dedupe) {\n      for (var i = 0; i < this.length; i++) {\n        // eslint-disable-next-line prefer-destructuring\n        var id = this[i][0];\n\n        if (id != null) {\n          alreadyImportedModules[id] = true;\n        }\n      }\n    }\n\n    for (var _i = 0; _i < modules.length; _i++) {\n      var item = [].concat(modules[_i]);\n\n      if (dedupe && alreadyImportedModules[item[0]]) {\n        // eslint-disable-next-line no-continue\n        continue;\n      }\n\n      if (mediaQuery) {\n        if (!item[2]) {\n          item[2] = mediaQuery;\n        } else {\n          item[2] = \"\".concat(mediaQuery, \" and \").concat(item[2]);\n        }\n      }\n\n      list.push(item);\n    }\n  };\n\n  return list;\n};\n\nfunction cssWithMappingToString(item, useSourceMap) {\n  var content = item[1] || ''; // eslint-disable-next-line prefer-destructuring\n\n  var cssMapping = item[3];\n\n  if (!cssMapping) {\n    return content;\n  }\n\n  if (useSourceMap && typeof btoa === 'function') {\n    var sourceMapping = toComment(cssMapping);\n    var sourceURLs = cssMapping.sources.map(function (source) {\n      return \"/*# sourceURL=\".concat(cssMapping.sourceRoot || '').concat(source, \" */\");\n    });\n    return [content].concat(sourceURLs).concat([sourceMapping]).join('\\n');\n  }\n\n  return [content].join('\\n');\n} // Adapted from convert-source-map (MIT)\n\n\nfunction toComment(sourceMap) {\n  // eslint-disable-next-line no-undef\n  var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));\n  var data = \"sourceMappingURL=data:application/json;charset=utf-8;base64,\".concat(base64);\n  return \"/*# \".concat(data, \" */\");\n}\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./node_modules/css-loader/dist/runtime/api.js?");
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 
-/***/ "./node_modules/iframe-resizer/js/iframeResizer.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/iframe-resizer/js/iframeResizer.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-eval("var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*\n * File: iframeResizer.js\n * Desc: Force iframes to size to content.\n * Requires: iframeResizer.contentWindow.js to be loaded into the target frame.\n * Doc: https://github.com/davidjbradshaw/iframe-resizer\n * Author: David J. Bradshaw - dave@bradshaw.net\n * Contributor: Jure Mav - jure.mav@gmail.com\n * Contributor: Reed Dadoune - reed@dadoune.com\n */\n\n// eslint-disable-next-line sonarjs/cognitive-complexity, no-shadow-restricted-names\n;(function (undefined) {\n  if (typeof window === 'undefined') return // don't run for server side render\n\n  var count = 0,\n    logEnabled = false,\n    hiddenCheckEnabled = false,\n    msgHeader = 'message',\n    msgHeaderLen = msgHeader.length,\n    msgId = '[iFrameSizer]', // Must match iframe msg ID\n    msgIdLen = msgId.length,\n    pagePosition = null,\n    requestAnimationFrame = window.requestAnimationFrame,\n    resetRequiredMethods = Object.freeze({\n      max: 1,\n      scroll: 1,\n      bodyScroll: 1,\n      documentElementScroll: 1\n    }),\n    settings = {},\n    timer = null,\n    defaults = Object.freeze({\n      autoResize: true,\n      bodyBackground: null,\n      bodyMargin: null,\n      bodyMarginV1: 8,\n      bodyPadding: null,\n      checkOrigin: true,\n      inPageLinks: false,\n      enablePublicMethods: true,\n      heightCalculationMethod: 'bodyOffset',\n      id: 'iFrameResizer',\n      interval: 32,\n      log: false,\n      maxHeight: Infinity,\n      maxWidth: Infinity,\n      minHeight: 0,\n      minWidth: 0,\n      mouseEvents: true,\n      resizeFrom: 'parent',\n      scrolling: false,\n      sizeHeight: true,\n      sizeWidth: false,\n      warningTimeout: 5000,\n      tolerance: 0,\n      widthCalculationMethod: 'scroll',\n      onClose: function () {\n        return true\n      },\n      onClosed: function () {},\n      onInit: function () {},\n      onMessage: function () {\n        warn('onMessage function not defined')\n      },\n      onMouseEnter: function () {},\n      onMouseLeave: function () {},\n      onResized: function () {},\n      onScroll: function () {\n        return true\n      }\n    })\n\n  function getMutationObserver() {\n    return (\n      window.MutationObserver ||\n      window.WebKitMutationObserver ||\n      window.MozMutationObserver\n    )\n  }\n\n  function addEventListener(el, evt, func) {\n    el.addEventListener(evt, func, false)\n  }\n\n  function removeEventListener(el, evt, func) {\n    el.removeEventListener(evt, func, false)\n  }\n\n  function setupRequestAnimationFrame() {\n    var vendors = ['moz', 'webkit', 'o', 'ms']\n    var x\n\n    // Remove vendor prefixing if prefixed and break early if not\n    for (x = 0; x < vendors.length && !requestAnimationFrame; x += 1) {\n      requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']\n    }\n\n    if (requestAnimationFrame) {\n      // Firefox extension content-scripts have a globalThis object that is not the same as window.\n      // Binding `requestAnimationFrame` to window allows the function to work and prevents errors\n      // being thrown when run in that context, and should be a no-op in every other context.\n      requestAnimationFrame = requestAnimationFrame.bind(window)\n    } else {\n      log('setup', 'RequestAnimationFrame not supported')\n    }\n  }\n\n  function getMyID(iframeId) {\n    var retStr = 'Host page: ' + iframeId\n\n    if (window.top !== window.self) {\n      retStr =\n        window.parentIFrame && window.parentIFrame.getId\n          ? window.parentIFrame.getId() + ': ' + iframeId\n          : 'Nested host page: ' + iframeId\n    }\n\n    return retStr\n  }\n\n  function formatLogHeader(iframeId) {\n    return msgId + '[' + getMyID(iframeId) + ']'\n  }\n\n  function isLogEnabled(iframeId) {\n    return settings[iframeId] ? settings[iframeId].log : logEnabled\n  }\n\n  function log(iframeId, msg) {\n    output('log', iframeId, msg, isLogEnabled(iframeId))\n  }\n\n  function info(iframeId, msg) {\n    output('info', iframeId, msg, isLogEnabled(iframeId))\n  }\n\n  function warn(iframeId, msg) {\n    output('warn', iframeId, msg, true)\n  }\n\n  function output(type, iframeId, msg, enabled) {\n    if (true === enabled && 'object' === typeof window.console) {\n      // eslint-disable-next-line no-console\n      console[type](formatLogHeader(iframeId), msg)\n    }\n  }\n\n  function iFrameListener(event) {\n    function resizeIFrame() {\n      function resize() {\n        setSize(messageData)\n        setPagePosition(iframeId)\n        on('onResized', messageData)\n      }\n\n      ensureInRange('Height')\n      ensureInRange('Width')\n\n      syncResize(resize, messageData, 'init')\n    }\n\n    function processMsg() {\n      var data = msg.slice(msgIdLen).split(':')\n      var height = data[1] ? parseInt(data[1], 10) : 0\n      var iframe = settings[data[0]] && settings[data[0]].iframe\n      var compStyle = getComputedStyle(iframe)\n\n      return {\n        iframe: iframe,\n        id: data[0],\n        height: height + getPaddingEnds(compStyle) + getBorderEnds(compStyle),\n        width: data[2],\n        type: data[3]\n      }\n    }\n\n    function getPaddingEnds(compStyle) {\n      if (compStyle.boxSizing !== 'border-box') {\n        return 0\n      }\n      var top = compStyle.paddingTop ? parseInt(compStyle.paddingTop, 10) : 0\n      var bot = compStyle.paddingBottom\n        ? parseInt(compStyle.paddingBottom, 10)\n        : 0\n      return top + bot\n    }\n\n    function getBorderEnds(compStyle) {\n      if (compStyle.boxSizing !== 'border-box') {\n        return 0\n      }\n      var top = compStyle.borderTopWidth\n        ? parseInt(compStyle.borderTopWidth, 10)\n        : 0\n      var bot = compStyle.borderBottomWidth\n        ? parseInt(compStyle.borderBottomWidth, 10)\n        : 0\n      return top + bot\n    }\n\n    function ensureInRange(Dimension) {\n      var max = Number(settings[iframeId]['max' + Dimension]),\n        min = Number(settings[iframeId]['min' + Dimension]),\n        dimension = Dimension.toLowerCase(),\n        size = Number(messageData[dimension])\n\n      log(iframeId, 'Checking ' + dimension + ' is in range ' + min + '-' + max)\n\n      if (size < min) {\n        size = min\n        log(iframeId, 'Set ' + dimension + ' to min value')\n      }\n\n      if (size > max) {\n        size = max\n        log(iframeId, 'Set ' + dimension + ' to max value')\n      }\n\n      messageData[dimension] = '' + size\n    }\n\n    function isMessageFromIFrame() {\n      function checkAllowedOrigin() {\n        function checkList() {\n          var i = 0,\n            retCode = false\n\n          log(\n            iframeId,\n            'Checking connection is from allowed list of origins: ' +\n              checkOrigin\n          )\n\n          for (; i < checkOrigin.length; i++) {\n            if (checkOrigin[i] === origin) {\n              retCode = true\n              break\n            }\n          }\n          return retCode\n        }\n\n        function checkSingle() {\n          var remoteHost = settings[iframeId] && settings[iframeId].remoteHost\n          log(iframeId, 'Checking connection is from: ' + remoteHost)\n          return origin === remoteHost\n        }\n\n        return checkOrigin.constructor === Array ? checkList() : checkSingle()\n      }\n\n      var origin = event.origin,\n        checkOrigin = settings[iframeId] && settings[iframeId].checkOrigin\n\n      if (checkOrigin && '' + origin !== 'null' && !checkAllowedOrigin()) {\n        throw new Error(\n          'Unexpected message received from: ' +\n            origin +\n            ' for ' +\n            messageData.iframe.id +\n            '. Message was: ' +\n            event.data +\n            '. This error can be disabled by setting the checkOrigin: false option or by providing of array of trusted domains.'\n        )\n      }\n\n      return true\n    }\n\n    function isMessageForUs() {\n      return (\n        msgId === ('' + msg).slice(0, msgIdLen) &&\n        msg.slice(msgIdLen).split(':')[0] in settings\n      ) // ''+Protects against non-string msg\n    }\n\n    function isMessageFromMetaParent() {\n      // Test if this message is from a parent above us. This is an ugly test, however, updating\n      // the message format would break backwards compatibility.\n      var retCode = messageData.type in { true: 1, false: 1, undefined: 1 }\n\n      if (retCode) {\n        log(iframeId, 'Ignoring init message from meta parent page')\n      }\n\n      return retCode\n    }\n\n    function getMsgBody(offset) {\n      return msg.slice(msg.indexOf(':') + msgHeaderLen + offset)\n    }\n\n    function forwardMsgFromIFrame(msgBody) {\n      log(\n        iframeId,\n        'onMessage passed: {iframe: ' +\n          messageData.iframe.id +\n          ', message: ' +\n          msgBody +\n          '}'\n      )\n\n      on('onMessage', {\n        iframe: messageData.iframe,\n        message: JSON.parse(msgBody)\n      })\n\n      log(iframeId, '--')\n    }\n\n    function getPageInfo() {\n      var bodyPosition = document.body.getBoundingClientRect(),\n        iFramePosition = messageData.iframe.getBoundingClientRect()\n\n      return JSON.stringify({\n        iframeHeight: iFramePosition.height,\n        iframeWidth: iFramePosition.width,\n        clientHeight: Math.max(\n          document.documentElement.clientHeight,\n          window.innerHeight || 0\n        ),\n        clientWidth: Math.max(\n          document.documentElement.clientWidth,\n          window.innerWidth || 0\n        ),\n        offsetTop: parseInt(iFramePosition.top - bodyPosition.top, 10),\n        offsetLeft: parseInt(iFramePosition.left - bodyPosition.left, 10),\n        scrollTop: window.pageYOffset,\n        scrollLeft: window.pageXOffset,\n        documentHeight: document.documentElement.clientHeight,\n        documentWidth: document.documentElement.clientWidth,\n        windowHeight: window.innerHeight,\n        windowWidth: window.innerWidth\n      })\n    }\n\n    function sendPageInfoToIframe(iframe, iframeId) {\n      function debouncedTrigger() {\n        trigger('Send Page Info', 'pageInfo:' + getPageInfo(), iframe, iframeId)\n      }\n      debounceFrameEvents(debouncedTrigger, 32, iframeId)\n    }\n\n    function startPageInfoMonitor() {\n      function setListener(type, func) {\n        function sendPageInfo() {\n          if (settings[id]) {\n            sendPageInfoToIframe(settings[id].iframe, id)\n          } else {\n            stop()\n          }\n        }\n\n        ;['scroll', 'resize'].forEach(function (evt) {\n          log(id, type + evt + ' listener for sendPageInfo')\n          func(window, evt, sendPageInfo)\n        })\n      }\n\n      function stop() {\n        setListener('Remove ', removeEventListener)\n      }\n\n      function start() {\n        setListener('Add ', addEventListener)\n      }\n\n      var id = iframeId // Create locally scoped copy of iFrame ID\n\n      start()\n\n      if (settings[id]) {\n        settings[id].stopPageInfo = stop\n      }\n    }\n\n    function stopPageInfoMonitor() {\n      if (settings[iframeId] && settings[iframeId].stopPageInfo) {\n        settings[iframeId].stopPageInfo()\n        delete settings[iframeId].stopPageInfo\n      }\n    }\n\n    function checkIFrameExists() {\n      var retBool = true\n\n      if (null === messageData.iframe) {\n        warn(iframeId, 'IFrame (' + messageData.id + ') not found')\n        retBool = false\n      }\n      return retBool\n    }\n\n    function getElementPosition(target) {\n      var iFramePosition = target.getBoundingClientRect()\n\n      getPagePosition(iframeId)\n\n      return {\n        x: Math.floor(Number(iFramePosition.left) + Number(pagePosition.x)),\n        y: Math.floor(Number(iFramePosition.top) + Number(pagePosition.y))\n      }\n    }\n\n    function scrollRequestFromChild(addOffset) {\n      /* istanbul ignore next */ // Not testable in Karma\n      function reposition() {\n        pagePosition = newPosition\n        scrollTo()\n        log(iframeId, '--')\n      }\n\n      function calcOffset() {\n        return {\n          x: Number(messageData.width) + offset.x,\n          y: Number(messageData.height) + offset.y\n        }\n      }\n\n      function scrollParent() {\n        if (window.parentIFrame) {\n          window.parentIFrame['scrollTo' + (addOffset ? 'Offset' : '')](\n            newPosition.x,\n            newPosition.y\n          )\n        } else {\n          warn(\n            iframeId,\n            'Unable to scroll to requested position, window.parentIFrame not found'\n          )\n        }\n      }\n\n      var offset = addOffset\n          ? getElementPosition(messageData.iframe)\n          : { x: 0, y: 0 },\n        newPosition = calcOffset()\n\n      log(\n        iframeId,\n        'Reposition requested from iFrame (offset x:' +\n          offset.x +\n          ' y:' +\n          offset.y +\n          ')'\n      )\n\n      if (window.top === window.self) {\n        reposition()\n      } else {\n        scrollParent()\n      }\n    }\n\n    function scrollTo() {\n      if (false === on('onScroll', pagePosition)) {\n        unsetPagePosition()\n      } else {\n        setPagePosition(iframeId)\n      }\n    }\n\n    function findTarget(location) {\n      function jumpToTarget() {\n        var jumpPosition = getElementPosition(target)\n\n        log(\n          iframeId,\n          'Moving to in page link (#' +\n            hash +\n            ') at x: ' +\n            jumpPosition.x +\n            ' y: ' +\n            jumpPosition.y\n        )\n        pagePosition = {\n          x: jumpPosition.x,\n          y: jumpPosition.y\n        }\n\n        scrollTo()\n        log(iframeId, '--')\n      }\n\n      function jumpToParent() {\n        if (window.parentIFrame) {\n          window.parentIFrame.moveToAnchor(hash)\n        } else {\n          log(\n            iframeId,\n            'In page link #' +\n              hash +\n              ' not found and window.parentIFrame not found'\n          )\n        }\n      }\n\n      var hash = location.split('#')[1] || '',\n        hashData = decodeURIComponent(hash),\n        target =\n          document.getElementById(hashData) ||\n          document.getElementsByName(hashData)[0]\n\n      if (target) {\n        jumpToTarget()\n      } else if (window.top === window.self) {\n        log(iframeId, 'In page link #' + hash + ' not found')\n      } else {\n        jumpToParent()\n      }\n    }\n\n    function onMouse(event) {\n      var mousePos = {}\n\n      if (Number(messageData.width) === 0 && Number(messageData.height) === 0) {\n        var data = getMsgBody(9).split(':')\n        mousePos = {\n          x: data[1],\n          y: data[0]\n        }\n      } else {\n        mousePos = {\n          x: messageData.width,\n          y: messageData.height\n        }\n      }\n\n      on(event, {\n        iframe: messageData.iframe,\n        screenX: Number(mousePos.x),\n        screenY: Number(mousePos.y),\n        type: messageData.type\n      })\n    }\n\n    function on(funcName, val) {\n      return chkEvent(iframeId, funcName, val)\n    }\n\n    function actionMsg() {\n      if (settings[iframeId] && settings[iframeId].firstRun) firstRun()\n\n      switch (messageData.type) {\n        case 'close': {\n          closeIFrame(messageData.iframe)\n          break\n        }\n\n        case 'message': {\n          forwardMsgFromIFrame(getMsgBody(6))\n          break\n        }\n\n        case 'mouseenter': {\n          onMouse('onMouseEnter')\n          break\n        }\n\n        case 'mouseleave': {\n          onMouse('onMouseLeave')\n          break\n        }\n\n        case 'autoResize': {\n          settings[iframeId].autoResize = JSON.parse(getMsgBody(9))\n          break\n        }\n\n        case 'scrollTo': {\n          scrollRequestFromChild(false)\n          break\n        }\n\n        case 'scrollToOffset': {\n          scrollRequestFromChild(true)\n          break\n        }\n\n        case 'pageInfo': {\n          sendPageInfoToIframe(\n            settings[iframeId] && settings[iframeId].iframe,\n            iframeId\n          )\n          startPageInfoMonitor()\n          break\n        }\n\n        case 'pageInfoStop': {\n          stopPageInfoMonitor()\n          break\n        }\n\n        case 'inPageLink': {\n          findTarget(getMsgBody(9))\n          break\n        }\n\n        case 'reset': {\n          resetIFrame(messageData)\n          break\n        }\n\n        case 'init': {\n          resizeIFrame()\n          on('onInit', messageData.iframe)\n          break\n        }\n\n        default: {\n          if (\n            Number(messageData.width) === 0 &&\n            Number(messageData.height) === 0\n          ) {\n            warn(\n              'Unsupported message received (' +\n                messageData.type +\n                '), this is likely due to the iframe containing a later ' +\n                'version of iframe-resizer than the parent page'\n            )\n          } else {\n            resizeIFrame()\n          }\n        }\n      }\n    }\n\n    function hasSettings(iframeId) {\n      var retBool = true\n\n      if (!settings[iframeId]) {\n        retBool = false\n        warn(\n          messageData.type +\n            ' No settings for ' +\n            iframeId +\n            '. Message was: ' +\n            msg\n        )\n      }\n\n      return retBool\n    }\n\n    function iFrameReadyMsgReceived() {\n      // eslint-disable-next-line no-restricted-syntax, guard-for-in\n      for (var iframeId in settings) {\n        trigger(\n          'iFrame requested init',\n          createOutgoingMsg(iframeId),\n          settings[iframeId].iframe,\n          iframeId\n        )\n      }\n    }\n\n    function firstRun() {\n      if (settings[iframeId]) {\n        settings[iframeId].firstRun = false\n      }\n    }\n\n    var msg = event.data,\n      messageData = {},\n      iframeId = null\n\n    if ('[iFrameResizerChild]Ready' === msg) {\n      iFrameReadyMsgReceived()\n    } else if (isMessageForUs()) {\n      messageData = processMsg()\n      iframeId = messageData.id\n      if (settings[iframeId]) {\n        settings[iframeId].loaded = true\n      }\n\n      if (!isMessageFromMetaParent() && hasSettings(iframeId)) {\n        log(iframeId, 'Received: ' + msg)\n\n        if (checkIFrameExists() && isMessageFromIFrame()) {\n          actionMsg()\n        }\n      }\n    } else {\n      info(iframeId, 'Ignored: ' + msg)\n    }\n  }\n\n  function chkEvent(iframeId, funcName, val) {\n    var func = null,\n      retVal = null\n\n    if (settings[iframeId]) {\n      func = settings[iframeId][funcName]\n\n      if ('function' === typeof func) {\n        retVal = func(val)\n      } else {\n        throw new TypeError(\n          funcName + ' on iFrame[' + iframeId + '] is not a function'\n        )\n      }\n    }\n\n    return retVal\n  }\n\n  function removeIframeListeners(iframe) {\n    var iframeId = iframe.id\n    delete settings[iframeId]\n  }\n\n  function closeIFrame(iframe) {\n    var iframeId = iframe.id\n    if (chkEvent(iframeId, 'onClose', iframeId) === false) {\n      log(iframeId, 'Close iframe cancelled by onClose event')\n      return\n    }\n    log(iframeId, 'Removing iFrame: ' + iframeId)\n\n    try {\n      // Catch race condition error with React\n      if (iframe.parentNode) {\n        iframe.parentNode.removeChild(iframe)\n      }\n    } catch (error) {\n      warn(error)\n    }\n\n    chkEvent(iframeId, 'onClosed', iframeId)\n    log(iframeId, '--')\n    removeIframeListeners(iframe)\n  }\n\n  function getPagePosition(iframeId) {\n    if (null === pagePosition) {\n      pagePosition = {\n        x:\n          window.pageXOffset === undefined\n            ? document.documentElement.scrollLeft\n            : window.pageXOffset,\n        y:\n          window.pageYOffset === undefined\n            ? document.documentElement.scrollTop\n            : window.pageYOffset\n      }\n      log(\n        iframeId,\n        'Get page position: ' + pagePosition.x + ',' + pagePosition.y\n      )\n    }\n  }\n\n  function setPagePosition(iframeId) {\n    if (null !== pagePosition) {\n      window.scrollTo(pagePosition.x, pagePosition.y)\n      log(\n        iframeId,\n        'Set page position: ' + pagePosition.x + ',' + pagePosition.y\n      )\n      unsetPagePosition()\n    }\n  }\n\n  function unsetPagePosition() {\n    pagePosition = null\n  }\n\n  function resetIFrame(messageData) {\n    function reset() {\n      setSize(messageData)\n      trigger('reset', 'reset', messageData.iframe, messageData.id)\n    }\n\n    log(\n      messageData.id,\n      'Size reset requested by ' +\n        ('init' === messageData.type ? 'host page' : 'iFrame')\n    )\n    getPagePosition(messageData.id)\n    syncResize(reset, messageData, 'reset')\n  }\n\n  function setSize(messageData) {\n    function setDimension(dimension) {\n      if (!messageData.id) {\n        log('undefined', 'messageData id not set')\n        return\n      }\n      messageData.iframe.style[dimension] = messageData[dimension] + 'px'\n      log(\n        messageData.id,\n        'IFrame (' +\n          iframeId +\n          ') ' +\n          dimension +\n          ' set to ' +\n          messageData[dimension] +\n          'px'\n      )\n    }\n\n    function chkZero(dimension) {\n      // FireFox sets dimension of hidden iFrames to zero.\n      // So if we detect that set up an event to check for\n      // when iFrame becomes visible.\n\n      /* istanbul ignore next */ // Not testable in PhantomJS\n      if (!hiddenCheckEnabled && '0' === messageData[dimension]) {\n        hiddenCheckEnabled = true\n        log(iframeId, 'Hidden iFrame detected, creating visibility listener')\n        fixHiddenIFrames()\n      }\n    }\n\n    function processDimension(dimension) {\n      setDimension(dimension)\n      chkZero(dimension)\n    }\n\n    var iframeId = messageData.iframe.id\n\n    if (settings[iframeId]) {\n      if (settings[iframeId].sizeHeight) {\n        processDimension('height')\n      }\n      if (settings[iframeId].sizeWidth) {\n        processDimension('width')\n      }\n    }\n  }\n\n  function syncResize(func, messageData, doNotSync) {\n    /* istanbul ignore if */ // Not testable in PhantomJS\n    if (\n      doNotSync !== messageData.type &&\n      requestAnimationFrame &&\n      // including check for jasmine because had trouble getting spy to work in unit test using requestAnimationFrame\n      !window.jasmine\n    ) {\n      log(messageData.id, 'Requesting animation frame')\n      requestAnimationFrame(func)\n    } else {\n      func()\n    }\n  }\n\n  function trigger(calleeMsg, msg, iframe, id, noResponseWarning) {\n    function postMessageToIFrame() {\n      var target = settings[id] && settings[id].targetOrigin\n      log(\n        id,\n        '[' +\n          calleeMsg +\n          '] Sending msg to iframe[' +\n          id +\n          '] (' +\n          msg +\n          ') targetOrigin: ' +\n          target\n      )\n      iframe.contentWindow.postMessage(msgId + msg, target)\n    }\n\n    function iFrameNotFound() {\n      warn(id, '[' + calleeMsg + '] IFrame(' + id + ') not found')\n    }\n\n    function chkAndSend() {\n      if (\n        iframe &&\n        'contentWindow' in iframe &&\n        null !== iframe.contentWindow\n      ) {\n        // Null test for PhantomJS\n        postMessageToIFrame()\n      } else {\n        iFrameNotFound()\n      }\n    }\n\n    function warnOnNoResponse() {\n      function warning() {\n        if (settings[id] && !settings[id].loaded && !errorShown) {\n          errorShown = true\n          warn(\n            id,\n            'IFrame has not responded within ' +\n              settings[id].warningTimeout / 1000 +\n              ' seconds. Check iFrameResizer.contentWindow.js has been loaded in iFrame. This message can be ignored if everything is working, or you can set the warningTimeout option to a higher value or zero to suppress this warning.'\n          )\n        }\n      }\n\n      if (\n        !!noResponseWarning &&\n        settings[id] &&\n        !!settings[id].warningTimeout\n      ) {\n        settings[id].msgTimeout = setTimeout(\n          warning,\n          settings[id].warningTimeout\n        )\n      }\n    }\n\n    var errorShown = false\n\n    id = id || iframe.id\n\n    if (settings[id]) {\n      chkAndSend()\n      warnOnNoResponse()\n    }\n  }\n\n  function createOutgoingMsg(iframeId) {\n    return (\n      iframeId +\n      ':' +\n      settings[iframeId].bodyMarginV1 +\n      ':' +\n      settings[iframeId].sizeWidth +\n      ':' +\n      settings[iframeId].log +\n      ':' +\n      settings[iframeId].interval +\n      ':' +\n      settings[iframeId].enablePublicMethods +\n      ':' +\n      settings[iframeId].autoResize +\n      ':' +\n      settings[iframeId].bodyMargin +\n      ':' +\n      settings[iframeId].heightCalculationMethod +\n      ':' +\n      settings[iframeId].bodyBackground +\n      ':' +\n      settings[iframeId].bodyPadding +\n      ':' +\n      settings[iframeId].tolerance +\n      ':' +\n      settings[iframeId].inPageLinks +\n      ':' +\n      settings[iframeId].resizeFrom +\n      ':' +\n      settings[iframeId].widthCalculationMethod +\n      ':' +\n      settings[iframeId].mouseEvents\n    )\n  }\n\n  function isNumber(value) {\n    return typeof value === 'number'\n  }\n\n  function setupIFrame(iframe, options) {\n    function setLimits() {\n      function addStyle(style) {\n        var styleValue = settings[iframeId][style]\n        if (Infinity !== styleValue && 0 !== styleValue) {\n          iframe.style[style] = isNumber(styleValue)\n            ? styleValue + 'px'\n            : styleValue\n          log(iframeId, 'Set ' + style + ' = ' + iframe.style[style])\n        }\n      }\n\n      function chkMinMax(dimension) {\n        if (\n          settings[iframeId]['min' + dimension] >\n          settings[iframeId]['max' + dimension]\n        ) {\n          throw new Error(\n            'Value for min' +\n              dimension +\n              ' can not be greater than max' +\n              dimension\n          )\n        }\n      }\n\n      chkMinMax('Height')\n      chkMinMax('Width')\n\n      addStyle('maxHeight')\n      addStyle('minHeight')\n      addStyle('maxWidth')\n      addStyle('minWidth')\n    }\n\n    function newId() {\n      var id = (options && options.id) || defaults.id + count++\n      if (null !== document.getElementById(id)) {\n        id += count++\n      }\n      return id\n    }\n\n    function ensureHasId(iframeId) {\n      if (typeof iframeId !== 'string') {\n        throw new TypeError('Invaild id for iFrame. Expected String')\n      }\n\n      if ('' === iframeId) {\n        // eslint-disable-next-line no-multi-assign\n        iframe.id = iframeId = newId()\n        logEnabled = (options || {}).log\n        log(\n          iframeId,\n          'Added missing iframe ID: ' + iframeId + ' (' + iframe.src + ')'\n        )\n      }\n\n      return iframeId\n    }\n\n    function setScrolling() {\n      log(\n        iframeId,\n        'IFrame scrolling ' +\n          (settings[iframeId] && settings[iframeId].scrolling\n            ? 'enabled'\n            : 'disabled') +\n          ' for ' +\n          iframeId\n      )\n      iframe.style.overflow =\n        false === (settings[iframeId] && settings[iframeId].scrolling)\n          ? 'hidden'\n          : 'auto'\n      switch (settings[iframeId] && settings[iframeId].scrolling) {\n        case 'omit': {\n          break\n        }\n\n        case true: {\n          iframe.scrolling = 'yes'\n          break\n        }\n\n        case false: {\n          iframe.scrolling = 'no'\n          break\n        }\n\n        default: {\n          iframe.scrolling = settings[iframeId]\n            ? settings[iframeId].scrolling\n            : 'no'\n        }\n      }\n    }\n\n    // The V1 iFrame script expects an int, where as in V2 expects a CSS\n    // string value such as '1px 3em', so if we have an int for V2, set V1=V2\n    // and then convert V2 to a string PX value.\n    function setupBodyMarginValues() {\n      if (\n        'number' ===\n          typeof (settings[iframeId] && settings[iframeId].bodyMargin) ||\n        '0' === (settings[iframeId] && settings[iframeId].bodyMargin)\n      ) {\n        settings[iframeId].bodyMarginV1 = settings[iframeId].bodyMargin\n        settings[iframeId].bodyMargin =\n          '' + settings[iframeId].bodyMargin + 'px'\n      }\n    }\n\n    function checkReset() {\n      // Reduce scope of firstRun to function, because IE8's JS execution\n      // context stack is borked and this value gets externally\n      // changed midway through running this function!!!\n      var firstRun = settings[iframeId] && settings[iframeId].firstRun,\n        resetRequertMethod =\n          settings[iframeId] &&\n          settings[iframeId].heightCalculationMethod in resetRequiredMethods\n\n      if (!firstRun && resetRequertMethod) {\n        resetIFrame({ iframe: iframe, height: 0, width: 0, type: 'init' })\n      }\n    }\n\n    function setupIFrameObject() {\n      if (settings[iframeId]) {\n        settings[iframeId].iframe.iFrameResizer = {\n          close: closeIFrame.bind(null, settings[iframeId].iframe),\n\n          removeListeners: removeIframeListeners.bind(\n            null,\n            settings[iframeId].iframe\n          ),\n\n          resize: trigger.bind(\n            null,\n            'Window resize',\n            'resize',\n            settings[iframeId].iframe\n          ),\n\n          moveToAnchor: function (anchor) {\n            trigger(\n              'Move to anchor',\n              'moveToAnchor:' + anchor,\n              settings[iframeId].iframe,\n              iframeId\n            )\n          },\n\n          sendMessage: function (message) {\n            message = JSON.stringify(message)\n            trigger(\n              'Send Message',\n              'message:' + message,\n              settings[iframeId].iframe,\n              iframeId\n            )\n          }\n        }\n      }\n    }\n\n    // We have to call trigger twice, as we can not be sure if all\n    // iframes have completed loading when this code runs. The\n    // event listener also catches the page changing in the iFrame.\n    function init(msg) {\n      function iFrameLoaded() {\n        trigger('iFrame.onload', msg, iframe, undefined, true)\n        checkReset()\n      }\n\n      function createDestroyObserver(MutationObserver) {\n        if (!iframe.parentNode) {\n          return\n        }\n\n        var destroyObserver = new MutationObserver(function (mutations) {\n          mutations.forEach(function (mutation) {\n            var removedNodes = Array.prototype.slice.call(mutation.removedNodes) // Transform NodeList into an Array\n            removedNodes.forEach(function (removedNode) {\n              if (removedNode === iframe) {\n                closeIFrame(iframe)\n              }\n            })\n          })\n        })\n        destroyObserver.observe(iframe.parentNode, {\n          childList: true\n        })\n      }\n\n      var MutationObserver = getMutationObserver()\n      if (MutationObserver) {\n        createDestroyObserver(MutationObserver)\n      }\n\n      addEventListener(iframe, 'load', iFrameLoaded)\n      trigger('init', msg, iframe, undefined, true)\n    }\n\n    function checkOptions(options) {\n      if ('object' !== typeof options) {\n        throw new TypeError('Options is not an object')\n      }\n    }\n\n    function copyOptions(options) {\n      // eslint-disable-next-line no-restricted-syntax\n      for (var option in defaults) {\n        if (Object.prototype.hasOwnProperty.call(defaults, option)) {\n          settings[iframeId][option] = Object.prototype.hasOwnProperty.call(\n            options,\n            option\n          )\n            ? options[option]\n            : defaults[option]\n        }\n      }\n    }\n\n    function getTargetOrigin(remoteHost) {\n      return '' === remoteHost ||\n        null !== remoteHost.match(/^(about:blank|javascript:|file:\\/\\/)/)\n        ? '*'\n        : remoteHost\n    }\n\n    function depricate(key) {\n      var splitName = key.split('Callback')\n\n      if (splitName.length === 2) {\n        var name =\n          'on' + splitName[0].charAt(0).toUpperCase() + splitName[0].slice(1)\n        this[name] = this[key]\n        delete this[key]\n        warn(\n          iframeId,\n          \"Deprecated: '\" +\n            key +\n            \"' has been renamed '\" +\n            name +\n            \"'. The old method will be removed in the next major version.\"\n        )\n      }\n    }\n\n    function processOptions(options) {\n      options = options || {}\n\n      settings[iframeId] = Object.create(null) // Protect against prototype attacks\n      settings[iframeId].iframe = iframe\n      settings[iframeId].firstRun = true\n      settings[iframeId].remoteHost =\n        iframe.src && iframe.src.split('/').slice(0, 3).join('/')\n\n      checkOptions(options)\n      Object.keys(options).forEach(depricate, options)\n      copyOptions(options)\n\n      if (settings[iframeId]) {\n        settings[iframeId].targetOrigin =\n          true === settings[iframeId].checkOrigin\n            ? getTargetOrigin(settings[iframeId].remoteHost)\n            : '*'\n      }\n    }\n\n    function beenHere() {\n      return iframeId in settings && 'iFrameResizer' in iframe\n    }\n\n    var iframeId = ensureHasId(iframe.id)\n\n    if (beenHere()) {\n      warn(iframeId, 'Ignored iFrame, already setup.')\n    } else {\n      processOptions(options)\n      setScrolling()\n      setLimits()\n      setupBodyMarginValues()\n      init(createOutgoingMsg(iframeId))\n      setupIFrameObject()\n    }\n  }\n\n  function debouce(fn, time) {\n    if (null === timer) {\n      timer = setTimeout(function () {\n        timer = null\n        fn()\n      }, time)\n    }\n  }\n\n  var frameTimer = {}\n  function debounceFrameEvents(fn, time, frameId) {\n    if (!frameTimer[frameId]) {\n      frameTimer[frameId] = setTimeout(function () {\n        frameTimer[frameId] = null\n        fn()\n      }, time)\n    }\n  }\n\n  // Not testable in PhantomJS\n  /* istanbul ignore next */\n\n  function fixHiddenIFrames() {\n    function checkIFrames() {\n      function checkIFrame(settingId) {\n        function chkDimension(dimension) {\n          return (\n            '0px' ===\n            (settings[settingId] && settings[settingId].iframe.style[dimension])\n          )\n        }\n\n        function isVisible(el) {\n          return null !== el.offsetParent\n        }\n\n        if (\n          settings[settingId] &&\n          isVisible(settings[settingId].iframe) &&\n          (chkDimension('height') || chkDimension('width'))\n        ) {\n          trigger(\n            'Visibility change',\n            'resize',\n            settings[settingId].iframe,\n            settingId\n          )\n        }\n      }\n\n      Object.keys(settings).forEach(function (key) {\n        checkIFrame(key)\n      })\n    }\n\n    function mutationObserved(mutations) {\n      log(\n        'window',\n        'Mutation observed: ' + mutations[0].target + ' ' + mutations[0].type\n      )\n      debouce(checkIFrames, 16)\n    }\n\n    function createMutationObserver() {\n      var target = document.querySelector('body'),\n        config = {\n          attributes: true,\n          attributeOldValue: false,\n          characterData: true,\n          characterDataOldValue: false,\n          childList: true,\n          subtree: true\n        },\n        observer = new MutationObserver(mutationObserved)\n\n      observer.observe(target, config)\n    }\n\n    var MutationObserver = getMutationObserver()\n    if (MutationObserver) {\n      createMutationObserver()\n    }\n  }\n\n  function resizeIFrames(event) {\n    function resize() {\n      sendTriggerMsg('Window ' + event, 'resize')\n    }\n\n    log('window', 'Trigger event: ' + event)\n    debouce(resize, 16)\n  }\n\n  // Not testable in PhantomJS\n  /* istanbul ignore next */\n  function tabVisible() {\n    function resize() {\n      sendTriggerMsg('Tab Visible', 'resize')\n    }\n\n    if ('hidden' !== document.visibilityState) {\n      log('document', 'Trigger event: Visibility change')\n      debouce(resize, 16)\n    }\n  }\n\n  function sendTriggerMsg(eventName, event) {\n    function isIFrameResizeEnabled(iframeId) {\n      return (\n        settings[iframeId] &&\n        'parent' === settings[iframeId].resizeFrom &&\n        settings[iframeId].autoResize &&\n        !settings[iframeId].firstRun\n      )\n    }\n\n    Object.keys(settings).forEach(function (iframeId) {\n      if (isIFrameResizeEnabled(iframeId)) {\n        trigger(eventName, event, settings[iframeId].iframe, iframeId)\n      }\n    })\n  }\n\n  function setupEventListeners() {\n    addEventListener(window, 'message', iFrameListener)\n\n    addEventListener(window, 'resize', function () {\n      resizeIFrames('resize')\n    })\n\n    addEventListener(document, 'visibilitychange', tabVisible)\n\n    addEventListener(document, '-webkit-visibilitychange', tabVisible)\n  }\n\n  function factory() {\n    function init(options, element) {\n      function chkType() {\n        if (!element.tagName) {\n          throw new TypeError('Object is not a valid DOM element')\n        } else if ('IFRAME' !== element.tagName.toUpperCase()) {\n          throw new TypeError(\n            'Expected <IFRAME> tag, found <' + element.tagName + '>'\n          )\n        }\n      }\n\n      if (element) {\n        chkType()\n        setupIFrame(element, options)\n        iFrames.push(element)\n      }\n    }\n\n    function warnDeprecatedOptions(options) {\n      if (options && options.enablePublicMethods) {\n        warn(\n          'enablePublicMethods option has been removed, public methods are now always available in the iFrame'\n        )\n      }\n    }\n\n    var iFrames\n\n    setupRequestAnimationFrame()\n    setupEventListeners()\n\n    return function iFrameResizeF(options, target) {\n      iFrames = [] // Only return iFrames past in on this call\n\n      warnDeprecatedOptions(options)\n\n      switch (typeof target) {\n        case 'undefined':\n        case 'string': {\n          Array.prototype.forEach.call(\n            document.querySelectorAll(target || 'iframe'),\n            init.bind(undefined, options)\n          )\n          break\n        }\n\n        case 'object': {\n          init(options, target)\n          break\n        }\n\n        default: {\n          throw new TypeError('Unexpected data type (' + typeof target + ')')\n        }\n      }\n\n      return iFrames\n    }\n  }\n\n  function createJQueryPublicMethod($) {\n    if (!$.fn) {\n      info('', 'Unable to bind to jQuery, it is not fully loaded.')\n    } else if (!$.fn.iFrameResize) {\n      $.fn.iFrameResize = function $iFrameResizeF(options) {\n        function init(index, element) {\n          setupIFrame(element, options)\n        }\n\n        return this.filter('iframe').each(init).end()\n      }\n    }\n  }\n\n  if (window.jQuery !== undefined) {\n    createJQueryPublicMethod(window.jQuery)\n  }\n\n  if (true) {\n    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?\n\t\t\t\t(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))\n  } else {}\n  window.iFrameResize = window.iFrameResize || factory()\n})()\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./node_modules/iframe-resizer/js/iframeResizer.js?");
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
-  \********************************************************************/
-/*! exports provided: default */
+/***/ "9278":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return normalizeComponent; });\n/* globals __VUE_SSR_CONTEXT__ */\n\n// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).\n// This module is a runtime utility for cleaner component module output and will\n// be included in the final webpack user bundle.\n\nfunction normalizeComponent(\n  scriptExports,\n  render,\n  staticRenderFns,\n  functionalTemplate,\n  injectStyles,\n  scopeId,\n  moduleIdentifier /* server only */,\n  shadowMode /* vue-cli only */\n) {\n  // Vue.extend constructor export interop\n  var options =\n    typeof scriptExports === 'function' ? scriptExports.options : scriptExports\n\n  // render functions\n  if (render) {\n    options.render = render\n    options.staticRenderFns = staticRenderFns\n    options._compiled = true\n  }\n\n  // functional template\n  if (functionalTemplate) {\n    options.functional = true\n  }\n\n  // scopedId\n  if (scopeId) {\n    options._scopeId = 'data-v-' + scopeId\n  }\n\n  var hook\n  if (moduleIdentifier) {\n    // server build\n    hook = function (context) {\n      // 2.3 injection\n      context =\n        context || // cached call\n        (this.$vnode && this.$vnode.ssrContext) || // stateful\n        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional\n      // 2.2 with runInNewContext: true\n      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {\n        context = __VUE_SSR_CONTEXT__\n      }\n      // inject component styles\n      if (injectStyles) {\n        injectStyles.call(this, context)\n      }\n      // register component module identifier for async chunk inferrence\n      if (context && context._registeredComponents) {\n        context._registeredComponents.add(moduleIdentifier)\n      }\n    }\n    // used by ssr in case component is cached and beforeCreate\n    // never gets called\n    options._ssrRegister = hook\n  } else if (injectStyles) {\n    hook = shadowMode\n      ? function () {\n          injectStyles.call(\n            this,\n            (options.functional ? this.parent : this).$root.$options.shadowRoot\n          )\n        }\n      : injectStyles\n  }\n\n  if (hook) {\n    if (options.functional) {\n      // for template-only hot-reload because in that case the render fn doesn't\n      // go through the normalizer\n      options._injectStyles = hook\n      // register for functional component in vue file\n      var originalRender = options.render\n      options.render = function renderWithStyleInjection(h, context) {\n        hook.call(context)\n        return originalRender(h, context)\n      }\n    } else {\n      // inject component registration as beforeCreate hook\n      var existing = options.beforeCreate\n      options.beforeCreate = existing ? [].concat(existing, hook) : [hook]\n    }\n  }\n\n  return {\n    exports: scriptExports,\n    options: options\n  }\n}\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./node_modules/vue-loader/lib/runtime/componentNormalizer.js?");
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_31d93740_prod_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("6d6a");
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_31d93740_prod_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_31d93740_prod_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* unused harmony reexport * */
+
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js?!./node_modules/css-loader/dist/cjs.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css&":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-style-loader??ref--7-oneOf-1-0!./node_modules/css-loader/dist/cjs.js??ref--7-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-oneOf-1-2!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css& ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-eval("// style-loader: Adds some css to the DOM by adding a <style> tag\n\n// load the styles\nvar content = __webpack_require__(/*! !../../node_modules/css-loader/dist/cjs.js??ref--7-oneOf-1-1!../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../node_modules/postcss-loader/src??ref--7-oneOf-1-2!../../node_modules/cache-loader/dist/cjs.js??ref--1-0!../../node_modules/vue-loader/lib??vue-loader-options!./LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css& */ \"./node_modules/css-loader/dist/cjs.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css&\");\nif(content.__esModule) content = content.default;\nif(typeof content === 'string') content = [[module.i, content, '']];\nif(content.locals) module.exports = content.locals;\n// add the styles to the DOM\nvar add = __webpack_require__(/*! ../../node_modules/vue-style-loader/lib/addStylesClient.js */ \"./node_modules/vue-style-loader/lib/addStylesClient.js\").default\nvar update = add(\"4a75f4d5\", content, false, {\"sourceMap\":false,\"shadowMode\":false});\n// Hot Module Replacement\nif(false) {}\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/components/LernmoduleCoursewareBlockBase.vue?./node_modules/vue-style-loader??ref--7-oneOf-1-0!./node_modules/css-loader/dist/cjs.js??ref--7-oneOf-1-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-oneOf-1-2!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options");
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/lib/addStylesClient.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/vue-style-loader/lib/addStylesClient.js ***!
-  \**************************************************************/
-/*! exports provided: default */
+/***/ "fae3":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return addStylesClient; });\n/* harmony import */ var _listToStyles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./listToStyles */ \"./node_modules/vue-style-loader/lib/listToStyles.js\");\n/*\n  MIT License http://www.opensource.org/licenses/mit-license.php\n  Author Tobias Koppers @sokra\n  Modified by Evan You @yyx990803\n*/\n\n\n\nvar hasDocument = typeof document !== 'undefined'\n\nif (typeof DEBUG !== 'undefined' && DEBUG) {\n  if (!hasDocument) {\n    throw new Error(\n    'vue-style-loader cannot be used in a non-browser environment. ' +\n    \"Use { target: 'node' } in your Webpack config to indicate a server-rendering environment.\"\n  ) }\n}\n\n/*\ntype StyleObject = {\n  id: number;\n  parts: Array<StyleObjectPart>\n}\n\ntype StyleObjectPart = {\n  css: string;\n  media: string;\n  sourceMap: ?string\n}\n*/\n\nvar stylesInDom = {/*\n  [id: number]: {\n    id: number,\n    refs: number,\n    parts: Array<(obj?: StyleObjectPart) => void>\n  }\n*/}\n\nvar head = hasDocument && (document.head || document.getElementsByTagName('head')[0])\nvar singletonElement = null\nvar singletonCounter = 0\nvar isProduction = false\nvar noop = function () {}\nvar options = null\nvar ssrIdKey = 'data-vue-ssr-id'\n\n// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>\n// tags it will allow on a page\nvar isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase())\n\nfunction addStylesClient (parentId, list, _isProduction, _options) {\n  isProduction = _isProduction\n\n  options = _options || {}\n\n  var styles = Object(_listToStyles__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(parentId, list)\n  addStylesToDom(styles)\n\n  return function update (newList) {\n    var mayRemove = []\n    for (var i = 0; i < styles.length; i++) {\n      var item = styles[i]\n      var domStyle = stylesInDom[item.id]\n      domStyle.refs--\n      mayRemove.push(domStyle)\n    }\n    if (newList) {\n      styles = Object(_listToStyles__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(parentId, newList)\n      addStylesToDom(styles)\n    } else {\n      styles = []\n    }\n    for (var i = 0; i < mayRemove.length; i++) {\n      var domStyle = mayRemove[i]\n      if (domStyle.refs === 0) {\n        for (var j = 0; j < domStyle.parts.length; j++) {\n          domStyle.parts[j]()\n        }\n        delete stylesInDom[domStyle.id]\n      }\n    }\n  }\n}\n\nfunction addStylesToDom (styles /* Array<StyleObject> */) {\n  for (var i = 0; i < styles.length; i++) {\n    var item = styles[i]\n    var domStyle = stylesInDom[item.id]\n    if (domStyle) {\n      domStyle.refs++\n      for (var j = 0; j < domStyle.parts.length; j++) {\n        domStyle.parts[j](item.parts[j])\n      }\n      for (; j < item.parts.length; j++) {\n        domStyle.parts.push(addStyle(item.parts[j]))\n      }\n      if (domStyle.parts.length > item.parts.length) {\n        domStyle.parts.length = item.parts.length\n      }\n    } else {\n      var parts = []\n      for (var j = 0; j < item.parts.length; j++) {\n        parts.push(addStyle(item.parts[j]))\n      }\n      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }\n    }\n  }\n}\n\nfunction createStyleElement () {\n  var styleElement = document.createElement('style')\n  styleElement.type = 'text/css'\n  head.appendChild(styleElement)\n  return styleElement\n}\n\nfunction addStyle (obj /* StyleObjectPart */) {\n  var update, remove\n  var styleElement = document.querySelector('style[' + ssrIdKey + '~=\"' + obj.id + '\"]')\n\n  if (styleElement) {\n    if (isProduction) {\n      // has SSR styles and in production mode.\n      // simply do nothing.\n      return noop\n    } else {\n      // has SSR styles but in dev mode.\n      // for some reason Chrome can't handle source map in server-rendered\n      // style tags - source maps in <style> only works if the style tag is\n      // created and inserted dynamically. So we remove the server rendered\n      // styles and inject new ones.\n      styleElement.parentNode.removeChild(styleElement)\n    }\n  }\n\n  if (isOldIE) {\n    // use singleton mode for IE9.\n    var styleIndex = singletonCounter++\n    styleElement = singletonElement || (singletonElement = createStyleElement())\n    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)\n    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)\n  } else {\n    // use multi-style-tag mode in all other cases\n    styleElement = createStyleElement()\n    update = applyToTag.bind(null, styleElement)\n    remove = function () {\n      styleElement.parentNode.removeChild(styleElement)\n    }\n  }\n\n  update(obj)\n\n  return function updateStyle (newObj /* StyleObjectPart */) {\n    if (newObj) {\n      if (newObj.css === obj.css &&\n          newObj.media === obj.media &&\n          newObj.sourceMap === obj.sourceMap) {\n        return\n      }\n      update(obj = newObj)\n    } else {\n      remove()\n    }\n  }\n}\n\nvar replaceText = (function () {\n  var textStore = []\n\n  return function (index, replacement) {\n    textStore[index] = replacement\n    return textStore.filter(Boolean).join('\\n')\n  }\n})()\n\nfunction applyToSingletonTag (styleElement, index, remove, obj) {\n  var css = remove ? '' : obj.css\n\n  if (styleElement.styleSheet) {\n    styleElement.styleSheet.cssText = replaceText(index, css)\n  } else {\n    var cssNode = document.createTextNode(css)\n    var childNodes = styleElement.childNodes\n    if (childNodes[index]) styleElement.removeChild(childNodes[index])\n    if (childNodes.length) {\n      styleElement.insertBefore(cssNode, childNodes[index])\n    } else {\n      styleElement.appendChild(cssNode)\n    }\n  }\n}\n\nfunction applyToTag (styleElement, obj) {\n  var css = obj.css\n  var media = obj.media\n  var sourceMap = obj.sourceMap\n\n  if (media) {\n    styleElement.setAttribute('media', media)\n  }\n  if (options.ssrId) {\n    styleElement.setAttribute(ssrIdKey, obj.id)\n  }\n\n  if (sourceMap) {\n    // https://developer.chrome.com/devtools/docs/javascript-debugging\n    // this makes source maps inside style tags work properly in Chrome\n    css += '\\n/*# sourceURL=' + sourceMap.sources[0] + ' */'\n    // http://stackoverflow.com/a/26603875\n    css += '\\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'\n  }\n\n  if (styleElement.styleSheet) {\n    styleElement.styleSheet.cssText = css\n  } else {\n    while (styleElement.firstChild) {\n      styleElement.removeChild(styleElement.firstChild)\n    }\n    styleElement.appendChild(document.createTextNode(css))\n  }\n}\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./node_modules/vue-style-loader/lib/addStylesClient.js?");
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
 
-/***/ }),
+// CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/setPublicPath.js
+// This file is imported into lib/wc client bundles.
 
-/***/ "./node_modules/vue-style-loader/lib/listToStyles.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/vue-style-loader/lib/listToStyles.js ***!
-  \***********************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+if (typeof window !== 'undefined') {
+  var currentScript = window.document.currentScript
+  if (false) { var getCurrentScript; }
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return listToStyles; });\n/**\n * Translates the list format produced by css-loader into something\n * easier to manipulate.\n */\nfunction listToStyles (parentId, list) {\n  var styles = []\n  var newStyles = {}\n  for (var i = 0; i < list.length; i++) {\n    var item = list[i]\n    var id = item[0]\n    var css = item[1]\n    var media = item[2]\n    var sourceMap = item[3]\n    var part = {\n      id: parentId + ':' + i,\n      css: css,\n      media: media,\n      sourceMap: sourceMap\n    }\n    if (!newStyles[id]) {\n      styles.push(newStyles[id] = { id: id, parts: [part] })\n    } else {\n      newStyles[id].parts.push(part)\n    }\n  }\n  return styles\n}\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./node_modules/vue-style-loader/lib/listToStyles.js?");
+  var src = currentScript && currentScript.src.match(/(.+\/)[^/]+\.js(\?.*)?$/)
+  if (src) {
+    __webpack_require__.p = src[1] // eslint-disable-line
+  }
+}
 
-/***/ }),
+// Indicate to webpack that this file can be concatenated
+/* harmony default export */ var setPublicPath = (null);
 
-/***/ "./src/components/LernmoduleCoursewareBlockBase.vue":
-/*!**********************************************************!*\
-  !*** ./src/components/LernmoduleCoursewareBlockBase.vue ***!
-  \**********************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"306c4593-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=31d93740&
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c(_vm.coursewarePluginComponents.CoursewareDefaultBlock,{ref:"defaultBlock",tag:"component",staticClass:"cw-lernmodule-block cw-block",attrs:{"block":_vm.block,"canEdit":_vm.canEdit,"isTeacher":_vm.isTeacher,"preview":true,"defaultGrade":false},on:{"storeEdit":_vm.storeBlock,"showEdit":_vm.onShowEditChange},scopedSlots:_vm._u([{key:"content",fn:function(){return [(false)?undefined:_vm._e(),_c('iframe',{ref:"lernmoduleIframe",staticClass:"lernmodule-iframe",attrs:{"src":_vm.iframeUrl},on:{"load":_vm.onIframeLoad}})]},proxy:true}])})}
+var staticRenderFns = []
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _LernmoduleCoursewareBlockBase_vue_vue_type_template_id_1a9fb336___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LernmoduleCoursewareBlockBase.vue?vue&type=template&id=1a9fb336& */ \"./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=1a9fb336&\");\n/* harmony import */ var _LernmoduleCoursewareBlockBase_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js& */ \"./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_1a9fb336_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css& */ \"./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css&\");\n/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n  _LernmoduleCoursewareBlockBase_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _LernmoduleCoursewareBlockBase_vue_vue_type_template_id_1a9fb336___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _LernmoduleCoursewareBlockBase_vue_vue_type_template_id_1a9fb336___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"src/components/LernmoduleCoursewareBlockBase.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/components/LernmoduleCoursewareBlockBase.vue?");
 
-/***/ }),
+// CONCATENATED MODULE: ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=31d93740&
 
-/***/ "./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************!*\
-  !*** ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+// EXTERNAL MODULE: ./node_modules/iframe-resizer/js/iframeResizer.js
+var iframeResizer = __webpack_require__("0363");
+var iframeResizer_default = /*#__PURE__*/__webpack_require__.n(iframeResizer);
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_cache_loader_dist_cjs_js_ref_13_0_node_modules_babel_loader_lib_index_js_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/cache-loader/dist/cjs.js??ref--13-0!../../node_modules/babel-loader/lib!../../node_modules/cache-loader/dist/cjs.js??ref--1-0!../../node_modules/vue-loader/lib??vue-loader-options!./LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js& */ \"./node_modules/cache-loader/dist/cjs.js?!./node_modules/babel-loader/lib/index.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_cache_loader_dist_cjs_js_ref_13_0_node_modules_babel_loader_lib_index_js_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/components/LernmoduleCoursewareBlockBase.vue?");
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-/***/ }),
 
-/***/ "./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css&":
-/*!*******************************************************************************************************!*\
-  !*** ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css& ***!
-  \*******************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* harmony default export */ var LernmoduleCoursewareBlockBasevue_type_script_lang_js_ = ({
+  name: 'LernmoduleCoursewareBlockBase',
+  inject: ['coursewarePluginComponents'],
+  props: {
+    block: {
+      type: Object,
+      required: true
+    },
+    canEdit: {
+      type: Boolean,
+      required: true
+    },
+    isTeacher: {
+      type: Boolean,
+      required: true
+    }
+  },
+  computed: {
+    iframeUrl() {
+      return window.STUDIP.LernmoduleCoursewareBlocksPlugin.editorUrl;
+    },
+    isBlockInitialized() {
+      return this.block.attributes.payload.initialized;
+    }
+  },
+  created() {
+    window.addEventListener('message', this.onWindowMessage);
+  },
+  beforeDestroy() {
+    window.removeEventListener('message', this.onWindowMessage);
+  },
+  methods: {
+    // Handle messages posted to our window from our iframe
+    onWindowMessage(message) {
+      if (message.source !== this.$refs.lernmoduleIframe.contentWindow) {
+        return; // Ignore the message -- it's not from our iframe
+      }
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_1a9fb336_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/vue-style-loader??ref--7-oneOf-1-0!../../node_modules/css-loader/dist/cjs.js??ref--7-oneOf-1-1!../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../node_modules/postcss-loader/src??ref--7-oneOf-1-2!../../node_modules/cache-loader/dist/cjs.js??ref--1-0!../../node_modules/vue-loader/lib??vue-loader-options!./LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css& */ \"./node_modules/vue-style-loader/index.js?!./node_modules/css-loader/dist/cjs.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=1a9fb336&lang=css&\");\n/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_1a9fb336_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_1a9fb336_lang_css___WEBPACK_IMPORTED_MODULE_0__);\n/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_1a9fb336_lang_css___WEBPACK_IMPORTED_MODULE_0__) if([\"default\"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_1a9fb336_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/components/LernmoduleCoursewareBlockBase.vue?");
+      if (message.data && Object.hasOwn(message.data, 'type')) {
+        switch (message.data.type) {
+          case 'SaveCoursewareBlock':
+            console.log('got message posted to window: ', message, 'saving courseware block. taskDefinition: ', message.data.taskDefinition);
+            this.storeBlock(message.data.taskDefinition);
+            break;
+          case 'CancelEditingCoursewareBlock':
+            console.log('got message posted to window: ', message, 'canceling editing.');
+            // close the edit menu
+            this.$refs.defaultBlock.closeEdit();
+            // Reload the iframe (this causes the state of the block to reset to how
+            // it is on the server, discarding user's unsaved changes).
+            this.$refs.lernmoduleIframe.contentWindow.location.reload();
+            break;
+        }
+      }
+    },
+    // Pass the child CoursewareDefaultBlock's editing state on to our iFrame.
+    // This lets our Vue 3 component know whether to hide/show its editing UI
+    onShowEditChange(state) {
+      this.$refs.lernmoduleIframe.contentWindow.postMessage({
+        type: 'ShowEditChange',
+        state
+      });
+    },
+    onIframeLoad() {
+      console.log('on iframe load');
+      // Configure iFrameResize to resize the iframe to the height of the
+      // #app element, which is marked with data-iframe-height, inside the iframe
+      iframeResizer_default()({
+        heightCalculationMethod: 'taggedElement'
+      }, this.$refs.lernmoduleIframe);
 
-/***/ }),
+      // Send message to initialize the Vue 3 courseware block's store
+      this.$refs.lernmoduleIframe.contentWindow.postMessage({
+        type: 'InitializeCoursewareBlock',
+        ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,
+        canEdit: this.canEdit,
+        isTeacher: this.isTeacher,
+        block: JSON.parse(JSON.stringify(this.block)),
+        context: this.$store.getters.context
+      });
 
-/***/ "./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=1a9fb336&":
-/*!*****************************************************************************************!*\
-  !*** ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=1a9fb336& ***!
-  \*****************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+      // Call onShowEditChange one time after load to initialize the 'editing'
+      // state in our Vue 3 component
+      console.log('iframe loaded, calling onShowEditChange...');
+      this.onShowEditChange(this.$refs.defaultBlock.showEdit);
+    },
+    storeBlock(taskDefinition) {
+      const attributes = {
+        ...this.block.attributes,
+        payload: {
+          initialized: true,
+          task_json: taskDefinition
+        }
+      };
+      this.$store.dispatch('updateBlockInContainer', {
+        attributes,
+        blockId: this.block.id,
+        containerId: this.block.relationships.container.data.id
+      }).then(() => {
+        // close the edit menu
+        this.$refs.defaultBlock.displayFeature(false);
+      });
+    }
+  }
+});
+// CONCATENATED MODULE: ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js&
+ /* harmony default export */ var components_LernmoduleCoursewareBlockBasevue_type_script_lang_js_ = (LernmoduleCoursewareBlockBasevue_type_script_lang_js_); 
+// EXTERNAL MODULE: ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=31d93740&prod&lang=css&
+var LernmoduleCoursewareBlockBasevue_type_style_index_0_id_31d93740_prod_lang_css_ = __webpack_require__("9278");
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_cache_loader_dist_cjs_js_cacheDirectory_node_modules_cache_vue_loader_cacheIdentifier_907b46f0_vue_loader_template_node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_template_id_1a9fb336___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/cache-loader/dist/cjs.js?{\"cacheDirectory\":\"node_modules/.cache/vue-loader\",\"cacheIdentifier\":\"907b46f0-vue-loader-template\"}!../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../node_modules/cache-loader/dist/cjs.js??ref--1-0!../../node_modules/vue-loader/lib??vue-loader-options!./LernmoduleCoursewareBlockBase.vue?vue&type=template&id=1a9fb336& */ \"./node_modules/cache-loader/dist/cjs.js?{\\\"cacheDirectory\\\":\\\"node_modules/.cache/vue-loader\\\",\\\"cacheIdentifier\\\":\\\"907b46f0-vue-loader-template\\\"}!./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=1a9fb336&\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return _node_modules_cache_loader_dist_cjs_js_cacheDirectory_node_modules_cache_vue_loader_cacheIdentifier_907b46f0_vue_loader_template_node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_template_id_1a9fb336___WEBPACK_IMPORTED_MODULE_0__[\"render\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return _node_modules_cache_loader_dist_cjs_js_cacheDirectory_node_modules_cache_vue_loader_cacheIdentifier_907b46f0_vue_loader_template_node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_template_id_1a9fb336___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]; });\n\n\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/components/LernmoduleCoursewareBlockBase.vue?");
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
+/* globals __VUE_SSR_CONTEXT__ */
 
-/***/ }),
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
 
-/***/ "./src/register-courseware-blocks.js":
-/*!*******************************************!*\
-  !*** ./src/register-courseware-blocks.js ***!
-  \*******************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+function normalizeComponent(
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */,
+  shadowMode /* vue-cli only */
+) {
+  // Vue.extend constructor export interop
+  var options =
+    typeof scriptExports === 'function' ? scriptExports.options : scriptExports
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_LernmoduleCoursewareBlockBase_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/components/LernmoduleCoursewareBlockBase.vue */ \"./src/components/LernmoduleCoursewareBlockBase.vue\");\n\n\n// When adding a Courseware block for a new task type, you must add its name\n// to this array so that a corresponding vue 2 component will be registered in\n// the Courseware.\nconst taskTypes = ['FillInTheBlanks', 'Question', 'DragTheWords', 'MarkTheWords', 'Memory', 'ImagePairing', 'LmbInteractiveVideo'];\nconsole.log('Hello :) Registering Lernmodule Courseware blocks...');\nwindow.STUDIP.eventBus.on('courseware:init-plugin-manager', pluginManager => {\n  for (const taskType of taskTypes) {\n    const blockComponent = coursewareBlockComponentForTaskType(taskType);\n    pluginManager.addBlock(blockComponent.name, blockComponent);\n    console.info('Registered CW block component: ', blockComponent.name);\n  }\n});\n\n/**\n * All of the Vue 2 Lernmodule Courseware block components inherit from the same\n * base component, which is merely a proxy to our Vue 3 code.\n */\nfunction coursewareBlockComponentForTaskType(taskType) {\n  return {\n    name: `Courseware${taskType}Block`,\n    extends: _components_LernmoduleCoursewareBlockBase_vue__WEBPACK_IMPORTED_MODULE_0__[\"default\"]\n  };\n}\n\n//# sourceURL=webpack://lernmodule-courseware-blocks/./src/register-courseware-blocks.js?");
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) {
+    // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () {
+          injectStyles.call(
+            this,
+            (options.functional ? this.parent : this).$root.$options.shadowRoot
+          )
+        }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functional component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection(h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing ? [].concat(existing, hook) : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
+// CONCATENATED MODULE: ./src/components/LernmoduleCoursewareBlockBase.vue
+
+
+
+
+
+
+/* normalize component */
+
+var component = normalizeComponent(
+  components_LernmoduleCoursewareBlockBasevue_type_script_lang_js_,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var LernmoduleCoursewareBlockBase = (component.exports);
+// CONCATENATED MODULE: ./src/register-courseware-blocks.js
+
+
+// When adding a Courseware block for a new task type, you must add its name
+// to this array so that a corresponding vue 2 component will be registered in
+// the Courseware.
+const taskTypes = ['FillInTheBlanks', 'Question', 'DragTheWords', 'MarkTheWords', 'Memory', 'ImagePairing', 'LmbInteractiveVideo'];
+console.log('Hello :) Registering Lernmodule Courseware blocks...');
+window.STUDIP.eventBus.on('courseware:init-plugin-manager', pluginManager => {
+  for (const taskType of taskTypes) {
+    const blockComponent = coursewareBlockComponentForTaskType(taskType);
+    pluginManager.addBlock(blockComponent.name, blockComponent);
+    console.info('Registered CW block component: ', blockComponent.name);
+  }
+});
+
+/**
+ * All of the Vue 2 Lernmodule Courseware block components inherit from the same
+ * base component, which is merely a proxy to our Vue 3 code.
+ */
+function coursewareBlockComponentForTaskType(taskType) {
+  return {
+    name: `Courseware${taskType}Block`,
+    extends: LernmoduleCoursewareBlockBase
+  };
+}
+// CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js
+
+
+
 
 /***/ })
 
 /******/ });
 });
+//# sourceMappingURL=lernmodule-courseware-blocks.umd.js.map
