@@ -299,7 +299,7 @@ export default defineComponent({
       });
 
       // Observe the progress bar -- we need to know its size and location
-      // in order to position our breadcrumbs correctly on top of it.
+      // in order to position our interaction markers correctly on top of it.
       const progressBarEls = playerElement.getElementsByClassName(
         'vjs-progress-holder'
       );
@@ -538,7 +538,7 @@ export default defineComponent({
         popperInstance?.update();
       }
     },
-    progressBarBreadcrumbStyle(
+    progressBarInteractionMarkerStyle(
       interaction: Interaction
     ): Partial<CSSStyleDeclaration> {
       const progressPercentage =
@@ -550,9 +550,9 @@ export default defineComponent({
         ${timeOffsetPx}px - 0.25em)`,
       };
     },
-    onClickBreadcrumb(interaction: Interaction): void {
+    onClickInteractionMarker(interaction: Interaction): void {
       this.editor?.selectInteraction(interaction.id);
-      // Give keyboard focus to the interaction whose breadcrumb was clicked.
+      // Give keyboard focus to the interaction whose interaction marker was clicked.
       const focusInteraction = () => {
         const interactionElement = document.getElementById(
           `interaction-${this.uid}-${interaction.id}`
@@ -602,11 +602,11 @@ export default defineComponent({
       @click="editor!.selectInteraction(undefined)"
     ></div>
     <button
-      class="progress-bar-breadcrumb"
+      class="progress-bar-interaction-marker"
       v-for="interaction in task.interactions"
       :key="interaction.id"
-      :style="progressBarBreadcrumbStyle(interaction)"
-      @click="onClickBreadcrumb(interaction)"
+      :style="progressBarInteractionMarkerStyle(interaction)"
+      @click="onClickInteractionMarker(interaction)"
       :title="
         $gettext('Zu %{ interaction } springen', {
           interaction: printInteractionType(interaction),
@@ -759,7 +759,7 @@ export default defineComponent({
 }
 
 $progress-control-height: 3.5em;
-.progress-bar-breadcrumb {
+.progress-bar-interaction-marker {
   /* CSS Reset for button styles */
   padding: 0;
   border: none;
@@ -804,16 +804,16 @@ $progress-control-height: 3.5em;
     }
   }
 }
-// Ensure that timeline breadcrumbs fade out just as the progress bar does
+// Ensure that progress bar interaction markers fade out just as the progress bar does
 // when the user is watching the video and not touching the controls
 .video-player-root:has(.vjs-has-started.vjs-user-inactive.vjs-playing) {
-  .progress-bar-breadcrumb {
+  .progress-bar-interaction-marker {
     opacity: 0;
     transition: opacity 1s;
   }
 }
 .video-player-root:not(:has(.vjs-has-started)) {
-  .progress-bar-breadcrumb {
+  .progress-bar-interaction-marker {
     display: none;
   }
 }
