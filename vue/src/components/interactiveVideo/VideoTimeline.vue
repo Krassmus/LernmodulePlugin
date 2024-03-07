@@ -461,6 +461,7 @@ export default defineComponent({
             selected: selectedInteractionId === interaction.id,
           }"
           :style="timelineInteractionStyle(interaction)"
+          :title="printInteractionType(interaction)"
         >
           <div class="overflow-container">
             <button
