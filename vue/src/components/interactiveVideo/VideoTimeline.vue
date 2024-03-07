@@ -442,6 +442,11 @@ export default defineComponent({
           onClickInteraction(interaction);
           $emit('timelineSeek', interaction.startTime + 0.1);
         "
+        :title="
+          $gettext('Zu %{ interaction } springen', {
+            interaction: printInteractionType(interaction),
+          })
+        "
       ></button>
     </div>
     <div

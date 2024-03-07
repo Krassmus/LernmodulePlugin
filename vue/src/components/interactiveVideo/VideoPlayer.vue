@@ -607,7 +607,11 @@ export default defineComponent({
       :key="interaction.id"
       :style="progressBarBreadcrumbStyle(interaction)"
       @click="onClickBreadcrumb(interaction)"
-      :title="printInteractionType(interaction)"
+      :title="
+        $gettext('Zu %{ interaction } springen', {
+          interaction: printInteractionType(interaction),
+        })
+      "
     />
     <div
       ref="selectedInteractionTooltip"
