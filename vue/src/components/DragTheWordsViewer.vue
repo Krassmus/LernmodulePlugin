@@ -6,7 +6,7 @@
         <span
           v-if="userInputs[element.uuid]"
           :class="classForFilledBlank(element)"
-          draggable="true"
+          :draggable="editable"
           @dragstart="
             startDragUsedAnswer($event, element, userInputs[element.uuid])
           "
@@ -40,7 +40,8 @@
       <div v-for="answer in unusedAnswers" :key="answer.uuid">
         <span
           class="h5pBlankSolution"
-          draggable="true"
+          :class="{ disabled: !this.editable }"
+          :draggable="editable"
           @dragstart="startDragUnusedAnswer($event, answer)"
           @click="onClickUnusedAnswer(answer)"
         >
@@ -138,6 +139,7 @@ export default defineComponent({
       draggedAnswerId: undefined as Uuid | undefined,
       draggedSourceId: undefined as Uuid | undefined,
       clickedAnswerId: undefined as Uuid | undefined,
+      editable: true as Boolean,
     };
   },
   methods: {
@@ -256,6 +258,7 @@ export default defineComponent({
     onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
+      this.editable = false;
     },
 
     onClickShowSolution() {
@@ -266,6 +269,7 @@ export default defineComponent({
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
+      this.editable = true;
     },
 
     classForFilledBlank(blank: Blank) {
@@ -275,16 +279,9 @@ export default defineComponent({
 
       if (this.userInputs?.[blank.uuid]) {
         if (this.submittedAnswerIsCorrect(blank)) {
-          return 'h5pFilledBlank h5pBlankCorrect';
+          return 'h5pFilledBlank h5pBlankCorrect disabled';
         } else {
-          const userInputHasChangedAfterSubmitting =
-            this.submittedAnswers?.[blank.uuid] !==
-            this.userInputs?.[blank.uuid];
-          if (!userInputHasChangedAfterSubmitting) {
-            return 'h5pFilledBlank h5pBlankIncorrect';
-          } else {
-            return 'h5pFilledBlank';
-          }
+          return 'h5pFilledBlank h5pBlankIncorrect disabled';
         }
       } else {
         return 'h5pBlank';
@@ -574,5 +571,9 @@ span.item:empty:before {
   color: #1a73d9;
   font-weight: 700;
   padding-top: 0.5em;
+}
+
+.disabled {
+  cursor: default;
 }
 </style>
