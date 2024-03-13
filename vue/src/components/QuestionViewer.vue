@@ -79,32 +79,33 @@
       </template>
     </template>
 
-    <button v-if="!isSubmitted" @click="onClickCheck" class="h5pButton">
-      {{ this.task.strings.checkButton }}
-    </button>
-
     <FeedbackElement
       v-if="isSubmitted"
       :achieved-points="points"
       :max-points="maxPoints"
     />
 
-    <div class="retry-and-show-solutions-buttons">
+    <div class="h5pButtonPanel">
+      <button
+        v-if="!isSubmitted"
+        @click="onClickCheck"
+        class="h5pButton"
+        v-text="this.task.strings.checkButton"
+      />
+
       <button
         v-if="this.task.retryAllowed && isSubmitted"
         @click="onClickTryAgain"
         class="h5pButton"
-      >
-        {{ this.task.strings.retryButton }}
-      </button>
+        v-text="this.task.strings.retryButton"
+      />
 
       <button
         v-if="showSolutionsButton"
         @click="onClickShowSolution"
         class="h5pButton"
-      >
-        {{ this.task.strings.solutionsButton }}
-      </button>
+        v-text="this.task.strings.solutionsButton"
+      />
     </div>
   </div>
 </template>
@@ -298,12 +299,5 @@ export default defineComponent({
   margin-left: 0.25em;
   border-left: 6px solid rgba(10, 10, 10, 0.1) !important;
   padding: 0.01em 16px;
-}
-
-.retry-and-show-solutions-buttons {
-  margin-top: 0.5em;
-  display: flex;
-  gap: 1em;
-  flex-wrap: wrap;
 }
 </style>
