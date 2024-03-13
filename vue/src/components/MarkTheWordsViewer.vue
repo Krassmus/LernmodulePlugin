@@ -241,33 +241,33 @@ export default defineComponent({
 }
 
 .h5pStaticText:hover {
-  box-shadow: 0 0 0 2px #cee0f4;
+  box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
 }
 
 .h5pMarkedWord {
-  border: 1px solid #cee0f4;
+  box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   background-color: #d4f1f6;
 }
 
 .h5pMarkedWord:hover {
-  box-shadow: 0 0 0 2px #cee0f4;
+  box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
 }
 
 .h5pCorrectAnswer {
   color: #255c41;
-  border: 1px solid #d4f6e6;
+  box-shadow: 0 0 0 1px #d4f6e6;
   border-radius: 0.25em;
   background-color: #d4f6e6;
 }
 
 .h5pIncorrectAnswer {
   color: #b71c1c;
-  border: 1px solid #f7d0d0;
+  box-shadow: 0 0 0 1px #f7d0d0;
   border-radius: 0.25em;
   background-color: #f7d0d0;
   text-decoration: line-through;
