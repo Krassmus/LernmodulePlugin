@@ -194,12 +194,15 @@ export default defineComponent({
       });
       return parsedTemplate;
     },
+
     showCheckButton(): boolean {
       return !this.showResults;
     },
+
     showRetryButton(): boolean {
       return this.task.retryAllowed && this.showResults;
     },
+
     score(): number {
       let score = 0;
 
@@ -215,6 +218,7 @@ export default defineComponent({
 
       return score;
     },
+
     maxScore(): number {
       let maxScore = 0;
       for (const element of this.parsedTemplate) {
@@ -222,6 +226,7 @@ export default defineComponent({
       }
       return maxScore;
     },
+
     feedbackMessage(): string {
       return this.score + ' / ' + this.maxScore;
     },
