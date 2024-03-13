@@ -17,22 +17,27 @@
       </span>
     </div>
 
-    <div>
-      <button v-if="showCheckButton" @click="onClickCheck" class="h5pButton">
-        {{ this.task.strings.checkButton }}
-      </button>
-      <button v-if="showRetryButton" @click="onClickRetry" class="h5pButton">
-        {{ this.task.strings.retryButton }}
-      </button>
-    </div>
+    <feedback-element
+      v-if="showResults"
+      :message="feedbackMessage"
+      :achieved-points="score"
+      :max-points="maxScore"
+    />
 
-    <template v-if="showResults">
-      <feedback-element
-        :message="feedbackMessage"
-        :achieved-points="score"
-        :max-points="maxScore"
+    <div class="h5pButtonPanel">
+      <button
+        v-if="showCheckButton"
+        @click="onClickCheck"
+        class="h5pButton"
+        v-text="this.task.strings.checkButton"
       />
-    </template>
+      <button
+        v-if="showRetryButton"
+        @click="onClickRetry"
+        class="h5pButton"
+        v-text="this.task.strings.retryButton"
+      />
+    </div>
 
     <div v-if="debug">
       Marked words:
