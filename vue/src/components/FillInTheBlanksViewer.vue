@@ -6,8 +6,8 @@
         <input
           type="text"
           v-model="userInputs[element.uuid]"
-          :readonly="submittedAnswerIsCorrect(element) || showSolutions"
-          :disabled="submittedAnswerIsCorrect(element) || showSolutions"
+          :readonly="!this.editable"
+          :disabled="!this.editable"
           :class="classForInput(element)"
           @blur="onInputBlurOrEnter"
           @keyup.enter="onInputBlurOrEnter"
@@ -41,7 +41,7 @@
 
     <div class="h5pButtonPanel">
       <button
-        @click="onClickCheck"
+        @click="onClickCheck(false)"
         v-if="showCheckButton"
         class="h5pButton"
         v-text="this.task.strings.checkButton"
@@ -106,6 +106,7 @@ export default defineComponent({
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
       userWantsToSeeSolutions: false,
+      editable: true,
     };
   },
   methods: {
@@ -228,10 +229,11 @@ export default defineComponent({
       }, 1);
     },
 
-    onClickCheck() {
+    onClickCheck(taskEditableAfterCheck: boolean) {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
       this.updateAttempt();
+      this.editable = taskEditableAfterCheck;
     },
 
     onClickShowSolution() {
@@ -242,12 +244,13 @@ export default defineComponent({
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
+      this.editable = true;
     },
 
     onInputBlurOrEnter() {
       this.userWantsToSeeSolutions = false;
       if (this.task.autoCorrect) {
-        this.onClickCheck();
+        this.onClickCheck(true);
       }
     },
 
@@ -267,7 +270,11 @@ export default defineComponent({
           return 'h5pBlank h5pBlankIncorrect';
         }
       } else {
-        return 'h5pBlank h5pBlankIncorrect';
+        if (this.task.autoCorrect) {
+          return 'h5pBlank';
+        } else {
+          return 'h5pBlank h5pBlankIncorrect';
+        }
       }
     },
 
