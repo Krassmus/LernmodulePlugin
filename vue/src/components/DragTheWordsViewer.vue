@@ -57,41 +57,35 @@
       :result-message="resultMessage"
     />
 
-    <div class="h5pFeedbackContainer">
-      <div class="h5pFeedbackContainerTop">
-        <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
-          {{
-            this.task.strings.fillInAllBlanksMessage
-              ? this.task.strings.fillInAllBlanksMessage
-              : $gettext(
-                  'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
-                )
-          }}
-        </div>
-      </div>
-      <div class="h5pFeedbackContainerBottom">
-        <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-          {{ this.task.strings.checkButton }}
-        </button>
+    <div
+      v-if="showFillInAllTheBlanksMessage"
+      class="h5pFeedbackText"
+      v-text="fillInAllTheBlanksMessage"
+    />
 
-        <div class="h5pFeedbackResultAndButtons" v-if="showExtraButtons">
-          <button
-            v-if="!showSolutions && this.task.showSolutionsAllowed"
-            @click="onClickShowSolution"
-            class="h5pButton"
-          >
-            {{ this.task.strings.solutionsButton }}
-          </button>
+    <div class="h5pButtonPanel">
+      <button
+        @click="onClickCheck"
+        v-if="showCheckButton"
+        class="h5pButton"
+        v-text="this.task.strings.checkButton"
+      />
 
-          <button
-            v-if="this.task.retryAllowed"
-            @click="onClickTryAgain"
-            class="h5pButton"
-          >
-            {{ this.task.strings.retryButton }}
-          </button>
-        </div>
-      </div>
+      <template v-if="showExtraButtons">
+        <button
+          v-if="!showSolutions && this.task.showSolutionsAllowed"
+          @click="onClickShowSolution"
+          class="h5pButton"
+          v-text="this.task.strings.solutionsButton"
+        />
+
+        <button
+          v-if="this.task.retryAllowed"
+          @click="onClickTryAgain"
+          class="h5pButton"
+          v-text="this.task.strings.retryButton"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -488,6 +482,14 @@ export default defineComponent({
       );
 
       return resultMessage;
+    },
+
+    fillInAllTheBlanksMessage(): string {
+      return this.task.strings.fillInAllBlanksMessage
+        ? this.task.strings.fillInAllBlanksMessage
+        : $gettext(
+            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+          );
     },
   },
 });
