@@ -59,7 +59,7 @@
 
     <div
       v-if="showFillInAllTheBlanksMessage"
-      class="h5pFeedbackText"
+      class="h5pMessage"
       v-text="fillInAllTheBlanksMessage"
     />
 
@@ -567,5 +567,12 @@ span.item:empty:before {
   min-height: 2rem;
   border: 1px solid #eee;
   border-radius: 5px;
+}
+
+.h5pMessage {
+  font-size: 1em;
+  color: #1a73d9;
+  font-weight: 700;
+  padding-top: 0.5em;
 }
 </style>
