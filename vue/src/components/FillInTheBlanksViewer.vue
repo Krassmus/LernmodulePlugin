@@ -114,6 +114,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+
     submittedAnswerIsCorrect(element: FillInTheBlanksElement): boolean {
       const blank = element as Blank;
 
@@ -126,6 +127,7 @@ export default defineComponent({
         );
       }
     },
+
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
       if (this.task.caseSensitive) {
         if (this.task.acceptTypos) {
@@ -145,6 +147,7 @@ export default defineComponent({
         }
       }
     },
+
     isAnswerCorrectWithTypo(userAnswer: string, solution: string): boolean {
       if (userAnswer === solution) return true;
 
@@ -158,6 +161,7 @@ export default defineComponent({
         (userAnswer.length > 9 && distance <= 2)
       );
     },
+
     updateAttempt() {
       // Tell the server which blanks were filled out correctly.
       const points = {} as Record<string, number>;
@@ -174,6 +178,7 @@ export default defineComponent({
         success: this.correctAnswers === this.blanks.length,
       });
     },
+
     /**
      * Adapted from the H5P source code, MIT License
      * https://github.com/h5p/h5p-blanks/blob/e9bf6862211c082a5724d9873496e66c489d23f7/js/blanks.js#L401
@@ -226,28 +231,34 @@ export default defineComponent({
         }
       }, 1);
     },
+
     onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
       this.updateAttempt();
     },
+
     onClickShowSolution() {
       this.userWantsToSeeSolutions = true;
     },
+
     onClickTryAgain() {
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
     },
+
     onInputBlurOrEnter() {
       this.userWantsToSeeSolutions = false;
       if (this.task.autoCorrect) {
         this.onClickCheck();
       }
     },
+
     onInput(event: Event) {
       this.autoGrowTextField(event.target as HTMLInputElement);
     },
+
     classForInput(blank: FillInTheBlanksElement) {
       if (!this.submittedAnswers) {
         return 'h5pBlank';
@@ -263,6 +274,7 @@ export default defineComponent({
         return 'h5pBlank h5pBlankIncorrect';
       }
     },
+
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
@@ -275,6 +287,7 @@ export default defineComponent({
       // and the odd indexes are the blanks.
       return this.task.template.split(/\*([^*]*)\*/);
     },
+
     parsedTemplate(): FillInTheBlanksElement[] {
       return this.splitTemplate.map((value, index) => {
         if (index % 2 === 0) {
@@ -292,11 +305,13 @@ export default defineComponent({
         }
       });
     },
+
     blanks(): Blank[] {
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
       ) as Blank[];
     },
+
     blanksFilled(): number {
       if (!this.submittedAnswers) {
         return 0;
@@ -304,22 +319,28 @@ export default defineComponent({
         return Object.keys(this.submittedAnswers).length;
       }
     },
+
     allBlanksAreFilled(): boolean {
       return this.blanksFilled == this.blanks.length;
     },
+
     correctAnswers(): number {
       return this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
         .length;
     },
+
     allAnswersAreCorrect(): boolean {
       return this.blanks.every((blank) => this.submittedAnswerIsCorrect(blank));
     },
+
     maxPoints(): number {
       return this.blanks.length;
     },
+
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
     },
+
     showExtraButtons(): boolean {
       if (this.task.autoCorrect) {
         if (this.allBlanksAreFilled) {
@@ -339,18 +360,22 @@ export default defineComponent({
         );
       }
     },
+
     showCheckButton(): boolean {
       return (
         (this.submittedAnswers === null || this.inputHasChanged) &&
         !this.task.autoCorrect
       );
     },
+
     showSolutionButton(): boolean {
       return !this.showSolutions && this.task.showSolutionsAllowed;
     },
+
     showRetryButton(): boolean {
       return this.task.retryAllowed && this.submittedAnswers !== null;
     },
+
     showSolutions(): boolean {
       return (
         this.userWantsToSeeSolutions &&
@@ -358,6 +383,7 @@ export default defineComponent({
           !this.task.allBlanksMustBeFilledForSolutions)
       );
     },
+
     showFillInAllTheBlanksMessage(): boolean {
       return (
         this.task.allBlanksMustBeFilledForSolutions &&
@@ -366,6 +392,7 @@ export default defineComponent({
         !this.inputHasChanged
       );
     },
+
     showResults(): boolean {
       return (
         !(this.submittedAnswers === null) &&
@@ -374,6 +401,7 @@ export default defineComponent({
         !this.inputHasChanged
       );
     },
+
     resultMessage(): string {
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
@@ -387,6 +415,7 @@ export default defineComponent({
 
       return resultMessage;
     },
+
     feedbackSortedByScore(): Feedback[] {
       return this.task.feedback
         .map((value) => value)
