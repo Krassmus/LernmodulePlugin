@@ -23,8 +23,8 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 }
 
 .h5pButtonPanel {
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .h5pButton {

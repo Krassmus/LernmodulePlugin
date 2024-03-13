@@ -29,43 +29,39 @@
       v-if="showResults"
       :achievedPoints="correctAnswers"
       :maxPoints="maxPoints"
-      :resultMessage="resultMessage"
       :feedback="task.feedback"
+      :resultMessage="resultMessage"
     />
-    <div class="h5pFeedbackContainer">
-      <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
-        {{
-          task.strings.fillInAllBlanksMessage
-            ? task.strings.fillInAllBlanksMessage
-            : $gettext(
-                'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
-              )
-        }}
-      </div>
 
-      <div class="h5pFeedbackContainerBottom">
-        <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-          {{ task.strings.checkButton }}
-        </button>
+    <div
+      v-if="showFillInAllTheBlanksMessage"
+      class="h5pMessage"
+      v-text="fillInAllTheBlanksMessage"
+    />
 
-        <template v-if="showExtraButtons">
-          <button
-            v-if="showSolutionButton"
-            @click="onClickShowSolution"
-            class="h5pButton"
-          >
-            {{ task.strings.solutionsButton }}
-          </button>
+    <div class="h5pButtonPanel">
+      <button
+        @click="onClickCheck"
+        v-if="showCheckButton"
+        class="h5pButton"
+        v-text="this.task.strings.checkButton"
+      />
 
-          <button
-            v-if="showRetryButton"
-            @click="onClickTryAgain"
-            class="h5pButton"
-          >
-            {{ task.strings.retryButton }}
-          </button>
-        </template>
-      </div>
+      <template v-if="showExtraButtons">
+        <button
+          v-if="showSolutionButton"
+          @click="onClickShowSolution"
+          class="h5pButton"
+          v-text="this.task.strings.solutionsButton"
+        />
+
+        <button
+          v-if="showRetryButton"
+          @click="onClickTryAgain"
+          class="h5pButton"
+          v-text="this.task.strings.retryButton"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -421,6 +417,14 @@ export default defineComponent({
         .map((value) => value)
         .sort((a, b) => b.percentage - a.percentage);
     },
+
+    fillInAllTheBlanksMessage(): string {
+      return this.task.strings.fillInAllBlanksMessage
+        ? this.task.strings.fillInAllBlanksMessage
+        : $gettext(
+            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+          );
+    },
   },
 });
 </script>
@@ -467,5 +471,12 @@ input[type='text'] {
   padding: 0.15em;
   border-radius: 0.25em;
   margin-left: 0.5em;
+}
+
+.h5pMessage {
+  font-size: 1em;
+  color: #1a73d9;
+  font-weight: 700;
+  padding-top: 0.5em;
 }
 </style>
