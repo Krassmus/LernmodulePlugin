@@ -117,6 +117,7 @@ export default defineComponent({
   computed: {
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
+
     instructions(): string {
       return $gettext(
         'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den "Lücke hinzufügen"–Button.' +
@@ -126,6 +127,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+
     /**
      * Surround the selected text with two asterisks
      */
