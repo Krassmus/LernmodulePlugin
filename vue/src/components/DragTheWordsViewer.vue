@@ -279,7 +279,7 @@ export default defineComponent({
     },
 
     classForFilledBlank(blank: Blank) {
-      if (!this.submittedAnswers) {
+      if (!this.submittedAnswers && !this.task.instantFeedback) {
         return 'h5pFilledBlank';
       }
 
