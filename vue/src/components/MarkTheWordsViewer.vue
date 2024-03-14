@@ -143,7 +143,7 @@ export default defineComponent({
             return 'h5pIncorrectAnswer';
           }
         } else {
-          return 'h5pStaticText';
+          return 'h5pStaticTextNoHover';
         }
       } else {
         // User is working on the task
@@ -252,6 +252,11 @@ export default defineComponent({
   box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
+}
+
+.h5pStaticTextNoHover {
+  background: #ffffff;
+  color: #000000;
 }
 
 .h5pMarkedWord {
