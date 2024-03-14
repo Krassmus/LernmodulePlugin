@@ -48,3 +48,13 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 .h5pButton:last-child {
   margin-right: 0;
 }
+
+.h5pSolution {
+  color: #255c41;
+  font-weight: bold;
+  border: 1px #255c41 dashed;
+  background-color: #d4f6e6;
+  padding: 0.15em;
+  border-radius: 0.25em;
+  margin-left: 0.25em;
+}

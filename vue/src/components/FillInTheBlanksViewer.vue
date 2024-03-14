@@ -470,16 +470,6 @@ input[type='text'] {
   /*  Irgendwas damit es nicht rot oder grün gehighlightet wird, während noch drin getippt wird */
 }
 
-.h5pSolution {
-  color: #255c41;
-  font-weight: bold;
-  border: 1px #255c41 dashed;
-  background-color: #d4f6e6;
-  padding: 0.15em;
-  border-radius: 0.25em;
-  margin-left: 0.5em;
-}
-
 .h5pMessage {
   font-size: 1em;
   color: #1a73d9;
