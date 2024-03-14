@@ -70,6 +70,7 @@ export const markTheWordsTaskSchema = z.object({
     solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
+  feedback: z.array(feedbackSchema),
 });
 export type MarkTheWordsTask = z.infer<typeof markTheWordsTaskSchema>;
 
@@ -354,6 +355,12 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Wörter richtig ausgewählt.',
         },
+        feedback: [
+          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+          { percentage: 50, message: 'Gut.' },
+          { percentage: 75, message: 'Sehr gut.' },
+          { percentage: 100, message: 'Perfekt!' },
+        ],
       };
     case 'Memory':
       return {

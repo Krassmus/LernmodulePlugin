@@ -19,9 +19,10 @@
 
     <feedback-element
       v-if="showResults"
-      :message="feedbackMessage"
       :achieved-points="score"
       :max-points="maxScore"
+      :feedback="this.task.feedback"
+      :result-message="resultMessage"
     />
 
     <div class="h5pButtonPanel">
@@ -227,8 +228,15 @@ export default defineComponent({
       return maxScore;
     },
 
-    feedbackMessage(): string {
-      return this.score + ' / ' + this.maxScore;
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.score.toString()
+      );
+
+      resultMessage = resultMessage.replace(':total', this.maxScore.toString());
+
+      return resultMessage;
     },
   },
 });
