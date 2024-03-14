@@ -200,6 +200,7 @@ export default defineComponent({
       blank: Blank,
       answerId: Uuid
     ): void {
+      if (!this.editable) return;
       if (dragEvent.dataTransfer) {
         dragEvent.dataTransfer.dropEffect = 'move';
         dragEvent.dataTransfer.effectAllowed = 'move';
