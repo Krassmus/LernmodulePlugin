@@ -294,7 +294,7 @@ export default defineComponent({
 
     onClickUnusedAnswer(answer: Answer): void {
       console.log('Clicked answer:', answer);
-      this.clickedAnswerId = answer.uuid;
+      if (this.editable) this.clickedAnswerId = answer.uuid;
     },
 
     onClickBlank(blank: Blank): void {
