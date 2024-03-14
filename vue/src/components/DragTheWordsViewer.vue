@@ -28,6 +28,12 @@
         <label v-if="element.hint">
           <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
         </label>
+        <span
+          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+          class="h5pSolution"
+        >
+          {{ element.solution }}
+        </span>
       </template>
     </template>
 
