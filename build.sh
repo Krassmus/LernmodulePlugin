@@ -18,4 +18,5 @@ cd ../locale && # Compile translations for PHP
 cd .. &&
 # Zip up the whole plugin directory's contents, excluding certain folders.
 # Stud.IP will take FOREVER to install the plugin if .git or node_modules are included.
-zip -r "dist/lernmodule-plugin-$timestamp-$git_hash.zip" . -x "./.git/*" "*/node_modules/*" "./.idea/*" "./dist/*"
+zip -r "dist/lernmodule-plugin-$timestamp-$git_hash.zip" . -x "./.git/*" "*/node_modules/*" \
+ "./.idea/*" "./dist/*" "./.gitlab-ci.yml"
