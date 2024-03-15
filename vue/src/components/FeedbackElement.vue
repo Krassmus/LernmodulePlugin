@@ -5,7 +5,6 @@
     </div>
     <template v-if="maxPoints">
       <meter
-        id="score"
         min="0"
         :low="lowNumber"
         :high="highNumber"
@@ -120,7 +119,6 @@ meter {
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) inset;
   border-radius: 1.5em;
 
-  display: -webkit-inline-flex;
   max-width: 100%;
   padding: 0.625em;
   border: 1px solid rgba(0, 0, 0, 0.08);
