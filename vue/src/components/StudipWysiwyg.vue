@@ -30,6 +30,11 @@ export default defineComponent({
       required: false,
       default: false,
     },
+    insertHtmlComment: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
@@ -54,19 +59,27 @@ export default defineComponent({
         console.info('load');
         let ckeditor = window.STUDIP.wysiwyg.getEditor(textAreaElement)!;
         ckeditor.model.document.on('change:data', () => {
-          const data = ckeditor.getData();
+          let data = ckeditor.getData();
           if (this.removeWrappingPTag) {
             // Remove the <p> tag wrapping the editor's contents.
             // These tags are inserted automatically by CKEditor5.
             // It appears to be a WONTFIX on their end.
             // See https://github.com/ckeditor/ckeditor5/issues/1537
-            const removedPTagsText = data
-              .replace(/<p>(.*?)/, '$1')
-              .replace(/(.*?)<\/p>/, '$1');
-            this.$emit('update:modelValue', removedPTagsText);
-          } else {
-            this.$emit('update:modelValue', data);
+            data = data.replace(/<p>(.*?)/, '$1').replace(/(.*?)<\/p>/, '$1');
           }
+          if (this.insertHtmlComment) {
+            /**
+             Insert <!--HTML--> at the start of the text so it is recognized by studip as a
+             raw HTML that should be inserted as-is into a PHP page when formatted
+             using htmlReady.
+             */
+            // This regex is the one used in Markup.class.php to recognize HTML
+            const regex = /^\s*<!--\s*HTML.*?-->/i;
+            if (!regex.test(data)) {
+              data = '<!--HTML-->'.concat(data);
+            }
+          }
+          this.$emit('update:modelValue', data);
         });
         ckeditor.editing.view.document.on(
           'enter',
