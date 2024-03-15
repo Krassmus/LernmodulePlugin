@@ -70,7 +70,7 @@ export const markTheWordsTaskSchema = z.object({
     solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
-  feedback: z.array(feedbackSchema),
+  feedback: z.array(feedbackSchema).default(() => defaultFeedback()),
 });
 export type MarkTheWordsTask = z.infer<typeof markTheWordsTaskSchema>;
 
@@ -217,6 +217,15 @@ export const taskTypeSchema = z.union([
   questionTaskSchema.shape.task_type,
 ]);
 
+function defaultFeedback(): Feedback[] {
+  return [
+    { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
+    { percentage: 50, message: 'Gut.' },
+    { percentage: 75, message: 'Sehr gut.' },
+    { percentage: 100, message: 'Perfekt!' },
+  ];
+}
+
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
   switch (type) {
     case 'DragTheWords':
@@ -236,12 +245,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
           resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
         },
-        feedback: [
-          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
-          { percentage: 50, message: 'Gut.' },
-          { percentage: 75, message: 'Sehr gut.' },
-          { percentage: 100, message: 'Perfekt!' },
-        ],
+        feedback: defaultFeedback(),
       };
     case 'FillInTheBlanks':
       return {
@@ -261,12 +265,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.',
           resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
         },
-        feedback: [
-          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
-          { percentage: 50, message: 'Gut.' },
-          { percentage: 75, message: 'Sehr gut.' },
-          { percentage: 100, message: 'Perfekt!' },
-        ],
+        feedback: defaultFeedback(),
       };
     case 'FindTheHotspot':
       return {
@@ -301,12 +300,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Bilder richtig zugeordnet.',
         },
-        feedback: [
-          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
-          { percentage: 50, message: 'Gut.' },
-          { percentage: 75, message: 'Sehr gut.' },
-          { percentage: 100, message: 'Perfekt!' },
-        ],
+        feedback: defaultFeedback(),
       };
     case 'ImageSequencing':
       return {
@@ -324,12 +318,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Bildern richtig sortiert.',
         },
-        feedback: [
-          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
-          { percentage: 50, message: 'Gut.' },
-          { percentage: 75, message: 'Sehr gut.' },
-          { percentage: 100, message: 'Perfekt!' },
-        ],
+        feedback: defaultFeedback(),
       };
     case 'InteractiveVideo':
       return {
@@ -355,12 +344,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Wörter richtig ausgewählt.',
         },
-        feedback: [
-          { percentage: 0, message: 'Versuchen Sie es noch einmal.' },
-          { percentage: 50, message: 'Gut.' },
-          { percentage: 75, message: 'Sehr gut.' },
-          { percentage: 100, message: 'Perfekt!' },
-        ],
+        feedback: defaultFeedback(),
       };
     case 'Memory':
       return {
