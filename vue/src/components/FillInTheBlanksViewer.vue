@@ -463,7 +463,8 @@ input[type='text'] {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  width: 104px;
+  /* Calculated to be the minPx number spit out by autoGrowTextField */
+  width: 91px;
 }
 
 .h5pBlank.autocorrect:focus {
