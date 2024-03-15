@@ -1909,12 +1909,17 @@ var component = normalizeComponent(
 // to this array so that a corresponding vue 2 component will be registered in
 // the Courseware.
 const taskTypes = ['FillInTheBlanks', 'Question', 'DragTheWords', 'MarkTheWords', 'Memory', 'ImagePairing', 'LmbInteractiveVideo'];
-console.log('Hello :) Registering Lernmodule Courseware blocks...');
+const debug = window.STUDIP.LernmoduleCoursewareBlocksPlugin.debug;
+if (debug) {
+  console.log('Hello :) Registering Lernmodule Courseware blocks...');
+}
 window.STUDIP.eventBus.on('courseware:init-plugin-manager', pluginManager => {
   for (const taskType of taskTypes) {
     const blockComponent = coursewareBlockComponentForTaskType(taskType);
     pluginManager.addBlock(blockComponent.name, blockComponent);
-    console.info('Registered CW block component: ', blockComponent.name);
+    if (debug) {
+      console.info('Registered CW block component: ', blockComponent.name);
+    }
   }
 });
 
