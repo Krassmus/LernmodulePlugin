@@ -1,28 +1,26 @@
 <template>
   <div class="h5pFeedbackContainer">
-    <div class="h5pFeedbackContainerTop">
-      <div class="h5pFeedbackText">
-        {{ resultMessage }}
-      </div>
-      <template v-if="maxPoints">
-        <meter
-          id="score"
-          min="0"
-          :low="lowNumber"
-          :high="highNumber"
-          :optimum="maxPoints"
-          :max="maxPoints"
-          :value="achievedPoints"
-        />
-        <img
-          v-if="achievedMaxPoints"
-          :src="urlForIcon('star')"
-          width="36"
-          height="36"
-        />
-      </template>
-      <div v-else>{{ achievedPoints }}</div>
+    <div class="h5pFeedbackText">
+      {{ resultMessage }}
     </div>
+    <template v-if="maxPoints">
+      <meter
+        id="score"
+        min="0"
+        :low="lowNumber"
+        :high="highNumber"
+        :optimum="maxPoints"
+        :max="maxPoints"
+        :value="achievedPoints"
+      />
+      <img
+        v-if="achievedMaxPoints"
+        :src="urlForIcon('star')"
+        width="36"
+        height="36"
+      />
+    </template>
+    <div v-else>{{ achievedPoints }}</div>
     <div v-if="feedbackMessage" class="h5pFeedbackText">
       {{ feedbackMessage }}
     </div>
@@ -105,31 +103,12 @@ export default defineComponent({
 <style>
 .h5pFeedbackText {
   font-size: 1em;
-  margin-left: 0.5em;
   color: #1a73d9;
   font-weight: 700;
 }
 
 .h5pFeedbackContainer {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-}
-
-.h5pFeedbackContainerTop {
-}
-
-.h5pFeedbackContainerCenter {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.h5pFeedbackContainerBottom {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1em;
+  padding-top: 0.5em;
 }
 
 meter {

@@ -6,8 +6,8 @@
         <input
           type="text"
           v-model="userInputs[element.uuid]"
-          :readonly="submittedAnswerIsCorrect(element) || showSolutions"
-          :disabled="submittedAnswerIsCorrect(element) || showSolutions"
+          :readonly="!this.editable"
+          :disabled="!this.editable"
           :class="classForInput(element)"
           @blur="onInputBlurOrEnter"
           @keyup.enter="onInputBlurOrEnter"
@@ -29,43 +29,39 @@
       v-if="showResults"
       :achievedPoints="correctAnswers"
       :maxPoints="maxPoints"
-      :resultMessage="resultMessage"
       :feedback="task.feedback"
+      :resultMessage="resultMessage"
     />
-    <div class="h5pFeedbackContainer">
-      <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
-        {{
-          task.strings.fillInAllBlanksMessage
-            ? task.strings.fillInAllBlanksMessage
-            : $gettext(
-                'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
-              )
-        }}
-      </div>
 
-      <div class="h5pFeedbackContainerBottom">
-        <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-          {{ task.strings.checkButton }}
-        </button>
+    <div
+      v-if="showFillInAllTheBlanksMessage"
+      class="h5pMessage"
+      v-text="fillInAllTheBlanksMessage"
+    />
 
-        <template v-if="showExtraButtons">
-          <button
-            v-if="showSolutionButton"
-            @click="onClickShowSolution"
-            class="h5pButton"
-          >
-            {{ task.strings.solutionsButton }}
-          </button>
+    <div class="h5pButtonPanel">
+      <button
+        @click="onClickCheck(false)"
+        v-if="showCheckButton"
+        class="h5pButton"
+        v-text="this.task.strings.checkButton"
+      />
 
-          <button
-            v-if="showRetryButton"
-            @click="onClickTryAgain"
-            class="h5pButton"
-          >
-            {{ task.strings.retryButton }}
-          </button>
-        </template>
-      </div>
+      <template v-if="showExtraButtons">
+        <button
+          v-if="showSolutionButton"
+          @click="onClickShowSolution"
+          class="h5pButton"
+          v-text="this.task.strings.solutionsButton"
+        />
+
+        <button
+          v-if="showRetryButton"
+          @click="onClickTryAgain"
+          class="h5pButton"
+          v-text="this.task.strings.retryButton"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -110,10 +106,12 @@ export default defineComponent({
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
       userWantsToSeeSolutions: false,
+      editable: true,
     };
   },
   methods: {
     $gettext,
+
     submittedAnswerIsCorrect(element: FillInTheBlanksElement): boolean {
       const blank = element as Blank;
 
@@ -126,6 +124,7 @@ export default defineComponent({
         );
       }
     },
+
     isAnswerCorrect(userAnswer: string, solution: string): boolean {
       if (this.task.caseSensitive) {
         if (this.task.acceptTypos) {
@@ -145,6 +144,7 @@ export default defineComponent({
         }
       }
     },
+
     isAnswerCorrectWithTypo(userAnswer: string, solution: string): boolean {
       if (userAnswer === solution) return true;
 
@@ -158,6 +158,7 @@ export default defineComponent({
         (userAnswer.length > 9 && distance <= 2)
       );
     },
+
     updateAttempt() {
       // Tell the server which blanks were filled out correctly.
       const points = {} as Record<string, number>;
@@ -174,6 +175,7 @@ export default defineComponent({
         success: this.correctAnswers === this.blanks.length,
       });
     },
+
     /**
      * Adapted from the H5P source code, MIT License
      * https://github.com/h5p/h5p-blanks/blob/e9bf6862211c082a5724d9873496e66c489d23f7/js/blanks.js#L401
@@ -226,28 +228,36 @@ export default defineComponent({
         }
       }, 1);
     },
-    onClickCheck() {
+
+    onClickCheck(taskEditableAfterCheck: boolean) {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
       this.updateAttempt();
+      this.editable = taskEditableAfterCheck;
     },
+
     onClickShowSolution() {
       this.userWantsToSeeSolutions = true;
     },
+
     onClickTryAgain() {
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
+      this.editable = true;
     },
+
     onInputBlurOrEnter() {
       this.userWantsToSeeSolutions = false;
       if (this.task.autoCorrect) {
-        this.onClickCheck();
+        this.onClickCheck(true);
       }
     },
+
     onInput(event: Event) {
       this.autoGrowTextField(event.target as HTMLInputElement);
     },
+
     classForInput(blank: FillInTheBlanksElement) {
       if (!this.submittedAnswers) {
         return 'h5pBlank';
@@ -260,9 +270,14 @@ export default defineComponent({
           return 'h5pBlank h5pBlankIncorrect';
         }
       } else {
-        return 'h5pBlank h5pBlankIncorrect';
+        if (this.task.autoCorrect) {
+          return 'h5pBlank';
+        } else {
+          return 'h5pBlank h5pBlankIncorrect';
+        }
       }
     },
+
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
@@ -275,6 +290,7 @@ export default defineComponent({
       // and the odd indexes are the blanks.
       return this.task.template.split(/\*([^*]*)\*/);
     },
+
     parsedTemplate(): FillInTheBlanksElement[] {
       return this.splitTemplate.map((value, index) => {
         if (index % 2 === 0) {
@@ -292,11 +308,13 @@ export default defineComponent({
         }
       });
     },
+
     blanks(): Blank[] {
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
       ) as Blank[];
     },
+
     blanksFilled(): number {
       if (!this.submittedAnswers) {
         return 0;
@@ -304,22 +322,28 @@ export default defineComponent({
         return Object.keys(this.submittedAnswers).length;
       }
     },
+
     allBlanksAreFilled(): boolean {
       return this.blanksFilled == this.blanks.length;
     },
+
     correctAnswers(): number {
       return this.blanks.filter((blank) => this.submittedAnswerIsCorrect(blank))
         .length;
     },
+
     allAnswersAreCorrect(): boolean {
       return this.blanks.every((blank) => this.submittedAnswerIsCorrect(blank));
     },
+
     maxPoints(): number {
       return this.blanks.length;
     },
+
     inputHasChanged(): boolean {
       return !isEqual(this.submittedAnswers, this.userInputs);
     },
+
     showExtraButtons(): boolean {
       if (this.task.autoCorrect) {
         if (this.allBlanksAreFilled) {
@@ -339,18 +363,22 @@ export default defineComponent({
         );
       }
     },
+
     showCheckButton(): boolean {
       return (
         (this.submittedAnswers === null || this.inputHasChanged) &&
         !this.task.autoCorrect
       );
     },
+
     showSolutionButton(): boolean {
       return !this.showSolutions && this.task.showSolutionsAllowed;
     },
+
     showRetryButton(): boolean {
       return this.task.retryAllowed && this.submittedAnswers !== null;
     },
+
     showSolutions(): boolean {
       return (
         this.userWantsToSeeSolutions &&
@@ -358,6 +386,7 @@ export default defineComponent({
           !this.task.allBlanksMustBeFilledForSolutions)
       );
     },
+
     showFillInAllTheBlanksMessage(): boolean {
       return (
         this.task.allBlanksMustBeFilledForSolutions &&
@@ -366,6 +395,7 @@ export default defineComponent({
         !this.inputHasChanged
       );
     },
+
     showResults(): boolean {
       return (
         !(this.submittedAnswers === null) &&
@@ -374,6 +404,7 @@ export default defineComponent({
         !this.inputHasChanged
       );
     },
+
     resultMessage(): string {
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
@@ -387,10 +418,19 @@ export default defineComponent({
 
       return resultMessage;
     },
+
     feedbackSortedByScore(): Feedback[] {
       return this.task.feedback
         .map((value) => value)
         .sort((a, b) => b.percentage - a.percentage);
+    },
+
+    fillInAllTheBlanksMessage(): string {
+      return this.task.strings.fillInAllBlanksMessage
+        ? this.task.strings.fillInAllBlanksMessage
+        : $gettext(
+            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+          );
     },
   },
 });
@@ -423,20 +463,18 @@ input[type='text'] {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  width: 104px;
+  /* Calculated to be the minPx number spit out by autoGrowTextField */
+  width: 91px;
 }
 
 .h5pBlank.autocorrect:focus {
   /*  Irgendwas damit es nicht rot oder grün gehighlightet wird, während noch drin getippt wird */
 }
 
-.h5pSolution {
-  color: #255c41;
-  font-weight: bold;
-  border: 1px #255c41 dashed;
-  background-color: #d4f6e6;
-  padding: 0.15em;
-  border-radius: 0.25em;
-  margin-left: 0.5em;
+.h5pMessage {
+  font-size: 1em;
+  color: #1a73d9;
+  font-weight: 700;
+  padding-top: 0.5em;
 }
 </style>

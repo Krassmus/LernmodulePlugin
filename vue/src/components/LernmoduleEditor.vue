@@ -30,6 +30,8 @@
           :model-value="infotext"
           id="ckeditorElement"
           @update:modelValue="onInputInfotext"
+          insert-html-comment
+          remove-wrapping-p-tag
         />
       </label>
     </fieldset>

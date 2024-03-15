@@ -6,7 +6,7 @@
         <span
           v-if="userInputs[element.uuid]"
           :class="classForFilledBlank(element)"
-          draggable="true"
+          :draggable="editable"
           @dragstart="
             startDragUsedAnswer($event, element, userInputs[element.uuid])
           "
@@ -28,6 +28,12 @@
         <label v-if="element.hint">
           <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
         </label>
+        <span
+          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+          class="h5pSolution"
+        >
+          {{ element.solution }}
+        </span>
       </template>
     </template>
 
@@ -40,7 +46,8 @@
       <div v-for="answer in unusedAnswers" :key="answer.uuid">
         <span
           class="h5pBlankSolution"
-          draggable="true"
+          :class="{ disabled: !this.editable }"
+          :draggable="editable"
           @dragstart="startDragUnusedAnswer($event, answer)"
           @click="onClickUnusedAnswer(answer)"
         >
@@ -57,41 +64,35 @@
       :result-message="resultMessage"
     />
 
-    <div class="h5pFeedbackContainer">
-      <div class="h5pFeedbackContainerTop">
-        <div v-if="showFillInAllTheBlanksMessage" class="h5pFeedbackText">
-          {{
-            this.task.strings.fillInAllBlanksMessage
-              ? this.task.strings.fillInAllBlanksMessage
-              : $gettext(
-                  'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
-                )
-          }}
-        </div>
-      </div>
-      <div class="h5pFeedbackContainerBottom">
-        <button @click="onClickCheck" v-if="showCheckButton" class="h5pButton">
-          {{ this.task.strings.checkButton }}
-        </button>
+    <div
+      v-if="showFillInAllTheBlanksMessage"
+      class="h5pMessage"
+      v-text="fillInAllTheBlanksMessage"
+    />
 
-        <div class="h5pFeedbackResultAndButtons" v-if="showExtraButtons">
-          <button
-            v-if="!showSolutions && this.task.showSolutionsAllowed"
-            @click="onClickShowSolution"
-            class="h5pButton"
-          >
-            {{ this.task.strings.solutionsButton }}
-          </button>
+    <div class="h5pButtonPanel">
+      <button
+        @click="onClickCheck"
+        v-if="showCheckButton"
+        class="h5pButton"
+        v-text="this.task.strings.checkButton"
+      />
 
-          <button
-            v-if="this.task.retryAllowed"
-            @click="onClickTryAgain"
-            class="h5pButton"
-          >
-            {{ this.task.strings.retryButton }}
-          </button>
-        </div>
-      </div>
+      <template v-if="showExtraButtons">
+        <button
+          v-if="!showSolutions && this.task.showSolutionsAllowed"
+          @click="onClickShowSolution"
+          class="h5pButton"
+          v-text="this.task.strings.solutionsButton"
+        />
+
+        <button
+          v-if="this.task.retryAllowed"
+          @click="onClickTryAgain"
+          class="h5pButton"
+          v-text="this.task.strings.retryButton"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -144,6 +145,7 @@ export default defineComponent({
       draggedAnswerId: undefined as Uuid | undefined,
       draggedSourceId: undefined as Uuid | undefined,
       clickedAnswerId: undefined as Uuid | undefined,
+      editable: true as Boolean,
     };
   },
   methods: {
@@ -198,6 +200,7 @@ export default defineComponent({
       blank: Blank,
       answerId: Uuid
     ): void {
+      if (!this.editable) return;
       if (dragEvent.dataTransfer) {
         dragEvent.dataTransfer.dropEffect = 'move';
         dragEvent.dataTransfer.effectAllowed = 'move';
@@ -262,6 +265,7 @@ export default defineComponent({
     onClickCheck() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
+      this.editable = false;
     },
 
     onClickShowSolution() {
@@ -272,25 +276,19 @@ export default defineComponent({
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
+      this.editable = true;
     },
 
     classForFilledBlank(blank: Blank) {
-      if (!this.submittedAnswers) {
+      if (!this.submittedAnswers && !this.task.instantFeedback) {
         return 'h5pFilledBlank';
       }
 
       if (this.userInputs?.[blank.uuid]) {
         if (this.submittedAnswerIsCorrect(blank)) {
-          return 'h5pFilledBlank h5pBlankCorrect';
+          return 'h5pFilledBlank h5pBlankCorrect disabled';
         } else {
-          const userInputHasChangedAfterSubmitting =
-            this.submittedAnswers?.[blank.uuid] !==
-            this.userInputs?.[blank.uuid];
-          if (!userInputHasChangedAfterSubmitting) {
-            return 'h5pFilledBlank h5pBlankIncorrect';
-          } else {
-            return 'h5pFilledBlank';
-          }
+          return 'h5pFilledBlank h5pBlankIncorrect disabled';
         }
       } else {
         return 'h5pBlank';
@@ -303,7 +301,7 @@ export default defineComponent({
 
     onClickUnusedAnswer(answer: Answer): void {
       console.log('Clicked answer:', answer);
-      this.clickedAnswerId = answer.uuid;
+      if (this.editable) this.clickedAnswerId = answer.uuid;
     },
 
     onClickBlank(blank: Blank): void {
@@ -489,6 +487,14 @@ export default defineComponent({
 
       return resultMessage;
     },
+
+    fillInAllTheBlanksMessage(): string {
+      return this.task.strings.fillInAllBlanksMessage
+        ? this.task.strings.fillInAllBlanksMessage
+        : $gettext(
+            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen'
+          );
+    },
   },
 });
 </script>
@@ -565,5 +571,16 @@ span.item:empty:before {
   min-height: 2rem;
   border: 1px solid #eee;
   border-radius: 5px;
+}
+
+.h5pMessage {
+  font-size: 1em;
+  color: #1a73d9;
+  font-weight: 700;
+  padding-top: 0.5em;
+}
+
+.disabled {
+  cursor: default;
 }
 </style>

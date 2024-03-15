@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: uol 5.1\n"
-"PO-Revision-Date: 2024-03-07 15:01+0000\n"
+"PO-Revision-Date: 2024-03-08 15:29+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/"
 "rasmusfuhse-lernmoduleplugin/js/en/>\n"
@@ -106,7 +106,7 @@ msgstr "Select task type:"
 
 #: src/components/MemoryViewer.vue:6 src/components/MemoryViewer.vue:7
 msgid "Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
-msgstr "Pairs revealed: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
+msgstr "Pairs revealed: %{ amountOfPairsSolved } of %{ totalAmountOfPairs }"
 
 #: src/components/interactiveVideo/SelectVideo.vue:104
 #: src/components/interactiveVideo/SelectVideo.vue:109

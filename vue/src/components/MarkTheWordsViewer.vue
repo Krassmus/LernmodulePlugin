@@ -17,22 +17,28 @@
       </span>
     </div>
 
-    <div>
-      <button v-if="showCheckButton" @click="onClickCheck" class="h5pButton">
-        {{ this.task.strings.checkButton }}
-      </button>
-      <button v-if="showRetryButton" @click="onClickRetry" class="h5pButton">
-        {{ this.task.strings.retryButton }}
-      </button>
-    </div>
+    <feedback-element
+      v-if="showResults"
+      :achieved-points="score"
+      :max-points="maxScore"
+      :feedback="this.task.feedback"
+      :result-message="resultMessage"
+    />
 
-    <template v-if="showResults">
-      <feedback-element
-        :message="feedbackMessage"
-        :achieved-points="score"
-        :max-points="maxScore"
+    <div class="h5pButtonPanel">
+      <button
+        v-if="showCheckButton"
+        @click="onClickCheck"
+        class="h5pButton"
+        v-text="this.task.strings.checkButton"
       />
-    </template>
+      <button
+        v-if="showRetryButton"
+        @click="onClickRetry"
+        class="h5pButton"
+        v-text="this.task.strings.retryButton"
+      />
+    </div>
 
     <div v-if="debug">
       Marked words:
@@ -137,7 +143,7 @@ export default defineComponent({
             return 'h5pIncorrectAnswer';
           }
         } else {
-          return 'h5pStaticText';
+          return 'h5pStaticTextNoHover';
         }
       } else {
         // User is working on the task
@@ -189,12 +195,15 @@ export default defineComponent({
       });
       return parsedTemplate;
     },
+
     showCheckButton(): boolean {
       return !this.showResults;
     },
+
     showRetryButton(): boolean {
       return this.task.retryAllowed && this.showResults;
     },
+
     score(): number {
       let score = 0;
 
@@ -210,6 +219,7 @@ export default defineComponent({
 
       return score;
     },
+
     maxScore(): number {
       let maxScore = 0;
       for (const element of this.parsedTemplate) {
@@ -217,8 +227,16 @@ export default defineComponent({
       }
       return maxScore;
     },
-    feedbackMessage(): string {
-      return this.score + ' / ' + this.maxScore;
+
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.score.toString()
+      );
+
+      resultMessage = resultMessage.replace(':total', this.maxScore.toString());
+
+      return resultMessage;
     },
   },
 });
@@ -231,33 +249,38 @@ export default defineComponent({
 }
 
 .h5pStaticText:hover {
-  box-shadow: 0 0 0 2px #cee0f4;
+  box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
 }
 
+.h5pStaticTextNoHover {
+  background: #ffffff;
+  color: #000000;
+}
+
 .h5pMarkedWord {
-  border: 1px solid #cee0f4;
+  box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   background-color: #d4f1f6;
 }
 
 .h5pMarkedWord:hover {
-  box-shadow: 0 0 0 2px #cee0f4;
+  box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
 }
 
 .h5pCorrectAnswer {
   color: #255c41;
-  border: 1px solid #d4f6e6;
+  box-shadow: 0 0 0 1px #d4f6e6;
   border-radius: 0.25em;
   background-color: #d4f6e6;
 }
 
 .h5pIncorrectAnswer {
   color: #b71c1c;
-  border: 1px solid #f7d0d0;
+  box-shadow: 0 0 0 1px #f7d0d0;
   border-radius: 0.25em;
   background-color: #f7d0d0;
   text-decoration: line-through;

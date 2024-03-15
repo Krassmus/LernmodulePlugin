@@ -126,6 +126,7 @@
         />
       </label>
     </fieldset>
+
     <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Feedback') }}</legend>
       <label>
@@ -210,6 +211,7 @@ export default defineComponent({
         .map((value) => value)
         .sort((a, b) => b.percentage - a.percentage);
     },
+
     instructions(): string {
       return $gettext(
         'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den "Lücke hinzufügen"–Button.' +
@@ -220,12 +222,14 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+
     titleForDeleteButtonForFeedback(feedback: Feedback): string {
       return this.$gettext(
         'Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt.',
         { percentage: feedback.percentage.toString() }
       );
     },
+
     /**
      * Surround the selected text with two asterisks
      */
@@ -248,17 +252,20 @@ export default defineComponent({
         writer.insertText('*', start);
       });
     },
+
     addFeedback(): void {
       this.taskDefinition.feedback.push({
         percentage: this.feedbackSortedByScore[0]?.percentage,
         message: 'Feedback',
       });
     },
+
     removeFeedback(feedbackToRemove: Feedback): void {
       this.taskDefinition.feedback = this.taskDefinition.feedback.filter(
         (feedback) => feedback !== feedbackToRemove
       );
     },
+
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
