@@ -250,17 +250,18 @@ export default defineComponent({
           {{ startPositionInputError }}
         </div>
       </div>
-      <label>
+      <label v-if="false">
+        <!-- hidden until 'disable navigation' feature is ready -->
         {{ $gettext('Navigation deaktivieren') }}
         <select v-model="taskDefinition.disableNavigation">
           <option :value="'not disabled'">
             {{ $gettext('Nicht deaktiviert') }}
           </option>
           <option :value="'forward disabled'">
-            {{ $gettext('Vorspülen deaktiviert') }}
+            {{ $gettext('Vorspulen deaktiviert') }}
           </option>
           <option :value="'forward and backward disabled'">
-            {{ $gettext('Vorspülen und Rückspülen deaktiviert') }}
+            {{ $gettext('Vorspulen und Rückspulen deaktiviert') }}
           </option>
         </select>
       </label>
