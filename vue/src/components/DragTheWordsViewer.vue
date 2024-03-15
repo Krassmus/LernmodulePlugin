@@ -284,6 +284,10 @@ export default defineComponent({
         return 'h5pFilledBlank';
       }
 
+      if (this.task.instantFeedback) {
+        this.submittedAnswers = { ...this.userInputs };
+      }
+
       if (this.userInputs?.[blank.uuid]) {
         if (this.submittedAnswerIsCorrect(blank)) {
           return 'h5pFilledBlank h5pBlankCorrect disabled';

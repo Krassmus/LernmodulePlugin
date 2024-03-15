@@ -335,7 +335,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'MarkTheWords',
         template:
-          '*The* moon is our natural satellite, *i.e.* it revolves around the *Earth*!',
+          '*The* moon is our natural satellite, *i.e.* it revolves around the *Earth!*',
         retryAllowed: true,
         showSolutionsAllowed: true,
         strings: {

@@ -1,6 +1,6 @@
 <template>
   <div class="h5pModule">
-    <div ref="wrapperElement">
+    <div class="h5pMarkTheWordText" ref="wrapperElement">
       <span v-for="(element, index) in parsedTemplate" :key="element.uuid">
         <span
           tabindex="0"
@@ -13,7 +13,7 @@
           v-html="element.text"
         />
         <!--  prettier-ignore-->
-        <pre v-if="index < parsedTemplate.length - 1" class="space"> </pre>
+        <pre v-if="index < parsedTemplate.length" class="space"> </pre>
       </span>
     </div>
 
@@ -284,6 +284,12 @@ export default defineComponent({
   border-radius: 0.25em;
   background-color: #f7d0d0;
   text-decoration: line-through;
+}
+
+.h5pMarkTheWordText {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .space {

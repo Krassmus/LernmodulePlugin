@@ -5,7 +5,6 @@
     </div>
     <template v-if="maxPoints">
       <meter
-        id="score"
         min="0"
         :low="lowNumber"
         :high="highNumber"
@@ -112,11 +111,6 @@ export default defineComponent({
 }
 
 meter {
-  /* Reset the default appearance */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
   width: 15em;
   height: 30px;
 
@@ -125,7 +119,6 @@ meter {
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) inset;
   border-radius: 1.5em;
 
-  display: -webkit-inline-flex;
   max-width: 100%;
   padding: 0.625em;
   border: 1px solid rgba(0, 0, 0, 0.08);
