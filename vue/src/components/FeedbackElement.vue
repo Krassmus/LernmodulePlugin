@@ -112,11 +112,6 @@ export default defineComponent({
 }
 
 meter {
-  /* Reset the default appearance */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
   width: 15em;
   height: 30px;
 
