@@ -287,9 +287,7 @@ export default defineComponent({
 }
 
 .h5pMarkTheWordText {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  word-break: break-word;
 }
 
 .space {
