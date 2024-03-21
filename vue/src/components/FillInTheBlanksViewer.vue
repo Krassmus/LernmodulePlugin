@@ -1,29 +1,31 @@
 <template>
   <div class="h5pModule" ref="wrapperElement">
-    <template v-for="element in parsedTemplate" :key="element.uuid">
-      <span v-if="element.type === 'staticText'" v-html="element.text" />
-      <template v-else-if="element.type === 'blank'">
-        <input
-          type="text"
-          v-model="userInputs[element.uuid]"
-          :readonly="!this.editable"
-          :disabled="!this.editable"
-          :class="classForInput(element)"
-          @blur="onInputBlurOrEnter"
-          @keyup.enter="onInputBlurOrEnter"
-          @input="onInput"
-        />
-        <label v-if="element.hint">
-          <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
-        </label>
-        <span
-          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-          class="h5pSolution"
-        >
-          {{ element.solutions[0] }}
-        </span>
+    <div class="fill-in-the-blanks-text">
+      <template v-for="element in parsedTemplate" :key="element.uuid">
+        <span v-if="element.type === 'staticText'" v-html="element.text" />
+        <template v-else-if="element.type === 'blank'">
+          <input
+            type="text"
+            v-model="userInputs[element.uuid]"
+            :readonly="!this.editable"
+            :disabled="!this.editable"
+            :class="classForInput(element)"
+            @blur="onInputBlurOrEnter"
+            @keyup.enter="onInputBlurOrEnter"
+            @input="onInput"
+          />
+          <label v-if="element.hint">
+            <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
+          </label>
+          <span
+            v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+            class="h5pSolution"
+          >
+            {{ element.solutions[0] }}
+          </span>
+        </template>
       </template>
-    </template>
+    </div>
 
     <FeedbackElement
       v-if="showResults"
@@ -440,6 +442,10 @@ export default defineComponent({
 input[type='text'] {
   max-height: 1em;
   font-family: Lato, sans-serif;
+}
+
+.fill-in-the-blanks-text {
+  word-break: break-word;
 }
 
 .h5pBlankCorrect {
