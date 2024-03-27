@@ -1,8 +1,9 @@
 pluginname=LernmodulePlugin
 pluginclassname=LernmodulePlugin
-version=2.6.12
+pluginclassname=LernmoduleCoursewareBlocksPlugin
+version=3.0.0
 origin=RasmusFuhse
-studipMinVersion=4.0
+studipMinVersion=5.4
 summary=Lernmodule in Stud.IP
 descriptionlong=Ein Ort, um Lernmodule zu erstellen, hochzuladen oder zu verlinken. Es können Abhängigkeiten zwischen Lernmodulen definiert werden, sodass Lernmodul B erst ausgeführt werden kann, wenn Lernmodul A absolviert worden ist. Auch zeitgesteuerte Lernmodule sind möglich, die erst ab einem bestimmten Datum sichtbar sind. Man kann die Lernmodule in Darstellungsblöcke gruppieren, die je noch einen einleitenden Text bekommen. Die Reihenfolge wird per Drag&Drop bestimmt.
 homepage=https://github.com/Krassmus/LernmodulePlugin

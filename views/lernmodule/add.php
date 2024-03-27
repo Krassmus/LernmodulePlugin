@@ -2,8 +2,15 @@
     <? if (StudipVersion::newerThan("4.5.99")) : ?>
     <div>
     <? endif ?>
-
-    <? if ($h5plibs > 0) : ?>
+      <a href="<?= PluginEngine::getLink(
+          $plugin,
+          array('block_id' => Request::option("block_id")),
+          "vuejseditor/edit"
+      ) ?>">
+          <?= Icon::create("learnmodule", "clickable")->asImg(50) ?>
+          <?= _("Stud.IP H5P Editor") ?>
+      </a>
+      <? if ($h5plibs > 0) : ?>
         <a href="<?= PluginEngine::getLink($plugin, array('block_id' => Request::option("block_id")), "h5peditor/edit") ?>">
             <?= Icon::create("learnmodule", "clickable")->asImg(50) ?>
             <?= _("Editor") ?>

@@ -64,7 +64,8 @@
 
                 <div id="timeline"></div>
                 <script>
-                    jQuery(function () {
+                    jQuery(async function() {
+                        var Chartist = await STUDIP.loadChunk('chartist');
                         var data = {
                             // A labels array that can contain any sort of values
                             labels: <?= json_encode($range) ?>,

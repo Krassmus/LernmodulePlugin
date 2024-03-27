@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="LM-CW-Vue2 watch" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/public/plugins_packages/RasmusFuhse/LernmodulePlugin/courseware-blocks-vue2/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="watch" />
+    </scripts>
+    <node-interpreter value="project" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>
