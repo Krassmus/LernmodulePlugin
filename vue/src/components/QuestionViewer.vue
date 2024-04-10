@@ -88,23 +88,26 @@
     <div class="h5pButtonPanel">
       <button
         v-if="!isSubmitted"
-        @click="onClickCheck"
-        class="h5pButton"
         v-text="this.task.strings.checkButton"
+        @click="onClickCheck"
+        type="button"
+        class="h5pButton"
       />
 
       <button
         v-if="this.task.retryAllowed && isSubmitted"
-        @click="onClickTryAgain"
-        class="h5pButton"
         v-text="this.task.strings.retryButton"
+        @click="onClickTryAgain"
+        type="button"
+        class="h5pButton"
       />
 
       <button
         v-if="showSolutionsButton"
-        @click="onClickShowSolution"
-        class="h5pButton"
         v-text="this.task.strings.solutionsButton"
+        @click="onClickShowSolution"
+        type="button"
+        class="h5pButton"
       />
     </div>
   </div>

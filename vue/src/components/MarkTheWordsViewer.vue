@@ -28,15 +28,18 @@
     <div class="h5pButtonPanel">
       <button
         v-if="showCheckButton"
-        @click="onClickCheck"
-        class="h5pButton"
         v-text="this.task.strings.checkButton"
+        @click="onClickCheck"
+        type="button"
+        class="h5pButton"
       />
+
       <button
         v-if="showRetryButton"
-        @click="onClickRetry"
-        class="h5pButton"
         v-text="this.task.strings.retryButton"
+        @click="onClickRetry"
+        type="button"
+        class="h5pButton"
       />
     </div>
 

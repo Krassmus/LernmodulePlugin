@@ -22,6 +22,7 @@
       }}</span>
     </div>
   </div>
+
   <FeedbackElement
     v-if="showResults"
     :achievedPoints="correctAnswers"
@@ -29,22 +30,24 @@
     :resultMessage="resultMessage"
     :feedback="task.feedback"
   />
-  <button
-    v-if="!this.showResults"
-    type="button"
-    class="h5pButton"
-    @click="checkResults()"
-  >
-    {{ this.task.strings.checkButton }}
-  </button>
-  <button
-    v-if="this.showResults"
-    type="button"
-    class="h5pButton"
-    @click="reset()"
-  >
-    {{ this.task.strings.retryButton }}
-  </button>
+
+  <div class="h5pButtonPanel">
+    <button
+      v-if="!this.showResults"
+      v-text="this.task.strings.checkButton"
+      @click="checkResults()"
+      type="button"
+      class="h5pButton"
+    />
+
+    <button
+      v-if="this.showResults"
+      v-text="this.task.strings.retryButton"
+      @click="reset()"
+      type="button"
+      class="h5pButton"
+    />
+  </div>
 </template>
 
 <script lang="ts">
