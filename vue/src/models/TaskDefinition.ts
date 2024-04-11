@@ -1,5 +1,7 @@
 import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
+import FindTheWordsEditor from '@/components/FindTheWordsEditor.vue';
+import FindTheWordsViewer from '@/components/FindTheWordsViewer.vue';
 import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
 import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
@@ -58,6 +60,12 @@ export const findTheHotspotTaskSchema = z.object({
   image: imageSchema,
 });
 export type FindTheHotspotTask = z.infer<typeof findTheHotspotTaskSchema>;
+
+export const findTheWordsTaskSchema = z.object({
+  task_type: z.literal('FindTheWords'),
+  words: z.array(z.string()),
+});
+export type FindTheWordsTask = z.infer<typeof findTheWordsTaskSchema>;
 
 export const markTheWordsTaskSchema = z.object({
   task_type: z.literal('MarkTheWords'),
@@ -177,6 +185,7 @@ export const taskDefinitionSchema = z.union([
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
+  findTheWordsTaskSchema,
   imagePairingTaskSchema,
   imageSequencingTaskSchema,
   interactiveVideoTaskSchema,
@@ -196,6 +205,7 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
+  findTheWordsTaskSchema,
   imagePairingTaskSchema,
   imageSequencingTaskSchema,
   markTheWordsTaskSchema,
@@ -209,6 +219,7 @@ export const taskTypeSchema = z.union([
   dragTheWordsTaskSchema.shape.task_type,
   fillInTheBlanksTaskSchema.shape.task_type,
   findTheHotspotTaskSchema.shape.task_type,
+  findTheWordsTaskSchema.shape.task_type,
   imagePairingTaskSchema.shape.task_type,
   imageSequencingTaskSchema.shape.task_type,
   interactiveVideoTaskSchema.shape.task_type,
@@ -275,6 +286,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           imageUrl: '',
           altText: '',
         },
+      };
+    case 'FindTheWords':
+      return {
+        task_type: 'FindTheWords',
+        words: ['apple', 'banana', 'orange'],
       };
     case 'ImagePairing':
       return {
@@ -458,6 +474,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return FillInTheBlanksViewer;
     case 'FindTheHotspot':
       return FindTheHotspotViewer;
+    case 'FindTheWords':
+      return FindTheWordsViewer;
     case 'ImagePairing':
       return ImagePairingViewer;
     case 'ImageSequencing':
@@ -483,6 +501,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return FillInTheBlanksEditor;
     case 'FindTheHotspot':
       return FindTheHotspotEditor;
+    case 'FindTheWords':
+      return FindTheWordsEditor;
     case 'ImagePairing':
       return ImagePairingEditor;
     case 'ImageSequencing':
@@ -508,6 +528,8 @@ export function printTaskType(type: TaskDefinition['task_type']): string {
       return $gettext('Fill In The Blanks');
     case 'FindTheHotspot':
       return $gettext('Find The Hotspot');
+    case 'FindTheWords':
+      return $gettext('Find The Words');
     case 'ImagePairing':
       return $gettext('Image Pairing');
     case 'ImageSequencing':
@@ -539,6 +561,8 @@ export function iconForTaskType(type: TaskDefinition['task_type']): string {
       break;
     case 'FillInTheBlanks':
       return 'file-office';
+    case 'FindTheWords':
+      break;
     case 'Question':
       return 'question';
     case 'DragTheWords':
