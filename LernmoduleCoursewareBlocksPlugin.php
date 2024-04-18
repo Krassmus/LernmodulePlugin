@@ -87,9 +87,12 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\ImagePairingBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
+
+        if (Config::get()->LERNMODULE_DEBUG) {
+            $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
+            $otherBlockTypes[] = \CoursewareLernmoduleBlocks\ImagePairingBlock::class;
+        }
 
         return $otherBlockTypes;
     }
