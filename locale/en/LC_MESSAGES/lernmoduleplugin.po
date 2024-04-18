@@ -34,10 +34,6 @@ msgstr "An assignment where the gaps in a text are to be filled in by students."
 msgid "Im Editor bearbeiten"
 msgstr "Edit module in editor"
 
-#: ../lib/VuejsLernmodul.php:30
-msgid "Ann's Javascript Test"
-msgstr "Ann's Javascript Test (This time in English! :))"
-
 #: ../lib/H5pLernmodul.php:89 ../lib/HtmlLernmodul.php:45
 #: ../controllers/h5peditor.php:123 ../controllers/h5p.php:285
 msgid "Vollbild"
