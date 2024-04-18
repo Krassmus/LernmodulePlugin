@@ -17,12 +17,16 @@
         >{{ saveStatusText }}</span
       >
     </li>
-    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">
-      {{ $pgettext('Im Sinne von undo/redo', 'Rückgängig') }}
-    </li>
-    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">
-      {{ $pgettext('Im Sinne von undo/redo', 'Wiederherstellen') }}
-    </li>
+    <template v-if="LernmoduleVueJS.LERNMODULE_DEBUG">
+      <!-- As the undo/redo functionality is still not complete, these buttons
+           are to be hidden except when in development mode. -->
+      <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">
+        {{ $pgettext('Im Sinne von undo/redo', 'Rückgängig') }}
+      </li>
+      <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">
+        {{ $pgettext('Im Sinne von undo/redo', 'Wiederherstellen') }}
+      </li>
+    </template>
   </teleport>
 
   <form class="default">

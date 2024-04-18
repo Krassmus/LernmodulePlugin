@@ -18,7 +18,8 @@ if ($template) {
                 'name' => $mod['name']
             ],
             'saveRoute' => $controller->url_for('vuejseditor/save'),
-            'updateAttemptRoute' => $controller->url_for('lernmodule/update_attempt/' . $attempt->getId())
+            'updateAttemptRoute' => $controller->url_for('lernmodule/update_attempt/' . $attempt->getId()),
+            'LERNMODULE_DEBUG' => Config::get()->LERNMODULE_DEBUG
         ]
     );
 }

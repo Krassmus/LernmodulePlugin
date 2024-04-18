@@ -39,6 +39,7 @@ declare global {
         block_id?: string;
         saveRoute: string;
         updateAttemptRoute: string;
+        LERNMODULE_DEBUG: boolean;
       };
     };
     // TODO use correct types for jQuery
