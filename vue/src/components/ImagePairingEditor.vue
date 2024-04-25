@@ -1,54 +1,39 @@
 <template>
   <div class="main-flex">
-    <div class="cards-list">
-      <div
+    <div class="h5p-elements-overview">
+      <ElementPair
         v-for="(pair, index) in taskDefinition.imagePairs"
         :key="pair.uuid"
         :class="{
-          'cards-list-item': true,
-          'selected-card': index === this.selectedPairIndex,
+          selected: index === this.selectedPairIndex,
         }"
+        :pair="this.taskDefinition.imagePairs[index]"
+        :pair-index="index"
         @click="selectPair(index)"
-      >
-        {{ index }}.
-        <!-- Apply .stop modifier to @click so that the click event handler on the
-            parent element doesn't get called when the delete button is clicked -->
-        <img
-          class="flex-child-element removeAnswerButton"
-          :src="urlForIcon('trash')"
-          @click.stop="deletePair(index)"
-          alt="an icon showing a trash bin"
-        />
-      </div>
-      <button type="button" @click="addPair">
-        {{ $gettext('Karte hinzufügen') }}
-      </button>
+      />
     </div>
-
-    <EditedImagePair
-      v-if="this.taskDefinition.imagePairs[this.selectedPairIndex]"
-      class="edited-memory-card"
-      :pair="this.taskDefinition.imagePairs[this.selectedPairIndex]"
-      :pair-index="this.selectedPairIndex"
-    />
-    <div v-else class="edited-memory-card no-card-selected-placeholder">
-      {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
+    <div class="h5p-elements-settings">
+      <form class="default">
+        <fieldset>
+          <label>Einstellungen</label>
+        </fieldset>
+      </form>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import EditedImagePair from '@/components/EditedImagePair.vue';
 import { ImagePairingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { taskEditorStore } from '@/store';
 import { v4 } from 'uuid';
+import ElementPair from '@/components/ElementPair.vue';
 
 export default defineComponent({
   name: 'ImagePairingEditor',
-  components: { EditedImagePair },
+  components: { ElementPair },
   props: {
     task: {
       type: Object as PropType<ImagePairingTask>,
@@ -141,14 +126,11 @@ export default defineComponent({
   border: #0a78d1 2px solid;
 }
 
-.edited-memory-card {
-  flex: 1 1 auto;
-}
-
-.no-card-selected-placeholder {
+.h5p-elements-overview {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: start;
+  justify-content: left;
 }
 </style>
