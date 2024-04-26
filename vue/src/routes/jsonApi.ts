@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { z } from 'zod';
 
 export const httpClient = axios.create({
   baseURL: window.STUDIP.URLHelper.getURL(`jsonapi.php/v1`, {}, true),
@@ -15,7 +16,7 @@ export async function createFile({
   file: StudipFile;
   fileData: File | Blob;
   folder: Pick<Folder, 'id'>;
-}) {
+}): Promise<CreateFileResponse> {
   const termId = file?.relationships?.['terms-of-use']?.data?.id ?? null;
   const formData = new FormData();
   formData.append('file', fileData, file.attributes.name);
@@ -28,15 +29,36 @@ export async function createFile({
       'Content-Type': 'multipart/form-data',
     },
   });
-  let response = null;
-  try {
-    response = await httpClient.get(request.headers.location);
-  } catch (e) {
-    console.debug(e);
-    response = null;
-  }
-  return response ? response.data.data : response;
+  const response = await httpClient.get(request.headers.location);
+  const data = response.data.data;
+  return createFileResponseSchema.parse(data);
 }
+
+const createFileResponseSchema = z.object({
+  type: z.literal('file-refs'),
+  id: z.string(),
+  attributes: z.object({
+    name: z.string(),
+    mkdate: z.string(),
+    chdate: z.string(),
+    description: z.string(),
+    downloads: z.number(),
+    filesize: z.number(),
+    'is-downloadable': z.boolean(),
+    'is-editable': z.boolean(),
+    'is-readable': z.boolean(),
+    'is-writable': z.boolean(),
+    'mime-type': z.string(),
+  }),
+  links: z.object({
+    self: z.string(),
+  }),
+  meta: z.object({
+    'download-url': z.string(),
+  }),
+  relationships: z.unknown(),
+});
+export type CreateFileResponse = z.infer<typeof createFileResponseSchema>;
 
 export interface Folder {
   id: string;

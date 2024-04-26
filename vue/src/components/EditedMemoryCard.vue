@@ -5,7 +5,7 @@
       <div>
         <h4>{{ $gettext('Bild') }}</h4>
         <EditedMemoryCardImage v-if="card.imageUrl" :card="card" />
-        <FileUpload v-else @file-uploaded="onFileUploaded" />
+        <FileUpload v-else @file-uploaded="onImageUploaded" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
