@@ -46,7 +46,7 @@ import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { UploadedFile } from '@/routes/lernmodule';
 
 export default defineComponent({
   name: 'EditedImagePair',

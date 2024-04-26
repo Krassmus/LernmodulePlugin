@@ -5,7 +5,7 @@ import {
   taskDefinitionSchema,
 } from '@/models/TaskDefinition';
 import { isArray, isEqual } from 'lodash';
-import { saveTask, SaveTaskResponse } from '@/routes';
+import { saveTask, SaveTaskResponse } from '@/routes/lernmodule';
 import { setAutoFreeze } from 'immer';
 
 // Prevent immer from freezing objects.  This behavior causes trouble when we

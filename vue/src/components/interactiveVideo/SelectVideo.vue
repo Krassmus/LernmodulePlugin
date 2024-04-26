@@ -6,7 +6,7 @@ import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { UploadedFile } from '@/routes/lernmodule';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import FilePicker from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
 

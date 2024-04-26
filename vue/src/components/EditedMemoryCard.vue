@@ -27,7 +27,7 @@ import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { UploadedFile } from '@/routes/lernmodule';
 
 export default defineComponent({
   name: 'EditedMemoryCard',

@@ -6,7 +6,7 @@ import {
   taskDefinitionSchemaMinusInteractiveVideo,
 } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
-import { uploadedFileSchema } from '@/routes';
+import { uploadedFileSchema } from '@/routes/lernmodule';
 
 // There are different types of 'interaction' which can be added to the video.
 // TODO Maybe put the 'base' attributes shared by all types of interaction all in one place.

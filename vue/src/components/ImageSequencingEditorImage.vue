@@ -31,7 +31,7 @@ import { Image, ImageSequencingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { UploadedFile } from '@/routes/lernmodule';
 
 export default defineComponent({
   name: 'ImageSequencingEditorImage',

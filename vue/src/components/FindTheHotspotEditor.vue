@@ -9,7 +9,7 @@ import { FindTheHotspotTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
-import { UploadedFile } from '@/routes';
+import { UploadedFile } from '@/routes/lernmodule';
 
 export default defineComponent({
   name: 'FindTheHotspotEditor',
