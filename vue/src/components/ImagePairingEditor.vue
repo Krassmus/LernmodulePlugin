@@ -130,7 +130,7 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: start;
+  align-items: flex-start;
   justify-content: left;
 }
 </style>
