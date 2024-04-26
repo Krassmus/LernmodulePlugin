@@ -85,23 +85,27 @@ export async function updateAttempt(
   });
 }
 
-export const uploadedFileSchema = z.object({
+export const wysiwygUploadedFileSchema = z.object({
   name: z.string(),
   type: z.string(),
   url: z.string(),
 });
-export type UploadedFile = z.infer<typeof uploadedFileSchema>;
+export type WysiwygUploadedFile = z.infer<typeof wysiwygUploadedFileSchema>;
 
-const uploadFileResponseSchema = z.object({
-  files: z.array(uploadedFileSchema),
+const wysiwygUploadFileResponseSchema = z.object({
+  files: z.array(wysiwygUploadedFileSchema),
 });
-export type UploadFileResponse = z.infer<typeof uploadFileResponseSchema>;
+export type WysiwygUploadFileResponse = z.infer<
+  typeof wysiwygUploadFileResponseSchema
+>;
 
 /**
  * Upload the given file to the user's Wysiwyg Uploads folder in Stud.IP.
  * @param image A File object
  */
-export async function uploadFile(image: File): Promise<UploadFileResponse> {
+export async function wysiwygUploadFile(
+  image: File
+): Promise<WysiwygUploadFileResponse> {
   const uploadUrl = window.STUDIP.URLHelper.getURL(
     'dispatch.php/wysiwyg/upload'
   );
@@ -118,7 +122,7 @@ export async function uploadFile(image: File): Promise<UploadFileResponse> {
     }
     const json = await response.json();
     try {
-      return uploadFileResponseSchema.parse(json);
+      return wysiwygUploadFileResponseSchema.parse(json);
     } catch (error) {
       throw new Error('Could not parse server response', { cause: error });
     }

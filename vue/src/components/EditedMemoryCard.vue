@@ -27,7 +27,7 @@ import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes/lernmodule';
+import { WysiwygUploadedFile } from '@/routes/lernmodule';
 
 export default defineComponent({
   name: 'EditedMemoryCard',
@@ -47,7 +47,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onImageUploaded(file: UploadedFile): void {
+    onImageUploaded(file: WysiwygUploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         // TODO #20  - Store file ID instead of URL
         draft.cards[this.cardIndex].imageUrl = file.url;
