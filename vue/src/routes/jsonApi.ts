@@ -8,6 +8,10 @@ export const httpClient = axios.create({
   },
 });
 
+/**
+ * Send a request to the JSON API to create a file. Adapted from the file
+ * "courseware.module.js" in the Stud.IP core.
+ */
 export async function createFile({
   file,
   fileData,
