@@ -149,7 +149,6 @@ export default defineComponent({
           // What is emitted currently is merely the subset of information which
           // is emitted by the JSON api. This makes it compatible with the
           // existing Lernmodule editors in their current state, pre-refactor.
-          if (Math.random() > 0.5) throw new Error('Fake error');
           this.$emit('fileUploaded', {
             name: res.attributes.name,
             type: res.attributes['mime-type'],
