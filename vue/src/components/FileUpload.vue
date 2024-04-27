@@ -145,10 +145,11 @@ export default defineComponent({
         .then((res) => {
           // TODO Emit data type corresponding to JSON API and refactor all
           // Lernmodule editors correspondingly so that they save ID (and URL?)
-          // instead of just ID.
+          // instead of just the absolute file url.
           // What is emitted currently is merely the subset of information which
-          // is emitted by the JSON api. This makes it compatible with the
-          // existing Lernmodule editors in their current state, pre-refactor.
+          // is returned by the wysiwyg upload api. This makes it compatible with the
+          // existing Lernmodule editors, which were originally written using the
+          // wysiwyg upload route.
           this.$emit('fileUploaded', {
             name: res.attributes.name,
             type: res.attributes['mime-type'],

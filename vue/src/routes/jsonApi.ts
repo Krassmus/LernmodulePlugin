@@ -60,6 +60,8 @@ const createFileResponseSchema = z.object({
   meta: z.object({
     'download-url': z.string(),
   }),
+  // 'unknown' for the moment because I did not care to write out types for this
+  // field and do not have a use for it in the code I have written thus far.
   relationships: z.unknown(),
 });
 export type CreateFileResponse = z.infer<typeof createFileResponseSchema>;
