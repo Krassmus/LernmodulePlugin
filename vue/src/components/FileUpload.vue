@@ -9,7 +9,9 @@
     :accept="accept"
     @change="onInputChange"
   />
-  <pre>{{ { selectedFolderId, loadedUserFolders } }}</pre>
+  <p class="validation-error" v-for="error in errors" :key="error">
+    {{ error }}
+  </p>
 </template>
 
 <script lang="ts">
@@ -35,6 +37,7 @@ export default defineComponent({
       // unterwegs ist.
       uploadRequestPromise: undefined as Promise<unknown> | undefined,
       selectedFolderId: undefined as string | undefined,
+      errors: [] as string[],
     };
   },
   async mounted() {
@@ -45,7 +48,14 @@ export default defineComponent({
     if (wysiwigUploads) {
       this.selectedFolderId = wysiwigUploads.id;
     } else {
-      console.error('Wysiwyg Uploads folder not found.');
+      // TODO just create the folder if it's not present.
+      // TODO Consider using a separate folder, like "Courseware Uploads"?
+      const error = $gettext(
+        'Das Verzeichnis "Wysiwyg Uploads" ist nicht vorhanden. ' +
+          'Es können keine Dateien hochgeladen werden.'
+      );
+      this.errors.push(error);
+      console.error(error);
     }
   },
   computed: {
@@ -115,9 +125,14 @@ export default defineComponent({
         return;
       }
       if (!this.selectedFolderId) {
-        console.error('selectedFolderId is not defined');
+        const error = $gettext(
+          'Kein Ordner ist ausgewählt. Die Datei kann nicht hochgeladen werden.'
+        );
+        console.error(error);
+        this.errors.push(error);
         return;
       }
+      this.errors = [];
       this.uploadRequestPromise = createFile({
         file: {
           attributes: {
@@ -128,23 +143,24 @@ export default defineComponent({
         folder: { id: this.selectedFolderId },
       })
         .then((res) => {
-          console.log(res);
           // TODO Emit data type corresponding to JSON API and refactor all
           // Lernmodule editors correspondingly so that they save ID (and URL?)
           // instead of just ID.
           // What is emitted currently is merely the subset of information which
           // is emitted by the JSON api. This makes it compatible with the
           // existing Lernmodule editors in their current state, pre-refactor.
+          if (Math.random() > 0.5) throw new Error('Fake error');
           this.$emit('fileUploaded', {
             name: res.attributes.name,
             type: res.attributes['mime-type'],
             url: res.meta['download-url'],
           });
           this.uploadRequestPromise = undefined;
+          this.errors = [];
         })
         .catch((error) => {
           console.error(error);
-          // TODO Display the error somewhere!
+          this.errors.push(error);
           this.uploadRequestPromise = undefined;
         });
     },
