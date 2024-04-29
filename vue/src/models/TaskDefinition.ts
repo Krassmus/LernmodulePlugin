@@ -22,6 +22,7 @@ import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
 import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
 import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
+import { isObject } from 'lodash';
 
 export const feedbackSchema = z.object({
   percentage: z.number(),
@@ -29,11 +30,36 @@ export const feedbackSchema = z.object({
 });
 export type Feedback = z.infer<typeof feedbackSchema>;
 
-export const imageSchema = z.object({
-  uuid: z.string(),
-  imageUrl: z.string(),
-  altText: z.string(),
-});
+export const imageSchema = z.preprocess(
+  (val: unknown) => {
+    console.log('preprocess', val);
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (
+      isObject(val) &&
+      'imageUrl' in val &&
+      typeof val.imageUrl === 'string'
+    ) {
+      console.log('migrating image from imageUrl to file_id');
+      const urlParams = new URLSearchParams(val.imageUrl);
+      const file_id = urlParams.get('file_id');
+      if (!file_id) {
+        throw new Error(
+          'Could not migrate imageUrl to file_id. The query param ' +
+            '"file_id" was not found in the imageUrl string.'
+        );
+      }
+      delete val.imageUrl;
+      (val as Record<string, unknown>).file_id = file_id;
+      return val;
+    }
+  },
+  z.object({
+    uuid: z.string(),
+    imageUrl: z.string(),
+    altText: z.string(),
+  })
+);
 export type Image = z.infer<typeof imageSchema>;
 
 export const dragTheWordsTaskSchema = z.object({
