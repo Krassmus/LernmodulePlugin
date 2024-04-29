@@ -6,7 +6,7 @@ import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { WysiwygUploadedFile } from '@/routes/lernmodule';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import FilePicker from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
 
@@ -105,7 +105,7 @@ export default defineComponent({
         type: 'none',
       };
     },
-    onUploadStudipVideo(file: UploadedFile) {
+    onUploadStudipVideo(file: WysiwygUploadedFile) {
       this.taskDefinition.video = {
         type: 'studipFileReference',
         file,

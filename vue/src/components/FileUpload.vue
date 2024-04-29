@@ -9,12 +9,16 @@
     :accept="accept"
     @change="onInputChange"
   />
+  <p class="validation-error" v-for="error in errors" :key="error">
+    {{ error }}
+  </p>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { uploadFile } from '@/routes';
 import { $gettext } from '@/language/gettext';
+import { mapActions, mapGetters } from 'vuex';
+import { createFile, Folder } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'FileUpload',
@@ -32,10 +36,79 @@ export default defineComponent({
       // Wenn dieser Promise vorhanden ist, heißt das, dass eine HTTP-Anfrage
       // unterwegs ist.
       uploadRequestPromise: undefined as Promise<unknown> | undefined,
+      selectedFolderId: undefined as string | undefined,
+      errors: [] as string[],
     };
+  },
+  async mounted() {
+    await this.getUserFolders();
+    const wysiwigUploads = this.loadedUserFolders.find(
+      (f) => f.attributes.name === 'Wysiwyg Uploads'
+    );
+    if (wysiwigUploads) {
+      this.selectedFolderId = wysiwigUploads.id;
+    } else {
+      // TODO just create the folder if it's not present.
+      // TODO Consider using a separate folder, like "Courseware Uploads"?
+      const error = $gettext(
+        'Das Verzeichnis "Wysiwyg Uploads" ist nicht vorhanden. ' +
+          'Es können keine Dateien hochgeladen werden.'
+      );
+      this.errors.push(error);
+      console.error(error);
+    }
+  },
+  computed: {
+    ...mapGetters({
+      relatedFolders: 'folders/related',
+    }),
+    userId(): string {
+      // Replaces the vuex getter 'userId'
+      return window.STUDIP.USER_ID;
+    },
+    userObject() {
+      return { type: 'users', id: `${this.userId}` };
+    },
+    loadedUserFolders() {
+      let loadedUserFolders: Folder[] = [];
+      let userFolders: Folder[] =
+        this.relatedFolders({
+          parent: this.userObject,
+          relationship: 'folders',
+        }) ?? [];
+      userFolders.forEach((folder: Folder) => {
+        if (folder.attributes['folder-type'] === 'PublicFolder') {
+          loadedUserFolders.push(folder);
+        }
+      });
+
+      return loadedUserFolders;
+    },
   },
   methods: {
     $gettext,
+    ...mapActions({
+      _loadRelatedFolders: 'folders/loadRelated',
+    }),
+    // Typed shim for vuex action 'folders/loadRelated'
+    loadRelatedFolders(params: {
+      parent: {
+        type: string;
+        id: string;
+      };
+      relationship: string;
+      options: {
+        'page[limit]': number;
+      };
+    }): Promise<unknown> {
+      return this._loadRelatedFolders(params);
+    },
+    async getUserFolders() {
+      const parent = this.userObject;
+      const relationship = 'folders';
+      const options = { 'page[limit]': 10000 };
+      return await this.loadRelatedFolders({ parent, relationship, options });
+    },
     onInputChange(event: Event): void {
       if (this.uploadRequestPromise) {
         console.warn(
@@ -51,14 +124,43 @@ export default defineComponent({
         );
         return;
       }
-      this.uploadRequestPromise = uploadFile(file)
+      if (!this.selectedFolderId) {
+        const error = $gettext(
+          'Kein Ordner ist ausgewählt. Die Datei kann nicht hochgeladen werden.'
+        );
+        console.error(error);
+        this.errors.push(error);
+        return;
+      }
+      this.errors = [];
+      this.uploadRequestPromise = createFile({
+        file: {
+          attributes: {
+            name: file.name,
+          },
+        },
+        fileData: file,
+        folder: { id: this.selectedFolderId },
+      })
         .then((res) => {
-          this.$emit('fileUploaded', res.files[0]);
+          // TODO Emit data type corresponding to JSON API and refactor all
+          // Lernmodule editors correspondingly so that they save ID (and URL?)
+          // instead of just the absolute file url.
+          // What is emitted currently is merely the subset of information which
+          // is returned by the wysiwyg upload api. This makes it compatible with the
+          // existing Lernmodule editors, which were originally written using the
+          // wysiwyg upload route.
+          this.$emit('fileUploaded', {
+            name: res.attributes.name,
+            type: res.attributes['mime-type'],
+            url: res.meta['download-url'],
+          });
           this.uploadRequestPromise = undefined;
+          this.errors = [];
         })
         .catch((error) => {
           console.error(error);
-          // TODO Display the error somewhere!
+          this.errors.push(error);
           this.uploadRequestPromise = undefined;
         });
     },

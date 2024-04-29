@@ -46,7 +46,7 @@ import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { WysiwygUploadedFile } from '@/routes/lernmodule';
 
 export default defineComponent({
   name: 'EditedImagePair',
@@ -66,7 +66,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onUploadDraggableImage(file: UploadedFile): void {
+    onUploadDraggableImage(file: WysiwygUploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         // TODO #20  - Store file ID instead of URL
         draft.imagePairs[this.pairIndex].draggableImage.imageUrl = file.url;
@@ -76,7 +76,7 @@ export default defineComponent({
         undoBatch: {},
       });
     },
-    onUploadTargetImage(file: UploadedFile): void {
+    onUploadTargetImage(file: WysiwygUploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         // TODO #20  - Store file ID instead of URL
         draft.imagePairs[this.pairIndex].targetImage.imageUrl = file.url;

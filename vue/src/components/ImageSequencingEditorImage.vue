@@ -31,7 +31,7 @@ import { Image, ImageSequencingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { WysiwygUploadedFile } from '@/routes/lernmodule';
 
 export default defineComponent({
   name: 'ImageSequencingEditorImage',
@@ -51,7 +51,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onUploadImage(file: UploadedFile): void {
+    onUploadImage(file: WysiwygUploadedFile): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         // TODO #20  - Store file ID instead of URL
         draft.images[this.imageIndex].imageUrl = file.url;

@@ -15,7 +15,7 @@ import {
   taskDefinitionSchema,
   viewerForTaskType,
 } from '@/models/TaskDefinition';
-import { updateAttempt } from '@/routes';
+import { updateAttempt } from '@/routes/lernmodule';
 
 export default defineComponent({
   name: 'LernmoduleViewer',

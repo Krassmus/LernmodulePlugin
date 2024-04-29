@@ -35,24 +35,7 @@ import { defineComponent } from 'vue';
 import { Context } from '@/models/CoursewareBlockIframeMessages';
 import { coursewareBlockStore } from '@/store';
 import { mapActions, mapGetters } from 'vuex';
-
-interface Folder {
-  id: string;
-  attributes: {
-    'folder-type': string;
-    'data-content': {
-      download_allowed: number;
-    };
-    name: string;
-  };
-  relationships?: {
-    parent?: {
-      data: {
-        id: string;
-      };
-    };
-  };
-}
+import { Folder } from '@/routes/jsonApi';
 
 function filterCourseFolders(
   folders: Folder[],
@@ -158,12 +141,12 @@ export default defineComponent({
     },
     loadedUserFolders() {
       let loadedUserFolders: Folder[] = [];
-      let UserFolders: Folder[] =
+      let userFolders: Folder[] =
         this.relatedFolders({
           parent: this.userObject,
           relationship: 'folders',
         }) ?? [];
-      UserFolders.forEach((folder: Folder) => {
+      userFolders.forEach((folder: Folder) => {
         if (folder.attributes['folder-type'] === 'PublicFolder') {
           loadedUserFolders.push(folder);
         }
