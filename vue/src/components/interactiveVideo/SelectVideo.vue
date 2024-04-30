@@ -9,6 +9,7 @@ import FileUpload from '@/components/FileUpload.vue';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import FilePicker from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
 import { CreateFileResponse } from '@/routes/jsonApi';
+import { fileIdToUrl } from '@/models/TaskDefinition';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -70,6 +71,7 @@ export default defineComponent({
     },
   },
   methods: {
+    fileIdToUrl,
     $gettext,
     onTimeUpdate(time: number) {
       this.currentTime = time;
@@ -92,12 +94,9 @@ export default defineComponent({
         return;
       }
       this.taskDefinition.video = {
+        v: 2,
         type: 'studipFileReference',
-        file: {
-          name: this.selectedFile.name,
-          type: this.selectedFile.mime_type,
-          url: this.selectedFile.download_url,
-        },
+        file_id: this.selectedFile.id,
       };
     },
     deleteVideo() {
@@ -107,12 +106,9 @@ export default defineComponent({
     },
     onUploadStudipVideo(file: CreateFileResponse) {
       this.taskDefinition.video = {
+        v: 2,
         type: 'studipFileReference',
-        file: {
-          name: file.attributes.name,
-          type: file.attributes['mime-type'],
-          url: file.meta['download-url'],
-        },
+        file_id: file.id,
       };
     },
   },
@@ -210,9 +206,10 @@ export default defineComponent({
     </p>
     <p v-else-if="taskDefinition.video.type === 'studipFileReference'">
       {{ $gettext('Hochgeladenes Video: ') }}
-      <a :href="taskDefinition.video.file.url" target="_blank">{{
-        taskDefinition.video.file.name
-      }}</a>
+      <!--  TODO show filename and other stuff using JSON API -->
+      <a :href="fileIdToUrl(taskDefinition.video.file_id)" target="_blank">
+        {{ taskDefinition.video.file_id }}
+      </a>
     </p>
     <div class="video-preview-actions">
       <button class="button trash" @click="deleteVideo">

@@ -7,8 +7,12 @@ import 'videojs-youtube/dist/Youtube.min.js';
 import {
   Interaction,
   InteractiveVideoTask,
+  NoVideo,
   printInteractionType,
   ResizeHandle,
+  StudipFileVideo,
+  Video,
+  YoutubeVideo,
 } from '@/models/InteractiveVideoTask';
 import {
   EditorState,
@@ -39,6 +43,12 @@ type DragState =
       handle: string;
     }
   | undefined;
+
+type LoadedStudipFileVideo = StudipFileVideo & {
+  download_url: string;
+  mime_type: string;
+};
+type VideoInfo = LoadedStudipFileVideo | NoVideo | YoutubeVideo;
 
 let popperInstance: Instance | undefined;
 export default defineComponent({
@@ -71,6 +81,7 @@ export default defineComponent({
         xOffsetPixels: 0,
       },
       progressBarObserver: undefined as ResizeObserver | undefined,
+      videoInfo: Promise.resolve({ type: 'none' }) as Promise<VideoInfo>,
     };
   },
   computed: {
@@ -100,26 +111,6 @@ export default defineComponent({
     selectedInteractionId(): string | undefined {
       return this.editor?.selectedInteractionId.value;
     },
-    videoUrl(): string {
-      switch (this.task.video.type) {
-        case 'youtube':
-          return this.task.video.url;
-        case 'studipFileReference':
-          return this.task.video.file.url;
-        default:
-          return '';
-      }
-    },
-    videoType(): string | undefined {
-      switch (this.task.video.type) {
-        case 'youtube':
-          return 'video/youtube';
-        case 'studipFileReference':
-          return this.task.video.file.type;
-        default:
-          return '';
-      }
-    },
     /**
      * @return a list of Interaction objects whose clickable icons (or other elements)
      * should be shown overlaid over the video at the timestamp given by this.time.
@@ -136,9 +127,15 @@ export default defineComponent({
     },
   },
   watch: {
-    'task.video': function (value) {
-      console.log('video prop changed', value);
-      this.initializePlayer();
+    'task.video': {
+      handler(video: Video) {
+        console.log('video prop changed', video);
+        this.videoInfo = this.loadVideoInfo(video);
+        this.videoInfo.then((videoInfo) => {
+          this.initializePlayer(videoInfo);
+        });
+      },
+      immediate: true,
     },
     // Handle pausing the video when an interaction becomes visible.
     timeAndVisibleInteractions(
@@ -198,7 +195,36 @@ export default defineComponent({
     onPlayerReady() {
       console.log('player ready');
     },
-    initializePlayer() {
+    async loadVideoInfo(video: Video): Promise<VideoInfo> {
+      switch (this.task.video.type) {
+        case 'youtube':
+        case 'none':
+          return this.task.video;
+        case 'studipFileReference':
+          return { type: 'none' }; // TODO Load file info from JSON API
+      }
+    },
+    videoUrl(videoInfo: VideoInfo): string {
+      switch (videoInfo.type) {
+        case 'youtube':
+          return videoInfo.url;
+        case 'studipFileReference':
+          return videoInfo.download_url;
+        default:
+          return '';
+      }
+    },
+    videoType(videoInfo: VideoInfo): string | undefined {
+      switch (videoInfo.type) {
+        case 'youtube':
+          return 'video/youtube';
+        case 'studipFileReference':
+          return videoInfo.mime_type;
+        default:
+          return '';
+      }
+    },
+    initializePlayer(videoInfo: VideoInfo) {
       // If player has already been created, it must be destroyed before we
       // create a new one.
       this.progressBarObserver?.disconnect();
@@ -219,8 +245,8 @@ export default defineComponent({
           techOrder: ['html5', 'youtube'],
           sources: [
             {
-              src: this.videoUrl,
-              type: this.videoType,
+              src: this.videoUrl(videoInfo),
+              type: this.videoType(videoInfo),
             },
           ],
           controls: true,
@@ -579,9 +605,6 @@ export default defineComponent({
         this.player!.currentTime(interaction.startTime + delta / 2);
       }
     },
-  },
-  mounted() {
-    this.initializePlayer();
   },
   beforeUnmount() {
     this.progressBarObserver?.disconnect();
