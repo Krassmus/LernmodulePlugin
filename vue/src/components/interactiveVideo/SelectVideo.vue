@@ -6,9 +6,9 @@ import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
-import { WysiwygUploadedFile } from '@/routes/lernmodule';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import FilePicker from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
+import { CreateFileResponse } from '@/routes/jsonApi';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -105,10 +105,14 @@ export default defineComponent({
         type: 'none',
       };
     },
-    onUploadStudipVideo(file: WysiwygUploadedFile) {
+    onUploadStudipVideo(file: CreateFileResponse) {
       this.taskDefinition.video = {
         type: 'studipFileReference',
-        file,
+        file: {
+          name: file.attributes.name,
+          type: file.attributes['mime-type'],
+          url: file.meta['download-url'],
+        },
       };
     },
   },

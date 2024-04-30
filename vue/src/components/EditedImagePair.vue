@@ -46,7 +46,6 @@ import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { WysiwygUploadedFile } from '@/routes/lernmodule';
 import { CreateFileResponse } from '@/routes/jsonApi';
 
 export default defineComponent({

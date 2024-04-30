@@ -27,7 +27,6 @@ import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { WysiwygUploadedFile } from '@/routes/lernmodule';
 import { CreateFileResponse } from '@/routes/jsonApi';
 
 export default defineComponent({

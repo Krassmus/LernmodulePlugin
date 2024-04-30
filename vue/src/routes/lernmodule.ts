@@ -90,11 +90,3 @@ export const wysiwygUploadedFileSchema = z.object({
   type: z.string(),
   url: z.string(),
 });
-export type WysiwygUploadedFile = z.infer<typeof wysiwygUploadedFileSchema>;
-
-const wysiwygUploadFileResponseSchema = z.object({
-  files: z.array(wysiwygUploadedFileSchema),
-});
-export type WysiwygUploadFileResponse = z.infer<
-  typeof wysiwygUploadFileResponseSchema
->;
