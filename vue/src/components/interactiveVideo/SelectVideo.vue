@@ -9,7 +9,7 @@ import FileUpload from '@/components/FileUpload.vue';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import FilePicker from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
 import { CreateFileResponse } from '@/routes/jsonApi';
-import { fileIdToUrl } from '@/models/TaskDefinition';
+import { fileDetailsUrl, fileIdToUrl } from '@/models/TaskDefinition';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -71,6 +71,7 @@ export default defineComponent({
     },
   },
   methods: {
+    fileDetailsUrl,
     fileIdToUrl,
     $gettext,
     onTimeUpdate(time: number) {
@@ -207,7 +208,7 @@ export default defineComponent({
     <p v-else-if="taskDefinition.video.type === 'studipFileReference'">
       {{ $gettext('Hochgeladenes Video: ') }}
       <!--  TODO show filename and other stuff using JSON API -->
-      <a :href="fileIdToUrl(taskDefinition.video.file_id)" target="_blank">
+      <a :href="fileDetailsUrl(taskDefinition.video.file_id)" target="_blank">
         {{ taskDefinition.video.file_id }}
       </a>
     </p>

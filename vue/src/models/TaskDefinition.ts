@@ -80,7 +80,7 @@ const imageSchema = z
 export type Image = z.infer<typeof imageSchema>;
 
 /**
- * @return The Stud.IP download url for the file with the given ID, or '' if id is ''
+ * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
  */
 export function fileIdToUrl(fileId: string): string {
   if (fileId === '') {
@@ -89,6 +89,13 @@ export function fileIdToUrl(fileId: string): string {
   return window.STUDIP.URLHelper.getURL('sendfile.php', {
     file_id: fileId,
   });
+}
+
+/**
+ * @return The Stud.IP URL to view 'details' about the file with the given ID.
+ */
+export function fileDetailsUrl(fileId: string): string {
+  return window.STUDIP.URLHelper.getURL(`dispatch.php/file/details/${fileId}`);
 }
 
 export const dragTheWordsTaskSchema = z.object({
