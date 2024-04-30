@@ -1,6 +1,6 @@
 <template>
   <img
-    :src="image.imageUrl"
+    :src="fileIdToUrl(image.file_id)"
     :alt="image.altText"
     class="edited-image-pair-image"
   />
@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Image } from '@/models/TaskDefinition';
+import { fileIdToUrl, Image } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'EditedImagePairImage',
@@ -21,7 +21,7 @@ export default defineComponent({
   data() {
     return {};
   },
-  methods: {},
+  methods: { fileIdToUrl },
   computed: {},
 });
 </script>

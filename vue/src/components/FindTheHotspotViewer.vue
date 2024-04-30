@@ -1,11 +1,11 @@
 <template>
   <span>Find The Hotspot - Viewer</span><br />
-  <img :src="this.task.image.imageUrl" />
+  <img :src="fileIdToUrl(task.image.file_id)" />
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { FindTheHotspotTask } from '@/models/TaskDefinition';
+import { fileIdToUrl, FindTheHotspotTask } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'FindTheHotspotViewer',
@@ -16,7 +16,7 @@ export default defineComponent({
   data() {
     return {};
   },
-  methods: {},
+  methods: { fileIdToUrl },
   computed: {},
 });
 </script>

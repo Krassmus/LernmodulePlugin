@@ -27,7 +27,7 @@
       >
         <img
           class="draggableImage"
-          :src="getImageById(draggableImageId).imageUrl"
+          :src="fileIdToUrl(getImageById(draggableImageId).file_id)"
           :alt="getImageById(draggableImageId).altText"
           draggable="false"
           ref="draggableImages"
@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Image, ImagePairingTask } from '@/models/TaskDefinition';
+import { fileIdToUrl, Image, ImagePairingTask } from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
@@ -125,6 +125,7 @@ export default defineComponent({
     };
   },
   methods: {
+    fileIdToUrl,
     isAnswerCorrect(targetId: Uuid): boolean {
       const userInput = this.imagesDraggedOntoTargets[targetId];
       if (!userInput) {
@@ -171,7 +172,10 @@ export default defineComponent({
         // Change the drag image to the parent element to include the border
         const refToImage = (
           this.$refs.draggableImages as HTMLImageElement[]
-        ).find((value) => value.src == this.getImageById(imageId).imageUrl);
+        ).find(
+          (value) =>
+            value.src == fileIdToUrl(this.getImageById(imageId).file_id)
+        );
 
         const parentElementOfImage = refToImage?.parentElement!;
 
@@ -220,7 +224,9 @@ export default defineComponent({
         const refToImage = (
           this.$refs.draggableImages as HTMLImageElement[]
         ).find(
-          (value) => value.src == this.getImageById(userDraggedImageId).imageUrl
+          (value) =>
+            value.src ==
+            fileIdToUrl(this.getImageById(userDraggedImageId).file_id)
         );
 
         const parentElementOfImage = refToImage?.parentElement!;

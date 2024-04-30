@@ -18,7 +18,7 @@
 import { defineComponent } from 'vue';
 import { $gettext } from '@/language/gettext';
 import { mapActions, mapGetters } from 'vuex';
-import { createFile, Folder } from '@/routes/jsonApi';
+import { createFile, CreateFileResponse, Folder } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'FileUpload',
@@ -142,19 +142,8 @@ export default defineComponent({
         fileData: file,
         folder: { id: this.selectedFolderId },
       })
-        .then((res) => {
-          // TODO Emit data type corresponding to JSON API and refactor all
-          // Lernmodule editors correspondingly so that they save ID (and URL?)
-          // instead of just the absolute file url.
-          // What is emitted currently is merely the subset of information which
-          // is returned by the wysiwyg upload api. This makes it compatible with the
-          // existing Lernmodule editors, which were originally written using the
-          // wysiwyg upload route.
-          this.$emit('fileUploaded', {
-            name: res.attributes.name,
-            type: res.attributes['mime-type'],
-            url: res.meta['download-url'],
-          });
+        .then((res: CreateFileResponse) => {
+          this.$emit('fileUploaded', res);
           this.uploadRequestPromise = undefined;
           this.errors = [];
         })

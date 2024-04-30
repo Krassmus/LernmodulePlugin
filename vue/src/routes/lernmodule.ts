@@ -98,33 +98,3 @@ const wysiwygUploadFileResponseSchema = z.object({
 export type WysiwygUploadFileResponse = z.infer<
   typeof wysiwygUploadFileResponseSchema
 >;
-
-/**
- * Upload the given file to the user's Wysiwyg Uploads folder in Stud.IP.
- * @param image A File object
- */
-export async function wysiwygUploadFile(
-  image: File
-): Promise<WysiwygUploadFileResponse> {
-  const uploadUrl = window.STUDIP.URLHelper.getURL(
-    'dispatch.php/wysiwyg/upload'
-  );
-  const formData = new FormData();
-  const token = window.STUDIP.CSRF_TOKEN;
-  formData.append(token.name, token.value);
-  formData.append('files[]', image);
-  return fetch(uploadUrl, {
-    method: 'POST',
-    body: formData,
-  }).then(async (response) => {
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    const json = await response.json();
-    try {
-      return wysiwygUploadFileResponseSchema.parse(json);
-    } catch (error) {
-      throw new Error('Could not parse server response', { cause: error });
-    }
-  });
-}

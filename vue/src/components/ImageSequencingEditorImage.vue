@@ -5,8 +5,8 @@
       <div>
         <h4>{{ $gettext('Das Bild') }}</h4>
         <img
-          v-if="image.imageUrl"
-          :src="image.imageUrl"
+          v-if="image.file_id"
+          :src="fileIdToUrl(image.file_id)"
           :alt="image.altText"
           class="image-sequencing-editor-image"
         />
@@ -27,11 +27,16 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
-import { Image, ImageSequencingTask } from '@/models/TaskDefinition';
+import {
+  fileIdToUrl,
+  Image,
+  ImageSequencingTask,
+} from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import FileUpload from '@/components/FileUpload.vue';
 import { WysiwygUploadedFile } from '@/routes/lernmodule';
+import { CreateFileResponse } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'ImageSequencingEditorImage',
@@ -50,11 +55,11 @@ export default defineComponent({
     return {};
   },
   methods: {
+    fileIdToUrl,
     $gettext,
-    onUploadImage(file: WysiwygUploadedFile): void {
+    onUploadImage(file: CreateFileResponse): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        // TODO #20  - Store file ID instead of URL
-        draft.images[this.imageIndex].imageUrl = file.url;
+        draft.images[this.imageIndex].file_id = file.id;
       });
       taskEditorStore.performEdit({
         newTaskDefinition,

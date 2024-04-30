@@ -2,7 +2,7 @@
   <div v-if="draggableImage" class="grid-square two-images">
     <div class="image-container back">
       <img
-        :src="targetImage.imageUrl"
+        :src="fileIdToUrl(targetImage.file_id)"
         :alt="targetImage.altText"
         class="image"
         draggable="false"
@@ -15,7 +15,7 @@
     </div>
     <div class="image-container front">
       <img
-        :src="draggableImage.imageUrl"
+        :src="fileIdToUrl(draggableImage.file_id)"
         :alt="draggableImage.altText"
         class="image"
         draggable="false"
@@ -30,7 +30,7 @@
   <div v-else class="grid-square one-image">
     <img
       draggable="false"
-      :src="targetImage.imageUrl"
+      :src="fileIdToUrl(targetImage.file_id)"
       :alt="targetImage.altText"
       class="image"
     />
@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Image } from '@/models/TaskDefinition';
+import { fileIdToUrl, Image } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'TargetImage',
@@ -63,7 +63,7 @@ export default defineComponent({
     },
   },
   computed: {},
-  methods: {},
+  methods: { fileIdToUrl },
 });
 </script>
 

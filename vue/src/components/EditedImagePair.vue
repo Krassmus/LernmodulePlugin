@@ -5,7 +5,7 @@
       <div>
         <h4>{{ $gettext('Das zu ziehende Bild') }}</h4>
         <EditedImagePairImage
-          v-if="pair.draggableImage.imageUrl"
+          v-if="pair.draggableImage.file_id"
           :image="pair.draggableImage"
         />
         <FileUpload v-else @file-uploaded="onUploadDraggableImage" />
@@ -21,7 +21,7 @@
       <div>
         <h4>{{ $gettext('Das Zielbild') }}</h4>
         <EditedImagePairImage
-          v-if="pair.targetImage.imageUrl"
+          v-if="pair.targetImage.file_id"
           :image="pair.targetImage"
         />
         <FileUpload v-else @file-uploaded="onUploadTargetImage" />
@@ -47,6 +47,7 @@ import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { WysiwygUploadedFile } from '@/routes/lernmodule';
+import { CreateFileResponse } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'EditedImagePair',
@@ -66,20 +67,18 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onUploadDraggableImage(file: WysiwygUploadedFile): void {
+    onUploadDraggableImage(file: CreateFileResponse): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        // TODO #20  - Store file ID instead of URL
-        draft.imagePairs[this.pairIndex].draggableImage.imageUrl = file.url;
+        draft.imagePairs[this.pairIndex].draggableImage.file_id = file.id;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
-    onUploadTargetImage(file: WysiwygUploadedFile): void {
+    onUploadTargetImage(file: CreateFileResponse): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        // TODO #20  - Store file ID instead of URL
-        draft.imagePairs[this.pairIndex].targetImage.imageUrl = file.url;
+        draft.imagePairs[this.pairIndex].targetImage.file_id = file.id;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
