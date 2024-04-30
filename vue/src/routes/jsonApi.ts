@@ -38,7 +38,8 @@ export async function createFile({
   return createFileResponseSchema.parse(data);
 }
 
-const createFileResponseSchema = z.object({
+// TODO Rename to fileRefsSchema
+export const createFileResponseSchema = z.object({
   type: z.literal('file-refs'),
   id: z.string(),
   attributes: z.object({

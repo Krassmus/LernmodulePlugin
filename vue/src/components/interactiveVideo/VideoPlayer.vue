@@ -26,6 +26,8 @@ import type { StrictModifiers } from '@popperjs/core';
 import { v4 } from 'uuid';
 import OverlayInteraction from '@/components/interactiveVideo/interactions/OverlayInteraction.vue';
 import { OverlayInteraction as OverlayInteractionType } from '@/models/InteractiveVideoTask';
+import { mapActions, mapGetters } from 'vuex';
+import { createFileResponseSchema } from '@/routes/jsonApi';
 
 type DragState =
   | {
@@ -85,6 +87,9 @@ export default defineComponent({
     };
   },
   computed: {
+    ...mapGetters({
+      fileRefById: 'file-refs/byId',
+    }),
     // A unique ID for this instance of VideoPlayer, so that we can refer
     // to elements inside of it by ID when there are multiple VideoPlayers
     // (e.g. viewer on one tab, editor on another tab).
@@ -192,16 +197,32 @@ export default defineComponent({
     $gettext,
     printTaskType,
     viewerForTaskType,
+    ...mapActions({
+      loadFileRef: 'file-refs/loadById',
+    }),
     onPlayerReady() {
       console.log('player ready');
     },
+    // TODO This information is needed in other places in the Interactive
+    //  Video Editor, for example, in 'SelectVideo.vue' to display the name and
+    //  file type of the selected file.  This asynchronous method should be
+    //  implemented and called one time in InteractiveVideoEditor.vue.
     async loadVideoInfo(video: Video): Promise<VideoInfo> {
-      switch (this.task.video.type) {
+      switch (video.type) {
         case 'youtube':
         case 'none':
-          return this.task.video;
-        case 'studipFileReference':
-          return { type: 'none' }; // TODO Load file info from JSON API
+          return video;
+        case 'studipFileReference': {
+          await this.loadFileRef({ id: video.file_id });
+          const ref = createFileResponseSchema.parse(
+            this.fileRefById({ id: video.file_id })
+          );
+          return {
+            ...video,
+            mime_type: ref.attributes['mime-type'],
+            download_url: ref.meta['download-url'],
+          };
+        }
       }
     },
     videoUrl(videoInfo: VideoInfo): string {
