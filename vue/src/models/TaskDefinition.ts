@@ -22,7 +22,6 @@ import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
 import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
 import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
-import { isObject } from 'lodash';
 
 export const feedbackSchema = z.object({
   percentage: z.number(),
@@ -49,6 +48,7 @@ const imageSchema = z
   .union([imageSchema_v1, imageSchema_v2])
   .transform((val) => {
     if (!Object.hasOwn(val, 'v')) {
+      // Migration from v1 to v2
       const val_v1 = val as z.infer<typeof imageSchema_v1>;
       const urlParams = new URLSearchParams(val_v1.imageUrl);
       const file_id = urlParams.get('file_id');
