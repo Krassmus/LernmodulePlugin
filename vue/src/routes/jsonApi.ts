@@ -38,6 +38,9 @@ export async function createFile({
   return fileRefsSchema.parse(data);
 }
 
+/**
+ * Datatype 'file-refs' provided by the Stud.IP JSON API.
+ */
 export const fileRefsSchema = z.object({
   type: z.literal('file-refs'),
   id: z.string(),
