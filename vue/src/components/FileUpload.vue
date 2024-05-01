@@ -18,7 +18,7 @@
 import { defineComponent } from 'vue';
 import { $gettext } from '@/language/gettext';
 import { mapActions, mapGetters } from 'vuex';
-import { createFile, FileRef, Folder } from '@/routes/jsonApi';
+import { createFile, FileRef, FolderRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'FileUpload',
@@ -70,13 +70,13 @@ export default defineComponent({
       return { type: 'users', id: `${this.userId}` };
     },
     loadedUserFolders() {
-      let loadedUserFolders: Folder[] = [];
-      let userFolders: Folder[] =
+      let loadedUserFolders: FolderRef[] = [];
+      let userFolders: FolderRef[] =
         this.relatedFolders({
           parent: this.userObject,
           relationship: 'folders',
         }) ?? [];
-      userFolders.forEach((folder: Folder) => {
+      userFolders.forEach((folder: FolderRef) => {
         if (folder.attributes['folder-type'] === 'PublicFolder') {
           loadedUserFolders.push(folder);
         }

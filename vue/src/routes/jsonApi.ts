@@ -19,7 +19,7 @@ export async function createFile({
 }: {
   file: CreateFileSpec;
   fileData: File | Blob;
-  folder: Pick<Folder, 'id'>;
+  folder: Pick<FolderRef, 'id'>;
 }): Promise<FileRef> {
   const termId = file?.relationships?.['terms-of-use']?.data?.id ?? null;
   const formData = new FormData();
@@ -66,7 +66,7 @@ export const fileRefsSchema = z.object({
 });
 export type FileRef = z.infer<typeof fileRefsSchema>;
 
-export interface Folder {
+export interface FolderRef {
   id: string;
   attributes: {
     'folder-type': string;
