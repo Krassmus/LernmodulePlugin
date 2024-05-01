@@ -46,7 +46,7 @@ import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { CreateFileResponse } from '@/routes/jsonApi';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'EditedImagePair',
@@ -66,7 +66,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onUploadDraggableImage(file: CreateFileResponse): void {
+    onUploadDraggableImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.imagePairs[this.pairIndex].draggableImage.file_id = file.id;
       });
@@ -75,7 +75,7 @@ export default defineComponent({
         undoBatch: {},
       });
     },
-    onUploadTargetImage(file: CreateFileResponse): void {
+    onUploadTargetImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.imagePairs[this.pairIndex].targetImage.file_id = file.id;
       });

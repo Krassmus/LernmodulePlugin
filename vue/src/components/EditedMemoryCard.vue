@@ -27,7 +27,7 @@ import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { CreateFileResponse } from '@/routes/jsonApi';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'EditedMemoryCard',
@@ -47,7 +47,7 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onImageUploaded(file: CreateFileResponse): void {
+    onImageUploaded(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.cards[this.cardIndex].file_id = file.id;
       });

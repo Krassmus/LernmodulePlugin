@@ -10,7 +10,7 @@ import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import FilePicker, {
   FilePickerFile,
 } from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
-import { CreateFileResponse, createFileResponseSchema } from '@/routes/jsonApi';
+import { FileRef, fileRefsSchema } from '@/routes/jsonApi';
 import { fileDetailsUrl, fileIdToUrl } from '@/models/TaskDefinition';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -68,7 +68,7 @@ export default defineComponent({
             ) {
               // Get metadata for file
               await this.loadFileRef({ id: value.file_id });
-              const ref = createFileResponseSchema.parse(
+              const ref = fileRefsSchema.parse(
                 this.fileRefById({ id: value.file_id })
               );
               this.selectedFile = {
@@ -128,7 +128,7 @@ export default defineComponent({
         type: 'none',
       };
     },
-    onUploadStudipVideo(file: CreateFileResponse) {
+    onUploadStudipVideo(file: FileRef) {
       this.taskDefinition.video = {
         v: 2,
         type: 'studipFileReference',

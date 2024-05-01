@@ -18,7 +18,7 @@
 import { defineComponent } from 'vue';
 import { $gettext } from '@/language/gettext';
 import { mapActions, mapGetters } from 'vuex';
-import { createFile, CreateFileResponse, Folder } from '@/routes/jsonApi';
+import { createFile, FileRef, Folder } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'FileUpload',
@@ -142,8 +142,8 @@ export default defineComponent({
         fileData: file,
         folder: { id: this.selectedFolderId },
       })
-        .then((res: CreateFileResponse) => {
-          this.$emit('fileUploaded', res);
+        .then((fileRef: FileRef) => {
+          this.$emit('fileUploaded', fileRef);
           this.uploadRequestPromise = undefined;
           this.errors = [];
         })

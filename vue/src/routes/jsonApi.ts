@@ -20,7 +20,7 @@ export async function createFile({
   file: StudipFile;
   fileData: File | Blob;
   folder: Pick<Folder, 'id'>;
-}): Promise<CreateFileResponse> {
+}): Promise<FileRef> {
   const termId = file?.relationships?.['terms-of-use']?.data?.id ?? null;
   const formData = new FormData();
   formData.append('file', fileData, file.attributes.name);
@@ -35,11 +35,10 @@ export async function createFile({
   });
   const response = await httpClient.get(request.headers.location);
   const data = response.data.data;
-  return createFileResponseSchema.parse(data);
+  return fileRefsSchema.parse(data);
 }
 
-// TODO Rename to fileRefsSchema
-export const createFileResponseSchema = z.object({
+export const fileRefsSchema = z.object({
   type: z.literal('file-refs'),
   id: z.string(),
   attributes: z.object({
@@ -65,7 +64,7 @@ export const createFileResponseSchema = z.object({
   // field and do not have a use for it in the code I have written thus far.
   relationships: z.unknown(),
 });
-export type CreateFileResponse = z.infer<typeof createFileResponseSchema>;
+export type FileRef = z.infer<typeof fileRefsSchema>;
 
 export interface Folder {
   id: string;

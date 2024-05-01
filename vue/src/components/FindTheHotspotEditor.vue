@@ -9,7 +9,7 @@ import { FindTheHotspotTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
-import { CreateFileResponse } from '@/routes/jsonApi';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'FindTheHotspotEditor',
@@ -24,7 +24,7 @@ export default defineComponent({
     return {};
   },
   methods: {
-    onImageUploaded(file: CreateFileResponse): void {
+    onImageUploaded(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.image.file_id = file.id;
       });

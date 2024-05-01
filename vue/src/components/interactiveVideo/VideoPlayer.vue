@@ -27,7 +27,7 @@ import { v4 } from 'uuid';
 import OverlayInteraction from '@/components/interactiveVideo/interactions/OverlayInteraction.vue';
 import { OverlayInteraction as OverlayInteractionType } from '@/models/InteractiveVideoTask';
 import { mapActions, mapGetters } from 'vuex';
-import { createFileResponseSchema } from '@/routes/jsonApi';
+import { fileRefsSchema } from '@/routes/jsonApi';
 
 type DragState =
   | {
@@ -214,7 +214,7 @@ export default defineComponent({
           return video;
         case 'studipFileReference': {
           await this.loadFileRef({ id: video.file_id });
-          const ref = createFileResponseSchema.parse(
+          const ref = fileRefsSchema.parse(
             this.fileRefById({ id: video.file_id })
           );
           return {

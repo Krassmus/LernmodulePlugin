@@ -35,7 +35,7 @@ import {
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import FileUpload from '@/components/FileUpload.vue';
-import { CreateFileResponse } from '@/routes/jsonApi';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'ImageSequencingEditorImage',
@@ -56,7 +56,7 @@ export default defineComponent({
   methods: {
     fileIdToUrl,
     $gettext,
-    onUploadImage(file: CreateFileResponse): void {
+    onUploadImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.images[this.imageIndex].file_id = file.id;
       });
