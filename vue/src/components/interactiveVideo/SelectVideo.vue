@@ -35,7 +35,7 @@ function formatSecondsToHhMmSs(time: number): string {
 }
 
 // TODO #21 Refactor to remove this datatype
-interface JsonApiFile {
+interface FilePickerFile {
   id: string;
   name: string;
   mime_type: string;
@@ -56,7 +56,7 @@ export default defineComponent({
       startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
       selectedFolderId: '',
-      selectedFile: undefined as JsonApiFile | undefined,
+      selectedFile: undefined as FilePickerFile | undefined,
       selectedFileId: '',
     };
   },
@@ -109,7 +109,7 @@ export default defineComponent({
     onClickUseCurrentTime() {
       this.taskDefinition.startAt = this.currentTime;
     },
-    updateCurrentFile(file: JsonApiFile) {
+    updateCurrentFile(file: FilePickerFile) {
       this.selectedFile = file;
       this.selectedFileId = file.id;
     },
