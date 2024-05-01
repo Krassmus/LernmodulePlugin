@@ -140,9 +140,10 @@ export default defineComponent({
         return true;
       };
 
-      // TODO #21 Refactor.. I do not see the utility of mapping the file-ref,
+      // TODO #21 Refactor.. I'm not sure it is useful to map the file-ref,
       // which we fetched from the JSON API, to a subset of its keys here.
-      // Clients may need other values, like the folder ID.  This will require
+      // Clients may need other values, like the folder ID, which we do not
+      // provide here.
       return loadArray.filter(filterFile).map((file) => ({
         id: file.id,
         name: file.attributes.name,
