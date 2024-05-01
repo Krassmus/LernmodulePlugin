@@ -17,7 +17,7 @@ export async function createFile({
   fileData,
   folder,
 }: {
-  file: StudipFile;
+  file: CreateFileSpec;
   fileData: File | Blob;
   folder: Pick<Folder, 'id'>;
 }): Promise<FileRef> {
@@ -84,7 +84,11 @@ export interface Folder {
   };
 }
 
-export interface StudipFile {
+/**
+ * A subset of the information contained in FileRef, containing the information
+ * necessary to send a request to create a new file on the server.
+ */
+export interface CreateFileSpec {
   relationships?: {
     'terms-of-use'?: {
       data?: {
