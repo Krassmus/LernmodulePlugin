@@ -62,9 +62,11 @@ const youtubeVideoSchema = z.object({
 });
 export type YoutubeVideo = z.infer<typeof youtubeVideoSchema>;
 
+/**
+ * @deprecated -- File is now stored as ID instead of url,name,type.
+ */
 const studipFileVideoSchema_v1 = z.object({
   type: z.literal('studipFileReference'),
-  // TODO #20 -- Consider storing file ID instead of { url, name, type }
   file: wysiwygUploadedFileSchema,
 });
 const studipFileVideoSchema_v2 = z.object({
@@ -103,6 +105,7 @@ const studipFileVideoSchema = z
       return val as z.infer<typeof studipFileVideoSchema_v2>;
     }
   });
+export type StudipFileVideo = z.infer<typeof studipFileVideoSchema>;
 
 const videoSchema = z.union([
   noVideoSchema,
@@ -111,7 +114,6 @@ const videoSchema = z.union([
 ]);
 export type Video = z.infer<typeof videoSchema>;
 
-export type StudipFileVideo = z.infer<typeof studipFileVideoSchema>;
 export const interactiveVideoTaskSchema = z.object({
   task_type: z.literal('InteractiveVideo'),
   video: videoSchema,
