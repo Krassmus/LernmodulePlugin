@@ -7,7 +7,9 @@ import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask, Video } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
-import FilePicker from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
+import FilePicker, {
+  FilePickerFile,
+} from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
 import { CreateFileResponse, createFileResponseSchema } from '@/routes/jsonApi';
 import { fileDetailsUrl, fileIdToUrl } from '@/models/TaskDefinition';
 import { mapActions, mapGetters } from 'vuex';
@@ -32,14 +34,6 @@ function formatSecondsToHhMmSs(time: number): string {
     });
   }
   return `${twoDigits(hours)}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
-}
-
-// TODO #21 Refactor to remove this datatype
-interface FilePickerFile {
-  id: string;
-  name: string;
-  mime_type: string;
-  download_url: string;
 }
 
 export default defineComponent({

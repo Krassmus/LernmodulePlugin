@@ -30,6 +30,14 @@ import { mapActions, mapGetters } from 'vuex';
 import { defineComponent } from 'vue';
 import { $gettext } from '../../language/gettext';
 
+// TODO #21 Refactor to remove this datatype
+export interface FilePickerFile {
+  id: string;
+  name: string;
+  mime_type: string;
+  download_url: string;
+}
+
 export default defineComponent({
   name: 'FilePicker',
   components: { FolderPicker },
