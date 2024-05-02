@@ -101,7 +101,7 @@ import FeedbackElement from '@/components/FeedbackElement.vue';
 type Uuid = string;
 
 export default defineComponent({
-  name: 'ImagePairingViewer',
+  name: 'PairingViewer',
   components: {
     TargetImage,
     FeedbackElement,

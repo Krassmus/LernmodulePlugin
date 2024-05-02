@@ -1,7 +1,7 @@
 <template>
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Image Pair') }}</legend>
+      <legend>{{ $gettext('Paar') }}</legend>
       <div>
         <h4>{{ $gettext('Das zu ziehende Bild') }}</h4>
         <EditedImagePairImage

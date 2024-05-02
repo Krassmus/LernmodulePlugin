@@ -10,8 +10,8 @@ import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
 import MemoryViewer from '@/components/MemoryViewer.vue';
-import ImagePairingViewer from '@/components/PairingViewer.vue';
-import ImagePairingEditor from '@/components/PairingEditor.vue';
+import PairingViewer from '@/components/PairingViewer.vue';
+import PairingEditor from '@/components/PairingEditor.vue';
 import ImageSequencingViewer from '@/components/ImageSequencingViewer.vue';
 import ImageSequencingEditor from '@/components/ImageSequencingEditor.vue';
 import { v4 } from 'uuid';
@@ -558,7 +558,7 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
     case 'FindTheWords':
       return FindTheWordsViewer;
     case 'Pairing':
-      return ImagePairingViewer;
+      return PairingViewer;
     case 'ImageSequencing':
       return ImageSequencingViewer;
     case 'InteractiveVideo':
@@ -585,7 +585,7 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
     case 'FindTheWords':
       return FindTheWordsEditor;
     case 'Pairing':
-      return ImagePairingEditor;
+      return PairingEditor;
     case 'ImageSequencing':
       return ImageSequencingEditor;
     case 'InteractiveVideo':

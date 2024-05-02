@@ -9,7 +9,7 @@ const taskTypes = [
   'DragTheWords',
   'MarkTheWords',
   'Memory',
-  'ImagePairing',
+  'Pairing',
   'LmbInteractiveVideo',
 ];
 
