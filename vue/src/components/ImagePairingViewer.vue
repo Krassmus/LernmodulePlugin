@@ -372,13 +372,14 @@ export default defineComponent({
     correctAnswers(): number {
       let correctAnswers = 0;
       for (const imagePair of this.task.pairs) {
-        if (this.isAnswerCorrect(imagePair.targetImage.uuid)) correctAnswers++;
+        if (this.isAnswerCorrect(imagePair.targetElement.uuid))
+          correctAnswers++;
       }
       return correctAnswers;
     },
 
     maxPoints(): number {
-      return this.task.imagePairs.length;
+      return this.task.pairs.length;
     },
 
     resultMessage(): string {

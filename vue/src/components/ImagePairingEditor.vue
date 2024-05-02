@@ -69,12 +69,14 @@ export default defineComponent({
           uuid: v4(),
           draggableElement: {
             uuid: v4(),
-            content: '',
+            type: 'image',
+            file_id: '',
             altText: '',
           },
           targetElement: {
             uuid: v4(),
-            content: '',
+            type: 'image',
+            file_id: '',
             altText: '',
           },
         });

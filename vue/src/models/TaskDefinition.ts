@@ -206,17 +206,10 @@ export const questionTaskSchema = z.object({
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
-export const pairSchema = z.object({
-  uuid: z.string(),
-  draggableElement: pairElementSchema,
-  targetElement: pairElementSchema,
-});
-export type Pair = z.infer<typeof pairSchema>;
-
 const imageElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('image'),
-  imageUrl: z.string(),
+  file_id: z.string(),
   altText: z.string(),
 });
 
@@ -232,6 +225,12 @@ export const pairElementSchema = z.union([
   audioElementSchema,
 ]);
 export type PairElement = z.infer<typeof pairElementSchema>;
+export const pairSchema = z.object({
+  uuid: z.string(),
+  draggableElement: pairElementSchema,
+  targetElement: pairElementSchema,
+});
+export type Pair = z.infer<typeof pairSchema>;
 
 export const pairingTaskSchema = z.object({
   task_type: z.literal('Pairing'),
@@ -374,18 +373,18 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'Pairing':
       return {
         task_type: 'Pairing',
-        imagePairs: [
+        pairs: [
           {
             uuid: v4(),
-            draggableImage: {
+            draggableElement: {
               uuid: v4(),
-              v: 2,
+              type: 'image',
               file_id: '',
               altText: '',
             },
-            targetImage: {
+            targetElement: {
               uuid: v4(),
-              v: 2,
+              type: 'image',
               file_id: '',
               altText: '',
             },
@@ -559,7 +558,7 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return FindTheHotspotViewer;
     case 'FindTheWords':
       return FindTheWordsViewer;
-    case 'ImagePairing':
+    case 'Pairing':
       return ImagePairingViewer;
     case 'ImageSequencing':
       return ImageSequencingViewer;
@@ -586,7 +585,7 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return FindTheHotspotEditor;
     case 'FindTheWords':
       return FindTheWordsEditor;
-    case 'ImagePairing':
+    case 'Pairing':
       return ImagePairingEditor;
     case 'ImageSequencing':
       return ImageSequencingEditor;
@@ -613,8 +612,8 @@ export function printTaskType(type: TaskDefinition['task_type']): string {
       return $gettext('Find The Hotspot');
     case 'FindTheWords':
       return $gettext('Find The Words');
-    case 'ImagePairing':
-      return $gettext('Image Pairing');
+    case 'Pairing':
+      return $gettext('Pairing');
     case 'ImageSequencing':
       return $gettext('Image Sequencing');
     case 'InteractiveVideo':
@@ -652,7 +651,7 @@ export function iconForTaskType(type: TaskDefinition['task_type']): string {
       return 'tan3';
     case 'MarkTheWords':
       return 'tan3';
-    case 'ImagePairing':
+    case 'Pairing':
       break;
     case 'ImageSequencing':
       break;
