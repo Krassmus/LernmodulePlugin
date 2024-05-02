@@ -17,6 +17,59 @@
         <fieldset>
           <label>{{ $gettext('Eigenschaften') }}</label>
           <pre>{{ this.taskDefinition.pairs[this.selectedPairIndex] }}</pre>
+          <label>{{ $gettext('Karte A') }}</label>
+          <label>
+            {{ $gettext('Typ') }}
+            <select
+              v-model="
+                this.taskDefinition.pairs[this.selectedPairIndex]
+                  .draggableElement.type
+              "
+            >
+              <option :value="'image'">
+                {{ $gettext('Bild') }}
+              </option>
+              <option :value="'text'">
+                {{ $gettext('Text') }}
+              </option>
+              <option :value="'audio'">
+                {{ $gettext('Audio') }}
+              </option>
+            </select>
+          </label>
+          <template
+            v-if="
+              this.taskDefinition.pairs[this.selectedPairIndex].draggableElement
+                .type == 'image'
+            "
+            ><img
+              :src="
+                fileIdToUrl(
+                  this.taskDefinition.pairs[this.selectedPairIndex]
+                    .draggableElement.file_id
+                )
+              "
+          /></template>
+          <label>{{ $gettext('Karte B') }}</label>
+          <label>
+            {{ $gettext('Typ') }}
+            <select
+              v-model="
+                this.taskDefinition.pairs[this.selectedPairIndex].targetElement
+                  .type
+              "
+            >
+              <option :value="'image'">
+                {{ $gettext('Bild') }}
+              </option>
+              <option :value="'text'">
+                {{ $gettext('Text') }}
+              </option>
+              <option :value="'audio'">
+                {{ $gettext('Audio') }}
+              </option>
+            </select>
+          </label>
         </fieldset>
       </form>
     </div>
@@ -25,7 +78,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { PairingTask } from '@/models/TaskDefinition';
+import { fileIdToUrl, PairingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { taskEditorStore } from '@/store';
@@ -52,6 +105,7 @@ export default defineComponent({
     }
   },
   methods: {
+    fileIdToUrl,
     $gettext,
     urlForIcon(iconName: string) {
       return (
