@@ -29,12 +29,74 @@ export const feedbackSchema = z.object({
 });
 export type Feedback = z.infer<typeof feedbackSchema>;
 
-export const imageSchema = z.object({
+/**
+ * @deprecated Images are now stored as IDs rather than as absolute URLs.
+ */
+const imageSchema_v1 = z.object({
   uuid: z.string(),
   imageUrl: z.string(),
   altText: z.string(),
 });
+const imageSchema_v2 = z.object({
+  v: z.literal(2),
+  uuid: z.string(),
+  file_id: z.string(),
+  altText: z.string(),
+});
+
+const imageSchema = z
+  .union([imageSchema_v1, imageSchema_v2])
+  .transform((val) => {
+    if (!Object.hasOwn(val, 'v')) {
+      // Migration from v1 to v2
+      const val_v1 = val as z.infer<typeof imageSchema_v1>;
+      const urlParams = new URLSearchParams(val_v1.imageUrl);
+      const file_id = urlParams.get('file_id');
+      if (!file_id) {
+        throw new Error(
+          'Could not migrate imageUrl to file_id. The query param ' +
+            '"file_id" was not found in the imageUrl string.'
+        );
+      }
+      const val_v2 = {
+        v: 2,
+        uuid: val_v1.uuid,
+        altText: val_v1.altText,
+        file_id,
+      } as z.infer<typeof imageSchema_v2>;
+      console.log(
+        'Migrating from imageSchema_v1 to imageSchema_v2',
+        'v1:',
+        val_v1,
+        'v2:',
+        val_v2
+      );
+      return val_v2;
+    } else {
+      return val as z.infer<typeof imageSchema_v2>;
+    }
+  });
+
 export type Image = z.infer<typeof imageSchema>;
+
+/**
+ * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
+ */
+export function fileIdToUrl(fileId: string): string {
+  if (fileId === '') {
+    return '';
+  }
+  return window.STUDIP.URLHelper.getURL('sendfile.php', {
+    file_id: fileId,
+  });
+}
+
+/**
+ * @return The Stud.IP URL to view 'details' about the file with the given ID.
+ */
+export function fileDetailsUrl(fileId: string): string {
+  return window.STUDIP.URLHelper.getURL(`dispatch.php/file/details/${fileId}`);
+}
 
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
@@ -82,11 +144,7 @@ export const markTheWordsTaskSchema = z.object({
 });
 export type MarkTheWordsTask = z.infer<typeof markTheWordsTaskSchema>;
 
-export const memoryCardSchema = z.object({
-  uuid: z.string(),
-  imageUrl: z.string(),
-  altText: z.string(),
-});
+export const memoryCardSchema = imageSchema;
 export type MemoryCard = z.infer<typeof memoryCardSchema>;
 
 export const memoryTaskSchema = z.object({
@@ -282,8 +340,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'FindTheHotspot',
         image: {
+          v: 2,
           uuid: v4(),
-          imageUrl: '',
+          file_id: '',
           altText: '',
         },
       };
@@ -300,12 +359,14 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             uuid: v4(),
             draggableImage: {
               uuid: v4(),
-              imageUrl: '',
+              v: 2,
+              file_id: '',
               altText: '',
             },
             targetImage: {
               uuid: v4(),
-              imageUrl: '',
+              v: 2,
+              file_id: '',
               altText: '',
             },
           },
@@ -324,7 +385,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         images: [
           {
             uuid: v4(),
-            imageUrl: '',
+            v: 2,
+            file_id: '',
             altText: '',
           },
         ],
@@ -368,7 +430,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         cards: [
           {
             uuid: v4(),
-            imageUrl: '',
+            v: 2,
+            file_id: '',
             altText: '',
           },
         ],

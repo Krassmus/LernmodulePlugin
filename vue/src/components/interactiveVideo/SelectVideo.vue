@@ -4,11 +4,15 @@
 import { defineComponent, PropType } from 'vue';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import { $gettext } from '@/language/gettext';
-import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
+import { InteractiveVideoTask, Video } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
-import { WysiwygUploadedFile } from '@/routes/lernmodule';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
-import FilePicker from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
+import FilePicker, {
+  FilePickerFile,
+} from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
+import { FileRef, fileRefsSchema } from '@/routes/jsonApi';
+import { fileDetailsUrl, fileIdToUrl } from '@/models/TaskDefinition';
+import { mapActions, mapGetters } from 'vuex';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -32,13 +36,6 @@ function formatSecondsToHhMmSs(time: number): string {
   return `${twoDigits(hours)}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
 }
 
-interface JsonApiFile {
-  id: string;
-  name: string;
-  mime_type: string;
-  download_url: string;
-}
-
 export default defineComponent({
   name: 'SelectVideo',
   props: {
@@ -53,31 +50,60 @@ export default defineComponent({
       startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
       selectedFolderId: '',
-      selectedFile: undefined as JsonApiFile | undefined,
+      selectedFile: undefined as FilePickerFile | undefined,
       selectedFileId: '',
     };
   },
   watch: {
     'taskDefinition.video': {
       immediate: true,
-      handler: function (value) {
-        if (value.type === 'youtube') {
-          this.youtubeUrlInput = value.url;
-        } else {
-          this.youtubeUrlInput = '';
+      handler: async function (value: Video) {
+        switch (value.type) {
+          case 'none':
+            break;
+          case 'studipFileReference':
+            if (
+              this.selectedFile === undefined ||
+              this.selectedFile.id !== value.file_id
+            ) {
+              // Get metadata for file
+              await this.loadFileRef({ id: value.file_id });
+              const ref = fileRefsSchema.parse(
+                this.fileRefById({ id: value.file_id })
+              );
+              this.selectedFile = {
+                id: value.file_id,
+                name: ref.attributes.name,
+                mime_type: ref.attributes['mime-type'],
+                download_url: ref.meta['download-url'],
+              };
+            }
+            break;
+          case 'youtube':
+            this.youtubeUrlInput = value.url;
         }
       },
     },
   },
+  computed: {
+    ...mapGetters({
+      fileRefById: 'file-refs/byId',
+    }),
+  },
   methods: {
+    fileDetailsUrl,
+    fileIdToUrl,
     $gettext,
+    ...mapActions({
+      loadFileRef: 'file-refs/loadById',
+    }),
     onTimeUpdate(time: number) {
       this.currentTime = time;
     },
     onClickUseCurrentTime() {
       this.taskDefinition.startAt = this.currentTime;
     },
-    updateCurrentFile(file: JsonApiFile) {
+    updateCurrentFile(file: FilePickerFile) {
       this.selectedFile = file;
       this.selectedFileId = file.id;
     },
@@ -92,12 +118,9 @@ export default defineComponent({
         return;
       }
       this.taskDefinition.video = {
+        v: 2,
         type: 'studipFileReference',
-        file: {
-          name: this.selectedFile.name,
-          type: this.selectedFile.mime_type,
-          url: this.selectedFile.download_url,
-        },
+        file_id: this.selectedFile.id,
       };
     },
     deleteVideo() {
@@ -105,10 +128,17 @@ export default defineComponent({
         type: 'none',
       };
     },
-    onUploadStudipVideo(file: WysiwygUploadedFile) {
+    onUploadStudipVideo(file: FileRef) {
       this.taskDefinition.video = {
+        v: 2,
         type: 'studipFileReference',
-        file,
+        file_id: file.id,
+      };
+      this.selectedFile = {
+        id: file.id,
+        name: file.attributes.name,
+        mime_type: file.attributes['mime-type'],
+        download_url: file.meta['download-url'],
       };
     },
   },
@@ -137,7 +167,7 @@ export default defineComponent({
             {{ $gettext('Stud.IP-Video') }}
           </legend>
           <label>
-            {{ $gettext('Neues Video hochladen') }}
+            {{ $gettext('Neues Video hochladen') }} <br />
             <FileUpload
               @file-uploaded="onUploadStudipVideo"
               :accept="'video/*'"
@@ -151,7 +181,7 @@ export default defineComponent({
               @selectFile="updateCurrentFile"
             />
           </label>
-          <div class="youtube-url-actions">
+          <div class="bottom-actions">
             <button
               type="button"
               class="button accept"
@@ -178,7 +208,7 @@ export default defineComponent({
               v-model="youtubeUrlInput"
             />
           </label>
-          <div class="youtube-url-actions">
+          <div class="bottom-actions">
             <button
               type="submit"
               class="button accept"
@@ -206,9 +236,14 @@ export default defineComponent({
     </p>
     <p v-else-if="taskDefinition.video.type === 'studipFileReference'">
       {{ $gettext('Hochgeladenes Video: ') }}
-      <a :href="taskDefinition.video.file.url" target="_blank">{{
-        taskDefinition.video.file.name
-      }}</a>
+      <a :href="fileDetailsUrl(taskDefinition.video.file_id)" target="_blank">
+        <template v-if="selectedFile">
+          {{ selectedFile.name }}
+        </template>
+        <template v-else>
+          {{ taskDefinition.video.file_id }}
+        </template>
+      </a>
     </p>
     <div class="video-preview-actions">
       <button class="button trash" @click="deleteVideo">
@@ -283,7 +318,7 @@ export default defineComponent({
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      .youtube-url-actions {
+      .bottom-actions {
         display: flex;
         justify-content: flex-end;
         button.button {

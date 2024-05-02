@@ -2,14 +2,14 @@
   <div class="h5pElementPair">
     <div class="h5pElement">
       <EditedImagePairImage
-        v-if="pair.draggableImage.imageUrl"
+        v-if="pair.draggableImage.file_id"
         :image="pair.draggableImage"
       />
       <FileUpload v-else @file-uploaded="onUploadDraggableImage" />
     </div>
     <div class="h5pElement">
       <EditedImagePairImage
-        v-if="pair.targetImage.imageUrl"
+        v-if="pair.targetImage.file_id"
         :image="pair.targetImage"
       />
       <FileUpload v-else @file-uploaded="onUploadTargetImage" />

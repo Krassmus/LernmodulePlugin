@@ -35,15 +35,15 @@ import { defineComponent } from 'vue';
 import { Context } from '@/models/CoursewareBlockIframeMessages';
 import { coursewareBlockStore } from '@/store';
 import { mapActions, mapGetters } from 'vuex';
-import { Folder } from '@/routes/jsonApi';
+import { FolderRef } from '@/routes/jsonApi';
 
 function filterCourseFolders(
-  folders: Folder[],
+  folders: FolderRef[],
   { allowHomeworkFolders }: { allowHomeworkFolders: boolean }
 ) {
   const validatedParents = new Map();
 
-  return folders.filter((folder: Folder) => {
+  return folders.filter((folder: FolderRef) => {
     if (validateParentFolder(folder)) {
       switch (folder.attributes['folder-type']) {
         case 'HiddenFolder':
@@ -62,7 +62,7 @@ function filterCourseFolders(
     }
   });
 
-  function validateParentFolder(folder: Folder): boolean {
+  function validateParentFolder(folder: FolderRef): boolean {
     let isValid = true;
     if (folder?.relationships?.parent) {
       let parentId = folder.relationships.parent.data.id;
@@ -79,7 +79,7 @@ function filterCourseFolders(
     return isValid;
   }
 
-  function hiddenParentFolderValidation(parentFolder: Folder): boolean {
+  function hiddenParentFolderValidation(parentFolder: FolderRef): boolean {
     if (parentFolder.attributes['folder-type'] === 'HiddenFolder') {
       return false;
     } else if (parentFolder?.relationships?.parent) {
@@ -140,13 +140,13 @@ export default defineComponent({
       );
     },
     loadedUserFolders() {
-      let loadedUserFolders: Folder[] = [];
-      let userFolders: Folder[] =
+      let loadedUserFolders: FolderRef[] = [];
+      let userFolders: FolderRef[] =
         this.relatedFolders({
           parent: this.userObject,
           relationship: 'folders',
         }) ?? [];
-      userFolders.forEach((folder: Folder) => {
+      userFolders.forEach((folder: FolderRef) => {
         if (folder.attributes['folder-type'] === 'PublicFolder') {
           loadedUserFolders.push(folder);
         }
@@ -194,7 +194,7 @@ export default defineComponent({
     },
 
     confirmSelectedFolder() {
-      const folders: Folder[] = this.loadedUserFolders.concat(
+      const folders: FolderRef[] = this.loadedUserFolders.concat(
         this.loadedCourseFolders
       );
 

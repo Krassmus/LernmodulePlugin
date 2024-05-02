@@ -18,7 +18,7 @@
 import { defineComponent } from 'vue';
 import { $gettext } from '@/language/gettext';
 import { mapActions, mapGetters } from 'vuex';
-import { createFile, Folder } from '@/routes/jsonApi';
+import { createFile, FileRef, FolderRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'FileUpload',
@@ -70,13 +70,13 @@ export default defineComponent({
       return { type: 'users', id: `${this.userId}` };
     },
     loadedUserFolders() {
-      let loadedUserFolders: Folder[] = [];
-      let userFolders: Folder[] =
+      let loadedUserFolders: FolderRef[] = [];
+      let userFolders: FolderRef[] =
         this.relatedFolders({
           parent: this.userObject,
           relationship: 'folders',
         }) ?? [];
-      userFolders.forEach((folder: Folder) => {
+      userFolders.forEach((folder: FolderRef) => {
         if (folder.attributes['folder-type'] === 'PublicFolder') {
           loadedUserFolders.push(folder);
         }
@@ -142,19 +142,8 @@ export default defineComponent({
         fileData: file,
         folder: { id: this.selectedFolderId },
       })
-        .then((res) => {
-          // TODO Emit data type corresponding to JSON API and refactor all
-          // Lernmodule editors correspondingly so that they save ID (and URL?)
-          // instead of just the absolute file url.
-          // What is emitted currently is merely the subset of information which
-          // is returned by the wysiwyg upload api. This makes it compatible with the
-          // existing Lernmodule editors, which were originally written using the
-          // wysiwyg upload route.
-          this.$emit('fileUploaded', {
-            name: res.attributes.name,
-            type: res.attributes['mime-type'],
-            url: res.meta['download-url'],
-          });
+        .then((fileRef: FileRef) => {
+          this.$emit('fileUploaded', fileRef);
           this.uploadRequestPromise = undefined;
           this.errors = [];
         })

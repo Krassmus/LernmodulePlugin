@@ -76,8 +76,9 @@ export default defineComponent({
     addImage() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.images.push({
+          v: 2,
           uuid: v4(),
-          imageUrl: '',
+          file_id: '',
           altText: '',
         });
       });

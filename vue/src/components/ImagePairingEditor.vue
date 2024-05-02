@@ -65,13 +65,15 @@ export default defineComponent({
         draft.imagePairs.push({
           uuid: v4(),
           draggableImage: {
+            v: 2,
             uuid: v4(),
-            imageUrl: '',
+            file_id: '',
             altText: '',
           },
           targetImage: {
+            v: 2,
             uuid: v4(),
-            imageUrl: '',
+            file_id: '',
             altText: '',
           },
         });

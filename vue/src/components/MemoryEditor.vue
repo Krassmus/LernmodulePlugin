@@ -110,8 +110,9 @@ export default defineComponent({
     addCard() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.cards.push({
+          v: 2,
           uuid: v4(),
-          imageUrl: '',
+          file_id: '',
           altText: '',
         });
       });

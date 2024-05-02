@@ -52,22 +52,71 @@ const interactiveVideoInteractionSchema = z
   });
 export type Interaction = z.infer<typeof interactiveVideoInteractionSchema>;
 
+const noVideoSchema = z.object({
+  type: z.literal('none'),
+});
+export type NoVideo = z.infer<typeof noVideoSchema>;
+const youtubeVideoSchema = z.object({
+  type: z.literal('youtube'),
+  url: z.string(),
+});
+export type YoutubeVideo = z.infer<typeof youtubeVideoSchema>;
+
+/**
+ * @deprecated -- File is now stored as ID instead of url,name,type.
+ */
+const studipFileVideoSchema_v1 = z.object({
+  type: z.literal('studipFileReference'),
+  file: wysiwygUploadedFileSchema,
+});
+const studipFileVideoSchema_v2 = z.object({
+  v: z.literal(2),
+  type: z.literal('studipFileReference'),
+  file_id: z.string(),
+});
+const studipFileVideoSchema = z
+  .union([studipFileVideoSchema_v1, studipFileVideoSchema_v2])
+  .transform((val) => {
+    if (!Object.hasOwn(val, 'v')) {
+      // Migration from v1 to v2
+      const val_v1 = val as z.infer<typeof studipFileVideoSchema_v1>;
+      const urlParams = new URLSearchParams(val_v1.file.url);
+      const file_id = urlParams.get('file_id');
+      if (!file_id) {
+        throw new Error(
+          'Could not migrate studip file reference schema v1 to v2. The query param ' +
+            `"file_id" was not found in the string file.url: "${val_v1.file.url}"`
+        );
+      }
+      const val_v2 = {
+        v: 2,
+        type: 'studipFileReference',
+        file_id,
+      } as z.infer<typeof studipFileVideoSchema_v2>;
+      console.log(
+        'Migrating from studipFileVideoSchema_v1 to studipFileVideoSchema_v2',
+        'v1:',
+        val_v1,
+        'v2:',
+        val_v2
+      );
+      return val_v2;
+    } else {
+      return val as z.infer<typeof studipFileVideoSchema_v2>;
+    }
+  });
+export type StudipFileVideo = z.infer<typeof studipFileVideoSchema>;
+
+const videoSchema = z.union([
+  noVideoSchema,
+  youtubeVideoSchema,
+  studipFileVideoSchema,
+]);
+export type Video = z.infer<typeof videoSchema>;
+
 export const interactiveVideoTaskSchema = z.object({
   task_type: z.literal('InteractiveVideo'),
-  video: z.union([
-    z.object({
-      type: z.literal('none'),
-    }),
-    z.object({
-      type: z.literal('youtube'),
-      url: z.string(),
-    }),
-    z.object({
-      type: z.literal('studipFileReference'),
-      // TODO #20 -- Consider storing file ID instead of { url, name, type }
-      file: wysiwygUploadedFileSchema,
-    }),
-  ]),
+  video: videoSchema,
   autoplay: z.boolean().optional().default(false),
   startAt: z.number().optional().default(0),
   disableNavigation: z
