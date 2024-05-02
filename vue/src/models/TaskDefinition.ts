@@ -212,19 +212,18 @@ const imageElementSchema = z.object({
   file_id: z.string(),
   altText: z.string(),
 });
-
 const audioElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('audio'),
   file_id: z.string(),
   altText: z.string(),
 });
-
 export const pairElementSchema = z.union([
   imageElementSchema,
   audioElementSchema,
 ]);
 export type PairElement = z.infer<typeof pairElementSchema>;
+
 export const pairSchema = z.object({
   uuid: z.string(),
   draggableElement: pairElementSchema,
