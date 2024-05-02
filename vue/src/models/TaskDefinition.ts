@@ -394,7 +394,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Reihenfolge überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Bildern richtig sortiert.',
+          resultMessage: ':correct von :total Elemente richtig sortiert.',
         },
         feedback: defaultFeedback(),
       };

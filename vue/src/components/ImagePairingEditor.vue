@@ -15,7 +15,10 @@
     <div class="h5p-elements-settings">
       <form class="default">
         <fieldset>
-          <label>Einstellungen</label>
+          <label>{{ $gettext('Eigenschaften') }}</label>
+          <pre>{{
+            this.taskDefinition.imagePairs[this.selectedPairIndex]
+          }}</pre>
         </fieldset>
       </form>
     </div>
@@ -108,31 +111,19 @@ export default defineComponent({
 <style scoped>
 .main-flex {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 1em;
-}
-
-.cards-list {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 200px;
-}
-
-.cards-list-item {
-  display: flex;
-  justify-content: space-between;
-}
-
-.selected-card {
-  border: #0a78d1 2px solid;
+  flex-direction: row;
 }
 
 .h5p-elements-overview {
+  width: 60%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: left;
+}
+
+.h5p-elements-settings {
+  width: 40%;
 }
 </style>
