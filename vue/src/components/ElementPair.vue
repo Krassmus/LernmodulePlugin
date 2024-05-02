@@ -2,15 +2,15 @@
   <div class="h5pElementPair">
     <div class="h5pElement">
       <EditedImagePairImage
-        v-if="pair.draggableImage.file_id"
-        :image="pair.draggableImage"
+        v-if="pair.draggableElement.content"
+        :image="pair.draggableElement"
       />
       <FileUpload v-else @file-uploaded="onUploadDraggableImage" />
     </div>
     <div class="h5pElement">
       <EditedImagePairImage
-        v-if="pair.targetImage.file_id"
-        :image="pair.targetImage"
+        v-if="pair.targetElement.content"
+        :image="pair.targetElement"
       />
       <FileUpload v-else @file-uploaded="onUploadTargetImage" />
     </div>
@@ -20,7 +20,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
-import { ImagePair } from '@/models/TaskDefinition';
+import { Pair } from '@/models/TaskDefinition';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
 
@@ -29,7 +29,7 @@ export default defineComponent({
   components: { FileUpload, EditedImagePairImage },
   props: {
     pair: {
-      type: Object as PropType<ImagePair>,
+      type: Object as PropType<Pair>,
       required: true,
     },
     pairIndex: {

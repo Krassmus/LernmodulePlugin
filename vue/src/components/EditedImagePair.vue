@@ -41,7 +41,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
-import { ImagePair, ImagePairingTask } from '@/models/TaskDefinition';
+import { Pair, PairingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
@@ -53,7 +53,7 @@ export default defineComponent({
   components: { FileUpload, EditedImagePairImage },
   props: {
     pair: {
-      type: Object as PropType<ImagePair>,
+      type: Object as PropType<Pair>,
       required: true,
     },
     pairIndex: {
@@ -68,7 +68,7 @@ export default defineComponent({
     $gettext,
     onUploadDraggableImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].draggableImage.file_id = file.id;
+        draft.pairs[this.pairIndex].draggableElement.file_id = file.id;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
@@ -77,7 +77,7 @@ export default defineComponent({
     },
     onUploadTargetImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].targetImage.file_id = file.id;
+        draft.pairs[this.pairIndex].targetElement.file_id = file.id;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
@@ -87,7 +87,7 @@ export default defineComponent({
     onInputDraggableImageAltText(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].draggableImage.altText = value;
+        draft.pairs[this.pairIndex].draggableElement.altText = value;
       });
       taskEditorStore.performEdit({
         newTaskDefinition,
@@ -97,7 +97,7 @@ export default defineComponent({
     onInputTargetImageAltText(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].targetImage.altText = value;
+        draft.pairs[this.pairIndex].targetElement.altText = value;
       });
       taskEditorStore.performEdit({
         newTaskDefinition,
@@ -106,7 +106,7 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as ImagePairingTask,
+    taskDefinition: () => taskEditorStore.taskDefinition as PairingTask,
   },
 });
 </script>

@@ -11,7 +11,7 @@ use Opis\JsonSchema\Schema;
  * @author  Ann Yanich
  * @license GPL3 or any later version
  */
-class ImagePairingBlock extends BlockType
+class PairingBlock extends BlockType
 {
     public static function getType(): string
     {
@@ -35,7 +35,7 @@ class ImagePairingBlock extends BlockType
     {
         return [
             "initialized" => false,
-            "task_type" => 'ImagePairing',
+            "task_type" => 'Pairing',
         ];
     }
 

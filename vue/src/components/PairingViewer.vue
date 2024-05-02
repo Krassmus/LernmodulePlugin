@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, Image, ImagePairingTask } from '@/models/TaskDefinition';
+import { fileIdToUrl, PairElement, PairingTask } from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
@@ -108,7 +108,7 @@ export default defineComponent({
   },
   props: {
     task: {
-      type: Object as PropType<ImagePairingTask>,
+      type: Object as PropType<PairingTask>,
       required: true,
     },
   },
@@ -138,8 +138,8 @@ export default defineComponent({
       // But it should be fine, because even if there are 50 images in a set
       // (very unlikely), this comes out to 2500 comparisons, which should
       // complete in under a millisecond.
-      const pair = this.task.imagePairs.find(
-        (pair) => pair.targetImage.uuid === targetId
+      const pair = this.task.pairs.find(
+        (pair) => pair.targetElement.uuid === targetId
       );
       if (!pair) {
         throw new Error(
@@ -148,10 +148,10 @@ export default defineComponent({
             ' belongs'
         );
       }
-      return pair.draggableImage.uuid === userInput;
+      return pair.draggableElement.uuid === userInput;
     },
 
-    getImageDraggedOntoTarget(targetId: Uuid): Image | undefined {
+    getImageDraggedOntoTarget(targetId: Uuid): PairElement | undefined {
       const draggedImageId = this.imagesDraggedOntoTargets[targetId];
       if (draggedImageId) {
         return this.getImageById(draggedImageId);
@@ -278,7 +278,7 @@ export default defineComponent({
       this.draggedImageId = undefined;
     },
 
-    getImageById(imageId: string): Image {
+    getImageById(imageId: string): PairElement {
       const image = this.imagesById[imageId];
       if (!image) {
         throw new Error('No image found with the given ID: ' + imageId);
@@ -354,31 +354,32 @@ export default defineComponent({
     draggableImages(): Uuid[] {
       // Shuffle the images
       // https://stackoverflow.com/a/46545530
-      return this.task.imagePairs
-        .map((imagePair) => ({ imagePair: imagePair, sort: Math.random() }))
-        .sort((imagePair1, imagePair2) => imagePair1.sort - imagePair2.sort)
-        .map(({ imagePair }) => imagePair.draggableImage.uuid);
+      return this.task.pairs
+        .map((pair) => ({ pair: pair, sort: Math.random() }))
+        .sort((pair1, pair2) => pair1.sort - pair2.sort)
+        .map(({ pair }) => pair.draggableElement.uuid);
     },
 
-    imagesById(): Record<Uuid, Image> {
-      const imagesById: Record<Uuid, Image> = {};
-      for (const imagePair of this.task.imagePairs) {
-        imagesById[imagePair.draggableImage.uuid] = imagePair.draggableImage;
-        imagesById[imagePair.targetImage.uuid] = imagePair.targetImage;
+    imagesById(): Record<Uuid, PairElement> {
+      const imagesById: Record<Uuid, PairElement> = {};
+      for (const pair of this.task.pairs) {
+        imagesById[pair.draggableElement.uuid] = pair.draggableElement;
+        imagesById[pair.targetElement.uuid] = pair.targetElement;
       }
       return imagesById;
     },
 
     correctAnswers(): number {
       let correctAnswers = 0;
-      for (const imagePair of this.task.imagePairs) {
-        if (this.isAnswerCorrect(imagePair.targetImage.uuid)) correctAnswers++;
+      for (const imagePair of this.task.pairs) {
+        if (this.isAnswerCorrect(imagePair.targetElement.uuid))
+          correctAnswers++;
       }
       return correctAnswers;
     },
 
     maxPoints(): number {
-      return this.task.imagePairs.length;
+      return this.task.pairs.length;
     },
 
     resultMessage(): string {
