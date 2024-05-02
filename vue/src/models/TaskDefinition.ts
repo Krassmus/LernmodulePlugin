@@ -206,16 +206,36 @@ export const questionTaskSchema = z.object({
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
-export const imagePairSchema = z.object({
+export const pairSchema = z.object({
   uuid: z.string(),
-  draggableImage: imageSchema,
-  targetImage: imageSchema,
+  draggableElement: pairElementSchema,
+  targetElement: pairElementSchema,
 });
-export type ImagePair = z.infer<typeof imagePairSchema>;
+export type Pair = z.infer<typeof pairSchema>;
 
-export const imagePairingTaskSchema = z.object({
-  task_type: z.literal('ImagePairing'),
-  imagePairs: z.array(imagePairSchema),
+const imageElementSchema = z.object({
+  uuid: z.string(),
+  type: z.literal('image'),
+  imageUrl: z.string(),
+  altText: z.string(),
+});
+
+const audioElementSchema = z.object({
+  uuid: z.string(),
+  type: z.literal('audio'),
+  file_id: z.string(),
+  altText: z.string(),
+});
+
+export const pairElementSchema = z.union([
+  imageElementSchema,
+  audioElementSchema,
+]);
+export type PairElement = z.infer<typeof pairElementSchema>;
+
+export const pairingTaskSchema = z.object({
+  task_type: z.literal('Pairing'),
+  pairs: z.array(pairSchema),
   strings: z.object({
     checkButton: z.string(),
     retryButton: z.string(),
@@ -224,7 +244,7 @@ export const imagePairingTaskSchema = z.object({
   }),
   feedback: z.array(feedbackSchema),
 });
-export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
+export type PairingTask = z.infer<typeof pairingTaskSchema>;
 
 export const imageSequencingTaskSchema = z.object({
   task_type: z.literal('ImageSequencing'),
@@ -244,11 +264,11 @@ export const taskDefinitionSchema = z.union([
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
   findTheWordsTaskSchema,
-  imagePairingTaskSchema,
   imageSequencingTaskSchema,
   interactiveVideoTaskSchema,
   markTheWordsTaskSchema,
   memoryTaskSchema,
+  pairingTaskSchema,
   questionTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
@@ -264,10 +284,10 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
   findTheWordsTaskSchema,
-  imagePairingTaskSchema,
   imageSequencingTaskSchema,
   markTheWordsTaskSchema,
   memoryTaskSchema,
+  pairingTaskSchema,
   questionTaskSchema,
 ]);
 
@@ -278,11 +298,11 @@ export const taskTypeSchema = z.union([
   fillInTheBlanksTaskSchema.shape.task_type,
   findTheHotspotTaskSchema.shape.task_type,
   findTheWordsTaskSchema.shape.task_type,
-  imagePairingTaskSchema.shape.task_type,
   imageSequencingTaskSchema.shape.task_type,
   interactiveVideoTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
+  pairingTaskSchema.shape.task_type,
   questionTaskSchema.shape.task_type,
 ]);
 
@@ -351,9 +371,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'FindTheWords',
         words: ['apple', 'banana', 'orange'],
       };
-    case 'ImagePairing':
+    case 'Pairing':
       return {
-        task_type: 'ImagePairing',
+        task_type: 'Pairing',
         imagePairs: [
           {
             uuid: v4(),

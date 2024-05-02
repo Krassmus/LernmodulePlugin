@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { ImagePairingTask } from '@/models/TaskDefinition';
+import { PairingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { taskEditorStore } from '@/store';
@@ -35,11 +35,11 @@ import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
 
 export default defineComponent({
-  name: 'ImagePairingEditor',
+  name: 'PairingEditor',
   components: { ElementPair },
   props: {
     task: {
-      type: Object as PropType<ImagePairingTask>,
+      type: Object as PropType<PairingTask>,
       required: true,
     },
   },
@@ -49,7 +49,7 @@ export default defineComponent({
     };
   },
   beforeMount(): void {
-    if (this.taskDefinition.imagePairs.length > 0) {
+    if (this.taskDefinition.pairs.length > 0) {
       this.selectedPairIndex = 0;
     }
   },
@@ -65,18 +65,16 @@ export default defineComponent({
     },
     addPair() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs.push({
+        draft.pairs.push({
           uuid: v4(),
-          draggableImage: {
-            v: 2,
+          draggableElement: {
             uuid: v4(),
-            file_id: '',
+            content: '',
             altText: '',
           },
-          targetImage: {
-            v: 2,
+          targetElement: {
             uuid: v4(),
-            file_id: '',
+            content: '',
             altText: '',
           },
         });
@@ -86,11 +84,11 @@ export default defineComponent({
         undoBatch: {},
       });
       // Select the newly inserted card
-      this.selectedPairIndex = this.taskDefinition.imagePairs.length - 1;
+      this.selectedPairIndex = this.taskDefinition.pairs.length - 1;
     },
     deletePair(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs.splice(index, 1);
+        draft.pairs.splice(index, 1);
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
@@ -103,7 +101,7 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as ImagePairingTask,
+    taskDefinition: () => taskEditorStore.taskDefinition as PairingTask,
   },
 });
 </script>
