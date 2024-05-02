@@ -2,12 +2,12 @@
   <div class="main-flex">
     <div class="h5p-elements-overview">
       <ElementPair
-        v-for="(pair, index) in taskDefinition.imagePairs"
+        v-for="(pair, index) in taskDefinition.pairs"
         :key="pair.uuid"
         :class="{
           selected: index === this.selectedPairIndex,
         }"
-        :pair="this.taskDefinition.imagePairs[index]"
+        :pair="this.taskDefinition.pairs[index]"
         :pair-index="index"
         @click="selectPair(index)"
       />
@@ -16,9 +16,7 @@
       <form class="default">
         <fieldset>
           <label>{{ $gettext('Eigenschaften') }}</label>
-          <pre>{{
-            this.taskDefinition.imagePairs[this.selectedPairIndex]
-          }}</pre>
+          <pre>{{ this.taskDefinition.pairs[this.selectedPairIndex] }}</pre>
         </fieldset>
       </form>
     </div>
