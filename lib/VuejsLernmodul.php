@@ -88,4 +88,51 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         return $output;
     }
 
+    public function getExportFile() {
+        // Create a temporary zip file
+        $temp_prefix = $GLOBALS['TMP_PATH'] . '/' . md5(uniqid());
+        $zip_filename = "{$temp_prefix}.studip-lernmodule.zip";
+        $zip = \Studip\ZipArchive::create($zip_filename);
+
+        // Get the JSON of the lernmodule and add it to the zip
+        $task_definition = json_decode($this['customdata'], true);
+        $task_definition_encoded = json_encode($task_definition);
+        $task_definition_filename = "{$temp_prefix}.task_definition.json";
+        file_put_contents($task_definition_filename, $task_definition_encoded);
+        $zip->addFile($task_definition_filename, 'task_definition.json');
+
+        /**
+         * Get all images, videos, etc. and add them to the zip
+         * By convention, they are all saved by ID under keys named "file_id".
+         * */
+        function getAllFiles($array, &$files) {
+            foreach ($array as $key => $value) {
+                if (is_array($value)) {
+                    getAllFiles($value, $files);
+                    continue;
+                }
+                if ($key == 'file_id') {
+                    $file_ref = FileRef::find($value);
+                    if (is_null($file_ref)) {
+                        throw new Exception("Es wurde kein File-Ref mit der ID {$value} gefunden.");
+                    }
+                    $path = $file_ref->file->getPath();
+                    if (is_null($path)) {
+                        throw new Exception("getPath() hat für das File-Ref mit der ID {$value} null geliefert.");
+                    }
+                    $files[$value] = $path;
+                }
+            }
+        }
+        $files = [];
+        getAllFiles($task_definition, $files);
+        // Add all the files we found to the zip
+        foreach ($files as $id => $path) {
+            $zip->addFile($path, $id);
+        }
+
+        $zip->close();
+        return $zip_filename;
+    }
+
 }
