@@ -9,7 +9,17 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
 
     public function afterInstall()
     {
-        throw new Exception('Not implemented');
+        // TODO Import the data from the exported zip file, whose contents
+        //  (precondition) have been extracted to $this->getPath():
+        // 1. Store all of the files, except for task_definition.json, as
+        //    Files/FileRefs using Stud.IP's SORM.
+        // 2. Find-and-replace every "file_id" key in task_definition.json using
+        //    the new file_id created in step 1.
+        // 3. Set $this['customdata'] to the contents of task_definition.json.
+        $task_definition_contents = file_get_contents($this->getPath() . '/task_definition.json');
+        $task_definition = json_decode($task_definition_contents, true);
+        $this['customdata'] = json_encode($task_definition);
+        $this->store();
     }
 
     public function getEditTemplate()
