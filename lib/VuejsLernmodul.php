@@ -13,25 +13,36 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
      */
     public function afterInstall()
     {
-        // 1. Store all of the files in the zip, except for task_definition.json,
-        //    as Files/FileRefs using Stud.IP's SORM.
-        // TODO preserve 'description' and terms of use metadata.
+        // 1. Import all of the files from the zip, except for task_definition.json
+        //    and files_metadata.json, as Files/FileRefs using Stud.IP's SORM.
+        // TODO import 'description' and terms of use metadata.
         // TODO: Import WYSIWYG Editor embedded image files and rewrite the URLs
         //  in any WYSIWYG html blobs.
-        $filenames = array_diff(scandir($this->getPath()), ['.', '..', 'task_definition.json']);
+
+        // Load the metadata for the files.
+        // TODO: Consider using JSON Schema validation, as in the Courseware,
+        //  to validate the contents of files_metadata.json.
+        $files_metadata_path = $this->getPath() . '/files_metadata.json';
+        $files_metadata_contents = file_get_contents($files_metadata_path);
+        if (!$files_metadata_contents) {
+            throw new Exception("Die Datei '$files_metadata_path' wurde nicht gefunden.");
+        }
+        $files_metadata = json_decode($files_metadata_contents, true);
+
+        // Import all the files, applying the metadata that has been supplied.
+        $filenames = array_diff(scandir($this->getPath()), ['.', '..', 'task_definition.json', 'files_metadata.json']);
         $uploaded_files = ['name' => [], 'error' => [], 'type' => [], 'size' => [], 'tmp_name' => []];
         foreach ($filenames as $filename) {
+            $metadata = $files_metadata[$filename];
             $file_path = $this->getPath() . '/' . $filename;
-            // TODO This sets the filename to the file's ID on the system where the
-            //  lernmodul was exported, which is definitely not what we want.
-            //  We should probably preserve the original filename in export and import.
-            $uploaded_files['name'][] = $filename;
+            $uploaded_files['name'][] = $metadata['name'];
             $uploaded_files['error'][] = 0;
             // TODO Check if mime_content_type is OK to use here.
             $uploaded_files['type'][] = mime_content_type($file_path);
             // FileManager will find the size for us.
             $uploaded_files['size'][] = null;
             $uploaded_files['tmp_name'][] = $file_path;
+            // TODO Import file description as well.
         }
         $folder = $this->getWysiwygFolder();
         $validatedFiles = FileManager::handleFileUpload(
@@ -56,7 +67,11 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         }
 
         // 3. Replace the old file_id keys with the new ones everywhere in task_definition.json.
-        $task_definition_contents = file_get_contents($this->getPath() . '/task_definition.json');
+        $task_definition_path = $this->getPath() . '/task_definition.json';
+        $task_definition_contents = file_get_contents($task_definition_path);
+        if (!$task_definition_contents) {
+            throw new Exception("Die Datei '$task_definition_path' wurde nicht gefunden.");
+        }
         $task_definition = json_decode($task_definition_contents, true);
         self::traverseArray($task_definition, function(&$array, $key, $value) use ($file_ids_map) {
             if ($key == 'file_id') {
@@ -66,7 +81,7 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
             }
         });
 
-        // 4. Set $this['customdata'] to the contents of task_definition.json.
+        // 4. Save the new task_definition with the correct file IDs.
         $this['customdata'] = json_encode($task_definition);
         $this->store();
 
@@ -223,10 +238,13 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
          * TODO: Export WYSIWYG Editor embedded image files (which are saved only
          *  using their URLs) as well.
          * */
+        // Map from file_id => file path
         $files = [];
+        // Map from file_id => ['name' => name, 'description' => description]
+        $files_metadata = [];
         self::traverseArray(
             $task_definition,
-            function($array, $key, $value) use (&$files) {
+            function($array, $key, $value) use (&$files, &$files_metadata) {
                 if ($key == 'file_id') {
                     $file_ref = FileRef::find($value);
                     if (is_null($file_ref)) {
@@ -237,14 +255,23 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
                         throw new Exception("getPath() hat für das File-Ref mit der ID {$value} null geliefert.");
                     }
                     $files[$value] = $path;
+                    $files_metadata[$value] = [
+                        'name' => $file_ref->name,
+                        'description' => $file_ref->description,
+                        // TODO Export terms of use metadata as well.
+                    ];
                 }
             }
         );
         // Add all the files we found to the zip, named according to their file_id.
-        // TODO Export filename, description and terms of use metadata as well.
         foreach ($files as $id => $path) {
             $zip->addFile($path, $id);
         }
+        // Add the metadata of all files to the zip as well.
+        $files_metadata_encoded = json_encode($files_metadata);
+        $files_metadata_filename = "{$temp_prefix}.files_metadata.json";
+        file_put_contents($files_metadata_filename, $files_metadata_encoded);
+        $zip->addFile($files_metadata_filename, 'files_metadata.json');
 
         // TODO: Export Infotext and image for the Lernmodul.
 
