@@ -44,8 +44,8 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         // The order of $validatedFiles is the same as the order of $uploaded_files,
         // so we can match files up by index.
         // However, we must first re-index $filenames numerically to make the indices
-        // match, because the use of array_diff above removes entries from $filenames,
-        // making it a sparse array.
+        // match, because the use of array_diff above removes entries from $filenames
+        // without reindexing, making it a sparse array.
         $filenames = array_values($filenames);
         // Go through the two lists of files and put every old_id => new_id entry
         // into the map.
