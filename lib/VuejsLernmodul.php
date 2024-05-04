@@ -16,6 +16,8 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         // 1. Store all of the files in the zip, except for task_definition.json,
         //    as Files/FileRefs using Stud.IP's SORM.
         // TODO preserve 'description' and terms of use metadata.
+        // TODO: Import WYSIWYG Editor embedded image files and rewrite the URLs
+        //  in any WYSIWYG html blobs.
         $filenames = array_diff(scandir($this->getPath()), ['.', '..', 'task_definition.json']);
         $uploaded_files = ['name' => [], 'error' => [], 'type' => [], 'size' => [], 'tmp_name' => []];
         foreach ($filenames as $filename) {
@@ -218,6 +220,8 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         /**
          * Get all images, videos, etc. and add them to the zip
          * By convention, they are all saved by ID under keys named "file_id".
+         * TODO: Export WYSIWYG Editor embedded image files (which are saved only
+         *  using their URLs) as well.
          * */
         $files = [];
         self::traverseArray(
