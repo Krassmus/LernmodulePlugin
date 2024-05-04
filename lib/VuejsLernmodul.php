@@ -15,7 +15,6 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
     {
         // 1. Import all of the files from the zip, except for task_definition.json
         //    and files_metadata.json, as Files/FileRefs using Stud.IP's SORM.
-        // TODO import 'description' and terms of use metadata.
         // TODO: Import WYSIWYG Editor embedded image files and rewrite the URLs
         //  in any WYSIWYG html blobs.
 
@@ -42,7 +41,7 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
             // FileManager will find the size for us.
             $uploaded_files['size'][] = null;
             $uploaded_files['tmp_name'][] = $file_path;
-            // TODO Import file description as well.
+            // TODO Import file description and terms of use as well.
         }
         $folder = $this->getWysiwygFolder();
         $validatedFiles = FileManager::handleFileUpload(
