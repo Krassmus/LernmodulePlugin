@@ -81,7 +81,7 @@ export default defineComponent({
         @pointerup.stop="onPointerUpResizeHandle($event, handle)"
       />
     </template>
-    <div class="overlay-content" v-html="interaction.text" />
+    <div class="overlay-content" v-html="interaction.content_wysiwyg" />
   </div>
 </template>
 

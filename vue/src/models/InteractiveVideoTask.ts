@@ -15,8 +15,11 @@ import { wysiwygUploadedFileSchema } from '@/routes/lernmodule';
 // (v-model for 'end time' input field), but I have noticed that I must calculate a duration
 // by hand in many other places anyway.
 
-// Overlay: An overlay is shown on top of the video over a span of time
-const overlaySchema = z.object({
+/**
+ * @deprecated -- Text field renamed to content_wysiwyg to simplify implementation
+ * of file export in PHP.
+ */
+const overlaySchema_v1 = z.object({
   type: z.literal('overlay'),
   id: z.string(),
   startTime: z.number(), // Seconds
@@ -28,7 +31,36 @@ const overlaySchema = z.object({
   text: z.string(), // Sanitized HTML from Wysiwyg editor
   pauseWhenVisible: z.boolean().optional().default(true),
 });
-export type OverlayInteraction = z.infer<typeof overlaySchema>;
+const overlaySchema_v2 = overlaySchema_v1.omit({ text: true }).extend({
+  v: z.literal(2), // Schema version
+  content_wysiwyg: z.string(), // Sanitized HTML from Wysiwyg editor
+});
+// Overlay: An overlay is shown on top of the video over a span of time
+const overlaySchema = z
+  .union([overlaySchema_v1, overlaySchema_v2])
+  .transform((val): z.infer<typeof overlaySchema_v2> => {
+    if (!Object.hasOwn(val, 'v')) {
+      // Migration from v1 to v2
+      const val_v1 = val as z.infer<typeof overlaySchema_v1>;
+      const { text, ...val_v1_rest } = val_v1;
+      const val_v2 = {
+        v: 2,
+        content_wysiwyg: text,
+        ...val_v1_rest,
+      } as z.infer<typeof overlaySchema_v2>;
+      console.log(
+        'Migrating from overlaySchema_v1 to overlaySchema_v2',
+        'v1:',
+        val_v1,
+        'v2:',
+        val_v2
+      );
+      return val_v2;
+    } else {
+      return val as z.infer<typeof overlaySchema_v2>;
+    }
+  });
+export type OverlayInteraction = z.infer<typeof overlaySchema_v2>;
 
 // LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
 // point in the video for the student to solve.
