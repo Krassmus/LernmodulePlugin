@@ -15,9 +15,6 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
     {
         // 1. Import all of the files from the zip, except for task_definition.json
         //    and files_metadata.json, as Files/FileRefs using Stud.IP's SORM.
-        // TODO: Import WYSIWYG Editor embedded image files and rewrite the URLs
-        //  in any WYSIWYG html blobs.
-
         // Load the metadata for the files.
         // TODO: Consider using JSON Schema validation, as in the Courseware,
         //  to validate the contents of files_metadata.json.
@@ -74,9 +71,23 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         $task_definition = json_decode($task_definition_contents, true);
         self::traverseArray($task_definition, function(&$array, $key, $value) use ($file_ids_map) {
             if ($key === 'file_id') {
+                // We made our lives easy and simply saved the file by its ID under 'file_id' :)
                 $old_id = $value;
                 $new_id = $file_ids_map[$old_id];
                 $array['file_id'] = $new_id;
+            } else if (self::is_wysiwyg_html($array, $key, $value)) {
+                // The WYSIWYG Editor makes our lives more complicated.
+                // We need to reach inside the WYSIWYG HTML and rewrite URLs,
+                // fixing up the 'file_id' parameter where appropriate.
+                // Fortunately, we can do this in a simple way: Just grep for each
+                // old ID and replace it with the respective new ID wherever it occurs
+                // in the WYSIWYG-HTML. I think there is little risk that we
+                // will mess anything up by doing this.
+                $replaced_html = $value;
+                foreach($file_ids_map as $old_id => $new_id) {
+                    $replaced_html = str_replace($old_id, $new_id, $replaced_html);
+                }
+                $array[$key] = $replaced_html;
             }
         });
 
@@ -321,11 +332,13 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
      * @return string[] Array of file IDs.
      */
     private static function extract_file_ids_from_wysiwyg_html(string $html) {
+        // I recommend using https://regex101.com/ to interpret and debug this
+        // complex regex if it gives you any trouble. -Ann
         $regex = preg_quote($GLOBALS['ABSOLUTE_URI_STUDIP'], '/') . 'sendfile\.php\?(?:\w+=[\w\+\.]+&amp;)*file_id=([a-f0-9]{32})';
         $matches = [];
         $result = preg_match_all("/$regex/", $html, $matches);
         if ($result === false) {
-            throw new Exception('preg_match_all hat mit "false" fehlgeschlagen. Regex: ' . $regex);
+            throw new Exception('preg_match_all hat fehlgeschlagen. Regex: ' . $regex);
         }
         return $matches[1];
     }
