@@ -38,7 +38,7 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
             // FileManager will find the size for us.
             $uploaded_files['size'][] = null;
             $uploaded_files['tmp_name'][] = $file_path;
-            // TODO Import file description and terms of use as well.
+            // TODO Import file description and terms of use as well?
         }
         $folder = $this->getWysiwygFolder();
         $validatedFiles = FileManager::handleFileUpload(
@@ -94,8 +94,6 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         // 4. Save the new task_definition with the correct file IDs.
         $this['customdata'] = json_encode($task_definition);
         $this->store();
-
-        // TODO Import the Infotext and image for the Lernmodul.
     }
 
     /**
@@ -285,7 +283,7 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
             $files_metadata[$file_id] = [
                 'name' => $file_ref->name,
                 'description' => $file_ref->description,
-                // TODO Export terms of use metadata as well.
+                // TODO Export terms of use metadata as well?
             ];
         }
 
@@ -298,8 +296,6 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         $files_metadata_filename = "{$temp_prefix}.files_metadata.json";
         file_put_contents($files_metadata_filename, $files_metadata_encoded);
         $zip->addFile($files_metadata_filename, 'files_metadata.json');
-
-        // TODO: Export Infotext and image for the Lernmodul.
 
         $zip->close();
         return $zip_file_path;
