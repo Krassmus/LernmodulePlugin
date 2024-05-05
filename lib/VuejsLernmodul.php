@@ -50,7 +50,7 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
 
         // 2. Make a map from old file_ids to new file_ids.
         $file_ids_map = [];
-        assert(count($filenames) == count($validatedFiles['files']));
+        assert(count($filenames) === count($validatedFiles['files']));
         // The order of $validatedFiles is the same as the order of $uploaded_files,
         // so we can match files up by index.
         // However, we must first re-index $filenames numerically to make the indices
@@ -73,7 +73,7 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         }
         $task_definition = json_decode($task_definition_contents, true);
         self::traverseArray($task_definition, function(&$array, $key, $value) use ($file_ids_map) {
-            if ($key == 'file_id') {
+            if ($key === 'file_id') {
                 $old_id = $value;
                 $new_id = $file_ids_map[$old_id];
                 $array['file_id'] = $new_id;
@@ -231,39 +231,52 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         file_put_contents($task_definition_filename, $task_definition_encoded);
         $zip->addFile($task_definition_filename, 'task_definition.json');
 
-        /**
-         * Get all images, videos, etc. and add them to the zip
-         * By convention, they are all saved by ID under keys named "file_id".
-         * TODO: Export WYSIWYG Editor embedded image files (which are saved only
-         *  using their URLs) as well.
-         * */
-        // Map from file_id => file path
-        $files = [];
-        // Map from file_id => ['name' => name, 'description' => description]
-        $files_metadata = [];
+        // Find the IDs of all files (images, videos, etc.) used in the Lernmodul
+        // that should be exported.
+        $file_ids = [];
         self::traverseArray(
             $task_definition,
-            function($array, $key, $value) use (&$files, &$files_metadata) {
-                if ($key == 'file_id') {
-                    $file_ref = FileRef::find($value);
-                    if (is_null($file_ref)) {
-                        throw new Exception("Es wurde kein File-Ref mit der ID {$value} gefunden.");
-                    }
-                    $path = $file_ref->file->getPath();
-                    if (is_null($path)) {
-                        throw new Exception("getPath() hat für das File-Ref mit der ID {$value} null geliefert.");
-                    }
-                    $files[$value] = $path;
-                    $files_metadata[$value] = [
-                        'name' => $file_ref->name,
-                        'description' => $file_ref->description,
-                        // TODO Export terms of use metadata as well.
-                    ];
+            function($array, $key, $value) use (&$file_ids) {
+                if ($key === 'file_id') {
+                    // To make things easy on ourselves, we try to save all
+                    // references to embedded files under keys named 'file_id'.
+                    $file_ids[] = $value;
+                } else if (self::is_wysiwyg_html($array, $key, $value)) {
+                    // The WYSIWYG editor makes things tricky, because it produces
+                    // a big blob of HTML that can have images embedded in it.
+                    // We should export any files in the Lernmodul that were
+                    // uploaded using the WYSIWYG editor.
+                    $wysiwyg_file_ids = self::extract_file_ids_from_wysiwyg_html($value);
+                    array_push($file_ids, ...$wysiwyg_file_ids);
                 }
             }
         );
+
+        // Now that we have a list of file IDs, use SORM to get the paths to the
+        // files on disk, as well as the files' metadata that should be exported.
+        // Map from file_id => file path
+        $file_paths_by_id = [];
+        // Map from file_id => ['name' => name, 'description' => description]
+        $files_metadata = [];
+        foreach ($file_ids as $file_id) {
+            $file_ref = FileRef::find($file_id);
+            if (is_null($file_ref)) {
+                throw new Exception("Es wurde kein File-Ref mit der ID {$file_id} gefunden.");
+            }
+            $path = $file_ref->file->getPath();
+            if (is_null($path)) {
+                throw new Exception("getPath() hat für das File-Ref mit der ID {$file_id} null geliefert.");
+            }
+            $file_paths_by_id[$file_id] = $path;
+            $files_metadata[$file_id] = [
+                'name' => $file_ref->name,
+                'description' => $file_ref->description,
+                // TODO Export terms of use metadata as well.
+            ];
+        }
+
         // Add all the files we found to the zip, named according to their file_id.
-        foreach ($files as $id => $path) {
+        foreach ($file_paths_by_id as $id => $path) {
             $zip->addFile($path, $id);
         }
         // Add the metadata of all files to the zip as well.
@@ -276,6 +289,45 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
 
         $zip->close();
         return $zip_file_path;
+    }
+
+    /**
+     * @param array $array
+     * @param string $key a key in the array
+     * @return bool true iff the value stored under key should be treated as
+     * wysiwyg html during import/export
+     */
+    private static function is_wysiwyg_html($array, $key, $value): bool {
+        if (str_ends_with($key, '_wysiwyg')) {
+            // All future wysiwyg html should be stored under a key ending with _wysiwyg, please!
+            return true;
+        } else {
+            // Certain existing task types save WYSIWYG-generated HTML under
+            // the key 'template'. Rather than change the data schema, which
+            // would force us to write a lot of migration boilerplate and refactor
+            // a lot of Vue code, we just special-case them here.
+            return $key === 'template' &&
+                in_array($array['task_type'], ['DragTheWords', 'MarkTheWords', 'FillInTheBlanks']);
+        }
+    }
+
+    /**
+     * Use a regex to extract, as best we can, file_ids of images embedded in
+     * the given rich text HTML string created in the Stud.IP WYSIWYG editor.
+     * They are embedded using tags like <img src='...'>.
+     * The 'src' attribute of each <img> tag should look something like this:
+     * http://localhost/54/sendfile.php?type=0&file_id=31c8022aed2992c052a4d471cb0eb58e&file_name=banan%C3%A1baby.jpeg
+     * @param string $html
+     * @return string[] Array of file IDs.
+     */
+    private static function extract_file_ids_from_wysiwyg_html(string $html) {
+        $regex = preg_quote($GLOBALS['ABSOLUTE_URI_STUDIP'], '/') . 'sendfile\.php\?(?:\w+=[\w\+\.]+&amp;)*file_id=([a-f0-9]{32})';
+        $matches = [];
+        $result = preg_match_all("/$regex/", $html, $matches);
+        if ($result === false) {
+            throw new Exception('preg_match_all hat mit "false" fehlgeschlagen. Regex: ' . $regex);
+        }
+        return $matches[1];
     }
 
 }
