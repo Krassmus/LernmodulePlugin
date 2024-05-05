@@ -274,6 +274,9 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
             if (is_null($file_ref)) {
                 throw new Exception("Es wurde kein File-Ref mit der ID {$file_id} gefunden.");
             }
+            // TODO -- Important: Make sure the user is allowed to access the given file_id!
+            //  Otherwise, this will become an exploit by which one can download
+            //  any file, just by knowing its ID.
             $path = $file_ref->file->getPath();
             if (is_null($path)) {
                 throw new Exception("getPath() hat für das File-Ref mit der ID {$file_id} null geliefert.");
