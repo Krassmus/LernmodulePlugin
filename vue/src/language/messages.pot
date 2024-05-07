@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: src/components/interactiveVideo/AddInteractions.vue:248
+#: src/components/interactiveVideo/AddInteractions.vue:249
 msgid "%{ interaction } löschen"
 msgstr ""
 
@@ -36,11 +36,11 @@ msgstr ""
 msgid "Abspielen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:113
 #: src/components/interactiveVideo/SelectVideo.vue:118
 #: src/components/interactiveVideo/SelectVideo.vue:123
-#: src/components/interactiveVideo/SelectVideo.vue:37
-#: src/components/interactiveVideo/SelectVideo.vue:87
+#: src/components/interactiveVideo/SelectVideo.vue:128
+#: src/components/interactiveVideo/SelectVideo.vue:42
+#: src/components/interactiveVideo/SelectVideo.vue:92
 msgid "Aktuelle Position setzen"
 msgstr ""
 
@@ -70,10 +70,10 @@ msgstr ""
 msgid "Alternativer Text"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:109
 #: src/components/interactiveVideo/SelectVideo.vue:114
-#: src/components/interactiveVideo/SelectVideo.vue:33
-#: src/components/interactiveVideo/SelectVideo.vue:83
+#: src/components/interactiveVideo/SelectVideo.vue:119
+#: src/components/interactiveVideo/SelectVideo.vue:38
+#: src/components/interactiveVideo/SelectVideo.vue:88
 msgid "Anfangen um"
 msgstr ""
 
@@ -84,13 +84,27 @@ msgstr ""
 msgid "Antworten alphabetisch sortieren"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:22
-#: src/components/LernmoduleEditor.vue:32
+#: src/components/PairingEditor.vue:26
+#: src/components/PairingEditor.vue:27
+#: src/components/PairingEditor.vue:31
+#: src/components/PairingEditor.vue:34
+#: src/components/PairingEditor.vue:36
+#: src/components/PairingEditor.vue:53
+#: src/components/PairingEditor.vue:54
+#: src/components/PairingEditor.vue:61
+#: src/components/PairingEditor.vue:64
+#: src/components/PairingEditor.vue:67
+#: src/components/PairingEditor.vue:69
+msgid "Audio"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:30
+#: src/components/LernmoduleEditor.vue:40
 msgid "Aufgabenbeschreibung"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:28
-#: src/components/LernmoduleEditor.vue:44
+#: src/components/LernmoduleEditor.vue:36
+#: src/components/LernmoduleEditor.vue:52
 msgid "Aufgabentyp auswählen:"
 msgstr ""
 
@@ -99,10 +113,10 @@ msgstr ""
 msgid "Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:104
 #: src/components/interactiveVideo/SelectVideo.vue:109
-#: src/components/interactiveVideo/SelectVideo.vue:28
-#: src/components/interactiveVideo/SelectVideo.vue:78
+#: src/components/interactiveVideo/SelectVideo.vue:114
+#: src/components/interactiveVideo/SelectVideo.vue:33
+#: src/components/interactiveVideo/SelectVideo.vue:83
 msgid "Automatisch abspielen"
 msgstr ""
 
@@ -117,6 +131,10 @@ msgstr ""
 
 #: src/components/interactiveVideo/VideoPlayer.vue:44
 msgid "Bearbeiten"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:148
+msgid "Beim Speichern ist ein Fehler aufgetreten."
 msgstr ""
 
 #: src/components/DragTheWordsEditor.vue:104
@@ -138,6 +156,17 @@ msgstr ""
 #: src/components/EditedMemoryCard.vue:6
 #: src/components/ImageSequencingEditorImage.vue:3
 #: src/components/ImageSequencingEditorImage.vue:4
+#: src/components/PairingEditor.vue:20
+#: src/components/PairingEditor.vue:21
+#: src/components/PairingEditor.vue:25
+#: src/components/PairingEditor.vue:28
+#: src/components/PairingEditor.vue:30
+#: src/components/PairingEditor.vue:47
+#: src/components/PairingEditor.vue:48
+#: src/components/PairingEditor.vue:55
+#: src/components/PairingEditor.vue:58
+#: src/components/PairingEditor.vue:61
+#: src/components/PairingEditor.vue:63
 msgid "Bild"
 msgstr ""
 
@@ -162,6 +191,10 @@ msgstr ""
 msgid "Das eingegebene Wert muss größer als 0 sein."
 msgstr ""
 
+#: src/components/FileUpload.vue:53
+msgid "Das Verzeichnis \"Wysiwyg Uploads\" ist nicht vorhanden. Es können keine Dateien hochgeladen werden."
+msgstr ""
+
 #: src/components/EditedImagePair.vue:13
 #: src/components/EditedImagePair.vue:14
 #: src/components/EditedImagePair.vue:22
@@ -184,7 +217,7 @@ msgstr ""
 msgid "Datei wird hochgeladen"
 msgstr ""
 
-#: src/components/courseware-components-ported-to-vue3/FolderPicker.vue:126
+#: src/components/courseware-components-ported-to-vue3/FolderPicker.vue:109
 msgid "Dateibereich dieser Veranstaltung"
 msgstr ""
 
@@ -199,21 +232,27 @@ msgstr ""
 
 #: src/components/DragTheWordsEditor.vue:3
 #: src/components/DragTheWordsEditor.vue:4
-#: src/components/LernmoduleEditor.vue:36
-#: src/components/LernmoduleEditor.vue:52
-#: src/components/LernmoduleEditor.vue:56
-#: src/models/TaskDefinition.ts:526
+#: src/components/LernmoduleEditor.vue:42
+#: src/components/LernmoduleEditor.vue:58
+#: src/components/LernmoduleEditor.vue:62
+#: src/models/TaskDefinition.ts:607
 msgid "Drag The Words"
+msgstr ""
+
+#: src/components/PairingEditor.vue:10
+#: src/components/PairingEditor.vue:11
+#: src/components/PairingEditor.vue:18
+msgid "Eigenschaften"
 msgstr ""
 
 #: src/components/interactiveVideo/AddInteractions.vue:14
 #: src/components/interactiveVideo/AddInteractions.vue:18
-#: src/components/interactiveVideo/AddInteractions.vue:216
+#: src/components/interactiveVideo/AddInteractions.vue:217
 #: src/components/interactiveVideo/AddInteractions.vue:7
 #: src/components/interactiveVideo/AddInteractions.vue:8
 #: src/components/interactiveVideo/interactions/OverlayInteraction.vue:4
 #: src/components/interactiveVideo/interactions/OverlayInteraction.vue:8
-#: src/models/InteractiveVideoTask.ts:89
+#: src/models/InteractiveVideoTask.ts:170
 msgid "Einblendung"
 msgstr ""
 
@@ -228,10 +267,10 @@ msgstr ""
 #: src/components/FindTheWordsEditor.vue:17
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:10
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:9
-#: src/components/interactiveVideo/SelectVideo.vue:100
 #: src/components/interactiveVideo/SelectVideo.vue:105
-#: src/components/interactiveVideo/SelectVideo.vue:24
-#: src/components/interactiveVideo/SelectVideo.vue:74
+#: src/components/interactiveVideo/SelectVideo.vue:110
+#: src/components/interactiveVideo/SelectVideo.vue:29
+#: src/components/interactiveVideo/SelectVideo.vue:79
 #: src/components/QuestionEditor.vue:41
 #: src/components/QuestionEditor.vue:43
 #: src/components/QuestionEditor.vue:76
@@ -292,26 +331,26 @@ msgstr ""
 
 #: src/components/FillInTheBlanksEditor.vue:3
 #: src/components/FillInTheBlanksEditor.vue:4
-#: src/components/LernmoduleEditor.vue:31
-#: src/components/LernmoduleEditor.vue:47
-#: src/components/LernmoduleEditor.vue:51
-#: src/models/TaskDefinition.ts:528
+#: src/components/LernmoduleEditor.vue:39
+#: src/components/LernmoduleEditor.vue:55
+#: src/components/LernmoduleEditor.vue:59
+#: src/models/TaskDefinition.ts:609
 msgid "Fill In The Blanks"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:33
-#: src/components/LernmoduleEditor.vue:49
-#: src/components/LernmoduleEditor.vue:53
-#: src/models/TaskDefinition.ts:530
+#: src/components/LernmoduleEditor.vue:46
+#: src/components/LernmoduleEditor.vue:62
+#: src/components/LernmoduleEditor.vue:66
+#: src/models/TaskDefinition.ts:611
 msgid "Find The Hotspot"
 msgstr ""
 
 #: src/components/FindTheWordsEditor.vue:3
 #: src/components/FindTheWordsEditor.vue:4
-#: src/components/LernmoduleEditor.vue:34
-#: src/components/LernmoduleEditor.vue:50
-#: src/components/LernmoduleEditor.vue:54
-#: src/models/TaskDefinition.ts:532
+#: src/components/LernmoduleEditor.vue:49
+#: src/components/LernmoduleEditor.vue:65
+#: src/components/LernmoduleEditor.vue:69
+#: src/models/TaskDefinition.ts:613
 msgid "Find The Words"
 msgstr ""
 
@@ -323,14 +362,18 @@ msgstr ""
 msgid "Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den \"Lücke hinzufügen\"–Button. Sie können alternative Antworten mit einem Schrägstrich (/) hinzufügen. Außerdem können Sie einen Tooltip mit einem Doppelpunkt (:) hinzufügen."
 msgstr ""
 
+#: src/components/LernmoduleEditor.vue:143
+msgid "Gespeichert"
+msgstr ""
+
 #: src/components/FillInTheBlanksEditor.vue:18
 #: src/components/FillInTheBlanksEditor.vue:19
 #: src/components/FillInTheBlanksEditor.vue:30
 msgid "Groß- und Kleinschreibung beachten"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:16
-#: src/components/LernmoduleEditor.vue:26
+#: src/components/LernmoduleEditor.vue:24
+#: src/components/LernmoduleEditor.vue:34
 msgid "Grunddaten"
 msgstr ""
 
@@ -355,26 +398,14 @@ msgstr ""
 msgid "Hochgeladenes Video: "
 msgstr ""
 
-#: src/components/EditedImagePair.vue:3
-#: src/components/EditedImagePair.vue:4
-msgid "Image Pair"
-msgstr ""
-
-#: src/components/LernmoduleEditor.vue:38
-#: src/components/LernmoduleEditor.vue:54
-#: src/components/LernmoduleEditor.vue:58
-#: src/models/TaskDefinition.ts:534
-msgid "Image Pairing"
-msgstr ""
-
-#: src/components/LernmoduleEditor.vue:40
-#: src/components/LernmoduleEditor.vue:56
-#: src/components/LernmoduleEditor.vue:60
-#: src/models/TaskDefinition.ts:536
+#: src/components/LernmoduleEditor.vue:52
+#: src/components/LernmoduleEditor.vue:68
+#: src/components/LernmoduleEditor.vue:72
+#: src/models/TaskDefinition.ts:617
 msgid "Image Sequencing"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:538
+#: src/models/TaskDefinition.ts:619
 msgid "Interactive Video"
 msgstr ""
 
@@ -391,9 +422,19 @@ msgstr ""
 msgid "Karte"
 msgstr ""
 
-#: src/components/ImagePairingEditor.vue:13
-#: src/components/ImagePairingEditor.vue:14
-#: src/components/ImagePairingEditor.vue:24
+#: src/components/PairingEditor.vue:12
+#: src/components/PairingEditor.vue:13
+#: src/components/PairingEditor.vue:20
+msgid "Karte A"
+msgstr ""
+
+#: src/components/PairingEditor.vue:39
+#: src/components/PairingEditor.vue:40
+#: src/components/PairingEditor.vue:47
+#: src/components/PairingEditor.vue:53
+msgid "Karte B"
+msgstr ""
+
 #: src/components/MemoryEditor.vue:16
 #: src/components/MemoryEditor.vue:17
 #: src/components/MemoryEditor.vue:26
@@ -404,10 +445,10 @@ msgstr ""
 msgid "Karte löschen"
 msgstr ""
 
-#: src/components/ImagePairingEditor.vue:19
-#: src/components/ImagePairingEditor.vue:20
-#: src/components/ImagePairingEditor.vue:30
-#: src/components/ImagePairingEditor.vue:35
+#: src/components/FileUpload.vue:128
+msgid "Kein Ordner ist ausgewählt. Die Datei kann nicht hochgeladen werden."
+msgstr ""
+
 #: src/components/ImageSequencingEditor.vue:19
 #: src/components/ImageSequencingEditor.vue:20
 #: src/components/ImageSequencingEditor.vue:30
@@ -470,12 +511,12 @@ msgstr ""
 msgid "manuell per Button"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:37
-#: src/components/LernmoduleEditor.vue:53
-#: src/components/LernmoduleEditor.vue:57
+#: src/components/LernmoduleEditor.vue:43
+#: src/components/LernmoduleEditor.vue:59
+#: src/components/LernmoduleEditor.vue:63
 #: src/components/MarkTheWordsEditor.vue:3
 #: src/components/MarkTheWordsEditor.vue:4
-#: src/models/TaskDefinition.ts:540
+#: src/models/TaskDefinition.ts:621
 msgid "Mark The Words"
 msgstr ""
 
@@ -505,7 +546,10 @@ msgstr ""
 msgid "Mehrere Versuche erlauben"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:542
+#: src/components/LernmoduleEditor.vue:48
+#: src/components/LernmoduleEditor.vue:64
+#: src/components/LernmoduleEditor.vue:68
+#: src/models/TaskDefinition.ts:623
 msgid "Memory"
 msgstr ""
 
@@ -534,11 +578,15 @@ msgstr ""
 msgid "Mitteilung, wenn nicht alle Lücken ausgefüllt sind:"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:122
+#: src/components/LernmoduleEditor.vue:141
+msgid "Modifiziert"
+msgstr ""
+
+#: src/components/interactiveVideo/SelectVideo.vue:101
 #: src/components/interactiveVideo/SelectVideo.vue:127
 #: src/components/interactiveVideo/SelectVideo.vue:132
-#: src/components/interactiveVideo/SelectVideo.vue:46
-#: src/components/interactiveVideo/SelectVideo.vue:96
+#: src/components/interactiveVideo/SelectVideo.vue:137
+#: src/components/interactiveVideo/SelectVideo.vue:51
 msgid "Navigation deaktivieren"
 msgstr ""
 
@@ -569,11 +617,11 @@ msgstr ""
 msgid "Neues Video hochladen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:125
+#: src/components/interactiveVideo/SelectVideo.vue:104
 #: src/components/interactiveVideo/SelectVideo.vue:130
 #: src/components/interactiveVideo/SelectVideo.vue:135
-#: src/components/interactiveVideo/SelectVideo.vue:49
-#: src/components/interactiveVideo/SelectVideo.vue:99
+#: src/components/interactiveVideo/SelectVideo.vue:140
+#: src/components/interactiveVideo/SelectVideo.vue:54
 msgid "Nicht deaktiviert"
 msgstr ""
 
@@ -582,11 +630,23 @@ msgstr ""
 msgid "Ordner-Filter"
 msgstr ""
 
+#: src/components/EditedImagePair.vue:3
+#: src/components/EditedImagePair.vue:4
+msgid "Paar"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:50
+#: src/components/LernmoduleEditor.vue:66
+#: src/components/LernmoduleEditor.vue:70
+#: src/models/TaskDefinition.ts:615
+msgid "Pairing"
+msgstr ""
+
 #: src/components/interactiveVideo/AddInteractions.vue:58
 msgid "Pausieren"
 msgstr ""
 
-#: src/components/courseware-components-ported-to-vue3/FolderPicker.vue:127
+#: src/components/courseware-components-ported-to-vue3/FolderPicker.vue:110
 msgid "Persönlicher Dateibereich"
 msgstr ""
 
@@ -605,12 +665,12 @@ msgstr ""
 msgid "Prozent"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:35
-#: src/components/LernmoduleEditor.vue:51
-#: src/components/LernmoduleEditor.vue:55
+#: src/components/LernmoduleEditor.vue:41
+#: src/components/LernmoduleEditor.vue:57
+#: src/components/LernmoduleEditor.vue:61
 #: src/components/QuestionEditor.vue:3
 #: src/components/QuestionEditor.vue:5
-#: src/models/TaskDefinition.ts:544
+#: src/models/TaskDefinition.ts:625
 msgid "Question"
 msgstr ""
 
@@ -638,10 +698,10 @@ msgstr ""
 #: src/components/CoursewareBlock.vue:7
 #: src/components/LernmoduleEditor.vue:10
 #: src/components/LernmoduleEditor.vue:3
-#: src/components/LernmoduleEditor.vue:50
 #: src/components/LernmoduleEditor.vue:6
-#: src/components/LernmoduleEditor.vue:70
-#: src/components/LernmoduleEditor.vue:73
+#: src/components/LernmoduleEditor.vue:63
+#: src/components/LernmoduleEditor.vue:83
+#: src/components/LernmoduleEditor.vue:86
 msgid "Speichern"
 msgstr ""
 
@@ -653,6 +713,20 @@ msgstr ""
 #: src/components/interactiveVideo/SelectVideo.vue:13
 #: src/components/interactiveVideo/SelectVideo.vue:14
 msgid "Stud.IP-Video"
+msgstr ""
+
+#: src/components/PairingEditor.vue:23
+#: src/components/PairingEditor.vue:24
+#: src/components/PairingEditor.vue:28
+#: src/components/PairingEditor.vue:31
+#: src/components/PairingEditor.vue:33
+#: src/components/PairingEditor.vue:50
+#: src/components/PairingEditor.vue:51
+#: src/components/PairingEditor.vue:58
+#: src/components/PairingEditor.vue:61
+#: src/components/PairingEditor.vue:64
+#: src/components/PairingEditor.vue:66
+msgid "Text"
 msgstr ""
 
 #: src/components/DragTheWordsEditor.vue:29
@@ -689,9 +763,19 @@ msgstr ""
 msgid "Text im Button:"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:18
-#: src/components/LernmoduleEditor.vue:28
+#: src/components/LernmoduleEditor.vue:26
+#: src/components/LernmoduleEditor.vue:36
 msgid "Titel"
+msgstr ""
+
+#: src/components/PairingEditor.vue:14
+#: src/components/PairingEditor.vue:15
+#: src/components/PairingEditor.vue:22
+#: src/components/PairingEditor.vue:41
+#: src/components/PairingEditor.vue:42
+#: src/components/PairingEditor.vue:49
+#: src/components/PairingEditor.vue:55
+msgid "Typ"
 msgstr ""
 
 #: src/components/interactiveVideo/SelectVideo.vue:25
@@ -717,10 +801,10 @@ msgstr ""
 msgid "Verkleinern"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:16
-#: src/components/interactiveVideo/SelectVideo.vue:66
-#: src/components/interactiveVideo/SelectVideo.vue:86
-#: src/components/interactiveVideo/SelectVideo.vue:92
+#: src/components/interactiveVideo/SelectVideo.vue:21
+#: src/components/interactiveVideo/SelectVideo.vue:71
+#: src/components/interactiveVideo/SelectVideo.vue:91
+#: src/components/interactiveVideo/SelectVideo.vue:97
 msgid "Video löschen"
 msgstr ""
 
@@ -741,26 +825,30 @@ msgstr ""
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:84
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:88
 #: src/components/interactiveVideo/VideoPlayer.vue:37
-#: src/components/LernmoduleEditor.vue:54
-#: src/components/LernmoduleEditor.vue:74
-#: src/components/LernmoduleEditor.vue:81
+#: src/components/LernmoduleEditor.vue:67
+#: src/components/LernmoduleEditor.vue:87
+#: src/components/LernmoduleEditor.vue:94
 msgid "Vorschau"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:102
-#: src/components/interactiveVideo/SelectVideo.vue:128
+#: src/components/interactiveVideo/SelectVideo.vue:107
 #: src/components/interactiveVideo/SelectVideo.vue:133
 #: src/components/interactiveVideo/SelectVideo.vue:138
-#: src/components/interactiveVideo/SelectVideo.vue:52
+#: src/components/interactiveVideo/SelectVideo.vue:143
+#: src/components/interactiveVideo/SelectVideo.vue:57
 msgid "Vorspulen deaktiviert"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:105
-#: src/components/interactiveVideo/SelectVideo.vue:131
+#: src/components/interactiveVideo/SelectVideo.vue:110
 #: src/components/interactiveVideo/SelectVideo.vue:136
 #: src/components/interactiveVideo/SelectVideo.vue:141
-#: src/components/interactiveVideo/SelectVideo.vue:55
+#: src/components/interactiveVideo/SelectVideo.vue:146
+#: src/components/interactiveVideo/SelectVideo.vue:60
 msgid "Vorspulen und Rückspulen deaktiviert"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:146
+msgid "Wird gespeichert..."
 msgstr ""
 
 #: src/components/FindTheWordsEditor.vue:8
@@ -802,16 +890,16 @@ msgstr ""
 msgid "Zu %{ interaction } springen"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:10
+#: src/components/LernmoduleEditor.vue:14
 #: src/components/LernmoduleEditor.vue:17
-#: src/components/LernmoduleEditor.vue:7
+#: src/components/LernmoduleEditor.vue:24
 msgctxt "Im Sinne von undo/redo"
 msgid "Rückgängig"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:10
-#: src/components/LernmoduleEditor.vue:13
+#: src/components/LernmoduleEditor.vue:17
 #: src/components/LernmoduleEditor.vue:20
+#: src/components/LernmoduleEditor.vue:27
 msgctxt "Im Sinne von undo/redo"
 msgid "Wiederherstellen"
 msgstr ""
