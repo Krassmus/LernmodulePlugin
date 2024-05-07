@@ -82,7 +82,9 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
                 // Fortunately, we can do this in a simple way: Just grep for each
                 // old ID and replace it with the respective new ID wherever it occurs
                 // in the WYSIWYG-HTML. I think there is little risk that we
-                // will mess anything up by doing this.
+                // will mess anything up by doing this, because file IDs are
+                // 32-character-long hexadecimal strings that are unlikely to
+                // appear here by mistake outside of the files' URLs.
                 $replaced_html = $value;
                 foreach($file_ids_map as $old_id => $new_id) {
                     $replaced_html = str_replace($old_id, $new_id, $replaced_html);
@@ -270,11 +272,11 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         foreach ($file_ids as $file_id) {
             $file_ref = FileRef::find($file_id);
             if (is_null($file_ref)) {
-                throw new Exception("Es wurde kein File-Ref mit der ID {$file_id} gefunden.");
+                throw new Exception("Es wurde kein File-Ref mit der ID $file_id gefunden.");
             }
-            // TODO -- Important: Make sure the user is allowed to access the given file_id!
-            //  Otherwise, this will become an exploit by which one can download
-            //  any file, just by knowing its ID.
+            if (!$file_ref->getFileType()->isDownloadable($GLOBALS['user']->id)) {
+                throw new Exception("Die Datei mit der ID $file_id ist für den eingeloggen Nutzer nicht verfügbar.");
+            }
             $path = $file_ref->file->getPath();
             if (is_null($path)) {
                 throw new Exception("getPath() hat für das File-Ref mit der ID {$file_id} null geliefert.");
