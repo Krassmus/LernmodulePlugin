@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-07 13:59+0200\n"
-"PO-Revision-Date: 2024-03-07 14:59+0000\n"
+"PO-Revision-Date: 2024-05-07 12:15+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/rasmusfuhse-"
-"lernmoduleplugin/php/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/"
+"rasmusfuhse-lernmoduleplugin/php/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,77 +21,73 @@ msgstr ""
 
 #: ../lib/CoursewareBlocks/PairingBlock.php:23
 msgid "LMB - Image Pairing"
-msgstr ""
+msgstr "LMB - Image Pairing"
 
 #: ../lib/CoursewareBlocks/PairingBlock.php:30
 msgid ""
 "Eine Lernaufgabe, wo Paare von Bildern zu einander gematcht werden sollen."
-msgstr ""
+msgstr "An assignment where pairs of images should be matched together."
 
 #: ../lib/CoursewareBlocks/DragTheWordsBlock.php:23
 msgid "LMB - Drag The Words"
-msgstr ""
+msgstr "LMB - Drag The Words"
 
 #: ../lib/CoursewareBlocks/DragTheWordsBlock.php:30
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, wo Wörter in die Lücken in einem Text gezogen werden "
 "sollen."
-msgstr ""
-"An assignment where the gaps in a text are to be filled in by students."
+msgstr "An assignment where words should be placed into gaps in a text."
 
 #: ../lib/CoursewareBlocks/MemoryBlock.php:23
 msgid "LMB - Memory"
-msgstr ""
+msgstr "LMB - Memory"
 
 #: ../lib/CoursewareBlocks/MemoryBlock.php:30
 msgid "TODO"
-msgstr ""
+msgstr "TODO"
 
 #: ../lib/CoursewareBlocks/QuestionBlock.php:23
 msgid "LMB - Frage"
-msgstr ""
+msgstr "LMB - Question"
 
 #: ../lib/CoursewareBlocks/QuestionBlock.php:30
 msgid ""
 "Eine Lernaufgabe, wo eine Multiple-Choice-Frage beantwortet werden soll."
-msgstr ""
+msgstr "An assignment where a multiple choice question should be answered."
 
 #: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:23
 msgid "LMB - Interactive Video"
-msgstr ""
+msgstr "LMB - Interactive Video"
 
 #: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:30
 msgid ""
 "Spielt ein mit Interaktionen angereichertes Video ab.  Andere LMB-Aufgaben "
 "können zu bestimmten Zeitpunkten im Video eingespielt werden."
 msgstr ""
+"Plays a video that has been enhanced with interactive elements. Other LMB "
+"tasks can be inserted at specific times in the video."
 
 #: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:23
 msgid "LMB - Mark The Words"
-msgstr ""
+msgstr "LMB - Mark The Words"
 
 #: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:30
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, wo bestimmte Wörter in einem Text markiert werden sollen."
-msgstr ""
-"An assignment where the gaps in a text are to be filled in by students."
+msgstr "An assignment where certain words in a text should be marked."
 
 #: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:23
 msgid "LMB - Fill In The Blanks"
-msgstr ""
+msgstr "LMB - Fill In The Blanks"
 
 #: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:30
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, wo die Lücken in einem Lückentext ausgefüllt werden sollen."
-msgstr ""
-"An assignment where the gaps in a text are to be filled in by students."
+msgstr "An assignment where the gaps in a text should be filled in."
 
 #: ../lib/VuejsLernmodul.php:132
 msgid "WYSIWYG-Ordner für hochgeladene Dateien konnte nicht erstellt werden!"
-msgstr ""
+msgstr "The WYSIWYG folder for uploaded files could not be created."
 
 #: ../lib/VuejsLernmodul.php:144 ../lib/VuejsLernmodul.php:155
 #: ../lib/H5pLernmodul.php:78 ../lib/H5pLernmodul.php:96
@@ -204,9 +200,8 @@ msgid "URL"
 msgstr "URL"
 
 #: ../views/vuejseditor/edit.php:35 ../views/lernmodule/view.php:49
-#, fuzzy
 msgid "Abspieloptionen bearbeiten"
-msgstr "Play options"
+msgstr "Playback options"
 
 #: ../views/h5peditor/edit.php:19
 msgid "Warte auf Javascript"
@@ -272,7 +267,7 @@ msgstr "No modules completed yet."
 
 #: ../views/lernmodule/add.php:11
 msgid "Stud.IP H5P Editor"
-msgstr ""
+msgstr "Stud.IP H5P Editor"
 
 #: ../views/lernmodule/add.php:16 ../controllers/h5peditor.php:762
 msgid "Editor"
@@ -324,9 +319,8 @@ msgid "Lernmodul hinzufügen"
 msgstr "Add learning module"
 
 #: ../views/lernmodule/move.php:7 ../views/lernmodule/move.php:12
-#, fuzzy
 msgid "Veranstaltung auswählen"
-msgstr "Select image"
+msgstr "Select course"
 
 #: ../views/lernmodule/move.php:28
 msgid "Verschieben"
@@ -369,9 +363,8 @@ msgid "Abspieloptionen"
 msgstr "Play options"
 
 #: ../views/lernmodule/edit.php:90
-#, fuzzy
 msgid "Infotext über dem Lernmodul"
-msgstr "Duration of learning module"
+msgstr "Description of the learning module"
 
 #: ../views/lernmodule/edit.php:98
 msgid "Adresse des Logos"
@@ -398,9 +391,8 @@ msgid "Noch kein Bild im Dateibereich"
 msgstr "No picture in file area yet"
 
 #: ../views/lernmodule/edit.php:147
-#, fuzzy
 msgid "Logo hochladen"
-msgstr "Upload"
+msgstr "Upload logo"
 
 #: ../views/lernmodule/edit.php:161
 msgid "Nutzer sollen anonym teilnehmen"
@@ -506,9 +498,8 @@ msgid "Neuen Darstellungsblock hinzufügen"
 msgstr "Add new display block"
 
 #: ../views/lernmodule/admin.php:57
-#, fuzzy
 msgid "Block hinzufügen"
-msgstr "Add learning module"
+msgstr "Add block"
 
 #: ../views/lernmodule/evaluation.php:63
 msgid "Dauer des Lernmoduls"
@@ -550,9 +541,8 @@ msgid "Bearbeiten"
 msgstr "Edit"
 
 #: ../views/h5p/admin_libraries.php:2
-#, fuzzy
 msgid "Wirklich alle ausgewählen Bibliotheken löschen?"
-msgstr "Do you really want to delete?"
+msgstr "Do you really want to delete all selected libraries?"
 
 #: ../views/h5p/admin_libraries.php:11
 msgid "Bibliothek"
@@ -597,13 +587,12 @@ msgid "Patch Version: "
 msgstr "Patch Version: "
 
 #: ../views/h5p/admin_libraries.php:56
-#, fuzzy
 msgid "Wirklich diese Bibliothek löschen?"
-msgstr "Do you really want to delete?"
+msgstr "Do you really want to delete this library?"
 
 #: ../views/h5p/admin_libraries.php:66
 msgid "Ausgewählte Löschen"
-msgstr ""
+msgstr "Delete selected"
 
 #: ../views/h5p/admin_libraries.php:78
 msgid "Bibliotheken hinzufügen"
@@ -647,13 +636,12 @@ msgid "Nur, wenn die Patch-Version höher ist"
 msgstr "Only if the patch version is higher"
 
 #: ../views/editor/metadata.php:6
-#, fuzzy
 msgid "Name des Lernmoduls"
-msgstr "Duration of learning module"
+msgstr "Name of learning module"
 
 #: ../views/editor/metadata.php:7
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../views/editor/metadata.php:11
 msgid "Logo-Bild"
@@ -664,9 +652,8 @@ msgid "Studierende müssen folgendes Lernmodul absolviert haben:"
 msgstr "Students have to complete the following learning module"
 
 #: ../controllers/h5peditor.php:37
-#, fuzzy
 msgid "Lernmodul wurde gespeichert"
-msgstr "Learning module saved succussfully."
+msgstr "Learning module saved successfully"
 
 #: ../controllers/h5peditor.php:41
 msgid "Lernmodul konnte nicht gespeichert werden. Daten unvollständig."
@@ -735,16 +722,16 @@ msgstr ""
 
 #: ../controllers/h5peditor.php:130 ../controllers/h5p.php:299
 msgid "Jahr"
-msgstr ""
+msgstr "Year"
 
 #: ../controllers/h5peditor.php:131 ../controllers/h5peditor.php:242
 #: ../controllers/h5peditor.php:729 ../controllers/h5p.php:300
 msgid "Quelle"
-msgstr ""
+msgstr "Source"
 
 #: ../controllers/h5peditor.php:132 ../controllers/h5p.php:301
 msgid "License"
-msgstr ""
+msgstr "License"
 
 #: ../controllers/h5peditor.php:133 ../controllers/h5p.php:302
 msgid "Thumbnail"
@@ -928,7 +915,7 @@ msgstr ""
 
 #: ../controllers/h5peditor.php:169 ../controllers/h5p.php:338
 msgid "Inhaltstyp"
-msgstr ""
+msgstr "Content type"
 
 #: ../controllers/h5peditor.php:170 ../controllers/h5p.php:339
 msgid "License Extras"
@@ -1102,29 +1089,24 @@ msgid ""
 msgstr "No H5P libraries found in this file that can be used "
 
 #: ../controllers/h5p.php:197
-#, fuzzy
 msgid "H5P-Bibliothek wurde gelöscht."
-msgstr "Could not use H5P libraries"
+msgstr "H5P library was deleted."
 
 #: ../controllers/h5p.php:213
-#, fuzzy
 msgid "H5P-Bibliotheken wurden gelöscht."
-msgstr "Could not use H5P libraries"
+msgstr "H5P libraries were deleted."
 
 #: ../controllers/h5p.php:493 ../controllers/html.php:42
-#, fuzzy
 msgid "Direktlink zum Lernmodul"
-msgstr "Images from learning module"
+msgstr "Direct link to learning module"
 
 #: ../controllers/participants.php:18
-#, fuzzy
 msgid "Teilnehmende"
 msgstr "Participants"
 
 #: ../controllers/editor.php:45
-#, fuzzy
 msgid "Lernmodul wurde erstellt und ist bereit zum Bearbeiten."
-msgstr "Upload and edit learning module"
+msgstr "Learning module was created and is ready to be edited."
 
 #: ../controllers/lernmodule.php:59
 #, php-format
@@ -1177,53 +1159,48 @@ msgid "Lernmodul gelöscht."
 msgstr "Learning module deleted."
 
 #: ../controllers/lernmodule.php:378
-#, fuzzy
 msgid "Block wurde gelöscht."
-msgstr "Learning module deleted."
+msgstr "Block has been deleted."
 
 #: ../controllers/lernmodule.php:400
 msgid "Einstellungen wurden gespeichert."
 msgstr "Settings saved."
 
 #: ../controllers/lernmodule.php:470
-#, fuzzy
 msgid "Quelle des Lernmoduls auswählen"
-msgstr "Duration of learning module"
+msgstr "Select the source of the learning module"
 
 #: ../controllers/lernmodule.php:530
-#, fuzzy
 msgid "Lernmodul verschieben in andere Veranstaltung"
-msgstr "Images of the course"
+msgstr "Move learning module to another course"
 
 #: ../controllers/lernmodule.php:570
-#, fuzzy
 msgid "Lernmodul wurde verschoben."
-msgstr "Create learning module"
+msgstr "Learning module was moved."
 
 #: ../controllers/vuejseditor.php:62
 msgid "'module_id' fehlt"
-msgstr ""
+msgstr "'module_id' is missing"
 
 #: ../controllers/vuejseditor.php:65
 msgid "'task_definition' fehlt"
-msgstr ""
+msgstr "'task_definition' is missing"
 
 #: ../controllers/vuejseditor.php:68
 msgid "'name' fehlt"
-msgstr ""
+msgstr "'name' is missing"
 
 #: ../controllers/vuejseditor.php:71
 msgid "'infotext' fehlt"
-msgstr ""
+msgstr "'infotext' is missing"
 
 #: ../controllers/vuejseditor.php:75
-#, fuzzy
 msgid "Lernmodul nicht gefunden."
-msgstr "Could not find learning module"
+msgstr "Could not find learning module."
 
 #: ../controllers/vuejseditor.php:81
 msgid "Block nicht gefunden."
-msgstr ""
+msgstr "Block not found."
 
 #: ../controllers/html.php:32
 msgid "Werte wurden gespeichert."
