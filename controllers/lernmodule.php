@@ -173,6 +173,9 @@ class LernmoduleController extends PluginController
             $modulecoursedata = Request::getArray("modulecourse");
             $modulecoursedata['starttime'] = strtotime($modulecoursedata['starttime']) ?: null;
             $this->modulecourse->setData($modulecoursedata);
+            if (!$this->modulecourse['gradebook_definition']) {
+                $this->modulecourse['gradebook_definition'] = null;
+            }
             $this->modulecourse->store();
 
             $success = true;
