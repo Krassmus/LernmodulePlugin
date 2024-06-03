@@ -1,0 +1,30 @@
+# This file is a template, and might need editing before it works on your project.
+
+# Die Konfigurationswerte, die unter "default" angegeben sind, gelten für alle Jobs in dieser Pipeline.
+default:
+  # Der Group Runner für die Gruppe it-dienste/studip läuft auf studip-ci01.virt.uni-oldenburg.de.
+  # Er ist erstmal dazu konfiguriert, nur Jobs mit dem Tag "studip-plugins" auszuführen.
+  tags:
+    - studip-plugins
+
+  # Der obengenannte Group Runner führt alle Jobs in isolierten Docker Containers aus.
+  # Für jeden Job kann ein beliebiges Docker Image aus Docker Hub verwendet werden.
+  # Hier habe ich mein eigenes Docker Image genommen, in dem zip, git, MySQL, PHP und Node v14 installiert sind.
+  # Der Quellcode für das Docker Image ist in https://gitlab.uni-oldenburg.de/topa8267/rocky-linux-stud.ip-docker-image zu finden.
+  image: annyanich/rockylinux-studip:0.6
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - echo "Running build.sh..."
+    - ./build.sh
+    - echo "Build complete."
+  artifacts:
+    paths:
+      # Der Skript build.sh buildet das Plugin und erzeugt eine Zip-Datei im Verzeichnis /dist.
+      # Diese Datei wird als Build-Artifact aufgegriffen und in der UI von Gitlab zum Herunterladen zur Verfügung gestellt.
+      - ./dist/*.zip
+    expire_in: 1 week

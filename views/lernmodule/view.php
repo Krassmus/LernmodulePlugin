@@ -4,15 +4,36 @@
 
 <input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
 
-<? $template = $mod->getViewerTemplate($attempt, $game_attendence ?? null) ?>
-<?= $template ? $template->render() : "" ?>
-
+<?
+$template = $mod->getViewerTemplate($attempt, $game_attendence ?? null);
+// Set attributes used in Vue.js Lernmodule
+if ($template) {
+    $template->set_attribute('plugin', $plugin);
+    $template->set_attribute(
+        'javascript_global_variables',
+        [
+            'module' => [
+                'customdata' => json_decode($mod['customdata']),
+                'module_id' => $mod['id'],
+                'name' => $mod['name']
+            ],
+            'saveRoute' => $controller->url_for('vuejseditor/save'),
+            'updateAttemptRoute' => $controller->url_for('lernmodule/update_attempt/' . $attempt->getId()),
+            'LERNMODULE_DEBUG' => Config::get()->LERNMODULE_DEBUG
+        ]
+    );
+}
+echo $template->render();
+?>
 <script>
-    STUDIP.Lernmodule.periodicalPushData = function () {
-        return {
-            'attempt_id': jQuery("#attempt_id").val(),
-            'customData': STUDIP.Lernmodule.attemptCustomData
-        };
+    if (!STUDIP.Lernmodule) {
+        STUDIP.Lernmodule = {};
+    }
+    STUDIP.Lernmodule.periodicalPushData = function() {
+      return {
+        'attempt_id': jQuery('#attempt_id').val(),
+        'customData': STUDIP.Lernmodule.attemptCustomData
+      };
     };
 </script>
 

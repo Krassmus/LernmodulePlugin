@@ -1,0 +1,81 @@
+.button-with-empty-icon {
+  white-space: nowrap;
+
+  &::before {
+    background-repeat: no-repeat;
+    content: " ";
+    float: left;
+    height: 16px;
+    margin: 1px 5px 0 -8px;
+    width: 16px;
+  }
+}
+
+@mixin button-with-icon($icon, $role, $roleOnHover) {
+  @extend .button-with-empty-icon;
+  &::before {
+    @include background-icon($icon, $role);
+  }
+
+  &:hover::before {
+    @include background-icon($icon, $roleOnHover);
+  }
+
+  &.disabled,
+  &[disabled],
+  &.no-hover-effect {
+    &:hover::before {
+      @include background-icon($icon, $role);
+    }
+  }
+}
+
+.button.file-office {
+  @include button-with-icon(file-office, clickable, info_alt);
+}
+.button.tan3 {
+  @include button-with-icon(tan3, clickable, info_alt);
+}
+.button.question {
+  @include button-with-icon(question, clickable, info_alt);
+}
+.button.item {
+  @include button-with-icon(item, clickable, info_alt);
+}
+.button.play {
+  @include button-with-icon(play, clickable, info_alt);
+}
+.button.pause {
+  @include button-with-icon(pause, clickable, info_alt);
+}
+.button.stop {
+  @include button-with-icon(stop, clickable, info_alt);
+}
+.button.zoom-in {
+  @include button-with-icon(zoom-in, clickable, info_alt);
+}
+.button.zoom-out {
+  @include button-with-icon(zoom-out, clickable, info_alt);
+}
+
+.small-button.edit {
+  @include button-with-icon(edit, clickable, info_alt);
+  &::before {
+    margin: unset;
+  }
+}
+
+.small-button.visibility-visible {
+  @include button-with-icon(visibility-visible, clickable, info_alt);
+  &::before {
+    margin: unset;
+  }
+}
+
+// A button which is just an icon without text.
+.small-button.trash {
+  @include button-with-icon(trash, clickable, info_alt);
+  &::before {
+    margin: unset; // Remove the margin set by button-with-icon
+  }
+}

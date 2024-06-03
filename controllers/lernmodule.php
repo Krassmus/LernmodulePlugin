@@ -96,8 +96,9 @@ class LernmoduleController extends PluginController
 
         $class = ucfirst($this->mod['type'])."Lernmodul";
         $this->mod = $class::buildExisting($this->mod->toArray());
-        if (!$this->mod['url'] && !file_exists($this->mod->getPath())) {
-            PageLayout::postMessage(MessageBox::error(dgettext("lernmoduleplugin","Kann Lernmodul nicht finden.")));
+        $isVuejsModule = $this->mod['type'] === 'vuejs'; // Vue.js Lernmodule don't have urls/paths.
+        if (!$isVuejsModule && !$this->mod['url'] && !file_exists($this->mod->getPath())) {
+            PageLayout::postMessage(MessageBox::error(dgettext("lernmoduleplugin", "Kann Lernmodul nicht finden.")));
         }
 
         $this->course_connection = $this->mod->courseConnection($this->course_id);
@@ -172,6 +173,9 @@ class LernmoduleController extends PluginController
             $modulecoursedata = Request::getArray("modulecourse");
             $modulecoursedata['starttime'] = strtotime($modulecoursedata['starttime']) ?: null;
             $this->modulecourse->setData($modulecoursedata);
+            if (!$this->modulecourse['gradebook_definition']) {
+                $this->modulecourse['gradebook_definition'] = null;
+            }
             $this->modulecourse->store();
 
             $success = true;
@@ -438,7 +442,7 @@ class LernmoduleController extends PluginController
     }
 
     /**
-     * Dialog to select the way a lernmodule should be added (url, upload or h5p-editor (or OER-marketplace)
+     * Dialog to select the way a lernmodule should be added (url, upload or h5p-editor (or OER-marketplace) (or Vue.js-Lernmodul)
      * @throws AccessDeniedException
      */
     public function add_action()

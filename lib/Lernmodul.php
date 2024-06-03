@@ -92,26 +92,35 @@ class Lernmodul extends SimpleORMap
         $success = Studip\ZipArchive::extractToPath($path, $this->getPath());
 
         if ($success) {
+            // Die hochgeladene Datei müsste eine Zip-Datei sein, denn sie konnte
+            // unzipped werden.
             if (count(scandir($this->getPath())) < 4) {
-                //Falls nur der Ordner auf oberster Ebene liegt:
+                // Hier wird mit einer möglichen Variante des H5P-Dateiformats umgegangen.
+                // Es kann sein, dass in der Zip-Datei auf oberste Ebene nichts
+                // zu finden ist, außer ein Verzeichnis, wo die Inhalte des Moduls drin sind.
+                // Diese Inhalte sollen dann auf $this->getPath() entpackt/verschoben werden.
                 foreach (scandir($this->getPath()) as $folder) {
                     if (!in_array($folder, array(".", ".."))) {
                         break;
                     }
                 }
-                $tmp_folder = $this->getPath() . "/" . $this->getId();
-                rename($this->getPath() . "/" . $folder, $tmp_folder);
-                $this->copyr(
-                    $tmp_folder,
-                    $this->getPath()
-                );
-                rmdirr($tmp_folder);
+                // (Nur wenn $folder wirklich ein Verzeichnis ist)
+                // Verschiebe die Inhalte des Verzeichnisses auf $this->getPath().
+                if (is_dir($folder)) {
+                    $tmp_folder = $this->getPath() . "/" . $this->getId();
+                    rename($this->getPath() . "/" . $folder, $tmp_folder);
+                    $this->copyr(
+                        $tmp_folder,
+                        $this->getPath()
+                    );
+                    rmdirr($tmp_folder);
+                }
             }
         } else {
-            //falls ein PDF oder anderes Dokument hochgeladen wurde
+            // Es wurde kein Zip hochgeladen, oder die Zip-Datei konnte nicht extrahiert werden.
+            // Wir gehen mal davon aus, dass ein PDF oder ein anderes Dokument hochgeladen wurde.
             rename($path, $this->getPath() . "/" . ($filename ?: "index.html"));
         }
-
 
         foreach ($this->scanForFiletypes(array("php", "php3", "php1", "php2", "phtml", "asp", "pl", "py"), null, true) as $php_file) {
             //remove all PHP-files
@@ -125,6 +134,8 @@ class Lernmodul extends SimpleORMap
 
         if (file_exists($this->getPath() . "/h5p.json")) {
             $this['type'] = "h5p";
+        } else if(file_exists($this->getPath() . "/task_definition.json")) {
+            $this['type'] = 'vuejs';
         } else {
             $this['type'] = "html";
         }
