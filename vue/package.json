@@ -28,7 +28,7 @@
     "vue3-gettext": "^2.5.0-alpha.1",
     "vuex": "^4.0.2",
     "vuex-module-decorators": "^2.0.0",
-    "zod": "^3.21.4"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
