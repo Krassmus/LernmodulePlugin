@@ -188,7 +188,7 @@
                 </label>
                 <label>
                     <input type="hidden" name="modulecourse[gradebook_rewrite]" value="0">
-                    <input type="checkbox" name="modulecourse[gradebook_rewrite]" value="1"<?= $modulecourse['gradebook_rewrite'] ? " checked" : "" ?>>
+                    <input type="checkbox" name="modulecourse[gradebook_rewrite]" value="1"<?= isset($modulecourse) && $modulecourse['gradebook_rewrite'] ? " checked" : "" ?>>
                     <?= dgettext("lernmoduleplugin","Kann mehrmals absolviert werden.") ?>
                 </label>
             <? endif ?>

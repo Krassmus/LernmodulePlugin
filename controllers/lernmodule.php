@@ -299,6 +299,31 @@ class LernmoduleController extends PluginController
             }
             $this->attempt->customdata = $message;
             $this->attempt->store();
+
+            $course_connection = new LernmodulCourse([$this->attempt['module_id'], Context::getId()]);
+            if ($course_connection['gradebook_definition']) {
+                $instance = \Grading\Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
+                    'user_id' => $GLOBALS['user']->id,
+                    'definition_id' => $course_connection['gradebook_definition']
+                ));
+                if (!$instance) {
+                    $instance = new \Grading\Instance();
+                    $instance['user_id'] = $this->attempt['user_id'];
+                    $instance['definition_id'] = $course_connection['gradebook_definition'];
+                    $instance['rawgrade'] = 1;
+                    if ($instance->isField('passed')) {
+                        $instance['passed'] = 1;
+                    }
+                    $instance->store();
+                } elseif ($course_connection['gradebook_rewrite']) {
+                    $instance['rawgrade'] = 1;
+                    if ($instance->isField('passed')) {
+                        $instance['passed'] = 1;
+                    }
+                    $instance->store();
+                }
+            }
+
         }
         $this->render_nothing();
     }
