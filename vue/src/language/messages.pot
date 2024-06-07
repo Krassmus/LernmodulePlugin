@@ -84,17 +84,17 @@ msgstr ""
 msgid "Antworten alphabetisch sortieren"
 msgstr ""
 
+#: src/components/PairingEditor.vue:26
 #: src/components/PairingEditor.vue:27
-#: src/components/PairingEditor.vue:28
-#: src/components/PairingEditor.vue:32
-#: src/components/PairingEditor.vue:35
-#: src/components/PairingEditor.vue:37
+#: src/components/PairingEditor.vue:31
+#: src/components/PairingEditor.vue:34
+#: src/components/PairingEditor.vue:36
+#: src/components/PairingEditor.vue:53
 #: src/components/PairingEditor.vue:54
-#: src/components/PairingEditor.vue:55
-#: src/components/PairingEditor.vue:62
-#: src/components/PairingEditor.vue:65
-#: src/components/PairingEditor.vue:68
-#: src/components/PairingEditor.vue:70
+#: src/components/PairingEditor.vue:61
+#: src/components/PairingEditor.vue:64
+#: src/components/PairingEditor.vue:67
+#: src/components/PairingEditor.vue:69
 msgid "Audio"
 msgstr ""
 
@@ -156,17 +156,17 @@ msgstr ""
 #: src/components/EditedMemoryCard.vue:6
 #: src/components/ImageSequencingEditorImage.vue:3
 #: src/components/ImageSequencingEditorImage.vue:4
+#: src/components/PairingEditor.vue:20
 #: src/components/PairingEditor.vue:21
-#: src/components/PairingEditor.vue:22
-#: src/components/PairingEditor.vue:26
-#: src/components/PairingEditor.vue:29
-#: src/components/PairingEditor.vue:31
+#: src/components/PairingEditor.vue:25
+#: src/components/PairingEditor.vue:28
+#: src/components/PairingEditor.vue:30
+#: src/components/PairingEditor.vue:47
 #: src/components/PairingEditor.vue:48
-#: src/components/PairingEditor.vue:49
-#: src/components/PairingEditor.vue:56
-#: src/components/PairingEditor.vue:59
-#: src/components/PairingEditor.vue:62
-#: src/components/PairingEditor.vue:64
+#: src/components/PairingEditor.vue:55
+#: src/components/PairingEditor.vue:58
+#: src/components/PairingEditor.vue:61
+#: src/components/PairingEditor.vue:63
 msgid "Bild"
 msgstr ""
 
@@ -228,12 +228,6 @@ msgstr ""
 
 #: src/components/interactiveVideo/VideoTimeInput.vue:102
 msgid "Die Startposition muss der Syntax HH;MM;SS oder HH;MM;SS;SS entsprechen."
-msgstr ""
-
-#: src/components/PairingEditor.vue:13
-#: src/components/PairingEditor.vue:14
-#: src/components/PairingEditor.vue:21
-msgid "Dieser String sollte übersetzt werden."
 msgstr ""
 
 #: src/components/DragTheWordsEditor.vue:3
@@ -434,10 +428,10 @@ msgstr ""
 msgid "Karte A"
 msgstr ""
 
+#: src/components/PairingEditor.vue:39
 #: src/components/PairingEditor.vue:40
-#: src/components/PairingEditor.vue:41
-#: src/components/PairingEditor.vue:48
-#: src/components/PairingEditor.vue:54
+#: src/components/PairingEditor.vue:47
+#: src/components/PairingEditor.vue:53
 msgid "Karte B"
 msgstr ""
 
@@ -721,17 +715,17 @@ msgstr ""
 msgid "Stud.IP-Video"
 msgstr ""
 
+#: src/components/PairingEditor.vue:23
 #: src/components/PairingEditor.vue:24
-#: src/components/PairingEditor.vue:25
-#: src/components/PairingEditor.vue:29
-#: src/components/PairingEditor.vue:32
-#: src/components/PairingEditor.vue:34
+#: src/components/PairingEditor.vue:28
+#: src/components/PairingEditor.vue:31
+#: src/components/PairingEditor.vue:33
+#: src/components/PairingEditor.vue:50
 #: src/components/PairingEditor.vue:51
-#: src/components/PairingEditor.vue:52
-#: src/components/PairingEditor.vue:59
-#: src/components/PairingEditor.vue:62
-#: src/components/PairingEditor.vue:65
-#: src/components/PairingEditor.vue:67
+#: src/components/PairingEditor.vue:58
+#: src/components/PairingEditor.vue:61
+#: src/components/PairingEditor.vue:64
+#: src/components/PairingEditor.vue:66
 msgid "Text"
 msgstr ""
 
@@ -774,13 +768,13 @@ msgstr ""
 msgid "Titel"
 msgstr ""
 
+#: src/components/PairingEditor.vue:14
 #: src/components/PairingEditor.vue:15
-#: src/components/PairingEditor.vue:16
-#: src/components/PairingEditor.vue:23
+#: src/components/PairingEditor.vue:22
+#: src/components/PairingEditor.vue:41
 #: src/components/PairingEditor.vue:42
-#: src/components/PairingEditor.vue:43
-#: src/components/PairingEditor.vue:50
-#: src/components/PairingEditor.vue:56
+#: src/components/PairingEditor.vue:49
+#: src/components/PairingEditor.vue:55
 msgid "Typ"
 msgstr ""
 
