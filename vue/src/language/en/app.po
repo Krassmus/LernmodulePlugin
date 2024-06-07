@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: uol 5.1\n"
-"PO-Revision-Date: 2024-05-07 12:03+0000\n"
+"PO-Revision-Date: 2024-06-07 13:32+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/rasmusfuhse-"
-"lernmoduleplugin/js/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/"
+"rasmusfuhse-lernmoduleplugin/js/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,7 +226,7 @@ msgstr ""
 #: src/components/PairingEditor.vue:13 src/components/PairingEditor.vue:14
 #: src/components/PairingEditor.vue:21
 msgid "Dieser String sollte übersetzt werden."
-msgstr ""
+msgstr "This string should be translated."
 
 #: src/components/DragTheWordsEditor.vue:3
 #: src/components/DragTheWordsEditor.vue:4
