@@ -190,7 +190,7 @@
     if ($game_attendance) {
         $url = URLHelper::getURL($url, $game_attendance->game['parameter']->getArrayCopy(), true);
     }
-    if ($lernmodulcourse['customdata']['configs']) {
+    if (isset($lernmodulcourse) && $lernmodulcourse['customdata']['configs']) {
         $url = URLHelper::getURL($url, $lernmodulcourse['customdata']['configs']->getArrayCopy(), true);
     }
     ?>
