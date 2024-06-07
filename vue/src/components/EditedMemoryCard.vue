@@ -4,8 +4,8 @@
       <legend>{{ $gettext('Karte') }}</legend>
       <div>
         <h4>{{ $gettext('Bild') }}</h4>
-        <EditedMemoryCardImage v-if="card.imageUrl" :card="card" />
-        <FileUpload v-else @file-uploaded="onFileUploaded" />
+        <EditedMemoryCardImage v-if="card.file_id" :card="card" />
+        <FileUpload v-else @file-uploaded="onImageUploaded" />
       </div>
       <label
         >{{ $gettext('Alternativer Text') }}
@@ -27,7 +27,7 @@ import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'EditedMemoryCard',
@@ -47,10 +47,9 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onImageUploaded(file: UploadedFile): void {
+    onImageUploaded(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        // TODO #20  - Store file ID instead of URL
-        draft.cards[this.cardIndex].imageUrl = file.url;
+        draft.cards[this.cardIndex].file_id = file.id;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,

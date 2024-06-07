@@ -1,11 +1,11 @@
 <template>
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Image Pair') }}</legend>
+      <legend>{{ $gettext('Paar') }}</legend>
       <div>
         <h4>{{ $gettext('Das zu ziehende Bild') }}</h4>
         <EditedImagePairImage
-          v-if="pair.draggableImage.imageUrl"
+          v-if="pair.draggableImage.file_id"
           :image="pair.draggableImage"
         />
         <FileUpload v-else @file-uploaded="onUploadDraggableImage" />
@@ -21,7 +21,7 @@
       <div>
         <h4>{{ $gettext('Das Zielbild') }}</h4>
         <EditedImagePairImage
-          v-if="pair.targetImage.imageUrl"
+          v-if="pair.targetImage.file_id"
           :image="pair.targetImage"
         />
         <FileUpload v-else @file-uploaded="onUploadTargetImage" />
@@ -41,19 +41,19 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
-import { ImagePair, ImagePairingTask } from '@/models/TaskDefinition';
+import { Pair, PairingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
-import { UploadedFile } from '@/routes';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'EditedImagePair',
   components: { FileUpload, EditedImagePairImage },
   props: {
     pair: {
-      type: Object as PropType<ImagePair>,
+      type: Object as PropType<Pair>,
       required: true,
     },
     pairIndex: {
@@ -66,20 +66,18 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onUploadDraggableImage(file: UploadedFile): void {
+    onUploadDraggableImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        // TODO #20  - Store file ID instead of URL
-        draft.imagePairs[this.pairIndex].draggableImage.imageUrl = file.url;
+        draft.pairs[this.pairIndex].draggableElement.file_id = file.id;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
-    onUploadTargetImage(file: UploadedFile): void {
+    onUploadTargetImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        // TODO #20  - Store file ID instead of URL
-        draft.imagePairs[this.pairIndex].targetImage.imageUrl = file.url;
+        draft.pairs[this.pairIndex].targetElement.file_id = file.id;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
@@ -89,7 +87,7 @@ export default defineComponent({
     onInputDraggableImageAltText(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].draggableImage.altText = value;
+        draft.pairs[this.pairIndex].draggableElement.altText = value;
       });
       taskEditorStore.performEdit({
         newTaskDefinition,
@@ -99,7 +97,7 @@ export default defineComponent({
     onInputTargetImageAltText(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.imagePairs[this.pairIndex].targetImage.altText = value;
+        draft.pairs[this.pairIndex].targetElement.altText = value;
       });
       taskEditorStore.performEdit({
         newTaskDefinition,
@@ -108,7 +106,7 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as ImagePairingTask,
+    taskDefinition: () => taskEditorStore.taskDefinition as PairingTask,
   },
 });
 </script>

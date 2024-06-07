@@ -30,6 +30,14 @@ import { mapActions, mapGetters } from 'vuex';
 import { defineComponent } from 'vue';
 import { $gettext } from '../../language/gettext';
 
+// TODO #21 Refactor to remove this datatype
+export interface FilePickerFile {
+  id: string;
+  name: string;
+  mime_type: string;
+  download_url: string;
+}
+
 export default defineComponent({
   name: 'FilePicker',
   components: { FolderPicker },
@@ -132,6 +140,10 @@ export default defineComponent({
         return true;
       };
 
+      // TODO #21 Refactor.. I'm not sure it is useful to map the file-ref,
+      // which we fetched from the JSON API, to a subset of its keys here.
+      // Clients may need other values, like the folder ID, which we do not
+      // provide here.
       return loadArray.filter(filterFile).map((file) => ({
         id: file.id,
         name: file.attributes.name,

@@ -9,12 +9,24 @@
     >
       <span>{{ $gettext('Speichern') }}</span>
       <span
-        :class="saveStatusText === 'Modified' ? 'save-status-modified' : ''"
+        :class="
+          saveStatus.status === 'saved' && this.hasUnsavedChanges
+            ? 'save-status-modified'
+            : ''
+        "
         >{{ saveStatusText }}</span
       >
     </li>
-    <!--    <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">Undo</li>-->
-    <!--    <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">Redo</li>-->
+    <template v-if="LernmoduleVueJS.LERNMODULE_DEBUG">
+      <!-- As the undo/redo functionality is still not complete, these buttons
+           are to be hidden except when in development mode. -->
+      <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">
+        {{ $pgettext('Im Sinne von undo/redo', 'Rückgängig') }}
+      </li>
+      <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">
+        {{ $pgettext('Im Sinne von undo/redo', 'Wiederherstellen') }}
+      </li>
+    </template>
   </teleport>
 
   <form class="default">
@@ -46,14 +58,20 @@
       <option value="FillInTheBlanks">
         {{ $gettext('Fill In The Blanks') }}
       </option>
-      <!--      <option value="FindTheHotspot">{{ $gettext('Find The Hotspot') }}</option>-->
       <option value="Question">{{ $gettext('Question') }}</option>
       <option value="DragTheWords">{{ $gettext('Drag The Words') }}</option>
       <option value="MarkTheWords">{{ $gettext('Mark The Words') }}</option>
-      <!--      <option value="ImagePairing">{{ $gettext('Image Pairing') }}</option>-->
-      <!--      <option value="ImageSequencing">-->
-      <!--        {{ $gettext('Image Sequencing') }}-->
-      <!--      </option>-->
+      <template v-if="LernmoduleVueJS.LERNMODULE_DEBUG">
+        <option value="FindTheHotspot">
+          {{ $gettext('Find The Hotspot') }}
+        </option>
+        <option value="Memory">{{ $gettext('Memory') }}</option>
+        <option value="FindTheWords">{{ $gettext('Find The Words') }}</option>
+        <option value="Pairing">{{ $gettext('Pairing') }}</option>
+        <option value="ImageSequencing">
+          {{ $gettext('Image Sequencing') }}
+        </option>
+      </template>
     </select>
   </div>
 
@@ -90,7 +108,7 @@ import {
   viewerForTaskType,
 } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
-import { $gettext } from '@/language/gettext';
+import { $gettext, $pgettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
 export default defineComponent({
@@ -120,19 +138,20 @@ export default defineComponent({
       switch (this.saveStatus.status) {
         case 'saved':
           if (this.hasUnsavedChanges) {
-            return 'Modified';
+            return $gettext('Modifiziert');
           } else {
-            return 'Saved';
+            return $gettext('Gespeichert');
           }
         case 'saving':
-          return 'Saving...';
+          return $gettext('Wird gespeichert...');
         case 'error':
-          return 'An error occurred while saving.';
+          return $gettext('Beim Speichern ist ein Fehler aufgetreten.');
       }
       return '';
     },
   },
   methods: {
+    $pgettext,
     $gettext,
     editorForTaskType,
     viewerForTaskType,

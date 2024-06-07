@@ -1908,7 +1908,7 @@ var component = normalizeComponent(
 // When adding a Courseware block for a new task type, you must add its name
 // to this array so that a corresponding vue 2 component will be registered in
 // the Courseware.
-const taskTypes = ['FillInTheBlanks', 'Question', 'DragTheWords', 'MarkTheWords', 'Memory', 'ImagePairing', 'LmbInteractiveVideo'];
+const taskTypes = ['FillInTheBlanks', 'Question', 'DragTheWords', 'MarkTheWords', 'Memory', 'Pairing', 'LmbInteractiveVideo'];
 const debug = window.STUDIP.LernmoduleCoursewareBlocksPlugin.debug;
 if (debug) {
   console.log('Hello :) Registering Lernmodule Courseware blocks...');

@@ -1,7 +1,11 @@
 <template>
   <div class="memoryCard" :class="{ memoryCardFlipped: card.flipped }">
     <div v-if="card.flipped" class="memoryCardFront">
-      <img :src="card.imageUrl" :alt="card.altText" class="memoryImage" />
+      <img
+        :src="fileIdToUrl(card.file_id)"
+        :alt="card.altText"
+        class="memoryImage"
+      />
     </div>
     <div v-else class="memoryCardBack">
       <img src="../assets/memoryCardBack.png" class="memoryImage" />
@@ -12,6 +16,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { ViewerMemoryCard } from '@/components/MemoryViewer.vue';
+import { fileIdToUrl } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'MemoryCard',
@@ -22,7 +27,7 @@ export default defineComponent({
     },
   },
   computed: {},
-  methods: {},
+  methods: { fileIdToUrl },
 });
 </script>
 

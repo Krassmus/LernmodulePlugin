@@ -1,29 +1,31 @@
 <template>
   <div class="h5pModule" ref="wrapperElement">
-    <template v-for="element in parsedTemplate" :key="element.uuid">
-      <span v-if="element.type === 'staticText'" v-html="element.text" />
-      <template v-else-if="element.type === 'blank'">
-        <input
-          type="text"
-          v-model="userInputs[element.uuid]"
-          :readonly="!this.editable"
-          :disabled="!this.editable"
-          :class="classForInput(element)"
-          @blur="onInputBlurOrEnter"
-          @keyup.enter="onInputBlurOrEnter"
-          @input="onInput"
-        />
-        <label v-if="element.hint">
-          <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
-        </label>
-        <span
-          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-          class="h5pSolution"
-        >
-          {{ element.solutions[0] }}
-        </span>
+    <div class="fill-in-the-blanks-text">
+      <template v-for="element in parsedTemplate" :key="element.uuid">
+        <span v-if="element.type === 'staticText'" v-html="element.text" />
+        <template v-else-if="element.type === 'blank'">
+          <input
+            type="text"
+            v-model="userInputs[element.uuid]"
+            :readonly="!this.editable"
+            :disabled="!this.editable"
+            :class="classForInput(element)"
+            @blur="onInputBlurOrEnter"
+            @keyup.enter="onInputBlurOrEnter"
+            @input="onInput"
+          />
+          <label v-if="element.hint">
+            <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
+          </label>
+          <span
+            v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+            class="h5pSolution"
+          >
+            {{ element.solutions[0] }}
+          </span>
+        </template>
       </template>
-    </template>
+    </div>
 
     <FeedbackElement
       v-if="showResults"
@@ -41,25 +43,28 @@
 
     <div class="h5pButtonPanel">
       <button
-        @click="onClickCheck(false)"
         v-if="showCheckButton"
-        class="h5pButton"
         v-text="this.task.strings.checkButton"
+        @click="onClickCheck(false)"
+        type="button"
+        class="h5pButton"
       />
 
       <template v-if="showExtraButtons">
         <button
           v-if="showSolutionButton"
-          @click="onClickShowSolution"
-          class="h5pButton"
           v-text="this.task.strings.solutionsButton"
+          @click="onClickShowSolution"
+          type="button"
+          class="h5pButton"
         />
 
         <button
           v-if="showRetryButton"
-          @click="onClickTryAgain"
-          class="h5pButton"
           v-text="this.task.strings.retryButton"
+          @click="onClickTryAgain"
+          type="button"
+          class="h5pButton"
         />
       </template>
     </div>
@@ -440,6 +445,10 @@ export default defineComponent({
 input[type='text'] {
   max-height: 1em;
   font-family: Lato, sans-serif;
+}
+
+.fill-in-the-blanks-text {
+  word-break: break-word;
 }
 
 .h5pBlankCorrect {

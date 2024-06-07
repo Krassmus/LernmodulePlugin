@@ -13,6 +13,7 @@
         )
       }}
     </div>
+
     <div class="h5pMemoryGame">
       <MemoryCardComponent
         v-for="card in this.cards"
@@ -33,15 +34,16 @@
           {{ this.resultMessage }}
         </label>
       </div>
-      <div class="h5pFeedbackContainerBottom">
-        <button
-          v-if="showRetryButton"
-          @click="onClickTryAgain"
-          class="h5pButton"
-        >
-          {{ this.task.strings.retryButton }}
-        </button>
-      </div>
+    </div>
+
+    <div class="h5pButtonPanel">
+      <button
+        v-if="showRetryButton"
+        v-text="this.task.strings.retryButton"
+        @click="onClickTryAgain"
+        type="button"
+        class="h5pButton"
+      />
     </div>
   </div>
 </template>

@@ -6,7 +6,7 @@ import {
   taskDefinitionSchemaMinusInteractiveVideo,
 } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
-import { uploadedFileSchema } from '@/routes';
+import { wysiwygUploadedFileSchema } from '@/routes/lernmodule';
 
 // There are different types of 'interaction' which can be added to the video.
 // TODO Maybe put the 'base' attributes shared by all types of interaction all in one place.
@@ -15,8 +15,11 @@ import { uploadedFileSchema } from '@/routes';
 // (v-model for 'end time' input field), but I have noticed that I must calculate a duration
 // by hand in many other places anyway.
 
-// Overlay: An overlay is shown on top of the video over a span of time
-const overlaySchema = z.object({
+/**
+ * @deprecated -- Text field renamed to content_wysiwyg to simplify implementation
+ * of file export in PHP.
+ */
+const overlaySchema_v1 = z.object({
   type: z.literal('overlay'),
   id: z.string(),
   startTime: z.number(), // Seconds
@@ -28,7 +31,36 @@ const overlaySchema = z.object({
   text: z.string(), // Sanitized HTML from Wysiwyg editor
   pauseWhenVisible: z.boolean().optional().default(true),
 });
-export type OverlayInteraction = z.infer<typeof overlaySchema>;
+const overlaySchema_v2 = overlaySchema_v1.omit({ text: true }).extend({
+  v: z.literal(2), // Schema version
+  content_wysiwyg: z.string(), // Sanitized HTML from Wysiwyg editor
+});
+// Overlay: An overlay is shown on top of the video over a span of time
+const overlaySchema = z
+  .union([overlaySchema_v1, overlaySchema_v2])
+  .transform((val): z.infer<typeof overlaySchema_v2> => {
+    if (!Object.hasOwn(val, 'v')) {
+      // Migration from v1 to v2
+      const val_v1 = val as z.infer<typeof overlaySchema_v1>;
+      const { text, ...val_v1_rest } = val_v1;
+      const val_v2 = {
+        v: 2,
+        content_wysiwyg: text,
+        ...val_v1_rest,
+      } as z.infer<typeof overlaySchema_v2>;
+      console.log(
+        'Migrating from overlaySchema_v1 to overlaySchema_v2',
+        'v1:',
+        val_v1,
+        'v2:',
+        val_v2
+      );
+      return val_v2;
+    } else {
+      return val as z.infer<typeof overlaySchema_v2>;
+    }
+  });
+export type OverlayInteraction = z.infer<typeof overlaySchema_v2>;
 
 // LMB Task interaction: A Lernmodule Block Task (LMB Task) is shown at a given
 // point in the video for the student to solve.
@@ -52,22 +84,71 @@ const interactiveVideoInteractionSchema = z
   });
 export type Interaction = z.infer<typeof interactiveVideoInteractionSchema>;
 
+const noVideoSchema = z.object({
+  type: z.literal('none'),
+});
+export type NoVideo = z.infer<typeof noVideoSchema>;
+const youtubeVideoSchema = z.object({
+  type: z.literal('youtube'),
+  url: z.string(),
+});
+export type YoutubeVideo = z.infer<typeof youtubeVideoSchema>;
+
+/**
+ * @deprecated -- File is now stored as ID instead of url,name,type.
+ */
+const studipFileVideoSchema_v1 = z.object({
+  type: z.literal('studipFileReference'),
+  file: wysiwygUploadedFileSchema,
+});
+const studipFileVideoSchema_v2 = z.object({
+  v: z.literal(2),
+  type: z.literal('studipFileReference'),
+  file_id: z.string(),
+});
+const studipFileVideoSchema = z
+  .union([studipFileVideoSchema_v1, studipFileVideoSchema_v2])
+  .transform((val) => {
+    if (!Object.hasOwn(val, 'v')) {
+      // Migration from v1 to v2
+      const val_v1 = val as z.infer<typeof studipFileVideoSchema_v1>;
+      const urlParams = new URLSearchParams(val_v1.file.url);
+      const file_id = urlParams.get('file_id');
+      if (!file_id) {
+        throw new Error(
+          'Could not migrate studip file reference schema v1 to v2. The query param ' +
+            `"file_id" was not found in the string file.url: "${val_v1.file.url}"`
+        );
+      }
+      const val_v2 = {
+        v: 2,
+        type: 'studipFileReference',
+        file_id,
+      } as z.infer<typeof studipFileVideoSchema_v2>;
+      console.log(
+        'Migrating from studipFileVideoSchema_v1 to studipFileVideoSchema_v2',
+        'v1:',
+        val_v1,
+        'v2:',
+        val_v2
+      );
+      return val_v2;
+    } else {
+      return val as z.infer<typeof studipFileVideoSchema_v2>;
+    }
+  });
+export type StudipFileVideo = z.infer<typeof studipFileVideoSchema>;
+
+const videoSchema = z.union([
+  noVideoSchema,
+  youtubeVideoSchema,
+  studipFileVideoSchema,
+]);
+export type Video = z.infer<typeof videoSchema>;
+
 export const interactiveVideoTaskSchema = z.object({
   task_type: z.literal('InteractiveVideo'),
-  video: z.union([
-    z.object({
-      type: z.literal('none'),
-    }),
-    z.object({
-      type: z.literal('youtube'),
-      url: z.string(),
-    }),
-    z.object({
-      type: z.literal('studipFileReference'),
-      // TODO #20 -- Consider storing file ID instead of { url, name, type }
-      file: uploadedFileSchema,
-    }),
-  ]),
+  video: videoSchema,
   autoplay: z.boolean().optional().default(false),
   startAt: z.number().optional().default(0),
   disableNavigation: z

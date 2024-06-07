@@ -206,6 +206,7 @@ function onClickPause() {
 function insertOverlay() {
   const interaction: OverlayInteraction = {
     type: 'overlay',
+    v: 2,
     id: v4(),
     startTime: currentTime.value,
     endTime: Math.min(videoMetadata.value.length, currentTime.value + 10),
@@ -213,7 +214,7 @@ function insertOverlay() {
     y: 0.4,
     width: 0.2,
     height: 0.2,
-    text: $gettext('Einblendung'),
+    content_wysiwyg: $gettext('Einblendung'),
     pauseWhenVisible: true,
   };
   // TODO make undoable ?

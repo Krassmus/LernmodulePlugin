@@ -1,5 +1,7 @@
 import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
+import FindTheWordsEditor from '@/components/FindTheWordsEditor.vue';
+import FindTheWordsViewer from '@/components/FindTheWordsViewer.vue';
 import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
 import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
@@ -8,8 +10,8 @@ import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
 import MemoryViewer from '@/components/MemoryViewer.vue';
-import ImagePairingViewer from '@/components/ImagePairingViewer.vue';
-import ImagePairingEditor from '@/components/ImagePairingEditor.vue';
+import PairingViewer from '@/components/PairingViewer.vue';
+import PairingEditor from '@/components/PairingEditor.vue';
 import ImageSequencingViewer from '@/components/ImageSequencingViewer.vue';
 import ImageSequencingEditor from '@/components/ImageSequencingEditor.vue';
 import { v4 } from 'uuid';
@@ -27,12 +29,74 @@ export const feedbackSchema = z.object({
 });
 export type Feedback = z.infer<typeof feedbackSchema>;
 
-export const imageSchema = z.object({
+/**
+ * @deprecated Images are now stored as IDs rather than as absolute URLs.
+ */
+const imageSchema_v1 = z.object({
   uuid: z.string(),
   imageUrl: z.string(),
   altText: z.string(),
 });
+const imageSchema_v2 = z.object({
+  v: z.literal(2),
+  uuid: z.string(),
+  file_id: z.string(),
+  altText: z.string(),
+});
+
+const imageSchema = z
+  .union([imageSchema_v1, imageSchema_v2])
+  .transform((val) => {
+    if (!Object.hasOwn(val, 'v')) {
+      // Migration from v1 to v2
+      const val_v1 = val as z.infer<typeof imageSchema_v1>;
+      const urlParams = new URLSearchParams(val_v1.imageUrl);
+      const file_id = urlParams.get('file_id');
+      if (!file_id) {
+        throw new Error(
+          'Could not migrate imageUrl to file_id. The query param ' +
+            '"file_id" was not found in the imageUrl string.'
+        );
+      }
+      const val_v2 = {
+        v: 2,
+        uuid: val_v1.uuid,
+        altText: val_v1.altText,
+        file_id,
+      } as z.infer<typeof imageSchema_v2>;
+      console.log(
+        'Migrating from imageSchema_v1 to imageSchema_v2',
+        'v1:',
+        val_v1,
+        'v2:',
+        val_v2
+      );
+      return val_v2;
+    } else {
+      return val as z.infer<typeof imageSchema_v2>;
+    }
+  });
+
 export type Image = z.infer<typeof imageSchema>;
+
+/**
+ * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
+ */
+export function fileIdToUrl(fileId: string): string {
+  if (fileId === '') {
+    return '';
+  }
+  return window.STUDIP.URLHelper.getURL('sendfile.php', {
+    file_id: fileId,
+  });
+}
+
+/**
+ * @return The Stud.IP URL to view 'details' about the file with the given ID.
+ */
+export function fileDetailsUrl(fileId: string): string {
+  return window.STUDIP.URLHelper.getURL(`dispatch.php/file/details/${fileId}`);
+}
 
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
@@ -59,6 +123,12 @@ export const findTheHotspotTaskSchema = z.object({
 });
 export type FindTheHotspotTask = z.infer<typeof findTheHotspotTaskSchema>;
 
+export const findTheWordsTaskSchema = z.object({
+  task_type: z.literal('FindTheWords'),
+  words: z.array(z.string()),
+});
+export type FindTheWordsTask = z.infer<typeof findTheWordsTaskSchema>;
+
 export const markTheWordsTaskSchema = z.object({
   task_type: z.literal('MarkTheWords'),
   template: z.string(),
@@ -74,11 +144,7 @@ export const markTheWordsTaskSchema = z.object({
 });
 export type MarkTheWordsTask = z.infer<typeof markTheWordsTaskSchema>;
 
-export const memoryCardSchema = z.object({
-  uuid: z.string(),
-  imageUrl: z.string(),
-  altText: z.string(),
-});
+export const memoryCardSchema = imageSchema;
 export type MemoryCard = z.infer<typeof memoryCardSchema>;
 
 export const memoryTaskSchema = z.object({
@@ -140,16 +206,34 @@ export const questionTaskSchema = z.object({
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
-export const imagePairSchema = z.object({
+const imageElementSchema = z.object({
   uuid: z.string(),
-  draggableImage: imageSchema,
-  targetImage: imageSchema,
+  type: z.literal('image'),
+  file_id: z.string(),
+  altText: z.string(),
 });
-export type ImagePair = z.infer<typeof imagePairSchema>;
+const audioElementSchema = z.object({
+  uuid: z.string(),
+  type: z.literal('audio'),
+  file_id: z.string(),
+  altText: z.string(),
+});
+export const pairElementSchema = z.union([
+  imageElementSchema,
+  audioElementSchema,
+]);
+export type PairElement = z.infer<typeof pairElementSchema>;
 
-export const imagePairingTaskSchema = z.object({
-  task_type: z.literal('ImagePairing'),
-  imagePairs: z.array(imagePairSchema),
+export const pairSchema = z.object({
+  uuid: z.string(),
+  draggableElement: pairElementSchema,
+  targetElement: pairElementSchema,
+});
+export type Pair = z.infer<typeof pairSchema>;
+
+export const pairingTaskSchema = z.object({
+  task_type: z.literal('Pairing'),
+  pairs: z.array(pairSchema),
   strings: z.object({
     checkButton: z.string(),
     retryButton: z.string(),
@@ -158,7 +242,7 @@ export const imagePairingTaskSchema = z.object({
   }),
   feedback: z.array(feedbackSchema),
 });
-export type ImagePairingTask = z.infer<typeof imagePairingTaskSchema>;
+export type PairingTask = z.infer<typeof pairingTaskSchema>;
 
 export const imageSequencingTaskSchema = z.object({
   task_type: z.literal('ImageSequencing'),
@@ -177,11 +261,12 @@ export const taskDefinitionSchema = z.union([
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
-  imagePairingTaskSchema,
+  findTheWordsTaskSchema,
   imageSequencingTaskSchema,
   interactiveVideoTaskSchema,
   markTheWordsTaskSchema,
   memoryTaskSchema,
+  pairingTaskSchema,
   questionTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
@@ -196,10 +281,11 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
-  imagePairingTaskSchema,
+  findTheWordsTaskSchema,
   imageSequencingTaskSchema,
   markTheWordsTaskSchema,
   memoryTaskSchema,
+  pairingTaskSchema,
   questionTaskSchema,
 ]);
 
@@ -209,11 +295,12 @@ export const taskTypeSchema = z.union([
   dragTheWordsTaskSchema.shape.task_type,
   fillInTheBlanksTaskSchema.shape.task_type,
   findTheHotspotTaskSchema.shape.task_type,
-  imagePairingTaskSchema.shape.task_type,
+  findTheWordsTaskSchema.shape.task_type,
   imageSequencingTaskSchema.shape.task_type,
   interactiveVideoTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
+  pairingTaskSchema.shape.task_type,
   questionTaskSchema.shape.task_type,
 ]);
 
@@ -271,25 +358,33 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'FindTheHotspot',
         image: {
+          v: 2,
           uuid: v4(),
-          imageUrl: '',
+          file_id: '',
           altText: '',
         },
       };
-    case 'ImagePairing':
+    case 'FindTheWords':
       return {
-        task_type: 'ImagePairing',
-        imagePairs: [
+        task_type: 'FindTheWords',
+        words: ['apple', 'banana', 'orange'],
+      };
+    case 'Pairing':
+      return {
+        task_type: 'Pairing',
+        pairs: [
           {
             uuid: v4(),
-            draggableImage: {
+            draggableElement: {
               uuid: v4(),
-              imageUrl: '',
+              type: 'image',
+              file_id: '',
               altText: '',
             },
-            targetImage: {
+            targetElement: {
               uuid: v4(),
-              imageUrl: '',
+              type: 'image',
+              file_id: '',
               altText: '',
             },
           },
@@ -308,7 +403,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         images: [
           {
             uuid: v4(),
-            imageUrl: '',
+            v: 2,
+            file_id: '',
             altText: '',
           },
         ],
@@ -316,7 +412,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Reihenfolge überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Bildern richtig sortiert.',
+          resultMessage: ':correct von :total Elemente richtig sortiert.',
         },
         feedback: defaultFeedback(),
       };
@@ -352,7 +448,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         cards: [
           {
             uuid: v4(),
-            imageUrl: '',
+            v: 2,
+            file_id: '',
             altText: '',
           },
         ],
@@ -458,8 +555,10 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return FillInTheBlanksViewer;
     case 'FindTheHotspot':
       return FindTheHotspotViewer;
-    case 'ImagePairing':
-      return ImagePairingViewer;
+    case 'FindTheWords':
+      return FindTheWordsViewer;
+    case 'Pairing':
+      return PairingViewer;
     case 'ImageSequencing':
       return ImageSequencingViewer;
     case 'InteractiveVideo':
@@ -483,8 +582,10 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return FillInTheBlanksEditor;
     case 'FindTheHotspot':
       return FindTheHotspotEditor;
-    case 'ImagePairing':
-      return ImagePairingEditor;
+    case 'FindTheWords':
+      return FindTheWordsEditor;
+    case 'Pairing':
+      return PairingEditor;
     case 'ImageSequencing':
       return ImageSequencingEditor;
     case 'InteractiveVideo':
@@ -508,8 +609,10 @@ export function printTaskType(type: TaskDefinition['task_type']): string {
       return $gettext('Fill In The Blanks');
     case 'FindTheHotspot':
       return $gettext('Find The Hotspot');
-    case 'ImagePairing':
-      return $gettext('Image Pairing');
+    case 'FindTheWords':
+      return $gettext('Find The Words');
+    case 'Pairing':
+      return $gettext('Pairing');
     case 'ImageSequencing':
       return $gettext('Image Sequencing');
     case 'InteractiveVideo':
@@ -539,13 +642,15 @@ export function iconForTaskType(type: TaskDefinition['task_type']): string {
       break;
     case 'FillInTheBlanks':
       return 'file-office';
+    case 'FindTheWords':
+      break;
     case 'Question':
       return 'question';
     case 'DragTheWords':
       return 'tan3';
     case 'MarkTheWords':
       return 'tan3';
-    case 'ImagePairing':
+    case 'Pairing':
       break;
     case 'ImageSequencing':
       break;

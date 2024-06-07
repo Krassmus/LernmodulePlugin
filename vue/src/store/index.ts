@@ -2,16 +2,9 @@ import { createStore } from 'vuex';
 import { getModule } from 'vuex-module-decorators';
 import { TaskEditorModule } from '@/store/modules/taskEditor';
 import { CoursewareBlockModule } from '@/store/modules/coursewareBlock';
-import axios from 'axios';
+import { httpClient } from '@/routes/jsonApi';
 const reststateVuex = require('@elan-ev/reststate-vuex');
 const mapResourceModules = reststateVuex.mapResourceModules;
-
-const httpClient = axios.create({
-  baseURL: window.STUDIP.URLHelper.getURL(`jsonapi.php/v1`, {}, true),
-  headers: {
-    'Content-Type': 'application/vnd.api+json',
-  },
-});
 
 export const store = createStore({
   modules: {

@@ -14,7 +14,7 @@
         draggable="false"
         @dragover.prevent
         @dragenter.prevent
-        :src="image.imageUrl"
+        :src="fileIdToUrl(image.file_id)"
         :alt="image.altText"
       />
       <span class="imageDescription" @dragover.prevent @dragenter.prevent>{{
@@ -22,6 +22,7 @@
       }}</span>
     </div>
   </div>
+
   <FeedbackElement
     v-if="showResults"
     :achievedPoints="correctAnswers"
@@ -29,27 +30,33 @@
     :resultMessage="resultMessage"
     :feedback="task.feedback"
   />
-  <button
-    v-if="!this.showResults"
-    type="button"
-    class="h5pButton"
-    @click="checkResults()"
-  >
-    {{ this.task.strings.checkButton }}
-  </button>
-  <button
-    v-if="this.showResults"
-    type="button"
-    class="h5pButton"
-    @click="reset()"
-  >
-    {{ this.task.strings.retryButton }}
-  </button>
+
+  <div class="h5pButtonPanel">
+    <button
+      v-if="!this.showResults"
+      v-text="this.task.strings.checkButton"
+      @click="checkResults()"
+      type="button"
+      class="h5pButton"
+    />
+
+    <button
+      v-if="this.showResults"
+      v-text="this.task.strings.retryButton"
+      @click="reset()"
+      type="button"
+      class="h5pButton"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Image, ImageSequencingTask } from '@/models/TaskDefinition';
+import {
+  fileIdToUrl,
+  Image,
+  ImageSequencingTask,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
 import FeedbackElement from '@/components/FeedbackElement.vue';
@@ -78,6 +85,7 @@ export default defineComponent({
     console.log('Before Mount');
   },
   methods: {
+    fileIdToUrl,
     $gettext,
 
     urlForIcon(iconName: string) {

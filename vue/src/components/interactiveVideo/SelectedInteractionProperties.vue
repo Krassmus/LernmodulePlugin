@@ -71,7 +71,7 @@
         <div>
           <StudipWysiwyg
             :key="`${selectedInteraction.id}-overlay-wysiwyg`"
-            v-model="selectedInteraction.text"
+            v-model="selectedInteraction.content_wysiwyg"
           />
         </div>
       </KeepAlive>
