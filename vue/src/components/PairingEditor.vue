@@ -18,6 +18,7 @@
           <label>{{ $gettext('Eigenschaften') }}</label>
           <pre>{{ this.taskDefinition.pairs[this.selectedPairIndex] }}</pre>
           <label>{{ $gettext('Karte A') }}</label>
+            <label>{{ $gettext('Dieser String sollte übersetzt werden.') }}</label>
           <label>
             {{ $gettext('Typ') }}
             <select
