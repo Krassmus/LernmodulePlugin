@@ -1,65 +1,65 @@
 <template>
-  <div class="imagePairingRow">
+  <div class="pairingRow">
     <div
-      class="draggableImagesColumn"
+      class="draggableElementsColumn"
       draggable="false"
       @dragover.prevent
       @dragenter.prevent
-      @drop="onDropOnInteractiveImages($event)"
+      @drop="onDropOnInteractiveElements($event)"
     >
       <div
-        v-for="draggableImageId in draggableImages"
-        :key="draggableImageId"
+        v-for="draggableElementId in draggableElements"
+        :key="draggableElementId"
         :draggable="
-          !this.isDraggableImageUsed(draggableImageId) && !this.showResults
+          !this.isDraggableElementUsed(draggableElementId) && !this.showResults
         "
-        @dragstart="startDragImage($event, draggableImageId)"
-        @dragend="endDragImage($event, draggableImageId)"
-        @click="onClickDraggableImage(draggableImageId)"
-        class="draggableImageContainer"
+        @dragstart="startDragElement($event, draggableElementId)"
+        @dragend="endDragElement()"
+        @click="onClickDraggableElement(draggableElementId)"
+        class="draggableElementContainer"
         :class="{
           disabled:
-            this.isDraggableImageUsed(draggableImageId) ||
+            this.isDraggableElementUsed(draggableElementId) ||
             this.showResults ||
-            this.draggedImageId === draggableImageId,
-          selected: this.imageIdInteractedWith === draggableImageId,
+            this.draggedElementId === draggableElementId,
+          selected: this.elementIdInteractedWith === draggableElementId,
         }"
       >
         <img
-          class="draggableImage"
-          :src="fileIdToUrl(getImageById(draggableImageId).file_id)"
-          :alt="getImageById(draggableImageId).altText"
+          class="draggableElement"
+          :src="fileIdToUrl(getElementById(draggableElementId).file_id)"
+          :alt="getElementById(draggableElementId).altText"
           draggable="false"
           ref="draggableImages"
         />
       </div>
     </div>
-    <div class="targetImagesColumn">
+    <div class="targetElementsColumn">
       <TargetImage
-        v-for="imagePair in this.task.imagePairs"
-        class="targetImage"
+        v-for="pair in this.task.pairs"
+        class="targetElement"
         :class="{
           outlined:
-            !this.imagesDraggedOntoTargets.hasOwnProperty(
-              imagePair.targetImage.uuid
+            !this.elementsDraggedOntoTargets.hasOwnProperty(
+              pair.targetElement.uuid
             ) &&
-            (this.draggedImageId || this.imageIdInteractedWith),
+            (this.draggedElementId || this.elementIdInteractedWith),
         }"
-        :draggable-image="getImageDraggedOntoTarget(imagePair.targetImage.uuid)"
-        :target-image="getImageById(imagePair.targetImage.uuid)"
-        :isCorrect="this.isAnswerCorrect(imagePair.targetImage.uuid)"
+        :draggable-image="getElementDraggedOntoTarget(pair.targetElement.uuid)"
+        :target-image="getElementById(pair.targetElement.uuid)"
+        :isCorrect="this.isAnswerCorrect(pair.targetElement.uuid)"
         :showResult="this.showResults"
-        :key="imagePair.uuid"
-        @drop="onDropOnTargetImage($event, imagePair.targetImage.uuid)"
+        :key="pair.uuid"
+        @drop="onDropOnTargetElement($event, pair.targetElement.uuid)"
         :draggable="
-          getImageDraggedOntoTarget(imagePair.targetImage.uuid) &&
+          getElementDraggedOntoTarget(pair.targetElement.uuid) &&
           !this.showResults
         "
-        @dragstart="startDragTargetImage($event, imagePair.targetImage.uuid)"
-        @dragend="endDragTargetImage($event, imagePair.targetImage.uuid)"
+        @dragstart="startDragTargetElement($event, pair.targetElement.uuid)"
+        @dragend="endDragTargetElement()"
         @dragover.prevent
         @dragenter.prevent
-        @click="onClickTargetImage(imagePair.targetImage.uuid)"
+        @click="onClickTargetElement(pair.targetElement.uuid)"
       />
     </div>
   </div>
@@ -115,19 +115,19 @@ export default defineComponent({
   emits: ['updateAttempt'],
   data() {
     return {
-      imageIdInteractedWith: undefined as Uuid | undefined,
-      draggedImageId: undefined as Uuid | undefined,
+      elementIdInteractedWith: undefined as Uuid | undefined,
+      draggedElementId: undefined as Uuid | undefined,
       // We used Record instead of Set because I wasn't sure if sets are
       // reactive in Vue 3.
-      // Record from target ID -> draggable image ID.
-      imagesDraggedOntoTargets: {} as Record<Uuid, Uuid>,
+      // Record from target ID -> draggable element ID.
+      elementsDraggedOntoTargets: {} as Record<Uuid, Uuid>,
       showResults: false as boolean,
     };
   },
   methods: {
     fileIdToUrl,
     isAnswerCorrect(targetId: Uuid): boolean {
-      const userInput = this.imagesDraggedOntoTargets[targetId];
+      const userInput = this.elementsDraggedOntoTargets[targetId];
       if (!userInput) {
         return false;
       }
@@ -135,7 +135,7 @@ export default defineComponent({
       // belongs so that we can check whether the user's solution is right
       // This method itself is therefore O(n), giving an O(n^2) if you check
       // every user answer in a loop every time the user makes an input.
-      // But it should be fine, because even if there are 50 images in a set
+      // But it should be fine, because even if there are 50 elements in a set
       // (very unlikely), this comes out to 2500 comparisons, which should
       // complete in under a millisecond.
       const pair = this.task.pairs.find(
@@ -151,20 +151,20 @@ export default defineComponent({
       return pair.draggableElement.uuid === userInput;
     },
 
-    getImageDraggedOntoTarget(targetId: Uuid): PairElement | undefined {
-      const draggedImageId = this.imagesDraggedOntoTargets[targetId];
-      if (draggedImageId) {
-        return this.getImageById(draggedImageId);
+    getElementDraggedOntoTarget(targetId: Uuid): PairElement | undefined {
+      const draggedElementId = this.elementsDraggedOntoTargets[targetId];
+      if (draggedElementId) {
+        return this.getElementById(draggedElementId);
       } else {
         return undefined;
       }
     },
 
-    startDragImage(dragEvent: DragEvent, imageId: Uuid): void {
-      if (!this.isDraggableImageUsed(imageId)) {
-        console.log('Dragging image:', imageId);
-        this.imageIdInteractedWith = imageId;
-        this.draggedImageId = imageId;
+    startDragElement(dragEvent: DragEvent, elementId: Uuid): void {
+      if (!this.isDraggableElementUsed(elementId)) {
+        console.log('Dragging element:', elementId);
+        this.elementIdInteractedWith = elementId;
+        this.draggedElementId = elementId;
 
         dragEvent.dataTransfer!.dropEffect = 'move';
         dragEvent.dataTransfer!.effectAllowed = 'move';
@@ -174,7 +174,7 @@ export default defineComponent({
           this.$refs.draggableImages as HTMLImageElement[]
         ).find(
           (value) =>
-            value.src == fileIdToUrl(this.getImageById(imageId).file_id)
+            value.src == fileIdToUrl(this.getElementById(elementId).file_id)
         );
 
         const parentElementOfImage = refToImage?.parentElement!;
@@ -202,22 +202,23 @@ export default defineComponent({
       }
     },
 
-    endDragImage(dragEvent: DragEvent, imageId: string): void {
-      this.imageIdInteractedWith = undefined;
-      this.draggedImageId = undefined;
+    endDragElement(): void {
+      this.elementIdInteractedWith = undefined;
+      this.draggedElementId = undefined;
     },
 
-    startDragTargetImage(dragEvent: DragEvent, targetImageId: Uuid): void {
+    startDragTargetElement(dragEvent: DragEvent, targetElementId: Uuid): void {
       dragEvent.dataTransfer!.dropEffect = 'move';
       dragEvent.dataTransfer!.effectAllowed = 'move';
-      // Remember that the image has been dragged away from a target
+      // Remember that the element has been dragged away from a target
       // where it had been placed by the user
-      dragEvent.dataTransfer!.setData('targetId', targetImageId);
+      dragEvent.dataTransfer!.setData('targetId', targetElementId);
 
-      // Check if an image has been dragged onto the target already
-      const userDraggedImageId = this.imagesDraggedOntoTargets[targetImageId];
-      if (userDraggedImageId) {
-        this.imageIdInteractedWith = userDraggedImageId;
+      // Check if an element has been dragged onto the target already
+      const userDraggedElementId =
+        this.elementsDraggedOntoTargets[targetElementId];
+      if (userDraggedElementId) {
+        this.elementIdInteractedWith = userDraggedElementId;
 
         // Add the interactive image to the cursor even if the user
         // clicked on the target image
@@ -226,7 +227,7 @@ export default defineComponent({
         ).find(
           (value) =>
             value.src ==
-            fileIdToUrl(this.getImageById(userDraggedImageId).file_id)
+            fileIdToUrl(this.getElementById(userDraggedElementId).file_id)
         );
 
         const parentElementOfImage = refToImage?.parentElement!;
@@ -240,105 +241,106 @@ export default defineComponent({
         }
 
         console.log(
-          'Dragging image:',
-          this.imageIdInteractedWith,
-          'from target image',
-          targetImageId
+          'Dragging element:',
+          this.elementIdInteractedWith,
+          'from target element',
+          targetElementId
         );
       }
     },
 
-    endDragTargetImage(event: DragEvent, targetImageId: Uuid) {
-      this.imageIdInteractedWith = undefined;
-      this.draggedImageId = undefined;
+    endDragTargetElement() {
+      this.elementIdInteractedWith = undefined;
+      this.draggedElementId = undefined;
     },
 
-    onDropOnTargetImage(event: DragEvent, targetImageId: Uuid): void {
-      if (!this.imageIdInteractedWith) {
+    onDropOnTargetElement(event: DragEvent, targetElementId: Uuid): void {
+      if (!this.elementIdInteractedWith) {
         return;
       }
 
-      // If the image has been dragged away from another target, then it should
+      // If the element has been dragged away from another target, then it should
       // be removed from that target when it is dropped onto this target.
       const otherTargetId = event.dataTransfer?.getData('targetId');
       if (otherTargetId) {
-        delete this.imagesDraggedOntoTargets[otherTargetId];
+        delete this.elementsDraggedOntoTargets[otherTargetId];
       }
-      // Save the dragged image onto the target where it has been dropped
-      this.imagesDraggedOntoTargets[targetImageId] = this.imageIdInteractedWith;
+      // Save the dragged element onto the target where it has been dropped
+      this.elementsDraggedOntoTargets[targetElementId] =
+        this.elementIdInteractedWith;
 
       console.log(
-        'Dropped image:',
-        this.imageIdInteractedWith,
+        'Dropped element:',
+        this.elementIdInteractedWith,
         'on target:',
-        targetImageId
+        targetElementId
       );
       // Mark that the drag interaction is over.
-      this.imageIdInteractedWith = undefined;
-      this.draggedImageId = undefined;
+      this.elementIdInteractedWith = undefined;
+      this.draggedElementId = undefined;
     },
 
-    getImageById(imageId: string): PairElement {
-      const image = this.imagesById[imageId];
-      if (!image) {
-        throw new Error('No image found with the given ID: ' + imageId);
+    getElementById(elementId: string): PairElement {
+      const element = this.elementsById[elementId];
+      if (!element) {
+        throw new Error('No element found with the given ID: ' + elementId);
       }
-      return image;
+      return element;
     },
 
-    onClickTargetImage(targetImageId: Uuid): void {
-      console.log('Clicked on target image', targetImageId);
+    onClickTargetElement(targetElementId: Uuid): void {
+      console.log('Clicked on target element', targetElementId);
 
       // Do nothing if we are displaying the results already
       if (this.showResults) return;
 
-      // Remove the image, if any, that has been dragged by the user onto
+      // Remove the element, if any, that has been dragged by the user onto
       // the target they have clicked.
-      const usedImageId = this.imagesDraggedOntoTargets[targetImageId];
-      if (usedImageId) {
-        delete this.imagesDraggedOntoTargets[targetImageId];
+      const usedElementId = this.elementsDraggedOntoTargets[targetElementId];
+      if (usedElementId) {
+        delete this.elementsDraggedOntoTargets[targetElementId];
       }
-      // Check if the user clicked a draggable image and wants to put it here
-      if (this.imageIdInteractedWith) {
-        this.imagesDraggedOntoTargets[targetImageId] =
-          this.imageIdInteractedWith;
-        this.imageIdInteractedWith = undefined;
+      // Check if the user clicked a draggable element and wants to put it here
+      if (this.elementIdInteractedWith) {
+        this.elementsDraggedOntoTargets[targetElementId] =
+          this.elementIdInteractedWith;
+        this.elementIdInteractedWith = undefined;
       }
     },
 
     // This has a complexity of O(n).  When it is called in our v-for to set
-    // the class of every draggable image element, it makes it O(n^2).
+    // the class of every draggable element, it makes it O(n^2).
     // But that should be OK, because no one will put more than (say) 100
-    // images in a single task, right?
-    isDraggableImageUsed(draggableImageId: Uuid): boolean {
-      return Object.values(this.imagesDraggedOntoTargets).includes(
-        draggableImageId
+    // elements in a single task, right?
+    isDraggableElementUsed(draggableElementId: Uuid): boolean {
+      return Object.values(this.elementsDraggedOntoTargets).includes(
+        draggableElementId
       );
     },
 
-    onClickDraggableImage(imageId: Uuid): void {
-      if (!this.isDraggableImageUsed(imageId) && !this.showResults) {
-        console.log('Clicked on image:', imageId);
-        this.imageIdInteractedWith = imageId;
+    onClickDraggableElement(elementId: Uuid): void {
+      if (!this.isDraggableElementUsed(elementId) && !this.showResults) {
+        console.log('Clicked on element:', elementId);
+        this.elementIdInteractedWith = elementId;
       }
     },
 
-    onDropOnInteractiveImages(event: DragEvent): void {
-      if (!this.imageIdInteractedWith) {
+    onDropOnInteractiveElements(event: DragEvent): void {
+      if (!this.elementIdInteractedWith) {
         return;
       }
 
-      // If the image has been dragged away from a target, then it should
+      // If the element has been dragged away from a target, then it should
       // be removed from that target when it is dropped here.
       const otherTargetId = event.dataTransfer?.getData('targetId');
       if (otherTargetId) {
-        delete this.imagesDraggedOntoTargets[otherTargetId];
+        delete this.elementsDraggedOntoTargets[otherTargetId];
       }
 
-      console.log('Returned image:', this.imageIdInteractedWith);
+      console.log('Returned element:', this.elementIdInteractedWith);
 
       // Mark that the interaction is over.
-      this.imageIdInteractedWith = undefined;
+      this.elementIdInteractedWith = undefined;
     },
 
     checkResults(): void {
@@ -347,12 +349,12 @@ export default defineComponent({
 
     reset(): void {
       this.showResults = false;
-      this.imagesDraggedOntoTargets = {};
+      this.elementsDraggedOntoTargets = {};
     },
   },
   computed: {
-    draggableImages(): Uuid[] {
-      // Shuffle the images
+    draggableElements(): Uuid[] {
+      // Shuffle the elements
       // https://stackoverflow.com/a/46545530
       return this.task.pairs
         .map((pair) => ({ pair: pair, sort: Math.random() }))
@@ -360,20 +362,19 @@ export default defineComponent({
         .map(({ pair }) => pair.draggableElement.uuid);
     },
 
-    imagesById(): Record<Uuid, PairElement> {
-      const imagesById: Record<Uuid, PairElement> = {};
+    elementsById(): Record<Uuid, PairElement> {
+      const elementsById: Record<Uuid, PairElement> = {};
       for (const pair of this.task.pairs) {
-        imagesById[pair.draggableElement.uuid] = pair.draggableElement;
-        imagesById[pair.targetElement.uuid] = pair.targetElement;
+        elementsById[pair.draggableElement.uuid] = pair.draggableElement;
+        elementsById[pair.targetElement.uuid] = pair.targetElement;
       }
-      return imagesById;
+      return elementsById;
     },
 
     correctAnswers(): number {
       let correctAnswers = 0;
-      for (const imagePair of this.task.pairs) {
-        if (this.isAnswerCorrect(imagePair.targetElement.uuid))
-          correctAnswers++;
+      for (const pair of this.task.pairs) {
+        if (this.isAnswerCorrect(pair.targetElement.uuid)) correctAnswers++;
       }
       return correctAnswers;
     },
@@ -400,12 +401,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.imagePairingRow {
+.pairingRow {
   display: flex;
   flex-direction: row;
 }
 
-.draggableImagesColumn {
+.draggableElementsColumn {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -414,7 +415,7 @@ export default defineComponent({
   border: 1px solid #cbd5de;
 }
 
-.targetImagesColumn {
+.targetElementsColumn {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -424,7 +425,7 @@ export default defineComponent({
   border: 1px solid #cbd5de;
 }
 
-.draggableImage {
+.draggableElement {
   object-fit: contain;
   object-position: center;
   display: flex;
@@ -444,18 +445,18 @@ export default defineComponent({
   border: 2px dashed #dbe2e8;
 }
 
-.draggableImageContainer {
+.draggableElementContainer {
   border: 2px solid #dbe2e8;
   border-radius: 6px;
   margin: 6px;
   padding: 6px;
 }
 
-.draggableImageContainer.selected {
+.draggableElementContainer.selected {
   border: 2px solid #7ba4d3;
 }
 
-.draggableImageContainer:not(.disabled):not(.selected):hover {
+.draggableElementContainer:not(.disabled):not(.selected):hover {
   cursor: grab;
   border: 2px solid #7ba4d3;
   box-shadow: 0 0 10px 0 #406ef3;
