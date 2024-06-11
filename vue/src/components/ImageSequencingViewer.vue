@@ -4,6 +4,9 @@
       v-for="image in this.images"
       :key="image.uuid"
       class="imageContainer"
+      :class="{
+        grabbable: !this.showResults,
+      }"
       :draggable="!this.showResults"
       @dragstart="startDragImage(image)"
       @dragover="onDragOver(image)"
@@ -204,6 +207,9 @@ export default defineComponent({
   border-radius: 6px;
   margin: 6px;
   padding: 6px;
+}
+
+.grabbable {
   cursor: grab;
 }
 
