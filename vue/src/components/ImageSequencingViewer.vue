@@ -5,9 +5,9 @@
       :key="image.uuid"
       class="imageContainer"
       :draggable="!this.showResults"
-      @dragstart="startDragImage($event, image)"
-      @dragover="onDragOver($event, image)"
-      @drop="onDropImage($event, image)"
+      @dragstart="startDragImage(image)"
+      @dragover="onDragOver(image)"
+      @drop="onDropImage()"
     >
       <img
         class="image"
@@ -60,7 +60,6 @@ import {
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
 import FeedbackElement from '@/components/FeedbackElement.vue';
-import { round } from 'lodash';
 
 export default defineComponent({
   name: 'ImageSequencingViewer',
@@ -94,17 +93,17 @@ export default defineComponent({
       );
     },
 
-    startDragImage(dragEvent: DragEvent, image: Image) {
-      this.imageInteractedWith = image;
+    startDragImage(image: Image) {
       console.log('Dragging image', image.altText);
+      this.imageInteractedWith = image;
     },
 
-    onDropImage(event: DragEvent, image: Image): void {
+    onDropImage(): void {
       console.log('Dropped image', this.imageInteractedWith?.altText);
       this.imageInteractedWith = undefined;
     },
 
-    onDragOver(event: DragEvent, image: Image): void {
+    onDragOver(image: Image): void {
       if (this.imageInteractedWith && this.imageInteractedWith != image) {
         const fromIndex = this.images.indexOf(this.imageInteractedWith);
         const toIndex = this.images.indexOf(image);
@@ -191,13 +190,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.main-flex {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 1em;
-}
-
 .imageRow {
   display: flex;
   flex-direction: row;
