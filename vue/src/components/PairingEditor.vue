@@ -49,6 +49,7 @@
                     .draggableElement.file_id
                 )
               "
+              class="h5p-element-image"
           /></template>
           <label>{{ $gettext('Karte B') }}</label>
           <label>
@@ -70,6 +71,20 @@
               </option>
             </select>
           </label>
+          <template
+            v-if="
+              this.taskDefinition.pairs[this.selectedPairIndex].targetElement
+                .type == 'image'
+            "
+            ><img
+              :src="
+                fileIdToUrl(
+                  this.taskDefinition.pairs[this.selectedPairIndex]
+                    .targetElement.file_id
+                )
+              "
+              class="h5p-element-image"
+          /></template>
         </fieldset>
       </form>
     </div>
@@ -177,5 +192,10 @@ export default defineComponent({
 
 .h5p-elements-settings {
   width: 40%;
+}
+
+.h5p-element-image {
+  max-width: 8em;
+  max-height: 8em;
 }
 </style>
