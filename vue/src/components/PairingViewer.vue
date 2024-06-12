@@ -37,7 +37,6 @@
     <div class="targetElementsColumn">
       <TargetImage
         v-for="pair in this.task.pairs"
-        class="targetElement"
         :class="{
           outlined:
             !this.elementsDraggedOntoTargets.hasOwnProperty(
