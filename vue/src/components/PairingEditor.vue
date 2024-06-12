@@ -49,6 +49,10 @@
                     .draggableElement.file_id
                 )
               "
+              :alt="
+                this.taskDefinition.pairs[this.selectedPairIndex]
+                  .draggableElement.altText
+              "
               class="h5p-element-image"
           /></template>
           <label>{{ $gettext('Karte B') }}</label>
@@ -82,6 +86,10 @@
                   this.taskDefinition.pairs[this.selectedPairIndex]
                     .targetElement.file_id
                 )
+              "
+              :alt="
+                this.taskDefinition.pairs[this.selectedPairIndex].targetElement
+                  .altText
               "
               class="h5p-element-image"
           /></template>
