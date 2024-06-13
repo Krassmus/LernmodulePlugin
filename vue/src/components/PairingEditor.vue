@@ -36,12 +36,14 @@
               </option>
             </select>
           </label>
-          <template
+          <div
             v-if="
               this.taskDefinition.pairs[this.selectedPairIndex].draggableElement
                 .type == 'image'
             "
-            ><img
+            class="h5p-element-container"
+          >
+            <img
               :src="
                 fileIdToUrl(
                   this.taskDefinition.pairs[this.selectedPairIndex]
@@ -53,7 +55,8 @@
                   .draggableElement.altText
               "
               class="h5p-element-image"
-          /></template>
+            />
+          </div>
           <label>{{ $gettext('Karte B') }}</label>
           <label>
             {{ $gettext('Typ') }}
@@ -74,12 +77,14 @@
               </option>
             </select>
           </label>
-          <template
+          <div
             v-if="
               this.taskDefinition.pairs[this.selectedPairIndex].targetElement
                 .type == 'image'
             "
-            ><img
+            class="h5p-element-container"
+          >
+            <img
               :src="
                 fileIdToUrl(
                   this.taskDefinition.pairs[this.selectedPairIndex]
@@ -91,7 +96,8 @@
                   .altText
               "
               class="h5p-element-image"
-          /></template>
+            />
+          </div>
         </fieldset>
       </form>
     </div>
@@ -204,8 +210,18 @@ export default defineComponent({
   padding: 32px;
 }
 
+.h5p-element-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .h5p-element-image {
-  max-width: 8em;
-  max-height: 8em;
+  width: 8em;
+  height: 8em;
+  object-fit: contain;
+  border: #888888 1px solid;
+  border-radius: 0.25em;
+  padding: 0.25em;
 }
 </style>
