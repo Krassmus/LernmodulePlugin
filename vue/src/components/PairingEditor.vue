@@ -41,20 +41,39 @@
               this.taskDefinition.pairs[this.selectedPairIndex].draggableElement
                 .type == 'image'
             "
-            class="h5p-element-container"
+            class="h5p-element-image-container"
           >
-            <img
-              :src="
-                fileIdToUrl(
-                  this.taskDefinition.pairs[this.selectedPairIndex]
-                    .draggableElement.file_id
-                )
-              "
-              :alt="
+            <template
+              v-if="
                 this.taskDefinition.pairs[this.selectedPairIndex]
-                  .draggableElement.altText
+                  .draggableElement.file_id
               "
-              class="h5p-element-image"
+            >
+              <img
+                :src="
+                  fileIdToUrl(
+                    this.taskDefinition.pairs[this.selectedPairIndex]
+                      .draggableElement.file_id
+                  )
+                "
+                :alt="
+                  this.taskDefinition.pairs[this.selectedPairIndex]
+                    .draggableElement.altText
+                "
+                class="h5p-element-image"
+              />
+              <button
+                @click="removeDraggableImage(this.selectedPairIndex)"
+                type="button"
+              >
+                {{ $gettext('Bild löschen') }}
+              </button>
+            </template>
+            <FileUpload
+              v-else
+              @file-uploaded="
+                onUploadDraggableImage(this.selectedPairIndex, $event)
+              "
             />
           </div>
           <label>{{ $gettext('Karte B') }}</label>
@@ -82,20 +101,39 @@
               this.taskDefinition.pairs[this.selectedPairIndex].targetElement
                 .type == 'image'
             "
-            class="h5p-element-container"
+            class="h5p-element-image-container"
           >
-            <img
-              :src="
-                fileIdToUrl(
-                  this.taskDefinition.pairs[this.selectedPairIndex]
-                    .targetElement.file_id
-                )
-              "
-              :alt="
+            <template
+              v-if="
                 this.taskDefinition.pairs[this.selectedPairIndex].targetElement
-                  .altText
+                  .file_id
               "
-              class="h5p-element-image"
+            >
+              <img
+                :src="
+                  fileIdToUrl(
+                    this.taskDefinition.pairs[this.selectedPairIndex]
+                      .targetElement.file_id
+                  )
+                "
+                :alt="
+                  this.taskDefinition.pairs[this.selectedPairIndex]
+                    .targetElement.altText
+                "
+                class="h5p-element-image"
+              />
+              <button
+                @click="removeTargetImage(this.selectedPairIndex)"
+                type="button"
+              >
+                {{ $gettext('Bild löschen') }}
+              </button>
+            </template>
+            <FileUpload
+              v-else
+              @file-uploaded="
+                onUploadTargetImage(this.selectedPairIndex, $event)
+              "
             />
           </div>
         </fieldset>
@@ -112,10 +150,12 @@ import produce from 'immer';
 import { taskEditorStore } from '@/store';
 import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
+import FileUpload from '@/components/FileUpload.vue';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'PairingEditor',
-  components: { ElementPair },
+  components: { FileUpload, ElementPair },
   props: {
     task: {
       type: Object as PropType<PairingTask>,
@@ -181,6 +221,52 @@ export default defineComponent({
         this.selectedPairIndex = this.selectedPairIndex - 1;
       }
     },
+    onUploadDraggableImage(pairIndex: number, file: FileRef): void {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.pairs[pairIndex].draggableElement.file_id = file.id;
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
+    },
+    removeDraggableImage(pairIndex: number) {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.pairs[pairIndex].draggableElement = {
+          uuid: v4(),
+          type: 'image',
+          file_id: '',
+          altText: '',
+        };
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
+    },
+    onUploadTargetImage(pairIndex: number, file: FileRef): void {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.pairs[pairIndex].targetElement.file_id = file.id;
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
+    },
+    removeTargetImage(pairIndex: number) {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.pairs[pairIndex].targetElement = {
+          uuid: v4(),
+          type: 'image',
+          file_id: '',
+          altText: '',
+        };
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
+    },
   },
   computed: {
     taskDefinition: () => taskEditorStore.taskDefinition as PairingTask,
@@ -210,9 +296,10 @@ export default defineComponent({
   padding: 32px;
 }
 
-.h5p-element-container {
+.h5p-element-image-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -223,5 +310,6 @@ export default defineComponent({
   border: #888888 1px solid;
   border-radius: 0.25em;
   padding: 0.25em;
+  margin-bottom: 0.5em; /* distance to delete image button */
 }
 </style>
