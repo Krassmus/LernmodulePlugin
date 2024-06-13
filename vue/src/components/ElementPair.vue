@@ -5,14 +5,24 @@
         v-if="pair.draggableElement.type === 'image'"
         :image="pair.draggableElement"
       />
-      <FileUpload v-else @file-uploaded="onUploadDraggableImage" />
+      <p v-else-if="pair.draggableElement.type === 'text'">
+        Platzhalter für Text Element
+      </p>
+      <p v-else-if="pair.draggableElement.type === 'audio'">
+        Platzhalter für Audio Element
+      </p>
     </div>
     <div class="h5pElement">
       <EditedImagePairImage
         v-if="pair.targetElement.type === 'image'"
         :image="pair.targetElement"
       />
-      <FileUpload v-else @file-uploaded="onUploadTargetImage" />
+      <p v-else-if="pair.targetElement.type === 'text'">
+        Platzhalter für Text Element
+      </p>
+      <p v-else-if="pair.targetElement.type === 'audio'">
+        Platzhalter für Audio Element
+      </p>
     </div>
   </div>
 </template>
@@ -22,11 +32,10 @@ import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
 import { Pair } from '@/models/TaskDefinition';
 import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
-import FileUpload from '@/components/FileUpload.vue';
 
 export default defineComponent({
   name: 'ElementPair',
-  components: { FileUpload, EditedImagePairImage },
+  components: { EditedImagePairImage },
   props: {
     pair: {
       type: Object as PropType<Pair>,
@@ -64,6 +73,8 @@ export default defineComponent({
   border: #888888 1px solid;
   border-radius: 0.25em;
   padding: 0.25em;
+  width: 8em;
+  height: 8em;
 }
 
 .selected {
