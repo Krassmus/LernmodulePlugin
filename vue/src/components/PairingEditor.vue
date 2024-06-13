@@ -189,16 +189,19 @@ export default defineComponent({
 }
 
 .h5p-elements-overview {
-  width: 60%;
+  width: 70%;
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* Main axis is horizontal and the cross-axis is vertical */
+  justify-content: flex-start; /* Alignment of flex items along the main axis within the flex container. */
+  align-items: flex-start; /* Alignment of flex items along the cross-axis within the flex container. */
   flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: left;
+  align-content: flex-start; /* Alignment of multiple lines when there is extra space in the cross-axis. */
+  padding: 32px;
 }
 
 .h5p-elements-settings {
-  width: 40%;
+  width: 30%;
+  padding: 32px;
 }
 
 .h5p-element-image {
