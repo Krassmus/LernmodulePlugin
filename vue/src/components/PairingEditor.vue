@@ -16,7 +16,6 @@
       <form class="default">
         <fieldset>
           <label>{{ $gettext('Eigenschaften') }}</label>
-          <pre>{{ this.taskDefinition.pairs[this.selectedPairIndex] }}</pre>
           <label>{{ $gettext('Karte A') }}</label>
           <label>
             {{ $gettext('Typ') }}
