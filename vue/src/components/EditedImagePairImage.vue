@@ -3,6 +3,7 @@
     :src="fileIdToUrl(image.file_id)"
     :alt="image.altText"
     class="edited-image-pair-image"
+    draggable="false"
   />
 </template>
 
@@ -18,19 +19,18 @@ export default defineComponent({
       required: true,
     },
   },
-  data() {
-    return {};
-  },
   methods: { fileIdToUrl },
-  computed: {},
 });
 </script>
 
 <style scoped>
 .edited-image-pair-image {
-  object-fit: contain;
-  object-position: center;
   width: 8em;
   height: 8em;
+  padding: 0.25em;
+  object-fit: contain;
+  box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
+  border: solid 1px #cbd5de;
+  border-radius: 0.25em;
 }
 </style>
