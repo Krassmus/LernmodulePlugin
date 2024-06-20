@@ -48,25 +48,17 @@
                   .draggableElement.file_id
               "
             >
-              <img
-                :src="
-                  fileIdToUrl(
-                    this.taskDefinition.pairs[this.selectedPairIndex]
-                      .draggableElement.file_id
-                  )
-                "
-                :alt="
+              <edited-image-pair-image
+                :image="
                   this.taskDefinition.pairs[this.selectedPairIndex]
-                    .draggableElement.altText
+                    .draggableElement
                 "
-                class="h5p-element-image"
               />
               <button
-                @click="removeDraggableImage(this.selectedPairIndex)"
                 type="button"
-              >
-                {{ $gettext('Bild löschen') }}
-              </button>
+                @click="removeDraggableImage(this.selectedPairIndex)"
+                v-text="$gettext('Bild löschen')"
+              />
             </template>
             <FileUpload
               v-else
@@ -108,25 +100,17 @@
                   .file_id
               "
             >
-              <img
-                :src="
-                  fileIdToUrl(
-                    this.taskDefinition.pairs[this.selectedPairIndex]
-                      .targetElement.file_id
-                  )
-                "
-                :alt="
+              <edited-image-pair-image
+                :image="
                   this.taskDefinition.pairs[this.selectedPairIndex]
-                    .targetElement.altText
+                    .targetElement
                 "
-                class="h5p-element-image"
               />
               <button
-                @click="removeTargetImage(this.selectedPairIndex)"
                 type="button"
-              >
-                {{ $gettext('Bild löschen') }}
-              </button>
+                @click="removeTargetImage(this.selectedPairIndex)"
+                v-text="$gettext('Bild löschen')"
+              />
             </template>
             <FileUpload
               v-else
@@ -151,10 +135,11 @@ import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
+import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
 
 export default defineComponent({
   name: 'PairingEditor',
-  components: { FileUpload, ElementPair },
+  components: { EditedImagePairImage, FileUpload, ElementPair },
   props: {
     task: {
       type: Object as PropType<PairingTask>,
@@ -297,15 +282,6 @@ export default defineComponent({
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-}
-
-.h5p-element-image {
-  width: 8em;
-  height: 8em;
-  object-fit: contain;
-  border: #888888 1px solid;
-  border-radius: 0.25em;
-  padding: 0.25em;
-  margin-bottom: 0.5em; /* distance to delete image button */
+  gap: 0.5em;
 }
 </style>

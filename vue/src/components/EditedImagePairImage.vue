@@ -27,7 +27,7 @@ export default defineComponent({
 .edited-image-pair-image {
   width: 8em;
   height: 8em;
-  padding: 0.25em;
+  padding: 0.5em;
   object-fit: contain;
   box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
   border: solid 1px #cbd5de;
