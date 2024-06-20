@@ -59,12 +59,12 @@ export default defineComponent({
 
 .h5pElementPair.selected {
   border: #0a78d1 2px solid;
-  box-shadow: 0 0 8px 0 #0a78d1;
+  box-shadow: 0 0 8px #0a78d1;
 }
 
 .h5pElementPair:not(.disabled):not(.selected):hover {
   cursor: grab;
   border: 2px solid #0a78d1;
-  box-shadow: 0 0 4px 0 #0a78d1;
+  box-shadow: 0 0 4px #0a78d1;
 }
 </style>
