@@ -1,6 +1,6 @@
 <template>
   <div class="h5pElementPair">
-    <div class="h5pElement">
+    <template v-if="pair.draggableElement">
       <EditedImagePairImage
         v-if="pair.draggableElement.type === 'image'"
         :image="pair.draggableElement"
@@ -11,8 +11,8 @@
       <p v-else-if="pair.draggableElement.type === 'audio'">
         Platzhalter für Audio Element
       </p>
-    </div>
-    <div class="h5pElement">
+    </template>
+    <template v-if="pair.targetElement">
       <EditedImagePairImage
         v-if="pair.targetElement.type === 'image'"
         :image="pair.targetElement"
@@ -23,7 +23,7 @@
       <p v-else-if="pair.targetElement.type === 'audio'">
         Platzhalter für Audio Element
       </p>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -41,43 +41,30 @@ export default defineComponent({
       type: Object as PropType<Pair>,
       required: true,
     },
-    pairIndex: {
-      type: Number as PropType<number>,
-      required: true,
-    },
-  },
-  data() {
-    return {};
   },
   methods: {
     $gettext,
   },
-  computed: {},
 });
 </script>
 
 <style scoped>
 .h5pElementPair {
   display: flex;
-  flex: 0 0 auto;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   border: rgba(0, 0, 0, 0) 2px solid;
-  border-radius: 0.25em;
+  border-radius: 0.5em;
   gap: 0.25em;
-  padding: 0.25em;
 }
 
-.h5pElement {
-  border: #888888 1px solid;
-  border-radius: 0.25em;
-  padding: 0.25em;
-  width: 8em;
-  height: 8em;
-}
-
-.selected {
+.h5pElementPair.selected {
   border: #0a78d1 2px solid;
+  box-shadow: 0 0 8px 0 #0a78d1;
+}
+
+.h5pElementPair:not(.disabled):not(.selected):hover {
+  cursor: grab;
+  border: 2px solid #0a78d1;
+  box-shadow: 0 0 4px 0 #0a78d1;
 }
 </style>

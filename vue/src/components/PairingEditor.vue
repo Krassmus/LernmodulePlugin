@@ -8,7 +8,6 @@
           selected: index === this.selectedPairIndex,
         }"
         :pair="this.taskDefinition.pairs[index]"
-        :pair-index="index"
         @click="selectPair(index)"
       />
     </div>
@@ -283,17 +282,14 @@ export default defineComponent({
 .h5p-elements-overview {
   width: 70%;
   display: flex;
-  flex-direction: row; /* Main axis is horizontal and the cross-axis is vertical */
-  justify-content: flex-start; /* Alignment of flex items along the main axis within the flex container. */
-  align-items: flex-start; /* Alignment of flex items along the cross-axis within the flex container. */
   flex-wrap: wrap;
-  align-content: flex-start; /* Alignment of multiple lines when there is extra space in the cross-axis. */
-  padding: 32px;
+  align-content: flex-start; /* Alignment of multiple lines when there is extra space in the vertical axis. */
+  column-gap: 0.5em;
+  row-gap: 1em;
 }
 
 .h5p-elements-settings {
   width: 30%;
-  padding: 32px;
 }
 
 .h5p-element-image-container {
