@@ -160,6 +160,17 @@ export default defineComponent({
     },
 
     startDragElement(dragEvent: DragEvent, elementId: Uuid): void {
+      /**
+       * TODO #27: After creating MultimediaElement: Refactor drag-drop interactions.
+       * The HTML5 drag-drop is hard to use with our planned refactoring
+       * to create the component 'MultimediaElement'.
+       * Since for HTML5 drag-drop, we have to do some hacking to make the
+       * ghost image look correct, and this hacking is not very robust and
+       * will fail for text/audio type content.
+       * So instead of using HTML5 drag-drop (draggable=true, ondrag, ondrop), let's
+       * use pointer events (pointerdown, pointermove and pointerup) and pointer capture API.
+       * (See Gitlab for rest of comment...)
+       */
       if (!this.isDraggableElementUsed(elementId)) {
         console.log('Dragging element:', elementId);
         this.elementIdInteractedWith = elementId;
