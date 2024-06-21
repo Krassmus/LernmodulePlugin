@@ -1,4 +1,4 @@
-import { TaskDefinition } from '@/models/TaskDefinition';
+import { TaskDefinition, taskDefinitionSchema } from '@/models/TaskDefinition';
 import { z } from 'zod';
 
 /**
@@ -21,9 +21,9 @@ export async function saveTask(
   const url = window.STUDIP.LernmoduleVueJS.saveRoute;
   const token = window.STUDIP.CSRF_TOKEN;
   const formData = new FormData();
-  // TODO Maybe we should parse taskDefinition here to ensure it has no extra
-  //   fields we didn't intend to save.
-  formData.append('task_definition', JSON.stringify(taskDefinition));
+  // Parse taskDefinition here to ensure it has no extra fields we didn't intend to save.
+  const parsedTaskDefinition = taskDefinitionSchema.parse(taskDefinition);
+  formData.append('task_definition', JSON.stringify(parsedTaskDefinition));
   formData.append('module_id', module_id);
   formData.append('name', moduleName);
   formData.append('infotext', infoText);
