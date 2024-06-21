@@ -10,6 +10,10 @@
         :pair="this.taskDefinition.pairs[index]"
         @click="selectPair(index)"
       />
+      <!-- TODO Make this button look good -->
+      <button type="button" class="button add" @click="addPair">
+        {{ $gettext('Pair hinzufügen') }}
+      </button>
     </div>
     <div class="h5p-elements-settings">
       <form class="default">
