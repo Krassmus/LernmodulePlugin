@@ -148,6 +148,10 @@ export default defineComponent({
           this.errors = [];
         })
         .catch((error) => {
+          /*
+           TODO #23 Check for common errors and translate them so they are
+             understandable for users. E.g. AxiosError 413 (File too large).
+          */
           console.error(error);
           this.errors.push(error);
           this.uploadRequestPromise = undefined;
