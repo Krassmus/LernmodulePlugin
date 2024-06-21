@@ -61,6 +61,7 @@
               />
             </template>
             <FileUpload
+              class="pairing-file-upload"
               v-else
               @file-uploaded="
                 onUploadDraggableImage(this.selectedPairIndex, $event)
@@ -113,6 +114,7 @@
               />
             </template>
             <FileUpload
+              class="pairing-file-upload"
               v-else
               @file-uploaded="
                 onUploadTargetImage(this.selectedPairIndex, $event)
@@ -258,15 +260,23 @@ export default defineComponent({
 });
 </script>
 
+<style>
+.pairing-file-upload,
+.pairing-file-upload input[type='file'] {
+  max-width: 100%;
+}
+</style>
+
 <style scoped>
 .main-flex {
   display: flex;
   flex-direction: row;
+  gap: 1em;
 }
 
 .h5p-elements-overview {
-  width: 70%;
   display: flex;
+  flex-grow: 1;
   flex-wrap: wrap;
   align-content: flex-start; /* Alignment of multiple lines when there is extra space in the vertical axis. */
   column-gap: 0.5em;
@@ -274,7 +284,9 @@ export default defineComponent({
 }
 
 .h5p-elements-settings {
-  width: 30%;
+  flex-grow: 0;
+  flex-basis: 250px;
+  flex-shrink: 0;
 }
 
 .h5p-element-image-container {

@@ -2,16 +2,17 @@
   <span v-if="uploadRequestPromise">{{
     $gettext('Datei wird hochgeladen')
   }}</span>
-  <input
-    v-else
-    ref="fileInput"
-    type="file"
-    :accept="accept"
-    @change="onInputChange"
-  />
-  <p class="validation-error" v-for="error in errors" :key="error">
-    {{ error }}
-  </p>
+  <div v-else>
+    <input
+      ref="fileInput"
+      type="file"
+      :accept="accept"
+      @change="onInputChange"
+    />
+    <p class="validation-error" v-for="error in errors" :key="error">
+      {{ error }}
+    </p>
+  </div>
 </template>
 
 <script lang="ts">
