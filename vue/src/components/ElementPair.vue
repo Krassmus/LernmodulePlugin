@@ -1,4 +1,5 @@
 <template>
+  <!--  TODO #28 use button instead of div -->
   <div class="h5pElementPair">
     <template v-if="pair.draggableElement">
       <EditedImagePairImage

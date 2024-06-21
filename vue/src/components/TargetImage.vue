@@ -1,4 +1,5 @@
 <template>
+  <!--  TODO #28 this should be a button, not a div, because it is clickable. -->
   <div v-if="draggableImage" class="grid-square two-images">
     <div class="image-container back">
       <img

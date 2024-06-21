@@ -7,7 +7,8 @@
       @dragenter.prevent
       @drop="onDropOnInteractiveElements($event)"
     >
-      <div
+      <button
+        type="button"
         v-for="draggableElementId in draggableElements"
         :key="draggableElementId"
         :draggable="
@@ -32,7 +33,7 @@
           draggable="false"
           ref="draggableImages"
         />
-      </div>
+      </button>
     </div>
     <div class="targetElementsColumn">
       <TargetImage
