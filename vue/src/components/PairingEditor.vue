@@ -18,12 +18,7 @@
           <label>{{ $gettext('Karte A') }}</label>
           <label>
             {{ $gettext('Typ') }}
-            <select
-              v-model="
-                this.taskDefinition.pairs[this.selectedPairIndex]
-                  .draggableElement.type
-              "
-            >
+            <select v-model="selectedPair.draggableElement.type">
               <option :value="'image'">
                 {{ $gettext('Bild') }}
               </option>
@@ -36,24 +31,11 @@
             </select>
           </label>
           <div
-            v-if="
-              this.taskDefinition.pairs[this.selectedPairIndex].draggableElement
-                .type == 'image'
-            "
+            v-if="selectedPair.draggableElement.type == 'image'"
             class="h5p-element-image-container"
           >
-            <template
-              v-if="
-                this.taskDefinition.pairs[this.selectedPairIndex]
-                  .draggableElement.file_id
-              "
-            >
-              <edited-image-pair-image
-                :image="
-                  this.taskDefinition.pairs[this.selectedPairIndex]
-                    .draggableElement
-                "
-              />
+            <template v-if="selectedPair.draggableElement.file_id">
+              <edited-image-pair-image :image="selectedPair.draggableElement" />
               <button
                 type="button"
                 @click="removeDraggableImage(this.selectedPairIndex)"
@@ -71,12 +53,7 @@
           <label>{{ $gettext('Karte B') }}</label>
           <label>
             {{ $gettext('Typ') }}
-            <select
-              v-model="
-                this.taskDefinition.pairs[this.selectedPairIndex].targetElement
-                  .type
-              "
-            >
+            <select v-model="selectedPair.targetElement.type">
               <option :value="'image'">
                 {{ $gettext('Bild') }}
               </option>
@@ -89,24 +66,11 @@
             </select>
           </label>
           <div
-            v-if="
-              this.taskDefinition.pairs[this.selectedPairIndex].targetElement
-                .type == 'image'
-            "
+            v-if="selectedPair.targetElement.type == 'image'"
             class="h5p-element-image-container"
           >
-            <template
-              v-if="
-                this.taskDefinition.pairs[this.selectedPairIndex].targetElement
-                  .file_id
-              "
-            >
-              <edited-image-pair-image
-                :image="
-                  this.taskDefinition.pairs[this.selectedPairIndex]
-                    .targetElement
-                "
-              />
+            <template v-if="selectedPair.targetElement.file_id">
+              <edited-image-pair-image :image="selectedPair.targetElement" />
               <button
                 type="button"
                 @click="removeTargetImage(this.selectedPairIndex)"
@@ -129,7 +93,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, PairingTask } from '@/models/TaskDefinition';
+import { fileIdToUrl, Pair, PairingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { taskEditorStore } from '@/store';
@@ -256,6 +220,9 @@ export default defineComponent({
   },
   computed: {
     taskDefinition: () => taskEditorStore.taskDefinition as PairingTask,
+    selectedPair(): Pair {
+      return this.taskDefinition.pairs[this.selectedPairIndex];
+    },
   },
 });
 </script>
