@@ -1,6 +1,6 @@
 <template>
   <!--  TODO #28 use button instead of div -->
-  <div class="h5pElementPair">
+  <button type="button" class="h5pElementPair">
     <template v-if="pair.draggableElement">
       <EditedImagePairImage
         v-if="pair.draggableElement.type === 'image'"
@@ -25,7 +25,7 @@
         Platzhalter für Audio Element
       </p>
     </template>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -56,6 +56,8 @@ export default defineComponent({
   border: rgba(0, 0, 0, 0) 2px solid;
   border-radius: 0.5em;
   gap: 0.25em;
+  padding: 0;
+  background: unset;
 }
 
 .h5pElementPair.selected {
