@@ -2,7 +2,7 @@
   <div class="main-flex">
     <div class="h5p-elements-overview">
       <ElementPair
-        v-for="(pair, index) in taskDefinition.pairs"
+        v-for="(pair, index) in task.pairs"
         :key="pair.uuid"
         :class="{
           selected: index === this.selectedPairIndex,
@@ -111,7 +111,7 @@ export default defineComponent({
   name: 'PairingEditor',
   components: { EditedImagePairImage, FileUpload, ElementPair },
   props: {
-    task: {
+    taskDefinition: {
       type: Object as PropType<PairingTask>,
       required: true,
     },
@@ -122,7 +122,7 @@ export default defineComponent({
     };
   },
   beforeMount(): void {
-    if (this.taskDefinition.pairs.length > 0) {
+    if (this.task.pairs.length > 0) {
       this.selectedPairIndex = 0;
     }
   },
@@ -138,7 +138,7 @@ export default defineComponent({
       this.selectedPairIndex = index;
     },
     addPair() {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.task, (draft) => {
         draft.pairs.push({
           uuid: v4(),
           draggableElement: {
@@ -160,10 +160,10 @@ export default defineComponent({
         undoBatch: {},
       });
       // Select the newly inserted card
-      this.selectedPairIndex = this.taskDefinition.pairs.length - 1;
+      this.selectedPairIndex = this.task.pairs.length - 1;
     },
     deletePair(index: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.task, (draft) => {
         draft.pairs.splice(index, 1);
       });
       taskEditorStore.performEdit({
@@ -176,7 +176,7 @@ export default defineComponent({
       }
     },
     onUploadDraggableImage(pairIndex: number, file: FileRef): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.task, (draft) => {
         draft.pairs[pairIndex].draggableElement.file_id = file.id;
       });
       taskEditorStore.performEdit({
@@ -185,7 +185,7 @@ export default defineComponent({
       });
     },
     removeDraggableImage(pairIndex: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.task, (draft) => {
         draft.pairs[pairIndex].draggableElement = {
           uuid: v4(),
           type: 'image',
@@ -199,7 +199,7 @@ export default defineComponent({
       });
     },
     onUploadTargetImage(pairIndex: number, file: FileRef): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.task, (draft) => {
         draft.pairs[pairIndex].targetElement.file_id = file.id;
       });
       taskEditorStore.performEdit({
@@ -208,7 +208,7 @@ export default defineComponent({
       });
     },
     removeTargetImage(pairIndex: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.task, (draft) => {
         draft.pairs[pairIndex].targetElement = {
           uuid: v4(),
           type: 'image',
@@ -223,9 +223,9 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as PairingTask,
+    task: () => taskEditorStore.taskDefinition as PairingTask,
     selectedPair(): Pair {
-      return this.taskDefinition.pairs[this.selectedPairIndex];
+      return this.task.pairs[this.selectedPairIndex];
     },
   },
 });
