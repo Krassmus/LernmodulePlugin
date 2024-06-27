@@ -26,10 +26,8 @@
           selected: this.elementIdInteractedWith === draggableElementId,
         }"
       >
-        <img
-          class="draggableElement"
-          :src="fileIdToUrl(getElementById(draggableElementId).file_id)"
-          :alt="getElementById(draggableElementId).altText"
+        <MultimediaElement
+          :element="getElementById(draggableElementId)"
           draggable="false"
           ref="draggableImages"
         />
@@ -97,12 +95,14 @@ import { defineComponent, PropType } from 'vue';
 import { fileIdToUrl, PairElement, PairingTask } from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
 import FeedbackElement from '@/components/FeedbackElement.vue';
+import MultimediaElement from '@/components/MultimediaElement.vue';
 
 type Uuid = string;
 
 export default defineComponent({
   name: 'PairingViewer',
   components: {
+    MultimediaElement,
     TargetImage,
     FeedbackElement,
   },
@@ -421,29 +421,25 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   user-select: none;
   border: 1px solid #cbd5de;
+  gap: 0.5em;
+  padding: 0.5em;
 }
 
 .targetElementsColumn {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
-  background-color: #eef1f4;
+  justify-content: flex-start;
+  align-items: flex-start;
   user-select: none;
   border: 1px solid #cbd5de;
-}
-
-.draggableElement {
-  object-fit: contain;
-  object-position: center;
-  display: flex;
-  justify-content: center;
-  width: 8em;
-  height: 8em;
-  box-shadow: inset 0 2px 74px 0 #cbd5de;
+  gap: 0.5em;
+  padding: 0.5em;
+  background-color: #eef1f4;
 }
 
 .disabled {
@@ -457,10 +453,12 @@ export default defineComponent({
 }
 
 .draggableElementContainer {
-  border: 2px solid #dbe2e8;
-  border-radius: 6px;
-  margin: 6px;
-  padding: 6px;
+  display: flex;
+  margin: unset;
+  padding: unset;
+  background: unset;
+  border: rgba(0, 0, 0, 0) 2px solid;
+  border-radius: 0.5em;
 }
 
 .draggableElementContainer.selected {

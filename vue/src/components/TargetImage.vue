@@ -2,11 +2,10 @@
   <!--  TODO #28 this should be a button, not a div, because it is clickable. -->
   <div v-if="draggableImage" class="grid-square two-images">
     <div class="image-container back">
-      <img
-        :src="fileIdToUrl(targetImage.file_id)"
-        :alt="targetImage.altText"
-        class="image"
+      <MultimediaElement
+        :element="targetImage"
         draggable="false"
+        class="image"
         :class="{
           correct: this.isCorrect,
           incorrect: !this.isCorrect,
@@ -15,11 +14,10 @@
       />
     </div>
     <div class="image-container front">
-      <img
-        :src="fileIdToUrl(draggableImage.file_id)"
-        :alt="draggableImage.altText"
-        class="image"
+      <MultimediaElement
+        :element="draggableImage"
         draggable="false"
+        class="image"
         :class="{
           correct: this.isCorrect,
           incorrect: !this.isCorrect,
@@ -29,22 +27,18 @@
     </div>
   </div>
   <div v-else class="grid-square one-image">
-    <img
-      draggable="false"
-      :src="fileIdToUrl(targetImage.file_id)"
-      :alt="targetImage.altText"
-      class="image"
-    />
+    <MultimediaElement :element="targetImage" draggable="false" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { fileIdToUrl, Image } from '@/models/TaskDefinition';
+import MultimediaElement from '@/components/MultimediaElement.vue';
 
 export default defineComponent({
   name: 'TargetImage',
-  components: {},
+  components: { MultimediaElement },
   props: {
     draggableImage: {
       type: Object as PropType<Image>,
@@ -70,20 +64,15 @@ export default defineComponent({
 
 <style scoped>
 .grid-square {
-  width: 8em;
-  padding: 6px;
-  margin: 6px;
   height: 8em;
-  border-radius: 6px;
+  width: 8em;
+  border-radius: 0.25em;
   border: 2px solid transparent;
 }
 
 .grid-square.one-image {
   display: flex;
   justify-content: center;
-  border-color: #dbe2e8;
-  box-shadow: 2px 2px 0 2px rgba(203, 213, 222, 0.2);
-  background-color: #ffffff;
 }
 
 .grid-square.two-images {
@@ -92,7 +81,7 @@ export default defineComponent({
 }
 
 .grid-square.two-images .image {
-  border-radius: 6px;
+  border-radius: 0.25em;
 }
 
 .grid-square.two-images:not(:hover):not(.showResult) .image {
@@ -139,6 +128,5 @@ export default defineComponent({
   object-fit: contain;
   object-position: center;
   box-sizing: border-box;
-  background-color: #eef1f4;
 }
 </style>
