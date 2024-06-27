@@ -1,30 +1,13 @@
 <template>
-  <!--  TODO #28 use button instead of div -->
   <button type="button" class="h5pElementPair">
-    <template v-if="pair.draggableElement">
-      <EditedImagePairImage
-        v-if="pair.draggableElement.type === 'image'"
-        :image="pair.draggableElement"
-      />
-      <p v-else-if="pair.draggableElement.type === 'text'">
-        Platzhalter für Text Element
-      </p>
-      <p v-else-if="pair.draggableElement.type === 'audio'">
-        Platzhalter für Audio Element
-      </p>
-    </template>
-    <template v-if="pair.targetElement">
-      <EditedImagePairImage
-        v-if="pair.targetElement.type === 'image'"
-        :image="pair.targetElement"
-      />
-      <p v-else-if="pair.targetElement.type === 'text'">
-        Platzhalter für Text Element
-      </p>
-      <p v-else-if="pair.targetElement.type === 'audio'">
-        Platzhalter für Audio Element
-      </p>
-    </template>
+    <MultimediaElement
+      v-if="pair.draggableElement"
+      :element="pair.draggableElement"
+    />
+    <MultimediaElement
+      v-if="pair.targetElement"
+      :element="pair.targetElement"
+    />
   </button>
 </template>
 
@@ -32,11 +15,11 @@
 import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
 import { Pair } from '@/models/TaskDefinition';
-import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
+import MultimediaElement from '@/components/MultimediaElement.vue';
 
 export default defineComponent({
   name: 'ElementPair',
-  components: { EditedImagePairImage },
+  components: { MultimediaElement },
   props: {
     pair: {
       type: Object as PropType<Pair>,

@@ -39,7 +39,7 @@
             class="h5p-element-image-container"
           >
             <template v-if="selectedPair.draggableElement.file_id">
-              <edited-image-pair-image :image="selectedPair.draggableElement" />
+              <MultimediaElement :element="selectedPair.draggableElement" />
               <button
                 type="button"
                 @click="removeDraggableImage(this.selectedPairIndex)"
@@ -74,7 +74,7 @@
             class="h5p-element-image-container"
           >
             <template v-if="selectedPair.targetElement.file_id">
-              <edited-image-pair-image :image="selectedPair.targetElement" />
+              <MultimediaElement :element="selectedPair.targetElement" />
               <button
                 type="button"
                 @click="removeTargetImage(this.selectedPairIndex)"
@@ -105,11 +105,11 @@ import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
-import EditedImagePairImage from '@/components/EditedImagePairImage.vue';
+import MultimediaElement from '@/components/MultimediaElement.vue';
 
 export default defineComponent({
   name: 'PairingEditor',
-  components: { EditedImagePairImage, FileUpload, ElementPair },
+  components: { MultimediaElement, FileUpload, ElementPair },
   props: {
     taskDefinition: {
       type: Object as PropType<PairingTask>,
