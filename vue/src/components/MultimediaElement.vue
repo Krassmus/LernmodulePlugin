@@ -27,8 +27,9 @@ export default defineComponent({
 
 <style scoped>
 .image-element {
-  width: 8em;
-  height: 8em;
+  box-sizing: border-box;
+  max-width: 8em;
+  max-height: 8em;
   padding: 0.5em;
   object-fit: contain;
   box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */

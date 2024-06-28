@@ -459,6 +459,9 @@ export default defineComponent({
   background: unset;
   border: rgba(0, 0, 0, 0) 2px solid;
   border-radius: 0.5em;
+  width: 8em;
+  height: 8em;
+  box-sizing: content-box;
 }
 
 .draggableElementContainer.selected {
