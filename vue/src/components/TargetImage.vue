@@ -1,6 +1,5 @@
 <template>
-  <!--  TODO #28 this should be a button, not a div, because it is clickable. -->
-  <div v-if="draggableImage" class="grid-square two-images">
+  <button v-if="draggableImage" type="button" class="grid-square two-images">
     <div class="image-container back">
       <MultimediaElement
         :element="targetImage"
@@ -25,10 +24,10 @@
         }"
       />
     </div>
-  </div>
-  <div v-else class="grid-square one-image">
+  </button>
+  <button v-else type="button" class="grid-square one-image">
     <MultimediaElement :element="targetImage" draggable="false" />
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -64,10 +63,15 @@ export default defineComponent({
 
 <style scoped>
 .grid-square {
-  height: 8em;
-  width: 8em;
-  border-radius: 0.25em;
+  display: flex;
+  margin: unset;
+  padding: unset;
+  background: unset;
   border: 2px solid transparent;
+  border-radius: 0.5em;
+  width: 8em;
+  height: 8em;
+  box-sizing: content-box;
 }
 
 .grid-square.one-image {
@@ -77,7 +81,6 @@ export default defineComponent({
 
 .grid-square.two-images {
   position: relative;
-  background-color: #eef1f4;
 }
 
 .grid-square.two-images .image {
@@ -85,7 +88,7 @@ export default defineComponent({
 }
 
 .grid-square.two-images:not(:hover):not(.showResult) .image {
-  border: 2px solid white;
+  border: 2px solid transparent;
 }
 
 .grid-square.two-images .image:is(.correct):is(.showResult) {
