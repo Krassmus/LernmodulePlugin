@@ -1,5 +1,14 @@
 <template>
-  <button v-if="draggableImage" type="button" class="grid-square two-images">
+  <button
+    v-if="draggableImage"
+    type="button"
+    class="grid-square two-images"
+    :class="{
+      correct: this.isCorrect,
+      incorrect: !this.isCorrect,
+      showResult: this.showResult,
+    }"
+  >
     <div class="image-container back">
       <MultimediaElement
         :element="targetImage"
@@ -87,22 +96,23 @@ export default defineComponent({
   border-radius: 0.25em;
 }
 
-.grid-square.two-images:not(:hover):not(.showResult) .image {
-  border: 2px solid transparent;
+.grid-square.two-images:not(:hover):not(.showResult) {
 }
 
-.grid-square.two-images .image:is(.correct):is(.showResult) {
+.grid-square.two-images:is(.correct):is(.showResult) {
   border: 2px solid #64a877;
+  box-shadow: inset 0 0 120px #64a877;
 }
 
-.grid-square.two-images .image:is(.incorrect):is(.showResult) {
+.grid-square.two-images:is(.incorrect):is(.showResult) {
   border: 2px solid #dd2e2e;
+  box-shadow: inset 0 0 120px #dd2e2e;
 }
 
-.grid-square.two-images:hover .image:not(.showResult) {
+.grid-square.two-images:hover:not(.showResult) {
   cursor: grab;
   border: 2px solid #7ba4d3;
-  box-shadow: 0 0 10px 0 #406ef3;
+  box-shadow: inset 0 0 72px #cbd5de, 0 0 10px 0 #406ef3;
 }
 
 .grid-square.two-images:hover .image:is(.showResult) {
@@ -116,13 +126,13 @@ export default defineComponent({
 }
 
 .image-container.front {
-  top: 0;
-  left: 0;
+  top: 0.25em;
+  left: 0.25em;
 }
 
 .image-container.back {
-  bottom: 0;
-  right: 0;
+  bottom: 0.25em;
+  right: 0.25em;
 }
 
 .image {
