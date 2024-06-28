@@ -35,5 +35,6 @@ export default defineComponent({
   box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
   border: solid 1px #cbd5de;
   border-radius: 0.25em;
+  background-color: white;
 }
 </style>
