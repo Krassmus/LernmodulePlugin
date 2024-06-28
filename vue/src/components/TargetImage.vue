@@ -111,18 +111,18 @@ export default defineComponent({
 
 .image-container {
   position: absolute;
-  width: 55%;
-  height: 55%;
+  width: 60%;
+  height: 60%;
 }
 
 .image-container.front {
-  top: 0.5em;
-  left: 0.5em;
+  top: 0;
+  left: 0;
 }
 
 .image-container.back {
-  bottom: 0.5em;
-  right: 0.5em;
+  bottom: 0;
+  right: 0;
 }
 
 .image {
