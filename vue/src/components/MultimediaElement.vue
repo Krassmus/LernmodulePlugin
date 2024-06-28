@@ -30,7 +30,7 @@ export default defineComponent({
   box-sizing: border-box;
   max-width: 100%;
   max-height: 100%;
-  padding: 0.5em;
+  padding: 5%;
   object-fit: contain;
   box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
   border: solid 1px #cbd5de;
