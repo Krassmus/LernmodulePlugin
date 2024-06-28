@@ -17,7 +17,7 @@
         @dragstart="startDragElement($event, draggableElementId)"
         @dragend="endDragElement()"
         @click="onClickDraggableElement(draggableElementId)"
-        class="draggableElementContainer"
+        class="draggableElement"
         :class="{
           disabled:
             this.isDraggableElementUsed(draggableElementId) ||
@@ -452,23 +452,23 @@ export default defineComponent({
   border: 2px dashed #dbe2e8;
 }
 
-.draggableElementContainer {
+.draggableElement {
   display: flex;
   margin: unset;
   padding: unset;
   background: unset;
-  border: rgba(0, 0, 0, 0) 2px solid;
+  border: 2px solid transparent;
   border-radius: 0.5em;
   width: 8em;
   height: 8em;
   box-sizing: content-box;
 }
 
-.draggableElementContainer.selected {
+.draggableElement.selected {
   border: 2px solid #7ba4d3;
 }
 
-.draggableElementContainer:not(.disabled):not(.selected):hover {
+.draggableElement:not(.disabled):not(.selected):hover {
   cursor: grab;
   border: 2px solid #7ba4d3;
   box-shadow: 0 0 10px 0 #406ef3;
