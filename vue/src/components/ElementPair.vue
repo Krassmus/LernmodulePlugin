@@ -3,10 +3,12 @@
     <MultimediaElement
       v-if="pair.draggableElement"
       :element="pair.draggableElement"
+      class="h5pMultimediaElement"
     />
     <MultimediaElement
       v-if="pair.targetElement"
       :element="pair.targetElement"
+      class="h5pMultimediaElement"
     />
   </button>
 </template>
@@ -52,5 +54,10 @@ export default defineComponent({
   cursor: grab;
   border: 2px solid #0a78d1;
   box-shadow: 0 0 4px #0a78d1;
+}
+
+.h5pMultimediaElement {
+  width: 8em;
+  height: 8em;
 }
 </style>

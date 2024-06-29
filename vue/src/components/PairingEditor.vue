@@ -39,7 +39,10 @@
             class="h5p-element-image-container"
           >
             <template v-if="selectedPair.draggableElement.file_id">
-              <MultimediaElement :element="selectedPair.draggableElement" />
+              <MultimediaElement
+                :element="selectedPair.draggableElement"
+                class="h5pMultimediaElement"
+              />
               <button
                 type="button"
                 @click="removeDraggableImage(this.selectedPairIndex)"
@@ -74,7 +77,10 @@
             class="h5p-element-image-container"
           >
             <template v-if="selectedPair.targetElement.file_id">
-              <MultimediaElement :element="selectedPair.targetElement" />
+              <MultimediaElement
+                :element="selectedPair.targetElement"
+                class="h5pMultimediaElement"
+              />
               <button
                 type="button"
                 @click="removeTargetImage(this.selectedPairIndex)"
@@ -266,5 +272,10 @@ export default defineComponent({
   justify-content: flex-start;
   align-items: center;
   gap: 0.5em;
+}
+
+.h5pMultimediaElement {
+  width: 8em;
+  height: 8em;
 }
 </style>
