@@ -10,9 +10,8 @@
         :pair="this.taskDefinition.pairs[index]"
         @click="selectPair(index)"
       />
-      <!-- TODO Make this button look good -->
-      <button type="button" class="button add" @click="addPair">
-        {{ $gettext('Pair hinzufügen') }}
+      <button type="button" class="button add add-pair-button" @click="addPair">
+        {{ $gettext('Paar hinzufügen') }}
       </button>
     </div>
     <div class="h5p-elements-settings">
@@ -277,5 +276,12 @@ export default defineComponent({
 .h5pMultimediaElement {
   width: 8em;
   height: 8em;
+}
+
+.add-pair-button {
+  height: 8em;
+  margin: 0;
+  border-radius: 0.5em;
+  align-self: center;
 }
 </style>
