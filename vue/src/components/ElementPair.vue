@@ -38,7 +38,7 @@ export default defineComponent({
 .h5pElementPair {
   display: flex;
   flex-direction: column;
-  border: rgba(0, 0, 0, 0) 2px solid;
+  border: 2px solid rgba(0, 0, 0, 0);
   border-radius: 0.5em;
   gap: 0.25em;
   padding: 0;
@@ -46,14 +46,14 @@ export default defineComponent({
 }
 
 .h5pElementPair.selected {
-  border: #0a78d1 2px solid;
-  box-shadow: 0 0 8px #0a78d1;
+  border: 2px solid #0a78d1;
+  box-shadow: 0 0 4px #0a78d1;
 }
 
 .h5pElementPair:not(.disabled):not(.selected):hover {
   cursor: grab;
   border: 2px solid #0a78d1;
-  box-shadow: 0 0 4px #0a78d1;
+  box-shadow: 0 0 8px #0a78d1 inset;
 }
 
 .h5pMultimediaElement {
