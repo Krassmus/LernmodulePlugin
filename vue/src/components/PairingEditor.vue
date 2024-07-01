@@ -10,9 +10,7 @@
         :pair="this.taskDefinition.pairs[index]"
         @click="selectPair(index)"
       />
-      <button type="button" class="button add add-pair-button" @click="addPair">
-        {{ $gettext('Paar hinzufügen') }}
-      </button>
+      <button type="button" class="add-pair-button" @click="addPair" />
     </div>
     <div class="h5p-elements-settings">
       <form class="default">
@@ -279,9 +277,21 @@ export default defineComponent({
 }
 
 .add-pair-button {
+  box-sizing: content-box;
   height: 8em;
+  width: 8em;
+
   margin: 0;
-  border-radius: 0.5em;
+  padding: 0;
+
+  border: solid 2px rgba(0, 0, 0, 0);
+  border-radius: 0.25em;
+
+  background-image: url(../../../../../../assets/images/icons/blue/add.svg);
+  background-size: 40%;
+  background-repeat: no-repeat;
+  background-position: center;
+
   align-self: center;
 }
 </style>
