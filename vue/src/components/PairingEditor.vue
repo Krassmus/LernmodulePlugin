@@ -279,11 +279,11 @@ export default defineComponent({
 }
 
 .add-pair-button {
-  box-sizing: content-box;
+  box-sizing: border-box;
   height: 8em;
   width: 8em;
 
-  margin: 0;
+  margin: 2px;
   padding: 0;
 
   border: solid 2px rgba(0, 0, 0, 0);
@@ -293,12 +293,10 @@ export default defineComponent({
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: center;
-
-  align-self: center;
 }
 
 .remove-element-button {
   /* top | right | bottom | left */
-  margin: 1em 0 0 0;
+  margin: 0.25em 0 0 0;
 }
 </style>
