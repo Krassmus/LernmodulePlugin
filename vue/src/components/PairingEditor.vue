@@ -44,6 +44,7 @@
                 type="button"
                 @click="removeDraggableImage(this.selectedPairIndex)"
                 v-text="$gettext('Bild löschen')"
+                class="button trash remove-element-button"
               />
             </template>
             <FileUpload
@@ -82,6 +83,7 @@
                 type="button"
                 @click="removeTargetImage(this.selectedPairIndex)"
                 v-text="$gettext('Bild löschen')"
+                class="button trash remove-element-button"
               />
             </template>
             <FileUpload
@@ -293,5 +295,10 @@ export default defineComponent({
   background-position: center;
 
   align-self: center;
+}
+
+.remove-element-button {
+  /* top | right | bottom | left */
+  margin: 1em 0 0 0;
 }
 </style>
