@@ -1,11 +1,14 @@
 <template>
-  <img
-    v-if="element.type === 'image'"
-    :src="fileIdToUrl(element.file_id)"
-    :alt="element.altText"
-    class="image-element"
-    draggable="false"
-  />
+  <template v-if="element.type === 'image'">
+    <img
+      v-if="element.file_id"
+      :src="fileIdToUrl(element.file_id)"
+      :alt="element.altText"
+      class="image-element"
+      draggable="false"
+    />
+    <div v-else class="image-element" />
+  </template>
   <p v-else>Platzhalter für {{ element.type }}</p>
 </template>
 
@@ -30,11 +33,12 @@ export default defineComponent({
   box-sizing: border-box;
   max-width: 100%;
   max-height: 100%;
-  padding: 5%;
+  padding: 4px;
   object-fit: contain;
   box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
   border: solid 1px #cbd5de;
   border-radius: 0.25em;
   background-color: white;
+  flex-grow: 1;
 }
 </style>
