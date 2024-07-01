@@ -94,6 +94,14 @@
               "
             />
           </div>
+          <div class="remove-pair-button-container">
+            <button
+              type="button"
+              @click="deletePair(selectedPairIndex)"
+              v-text="$gettext('Paar löschen')"
+              class="button trash remove-pair-button"
+            />
+          </div>
         </fieldset>
       </form>
     </div>
@@ -298,5 +306,14 @@ export default defineComponent({
 .remove-element-button {
   /* top | right | bottom | left */
   margin: 0.25em 0 0 0;
+}
+
+.remove-pair-button {
+  margin-right: 0;
+}
+
+.remove-pair-button-container {
+  text-align: end;
+  margin-top: 0.5em;
 }
 </style>
