@@ -15,8 +15,8 @@
     <div class="h5p-elements-settings">
       <form class="default">
         <fieldset>
-          <label>{{ $gettext('Eigenschaften') }}</label>
-          <label>{{ $gettext('Karte A') }}</label>
+          <h1>{{ $gettext('Eigenschaften') }}</h1>
+          <h2>{{ $gettext('Karte A') }}</h2>
           <label>
             {{ $gettext('Typ') }}
             <select v-model="selectedPair.draggableElement.type">
@@ -55,7 +55,7 @@
               "
             />
           </div>
-          <label>{{ $gettext('Karte B') }}</label>
+          <h2>{{ $gettext('Karte B') }}</h2>
           <label>
             {{ $gettext('Typ') }}
             <select v-model="selectedPair.targetElement.type">
