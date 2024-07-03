@@ -179,37 +179,6 @@ export default defineComponent({
 
         dragEvent.dataTransfer!.dropEffect = 'move';
         dragEvent.dataTransfer!.effectAllowed = 'move';
-
-        // Change the drag image to the parent element to include the border
-        const refToImage = (
-          this.$refs.draggableImages as HTMLImageElement[]
-        ).find(
-          (value) =>
-            value.src == fileIdToUrl(this.getElementById(elementId).file_id)
-        );
-
-        const parentElementOfImage = refToImage?.parentElement!;
-
-        if (refToImage && parentElementOfImage) {
-          const cloneOfParent = parentElementOfImage.cloneNode(
-            true
-          ) as HTMLElement;
-
-          cloneOfParent.style.top = '0';
-          cloneOfParent.style.left = '0';
-          cloneOfParent.style.position = 'absolute';
-          cloneOfParent.style.zIndex = '-999';
-
-          parentElementOfImage.parentElement!.append(cloneOfParent);
-
-          dragEvent.dataTransfer!.setDragImage(
-            cloneOfParent,
-            parentElementOfImage.clientWidth / 2,
-            parentElementOfImage.clientHeight / 2
-          );
-
-          setTimeout(() => cloneOfParent.remove());
-        }
       }
     },
 
@@ -230,26 +199,6 @@ export default defineComponent({
         this.elementsDraggedOntoTargets[targetElementId];
       if (userDraggedElementId) {
         this.elementIdInteractedWith = userDraggedElementId;
-
-        // Add the interactive image to the cursor even if the user
-        // clicked on the target image
-        const refToImage = (
-          this.$refs.draggableImages as HTMLImageElement[]
-        ).find(
-          (value) =>
-            value.src ==
-            fileIdToUrl(this.getElementById(userDraggedElementId).file_id)
-        );
-
-        const parentElementOfImage = refToImage?.parentElement!;
-
-        if (parentElementOfImage) {
-          dragEvent.dataTransfer!.setDragImage(
-            parentElementOfImage,
-            parentElementOfImage.clientWidth / 2,
-            parentElementOfImage.clientHeight / 2
-          );
-        }
 
         console.log(
           'Dragging element:',
