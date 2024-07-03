@@ -18,7 +18,7 @@
       />
     </div>
     <div class="h5p-elements-settings">
-      <form class="default">
+      <form class="default" @submit.prevent>
         <fieldset>
           <h1>{{ $gettext('Eigenschaften') }}</h1>
           <h2>{{ $gettext('Karte A') }}</h2>
@@ -49,8 +49,16 @@
                 type="button"
                 @click="removeDraggableImage(this.selectedPairIndex)"
                 v-text="$gettext('Bild löschen')"
-                class="button trash remove-element-button"
+                class="button trash element-pair-settings-item"
               />
+              <label style="align-self: stretch">
+                {{ $gettext('Alt-Text') }}
+                <input
+                  type="text"
+                  v-model="selectedPair.draggableElement.altText"
+                  class="element-pair-settings-item"
+                />
+              </label>
             </template>
             <FileUpload
               class="pairing-file-upload"
@@ -88,8 +96,16 @@
                 type="button"
                 @click="removeTargetImage(this.selectedPairIndex)"
                 v-text="$gettext('Bild löschen')"
-                class="button trash remove-element-button"
+                class="button trash element-pair-settings-item"
               />
+              <label style="align-self: stretch">
+                {{ $gettext('Alt-Text') }}
+                <input
+                  type="text"
+                  v-model="selectedPair.targetElement.altText"
+                  class="element-pair-settings-item"
+                />
+              </label>
             </template>
             <FileUpload
               class="pairing-file-upload"
@@ -313,7 +329,7 @@ export default defineComponent({
   background-position: center;
 }
 
-.remove-element-button {
+.element-pair-settings-item {
   /* top | right | bottom | left */
   margin: 0.25em 0 0 0;
 }
