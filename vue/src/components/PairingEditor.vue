@@ -68,6 +68,18 @@
               "
             />
           </div>
+
+          <div v-else-if="selectedPair.draggableElement.type == 'text'">
+            <label style="align-self: stretch">
+              {{ $gettext('Inhalt') }}
+              <textarea
+                type="text"
+                v-model="selectedPair.draggableElement.content"
+                class="element-pair-settings-item"
+              />
+            </label>
+          </div>
+
           <h2>{{ $gettext('Karte B') }}</h2>
           <label>
             {{ $gettext('Typ') }}
@@ -115,6 +127,18 @@
               "
             />
           </div>
+
+          <div v-else-if="selectedPair.targetElement.type == 'text'">
+            <label style="align-self: stretch">
+              {{ $gettext('Inhalt') }}
+              <textarea
+                type="text"
+                v-model="selectedPair.targetElement.content"
+                class="element-pair-settings-item"
+              />
+            </label>
+          </div>
+
           <div class="remove-pair-button-container">
             <button
               type="button"
@@ -211,7 +235,12 @@ export default defineComponent({
     },
     onUploadDraggableImage(pairIndex: number, file: FileRef): void {
       const newTaskDefinition = produce(this.task, (draft) => {
-        draft.pairs[pairIndex].draggableElement.file_id = file.id;
+        draft.pairs[pairIndex].draggableElement = {
+          uuid: v4(),
+          type: 'image',
+          file_id: file.id,
+          altText: '',
+        };
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
@@ -234,7 +263,12 @@ export default defineComponent({
     },
     onUploadTargetImage(pairIndex: number, file: FileRef): void {
       const newTaskDefinition = produce(this.task, (draft) => {
-        draft.pairs[pairIndex].targetElement.file_id = file.id;
+        draft.pairs[pairIndex].targetElement = {
+          uuid: v4(),
+          type: 'image',
+          file_id: file.id,
+          altText: '',
+        };
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,

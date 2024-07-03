@@ -218,9 +218,15 @@ const audioElementSchema = z.object({
   file_id: z.string(),
   altText: z.string(),
 });
+const textElementSchema = z.object({
+  uuid: z.string(),
+  type: z.literal('text'),
+  content: z.string(),
+});
 export const pairElementSchema = z.union([
   imageElementSchema,
   audioElementSchema,
+  textElementSchema,
 ]);
 export type PairElement = z.infer<typeof pairElementSchema>;
 
