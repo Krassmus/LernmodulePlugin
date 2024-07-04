@@ -319,12 +319,13 @@ export default defineComponent({
 }
 
 .h5p-elements-overview {
-  display: flex;
   flex-grow: 1;
-  flex-wrap: wrap;
-  align-content: flex-start; /* Alignment of multiple lines when there is extra space in the vertical axis. */
-  column-gap: 0.5em;
+  /* Adapted from https://stackoverflow.com/a/46099319/7359454 */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 8em);
+  justify-content: space-around;
   row-gap: 1em;
+  column-gap: 0.5em;
 }
 
 .h5p-elements-settings {
