@@ -358,7 +358,7 @@ export default defineComponent({
   border: solid 2px rgba(0, 0, 0, 0);
   border-radius: 0.25em;
 
-  //background-image: url(../../../../../../assets/images/icons/blue/add.svg);
+  /* background-image: url(../../../../../../assets/images/icons/blue/add.svg); */
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: center;
