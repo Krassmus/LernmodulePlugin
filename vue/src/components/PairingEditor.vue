@@ -323,6 +323,7 @@ export default defineComponent({
   /* Adapted from https://stackoverflow.com/a/46099319/7359454 */
   display: grid;
   grid-template-columns: repeat(auto-fill, 8em);
+  grid-auto-rows: max-content;
   justify-content: space-around;
   row-gap: 1em;
   column-gap: 0.5em;
