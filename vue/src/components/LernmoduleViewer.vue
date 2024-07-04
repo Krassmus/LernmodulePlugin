@@ -2,11 +2,13 @@
   <!--  <h1>Variables passed from server:</h1>-->
   <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
   <!--  <h1>Viewer</h1>-->
-  <component
-    :is="viewerForTaskType(taskDefinition.task_type)"
-    :task="taskDefinition"
-    @updateAttempt="onUpdateAttempt"
-  />
+  <div class="viewer">
+    <component
+      :is="viewerForTaskType(taskDefinition.task_type)"
+      :task="taskDefinition"
+      @updateAttempt="onUpdateAttempt"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -39,4 +41,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.viewer {
+  max-width: 1095px;
+}
+</style>
