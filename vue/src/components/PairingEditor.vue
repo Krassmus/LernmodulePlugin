@@ -331,8 +331,8 @@ export default defineComponent({
 
 .h5p-elements-settings {
   flex-grow: 0;
-  flex-basis: 250px;
   flex-shrink: 0;
+  width: 275px;
 }
 
 .h5p-element-image-container {
