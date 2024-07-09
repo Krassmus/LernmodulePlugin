@@ -20,9 +20,14 @@
           alt="an icon showing a trash bin"
         />
       </div>
-      <button type="button" @click="addImage">
-        {{ $gettext('Bild hinzufügen') }}
-      </button>
+      <div class="add-element-button-container">
+        <button
+          type="button"
+          @click="addImage"
+          v-text="$gettext('Bild hinzufügen')"
+          class="button add add-element-button"
+        />
+      </div>
     </div>
 
     <SequencingEditorImage
@@ -115,5 +120,14 @@ export default defineComponent({
   justify-content: space-between;
   width: 100%;
   gap: 1em;
+}
+
+.add-element-button {
+  margin-right: 0;
+}
+
+.radd-element-button-container {
+  text-align: end;
+  margin-top: 0.5em;
 }
 </style>
