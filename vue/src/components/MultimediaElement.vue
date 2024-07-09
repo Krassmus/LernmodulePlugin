@@ -48,7 +48,6 @@ export default defineComponent({
   border: solid 1px #cbd5de;
   border-radius: 0.25em;
   background-color: white;
-  flex-grow: 1;
 }
 
 .text-element {
@@ -59,7 +58,6 @@ export default defineComponent({
   border: solid 1px #cbd5de;
   border-radius: 0.25em;
   background-color: white;
-  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,7 +72,6 @@ export default defineComponent({
   border: solid 1px #cbd5de;
   border-radius: 0.25em;
   background-color: white;
-  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
