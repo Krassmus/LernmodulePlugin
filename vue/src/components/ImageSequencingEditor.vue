@@ -10,7 +10,7 @@
         }"
         @click="selectImage(index)"
       >
-        {{ index }}.
+        {{ index + '. ' + image.altText }}
         <!-- Apply .stop modifier to @click so that the click event handler on the
             parent element doesn't get called when the delete button is clicked -->
         <img
