@@ -68,8 +68,8 @@
         <option value="Memory">{{ $gettext('Memory') }}</option>
         <option value="FindTheWords">{{ $gettext('Find The Words') }}</option>
         <option value="Pairing">{{ $gettext('Pairing') }}</option>
-        <option value="ImageSequencing">
-          {{ $gettext('Image Sequencing') }}
+        <option value="Sequencing">
+          {{ $gettext('Sequencing') }}
         </option>
       </template>
     </select>

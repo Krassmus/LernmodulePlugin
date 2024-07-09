@@ -55,23 +55,19 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import {
-  fileIdToUrl,
-  Image,
-  ImageSequencingTask,
-} from '@/models/TaskDefinition';
+import { fileIdToUrl, Image, SequencingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
 export default defineComponent({
-  name: 'ImageSequencingViewer',
+  name: 'SequencingViewer',
   components: {
     FeedbackElement,
   },
   props: {
     task: {
-      type: Object as PropType<ImageSequencingTask>,
+      type: Object as PropType<SequencingTask>,
       required: true,
     },
   },
@@ -152,7 +148,7 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as ImageSequencingTask,
+    taskDefinition: () => taskEditorStore.taskDefinition as SequencingTask,
     correctAnswers(): Number {
       let correctAnswers = 0;
       for (let i = 0; i < this.task.images.length; i++) {

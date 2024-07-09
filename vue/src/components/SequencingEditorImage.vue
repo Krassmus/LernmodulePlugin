@@ -8,7 +8,7 @@
           v-if="image.file_id"
           :src="fileIdToUrl(image.file_id)"
           :alt="image.altText"
-          class="image-sequencing-editor-image"
+          class="sequencing-editor-image"
         />
         <FileUpload v-else @file-uploaded="onUploadImage" />
       </div>
@@ -27,18 +27,14 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
-import {
-  fileIdToUrl,
-  Image,
-  ImageSequencingTask,
-} from '@/models/TaskDefinition';
+import { fileIdToUrl, Image, SequencingTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
-  name: 'ImageSequencingEditorImage',
+  name: 'SequencingEditorImage',
   components: { FileUpload },
   props: {
     image: {
@@ -77,13 +73,13 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as ImageSequencingTask,
+    taskDefinition: () => taskEditorStore.taskDefinition as SequencingTask,
   },
 });
 </script>
 
 <style scoped>
-.image-sequencing-editor-image {
+.sequencing-editor-image {
   object-fit: contain;
   object-position: center;
   width: 8em;

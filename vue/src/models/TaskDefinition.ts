@@ -12,8 +12,8 @@ import MemoryEditor from '@/components/MemoryEditor.vue';
 import MemoryViewer from '@/components/MemoryViewer.vue';
 import PairingViewer from '@/components/PairingViewer.vue';
 import PairingEditor from '@/components/PairingEditor.vue';
-import ImageSequencingViewer from '@/components/ImageSequencingViewer.vue';
-import ImageSequencingEditor from '@/components/ImageSequencingEditor.vue';
+import SequencingViewer from '@/components/SequencingViewer.vue';
+import SequencingEditor from '@/components/SequencingEditor.vue';
 import { v4 } from 'uuid';
 import { z } from 'zod';
 import FindTheHotspotEditor from '@/components/FindTheHotspotEditor.vue';
@@ -250,8 +250,8 @@ export const pairingTaskSchema = z.object({
 });
 export type PairingTask = z.infer<typeof pairingTaskSchema>;
 
-export const imageSequencingTaskSchema = z.object({
-  task_type: z.literal('ImageSequencing'),
+export const sequencingTaskSchema = z.object({
+  task_type: z.literal('Sequencing'),
   images: z.array(imageSchema),
   strings: z.object({
     checkButton: z.string(),
@@ -261,14 +261,14 @@ export const imageSequencingTaskSchema = z.object({
   }),
   feedback: z.array(feedbackSchema),
 });
-export type ImageSequencingTask = z.infer<typeof imageSequencingTaskSchema>;
+export type SequencingTask = z.infer<typeof sequencingTaskSchema>;
 
 export const taskDefinitionSchema = z.union([
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
   findTheWordsTaskSchema,
-  imageSequencingTaskSchema,
+  sequencingTaskSchema,
   interactiveVideoTaskSchema,
   markTheWordsTaskSchema,
   memoryTaskSchema,
@@ -288,7 +288,7 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
   findTheWordsTaskSchema,
-  imageSequencingTaskSchema,
+  sequencingTaskSchema,
   markTheWordsTaskSchema,
   memoryTaskSchema,
   pairingTaskSchema,
@@ -302,7 +302,7 @@ export const taskTypeSchema = z.union([
   fillInTheBlanksTaskSchema.shape.task_type,
   findTheHotspotTaskSchema.shape.task_type,
   findTheWordsTaskSchema.shape.task_type,
-  imageSequencingTaskSchema.shape.task_type,
+  sequencingTaskSchema.shape.task_type,
   interactiveVideoTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
@@ -403,9 +403,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         },
         feedback: defaultFeedback(),
       };
-    case 'ImageSequencing':
+    case 'Sequencing':
       return {
-        task_type: 'ImageSequencing',
+        task_type: 'Sequencing',
         images: [
           {
             uuid: v4(),
@@ -565,8 +565,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return FindTheWordsViewer;
     case 'Pairing':
       return PairingViewer;
-    case 'ImageSequencing':
-      return ImageSequencingViewer;
+    case 'Sequencing':
+      return SequencingViewer;
     case 'InteractiveVideo':
       return InteractiveVideoViewer;
     case 'MarkTheWords':
@@ -592,8 +592,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return FindTheWordsEditor;
     case 'Pairing':
       return PairingEditor;
-    case 'ImageSequencing':
-      return ImageSequencingEditor;
+    case 'Sequencing':
+      return SequencingEditor;
     case 'InteractiveVideo':
       return InteractiveVideoEditor;
     case 'MarkTheWords':
@@ -619,8 +619,8 @@ export function printTaskType(type: TaskDefinition['task_type']): string {
       return $gettext('Find The Words');
     case 'Pairing':
       return $gettext('Pairing');
-    case 'ImageSequencing':
-      return $gettext('Image Sequencing');
+    case 'Sequencing':
+      return $gettext('Sequencing');
     case 'InteractiveVideo':
       return $gettext('Interactive Video');
     case 'MarkTheWords':
@@ -658,7 +658,7 @@ export function iconForTaskType(type: TaskDefinition['task_type']): string {
       return 'tan3';
     case 'Pairing':
       break;
-    case 'ImageSequencing':
+    case 'Sequencing':
       break;
     case 'InteractiveVideo':
       break;
