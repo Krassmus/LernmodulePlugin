@@ -1,8 +1,13 @@
 <? if (LernmodulePlugin::mayEditSandbox()) : ?>
     <label>
         <input type="hidden" name="module[sandbox]" value="0">
-        <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?> onChange="jQuery('#edit_end_file').toggle(!this.checked);">
+        <input type="checkbox" name="module[sandbox]" value="1"<?= $module['sandbox'] ? " checked" : "" ?> onChange="jQuery('#edit_end_file,#edit_passing_ids').toggle(!this.checked);">
         <?= dgettext("lernmoduleplugin","Im abgesicherten Modus abspielen") ?>
+    </label>
+    <label id="edit_passing_ids"<?= $module['sandbox'] ? ' style="display: none;"' : "" ?>>
+        <input type="hidden" name="module[customdata][pass_studip_ids]" value="0">
+        <input type="checkbox" name="module[customdata][pass_studip_ids]" value="1"<?= $module['customdata']['pass_studip_ids'] ? " checked" : "" ?>>
+        <?= dgettext("lernmoduleplugin","Aktuelle Veranstaltungs-ID ins Lernmodul übertragen") ?>
     </label>
 <? endif ?>
 
