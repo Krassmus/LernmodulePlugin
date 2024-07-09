@@ -92,7 +92,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, PairElement, PairingTask } from '@/models/TaskDefinition';
+import {
+  fileIdToUrl,
+  LernmoduleMultimediaElement,
+  PairingTask,
+} from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 import MultimediaElement from '@/components/MultimediaElement.vue';
@@ -151,7 +155,9 @@ export default defineComponent({
       return pair.draggableElement.uuid === userInput;
     },
 
-    getElementDraggedOntoTarget(targetId: Uuid): PairElement | undefined {
+    getElementDraggedOntoTarget(
+      targetId: Uuid
+    ): LernmoduleMultimediaElement | undefined {
       const draggedElementId = this.elementsDraggedOntoTargets[targetId];
       if (draggedElementId) {
         return this.getElementById(draggedElementId);
@@ -240,7 +246,7 @@ export default defineComponent({
       this.draggedElementId = undefined;
     },
 
-    getElementById(elementId: string): PairElement {
+    getElementById(elementId: string): LernmoduleMultimediaElement {
       const element = this.elementsById[elementId];
       if (!element) {
         throw new Error('No element found with the given ID: ' + elementId);
@@ -322,8 +328,8 @@ export default defineComponent({
         .map(({ pair }) => pair.draggableElement.uuid);
     },
 
-    elementsById(): Record<Uuid, PairElement> {
-      const elementsById: Record<Uuid, PairElement> = {};
+    elementsById(): Record<Uuid, LernmoduleMultimediaElement> {
+      const elementsById: Record<Uuid, LernmoduleMultimediaElement> = {};
       for (const pair of this.task.pairs) {
         elementsById[pair.draggableElement.uuid] = pair.draggableElement;
         elementsById[pair.targetElement.uuid] = pair.targetElement;

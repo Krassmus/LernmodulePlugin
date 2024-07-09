@@ -223,17 +223,19 @@ const textElementSchema = z.object({
   type: z.literal('text'),
   content: z.string(),
 });
-export const pairElementSchema = z.union([
+export const multimediaElementSchema = z.union([
   imageElementSchema,
   audioElementSchema,
   textElementSchema,
 ]);
-export type PairElement = z.infer<typeof pairElementSchema>;
+export type LernmoduleMultimediaElement = z.infer<
+  typeof multimediaElementSchema
+>;
 
 export const pairSchema = z.object({
   uuid: z.string(),
-  draggableElement: pairElementSchema,
-  targetElement: pairElementSchema,
+  draggableElement: multimediaElementSchema,
+  targetElement: multimediaElementSchema,
 });
 export type Pair = z.infer<typeof pairSchema>;
 

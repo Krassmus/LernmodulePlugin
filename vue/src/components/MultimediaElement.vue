@@ -23,13 +23,16 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, PairElement } from '@/models/TaskDefinition';
+import {
+  fileIdToUrl,
+  LernmoduleMultimediaElement,
+} from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'MultimediaElement',
   props: {
     element: {
-      type: Object as PropType<PairElement>,
+      type: Object as PropType<LernmoduleMultimediaElement>,
       required: true,
     },
   },
