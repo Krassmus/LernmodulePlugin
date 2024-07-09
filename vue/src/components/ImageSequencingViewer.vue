@@ -197,6 +197,7 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   padding-bottom: 1em;
+  flex-wrap: wrap;
 }
 
 .imageContainer {
