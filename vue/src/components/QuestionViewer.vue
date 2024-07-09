@@ -1,5 +1,5 @@
 <template>
-  <div class="h5pModule">
+  <div class="h5p-module">
     <div class="h5pQuestion" v-html="this.task.question" />
     <template v-if="task.canAnswerMultiple">
       <template v-for="(answer, i) in answers" :key="i">
@@ -85,13 +85,13 @@
       :max-points="maxPoints"
     />
 
-    <div class="h5pButtonPanel">
+    <div class="h5p-button-panel">
       <button
         v-if="!isSubmitted"
         v-text="this.task.strings.checkButton"
         @click="onClickCheck"
         type="button"
-        class="h5pButton"
+        class="h5p-button"
       />
 
       <button
@@ -99,7 +99,7 @@
         v-text="this.task.strings.retryButton"
         @click="onClickTryAgain"
         type="button"
-        class="h5pButton"
+        class="h5p-button"
       />
 
       <button
@@ -107,7 +107,7 @@
         v-text="this.task.strings.solutionsButton"
         @click="onClickShowSolution"
         type="button"
-        class="h5pButton"
+        class="h5p-button"
       />
     </div>
   </div>

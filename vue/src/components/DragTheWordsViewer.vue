@@ -1,5 +1,5 @@
 <template>
-  <div class="h5pModule" ref="wrapperElement">
+  <div class="h5p-module" ref="wrapperElement">
     <template v-for="element in parsedTemplate" :key="element.uuid">
       <span v-if="element.type === 'staticText'" v-html="element.text" />
       <template v-else-if="element.type === 'blank'">
@@ -30,7 +30,7 @@
         </label>
         <span
           v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-          class="h5pSolution"
+          class="h5p-solution"
         >
           {{ element.solution }}
         </span>
@@ -70,13 +70,13 @@
       v-text="fillInAllTheBlanksMessage"
     />
 
-    <div class="h5pButtonPanel">
+    <div class="h5p-button-panel">
       <button
         v-if="showCheckButton"
         v-text="this.task.strings.checkButton"
         @click="onClickCheck"
         type="button"
-        class="h5pButton"
+        class="h5p-button"
       />
 
       <template v-if="showExtraButtons">
@@ -85,7 +85,7 @@
           v-text="this.task.strings.solutionsButton"
           @click="onClickShowSolution"
           type="button"
-          class="h5pButton"
+          class="h5p-button"
         />
 
         <button
@@ -93,7 +93,7 @@
           v-text="this.task.strings.retryButton"
           @click="onClickTryAgain"
           type="button"
-          class="h5pButton"
+          class="h5p-button"
         />
       </template>
     </div>

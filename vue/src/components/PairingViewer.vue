@@ -71,13 +71,13 @@
     :feedback="task.feedback"
   />
 
-  <div class="h5pButtonPanel">
+  <div class="h5p-button-panel">
     <button
       v-if="!this.showResults"
       v-text="this.task.strings.checkButton"
       @click="checkResults()"
       type="button"
-      class="h5pButton"
+      class="h5p-button"
     />
 
     <button
@@ -85,7 +85,7 @@
       v-text="this.task.strings.retryButton"
       @click="reset()"
       type="button"
-      class="h5pButton"
+      class="h5p-button"
     />
   </div>
 </template>

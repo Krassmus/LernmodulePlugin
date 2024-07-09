@@ -1,9 +1,9 @@
 <template>
-  <div class="imageRow">
+  <div class="sequencing-viewer">
     <div
       v-for="image in this.images"
       :key="image.uuid"
-      class="imageContainer"
+      class="image-container"
       :class="{
         grabbable: !this.showResults,
       }"
@@ -20,7 +20,7 @@
         :src="fileIdToUrl(image.file_id)"
         :alt="image.altText"
       />
-      <span class="imageDescription" @dragover.prevent @dragenter.prevent>{{
+      <span class="image-description" @dragover.prevent @dragenter.prevent>{{
         image.altText
       }}</span>
     </div>
@@ -34,13 +34,13 @@
     :feedback="task.feedback"
   />
 
-  <div class="h5pButtonPanel">
+  <div class="h5p-button-panel">
     <button
       v-if="!this.showResults"
       v-text="this.task.strings.checkButton"
       @click="checkResults()"
       type="button"
-      class="h5pButton"
+      class="h5p-button"
     />
 
     <button
@@ -48,7 +48,7 @@
       v-text="this.task.strings.retryButton"
       @click="reset()"
       type="button"
-      class="h5pButton"
+      class="h5p-button"
     />
   </div>
 </template>
@@ -189,14 +189,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.imageRow {
+.sequencing-viewer {
   display: flex;
   flex-direction: row;
   padding-bottom: 1em;
   flex-wrap: wrap;
 }
 
-.imageContainer {
+.image-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -215,7 +215,7 @@ export default defineComponent({
   height: 10em;
 }
 
-.imageDescription {
+.image-description {
   margin-top: 6px;
   font-size: 18px;
 }

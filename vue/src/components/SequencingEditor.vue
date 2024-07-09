@@ -1,5 +1,5 @@
 <template>
-  <div class="main-flex">
+  <div class="sequencing-editor">
     <div class="cards-list">
       <div
         v-for="(image, index) in taskDefinition.images"
@@ -110,7 +110,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.main-flex {
+.sequencing-editor {
   display: flex;
   justify-content: space-between;
   width: 100%;

@@ -1,5 +1,5 @@
 <template>
-  <div class="h5pModule">
+  <div class="h5p-module">
     <div class="h5pMarkTheWordText" ref="wrapperElement">
       <span v-for="(element, index) in parsedTemplate" :key="element.uuid">
         <span
@@ -25,13 +25,13 @@
       :result-message="resultMessage"
     />
 
-    <div class="h5pButtonPanel">
+    <div class="h5p-button-panel">
       <button
         v-if="showCheckButton"
         v-text="this.task.strings.checkButton"
         @click="onClickCheck"
         type="button"
-        class="h5pButton"
+        class="h5p-button"
       />
 
       <button
@@ -39,7 +39,7 @@
         v-text="this.task.strings.retryButton"
         @click="onClickRetry"
         type="button"
-        class="h5pButton"
+        class="h5p-button"
       />
     </div>
 
