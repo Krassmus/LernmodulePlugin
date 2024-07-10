@@ -68,18 +68,20 @@
         <option value="Memory">{{ $gettext('Memory') }}</option>
         <option value="FindTheWords">{{ $gettext('Find The Words') }}</option>
         <option value="Pairing">{{ $gettext('Pairing') }}</option>
-        <option value="ImageSequencing">
-          {{ $gettext('Image Sequencing') }}
+        <option value="Sequencing">
+          {{ $gettext('Sequencing') }}
         </option>
       </template>
     </select>
   </div>
 
   <div>
-    <component
-      :is="editorForTaskType(taskDefinition.task_type)"
-      :taskDefinition="taskDefinition"
-    />
+    <div class="editor">
+      <component
+        :is="editorForTaskType(taskDefinition.task_type)"
+        :taskDefinition="taskDefinition"
+      />
+    </div>
 
     <div class="save-undo-redo">
       <button
@@ -91,11 +93,13 @@
       </button>
     </div>
 
-    <h1 style="margin-top: 1em">{{ $gettext('Vorschau') }}</h1>
-    <component
-      :is="viewerForTaskType(taskDefinition.task_type)"
-      :task="taskDefinition"
-    />
+    <div class="viewer">
+      <h1 style="margin-top: 1em">{{ $gettext('Vorschau') }}</h1>
+      <component
+        :is="viewerForTaskType(taskDefinition.task_type)"
+        :task="taskDefinition"
+      />
+    </div>
   </div>
 </template>
 
@@ -215,5 +219,13 @@ export default defineComponent({
 
 .task-name-input:focus {
   outline: none;
+}
+
+.editor {
+  max-width: 1095px;
+}
+
+.viewer {
+  max-width: 1095px;
 }
 </style>

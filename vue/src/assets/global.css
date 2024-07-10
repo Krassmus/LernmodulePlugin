@@ -16,17 +16,17 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   font-family: Lato, sans-serif;
 }
 
-.h5pModule {
+.h5p-module {
   border: 2px solid #eee;
   padding: 0.5em 0.5em 0.5em 0.5em;
   line-height: 1.75em;
 }
 
-.h5pButtonPanel {
+.h5p-button-panel {
   margin-top: 0.75em; /* margin between button and the feedback above it */
 }
 
-.h5pButton {
+.h5p-button {
   padding: 0.25em 1.25em; /* vertical, horizontal */
   margin-right: 0.75em; /* margin between buttons */
   border-radius: 2em;
@@ -43,11 +43,11 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   white-space: nowrap;
 }
 
-.h5pButton:last-child {
+.h5p-button:last-child {
   margin-right: 0;
 }
 
-.h5pSolution {
+.h5p-solution {
   color: #255c41;
   font-weight: bold;
   border: 1px #255c41 dashed;

@@ -1,5 +1,5 @@
 <template>
-  <div class="h5pModule">
+  <div class="h5p-module">
     <div>{{ $gettext('Umgedrehte Karten: ') + this.amountOfFlips }}</div>
 
     <div>
@@ -36,13 +36,13 @@
       </div>
     </div>
 
-    <div class="h5pButtonPanel">
+    <div class="h5p-button-panel">
       <button
         v-if="showRetryButton"
         v-text="this.task.strings.retryButton"
         @click="onClickTryAgain"
         type="button"
-        class="h5pButton"
+        class="h5p-button"
       />
     </div>
   </div>

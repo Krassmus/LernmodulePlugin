@@ -73,6 +73,8 @@ window.addEventListener('message', (event) => {
 
 function initializeApp(initializeMessage: InitializeMessage) {
   if (initializeMessage.block.attributes.payload.initialized) {
+    // TODO #15 Render an error message if the task definition can't be parsed or
+    //  any other error occurs during initialization.
     const existingTaskDefinition = taskDefinitionSchema.parse(
       initializeMessage.block.attributes.payload.task_json
     );

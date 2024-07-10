@@ -6,7 +6,7 @@ use Courseware\BlockTypes\BlockType;
 use Opis\JsonSchema\Schema;
 
 /**
- * This class represents the content of an 'Image Pairing' task from H5P.
+ * This class represents the content of a 'Pairing' task from H5P.
  *
  * @author  Ann Yanich
  * @license GPL3 or any later version
@@ -15,19 +15,19 @@ class PairingBlock extends BlockType
 {
     public static function getType(): string
     {
-        return 'image-pairing';
+        return 'pairing';
     }
 
     public static function getTitle(): string
     {
-        return dgettext('lernmoduleplugin', 'LMB - Image Pairing');
+        return dgettext('lernmoduleplugin', 'LMB - Pairing');
     }
 
     public static function getDescription(): string
     {
         return dgettext(
             'lernmoduleplugin',
-            'Eine Lernaufgabe, wo Paare von Bildern zu einander gematcht werden sollen.'
+            'Eine Lernaufgabe, wo Paare von Inhalten (Bilder, Texte oder Audio) zu einander gematcht werden sollen.'
         );
     }
 

@@ -5,6 +5,8 @@ import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
 
+// TODO #15 Render an error message if the task definition can't be parsed or
+//  any other error occurs during initialization.
 taskEditorStore.initializeNonCourseware();
 const app = createApp(LernmoduleEditor);
 app.directive('model-undoable', modelUndoable);
