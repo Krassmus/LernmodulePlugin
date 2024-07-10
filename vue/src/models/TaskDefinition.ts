@@ -639,7 +639,13 @@ export function printTaskType(type: TaskDefinition['task_type']): string {
 export function showViewerAboveEditor(
   type: TaskDefinition['task_type']
 ): boolean {
-  return type !== 'InteractiveVideo';
+  switch (type) {
+    case 'InteractiveVideo':
+    case 'Pairing':
+      return false;
+    default:
+      return true;
+  }
 }
 
 export function iconForTaskType(type: TaskDefinition['task_type']): string {
