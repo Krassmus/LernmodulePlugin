@@ -33,7 +33,14 @@ const coursewareBlockPayloadSchema = z.union([
   }),
   z.object({
     initialized: z.literal(true),
-    task_json: taskDefinitionSchema,
+    /**
+     * This field should be an instance of taskDefinitionSchema,
+     * but we would prefer to handle that validation in its own special place
+     * separate from the parsing of iframe messages. So, we don't specify
+     * what data type it should have here, allowing us to defer the parsing
+     * to a later step.
+     */
+    task_json: z.unknown(),
   }),
 ]);
 

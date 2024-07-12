@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { taskEditorStore, store, coursewareBlockStore } from '@/store';
 import { modelUndoable } from '@/directives/vModelUndoable';
-import { gettextPlugin } from '@/language/gettext';
+import { $gettext, gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
 import { isString } from 'lodash';
 import { newTask, taskDefinitionSchema } from '@/models/TaskDefinition';
@@ -10,6 +10,7 @@ import {
   InitializeMessage,
   iframeMessageSchema,
 } from '@/models/CoursewareBlockIframeMessages';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 
 // Wait to load until a message is posted to Window.
 if (!window.frameElement) {
@@ -26,16 +27,6 @@ window.addEventListener('message', (event) => {
     // youtube iframe player api.
     // console.info('Message not recognized: ', event.data, dataParseResult.error);
     if (event.data?.type === 'InitializeCoursewareBlock') {
-      // If the TaskDefinition loaded from the database does not match the current
-      // TaskDefinition schema, the parsing error will be printed here.  This may
-      // happen if, for example, we add a new non-optional field and the task definition
-      // in the database is missing that field.
-      // The error message may be hard to understand, because the datatype encoded by
-      // iframeMessageSchema is very big and nested.
-      // To improve the quality of the zod error messages we receive, I think it may be
-      // useful to split the parsing into two stages -- recognizing which iframe message
-      // type, and then parsing a TaskDefinition inside of the message, if needed.
-      // TODO #15
       console.info(
         'Message not recognized: ',
         event.data,
@@ -73,11 +64,32 @@ window.addEventListener('message', (event) => {
 
 function initializeApp(initializeMessage: InitializeMessage) {
   if (initializeMessage.block.attributes.payload.initialized) {
-    // TODO #15 Render an error message if the task definition can't be parsed or
-    //  any other error occurs during initialization.
-    const existingTaskDefinition = taskDefinitionSchema.parse(
-      initializeMessage.block.attributes.payload.task_json
-    );
+    // Parse the task_json from the database.
+    let existingTaskDefinition;
+    try {
+      existingTaskDefinition = taskDefinitionSchema.parse(
+        initializeMessage.block.attributes.payload.task_json
+      );
+    } catch (e: unknown) {
+      const errorMessage = $gettext(
+        'Diese Aufgabe konnte nicht geladen werden. ' +
+          'Beim Einlesen von task_json ist ein Fehler vorgekommen. Fehler: ' +
+          e
+      );
+      // TODO #15 Improve the error message given by zod so it is easier for
+      //  us developers to understand.
+      console.error(errorMessage, e);
+      console.error(
+        'task_json: ',
+        initializeMessage.block.attributes.payload.task_json
+      );
+      const app = createApp(ErrorMessage, {
+        error: errorMessage,
+      });
+      app.mount('#app');
+      return;
+    }
+
     taskEditorStore.initializeCourseware(existingTaskDefinition);
   } else {
     const newTaskDefinition = newTask(
