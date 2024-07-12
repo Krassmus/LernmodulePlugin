@@ -270,6 +270,9 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         // Map from file_id => ['name' => name, 'description' => description]
         $files_metadata = [];
         foreach ($file_ids as $file_id) {
+            if (!$file_id) {
+                continue; // Prevent an empty or undefined file_id from causing the export to fail.
+            }
             $file_ref = FileRef::find($file_id);
             if (is_null($file_ref)) {
                 throw new Exception("Es wurde kein File-Ref mit der ID '$file_id' gefunden.");
