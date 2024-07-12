@@ -21,134 +21,132 @@
         </div>
         <div class="h5p-elements-settings">
           <form class="default" @submit.prevent>
-            <fieldset>
-              <h1>{{ $gettext('Karte A') }}</h1>
-              <label>
-                {{ $gettext('Typ') }}
-                <select v-model="selectedPair.draggableElement.type">
-                  <option :value="'image'">
-                    {{ $gettext('Bild') }}
-                  </option>
-                  <option :value="'text'">
-                    {{ $gettext('Text') }}
-                  </option>
-                  <option :value="'audio'">
-                    {{ $gettext('Audio') }}
-                  </option>
-                </select>
-              </label>
-              <div
-                v-if="selectedPair.draggableElement.type == 'image'"
-                class="h5p-element-image-container"
-              >
-                <template v-if="selectedPair.draggableElement.file_id">
-                  <MultimediaElement
-                    :element="selectedPair.draggableElement"
-                    class="h5pMultimediaElement"
-                  />
-                  <button
-                    type="button"
-                    @click="removeDraggableImage(this.selectedPairIndex)"
-                    v-text="$gettext('Bild löschen')"
-                    class="button trash element-pair-settings-item"
-                  />
-                  <label style="align-self: stretch">
-                    {{ $gettext('Alt-Text') }}
-                    <input
-                      type="text"
-                      v-model="selectedPair.draggableElement.altText"
-                      class="element-pair-settings-item"
-                    />
-                  </label>
-                </template>
-                <FileUpload
-                  class="pairing-file-upload"
-                  v-else
-                  @file-uploaded="
-                    onUploadDraggableImage(this.selectedPairIndex, $event)
-                  "
+            <h1>{{ $gettext('Karte A') }}</h1>
+            <label>
+              {{ $gettext('Typ') }}
+              <select v-model="selectedPair.draggableElement.type">
+                <option :value="'image'">
+                  {{ $gettext('Bild') }}
+                </option>
+                <option :value="'text'">
+                  {{ $gettext('Text') }}
+                </option>
+                <option :value="'audio'">
+                  {{ $gettext('Audio') }}
+                </option>
+              </select>
+            </label>
+            <div
+              v-if="selectedPair.draggableElement.type == 'image'"
+              class="h5p-element-image-container"
+            >
+              <template v-if="selectedPair.draggableElement.file_id">
+                <MultimediaElement
+                  :element="selectedPair.draggableElement"
+                  class="h5pMultimediaElement"
                 />
-              </div>
-
-              <div v-else-if="selectedPair.draggableElement.type == 'text'">
-                <label style="align-self: stretch">
-                  {{ $gettext('Inhalt') }}
-                  <textarea
-                    type="text"
-                    v-model="selectedPair.draggableElement.content"
-                    class="element-pair-settings-item"
-                  />
-                </label>
-              </div>
-
-              <h1>{{ $gettext('Karte B') }}</h1>
-              <label>
-                {{ $gettext('Typ') }}
-                <select v-model="selectedPair.targetElement.type">
-                  <option :value="'image'">
-                    {{ $gettext('Bild') }}
-                  </option>
-                  <option :value="'text'">
-                    {{ $gettext('Text') }}
-                  </option>
-                  <option :value="'audio'">
-                    {{ $gettext('Audio') }}
-                  </option>
-                </select>
-              </label>
-              <div
-                v-if="selectedPair.targetElement.type == 'image'"
-                class="h5p-element-image-container"
-              >
-                <template v-if="selectedPair.targetElement.file_id">
-                  <MultimediaElement
-                    :element="selectedPair.targetElement"
-                    class="h5pMultimediaElement"
-                  />
-                  <button
-                    type="button"
-                    @click="removeTargetImage(this.selectedPairIndex)"
-                    v-text="$gettext('Bild löschen')"
-                    class="button trash element-pair-settings-item"
-                  />
-                  <label style="align-self: stretch">
-                    {{ $gettext('Alt-Text') }}
-                    <input
-                      type="text"
-                      v-model="selectedPair.targetElement.altText"
-                      class="element-pair-settings-item"
-                    />
-                  </label>
-                </template>
-                <FileUpload
-                  class="pairing-file-upload"
-                  v-else
-                  @file-uploaded="
-                    onUploadTargetImage(this.selectedPairIndex, $event)
-                  "
-                />
-              </div>
-
-              <div v-else-if="selectedPair.targetElement.type == 'text'">
-                <label style="align-self: stretch">
-                  {{ $gettext('Inhalt') }}
-                  <textarea
-                    type="text"
-                    v-model="selectedPair.targetElement.content"
-                    class="element-pair-settings-item"
-                  />
-                </label>
-              </div>
-
-              <div class="remove-pair-button-container">
                 <button
                   type="button"
-                  @click="deletePair(selectedPairIndex)"
-                  v-text="$gettext('Paar löschen')"
-                  class="button trash remove-pair-button"
+                  @click="removeDraggableImage(this.selectedPairIndex)"
+                  v-text="$gettext('Bild löschen')"
+                  class="button trash element-pair-settings-item"
                 />
-              </div>
-            </fieldset>
+                <label style="align-self: stretch">
+                  {{ $gettext('Alt-Text') }}
+                  <input
+                    type="text"
+                    v-model="selectedPair.draggableElement.altText"
+                    class="element-pair-settings-item"
+                  />
+                </label>
+              </template>
+              <FileUpload
+                class="pairing-file-upload"
+                v-else
+                @file-uploaded="
+                  onUploadDraggableImage(this.selectedPairIndex, $event)
+                "
+              />
+            </div>
+
+            <div v-else-if="selectedPair.draggableElement.type == 'text'">
+              <label style="align-self: stretch">
+                {{ $gettext('Inhalt') }}
+                <textarea
+                  type="text"
+                  v-model="selectedPair.draggableElement.content"
+                  class="element-pair-settings-item"
+                />
+              </label>
+            </div>
+
+            <h1>{{ $gettext('Karte B') }}</h1>
+            <label>
+              {{ $gettext('Typ') }}
+              <select v-model="selectedPair.targetElement.type">
+                <option :value="'image'">
+                  {{ $gettext('Bild') }}
+                </option>
+                <option :value="'text'">
+                  {{ $gettext('Text') }}
+                </option>
+                <option :value="'audio'">
+                  {{ $gettext('Audio') }}
+                </option>
+              </select>
+            </label>
+            <div
+              v-if="selectedPair.targetElement.type == 'image'"
+              class="h5p-element-image-container"
+            >
+              <template v-if="selectedPair.targetElement.file_id">
+                <MultimediaElement
+                  :element="selectedPair.targetElement"
+                  class="h5pMultimediaElement"
+                />
+                <button
+                  type="button"
+                  @click="removeTargetImage(this.selectedPairIndex)"
+                  v-text="$gettext('Bild löschen')"
+                  class="button trash element-pair-settings-item"
+                />
+                <label style="align-self: stretch">
+                  {{ $gettext('Alt-Text') }}
+                  <input
+                    type="text"
+                    v-model="selectedPair.targetElement.altText"
+                    class="element-pair-settings-item"
+                  />
+                </label>
+              </template>
+              <FileUpload
+                class="pairing-file-upload"
+                v-else
+                @file-uploaded="
+                  onUploadTargetImage(this.selectedPairIndex, $event)
+                "
+              />
+            </div>
+
+            <div v-else-if="selectedPair.targetElement.type == 'text'">
+              <label style="align-self: stretch">
+                {{ $gettext('Inhalt') }}
+                <textarea
+                  type="text"
+                  v-model="selectedPair.targetElement.content"
+                  class="element-pair-settings-item"
+                />
+              </label>
+            </div>
+
+            <div class="remove-pair-button-container">
+              <button
+                type="button"
+                @click="deletePair(selectedPairIndex)"
+                v-text="$gettext('Paar löschen')"
+                class="button trash remove-pair-button"
+              />
+            </div>
           </form>
         </div>
       </div>
@@ -331,7 +329,7 @@ export default defineComponent({
 .main-flex {
   display: flex;
   flex-direction: row;
-  gap: 1em;
+  gap: 0.5em;
 }
 
 .h5p-elements-overview {
@@ -343,12 +341,15 @@ export default defineComponent({
   justify-content: space-around;
   row-gap: 1em;
   column-gap: 0.5em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
 
 .h5p-elements-settings {
   flex-grow: 0;
   flex-shrink: 0;
   width: 275px;
+  padding: 0.5em 0.5em 0;
 }
 
 .h5p-element-image-container {
