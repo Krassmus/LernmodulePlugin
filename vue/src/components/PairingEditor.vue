@@ -1,6 +1,6 @@
 <template>
   <TabsComponent>
-    <TabComponent :title="$gettext('1. Aufgabe bearbeiten')">
+    <TabComponent :title="$gettext('1. Aufgabe bearbeiten')" icon="content">
       <div class="main-flex">
         <div class="h5p-elements-overview">
           <ElementPair
@@ -153,7 +153,7 @@
         </div>
       </div>
     </TabComponent>
-    <TabComponent :title="$gettext('2. Vorschau')">
+    <TabComponent :title="$gettext('2. Vorschau')" icon="visibility-visible">
       <PairingViewer :task="task" />
     </TabComponent>
   </TabsComponent>
