@@ -373,9 +373,8 @@ export default defineComponent({
   justify-content: flex-start;
   align-items: flex-start;
   user-select: none;
-  border: 1px solid #cbd5de;
   gap: 0.5em;
-  padding: 0.5em;
+  margin: 0.5em;
 }
 
 .targetElementsColumn {
@@ -385,9 +384,9 @@ export default defineComponent({
   justify-content: flex-start;
   align-items: flex-start;
   user-select: none;
-  border: 1px solid #cbd5de;
   gap: 0.5em;
-  padding: 0.5em;
+  margin: 0.5em;
+  border-radius: 0.25em;
   background-color: #eef1f4;
 }
 
