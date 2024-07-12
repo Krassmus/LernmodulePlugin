@@ -93,7 +93,7 @@
       </button>
     </div>
 
-    <div class="viewer">
+    <div class="viewer" v-if="showViewerAboveEditor(taskDefinition.task_type)">
       <h1 style="margin-top: 1em">{{ $gettext('Vorschau') }}</h1>
       <component
         :is="viewerForTaskType(taskDefinition.task_type)"
@@ -108,6 +108,7 @@ import { defineComponent } from 'vue';
 import {
   editorForTaskType,
   newTask,
+  showViewerAboveEditor,
   TaskDefinition,
   viewerForTaskType,
 } from '@/models/TaskDefinition';
@@ -155,6 +156,7 @@ export default defineComponent({
     },
   },
   methods: {
+    showViewerAboveEditor,
     $pgettext,
     $gettext,
     editorForTaskType,
