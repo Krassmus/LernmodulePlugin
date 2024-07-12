@@ -36,6 +36,11 @@ $actions->addLink(
     PluginEngine::getURL($plugin, array(), "lernmodule/edit/" . $mod->getId()),
     Icon::create("edit", "clickable")
 );
+$actions->addLink(
+    dgettext("lernmoduleplugin","Lernmodul herunterladen"),
+    $mod->getDownloadURL(),
+    Icon::create("download", "clickable")
+);
 Sidebar::get()->addWidget($actions);
 
 $views = new ViewsWidget();
