@@ -360,34 +360,36 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .pairingRow {
   display: flex;
   flex-direction: row;
 }
 
 .draggableElementsColumn {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  @extend .pairing-elements-grid;
+  flex-grow: 1;
   user-select: none;
-  gap: 0.5em;
   margin: 0.5em;
 }
 
 .targetElementsColumn {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  @extend .pairing-elements-grid;
+  flex-grow: 1;
   user-select: none;
-  gap: 0.5em;
   margin: 0.5em;
   border-radius: 0.25em;
   background-color: #eef1f4;
+}
+
+.pairing-elements-grid {
+  /* Adapted from https://stackoverflow.com/a/46099319/7359454 */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 8em);
+  grid-auto-rows: max-content;
+  justify-content: space-around;
+  row-gap: 1em;
+  column-gap: 0.5em;
 }
 
 .disabled {
