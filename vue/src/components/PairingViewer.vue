@@ -390,6 +390,7 @@ export default defineComponent({
   justify-content: space-around;
   row-gap: 1em;
   column-gap: 0.5em;
+  padding: 0.5em;
 }
 
 .disabled {
