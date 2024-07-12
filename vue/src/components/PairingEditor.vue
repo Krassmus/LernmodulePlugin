@@ -341,8 +341,7 @@ export default defineComponent({
   justify-content: space-around;
   row-gap: 1em;
   column-gap: 0.5em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
+  padding: 0.5em 0.5em 0;
 }
 
 .h5p-elements-settings {
