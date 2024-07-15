@@ -263,7 +263,7 @@ export const sequencingTaskSchema = z.object({
 });
 export type SequencingTask = z.infer<typeof sequencingTaskSchema>;
 
-export const taskDefinitionSchema = z.union([
+export const taskDefinitionSchema = z.discriminatedUnion('task_type', [
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
@@ -283,17 +283,20 @@ export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 // I at first used the workaround described at https://github.com/colinhacks/zod#recursive-types
 // but I later ran into hard-to-resolve typechecking errors when I started to
 // use .optional() inside of schemas. I decided this is the better option for now. -Ann
-export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
-  dragTheWordsTaskSchema,
-  fillInTheBlanksTaskSchema,
-  findTheHotspotTaskSchema,
-  findTheWordsTaskSchema,
-  sequencingTaskSchema,
-  markTheWordsTaskSchema,
-  memoryTaskSchema,
-  pairingTaskSchema,
-  questionTaskSchema,
-]);
+export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
+  'task_type',
+  [
+    dragTheWordsTaskSchema,
+    fillInTheBlanksTaskSchema,
+    findTheHotspotTaskSchema,
+    findTheWordsTaskSchema,
+    sequencingTaskSchema,
+    markTheWordsTaskSchema,
+    memoryTaskSchema,
+    pairingTaskSchema,
+    questionTaskSchema,
+  ]
+);
 
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
