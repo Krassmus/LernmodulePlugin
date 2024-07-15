@@ -11,6 +11,7 @@ import {
   iframeMessageSchema,
 } from '@/models/CoursewareBlockIframeMessages';
 import ErrorMessage from '@/components/ErrorMessage.vue';
+import { formatInvalidTaskDefinitionErrorMessage } from '@/functions';
 
 // Wait to load until a message is posted to Window.
 if (!window.frameElement) {
@@ -71,20 +72,10 @@ function initializeApp(initializeMessage: InitializeMessage) {
         initializeMessage.block.attributes.payload.task_json
       );
     } catch (e: unknown) {
-      const errorMessage =
-        $gettext(
-          'Diese Aufgabe konnte nicht geladen werden. ' +
-            'Beim Einlesen von task_json ist ein Fehler vorgekommen. Fehler: '
-        ) +
-        '\n' +
-        e +
-        '\n' +
-        'task_json: ' +
-        JSON.stringify(
-          initializeMessage.block.attributes.payload.task_json,
-          null,
-          2
-        );
+      const errorMessage = formatInvalidTaskDefinitionErrorMessage(
+        e,
+        initializeMessage.block.attributes.payload.task_json
+      );
       // TODO #15 Improve the error message given by zod so it is easier for
       //  us developers to understand.
       console.error(errorMessage, e);
