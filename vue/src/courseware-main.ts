@@ -76,8 +76,6 @@ function initializeApp(initializeMessage: InitializeMessage) {
         e,
         initializeMessage.block.attributes.payload.task_json
       );
-      // TODO #15 Improve the error message given by zod so it is easier for
-      //  us developers to understand.
       console.error(errorMessage, e);
       console.error(
         'task_json: ',
