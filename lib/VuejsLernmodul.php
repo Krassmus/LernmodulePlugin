@@ -278,7 +278,7 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
                 throw new Exception("Es wurde kein File-Ref mit der ID '$file_id' gefunden.");
             }
             if (!$file_ref->getFileType()->isDownloadable($GLOBALS['user']->id)) {
-                throw new Exception("Die Datei mit der ID '$file_id' ist für den eingeloggen Nutzer nicht verfügbar.");
+                throw new Exception("Die Datei mit der ID '$file_id' ist für den eingeloggten Nutzer nicht verfügbar.");
             }
             $path = $file_ref->file->getPath();
             if (is_null($path)) {
