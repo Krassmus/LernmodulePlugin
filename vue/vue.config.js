@@ -9,9 +9,6 @@ module.exports = defineConfig({
   filenameHashing: false,
   configureWebpack: {
     devtool: 'source-map',
-    experiments: {
-      topLevelAwait: true,
-    },
   },
   pages: {
     editor: 'src/editor-main.ts',
