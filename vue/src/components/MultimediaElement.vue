@@ -13,11 +13,9 @@
     <div class="text-element" draggable="false" v-text="element.content" />
   </template>
   <template v-else-if="element.type === 'audio'">
-    <div
-      class="audio-element"
-      draggable="false"
-      v-text="'Platzhalter für ' + element.type"
-    />
+    <div class="audio-element" draggable="false">
+      <CoursewareAudioBlock />
+    </div>
   </template>
 </template>
 
@@ -27,6 +25,12 @@ import {
   fileIdToUrl,
   LernmoduleMultimediaElement,
 } from '@/models/TaskDefinition';
+const CoursewareAudioBlock = (
+  (await import(
+    '../../../../../../../resources/vue/components/courseware/CoursewareAudioBlock.vue'
+  )) as any
+).default;
+console.log('cw audio block:', CoursewareAudioBlock);
 
 export default defineComponent({
   name: 'MultimediaElement',
@@ -35,6 +39,9 @@ export default defineComponent({
       type: Object as PropType<LernmoduleMultimediaElement>,
       required: true,
     },
+  },
+  components: {
+    CoursewareAudioBlock,
   },
   methods: { fileIdToUrl },
 });
