@@ -218,6 +218,7 @@ const audioElementSchema = z.object({
   file_id: z.string(),
   altText: z.string(),
 });
+export type AudioElement = z.infer<typeof audioElementSchema>;
 const textElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('text'),

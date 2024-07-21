@@ -1,6 +1,14 @@
 <template>
   <TabsComponent>
     <TabComponent :title="$gettext('1. Aufgabe bearbeiten')" icon="content">
+      <AudioElement
+        :element="{
+          type: 'audio',
+          file_id: '095b72e81b3b9bc24290f27ac9196c24',
+          altText: 'alt text',
+          uuid: '',
+        }"
+      />
       <div class="main-flex">
         <div class="h5p-elements-overview">
           <ElementPair
@@ -177,10 +185,12 @@ import MultimediaElement from '@/components/MultimediaElement.vue';
 import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
 import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
 import PairingViewer from '@/components/PairingViewer.vue';
+import AudioElement from '@/components/AudioElement.vue';
 
 export default defineComponent({
   name: 'PairingEditor',
   components: {
+    AudioElement,
     PairingViewer,
     TabComponent,
     TabsComponent,
