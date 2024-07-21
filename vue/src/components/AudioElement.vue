@@ -104,7 +104,6 @@ export default defineComponent({
       :src="audioUrl"
       class="lmb-audio-player"
       ref="audio"
-      controls
       @play="onPlayListener"
       @pause="onPauseListener"
       @timeupdate="onTimeUpdateListener"
@@ -145,4 +144,59 @@ export default defineComponent({
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.cw-audio-range {
+  margin: 0 5px 10px 0;
+  &::-moz-focus-outer {
+    border: 0;
+  }
+  &.ui-widget-content {
+    background-color: $base-color;
+  }
+  .ui-widget-header {
+    background-color: $dark-gray-color-5;
+  }
+  .ui-slider-handle {
+    border-radius: 20px;
+    width: 1em;
+    height: 1.7em;
+    top: -0.5em;
+    background-color: $dark-gray-color-20;
+    border-color: $content-color-40;
+    cursor: pointer;
+    margin-left: -2px;
+  }
+}
+.cw-audio-button {
+  border: solid thin $content-color-40;
+  background-color: $white;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 24px;
+  min-height: 27px;
+  line-height: 130%;
+  padding: 5px 15px 5px 30px;
+  cursor: pointer;
+  font-size: 14px;
+  box-sizing: border-box;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: bottom;
+  white-space: nowrap;
+  min-width: unset;
+  margin: 5px;
+  height: 46px;
+  width: 46px;
+  display: inline-block;
+
+  &:hover {
+    background-color: $base-color;
+  }
+}
+
+.cw-audio-time {
+  position: relative;
+  top: -1em;
+  color: $base-gray;
+}
+</style>
