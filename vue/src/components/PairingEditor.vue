@@ -157,6 +157,9 @@
     <TabComponent :title="$gettext('2. Vorschau')" icon="visibility-visible">
       <PairingViewer :task="task" />
     </TabComponent>
+    <TabComponent v-if="debug" title="Debug" icon="gear">
+      <pre v-text="task" />
+    </TabComponent>
   </TabsComponent>
 </template>
 
@@ -193,6 +196,7 @@ export default defineComponent({
   },
   data() {
     return {
+      debug: false,
       selectedPairIndex: -1,
     };
   },
