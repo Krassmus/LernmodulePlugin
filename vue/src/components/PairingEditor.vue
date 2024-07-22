@@ -157,7 +157,7 @@
     <TabComponent :title="$gettext('2. Vorschau')" icon="visibility-visible">
       <PairingViewer :task="task" />
     </TabComponent>
-    <TabComponent v-if="debug" title="Debug" icon="gear">
+    <TabComponent v-if="debug" title="Debug" icon="tools">
       <pre v-text="task" />
     </TabComponent>
   </TabsComponent>
