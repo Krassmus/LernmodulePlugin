@@ -196,7 +196,6 @@ export default defineComponent({
   },
   data() {
     return {
-      debug: false,
       selectedPairIndex: -1,
     };
   },
@@ -313,6 +312,7 @@ export default defineComponent({
   },
   computed: {
     task: () => taskEditorStore.taskDefinition as PairingTask,
+    debug: () => window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG,
     selectedPair(): Pair {
       return this.task.pairs[this.selectedPairIndex];
     },
