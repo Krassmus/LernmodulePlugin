@@ -6,11 +6,11 @@ import { InjectionKey, Ref } from 'vue';
  * There is a little bit of ceremony required to have the passed data be statically typed.
  * https://vuejs.org/guide/typescript/composition-api.html#typing-provide-inject
  */
-export const editorStateSymbol = Symbol(
+export const interactiveVideoEditorStateSymbol = Symbol(
   'Interactive Video Editor state'
-) as InjectionKey<EditorState>;
+) as InjectionKey<InteractiveVideoEditorState>;
 
-export interface EditorState {
+export interface InteractiveVideoEditorState {
   selectedInteractionId: Ref<string | undefined>;
   selectInteraction(id: string): void;
   editInteraction(id: string): void;

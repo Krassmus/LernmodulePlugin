@@ -191,13 +191,24 @@
 // Allow us to mutate the prop 'taskDefinition' as much as we want
 // TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
 /* eslint-disable vue/no-mutating-props */
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import { $gettext } from '@/language/gettext';
+import { taskEditorStore } from '@/store';
+import produce from 'immer';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'FillInTheBlanksEditor',
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   components: { StudipWysiwyg },
   props: {
     taskDefinition: {
@@ -222,7 +233,6 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-
     titleForDeleteButtonForFeedback(feedback: Feedback): string {
       return this.$gettext(
         'Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt.',
@@ -254,9 +264,39 @@ export default defineComponent({
     },
 
     addFeedback(): void {
-      this.taskDefinition.feedback.push({
-        percentage: this.feedbackSortedByScore[0]?.percentage,
-        message: 'Feedback',
+      // Old version directly mutating taskDefinition (breaks undo/redo)
+      // this.taskDefinition.feedback.push({
+      //   percentage: this.feedbackSortedByScore[0]?.percentage,
+      //   message: 'Feedback',
+      // });
+      // Rewrite to use performEdit over the store (Will not work in Interactive Video)
+      // taskEditorStore.performEdit({
+      //   newTaskDefinition: produce(
+      //     this.taskDefinition,
+      //     (taskDraft: FillInTheBlanksTask) => {
+      //       taskDraft.feedback.push({
+      //         percentage: this.feedbackSortedByScore[0]?.percentage,
+      //         message: 'Feedback',
+      //       });
+      //     }
+      //   ),
+      //   undoBatch: {},
+      // });
+
+      // Rewrite using provide/inject (will work in all of the cases we are
+      // considering -- Multiple tasks on the same page,or tasks included inside
+      // of each other a la Interactive Video).
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: FillInTheBlanksTask) => {
+            taskDraft.feedback.push({
+              percentage: this.feedbackSortedByScore[0]?.percentage,
+              message: 'Feedback',
+            });
+          }
+        ),
+        undoBatch: {},
       });
     },
 

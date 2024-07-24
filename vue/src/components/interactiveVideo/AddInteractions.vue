@@ -105,7 +105,15 @@
 </style>
 
 <script setup lang="ts">
-import { computed, defineProps, nextTick, PropType, provide, ref } from 'vue';
+import {
+  computed,
+  defineProps,
+  inject,
+  nextTick,
+  PropType,
+  provide,
+  ref,
+} from 'vue';
 import type {
   Interaction,
   InteractiveVideoTask,
@@ -122,9 +130,15 @@ import {
   TaskDefinition,
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
-import { editorStateSymbol } from '@/components/interactiveVideo/editorState';
+import { interactiveVideoEditorStateSymbol } from '@/components/interactiveVideo/interactiveVideoEditorState';
 import { $gettext } from '../../language/gettext';
 import { printInteractionType } from '@/models/InteractiveVideoTask';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
+import produce from 'immer';
+import { isEqual } from 'lodash';
 
 const props = defineProps({
   taskDefinition: {
@@ -152,7 +166,7 @@ const taskTypes: Array<TaskDefinition['task_type']> = [
   'Question',
 ];
 
-provide(editorStateSymbol, {
+provide(interactiveVideoEditorStateSymbol, {
   selectInteraction,
   selectedInteractionId,
   editInteraction,
@@ -162,7 +176,59 @@ provide(editorStateSymbol, {
   dragInteractionTimeline,
 });
 
-const selectedInteraction = computed(() =>
+/**
+ *  Do the necessary so that calls to performEdit from within the LMB Task
+ *  editor will not overwrite the state of the Interactive Video task
+ *  that contains them.
+ *  TODO Make a graphic diagram of all provides/injects in LernmodulePlugin
+ */
+
+provide(taskEditorStateSymbol, {
+  performEdit: performEditForEditedLmbInteraction,
+});
+
+const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
+
+function performEditForEditedLmbInteraction(payload: {
+  newTaskDefinition: TaskDefinition;
+  undoBatch: unknown;
+}): void {
+  // Apply the new task definition for the edited interaction.
+  const newDefinition = produce(
+    props.taskDefinition,
+    (videoTask: InteractiveVideoTask) => {
+      const interactionIndex = videoTask.interactions.findIndex(
+        (i) => i.id === selectedInteractionId.value
+      );
+      if (interactionIndex === -1) {
+        throw new Error('cant find selected interaction in interactions array');
+      }
+      const interaction = videoTask.interactions[interactionIndex];
+      if (interaction.type !== 'lmbTask') {
+        throw new Error('Selected interaction is not of type lmbTask');
+      }
+      interaction.taskDefinition = payload.newTaskDefinition;
+    }
+  );
+  const undoBatch = isEqual(payload.undoBatch, {})
+    ? // If the edited interaction's LMB task editor sends empty object as undoBatch,
+      // pass it through. This way, a new undo/redo state will always be created.
+      {}
+    : // If it doesn't send the empty object, that means that this edit should
+      // be merged together with other edits with the same undoBatch to the same
+      // Interaction.
+      {
+        type: 'editedLmbInteractionTask',
+        interactionId: selectedInteractionId.value,
+        undoBatch: payload.undoBatch,
+      };
+  taskEditor!.performEdit({
+    newTaskDefinition: newDefinition,
+    undoBatch: undoBatch,
+  });
+}
+
+const selectedInteraction = computed((): Interaction | undefined =>
   props.taskDefinition.interactions.find(
     (interaction) => interaction.id === selectedInteractionId.value
   )

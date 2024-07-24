@@ -115,10 +115,18 @@ import {
 import { taskEditorStore } from '@/store';
 import { $gettext, $pgettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
+import { taskEditorStateSymbol } from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'LernmoduleEditor',
   components: { StudipWysiwyg },
+  provide() {
+    return {
+      [taskEditorStateSymbol as symbol]: {
+        performEdit: taskEditorStore.performEdit,
+      },
+    };
+  },
   mounted() {
     // Prompt about unsaved changes when leaving the page
     window.addEventListener('beforeunload', this.onBeforeUnload, {

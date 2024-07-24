@@ -7,9 +7,17 @@ import {
   viewerForTaskType,
 } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
+import { taskEditorStateSymbol } from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'CoursewareBlock',
+  provide() {
+    return {
+      [taskEditorStateSymbol as symbol]: {
+        performEdit: taskEditorStore.performEdit,
+      },
+    };
+  },
   methods: {
     showViewerAboveEditor,
     viewerForTaskType,
@@ -22,6 +30,11 @@ export default defineComponent({
     saveStatus: () => taskEditorStore.saveStatus,
     saveBlock: () => coursewareBlockStore.saveBlock,
     cancelEditing: () => coursewareBlockStore.cancelEditing,
+    undo: () => taskEditorStore.undo,
+    redo: () => taskEditorStore.redo,
+    canUndo: () => taskEditorStore.canUndo,
+    canRedo: () => taskEditorStore.canRedo,
+    debug: () => window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG,
   },
 });
 </script>
@@ -34,6 +47,12 @@ export default defineComponent({
     class="lernmodule-viewer"
   />
   <template v-if="showEditingUI">
+    <template v-if="debug">
+      <!--   TODO Design UI for undo/redo and enable them after all task editors
+              have been adjusted to make undo/redo work. -->
+      <button @click="undo" :disabled="!canUndo">undo</button>
+      <button @click="redo" :disabled="!canRedo">redo</button>
+    </template>
     <component
       :is="editorForTaskType(taskDefinition.task_type)"
       :taskDefinition="taskDefinition"
