@@ -1,14 +1,6 @@
 <template>
   <TabsComponent>
     <TabComponent :title="$gettext('1. Aufgabe bearbeiten')" icon="content">
-      <AudioElement
-        :element="{
-          type: 'audio',
-          file_id: '095b72e81b3b9bc24290f27ac9196c24',
-          altText: 'alt text',
-          uuid: '',
-        }"
-      />
       <div class="main-flex">
         <div class="h5p-elements-overview">
           <ElementPair
