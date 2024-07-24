@@ -4,12 +4,12 @@
       <div class="main-flex">
         <div class="h5p-elements-overview">
           <ElementPair
-            v-for="(pair, index) in task.pairs"
+            v-for="(pair, index) in taskDefinition.pairs"
             :key="pair.uuid"
             :class="{
-              selected: index === this.selectedPairIndex,
+              selected: index === selectedPairIndex,
             }"
-            :pair="this.taskDefinition.pairs[index]"
+            :pair="taskDefinition.pairs[index]"
             @click="selectPair(index)"
           />
           <button
@@ -48,7 +48,7 @@
                   />
                   <button
                     type="button"
-                    @click="removeDraggableImage(this.selectedPairIndex)"
+                    @click="removeDraggableImage(selectedPairIndex)"
                     v-text="$gettext('Bild löschen')"
                     class="button trash element-pair-settings-item"
                   />
@@ -155,10 +155,10 @@
       </div>
     </TabComponent>
     <TabComponent :title="$gettext('2. Vorschau')" icon="visibility-visible">
-      <PairingViewer :task="task" />
+      <PairingViewer :task="taskDefinition" />
     </TabComponent>
     <TabComponent v-if="debug" title="Debug" icon="tools">
-      <pre v-text="task" />
+      <pre v-text="taskDefinition" />
     </TabComponent>
   </TabsComponent>
 </template>
@@ -200,7 +200,7 @@ export default defineComponent({
     };
   },
   beforeMount(): void {
-    if (this.task.pairs.length > 0) {
+    if (this.taskDefinition.pairs.length > 0) {
       this.selectedPairIndex = 0;
     }
   },
@@ -216,7 +216,7 @@ export default defineComponent({
       this.selectedPairIndex = index;
     },
     addPair() {
-      const newTaskDefinition = produce(this.task, (draft) => {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.push({
           uuid: v4(),
           draggableElement: {
@@ -238,10 +238,10 @@ export default defineComponent({
         undoBatch: {},
       });
       // Select the newly inserted card
-      this.selectedPairIndex = this.task.pairs.length - 1;
+      this.selectedPairIndex = this.taskDefinition.pairs.length - 1;
     },
     deletePair(index: number) {
-      const newTaskDefinition = produce(this.task, (draft) => {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.splice(index, 1);
       });
       taskEditorStore.performEdit({
@@ -254,7 +254,7 @@ export default defineComponent({
       }
     },
     onUploadDraggableImage(pairIndex: number, file: FileRef): void {
-      const newTaskDefinition = produce(this.task, (draft) => {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs[pairIndex].draggableElement = {
           uuid: v4(),
           type: 'image',
@@ -268,7 +268,7 @@ export default defineComponent({
       });
     },
     removeDraggableImage(pairIndex: number) {
-      const newTaskDefinition = produce(this.task, (draft) => {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs[pairIndex].draggableElement = {
           uuid: v4(),
           type: 'image',
@@ -282,7 +282,7 @@ export default defineComponent({
       });
     },
     onUploadTargetImage(pairIndex: number, file: FileRef): void {
-      const newTaskDefinition = produce(this.task, (draft) => {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs[pairIndex].targetElement = {
           uuid: v4(),
           type: 'image',
@@ -296,7 +296,7 @@ export default defineComponent({
       });
     },
     removeTargetImage(pairIndex: number) {
-      const newTaskDefinition = produce(this.task, (draft) => {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs[pairIndex].targetElement = {
           uuid: v4(),
           type: 'image',
@@ -311,10 +311,9 @@ export default defineComponent({
     },
   },
   computed: {
-    task: () => taskEditorStore.taskDefinition as PairingTask,
     debug: () => window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG,
     selectedPair(): Pair {
-      return this.task.pairs[this.selectedPairIndex];
+      return this.taskDefinition.pairs[this.selectedPairIndex];
     },
     addPairButtonBackgroundImage() {
       return {
