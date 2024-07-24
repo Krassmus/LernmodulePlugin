@@ -168,6 +168,8 @@ import { defineComponent, PropType } from 'vue';
 import { fileIdToUrl, Pair, PairingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
+// TODO Remove uses of taskEditorStore here so that Pairing can be used in Interactive Video.
+// (Replace them with injection -- See the usage of performEdit in FillInTheBlanksEditor.vue.)
 import { taskEditorStore } from '@/store';
 import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
