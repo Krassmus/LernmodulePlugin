@@ -21,126 +21,17 @@
         </div>
         <div class="h5p-elements-settings">
           <form class="default" @submit.prevent>
-            <div class="h5p-element-settings">
-              <h1>{{ $gettext('Karte A') }}</h1>
-              <label>
-                {{ $gettext('Typ') }}
-                <select v-model="selectedPair.draggableElement.type">
-                  <option :value="'image'">
-                    {{ $gettext('Bild') }}
-                  </option>
-                  <option :value="'text'">
-                    {{ $gettext('Text') }}
-                  </option>
-                  <option :value="'audio'">
-                    {{ $gettext('Audio') }}
-                  </option>
-                </select>
-              </label>
-              <div
-                v-if="selectedPair.draggableElement.type == 'image'"
-                class="h5p-element-image-container"
-              >
-                <template v-if="selectedPair.draggableElement.file_id">
-                  <MultimediaElement
-                    :element="selectedPair.draggableElement"
-                    class="h5pMultimediaElement"
-                  />
-                  <button
-                    type="button"
-                    @click="removeDraggableImage(selectedPairIndex)"
-                    v-text="$gettext('Bild löschen')"
-                    class="button trash element-pair-settings-item"
-                  />
-                  <label style="align-self: stretch">
-                    {{ $gettext('Alt-Text') }}
-                    <input
-                      type="text"
-                      v-model="selectedPair.draggableElement.altText"
-                      class="element-pair-settings-item"
-                    />
-                  </label>
-                </template>
-                <FileUpload
-                  class="pairing-file-upload"
-                  v-else
-                  @file-uploaded="
-                    onUploadDraggableImage(this.selectedPairIndex, $event)
-                  "
-                />
-              </div>
+            <h1>{{ $gettext('Karte A') }}</h1>
+            <PairingElement
+              :multimedia-element="selectedPair.draggableElement"
+              @element-Changed="onDraggableElementChanged"
+            />
 
-              <div v-else-if="selectedPair.draggableElement.type == 'text'">
-                <label style="align-self: stretch">
-                  {{ $gettext('Inhalt') }}
-                  <textarea
-                    type="text"
-                    v-model="selectedPair.draggableElement.content"
-                    class="element-pair-settings-item"
-                  />
-                </label>
-              </div>
-            </div>
-            <div class="h5p-element-settings">
-              <h1>{{ $gettext('Karte B') }}</h1>
-              <label>
-                {{ $gettext('Typ') }}
-                <select v-model="selectedPair.targetElement.type">
-                  <option :value="'image'">
-                    {{ $gettext('Bild') }}
-                  </option>
-                  <option :value="'text'">
-                    {{ $gettext('Text') }}
-                  </option>
-                  <option :value="'audio'">
-                    {{ $gettext('Audio') }}
-                  </option>
-                </select>
-              </label>
-              <div
-                v-if="selectedPair.targetElement.type == 'image'"
-                class="h5p-element-image-container"
-              >
-                <template v-if="selectedPair.targetElement.file_id">
-                  <MultimediaElement
-                    :element="selectedPair.targetElement"
-                    class="h5pMultimediaElement"
-                  />
-                  <button
-                    type="button"
-                    @click="removeTargetImage(this.selectedPairIndex)"
-                    v-text="$gettext('Bild löschen')"
-                    class="button trash element-pair-settings-item"
-                  />
-                  <label style="align-self: stretch">
-                    {{ $gettext('Alt-Text') }}
-                    <input
-                      type="text"
-                      v-model="selectedPair.targetElement.altText"
-                      class="element-pair-settings-item"
-                    />
-                  </label>
-                </template>
-                <FileUpload
-                  class="pairing-file-upload"
-                  v-else
-                  @file-uploaded="
-                    onUploadTargetImage(this.selectedPairIndex, $event)
-                  "
-                />
-              </div>
-
-              <div v-else-if="selectedPair.targetElement.type == 'text'">
-                <label style="align-self: stretch">
-                  {{ $gettext('Inhalt') }}
-                  <textarea
-                    type="text"
-                    v-model="selectedPair.targetElement.content"
-                    class="element-pair-settings-item"
-                  />
-                </label>
-              </div>
-            </div>
+            <h1>{{ $gettext('Karte B') }}</h1>
+            <PairingElement
+              :multimedia-element="selectedPair.targetElement"
+              @element-Changed="onTargetElementChanged"
+            />
 
             <div class="remove-pair-button-container">
               <button
@@ -165,7 +56,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, Pair, PairingTask } from '@/models/TaskDefinition';
+import {
+  fileIdToUrl,
+  LernmoduleMultimediaElement,
+  Pair,
+  PairingTask,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 // TODO Remove uses of taskEditorStore here so that Pairing can be used in Interactive Video.
@@ -173,12 +69,11 @@ import produce from 'immer';
 import { taskEditorStore } from '@/store';
 import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
-import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
-import MultimediaElement from '@/components/MultimediaElement.vue';
 import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
 import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
 import PairingViewer from '@/components/PairingViewer.vue';
+import PairingElement from '@/components/PairingElement.vue';
 
 export default defineComponent({
   name: 'PairingEditor',
@@ -186,9 +81,8 @@ export default defineComponent({
     PairingViewer,
     TabComponent,
     TabsComponent,
-    MultimediaElement,
-    FileUpload,
     ElementPair,
+    PairingElement,
   },
   props: {
     taskDefinition: {
@@ -305,6 +199,24 @@ export default defineComponent({
           file_id: '',
           altText: '',
         };
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
+    },
+    onDraggableElementChanged(element: LernmoduleMultimediaElement): void {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.pairs[this.selectedPairIndex].draggableElement = element;
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
+    },
+    onTargetElementChanged(element: LernmoduleMultimediaElement): void {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.pairs[this.selectedPairIndex].targetElement = element;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
