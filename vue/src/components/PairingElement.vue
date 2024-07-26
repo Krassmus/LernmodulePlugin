@@ -3,10 +3,7 @@
     <div class="h5p-element-settings">
       <label>
         {{ $gettext('Typ') }}
-        <select
-          :value="multimediaElement.type"
-          @change="onSelectionChange($event)"
-        >
+        <select :value="multimediaElement.type" @change="onChangeType($event)">
           <option :value="'image'">
             {{ $gettext('Bild') }}
           </option>
@@ -29,7 +26,7 @@
           />
           <button
             type="button"
-            @click="removeDraggableImage(selectedPairIndex)"
+            @click="onClickRemoveImage()"
             v-text="$gettext('Bild löschen')"
             class="button trash element-pair-settings-item"
           />
@@ -38,6 +35,7 @@
             <input
               type="text"
               :value="multimediaElement.altText"
+              @input="onInputAltText($event)"
               class="element-pair-settings-item"
             />
           </label>
@@ -45,9 +43,7 @@
         <FileUpload
           class="pairing-file-upload"
           v-else
-          @file-uploaded="
-            onUploadDraggableImage(this.selectedPairIndex, $event)
-          "
+          @file-uploaded="onUploadImage($event)"
         />
       </div>
       <div v-else-if="multimediaElement.type == 'text'">
@@ -56,6 +52,7 @@
           <textarea
             type="text"
             :value="multimediaElement.content"
+            @input="onInputContent($event)"
             class="element-pair-settings-item"
           />
         </label>
@@ -71,6 +68,7 @@ import { $gettext } from '@/language/gettext';
 import MultimediaElement from '@/components/MultimediaElement.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { v4 } from 'uuid';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'PairingElement',
@@ -87,14 +85,6 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    onSelectionChange(event: Event) {
-      const target = event.target as HTMLSelectElement;
-      const newType = target.value;
-      this.$emit(
-        'elementChanged',
-        this.createNewLernmoduleMultimediaElement(newType)
-      );
-    },
     createNewLernmoduleMultimediaElement(
       type: string
     ): LernmoduleMultimediaElement | undefined {
@@ -119,8 +109,37 @@ export default defineComponent({
           content: '',
         };
       }
-
       return undefined;
+    },
+    onChangeType(event: Event) {
+      const target = event.target as HTMLSelectElement;
+      const selectedType = target.value;
+      this.$emit(
+        'elementChanged',
+        this.createNewLernmoduleMultimediaElement(selectedType)
+      );
+    },
+    onClickRemoveImage() {
+      this.$emit(
+        'elementChanged',
+        this.createNewLernmoduleMultimediaElement('image')
+      );
+    },
+    onUploadImage(file: FileRef): void {
+      const updatedElement = { ...this.multimediaElement, file_id: file.id };
+      this.$emit('elementChanged', updatedElement);
+    },
+    onInputAltText(event: Event) {
+      const target = event.target as HTMLInputElement;
+      const newAltText = target.value;
+      const updatedElement = { ...this.multimediaElement, altText: newAltText };
+      this.$emit('elementChanged', updatedElement);
+    },
+    onInputContent(event: Event) {
+      const target = event.target as HTMLInputElement;
+      const newContent = target.value;
+      const updatedElement = { ...this.multimediaElement, content: newContent };
+      this.$emit('elementChanged', updatedElement);
     },
   },
   computed: {},
