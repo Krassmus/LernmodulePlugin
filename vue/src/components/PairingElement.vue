@@ -3,7 +3,10 @@
     <div class="h5p-element-settings">
       <label>
         {{ $gettext('Typ') }}
-        <select v-model="localElement.type" @change="onSelectionChange($event)">
+        <select
+          :value="multimediaElement.type"
+          @change="onSelectionChange($event)"
+        >
           <option :value="'image'">
             {{ $gettext('Bild') }}
           </option>
@@ -16,12 +19,12 @@
         </select>
       </label>
       <div
-        v-if="localElement.type == 'image'"
+        v-if="multimediaElement.type == 'image'"
         class="h5p-element-image-container"
       >
-        <template v-if="localElement.file_id">
+        <template v-if="multimediaElement.file_id">
           <MultimediaElement
-            :element="localElement"
+            :element="multimediaElement"
             class="h5pMultimediaElement"
           />
           <button
@@ -34,7 +37,7 @@
             {{ $gettext('Alt-Text') }}
             <input
               type="text"
-              v-model="localElement.altText"
+              :value="multimediaElement.altText"
               class="element-pair-settings-item"
             />
           </label>
@@ -47,12 +50,12 @@
           "
         />
       </div>
-      <div v-else-if="localElement.type == 'text'">
+      <div v-else-if="multimediaElement.type == 'text'">
         <label style="align-self: stretch">
           {{ $gettext('Inhalt') }}
           <textarea
             type="text"
-            v-model="localElement.content"
+            :value="multimediaElement.content"
             class="element-pair-settings-item"
           />
         </label>
@@ -67,6 +70,7 @@ import { LernmoduleMultimediaElement } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import MultimediaElement from '@/components/MultimediaElement.vue';
 import FileUpload from '@/components/FileUpload.vue';
+import { v4 } from 'uuid';
 
 export default defineComponent({
   name: 'PairingElement',
@@ -79,22 +83,44 @@ export default defineComponent({
   },
   emits: ['elementChanged'],
   data() {
-    return {
-      localElement: {} as LernmoduleMultimediaElement,
-    };
-  },
-  watch: {
-    multimediaElement: {
-      immediate: true,
-      handler(newVal) {
-        this.localElement = { ...newVal };
-      },
-    },
+    return {};
   },
   methods: {
     $gettext,
-    onSelectionChange() {
-      this.$emit('elementChanged', this.localElement);
+    onSelectionChange(event: Event) {
+      const target = event.target as HTMLSelectElement;
+      const newType = target.value;
+      this.$emit(
+        'elementChanged',
+        this.createNewLernmoduleMultimediaElement(newType)
+      );
+    },
+    createNewLernmoduleMultimediaElement(
+      type: string
+    ): LernmoduleMultimediaElement | undefined {
+      if (type === 'image') {
+        return {
+          uuid: v4(),
+          type: type,
+          file_id: '',
+          altText: '',
+        };
+      } else if (type === 'audio') {
+        return {
+          uuid: v4(),
+          type: type,
+          file_id: '',
+          altText: '',
+        };
+      } else if (type === 'text') {
+        return {
+          uuid: v4(),
+          type: type,
+          content: '',
+        };
+      }
+
+      return undefined;
     },
   },
   computed: {},
