@@ -10,12 +10,12 @@
               selected: index === selectedPairIndex,
             }"
             :pair="taskDefinition.pairs[index]"
-            @click="selectPair(index)"
+            @click="onClickPair(index)"
           />
           <button
             type="button"
             class="add-pair-button"
-            @click="addPair()"
+            @click="onClickAddPair()"
             :style="addPairButtonBackgroundImage"
           />
         </div>
@@ -24,19 +24,19 @@
             <h1>{{ $gettext('Karte A') }}</h1>
             <PairingElement
               :multimedia-element="selectedPair.draggableElement"
-              @element-Changed="onDraggableElementChanged"
+              @element-changed="onChangeDraggableElement"
             />
 
             <h1>{{ $gettext('Karte B') }}</h1>
             <PairingElement
               :multimedia-element="selectedPair.targetElement"
-              @element-Changed="onTargetElementChanged"
+              @element-changed="onChangeTargetElement"
             />
 
             <div class="remove-pair-button-container">
               <button
                 type="button"
-                @click="deletePair(selectedPairIndex)"
+                @click="onClickDeletePair(selectedPairIndex)"
                 v-text="$gettext('Paar löschen')"
                 class="button trash remove-pair-button"
               />
@@ -107,10 +107,10 @@ export default defineComponent({
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
-    selectPair(index: number) {
+    onClickPair(index: number) {
       this.selectedPairIndex = index;
     },
-    addPair() {
+    onClickAddPair() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.push({
           uuid: v4(),
@@ -135,7 +135,7 @@ export default defineComponent({
       // Select the newly inserted card
       this.selectedPairIndex = this.taskDefinition.pairs.length - 1;
     },
-    deletePair(index: number) {
+    onClickDeletePair(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.splice(index, 1);
       });
@@ -148,7 +148,7 @@ export default defineComponent({
         this.selectedPairIndex = this.selectedPairIndex - 1;
       }
     },
-    onDraggableElementChanged(element: LernmoduleMultimediaElement): void {
+    onChangeDraggableElement(element: LernmoduleMultimediaElement): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs[this.selectedPairIndex].draggableElement = element;
       });
@@ -157,7 +157,7 @@ export default defineComponent({
         undoBatch: {},
       });
     },
-    onTargetElementChanged(element: LernmoduleMultimediaElement): void {
+    onChangeTargetElement(element: LernmoduleMultimediaElement): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs[this.selectedPairIndex].targetElement = element;
       });
