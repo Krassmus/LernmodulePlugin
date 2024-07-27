@@ -183,13 +183,6 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.pairing-file-upload,
-.pairing-file-upload input[type='file'] {
-  max-width: 100%;
-}
-</style>
-
 <style scoped>
 .main-flex {
   display: flex;
@@ -219,19 +212,6 @@ export default defineComponent({
   margin-top: 2ex;
 }
 
-.h5p-element-image-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.5em;
-}
-
-.h5pMultimediaElement {
-  width: 8em;
-  height: 8em;
-}
-
 .add-pair-button {
   box-sizing: border-box;
   height: 8em;
@@ -246,11 +226,6 @@ export default defineComponent({
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: center;
-}
-
-.element-pair-settings-item {
-  /* top | right | bottom | left */
-  margin: 0.25em 0 0 0;
 }
 
 .remove-pair-button {
