@@ -21,18 +21,20 @@
         </div>
         <div class="h5p-elements-settings">
           <form class="default" @submit.prevent>
-            <h1>{{ $gettext('Karte A') }}</h1>
-            <PairingElement
-              :multimedia-element="selectedPair.draggableElement"
-              @element-changed="onChangeDraggableElement"
-            />
-
-            <h1>{{ $gettext('Karte B') }}</h1>
-            <PairingElement
-              :multimedia-element="selectedPair.targetElement"
-              @element-changed="onChangeTargetElement"
-            />
-
+            <div class="h5p-element-setting">
+              <h1>{{ $gettext('Karte A') }}</h1>
+              <PairingElement
+                :multimedia-element="selectedPair.draggableElement"
+                @element-changed="onChangeDraggableElement"
+              />
+            </div>
+            <div class="h5p-element-setting">
+              <h1>{{ $gettext('Karte B') }}</h1>
+              <PairingElement
+                :multimedia-element="selectedPair.targetElement"
+                @element-changed="onChangeTargetElement"
+              />
+            </div>
             <div class="remove-pair-button-container">
               <button
                 type="button"
@@ -213,8 +215,8 @@ export default defineComponent({
   width: 275px;
   padding: 0.5em 0.5em 0;
 }
-.h5p-element-settings + .h5p-element-settings {
-  margin-top: 1.5ex;
+.h5p-element-setting + .h5p-element-setting {
+  margin-top: 2ex;
 }
 
 .h5p-element-image-container {
