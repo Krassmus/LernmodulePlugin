@@ -69,7 +69,6 @@ import produce from 'immer';
 import { taskEditorStore } from '@/store';
 import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
-import { FileRef } from '@/routes/jsonApi';
 import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
 import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
 import PairingViewer from '@/components/PairingViewer.vue';
@@ -148,62 +147,6 @@ export default defineComponent({
       if (index <= this.selectedPairIndex) {
         this.selectedPairIndex = this.selectedPairIndex - 1;
       }
-    },
-    onUploadDraggableImage(pairIndex: number, file: FileRef): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[pairIndex].draggableElement = {
-          uuid: v4(),
-          type: 'image',
-          file_id: file.id,
-          altText: '',
-        };
-      });
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
-    },
-    removeDraggableImage(pairIndex: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[pairIndex].draggableElement = {
-          uuid: v4(),
-          type: 'image',
-          file_id: '',
-          altText: '',
-        };
-      });
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
-    },
-    onUploadTargetImage(pairIndex: number, file: FileRef): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[pairIndex].targetElement = {
-          uuid: v4(),
-          type: 'image',
-          file_id: file.id,
-          altText: '',
-        };
-      });
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
-    },
-    removeTargetImage(pairIndex: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[pairIndex].targetElement = {
-          uuid: v4(),
-          type: 'image',
-          file_id: '',
-          altText: '',
-        };
-      });
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
     },
     onDraggableElementChanged(element: LernmoduleMultimediaElement): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
