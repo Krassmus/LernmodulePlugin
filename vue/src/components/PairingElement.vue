@@ -149,13 +149,19 @@ export default defineComponent({
       const target = event.target as HTMLInputElement;
       const newAltText = target.value;
       const updatedElement = { ...this.multimediaElement, altText: newAltText };
-      this.$emit('elementChanged', { updatedElement, undoBatch: 'altText' });
+      this.$emit('elementChanged', {
+        updatedElement,
+        undoBatch: { field: 'altText', uuid: this.multimediaElement.uuid },
+      });
     },
     onInputContent(event: Event) {
       const target = event.target as HTMLInputElement;
       const newContent = target.value;
       const updatedElement = { ...this.multimediaElement, content: newContent };
-      this.$emit('elementChanged', { updatedElement, undoBatch: 'content' });
+      this.$emit('elementChanged', {
+        updatedElement,
+        undoBatch: { field: 'content', uuid: this.multimediaElement.uuid },
+      });
     },
   },
   computed: {},
