@@ -232,6 +232,7 @@ export const multimediaElementSchema = z.union([
 export type LernmoduleMultimediaElement = z.infer<
   typeof multimediaElementSchema
 >;
+export type MultimediaElementType = LernmoduleMultimediaElement['type'];
 
 export const pairSchema = z.object({
   uuid: z.string(),

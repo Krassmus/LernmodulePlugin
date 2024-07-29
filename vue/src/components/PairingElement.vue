@@ -63,7 +63,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { LernmoduleMultimediaElement } from '@/models/TaskDefinition';
+import {
+  LernmoduleMultimediaElement,
+  MultimediaElementType,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import MultimediaElement from '@/components/MultimediaElement.vue';
 import FileUpload from '@/components/FileUpload.vue';
@@ -86,34 +89,38 @@ export default defineComponent({
   methods: {
     $gettext,
     createNewLernmoduleMultimediaElement(
-      type: string
-    ): LernmoduleMultimediaElement | undefined {
-      if (type === 'image') {
-        return {
-          uuid: v4(),
-          type: type,
-          file_id: '',
-          altText: '',
-        };
-      } else if (type === 'audio') {
-        return {
-          uuid: v4(),
-          type: type,
-          file_id: '',
-          altText: '',
-        };
-      } else if (type === 'text') {
-        return {
-          uuid: v4(),
-          type: type,
-          content: '',
-        };
+      type: MultimediaElementType
+    ): LernmoduleMultimediaElement {
+      switch (type) {
+        case 'image':
+          return {
+            uuid: v4(),
+            type: type,
+            file_id: '',
+            altText: '',
+          };
+        case 'audio':
+          return {
+            uuid: v4(),
+            type: type,
+            file_id: '',
+            altText: '',
+          };
+        case 'text':
+          return {
+            uuid: v4(),
+            type: type,
+            content: '',
+          };
+        default:
+          throw new Error(
+            $gettext('Ungültiges MultimediaElementType: ') + type
+          );
       }
-      return undefined;
     },
     onChangeType(event: Event) {
       const target = event.target as HTMLSelectElement;
-      const selectedType = target.value;
+      const selectedType = target.value as MultimediaElementType;
       this.$emit(
         'elementChanged',
         this.createNewLernmoduleMultimediaElement(selectedType)
