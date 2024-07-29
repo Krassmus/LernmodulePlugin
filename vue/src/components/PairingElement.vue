@@ -30,21 +30,21 @@
             v-text="$gettext('Bild löschen')"
             class="button trash element-pair-settings-item"
           />
-          <label style="align-self: stretch">
-            {{ $gettext('Alt-Text') }}
-            <input
-              type="text"
-              :value="multimediaElement.altText"
-              @input="onInputAltText($event)"
-              class="element-pair-settings-item"
-            />
-          </label>
         </template>
         <FileUpload
           class="pairing-file-upload"
           v-else
           @file-uploaded="onUploadImage($event)"
         />
+        <label style="align-self: stretch">
+          {{ $gettext('Alt-Text') }}
+          <input
+            type="text"
+            :value="multimediaElement.altText"
+            @input="onInputAltText($event)"
+            class="element-pair-settings-item"
+          />
+        </label>
       </div>
       <div v-else-if="multimediaElement.type == 'text'">
         <label style="align-self: stretch">
@@ -64,6 +64,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import {
+  ImageElement,
   LernmoduleMultimediaElement,
   MultimediaElementType,
 } from '@/models/TaskDefinition';
@@ -134,7 +135,10 @@ export default defineComponent({
     },
     onClickRemoveImage() {
       this.$emit('elementChanged', {
-        updatedElement: this.createNewLernmoduleMultimediaElement('image'),
+        updatedElement: {
+          ...(this.multimediaElement as ImageElement),
+          file_id: '',
+        },
       });
     },
     onUploadImage(file: FileRef): void {

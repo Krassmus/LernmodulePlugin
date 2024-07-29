@@ -212,6 +212,7 @@ const imageElementSchema = z.object({
   file_id: z.string(),
   altText: z.string(),
 });
+export type ImageElement = z.infer<typeof imageElementSchema>;
 const audioElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('audio'),
