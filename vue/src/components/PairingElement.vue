@@ -82,7 +82,14 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['elementChanged'],
+  emits: {
+    elementChanged(payload: {
+      updatedElement: LernmoduleMultimediaElement;
+      undoBatch?: unknown;
+    }) {
+      return true;
+    },
+  },
   data() {
     return {};
   },
@@ -121,32 +128,30 @@ export default defineComponent({
     onChangeType(event: Event) {
       const target = event.target as HTMLSelectElement;
       const selectedType = target.value as MultimediaElementType;
-      this.$emit(
-        'elementChanged',
-        this.createNewLernmoduleMultimediaElement(selectedType)
-      );
+      this.$emit('elementChanged', {
+        updatedElement: this.createNewLernmoduleMultimediaElement(selectedType),
+      });
     },
     onClickRemoveImage() {
-      this.$emit(
-        'elementChanged',
-        this.createNewLernmoduleMultimediaElement('image')
-      );
+      this.$emit('elementChanged', {
+        updatedElement: this.createNewLernmoduleMultimediaElement('image'),
+      });
     },
     onUploadImage(file: FileRef): void {
       const updatedElement = { ...this.multimediaElement, file_id: file.id };
-      this.$emit('elementChanged', updatedElement);
+      this.$emit('elementChanged', { updatedElement });
     },
     onInputAltText(event: Event) {
       const target = event.target as HTMLInputElement;
       const newAltText = target.value;
       const updatedElement = { ...this.multimediaElement, altText: newAltText };
-      this.$emit('elementChanged', updatedElement);
+      this.$emit('elementChanged', { updatedElement, undoBatch: 'altText' });
     },
     onInputContent(event: Event) {
       const target = event.target as HTMLInputElement;
       const newContent = target.value;
       const updatedElement = { ...this.multimediaElement, content: newContent };
-      this.$emit('elementChanged', updatedElement);
+      this.$emit('elementChanged', { updatedElement, undoBatch: 'content' });
     },
   },
   computed: {},

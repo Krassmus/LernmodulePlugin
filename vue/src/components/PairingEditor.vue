@@ -150,22 +150,30 @@ export default defineComponent({
         this.selectedPairIndex = this.selectedPairIndex - 1;
       }
     },
-    onChangeDraggableElement(element: LernmoduleMultimediaElement): void {
+    onChangeDraggableElement(payload: {
+      updatedElement: LernmoduleMultimediaElement;
+      undoBatch?: unknown;
+    }): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[this.selectedPairIndex].draggableElement = element;
+        draft.pairs[this.selectedPairIndex].draggableElement =
+          payload.updatedElement;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
+        undoBatch: payload.undoBatch ?? {},
       });
     },
-    onChangeTargetElement(element: LernmoduleMultimediaElement): void {
+    onChangeTargetElement(payload: {
+      updatedElement: LernmoduleMultimediaElement;
+      undoBatch?: unknown;
+    }): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[this.selectedPairIndex].targetElement = element;
+        draft.pairs[this.selectedPairIndex].targetElement =
+          payload.updatedElement;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
+        undoBatch: payload.undoBatch ?? {},
       });
     },
   },
