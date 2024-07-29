@@ -10,142 +10,35 @@
               selected: index === selectedPairIndex,
             }"
             :pair="taskDefinition.pairs[index]"
-            @click="selectPair(index)"
+            @click="onClickPair(index)"
           />
           <button
             type="button"
             class="add-pair-button"
-            @click="addPair()"
+            @click="onClickAddPair()"
             :style="addPairButtonBackgroundImage"
           />
         </div>
         <div class="h5p-elements-settings">
           <form class="default" @submit.prevent>
-            <div class="h5p-element-settings">
+            <div class="h5p-element-setting">
               <h1>{{ $gettext('Karte A') }}</h1>
-              <label>
-                {{ $gettext('Typ') }}
-                <select v-model="selectedPair.draggableElement.type">
-                  <option :value="'image'">
-                    {{ $gettext('Bild') }}
-                  </option>
-                  <option :value="'text'">
-                    {{ $gettext('Text') }}
-                  </option>
-                  <option :value="'audio'">
-                    {{ $gettext('Audio') }}
-                  </option>
-                </select>
-              </label>
-              <div
-                v-if="selectedPair.draggableElement.type == 'image'"
-                class="h5p-element-image-container"
-              >
-                <template v-if="selectedPair.draggableElement.file_id">
-                  <MultimediaElement
-                    :element="selectedPair.draggableElement"
-                    class="h5pMultimediaElement"
-                  />
-                  <button
-                    type="button"
-                    @click="removeDraggableImage(selectedPairIndex)"
-                    v-text="$gettext('Bild löschen')"
-                    class="button trash element-pair-settings-item"
-                  />
-                  <label style="align-self: stretch">
-                    {{ $gettext('Alt-Text') }}
-                    <input
-                      type="text"
-                      v-model="selectedPair.draggableElement.altText"
-                      class="element-pair-settings-item"
-                    />
-                  </label>
-                </template>
-                <FileUpload
-                  class="pairing-file-upload"
-                  v-else
-                  @file-uploaded="
-                    onUploadDraggableImage(this.selectedPairIndex, $event)
-                  "
-                />
-              </div>
-
-              <div v-else-if="selectedPair.draggableElement.type == 'text'">
-                <label style="align-self: stretch">
-                  {{ $gettext('Inhalt') }}
-                  <textarea
-                    type="text"
-                    v-model="selectedPair.draggableElement.content"
-                    class="element-pair-settings-item"
-                  />
-                </label>
-              </div>
+              <PairingElement
+                :multimedia-element="selectedPair.draggableElement"
+                @element-changed="onChangeDraggableElement"
+              />
             </div>
-            <div class="h5p-element-settings">
+            <div class="h5p-element-setting">
               <h1>{{ $gettext('Karte B') }}</h1>
-              <label>
-                {{ $gettext('Typ') }}
-                <select v-model="selectedPair.targetElement.type">
-                  <option :value="'image'">
-                    {{ $gettext('Bild') }}
-                  </option>
-                  <option :value="'text'">
-                    {{ $gettext('Text') }}
-                  </option>
-                  <option :value="'audio'">
-                    {{ $gettext('Audio') }}
-                  </option>
-                </select>
-              </label>
-              <div
-                v-if="selectedPair.targetElement.type == 'image'"
-                class="h5p-element-image-container"
-              >
-                <template v-if="selectedPair.targetElement.file_id">
-                  <MultimediaElement
-                    :element="selectedPair.targetElement"
-                    class="h5pMultimediaElement"
-                  />
-                  <button
-                    type="button"
-                    @click="removeTargetImage(this.selectedPairIndex)"
-                    v-text="$gettext('Bild löschen')"
-                    class="button trash element-pair-settings-item"
-                  />
-                  <label style="align-self: stretch">
-                    {{ $gettext('Alt-Text') }}
-                    <input
-                      type="text"
-                      v-model="selectedPair.targetElement.altText"
-                      class="element-pair-settings-item"
-                    />
-                  </label>
-                </template>
-                <FileUpload
-                  class="pairing-file-upload"
-                  v-else
-                  @file-uploaded="
-                    onUploadTargetImage(this.selectedPairIndex, $event)
-                  "
-                />
-              </div>
-
-              <div v-else-if="selectedPair.targetElement.type == 'text'">
-                <label style="align-self: stretch">
-                  {{ $gettext('Inhalt') }}
-                  <textarea
-                    type="text"
-                    v-model="selectedPair.targetElement.content"
-                    class="element-pair-settings-item"
-                  />
-                </label>
-              </div>
+              <PairingElement
+                :multimedia-element="selectedPair.targetElement"
+                @element-changed="onChangeTargetElement"
+              />
             </div>
-
             <div class="remove-pair-button-container">
               <button
                 type="button"
-                @click="deletePair(selectedPairIndex)"
+                @click="onClickDeletePair(selectedPairIndex)"
                 v-text="$gettext('Paar löschen')"
                 class="button trash remove-pair-button"
               />
@@ -165,7 +58,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, Pair, PairingTask } from '@/models/TaskDefinition';
+import {
+  fileIdToUrl,
+  LernmoduleMultimediaElement,
+  Pair,
+  PairingTask,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 // TODO Remove uses of taskEditorStore here so that Pairing can be used in Interactive Video.
@@ -173,12 +71,10 @@ import produce from 'immer';
 import { taskEditorStore } from '@/store';
 import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
-import FileUpload from '@/components/FileUpload.vue';
-import { FileRef } from '@/routes/jsonApi';
-import MultimediaElement from '@/components/MultimediaElement.vue';
 import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
 import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
 import PairingViewer from '@/components/PairingViewer.vue';
+import PairingElement from '@/components/PairingElement.vue';
 
 export default defineComponent({
   name: 'PairingEditor',
@@ -186,9 +82,8 @@ export default defineComponent({
     PairingViewer,
     TabComponent,
     TabsComponent,
-    MultimediaElement,
-    FileUpload,
     ElementPair,
+    PairingElement,
   },
   props: {
     taskDefinition: {
@@ -214,10 +109,10 @@ export default defineComponent({
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
-    selectPair(index: number) {
+    onClickPair(index: number) {
       this.selectedPairIndex = index;
     },
-    addPair() {
+    onClickAddPair() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.push({
           uuid: v4(),
@@ -242,7 +137,7 @@ export default defineComponent({
       // Select the newly inserted card
       this.selectedPairIndex = this.taskDefinition.pairs.length - 1;
     },
-    deletePair(index: number) {
+    onClickDeletePair(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.splice(index, 1);
       });
@@ -255,60 +150,30 @@ export default defineComponent({
         this.selectedPairIndex = this.selectedPairIndex - 1;
       }
     },
-    onUploadDraggableImage(pairIndex: number, file: FileRef): void {
+    onChangeDraggableElement(payload: {
+      updatedElement: LernmoduleMultimediaElement;
+      undoBatch?: unknown;
+    }): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[pairIndex].draggableElement = {
-          uuid: v4(),
-          type: 'image',
-          file_id: file.id,
-          altText: '',
-        };
+        draft.pairs[this.selectedPairIndex].draggableElement =
+          payload.updatedElement;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
+        undoBatch: payload.undoBatch ?? {},
       });
     },
-    removeDraggableImage(pairIndex: number) {
+    onChangeTargetElement(payload: {
+      updatedElement: LernmoduleMultimediaElement;
+      undoBatch?: unknown;
+    }): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[pairIndex].draggableElement = {
-          uuid: v4(),
-          type: 'image',
-          file_id: '',
-          altText: '',
-        };
+        draft.pairs[this.selectedPairIndex].targetElement =
+          payload.updatedElement;
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
-    },
-    onUploadTargetImage(pairIndex: number, file: FileRef): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[pairIndex].targetElement = {
-          uuid: v4(),
-          type: 'image',
-          file_id: file.id,
-          altText: '',
-        };
-      });
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
-    },
-    removeTargetImage(pairIndex: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.pairs[pairIndex].targetElement = {
-          uuid: v4(),
-          type: 'image',
-          file_id: '',
-          altText: '',
-        };
-      });
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
+        undoBatch: payload.undoBatch ?? {},
       });
     },
   },
@@ -325,13 +190,6 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-.pairing-file-upload,
-.pairing-file-upload input[type='file'] {
-  max-width: 100%;
-}
-</style>
 
 <style scoped>
 .main-flex {
@@ -358,21 +216,8 @@ export default defineComponent({
   width: 275px;
   padding: 0.5em 0.5em 0;
 }
-.h5p-element-settings + .h5p-element-settings {
-  margin-top: 1.5ex;
-}
-
-.h5p-element-image-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0.5em;
-}
-
-.h5pMultimediaElement {
-  width: 8em;
-  height: 8em;
+.h5p-element-setting + .h5p-element-setting {
+  margin-top: 2ex;
 }
 
 .add-pair-button {
@@ -389,11 +234,6 @@ export default defineComponent({
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: center;
-}
-
-.element-pair-settings-item {
-  /* top | right | bottom | left */
-  margin: 0.25em 0 0 0;
 }
 
 .remove-pair-button {
