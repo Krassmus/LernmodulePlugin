@@ -20,7 +20,7 @@
           />
         </div>
         <div class="h5p-elements-settings">
-          <form class="default" @submit.prevent>
+          <form v-if="selectedPair" class="default" @submit.prevent>
             <div class="h5p-element-setting">
               <h1>{{ $gettext('Karte A') }}</h1>
               <PairingElement
@@ -135,7 +135,7 @@ export default defineComponent({
         undoBatch: {},
       });
       // Select the newly inserted card
-      this.selectedPairIndex = this.taskDefinition.pairs.length - 1;
+      this.selectedPairIndex = newTaskDefinition.pairs.length - 1;
     },
     onClickDeletePair(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
@@ -146,8 +146,10 @@ export default defineComponent({
         undoBatch: {},
       });
       // Adjust the selection index so the selected card doesn't unexpectedly change
-      if (index <= this.selectedPairIndex) {
-        this.selectedPairIndex = this.selectedPairIndex - 1;
+      if (this.taskDefinition.pairs.length === 0) {
+        this.selectedPairIndex = -1;
+      } else if (index <= this.selectedPairIndex) {
+        this.selectedPairIndex = Math.max(0, this.selectedPairIndex - 1);
       }
     },
     onChangeDraggableElement(payload: {
@@ -179,7 +181,7 @@ export default defineComponent({
   },
   computed: {
     debug: () => window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG,
-    selectedPair(): Pair {
+    selectedPair(): Pair | undefined {
       return this.taskDefinition.pairs[this.selectedPairIndex];
     },
     addPairButtonBackgroundImage() {
