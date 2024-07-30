@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import {
   fileIdToUrl,
   LernmoduleMultimediaElement,
@@ -66,15 +66,16 @@ import {
 } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
-// TODO Remove uses of taskEditorStore here so that Pairing can be used in Interactive Video.
-// (Replace them with injection -- See the usage of performEdit in FillInTheBlanksEditor.vue.)
-import { taskEditorStore } from '@/store';
 import { v4 } from 'uuid';
 import ElementPair from '@/components/ElementPair.vue';
 import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
 import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
 import PairingViewer from '@/components/PairingViewer.vue';
 import PairingElement from '@/components/PairingElement.vue';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'PairingEditor',
@@ -84,6 +85,11 @@ export default defineComponent({
     TabsComponent,
     ElementPair,
     PairingElement,
+  },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
   },
   props: {
     taskDefinition: {
@@ -130,7 +136,7 @@ export default defineComponent({
           },
         });
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
@@ -141,7 +147,7 @@ export default defineComponent({
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.splice(index, 1);
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
@@ -160,7 +166,7 @@ export default defineComponent({
         draft.pairs[this.selectedPairIndex].draggableElement =
           payload.updatedElement;
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: payload.undoBatch ?? {},
       });
@@ -173,7 +179,7 @@ export default defineComponent({
         draft.pairs[this.selectedPairIndex].targetElement =
           payload.updatedElement;
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: payload.undoBatch ?? {},
       });
