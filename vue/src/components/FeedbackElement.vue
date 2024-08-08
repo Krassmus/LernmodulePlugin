@@ -4,14 +4,13 @@
       {{ resultMessage }}
     </div>
     <template v-if="maxPoints">
-      <meter
-        min="0"
-        :low="lowNumber"
-        :high="highNumber"
-        :optimum="maxPoints"
-        :max="maxPoints"
-        :value="achievedPoints"
-      />
+      <div class="custom-meter">
+        <div
+          class="custom-meter-bar"
+          ref="meterbar"
+          :style="{ width: `${percentageCorrect}%` }"
+        />
+      </div>
       <img
         v-if="achievedMaxPoints"
         :src="urlForIcon('star')"
@@ -27,7 +26,6 @@
 </template>
 
 <script lang="ts">
-// need v-model to provide and get content -> <studip-wysiwyg v-model="content" />
 import { defineComponent, PropType } from 'vue';
 import { Feedback } from '@/models/TaskDefinition';
 import { round } from 'lodash';
@@ -52,16 +50,6 @@ export default defineComponent({
     },
   },
   computed: {
-    lowNumber(): Number {
-      if (this.maxPoints) return this.maxPoints / 3;
-      return 0;
-    },
-
-    highNumber(): Number {
-      if (this.maxPoints) return (this.maxPoints * 2) / 3;
-      return 0;
-    },
-
     feedbackSortedByScore(): Feedback[] {
       if (this.feedback) {
         return this.feedback
@@ -92,6 +80,12 @@ export default defineComponent({
       return undefined;
     },
 
+    percentageCorrect(): number {
+      if (this.achievedPoints && this.maxPoints)
+        return round((this.achievedPoints / this.maxPoints) * 100);
+      else return 0;
+    },
+
     achievedMaxPoints(): boolean {
       return this.achievedPoints === this.maxPoints;
     },
@@ -110,41 +104,22 @@ export default defineComponent({
   padding-top: 0.5em;
 }
 
-meter {
-  width: 15em;
-  height: 30px;
-
-  /* For Firefox */
-  background: #fff;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) inset;
-  border-radius: 1.5em;
-
-  max-width: 100%;
-  padding: 0.625em;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;
+.custom-meter {
+  background: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  height: 20px;
+  overflow: hidden; /* Ensure the bar doesn’t overflow */
+  max-width: 240px;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
-meter::-webkit-meter-bar {
-  background: none; /* Required to get rid of the default background property */
-  background-color: whiteSmoke;
-  box-shadow: 0 5px 5px -5px #333 inset;
-}
-
-meter::-webkit-meter-optimum-value {
-  box-shadow: 0 5px 5px -5px #999 inset;
-  background-image: linear-gradient(
-    90deg,
-    #8bcf69 5%,
-    #e6d450 5%,
-    #e6d450 15%,
-    #f28f68 15%,
-    #f28f68 55%,
-    #cf82bf 55%,
-    #cf82bf 95%,
-    #719fd1 95%,
-    #719fd1 100%
-  );
-  background-size: 100% 100%;
+.custom-meter-bar {
+  height: 100%;
+  background: #4caf50;
+  width: 0%; /* Initial width is 0% */
+  transition: width 0.5s ease;
 }
 </style>
