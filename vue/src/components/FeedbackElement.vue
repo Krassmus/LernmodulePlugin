@@ -1,9 +1,9 @@
 <template>
-  <div class="h5pFeedbackContainer">
-    <div class="h5pFeedbackText">
+  <div class="feedback-container">
+    <div class="feedback-text">
       {{ resultMessage }}
     </div>
-    <template v-if="maxPoints">
+    <div v-if="maxPoints" class="feedback-meter-and-star">
       <div class="custom-meter">
         <div
           class="custom-meter-bar"
@@ -13,13 +13,15 @@
       </div>
       <img
         v-if="achievedMaxPoints"
+        class="star-symbol"
         :src="urlForIcon('star')"
         width="36"
         height="36"
+        :alt="$gettext('Ein Stern')"
       />
-    </template>
+    </div>
     <div v-else>{{ achievedPoints }}</div>
-    <div v-if="feedbackMessage" class="h5pFeedbackText">
+    <div v-if="feedbackMessage" class="feedback-text">
       {{ feedbackMessage }}
     </div>
   </div>
@@ -94,14 +96,22 @@ export default defineComponent({
 </script>
 
 <style>
-.h5pFeedbackText {
+.feedback-text {
   font-size: 1em;
   color: #1a73d9;
   font-weight: 700;
 }
 
-.h5pFeedbackContainer {
+.feedback-container {
   padding-top: 0.5em;
+}
+
+.feedback-meter-and-star {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .custom-meter {
@@ -119,7 +129,12 @@ export default defineComponent({
 .custom-meter-bar {
   height: 100%;
   background: #4caf50;
-  width: 0%; /* Initial width is 0% */
+  width: 0; /* Initial width is 0% */
   transition: width 0.5s ease;
+}
+
+.star-symbol {
+  padding-bottom: 0.25em;
+  padding-left: 0.1em;
 }
 </style>
