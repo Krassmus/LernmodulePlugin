@@ -12,7 +12,7 @@
   "dependencies": {
     "@elan-ev/reststate-vuex": "^1.0.6",
     "@popperjs/core": "^2.11.8",
-    "axios": "^1.6.7",
+    "axios": "^1.7.4",
     "core-js": "^3.8.3",
     "d3-drag": "^3.0.0",
     "d3-selection": "^3.0.0",
