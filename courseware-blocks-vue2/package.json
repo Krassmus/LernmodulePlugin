@@ -13,8 +13,8 @@
   },
   "devDependencies": {
     "@types/offscreencanvas": "^2019.7.0",
-    "@vue/cli-plugin-babel": "~4.5.13",
-    "@vue/cli-service": "~4.5.13",
+    "@vue/cli-plugin-babel": "~5.0.8",
+    "@vue/cli-service": "~5.0.8",
     "@vue/eslint-config-prettier": "^9.0.0",
     "core-js": "^3.16.4npm",
     "eslint": "^8.56.0",
