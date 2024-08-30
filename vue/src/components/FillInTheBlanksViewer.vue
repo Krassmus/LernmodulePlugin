@@ -10,8 +10,8 @@
             :readonly="!this.editable"
             :disabled="!this.editable"
             :class="classForInput(element)"
-            @blur="onInputBlurOrEnter"
-            @keyup.enter="onInputBlurOrEnter"
+            @blur="onBlur"
+            @keyup.enter="onEnter($event)"
             @input="onInput"
             ref="blanks"
           />
@@ -49,6 +49,7 @@
         @click="onClickCheck(false)"
         type="button"
         class="h5p-button"
+        ref="checkButton"
       />
 
       <template v-if="showExtraButtons">
@@ -274,10 +275,37 @@ export default defineComponent({
       );
     },
 
-    onInputBlurOrEnter() {
+    onBlur() {
+      this.handleFilledBlank();
+    },
+
+    onEnter(event: KeyboardEvent) {
+      this.handleFilledBlank();
+      this.focusNextBlank(event.target as HTMLInputElement);
+    },
+
+    handleFilledBlank() {
       this.userWantsToSeeSolutions = false;
       if (this.task.autoCorrect) {
         this.onClickCheck(true);
+      }
+    },
+
+    focusNextBlank(blank: HTMLInputElement) {
+      const blanks = this.$refs.blanks as HTMLInputElement[];
+
+      // Find the index of the current input in the blanks array
+      const currentIndex = blanks.indexOf(blank);
+
+      // Move to the next input if available
+      if (currentIndex !== -1 && currentIndex < blanks.length - 1) {
+        const nextInput = blanks[currentIndex + 1];
+        nextInput.focus();
+      } else {
+        // This is the last blank, jump to the check button if it is there
+        if (this.showCheckButton) {
+          (this.$refs.checkButton as HTMLInputElement).focus();
+        }
       }
     },
 
