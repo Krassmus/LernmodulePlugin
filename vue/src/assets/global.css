@@ -15,6 +15,7 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   line-height: 1.75em;
   font-family: Lato, sans-serif;
   max-width: 1095px;
+  box-sizing: border-box;
 }
 
 .h5p-module {
