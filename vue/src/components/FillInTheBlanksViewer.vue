@@ -107,6 +107,14 @@ export default defineComponent({
       required: true,
     },
   },
+  watch: {
+    task: {
+      handler() {
+        this.resetTask();
+      },
+      deep: true,
+    },
+  },
   data() {
     return {
       userInputs: {} as Record<Uuid, string>,
@@ -247,14 +255,18 @@ export default defineComponent({
     },
 
     onClickTryAgain() {
+      this.resetTask();
+      this.resetBlankWidths();
+    },
+
+    resetTask() {
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
       this.editable = true;
-      this.resetBlanks();
     },
 
-    resetBlanks() {
+    resetBlankWidths() {
       (this.$refs.blanks as HTMLInputElement[]).forEach(
         (input: HTMLInputElement) => {
           this.autoGrowTextField(input);
