@@ -354,10 +354,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         template: 'Hier entsteht der *Lücken*text.',
         retryAllowed: true,
         showSolutionsAllowed: true,
-        caseSensitive: false,
+        caseSensitive: true,
         autoCorrect: false,
         allBlanksMustBeFilledForSolutions: false,
-        acceptTypos: true,
+        acceptTypos: false,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
