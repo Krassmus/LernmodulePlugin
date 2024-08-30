@@ -13,6 +13,7 @@
             @blur="onInputBlurOrEnter"
             @keyup.enter="onInputBlurOrEnter"
             @input="onInput"
+            ref="blanks"
           />
           <label v-if="element.hint">
             <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
@@ -250,6 +251,15 @@ export default defineComponent({
       this.userInputs = {};
       this.submittedAnswers = null;
       this.editable = true;
+      this.resetBlanks();
+    },
+
+    resetBlanks() {
+      (this.$refs.blanks as HTMLInputElement[]).forEach(
+        (input: HTMLInputElement) => {
+          this.autoGrowTextField(input);
+        }
+      );
     },
 
     onInputBlurOrEnter() {
