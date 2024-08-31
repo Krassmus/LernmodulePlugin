@@ -29,7 +29,7 @@
     </template>
   </teleport>
 
-  <form class="default">
+  <form class="default editor-element">
     <fieldset>
       <legend>{{ $gettext('Grunddaten') }}</legend>
       <label>
@@ -48,6 +48,7 @@
       </label>
     </fieldset>
   </form>
+
   <div style="margin-bottom: 1em; margin-top: 1em">
     <label>{{ $gettext('Aufgabentyp auswählen:') }}</label>
     <select
@@ -76,7 +77,7 @@
   </div>
 
   <div>
-    <div class="editor">
+    <div class="editor-element">
       <component
         :is="editorForTaskType(taskDefinition.task_type)"
         :taskDefinition="taskDefinition"
@@ -102,22 +103,19 @@
       </button>
     </div>
 
-    <form class="default" style="max-width: 1095px">
+    <form
+      class="default editor-element"
+      v-if="showViewerAboveEditor(taskDefinition.task_type)"
+    >
       <fieldset>
         <legend>
           {{ $gettext('Vorschau') }}
         </legend>
-        <div
-          class="viewer"
-          v-if="showViewerAboveEditor(taskDefinition.task_type)"
-        >
-          <div style="display: flex"></div>
-          <component
-            :is="viewerForTaskType(taskDefinition.task_type)"
-            :task="taskDefinition"
-            :key="viewerKey"
-          />
-        </div>
+        <component
+          :is="viewerForTaskType(taskDefinition.task_type)"
+          :task="taskDefinition"
+          :key="viewerKey"
+        />
       </fieldset>
     </form>
   </div>
@@ -264,11 +262,7 @@ export default defineComponent({
   outline: none;
 }
 
-.editor {
-  max-width: 1095px;
-}
-
-.viewer {
+.editor-element {
   max-width: 1095px;
 }
 </style>
