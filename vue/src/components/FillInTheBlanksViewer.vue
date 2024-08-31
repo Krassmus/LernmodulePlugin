@@ -108,14 +108,6 @@ export default defineComponent({
       required: true,
     },
   },
-  watch: {
-    task: {
-      handler() {
-        this.resetTask();
-      },
-      deep: true,
-    },
-  },
   data() {
     return {
       userInputs: {} as Record<Uuid, string>,
