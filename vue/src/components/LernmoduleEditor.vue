@@ -91,15 +91,35 @@
       >
         {{ $gettext('Speichern') }}
       </button>
+      <button class="button" @click="onResetPreview">
+        {{ $gettext('Vorschau zurücksetzen') }}
+        <!--        <img-->
+        <!--          :src="urlForIcon('refresh')"-->
+        <!--          :alt="$gettext('A refresh symbol consisting of two circular arrows.')"-->
+        <!--          width="16"-->
+        <!--          height="16"-->
+        <!--        />-->
+      </button>
     </div>
 
-    <div class="viewer" v-if="showViewerAboveEditor(taskDefinition.task_type)">
-      <h1 style="margin-top: 1em">{{ $gettext('Vorschau') }}</h1>
-      <component
-        :is="viewerForTaskType(taskDefinition.task_type)"
-        :task="taskDefinition"
-      />
-    </div>
+    <form class="default" style="max-width: 1095px">
+      <fieldset>
+        <legend>
+          {{ $gettext('Vorschau') }}
+        </legend>
+        <div
+          class="viewer"
+          v-if="showViewerAboveEditor(taskDefinition.task_type)"
+        >
+          <div style="display: flex"></div>
+          <component
+            :is="viewerForTaskType(taskDefinition.task_type)"
+            :task="taskDefinition"
+            :key="viewerKey"
+          />
+        </div>
+      </fieldset>
+    </form>
   </div>
 </template>
 
@@ -120,6 +140,11 @@ import { taskEditorStateSymbol } from '@/components/taskEditorState';
 export default defineComponent({
   name: 'LernmoduleEditor',
   components: { StudipWysiwyg },
+  data() {
+    return {
+      viewerKey: 0,
+    };
+  },
   provide() {
     return {
       [taskEditorStateSymbol as symbol]: {
@@ -191,6 +216,14 @@ export default defineComponent({
         newTaskDefinition: newTask(taskType as TaskDefinition['task_type']),
         undoBatch: {},
       });
+    },
+    onResetPreview() {
+      this.viewerKey += 1;
+    },
+    urlForIcon(iconName: string) {
+      return (
+        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
+      );
     },
   },
 });
