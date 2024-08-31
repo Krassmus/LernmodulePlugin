@@ -103,21 +103,17 @@
       </button>
     </div>
 
-    <form
-      class="default editor-element"
+    <div
+      class="editor-element"
       v-if="showViewerAboveEditor(taskDefinition.task_type)"
     >
-      <fieldset>
-        <legend>
-          {{ $gettext('Vorschau') }}
-        </legend>
-        <component
-          :is="viewerForTaskType(taskDefinition.task_type)"
-          :task="taskDefinition"
-          :key="viewerKey"
-        />
-      </fieldset>
-    </form>
+      <h1 style="margin-top: 1em">{{ $gettext('Vorschau') }}</h1>
+      <component
+        :is="viewerForTaskType(taskDefinition.task_type)"
+        :task="taskDefinition"
+        :key="viewerKey"
+      />
+    </div>
   </div>
 </template>
 
