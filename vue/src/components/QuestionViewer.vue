@@ -156,33 +156,33 @@ export default defineComponent({
     },
     classForAnswer(answer: QuestionAnswer): string {
       if (this.showSolutions) {
-        if (answer.correct) return 'correctAnswer';
+        if (answer.correct) return 'answer correct';
       }
 
       if (this.isSubmitted) {
         if (this.task.canAnswerMultiple) {
           if (this.selectedAnswers[answer.text]) {
             if (answer.correct) {
-              return 'correctAnswer';
+              return 'answer correct';
             } else {
-              return 'incorrectAnswer';
+              return 'answer incorrect';
             }
           } else {
-            return 'submittedAnswer';
+            return 'answer submitted';
           }
         } else {
           if (this.selectedAnswer === answer) {
             if (answer.correct) {
-              return 'correctAnswer';
+              return 'answer correct';
             } else {
-              return 'incorrectAnswer';
+              return 'answer incorrect';
             }
           } else {
-            return 'submittedAnswer';
+            return 'answer submitted';
           }
         }
       } else {
-        return 'answer';
+        return 'answer unsubmitted';
       }
     },
   },
@@ -248,42 +248,30 @@ export default defineComponent({
   border-radius: 0.3em;
   margin: 0.5em 0;
 
+  border: 0.1em solid transparent;
+  background: #ddd;
+}
+
+.unsubmitted {
   cursor: pointer;
-  border: 0.1em solid transparent;
-  background: rgba(230, 230, 230, 0.9);
 }
 
-.submittedAnswer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 0.3em;
-  margin: 0.5em 0;
-
-  border: 0.1em solid transparent;
-  background: rgba(230, 230, 230, 0.9);
+.unsubmitted:hover {
+  background: #ececec;
 }
 
-.correctAnswer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 0.3em;
-  margin: 0.5em 0;
+.submitted {
+  cursor: default;
+}
 
+.correct {
   border: 0.1em solid #b6e4ce;
   background: #b6e4ce;
   color: #255c41;
   box-shadow: 0 0.1em 0 #a2bdb0;
 }
 
-.incorrectAnswer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 0.3em;
-  margin: 0.5em 0;
-
+.incorrect {
   border: 0.1em solid #fbd7d8;
   background: #fbd7d8;
   color: #b71c1c;
