@@ -185,4 +185,13 @@ export default defineComponent({
   justify-content: flex-start;
   padding-bottom: 1ex;
 }
+
+.flex-child-element {
+  margin-right: 0.25em;
+}
+
+.removeAnswerButton {
+  align-self: stretch; /* Make the item fill the available height */
+  display: flex;
+}
 </style>
