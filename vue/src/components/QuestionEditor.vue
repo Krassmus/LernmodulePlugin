@@ -40,7 +40,7 @@
           </button>
         </div>
 
-        <fieldset class="collapsable collapsed">
+        <fieldset class="collapsable collapsed feedback">
           <legend>{{ $gettext('Hinweis und Feedback') }}</legend>
           <label>
             <span>{{ $gettext('Hinweis') }}</span>
@@ -193,5 +193,9 @@ export default defineComponent({
 .removeAnswerButton {
   align-self: stretch; /* Make the item fill the available height */
   display: flex;
+}
+
+.feedback {
+  margin: 0.5em 0 0 0;
 }
 </style>
