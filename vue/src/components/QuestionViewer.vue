@@ -6,6 +6,7 @@
         <label :class="classForAnswer(answer)">
           <input
             type="checkbox"
+            class="answer-checkbox"
             :value="answer.text"
             v-model="selectedAnswers[answer.text]"
             :disabled="isSubmitted"
@@ -13,7 +14,7 @@
           {{ answer.text }}
           <div
             v-if="answer.strings.hint && !isSubmitted"
-            class="tooltip tooltip-icon h5pTooltip"
+            class="tooltip tooltip-icon answer-tooltip"
             :data-tooltip="answer.strings.hint"
           />
         </label>
@@ -23,7 +24,7 @@
             v-if="
               answer.strings.feedbackSelected && selectedAnswers[answer.text]
             "
-            class="answerFeedback"
+            class="answer-feedback"
           >
             {{ answer.strings.feedbackSelected }}
           </div>
@@ -33,7 +34,7 @@
               answer.strings.feedbackNotSelected &&
               !selectedAnswers[answer.text]
             "
-            class="answerFeedback"
+            class="answer-feedback"
           >
             {{ answer.strings.feedbackNotSelected }}
           </div>
@@ -46,7 +47,7 @@
         <label :class="classForAnswer(answer)">
           <input
             type="radio"
-            class="answerRadioButton"
+            class="answer-radiobutton"
             :value="answer"
             v-model="selectedAnswer"
             :disabled="isSubmitted"
@@ -54,7 +55,7 @@
           {{ answer.text }}
           <div
             v-if="answer.strings.hint && !isSubmitted"
-            class="tooltip tooltip-icon h5pTooltip"
+            class="tooltip tooltip-icon answer-tooltip"
             :data-tooltip="answer.strings.hint"
           />
         </label>
@@ -62,7 +63,7 @@
         <template v-if="isSubmitted">
           <div
             v-if="answer.strings.feedbackSelected && selectedAnswer == answer"
-            class="answerFeedback"
+            class="answer-feedback"
           >
             {{ answer.strings.feedbackSelected }}
           </div>
@@ -71,7 +72,7 @@
             v-else-if="
               answer.strings.feedbackNotSelected && selectedAnswer !== answer
             "
-            class="answerFeedback"
+            class="answer-feedback"
           >
             {{ answer.strings.feedbackNotSelected }}
           </div>
@@ -278,15 +279,17 @@ export default defineComponent({
   box-shadow: 0 0.1em 0 #deb8b8;
 }
 
-.answerRadioButton {
-  margin-top: 0px;
+.answer-checkbox,
+.answer-radiobutton {
+  margin: 0 0.4em 0 0.4em;
 }
 
-.h5pTooltip {
+.answer-tooltip {
+  display: flex;
   margin-left: 0.25em;
 }
 
-.answerFeedback {
+.answer-feedback {
   margin-left: 0.25em;
   border-left: 6px solid rgba(10, 10, 10, 0.1) !important;
   padding: 0.01em 16px;
