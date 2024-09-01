@@ -52,7 +52,7 @@
           </label>
 
           <label>
-            <span>{{ $gettext('Feedback wenn ausgewählt') }}</span>
+            <span>{{ $gettext('Feedback, wenn ausgewählt') }}</span>
             <input
               class="textbox"
               type="text"
@@ -61,7 +61,7 @@
           </label>
 
           <label>
-            <span>{{ $gettext('Feedback wenn nicht ausgewählt') }}</span>
+            <span>{{ $gettext('Feedback, wenn nicht ausgewählt') }}</span>
             <input
               class="textbox"
               type="text"
