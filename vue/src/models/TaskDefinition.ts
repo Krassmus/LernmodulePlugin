@@ -202,7 +202,9 @@ export const questionTaskSchema = z.object({
     checkButton: z.string(),
     retryButton: z.string(),
     solutionsButton: z.string(),
+    resultMessage: z.string(),
   }),
+  feedback: z.array(feedbackSchema).default(() => defaultFeedback()),
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
@@ -554,7 +556,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Punkten',
         },
+        feedback: defaultFeedback(),
       };
     default:
       throw new Error('Unimplemented type: ' + type);

@@ -84,6 +84,8 @@
       v-if="isSubmitted"
       :achieved-points="points"
       :max-points="maxPoints"
+      :result-message="resultMessage"
+      :feedback="task.feedback"
     />
 
     <div class="h5p-button-panel">
@@ -236,6 +238,19 @@ export default defineComponent({
     },
     showSolutionsButton(): boolean {
       return this.task.showSolutionsAllowed && this.isSubmitted;
+    },
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.points.toString()
+      );
+
+      resultMessage = resultMessage.replace(
+        ':total',
+        this.maxPoints.toString()
+      );
+
+      return resultMessage;
     },
   },
 });
