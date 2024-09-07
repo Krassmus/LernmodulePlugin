@@ -2,13 +2,13 @@
     <defs>
         <!-- Radial Gradient for Fill -->
         <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <stop offset="42%" style="stop-color:#ffeb3b; stop-opacity:1"/>
+            <stop offset="90%" style="stop-color:#ffeb3b; stop-opacity:1"/>
             <stop offset="100%" style="stop-color:#fbc02d; stop-opacity:1"/>
         </radialGradient>
 
         <!-- Glow Filter -->
         <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="0.67" result="blur"/>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" result="blur"/>
             <feMerge>
                 <feMergeNode in="blur"/>
                 <feMergeNode in="SourceGraphic"/>
