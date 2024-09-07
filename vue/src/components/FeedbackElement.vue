@@ -5,15 +5,12 @@
     </div>
     <div v-if="maxPoints" class="feedback-meter-and-star">
       <div class="custom-meter">
-        <div
-          class="custom-meter-bar"
-          ref="meterbar"
-          :style="{ width: `${percentageCorrect}%` }"
-        />
+        <div class="custom-meter-bar" ref="meterbar" />
       </div>
       <img
         v-if="achievedMaxPoints"
         class="star-symbol"
+        :class="{ 'star-show': starVisible }"
         src="../assets/star.svg"
         width="48"
         height="48"
@@ -32,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, nextTick, PropType } from 'vue';
 import { Feedback } from '@/models/TaskDefinition';
 import { round } from 'lodash';
 
@@ -45,10 +42,32 @@ export default defineComponent({
     feedback: Object as PropType<Feedback[]>,
   },
   data() {
-    return {};
+    return {
+      starVisible: false,
+    };
   },
-  mounted() {},
+  mounted() {
+    this.startTransition();
+  },
   methods: {
+    async startTransition() {
+      // Wait for the next DOM update cycle
+      await nextTick();
+
+      // Access the ref safely and apply the style
+      const meterBar = this.$refs.meterbar as HTMLElement;
+      if (meterBar) {
+        // Trigger a reflow to ensure the width change is animated
+        meterBar.offsetHeight; // Trigger reflow
+
+        meterBar.style.width = `${this.percentageCorrect}%`;
+
+        // Show the star after the meter fills up
+        setTimeout(() => {
+          this.starVisible = true;
+        }, 500); // Adjust this delay to match the duration of the meter fill
+      }
+    },
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
@@ -125,21 +144,27 @@ export default defineComponent({
   width: 100%;
   height: 14px;
   overflow: hidden; /* Ensure the bar doesn’t overflow */
-  max-width: 240px;
+  max-width: 180px;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
 
 .custom-meter-bar {
   height: 100%;
-  background: #4caf50;
+  background: linear-gradient(to right, #4caf50, #2e8b57);
   width: 0; /* Initial width is 0% */
-  transition: width 0.5s ease;
+  transition: width 0.5s ease; /* Smooth fade-in */
 }
 
 .star-symbol {
   position: relative;
   right: 26px;
   bottom: 2px;
+  opacity: 0;
+  transition: opacity 0.5s ease; /* Smooth fade-in */
+}
+
+.star-show {
+  opacity: 1; /* Show the star */
 }
 </style>
