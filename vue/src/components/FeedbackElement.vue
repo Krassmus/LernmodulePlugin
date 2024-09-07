@@ -14,10 +14,14 @@
       <img
         v-if="achievedMaxPoints"
         class="star-symbol"
-        :src="urlForIcon('star')"
-        width="36"
-        height="36"
-        :alt="$gettext('Ein Stern')"
+        src="../assets/star.svg"
+        width="40"
+        height="40"
+        :alt="
+          $gettext(
+            'Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt'
+          )
+        "
       />
     </div>
     <div v-else>{{ achievedPoints }}</div>
