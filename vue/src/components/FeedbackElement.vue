@@ -15,8 +15,8 @@
         v-if="achievedMaxPoints"
         class="star-symbol"
         src="../assets/star.svg"
-        width="40"
-        height="40"
+        width="48"
+        height="48"
         :alt="
           $gettext(
             'Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt'
@@ -123,7 +123,7 @@ export default defineComponent({
   border: 1px solid #ccc;
   border-radius: 5px;
   width: 100%;
-  height: 20px;
+  height: 14px;
   overflow: hidden; /* Ensure the bar doesn’t overflow */
   max-width: 240px;
   margin-top: 0.5em;
@@ -138,7 +138,8 @@ export default defineComponent({
 }
 
 .star-symbol {
-  padding-bottom: 0.25em;
-  padding-left: 0.1em;
+  position: relative;
+  right: 26px;
+  bottom: 2px;
 }
 </style>
