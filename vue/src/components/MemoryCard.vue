@@ -8,7 +8,11 @@
       />
     </div>
     <div v-else class="memoryCardBack">
-      <img src="../assets/memoryCardBack.png" class="memoryImage" />
+      <img
+        src="../assets/memoryCardBack.png"
+        class="memoryImage"
+        alt="The back of a card in the memory game."
+      />
     </div>
   </div>
 </template>
