@@ -1,6 +1,21 @@
 <template>
   <div class="h5p-module">
-    <div>{{ $gettext('Umgedrehte Karten: ') + this.amountOfFlips }}</div>
+    <div class="h5pMemoryGame">
+      <MemoryCardComponent
+        v-for="card in this.cards"
+        :key="card.uuid"
+        :card="card"
+        @click="onClickCard(card)"
+      ></MemoryCardComponent>
+    </div>
+
+    <div style="margin-top: 1em">
+      {{
+        $gettext('Umgedrehte Karten: %{ amountOfFlips }', {
+          amountOfFlips: this.amountOfFlips.toString(),
+        })
+      }}
+    </div>
 
     <div>
       {{
@@ -12,15 +27,6 @@
           }
         )
       }}
-    </div>
-
-    <div class="h5pMemoryGame">
-      <MemoryCardComponent
-        v-for="card in this.cards"
-        :key="card.uuid"
-        :card="card"
-        @click="onClickCard(card)"
-      ></MemoryCardComponent>
     </div>
 
     <div class="h5pFeedbackContainer">
