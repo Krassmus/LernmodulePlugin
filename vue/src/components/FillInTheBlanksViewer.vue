@@ -335,7 +335,7 @@ export default defineComponent({
     splitTemplate(): string[] {
       // Returns an array where the even indexes are the static text portions,
       // and the odd indexes are the blanks.
-      return this.task.template.split(/\*([^*]*)\*/);
+      return this.task.template.split(/\*([^*]+)\*/);
     },
 
     parsedTemplate(): FillInTheBlanksElement[] {
