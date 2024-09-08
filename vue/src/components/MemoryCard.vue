@@ -74,8 +74,8 @@ export default defineComponent({
 }
 
 .memoryCard:hover {
-  border-color: rgba(0, 187, 109, 0.93);
-  background: rgba(0, 187, 109, 0.93);
+  border-color: rgb(0, 78, 159);
+  background: rgb(0, 78, 159);
   padding: 2px 2px 2px 2px;
 }
 </style>
