@@ -3,28 +3,32 @@
     <div class="feedback-text">
       {{ resultMessage }}
     </div>
-    <div v-if="maxPoints" class="feedback-meter-and-star">
-      <div class="custom-meter">
-        <div class="custom-meter-bar" ref="meterbar" />
+    <div v-if="maxPoints" class="feedback-score">
+      <div class="meter-and-star-container">
+        <div class="custom-meter">
+          <div class="custom-meter-bar" ref="meterbar" />
+        </div>
+        <img
+          v-if="achievedMaxPoints"
+          class="star-symbol"
+          :class="{ 'star-show': starVisible }"
+          src="../assets/star.svg"
+          width="36"
+          height="36"
+          :alt="
+            $gettext(
+              'Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt'
+            )
+          "
+        />
       </div>
-      <img
-        v-if="achievedMaxPoints"
-        class="star-symbol"
-        :class="{ 'star-show': starVisible }"
-        src="../assets/star.svg"
-        width="48"
-        height="48"
-        :alt="
-          $gettext(
-            'Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt'
-          )
-        "
+      <div
+        v-if="feedbackMessage"
+        class="feedback-text"
+        v-text="feedbackMessage"
       />
     </div>
     <div v-else>{{ achievedPoints }}</div>
-    <div v-if="feedbackMessage" class="feedback-text">
-      {{ feedbackMessage }}
-    </div>
   </div>
 </template>
 
@@ -129,12 +133,10 @@ export default defineComponent({
   padding-top: 0.5em;
 }
 
-.feedback-meter-and-star {
+.feedback-score {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
   align-items: center;
+  gap: 0.5em;
 }
 
 .custom-meter {
@@ -156,10 +158,23 @@ export default defineComponent({
   transition: width 0.5s ease; /* Smooth fade-in */
 }
 
-.star-symbol {
+.meter-and-star-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1.5em;
+  padding: 6px 4px 6px 10px;
+  width: 200px;
   position: relative;
-  right: 26px;
-  bottom: 2px;
+}
+
+.star-symbol {
+  position: absolute;
+  right: 6px;
+  top: 1px;
   opacity: 0;
   transition: opacity 0.5s ease; /* Smooth fade-in */
 }
