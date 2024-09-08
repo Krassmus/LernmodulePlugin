@@ -45,7 +45,7 @@ Sidebar::get()->addWidget($actions);
 
 $views = new ViewsWidget();
 $views->addLink(
-    $mod['name'],
+    dgettext("lernmoduleplugin", "Vorschau"),
     PluginEngine::getURL($plugin, array(), "lernmodule/view/" . $mod->getId()),
     null,
     array()
