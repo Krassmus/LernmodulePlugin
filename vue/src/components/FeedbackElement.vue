@@ -24,7 +24,7 @@
           "
         />
       </div>
-      <div class="feedback-text" v-text="resultMessage" />
+      <div class="result-text" v-text="resultMessage" />
     </div>
     <div v-else>{{ achievedPoints }}</div>
   </div>
@@ -122,9 +122,15 @@ export default defineComponent({
 
 <style>
 .feedback-text {
-  font-size: 1em;
+  font-size: 16px;
+  font-weight: bold;
   color: #1a73d9;
-  font-weight: 700;
+}
+
+.result-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
 }
 
 .feedback-container {
@@ -177,7 +183,20 @@ export default defineComponent({
   transition: opacity 0.5s ease; /* Smooth fade-in */
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .star-show {
   opacity: 1; /* Show the star */
+  animation: pulse 0.5s ease-in-out 0s 1; /* Apply the pulse animation */
 }
 </style>
