@@ -1,8 +1,10 @@
 <template>
   <div class="feedback-container">
-    <div class="feedback-text">
-      {{ resultMessage }}
-    </div>
+    <div
+      v-if="feedbackMessage"
+      class="feedback-text"
+      v-text="feedbackMessage"
+    />
     <div v-if="maxPoints" class="feedback-score">
       <div class="meter-and-star-container">
         <div class="custom-meter">
@@ -22,11 +24,7 @@
           "
         />
       </div>
-      <div
-        v-if="feedbackMessage"
-        class="feedback-text"
-        v-text="feedbackMessage"
-      />
+      <div class="feedback-text" v-text="resultMessage" />
     </div>
     <div v-else>{{ achievedPoints }}</div>
   </div>
