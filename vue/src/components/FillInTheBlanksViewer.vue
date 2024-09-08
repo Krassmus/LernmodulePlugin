@@ -491,6 +491,7 @@ input[type='text'] {
 
 .fill-in-the-blanks-text {
   word-break: break-word;
+  font-size: 16px;
 }
 
 .h5pBlankCorrect {
