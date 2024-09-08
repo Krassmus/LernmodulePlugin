@@ -6,27 +6,43 @@
         :key="card.uuid"
         :card="card"
         @click="onClickCard(card)"
-      ></MemoryCardComponent>
+      />
     </div>
 
     <div style="margin-top: 1em">
-      {{
-        $gettext('Umgedrehte Karten: %{ amountOfFlips }', {
-          amountOfFlips: this.amountOfFlips.toString(),
-        })
-      }}
+      <span
+        class="memory-info-header"
+        v-text="$gettext('Umgedrehte Karten:')"
+      />
+      <span v-text="' ' + this.amountOfFlips.toString()" />
     </div>
 
     <div>
-      {{
-        $gettext(
-          'Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }',
-          {
+      <span class="memory-info-header" v-text="$gettext('Zeit:')" />
+      <span
+        v-text="
+          ' ' +
+          $gettext('%{ time } Sekunden', {
+            time: this.timer.toString(),
+          })
+        "
+      />
+    </div>
+
+    <div>
+      <span
+        class="memory-info-header"
+        v-text="$gettext('Aufgedeckte Paare:')"
+      />
+      <span
+        v-text="
+          ' ' +
+          $gettext('%{ amountOfPairsSolved } von %{ totalAmountOfPairs }', {
             amountOfPairsSolved: this.amountOfPairsSolved.toString(),
             totalAmountOfPairs: this.totalAmountOfPairs.toString(),
-          }
-        )
-      }}
+          })
+        "
+      />
     </div>
 
     <div class="h5pFeedbackContainer">
@@ -85,6 +101,10 @@ export default defineComponent({
       showResults: false as boolean,
       feedbackMessage: undefined as string | undefined,
       resultMessage: undefined as string | undefined,
+
+      timer: 0, // Track elapsed time in seconds
+      timerStarted: false, // Flag to check if timer has started
+      timerInterval: null as number | null, // Store interval ID to control timer
     };
   },
   methods: {
@@ -96,6 +116,11 @@ export default defineComponent({
 
       card.flipped = true;
       console.log('Flipped', card.altText);
+
+      // Start timer
+      if (!this.timerStarted) {
+        this.startTimer();
+      }
 
       this.amountOfFlips++;
 
@@ -120,6 +145,25 @@ export default defineComponent({
       }
     },
 
+    startTimer() {
+      this.timerStarted = true;
+
+      // Start a timer that increments every second
+      this.timerInterval = setInterval(() => {
+        this.timer++;
+      }, 1000) as unknown as number;
+    },
+
+    stopTimer() {
+      // Stop the timer and clear the interval
+      if (this.timerInterval !== null) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null; // Reset after clearing
+      }
+
+      this.timerStarted = false;
+    },
+
     resetAllUnsolvedCardsExcept(exceptionId: string): void {
       for (const card of this.cards) {
         if (!card.solved && card.uuid !== exceptionId) {
@@ -130,6 +174,7 @@ export default defineComponent({
 
     onClickTryAgain(): void {
       this.amountOfFlips = 0;
+      this.timer = 0;
       this.firstFlippedCardId = undefined;
       this.resetCards();
       this.shuffleCards();
@@ -174,8 +219,12 @@ export default defineComponent({
       return amountOfCardsSolved / 2;
     },
 
-    showRetryButton(): boolean {
+    gameIsOver(): boolean {
       return this.amountOfPairsSolved === this.totalAmountOfPairs;
+    },
+
+    showRetryButton(): boolean {
+      return this.gameIsOver;
     },
   },
   watch: {
@@ -213,6 +262,11 @@ export default defineComponent({
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
+    gameIsOver(newValue) {
+      if (newValue) {
+        this.stopTimer();
+      }
+    },
   },
 });
 </script>
@@ -223,5 +277,9 @@ export default defineComponent({
   grid-gap: 1em;
   grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
   /*grid-template-rows: repeat(auto-fit, minmax(250px, 1fr));*/
+}
+
+.memory-info-header {
+  font-weight: 700;
 }
 </style>
