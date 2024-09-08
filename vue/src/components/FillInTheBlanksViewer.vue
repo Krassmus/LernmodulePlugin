@@ -516,7 +516,7 @@ input[type='text'] {
   overflow: hidden;
   white-space: nowrap;
   /* Calculated to be the minPx number spit out by autoGrowTextField */
-  width: 91px;
+  width: 104px;
 }
 
 .h5pBlank.autocorrect:focus {
