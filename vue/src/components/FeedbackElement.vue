@@ -157,7 +157,7 @@ export default defineComponent({
 
 .custom-meter-bar {
   height: 100%;
-  background: linear-gradient(to right, #4caf50, #2e8b57);
+  background: linear-gradient(to right, #34a86e, #2b8c5c);
   width: 0; /* Initial width is 0% */
   transition: width 0.5s ease; /* Smooth fade-in */
 }
