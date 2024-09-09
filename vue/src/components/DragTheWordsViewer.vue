@@ -20,6 +20,7 @@
               @drop="onDropBlank($event, element)"
               @dragover.prevent
               @dragenter.prevent
+              @click="onClickFilledBlank(element)"
             >
               {{ getAnswerById(userInputs[element.uuid])?.text }}
             </span>
@@ -329,6 +330,15 @@ export default defineComponent({
       if (!this.clickedAnswerId) return;
       this.userInputs[blank.uuid] = this.clickedAnswerId;
       this.clickedAnswerId = undefined;
+    },
+
+    onClickFilledBlank(blank: Blank): void {
+      console.log('Clicked filled blank:', blank);
+      if (!this.editable) return;
+
+      if (blank) {
+        delete this.userInputs[blank.uuid];
+      }
     },
   },
   computed: {
