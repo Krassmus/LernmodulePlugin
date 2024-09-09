@@ -18,7 +18,7 @@
         </span>
         <span
           v-else
-          class="h5pBlank"
+          class="blank"
           @drop="onDropBlank($event, element)"
           @dragover.prevent
           @dragenter.prevent
@@ -30,7 +30,7 @@
         </label>
         <span
           v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-          class="h5p-solution"
+          class="solution"
         >
           {{ element.solution }}
         </span>
@@ -45,7 +45,7 @@
     >
       <div v-for="answer in unusedAnswers" :key="answer.uuid">
         <span
-          class="h5pBlankSolution"
+          class="solution"
           :class="{ disabled: !this.editable }"
           :draggable="editable"
           @dragstart="startDragUnusedAnswer($event, answer)"
@@ -66,7 +66,7 @@
 
     <div
       v-if="showFillInAllTheBlanksMessage"
-      class="h5pMessage"
+      class="message"
       v-text="fillInAllTheBlanksMessage"
     />
 
@@ -284,7 +284,7 @@ export default defineComponent({
 
     classForFilledBlank(blank: Blank) {
       if (!this.submittedAnswers && !this.task.instantFeedback) {
-        return 'h5pFilledBlank';
+        return 'filled-blank';
       }
 
       if (this.task.instantFeedback) {
@@ -293,12 +293,12 @@ export default defineComponent({
 
       if (this.userInputs?.[blank.uuid]) {
         if (this.submittedAnswerIsCorrect(blank)) {
-          return 'h5pFilledBlank h5pBlankCorrect disabled';
+          return 'filled-blank correct disabled';
         } else {
-          return 'h5pFilledBlank h5pBlankIncorrect disabled';
+          return 'filled-blank incorrect disabled';
         }
       } else {
-        return 'h5pBlank';
+        return 'blank';
       }
     },
 
@@ -507,7 +507,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.h5pStaticText {
+.static-text {
   display: inline;
   background: #ffffff;
   color: #000000;
@@ -515,7 +515,7 @@ export default defineComponent({
   margin: 0.1em 0 0 0; /* top, right, bottom, left */
 }
 
-.h5pBlank {
+.blank {
   display: inline-block;
   background: #ffffff;
   color: #000000;
@@ -525,7 +525,7 @@ export default defineComponent({
   min-width: 9em;
 }
 
-.h5pFilledBlank {
+.filled-blank {
   display: inline-flex;
   justify-content: center;
   background: #ffffff;
@@ -537,7 +537,7 @@ export default defineComponent({
   cursor: grabbing;
 }
 
-.h5pBlankSolution {
+.solution {
   line-height: 1.25;
   cursor: grabbing;
   border-radius: 0.25em;
@@ -556,13 +556,13 @@ export default defineComponent({
   -ms-user-select: none;
 }
 
-.h5pBlankCorrect {
+.correct {
   background: #9dd8bb;
   border: 1px solid #9dd8bb;
   color: #255c41;
 }
 
-.h5pBlankIncorrect {
+.incorrect {
   background-color: #f7d0d0;
   border: 1px solid #f7d0d0;
   color: #b71c1c;
@@ -580,7 +580,7 @@ span.item:empty:before {
   border-radius: 5px;
 }
 
-.h5pMessage {
+.message {
   font-size: 1em;
   color: #1a73d9;
   font-weight: 700;
