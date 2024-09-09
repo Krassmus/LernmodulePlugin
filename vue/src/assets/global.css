@@ -26,17 +26,19 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 
 .h5p-button-panel {
   margin-top: 0.75em; /* margin between button and the feedback above it */
+  margin-bottom: 0.4em;
 }
 
 .h5p-button {
-  padding: 0.5em 1.25em; /* vertical, horizontal */
-  margin-right: 0.75em; /* margin between buttons */
+  padding: 0.5em 1em; /* vertical, horizontal */
+  margin-right: 0.5em; /* margin between buttons */
   border-radius: 2em;
   background: rgb(26, 115, 217);
   color: #fff;
   cursor: pointer;
   border: none;
   font-size: 16px;
+  line-height: 1.25em;
 }
 
 .h5p-button:last-child {
