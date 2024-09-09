@@ -15,8 +15,8 @@
           class="star-symbol"
           :class="{ 'star-show': starVisible }"
           src="../assets/star.svg"
-          width="36"
-          height="36"
+          width="38"
+          height="38"
           :alt="
             $gettext(
               'Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt'
@@ -192,7 +192,7 @@ export default defineComponent({
 
 .star-symbol {
   position: absolute;
-  left: 132px;
+  left: 134px;
   top: 1px;
   opacity: 0;
   transition: opacity 0.5s ease; /* Smooth fade-in */
