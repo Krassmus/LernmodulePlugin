@@ -539,7 +539,7 @@ export default defineComponent({
   cursor: grabbing;
 }
 
-.filled-blank:hover {
+.filled-blank:not(.disabled):hover {
   border: 0.1em solid rgb(212, 190, 216);
   color: #663366;
   background: #edd6e9;
@@ -598,7 +598,7 @@ span.item:empty:before {
   line-height: 1.5;
 }
 
-.unused-answer:hover {
+.unused-answer:not(.disabled):hover {
   border: 0.1em solid rgb(212, 190, 216);
   color: #663366;
   background: #edd6e9;
