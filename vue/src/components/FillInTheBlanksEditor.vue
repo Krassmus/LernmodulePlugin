@@ -147,7 +147,7 @@
       <div class="feedbackContainer">
         <div class="feedbackPercentagesChild">
           <label>
-            {{ $gettext('Prozent') }}
+            {{ $gettext('Ab Prozent') }}
           </label>
           <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
             <input
@@ -286,12 +286,17 @@ export default defineComponent({
       // Rewrite using provide/inject (will work in all of the cases we are
       // considering -- Multiple tasks on the same page,or tasks included inside
       // of each other a la Interactive Video).
+      const percentage =
+        this.feedbackSortedByScore?.length > 0
+          ? this.feedbackSortedByScore[0].percentage
+          : 100; // Default to 100 if no feedback is available
+
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
           this.taskDefinition,
           (taskDraft: FillInTheBlanksTask) => {
             taskDraft.feedback.push({
-              percentage: this.feedbackSortedByScore[0]?.percentage,
+              percentage: percentage,
               message: 'Feedback',
             });
           }
