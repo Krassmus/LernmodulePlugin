@@ -1,64 +1,67 @@
 <template>
   <div class="h5p-module" ref="wrapperElement">
-    <div class="drag-the-words-text">
-      <template v-for="element in parsedTemplate" :key="element.uuid">
-        <span
-          v-if="element.type === 'staticText'"
-          class="static-text"
-          v-html="element.text"
-        />
-        <template v-else-if="element.type === 'blank'">
+    <div class="text-and-answers-container">
+      <div class="drag-the-words-text">
+        <template v-for="element in parsedTemplate" :key="element.uuid">
           <span
-            v-if="userInputs[element.uuid]"
-            class="blank"
-            :class="classForFilledBlank(element)"
-            :draggable="editable"
-            @dragstart="
-              startDragUsedAnswer($event, element, userInputs[element.uuid])
-            "
-            @drop="onDropBlank($event, element)"
-            @dragover.prevent
-            @dragenter.prevent
-          >
-            {{ getAnswerById(userInputs[element.uuid])?.text }}
-          </span>
-          <span
-            v-else
-            class="blank"
-            @drop="onDropBlank($event, element)"
-            @dragover.prevent
-            @dragenter.prevent
-            @click="onClickBlank(element)"
-            >&#8203;
-          </span>
-          <label v-if="element.hint">
-            <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
-          </label>
-          <span
-            v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-            class="h5p-solution"
-          >
-            {{ element.solution }}
-          </span>
+            v-if="element.type === 'staticText'"
+            class="static-text"
+            v-html="element.text"
+          />
+          <template v-else-if="element.type === 'blank'">
+            <span
+              v-if="userInputs[element.uuid]"
+              class="blank"
+              :class="classForFilledBlank(element)"
+              :draggable="editable"
+              @dragstart="
+                startDragUsedAnswer($event, element, userInputs[element.uuid])
+              "
+              @drop="onDropBlank($event, element)"
+              @dragover.prevent
+              @dragenter.prevent
+            >
+              {{ getAnswerById(userInputs[element.uuid])?.text }}
+            </span>
+            <span
+              v-else
+              class="blank"
+              @drop="onDropBlank($event, element)"
+              @dragover.prevent
+              @dragenter.prevent
+              @click="onClickBlank(element)"
+              >&#8203;
+            </span>
+            <label v-if="element.hint">
+              <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
+            </label>
+            <span
+              v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+              class="h5p-solution"
+            >
+              {{ element.solution }}
+            </span>
+          </template>
         </template>
-      </template>
-    </div>
-    <div
-      class="unused-answers-list"
-      @drop="onDropUnusedAnswers($event)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <div v-for="answer in unusedAnswers" :key="answer.uuid">
-        <span
-          class="unused-answer"
-          :class="{ disabled: !this.editable }"
-          :draggable="editable"
-          @dragstart="startDragUnusedAnswer($event, answer)"
-          @click="onClickUnusedAnswer(answer)"
-        >
-          {{ answer.text }}
-        </span>
+      </div>
+
+      <div
+        class="unused-answers-list"
+        @drop="onDropUnusedAnswers($event)"
+        @dragover.prevent
+        @dragenter.prevent
+      >
+        <div v-for="answer in unusedAnswers" :key="answer.uuid">
+          <span
+            class="unused-answer"
+            :class="{ disabled: !this.editable }"
+            :draggable="editable"
+            @dragstart="startDragUnusedAnswer($event, answer)"
+            @click="onClickUnusedAnswer(answer)"
+          >
+            {{ answer.text }}
+          </span>
+        </div>
       </div>
     </div>
 
@@ -587,13 +590,14 @@ span.item:empty:before {
   text-align: center;
   display: inline-block;
   border: 0.1em solid #c6c6c6;
-  overflow: hidden;
+  overflow: scroll;
   background: #ddd;
   box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
 
   font-size: 16px;
   border-radius: 0.25em;
   min-width: 9em;
+  max-width: 9em;
   line-height: 1.5;
 }
 
@@ -604,6 +608,10 @@ span.item:empty:before {
 }
 
 .unused-answers-list {
+  display: flex;
+  min-width: 12em;
+  flex-direction: column;
+  align-items: center;
   margin-top: 0.5em;
   min-height: 140px;
   border: 1px solid #eee;
@@ -629,5 +637,9 @@ span.item:empty:before {
   display: flex;
   align-items: end;
   gap: 1em;
+}
+
+.text-and-answers-container {
+  display: flex;
 }
 </style>
