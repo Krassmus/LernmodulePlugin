@@ -627,7 +627,7 @@ span.item:empty:before {
 
 .feedback-and-button-container {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 1em;
 }
 
