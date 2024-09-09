@@ -259,7 +259,6 @@ export default defineComponent({
     },
 
     onDropUnusedAnswers(ev: DragEvent): void {
-      console.error('Not implemented');
       ev.preventDefault(); // Indicate that dropping is al
       if (!this.draggedAnswer) {
         throw new Error('draggedAnswer is undefined');
