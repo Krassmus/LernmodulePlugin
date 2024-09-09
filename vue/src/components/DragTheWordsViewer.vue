@@ -1,42 +1,48 @@
 <template>
   <div class="h5p-module" ref="wrapperElement">
-    <template v-for="element in parsedTemplate" :key="element.uuid">
-      <span v-if="element.type === 'staticText'" v-html="element.text" />
-      <template v-else-if="element.type === 'blank'">
+    <div class="drag-the-words-text">
+      <template v-for="element in parsedTemplate" :key="element.uuid">
         <span
-          v-if="userInputs[element.uuid]"
-          :class="classForFilledBlank(element)"
-          :draggable="editable"
-          @dragstart="
-            startDragUsedAnswer($event, element, userInputs[element.uuid])
-          "
-          @drop="onDropBlank($event, element)"
-          @dragover.prevent
-          @dragenter.prevent
-        >
-          {{ getAnswerById(userInputs[element.uuid])?.text }}
-        </span>
-        <span
-          v-else
-          class="blank"
-          @drop="onDropBlank($event, element)"
-          @dragover.prevent
-          @dragenter.prevent
-          @click="onClickBlank(element)"
-          >&#8203;
-        </span>
-        <label v-if="element.hint">
-          <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
-        </label>
-        <span
-          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-          class="solution"
-        >
-          {{ element.solution }}
-        </span>
+          v-if="element.type === 'staticText'"
+          class="static-text"
+          v-html="element.text"
+        />
+        <template v-else-if="element.type === 'blank'">
+          <span
+            v-if="userInputs[element.uuid]"
+            class="blank"
+            :class="classForFilledBlank(element)"
+            :draggable="editable"
+            @dragstart="
+              startDragUsedAnswer($event, element, userInputs[element.uuid])
+            "
+            @drop="onDropBlank($event, element)"
+            @dragover.prevent
+            @dragenter.prevent
+          >
+            {{ getAnswerById(userInputs[element.uuid])?.text }}
+          </span>
+          <span
+            v-else
+            class="blank"
+            @drop="onDropBlank($event, element)"
+            @dragover.prevent
+            @dragenter.prevent
+            @click="onClickBlank(element)"
+            >&#8203;
+          </span>
+          <label v-if="element.hint">
+            <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
+          </label>
+          <span
+            v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+            class="solution"
+          >
+            {{ element.solution }}
+          </span>
+        </template>
       </template>
-    </template>
-
+    </div>
     <div
       class="unused-answers-list"
       @drop="onDropUnusedAnswers($event)"
@@ -298,7 +304,7 @@ export default defineComponent({
           return 'filled-blank incorrect disabled';
         }
       } else {
-        return 'blank';
+        return '';
       }
     },
 
@@ -511,8 +517,6 @@ export default defineComponent({
   display: inline;
   background: #ffffff;
   color: #000000;
-  line-height: 1.875em; /* makes the static text line height the same as the blanks 1.75em line height + 1px border top and bottom */
-  margin: 0.1em 0 0 0; /* top, right, bottom, left */
 }
 
 .blank {
@@ -521,19 +525,13 @@ export default defineComponent({
   color: #000000;
   border: 1px solid #a0a0a0;
   border-radius: 0.25em;
-  margin: 0.1em 0.1em 0 0.1em; /* top, right, bottom, left */
+  margin: 0 0.1em 0 0.1em; /* top, right, bottom, left */
   min-width: 9em;
 }
 
 .filled-blank {
   display: inline-flex;
   justify-content: center;
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #a0a0a0;
-  border-radius: 0.25em;
-  margin: 0.1em 0.1em 0 0.1em; /* top, right, bottom, left */
-  min-width: 9em;
   cursor: grabbing;
 }
 
@@ -589,5 +587,9 @@ span.item:empty:before {
 
 .disabled {
   cursor: default;
+}
+
+.drag-the-words-text {
+  line-height: 2.25; /* makes the static text line height the same as the blanks 1.75em line height + 1px border top and bottom */
 }
 </style>
