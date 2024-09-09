@@ -45,7 +45,7 @@
       <div class="feedbackContainer">
         <div class="feedbackPercentagesChild">
           <label>
-            {{ $gettext('Prozent') }}
+            {{ $gettext('Ab Prozent') }}
           </label>
           <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
             <input
@@ -70,9 +70,19 @@
             <button
               type="button"
               :title="titleForDeleteButtonForFeedback(feedback)"
+              class="remove-feedback-button"
               @click="removeFeedback(feedback)"
             >
-              <img :src="urlForIcon('trash')" width="16" height="16" />
+              <img
+                :src="urlForIcon('trash')"
+                :alt="
+                  $gettext(
+                    'Trash can icon in a button used to delete a feedback interval'
+                  )
+                "
+                width="16"
+                height="16"
+              />
             </button>
           </div>
         </div>
@@ -198,5 +208,11 @@ export default defineComponent({
   display: flex;
   align-items: center;
   gap: 0.5em;
+}
+
+.remove-feedback-button {
+  display: flex;
+  align-items: center;
+  height: 28px;
 }
 </style>

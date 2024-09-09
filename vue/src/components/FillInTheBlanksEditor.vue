@@ -172,6 +172,7 @@
             <button
               type="button"
               :title="titleForDeleteButtonForFeedback(feedback)"
+              class="remove-feedback-button"
               @click="removeFeedback(feedback)"
             >
               <img
@@ -360,5 +361,11 @@ export default defineComponent({
   display: flex;
   align-items: center;
   gap: 0.5em;
+}
+
+.remove-feedback-button {
+  display: flex;
+  align-items: center;
+  height: 28px;
 }
 </style>
