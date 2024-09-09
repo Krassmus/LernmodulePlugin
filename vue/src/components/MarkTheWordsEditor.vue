@@ -160,7 +160,7 @@ export default defineComponent({
   computed: {
     instructions(): string {
       return $gettext(
-        'Markieren Sie ein Wort als Lösung, indem Sie ein Sternchen (*) vor und hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den "Richtiges Wort markieren"–Button.'
+        'Markieren Sie ein Wort als Lösung, indem Sie ein Sternchen (*) vor und hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den „Richtiges Wort markieren“–Button.'
       );
     },
 

@@ -197,7 +197,7 @@ export default defineComponent({
 
     instructions(): string {
       return $gettext(
-        'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den "Lücke hinzufügen"–Button.' +
+        'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den „Lücke hinzufügen“–Button.' +
           ' Außerdem können Sie einen Tooltip mit einem Doppelpunkt (:) hinzufügen.'
       );
     },
