@@ -36,7 +36,7 @@
           </label>
           <span
             v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-            class="solution"
+            class="h5p-solution"
           >
             {{ element.solution }}
           </span>
