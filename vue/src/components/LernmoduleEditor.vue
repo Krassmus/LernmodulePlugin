@@ -57,21 +57,19 @@
       style="margin-left: 0.5em"
     >
       <option value="FillInTheBlanks">
-        {{ $gettext('Fill In The Blanks') }}
+        {{ $gettext('Fill in the Blanks') }}
       </option>
       <option value="Question">{{ $gettext('Question') }}</option>
-      <option value="DragTheWords">{{ $gettext('Drag The Words') }}</option>
-      <option value="MarkTheWords">{{ $gettext('Mark The Words') }}</option>
+      <option value="DragTheWords">{{ $gettext('Drag the Words') }}</option>
+      <option value="MarkTheWords">{{ $gettext('Mark the Words') }}</option>
       <template v-if="LernmoduleVueJS.LERNMODULE_DEBUG">
         <option value="FindTheHotspot">
-          {{ $gettext('Find The Hotspot') }}
+          {{ $gettext('Find the Hotspot') }}
         </option>
         <option value="Memory">{{ $gettext('Memory') }}</option>
-        <option value="FindTheWords">{{ $gettext('Find The Words') }}</option>
+        <option value="FindTheWords">{{ $gettext('Find the Words') }}</option>
         <option value="Pairing">{{ $gettext('Pairing') }}</option>
-        <option value="Sequencing">
-          {{ $gettext('Sequencing') }}
-        </option>
+        <option value="Sequencing">{{ $gettext('Sequencing') }}</option>
       </template>
     </select>
   </div>

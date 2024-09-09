@@ -1,7 +1,7 @@
 <template>
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Find The Words') }}</legend>
+      <legend>{{ $gettext('Find the Words') }}</legend>
       <div class="h5pEditorTopPanel">
         <input type="text" style="width: 100%" @submit="addWord" />
         <button
