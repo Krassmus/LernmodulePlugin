@@ -298,7 +298,7 @@ export default defineComponent({
       const percentage =
         this.feedbackSortedByScore?.length > 0
           ? Math.min(this.feedbackSortedByScore[0].percentage * 2, 100)
-          : 100; // Default to 100 if no feedback is available
+          : 25; // Default to 100 if no feedback is available
 
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(

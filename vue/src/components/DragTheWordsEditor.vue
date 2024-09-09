@@ -113,7 +113,7 @@
       <div class="feedbackContainer">
         <div class="feedbackPercentagesChild">
           <label>
-            {{ $gettext('Prozent') }}
+            {{ $gettext('Ab Prozent') }}
           </label>
           <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
             <input
@@ -140,7 +140,16 @@
               :title="titleForDeleteButtonForFeedback(feedback)"
               @click="removeFeedback(feedback)"
             >
-              <img :src="urlForIcon('trash')" width="16" height="16" />
+              <img
+                :src="urlForIcon('trash')"
+                :alt="
+                  $gettext(
+                    'Trash can icon in a button used to delete a feedback interval'
+                  )
+                "
+                width="16"
+                height="16"
+              />
             </button>
           </div>
         </div>
@@ -157,14 +166,24 @@
 // Allow us to mutate the prop 'taskDefinition' as much as we want.
 // TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
 /* eslint-disable vue/no-mutating-props */
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
+import produce from 'immer';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'DragTheWordsEditor',
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   components: { StudipWysiwyg },
   props: {
     taskDefinition: {
@@ -216,9 +235,25 @@ export default defineComponent({
     },
 
     addFeedback(): void {
-      this.taskDefinition.feedback.push({
-        percentage: this.feedbackSortedByScore[0]?.percentage,
-        message: 'Feedback',
+      // Rewrite using provide/inject (will work in all of the cases we are
+      // considering -- Multiple tasks on the same page,or tasks included inside
+      // of each other a la Interactive Video).
+      const percentage =
+        this.feedbackSortedByScore?.length > 0
+          ? Math.min(this.feedbackSortedByScore[0].percentage * 2, 100)
+          : 25; // Default to 100 if no feedback is available
+
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: DragTheWordsTask) => {
+            taskDraft.feedback.push({
+              percentage: percentage,
+              message: 'Feedback',
+            });
+          }
+        ),
+        undoBatch: {},
       });
     },
 
