@@ -550,25 +550,6 @@ export default defineComponent({
   background: #edd6e9;
 }
 
-.solution {
-  line-height: 1.25;
-  cursor: grabbing;
-  border-radius: 0.25em;
-  padding: 0.1em 0.6em;
-  margin: 0.3em;
-  vertical-align: top;
-  text-align: center;
-  display: inline-block;
-  border: 0.1em solid #c6c6c6;
-  overflow: hidden;
-  background: #ddd;
-  box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
-  z-index: 3;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-
 .correct {
   background: #9dd8bb;
   border: 1px solid #9dd8bb;
