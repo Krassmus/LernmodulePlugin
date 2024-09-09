@@ -592,6 +592,7 @@ span.item:empty:before {
 }
 
 .unused-answers-list {
+  flex-grow: 0;
   display: flex;
   min-width: 12em;
   flex-direction: column;
@@ -620,6 +621,7 @@ span.item:empty:before {
 }
 
 .drag-the-words-text {
+  flex-grow: 1;
   line-height: 1.875;
 }
 
@@ -631,5 +633,6 @@ span.item:empty:before {
 
 .text-and-answers-container {
   display: flex;
+  gap: 1em;
 }
 </style>
