@@ -23,8 +23,12 @@
             )
           "
         />
+        <div
+          class="result-text"
+          :class="{ 'result-text-offset': achievedMaxPoints }"
+          v-text="resultMessage"
+        />
       </div>
-      <div class="result-text" v-text="resultMessage" />
     </div>
     <div v-else>{{ achievedPoints }}</div>
   </div>
@@ -122,19 +126,30 @@ export default defineComponent({
 
 <style>
 .feedback-text {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: #1a73d9;
+  padding-bottom: 8px;
 }
 
 .result-text {
+  flex-grow: 1;
+  min-width: 0;
+  padding-left: 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   font-size: 16px;
   font-weight: bold;
   color: #000;
 }
 
+.result-text-offset {
+  padding-left: 24px;
+}
+
 .feedback-container {
-  padding-top: 0.5em;
+  padding-top: 24px;
 }
 
 .feedback-score {
@@ -144,13 +159,13 @@ export default defineComponent({
 }
 
 .custom-meter {
+  flex-shrink: 0;
   background: #e0e0e0;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 100%;
-  height: 14px;
+  width: 140px;
+  height: 16px;
   overflow: hidden; /* Ensure the bar doesn’t overflow */
-  max-width: 180px;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
@@ -170,14 +185,14 @@ export default defineComponent({
   align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 1.5em;
-  padding: 6px 4px 6px 10px;
-  width: 200px;
+  padding: 6px 8px 6px 8px;
+  max-width: 480px;
   position: relative;
 }
 
 .star-symbol {
   position: absolute;
-  right: 6px;
+  left: 132px;
   top: 1px;
   opacity: 0;
   transition: opacity 0.5s ease; /* Smooth fade-in */
