@@ -51,7 +51,7 @@
     >
       <div v-for="answer in unusedAnswers" :key="answer.uuid">
         <span
-          class="solution"
+          class="unused-answer"
           :class="{ disabled: !this.editable }"
           :draggable="editable"
           @dragstart="startDragUnusedAnswer($event, answer)"
@@ -517,16 +517,18 @@ export default defineComponent({
   display: inline;
   background: #ffffff;
   color: #000000;
+  font-size: 16px;
 }
 
 .blank {
   display: inline-block;
   background: #ffffff;
   color: #000000;
+  font-size: 16px;
   border: 1px solid #a0a0a0;
   border-radius: 0.25em;
-  margin: 0 0.1em 0 0.1em; /* top, right, bottom, left */
   min-width: 9em;
+  line-height: 1.5;
 }
 
 .filled-blank {
@@ -571,9 +573,26 @@ span.item:empty:before {
   content: '\200b';
 }
 
+.unused-answer {
+  cursor: grabbing;
+  margin: 0.25em;
+  vertical-align: top;
+  text-align: center;
+  display: inline-block;
+  border: 0.1em solid #c6c6c6;
+  overflow: hidden;
+  background: #ddd;
+  box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
+
+  font-size: 16px;
+  border-radius: 0.25em;
+  min-width: 9em;
+  line-height: 1.5;
+}
+
 .unused-answers-list {
   margin-top: 0.5em;
-  min-height: 2rem;
+  min-height: 140px;
   border: 1px solid #eee;
   border-radius: 5px;
 }
@@ -590,6 +609,6 @@ span.item:empty:before {
 }
 
 .drag-the-words-text {
-  line-height: 2.25; /* makes the static text line height the same as the blanks 1.75em line height + 1px border top and bottom */
+  line-height: 1.875;
 }
 </style>
