@@ -62,46 +62,48 @@
       </div>
     </div>
 
-    <FeedbackElement
-      v-if="showResults"
-      :achieved-points="correctAnswers"
-      :max-points="maxPoints"
-      :feedback="task.feedback"
-      :result-message="resultMessage"
-    />
-
     <div
       v-if="showFillInAllTheBlanksMessage"
       class="message"
       v-text="fillInAllTheBlanksMessage"
     />
 
-    <div class="h5p-button-panel">
-      <button
-        v-if="showCheckButton"
-        v-text="this.task.strings.checkButton"
-        @click="onClickCheck"
-        type="button"
-        class="h5p-button"
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="showResults"
+        :achieved-points="correctAnswers"
+        :max-points="maxPoints"
+        :feedback="task.feedback"
+        :result-message="resultMessage"
       />
 
-      <template v-if="showExtraButtons">
+      <div class="h5p-button-panel">
         <button
-          v-if="!showSolutions && this.task.showSolutionsAllowed"
-          v-text="this.task.strings.solutionsButton"
-          @click="onClickShowSolution"
+          v-if="showCheckButton"
+          v-text="this.task.strings.checkButton"
+          @click="onClickCheck"
           type="button"
           class="h5p-button"
         />
 
-        <button
-          v-if="this.task.retryAllowed"
-          v-text="this.task.strings.retryButton"
-          @click="onClickTryAgain"
-          type="button"
-          class="h5p-button"
-        />
-      </template>
+        <template v-if="showExtraButtons">
+          <button
+            v-if="!showSolutions && this.task.showSolutionsAllowed"
+            v-text="this.task.strings.solutionsButton"
+            @click="onClickShowSolution"
+            type="button"
+            class="h5p-button"
+          />
+
+          <button
+            v-if="this.task.retryAllowed"
+            v-text="this.task.strings.retryButton"
+            @click="onClickTryAgain"
+            type="button"
+            class="h5p-button"
+          />
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -622,5 +624,11 @@ span.item:empty:before {
 
 .drag-the-words-text {
   line-height: 1.875;
+}
+
+.feedback-and-button-container {
+  display: flex;
+  align-items: end;
+  gap: 1em;
 }
 </style>
