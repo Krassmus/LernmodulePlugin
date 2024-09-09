@@ -522,10 +522,10 @@ export default defineComponent({
 
 .blank {
   display: inline-block;
-  background: #ffffff;
-  color: #000000;
+  background: #cee0f4;
+  color: #1a4473;
   font-size: 16px;
-  border: 1px solid #a0a0a0;
+  border: 1px solid #a9c3d0;
   border-radius: 0.25em;
   min-width: 9em;
   line-height: 1.5;
@@ -535,6 +535,12 @@ export default defineComponent({
   display: inline-flex;
   justify-content: center;
   cursor: grabbing;
+}
+
+.filled-blank:hover {
+  border: 0.1em solid rgb(212, 190, 216);
+  color: #663366;
+  background: #edd6e9;
 }
 
 .solution {
@@ -588,6 +594,12 @@ span.item:empty:before {
   border-radius: 0.25em;
   min-width: 9em;
   line-height: 1.5;
+}
+
+.unused-answer:hover {
+  border: 0.1em solid rgb(212, 190, 216);
+  color: #663366;
+  background: #edd6e9;
 }
 
 .unused-answers-list {
