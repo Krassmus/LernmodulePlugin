@@ -184,8 +184,8 @@ export default defineComponent({
   justify-content: flex-start;
   align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 1.5em;
-  padding: 6px 8px 6px 8px;
+  border-radius: 2em;
+  padding: 6px 12px 6px 12px;
   max-width: 480px;
   position: relative;
 }
