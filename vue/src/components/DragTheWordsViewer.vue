@@ -54,7 +54,10 @@
         <div v-for="answer in unusedAnswers" :key="answer.uuid">
           <span
             class="unused-answer"
-            :class="{ disabled: !this.editable }"
+            :class="{
+              disabled: !this.editable,
+              selected: answer.uuid === this.clickedAnswerId,
+            }"
             :draggable="editable"
             @dragstart="startDragUnusedAnswer($event, answer)"
             @click="onClickUnusedAnswer(answer)"
@@ -627,6 +630,12 @@ span.item:empty:before {
 
 .disabled {
   cursor: default;
+}
+
+.selected:not(.disabled) {
+  border: 0.1em solid rgb(212, 190, 216);
+  color: #663366;
+  background: #edd6e9;
 }
 
 .drag-the-words-text {
