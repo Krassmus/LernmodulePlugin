@@ -288,7 +288,7 @@ export default defineComponent({
       // of each other a la Interactive Video).
       const percentage =
         this.feedbackSortedByScore?.length > 0
-          ? this.feedbackSortedByScore[0].percentage
+          ? Math.min(this.feedbackSortedByScore[0].percentage * 2, 100)
           : 100; // Default to 100 if no feedback is available
 
       this.taskEditor!.performEdit({
