@@ -174,7 +174,16 @@
               :title="titleForDeleteButtonForFeedback(feedback)"
               @click="removeFeedback(feedback)"
             >
-              <img :src="urlForIcon('trash')" width="16" height="16" />
+              <img
+                :src="urlForIcon('trash')"
+                :alt="
+                  $gettext(
+                    'Trash can icon in a button used to delete a feedback interval'
+                  )
+                "
+                width="16"
+                height="16"
+              />
             </button>
           </div>
         </div>
