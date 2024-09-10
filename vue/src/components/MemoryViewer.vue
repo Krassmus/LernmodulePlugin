@@ -45,17 +45,8 @@
       />
     </div>
 
-    <div class="h5pFeedbackContainer">
-      <div class="h5pFeedbackContainerTop">
-        <label v-if="showResults && feedbackMessage" class="h5pFeedbackText">
-          {{ this.feedbackMessage }}
-        </label>
-      </div>
-      <div class="h5pFeedbackContainerCenter">
-        <label v-if="showResults" class="h5pFeedbackText">
-          {{ this.resultMessage }}
-        </label>
-      </div>
+    <div v-if="showResults" class="result-message">
+      {{ this.resultMessage }}
     </div>
 
     <div class="h5p-button-panel">
@@ -98,9 +89,6 @@ export default defineComponent({
       cards: [] as ViewerMemoryCard[],
       firstFlippedCardId: undefined as string | undefined,
       amountOfFlips: 0 as number,
-      showResults: false as boolean,
-      feedbackMessage: undefined as string | undefined,
-      resultMessage: undefined as string | undefined,
 
       timer: 0, // Track elapsed time in seconds
       timerStarted: false, // Flag to check if timer has started
@@ -223,8 +211,16 @@ export default defineComponent({
       return this.amountOfPairsSolved === this.totalAmountOfPairs;
     },
 
+    showResults(): boolean {
+      return this.gameIsOver;
+    },
+
     showRetryButton(): boolean {
       return this.gameIsOver;
+    },
+
+    resultMessage(): string {
+      return this.task.strings.resultMessage;
     },
   },
   watch: {
@@ -281,5 +277,12 @@ export default defineComponent({
 
 .memory-info-header {
   font-weight: 700;
+}
+
+.result-message {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1a73d9;
+  margin: 8px 0;
 }
 </style>
