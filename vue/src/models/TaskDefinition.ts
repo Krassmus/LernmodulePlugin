@@ -480,10 +480,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'Question',
         question:
-          'Welche dieser Himmelskörper sind Planeten in unserem Sonnensystem?',
+          'Wie nennt man die strukturell abgrenzbaren Bereiche einer Zelle?',
         answers: [
           {
-            text: 'Mars',
+            text: 'Organellen',
             correct: true,
             strings: {
               hint: '',
@@ -492,7 +492,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
-            text: 'Titan',
+            text: 'Mitochondrien',
             correct: false,
             strings: {
               hint: '',
@@ -501,7 +501,16 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
-            text: 'Sonne',
+            text: 'Ribosomen',
+            correct: false,
+            strings: {
+              hint: '',
+              feedbackSelected: '',
+              feedbackNotSelected: '',
+            },
+          },
+          {
+            text: 'Plasma',
             correct: false,
             strings: {
               hint: '',
