@@ -483,33 +483,6 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           'Welche dieser Himmelskörper sind Planeten in unserem Sonnensystem?',
         answers: [
           {
-            text: 'Mond',
-            correct: false,
-            strings: {
-              hint: '',
-              feedbackSelected: 'Dies ist ein Mond, kein Planet.',
-              feedbackNotSelected: 'Genau, der Mond ist ein Mond.',
-            },
-          },
-          {
-            text: 'Merkur',
-            correct: true,
-            strings: {
-              hint: '',
-              feedbackSelected: '',
-              feedbackNotSelected: '',
-            },
-          },
-          {
-            text: 'Venus',
-            correct: true,
-            strings: {
-              hint: '',
-              feedbackSelected: '',
-              feedbackNotSelected: '',
-            },
-          },
-          {
             text: 'Mars',
             correct: true,
             strings: {
@@ -519,22 +492,12 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
-            text: 'Pluto',
-            correct: false,
-            strings: {
-              hint: 'Hat sich hier was geändert?',
-              feedbackSelected: '',
-              feedbackNotSelected: '',
-            },
-          },
-          {
             text: 'Titan',
             correct: false,
             strings: {
               hint: '',
-              feedbackSelected:
-                'Das ist leider nicht richtig. Der Titan ist ein Mond vom Saturn.',
-              feedbackNotSelected: 'Genau, der Titan ist ein Mond vom Saturn.',
+              feedbackSelected: '',
+              feedbackNotSelected: '',
             },
           },
           {
@@ -542,9 +505,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             correct: false,
             strings: {
               hint: '',
-              feedbackSelected:
-                'Das ist leider nicht richtig. Die Sonne ist ein Stern.',
-              feedbackNotSelected: 'Genau, die Sonne ist ein Stern.',
+              feedbackSelected: '',
+              feedbackNotSelected: '',
             },
           },
         ],
@@ -556,7 +518,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Punkten',
+          resultMessage: ':correct/:total',
         },
         feedback: defaultFeedback(),
       };
