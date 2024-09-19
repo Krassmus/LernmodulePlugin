@@ -23,6 +23,11 @@
         remove-wrapping-p-tag
         disable-autoformat
       />
+
+      <label style="margin-top: 1.5ex">
+        {{ $gettext('Irreführende Antworten') }}
+        <input type="text" v-model="taskDefinition.distractors" />
+      </label>
     </fieldset>
 
     <fieldset class="collapsable collapsed">

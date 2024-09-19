@@ -366,6 +366,14 @@ export default defineComponent({
       });
     },
 
+    parsedDistractors(): string[] {
+      // Extract distractors from the input
+      const distractors = (this.task.distractors.match(/\*(.*?)\*/g) || []) // Handle cases with no matches
+        .map((distractor) => distractor.replace(/\*/g, '').trim());
+
+      return distractors;
+    },
+
     blanks(): Blank[] {
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
@@ -373,10 +381,17 @@ export default defineComponent({
     },
 
     answers(): Answer[] {
-      return this.blanks.map((blank) => ({
+      const correctAnswers = this.blanks.map((blank) => ({
         uuid: uuidv4(),
         text: blank.solution,
       }));
+
+      const distractorAnswers = this.parsedDistractors.map((distractor) => ({
+        uuid: uuidv4(),
+        text: distractor,
+      }));
+
+      return [...correctAnswers, ...distractorAnswers];
     },
 
     draggedAnswer(): Answer | undefined {

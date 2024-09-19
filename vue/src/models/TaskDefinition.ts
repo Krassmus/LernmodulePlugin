@@ -101,6 +101,7 @@ export function fileDetailsUrl(fileId: string): string {
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
   template: z.string(),
+  distractors: z.string(),
   retryAllowed: z.boolean(),
   showSolutionsAllowed: z.boolean(),
   instantFeedback: z.boolean(),
@@ -335,6 +336,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'DragTheWords',
         template: 'Drag the *words* to the matching *gaps*.',
+        distractors: '',
         retryAllowed: true,
         showSolutionsAllowed: true,
         instantFeedback: false,
