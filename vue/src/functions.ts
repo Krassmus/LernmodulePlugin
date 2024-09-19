@@ -7,7 +7,7 @@ export function formatInvalidTaskDefinitionErrorMessage(
   return (
     $gettext(
       'Diese Aufgabe konnte nicht geladen werden. ' +
-        'Beim Einlesen von task_json ist ein Fehler vorgekommen. Fehler: '
+        'Beim Einlesen von task_json ist ein Fehler aufgetreten. Fehler: '
     ) +
     '\n' +
     e +
