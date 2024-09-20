@@ -98,10 +98,10 @@ export function fileDetailsUrl(fileId: string): string {
   return window.STUDIP.URLHelper.getURL(`dispatch.php/file/details/${fileId}`);
 }
 
-export const dragTheWordsTaskSchema = z.object({
+// v1 of the Drag the Words task schema (without distractors)
+const dragTheWordsTaskSchema_v1 = z.object({
   task_type: z.literal('DragTheWords'),
   template: z.string(),
-  distractors: z.string(),
   retryAllowed: z.boolean(),
   showSolutionsAllowed: z.boolean(),
   instantFeedback: z.boolean(),
@@ -116,6 +116,53 @@ export const dragTheWordsTaskSchema = z.object({
   }),
   feedback: z.array(feedbackSchema),
 });
+
+// v2 of the schema, introducing 'distractors'
+const dragTheWordsTaskSchema_v2 = z.object({
+  v: z.literal(2), // Version indicator
+  task_type: z.literal('DragTheWords'),
+  template: z.string(),
+  distractors: z.string(), // New field
+  retryAllowed: z.boolean(),
+  showSolutionsAllowed: z.boolean(),
+  instantFeedback: z.boolean(),
+  allBlanksMustBeFilledForSolutions: z.boolean(),
+  alphabeticOrder: z.boolean(),
+  strings: z.object({
+    checkButton: z.string(),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    fillInAllBlanksMessage: z.string(),
+    resultMessage: z.string(),
+  }),
+  feedback: z.array(feedbackSchema),
+});
+
+// Union of both versions and migration logic
+export const dragTheWordsTaskSchema = z
+  .union([dragTheWordsTaskSchema_v1, dragTheWordsTaskSchema_v2])
+  .transform((val) => {
+    if (!Object.hasOwn(val, 'v')) {
+      // Migration from v1 to v2
+      const val_v1 = val as z.infer<typeof dragTheWordsTaskSchema_v1>;
+      const val_v2 = {
+        v: 2,
+        ...val_v1, // Copy all properties from v1
+        distractors: '', // Default value for the new 'distractors' field
+      } as z.infer<typeof dragTheWordsTaskSchema_v2>;
+      console.log(
+        'Migrating from dragTheWordsTaskSchema_v1 to dragTheWordsTaskSchema_v2',
+        'v1:',
+        val_v1,
+        'v2:',
+        val_v2
+      );
+      return val_v2;
+    } else {
+      return val as z.infer<typeof dragTheWordsTaskSchema_v2>;
+    }
+  });
+
 export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 
 export const findTheHotspotTaskSchema = z.object({
