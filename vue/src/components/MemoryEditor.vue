@@ -11,7 +11,7 @@
         @click="selectCard(index)"
       >
         {{ index }}.
-        {{ card.question === '' ? $gettext('Karte') : card.question }}
+        {{ card.altText === '' ? $gettext('Karte') : card.altText }}
         <!-- Apply .stop modifier so that the selectCard event handler on the
             parent element doesn't get called when the delete button is clicked -->
         <button
