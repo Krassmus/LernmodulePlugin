@@ -1,6 +1,9 @@
 <template>
-  <div class="memoryCard" :class="{ memoryCardFlipped: card.flipped }">
     <div v-if="card.flipped" class="memoryCardFront">
+  <div
+    class="memoryCard no-select"
+    :class="{ memoryCardFlipped: card.flipped }"
+  >
       <img
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"

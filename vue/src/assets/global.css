@@ -59,3 +59,7 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   border-radius: 0.25em;
   margin-left: 0.25em;
 }
+
+.no-select {
+  user-select: none;
+}
