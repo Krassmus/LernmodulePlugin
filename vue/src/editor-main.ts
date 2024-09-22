@@ -5,6 +5,7 @@ import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
 import './assets/global.css';
 import ErrorMessage from '@/components/ErrorMessage.vue';
+import { disableDrag } from '@/directives/vDisableDrag';
 
 init();
 
@@ -22,6 +23,7 @@ function init() {
 
   const app = createApp(LernmoduleEditor);
   app.directive('model-undoable', modelUndoable);
+  app.directive('disable-drag', disableDrag);
   app.use(store);
   app.use(gettextPlugin);
 

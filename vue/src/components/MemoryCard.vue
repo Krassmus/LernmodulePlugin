@@ -1,16 +1,16 @@
 <template>
-    <div v-if="card.flipped" class="memoryCardFront">
   <div
     class="memoryCard no-select"
     :class="{ memoryCardFlipped: card.flipped }"
   >
+    <div v-if="card.flipped" class="memoryCardFront" v-disable-drag>
       <img
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"
         class="memoryImage"
       />
     </div>
-    <div v-else class="memoryCardBack">
+    <div v-else class="memoryCardBack" v-disable-drag>
       <img
         src="../assets/memoryCardBack.png"
         class="memoryImage"
