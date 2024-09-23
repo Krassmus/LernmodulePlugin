@@ -79,6 +79,5 @@ export default defineComponent({
 .memoryCard:not(.memoryCardFlipped):hover {
   border-color: rgb(0, 78, 159);
   background: rgb(0, 78, 159);
-  padding: 2px 2px 2px 2px;
 }
 </style>
