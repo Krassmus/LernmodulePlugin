@@ -1,6 +1,12 @@
 <template>
   <div class="h5p-module">
-    <div class="h5pMemoryGame">
+    <div
+      class="h5pMemoryGame"
+      :style="{
+        gridTemplateColumns: gridTemplateColumns,
+        gridTemplateRows: gridTemplateRows,
+      }"
+    >
       <MemoryCardComponent
         v-for="card in this.cards"
         :key="card.uuid"
@@ -222,6 +228,26 @@ export default defineComponent({
     resultMessage(): string {
       return this.task.strings.resultMessage;
     },
+
+    gridTemplateColumns(): string {
+      if (this.task.squareLayout) {
+        const columns = Math.ceil(Math.sqrt(this.cards.length));
+        return `repeat(${columns}, 1fr)`;
+      } else {
+        return 'repeat(auto-fill, minmax(8em, 1fr))'; // Responsive behavior
+      }
+    },
+
+    gridTemplateRows(): string {
+      if (this.task.squareLayout) {
+        const rows = Math.ceil(
+          this.cards.length / Math.ceil(Math.sqrt(this.cards.length))
+        );
+        return `repeat(${rows}, 1fr)`;
+      } else {
+        return 'auto'; // For responsive layout, let the rows be created automatically
+      }
+    },
   },
   watch: {
     task: {
@@ -271,8 +297,6 @@ export default defineComponent({
 .h5pMemoryGame {
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
-  /*grid-template-rows: repeat(auto-fit, minmax(250px, 1fr));*/
 }
 
 .memory-info-header {

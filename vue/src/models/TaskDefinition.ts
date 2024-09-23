@@ -153,6 +153,7 @@ export type MemoryCard = z.infer<typeof memoryCardSchema>;
 export const memoryTaskSchema = z.object({
   task_type: z.literal('Memory'),
   cards: z.array(memoryCardSchema),
+  squareLayout: z.boolean().optional(),
   strings: z.object({
     checkButton: z.string(),
     retryButton: z.string(),
@@ -473,6 +474,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             altText: '',
           },
         ],
+        squareLayout: true,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',

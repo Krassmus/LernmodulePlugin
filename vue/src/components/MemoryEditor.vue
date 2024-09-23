@@ -1,42 +1,53 @@
 <template>
-  <div class="main-flex">
-    <div class="cards-list">
-      <div
-        v-for="(card, index) in taskDefinition.cards"
-        :key="card.uuid"
-        :class="{
-          'cards-list-item': true,
-          'selected-card': index === this.selectedCardIndex,
-        }"
-        @click="selectCard(index)"
-      >
-        {{ index }}.
-        {{ card.altText === '' ? $gettext('Karte') : card.altText }}
-        <!-- Apply .stop modifier so that the selectCard event handler on the
-            parent element doesn't get called when the delete button is clicked -->
-        <button
-          type="button"
-          class="flex-child-element removeAnswerButton"
-          @click.stop="deleteCard(index)"
+  <form class="default">
+    <fieldset class="main-flex">
+      <legend>{{ $gettext('Memory') }}</legend>
+      <div class="cards-list">
+        <div
+          v-for="(card, index) in taskDefinition.cards"
+          :key="card.uuid"
+          :class="{
+            'cards-list-item': true,
+            'selected-card': index === this.selectedCardIndex,
+          }"
+          @click="selectCard(index)"
         >
-          <img :src="urlForIcon('trash')" :alt="$gettext('Karte löschen')" />
+          {{ index }}.
+          {{ card.altText === '' ? $gettext('Karte') : card.altText }}
+          <!-- Apply .stop modifier so that the selectCard event handler on the
+            parent element doesn't get called when the delete button is clicked -->
+          <button
+            type="button"
+            class="flex-child-element removeAnswerButton"
+            @click.stop="deleteCard(index)"
+          >
+            <img :src="urlForIcon('trash')" :alt="$gettext('Karte löschen')" />
+          </button>
+        </div>
+        <button type="button" @click="addCard">
+          {{ $gettext('Karte hinzufügen') }}
         </button>
       </div>
-      <button type="button" @click="addCard">
-        {{ $gettext('Karte hinzufügen') }}
-      </button>
-    </div>
 
-    <EditedMemoryCard
-      v-if="this.taskDefinition.cards[this.selectedCardIndex]"
-      class="edited-memory-card"
-      :card="this.taskDefinition.cards[this.selectedCardIndex]"
-      :card-index="this.selectedCardIndex"
-    />
-    <div v-else class="edited-memory-card no-card-selected-placeholder">
-      {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
-    </div>
-  </div>
+      <EditedMemoryCard
+        v-if="this.taskDefinition.cards[this.selectedCardIndex]"
+        class="edited-memory-card"
+        :card="this.taskDefinition.cards[this.selectedCardIndex]"
+        :card-index="this.selectedCardIndex"
+      />
+      <div v-else class="edited-memory-card no-card-selected-placeholder">
+        {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
+      </div>
+    </fieldset>
+    <fieldset class="collapsable">
+      <legend>{{ $gettext('Einstellungen') }}</legend>
+
+      <label>
+        <input type="checkbox" v-model="taskDefinition.squareLayout" />
+        {{ $gettext('Karten in einem Quadrat positionieren') }}
+      </label>
+    </fieldset>
+  </form>
 </template>
 
 <style scoped>
