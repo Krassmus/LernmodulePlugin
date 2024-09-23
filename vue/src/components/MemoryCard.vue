@@ -83,8 +83,8 @@ export default defineComponent({
 }
 
 .memory-card:not(.flipped):hover {
+  transition: all 0.1s ease-out;
   border-color: rgb(0, 78, 159);
-  transform: translateY(-2px);
   box-shadow: 0 4px 8px rgb(0, 78, 159);
 }
 </style>
