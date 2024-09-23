@@ -1,21 +1,21 @@
 <template>
   <div
-    class="memoryCard no-select"
-    :class="{ memoryCardFlipped: card.flipped }"
+    class="memory-card no-select"
+    :class="{ flipped: card.flipped }"
     v-disable-drag
   >
-    <div class="memoryCardFront">
+    <div class="memory-card-front">
       <img
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"
-        class="memoryImage"
+        class="memory-card-image"
       />
     </div>
-    <div class="memoryCardBack">
+    <div class="memory-card-back">
       <img
         src="../assets/memoryCardBack.png"
         alt="The back of a card in the memory game."
-        class="memoryImage"
+        class="memory-card-image"
       />
     </div>
   </div>
@@ -40,49 +40,49 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.memoryCard {
+.memory-card {
   display: flex;
   flex-flow: column;
   align-items: center;
   aspect-ratio: 1;
   border: 2px solid #d0d7e3;
   color: rgb(40, 73, 124);
-  transition: all 0.2s ease-out;
+  transition: all 0.24s ease-in-out;
+  transform-style: preserve-3d;
+  perspective: 1000px; /* Perspective for 3D flip */
   position: relative;
 }
 
-.memoryCardFlipped {
-  transition: transform 0.4s ease-in-out;
-  transform-style: preserve-3d;
-  perspective: 1000px; /* Perspective for 3D flip */
+.flipped {
   transform: rotateY(180deg);
 }
 
-.memoryImage {
+.memory-card-image {
   max-width: 100%;
   max-height: 100%;
 }
 
-.memoryCardFront,
-.memoryCardBack {
+.memory-card-front,
+.memory-card-back {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-grow: 1;
   width: 100%;
   position: absolute;
+}
+
+.memory-card-front {
+  transform: rotateY(180deg); /* Start rotated, flipped with the back side */
+  backface-visibility: visible;
+}
+
+.memory-card-back {
+  transform: rotateY(0deg); /* Back side is initially visible */
   backface-visibility: hidden;
 }
 
-.memoryCardFront {
-  transform: rotateY(180deg); /* Start rotated, flipped with the back side */
-}
-
-.memoryCardBack {
-  transform: rotateY(0deg); /* Back side is initially visible */
-}
-
-.memoryCard:not(.memoryCardFlipped):hover {
+.memory-card:not(.flipped):hover {
   border-color: rgb(0, 78, 159);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgb(0, 78, 159);
