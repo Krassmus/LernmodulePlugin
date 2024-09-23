@@ -599,7 +599,7 @@ span.item:empty:before {
   text-align: center;
   display: inline-block;
   border: 0.1em solid #c6c6c6;
-  overflow: scroll;
+  overflow: auto;
   background: #ddd;
   box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
 
