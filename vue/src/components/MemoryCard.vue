@@ -47,7 +47,7 @@ export default defineComponent({
   border: 2px solid #d0d7e3;
   color: rgb(40, 73, 124);
   padding: 1px 1px 1px 1px;
-  transition: all 0.5s ease;
+  transition: all 0.2s ease-out;
 }
 
 .memoryCardFlipped {
@@ -78,6 +78,7 @@ export default defineComponent({
 
 .memoryCard:not(.memoryCardFlipped):hover {
   border-color: rgb(0, 78, 159);
-  background: rgb(0, 78, 159);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgb(0, 78, 159);
 }
 </style>
