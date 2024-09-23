@@ -2,19 +2,20 @@
   <div
     class="memoryCard no-select"
     :class="{ memoryCardFlipped: card.flipped }"
+    v-disable-drag
   >
-    <div v-if="card.flipped" class="memoryCardFront" v-disable-drag>
+    <div class="memoryCardFront">
       <img
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"
         class="memoryImage"
       />
     </div>
-    <div v-else class="memoryCardBack" v-disable-drag>
+    <div class="memoryCardBack">
       <img
         src="../assets/memoryCardBack.png"
-        class="memoryImage"
         alt="The back of a card in the memory game."
+        class="memoryImage"
       />
     </div>
   </div>
@@ -46,13 +47,15 @@ export default defineComponent({
   aspect-ratio: 1;
   border: 2px solid #d0d7e3;
   color: rgb(40, 73, 124);
-  padding: 1px 1px 1px 1px;
   transition: all 0.2s ease-out;
+  position: relative;
 }
 
 .memoryCardFlipped {
+  transition: transform 0.4s ease-in-out;
+  transform-style: preserve-3d;
+  perspective: 1000px; /* Perspective for 3D flip */
   transform: rotateY(180deg);
-  transform-style: flat;
 }
 
 .memoryImage {
@@ -60,25 +63,28 @@ export default defineComponent({
   max-height: 100%;
 }
 
-.memoryCardFront {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-  width: 100%;
-}
-
+.memoryCardFront,
 .memoryCardBack {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-grow: 1;
   width: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.memoryCardFront {
+  transform: rotateY(180deg); /* Start rotated, flipped with the back side */
+}
+
+.memoryCardBack {
+  transform: rotateY(0deg); /* Back side is initially visible */
 }
 
 .memoryCard:not(.memoryCardFlipped):hover {
   border-color: rgb(0, 78, 159);
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgb(0, 78, 159);
+  box-shadow: 0 4px 8px rgb(0, 78, 159);
 }
 </style>
