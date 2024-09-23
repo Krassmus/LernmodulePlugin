@@ -41,35 +41,42 @@ export default defineComponent({
 
 <style scoped>
 .memory-card {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  aspect-ratio: 1;
-  border: 2px solid #d0d7e3;
-  color: rgb(40, 73, 124);
-  transition: all 0.24s ease-in-out;
-  transform-style: preserve-3d;
-  perspective: 1000px; /* Perspective for 3D flip */
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  aspect-ratio: 1;
+
+  border: 2px solid #d0d7e3;
+  color: #28497c;
+  background: #e7ebf1;
+
+  transform-style: preserve-3d;
+  perspective: 1000px;
+
+  transition: transform 0.64s ease-in-out, border-color 0.12s ease-in-out,
+    box-shadow 0.24s ease-in-out;
 }
 
 .flipped {
-  transform: rotateY(180deg);
+  transform: rotate3d(0, 1, 0, 180deg);
 }
 
 .memory-card-image {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
 }
 
 .memory-card-front,
 .memory-card-back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1;
-  width: 100%;
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .memory-card-front {
@@ -83,7 +90,6 @@ export default defineComponent({
 }
 
 .memory-card:not(.flipped):hover {
-  transition: all 0.1s ease-out;
   border-color: rgb(0, 78, 159);
   box-shadow: 0 0 8px rgb(0, 78, 159);
 }
