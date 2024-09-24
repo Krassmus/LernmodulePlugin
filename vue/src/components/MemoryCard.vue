@@ -72,6 +72,7 @@ export default defineComponent({
 
 .memory-card-front,
 .memory-card-back {
+  width: 100%;
   position: absolute;
   display: flex;
   flex-direction: column;
