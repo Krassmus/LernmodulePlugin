@@ -1,8 +1,18 @@
 <template>
-  <img :src="fileIdToUrl(card.file_id)" :alt="card.altText" />
-  <button type="button" @click="deleteImage">
-    {{ $gettext('Bild Löschen') }}
-  </button>
+  <div class="memory-card-image-and-button-container">
+    <img
+      :src="fileIdToUrl(card.file_id)"
+      :alt="card.altText"
+      class="memory-card-image"
+    />
+    <button
+      type="button"
+      @click="deleteImage"
+      class="memory-card-delete-image-button"
+    >
+      {{ $gettext('Bild Löschen') }}
+    </button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -42,4 +52,17 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.memory-card-image-and-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+
+.memory-card-image {
+  max-width: 100%;
+  max-height: 480px;
+}
+</style>
