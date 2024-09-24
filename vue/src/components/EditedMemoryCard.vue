@@ -2,11 +2,11 @@
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Karte') }}</legend>
-      <div>
-        <h4>{{ $gettext('Bild') }}</h4>
+      <label
+        >{{ $gettext('Bild') }}
         <EditedMemoryCardImage v-if="card.file_id" :card="card" />
         <FileUpload v-else @file-uploaded="onImageUploaded" />
-      </div>
+      </label>
       <label
         >{{ $gettext('Alternativer Text') }}
         <input
