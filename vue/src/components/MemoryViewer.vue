@@ -234,7 +234,7 @@ export default defineComponent({
         const columns = Math.ceil(Math.sqrt(this.cards.length));
         return `repeat(${columns}, 1fr)`;
       } else {
-        return 'repeat(auto-fill, minmax(8em, 1fr))'; // Responsive behavior
+        return 'repeat(auto-fill, minmax(12em, 1fr))'; // Responsive behavior
       }
     },
 
