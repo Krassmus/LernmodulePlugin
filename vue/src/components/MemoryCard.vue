@@ -1,18 +1,19 @@
 <template>
-  <div
+  <button
+    type="button"
     class="memory-card no-select"
     :class="{ flipped: card.flipped }"
     v-disable-drag
   >
-    <div class="memory-card-front">
+    <span class="memory-card-front">
       <img
         v-if="card.file_id"
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"
         class="memory-card-image"
       />
-    </div>
-    <div class="memory-card-back">
+    </span>
+    <span class="memory-card-back">
       <img
         v-if="flipside"
         :src="fileIdToUrl(flipside.file_id)"
@@ -25,8 +26,8 @@
         alt="The back of a card in the memory game."
         class="memory-card-image"
       />
-    </div>
-  </div>
+    </span>
+  </button>
 </template>
 
 <script lang="ts">
