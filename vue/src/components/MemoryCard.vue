@@ -14,6 +14,13 @@
     </div>
     <div class="memory-card-back">
       <img
+        v-if="flipside"
+        :src="fileIdToUrl(flipside.file_id)"
+        :alt="flipside.altText"
+        class="memory-card-image"
+      />
+      <img
+        v-else
         src="../assets/memoryCardBack.png"
         alt="The back of a card in the memory game."
         class="memory-card-image"
@@ -25,7 +32,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { ViewerMemoryCard } from '@/components/MemoryViewer.vue';
-import { fileIdToUrl } from '@/models/TaskDefinition';
+import { fileIdToUrl, Image } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'MemoryCard',
@@ -33,6 +40,10 @@ export default defineComponent({
     card: {
       type: Object as PropType<ViewerMemoryCard>,
       required: true,
+    },
+    flipside: {
+      type: Object as PropType<Image>,
+      required: false,
     },
   },
   computed: {},

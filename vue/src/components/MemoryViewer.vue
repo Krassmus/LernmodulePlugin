@@ -11,6 +11,7 @@
         v-for="card in this.cards"
         :key="card.uuid"
         :card="card"
+        :flipside="task.flipside"
         @click="onClickCard(card)"
       />
     </div>

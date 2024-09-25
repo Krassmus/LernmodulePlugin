@@ -46,6 +46,27 @@
         <input type="checkbox" v-model="taskDefinition.squareLayout" />
         {{ $gettext('Karten in einem Quadrat positionieren') }}
       </label>
+
+      <label
+        >{{ $gettext('Rückseite') }}
+        <div
+          v-if="
+            this.taskDefinition.flipside && this.taskDefinition.flipside.file_id
+          "
+          class="flipside-image-and-button-container"
+        >
+          <img
+            :src="fileIdToUrl(this.taskDefinition.flipside.file_id)"
+            :alt="this.taskDefinition.flipside.altText"
+            class="flipside-image"
+          />
+          <button type="button" @click="deleteFlipsideImage">
+            {{ $gettext('Bild Löschen') }}
+          </button>
+        </div>
+
+        <FileUpload v-else @file-uploaded="onFlipsideImageUploaded" />
+      </label>
     </fieldset>
   </form>
 </template>
@@ -97,20 +118,35 @@
   aspect-ratio: 1;
   display: flex;
 }
+
+.flipside-image-and-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 0.5em;
+}
+
+.flipside-image {
+  max-width: 100%;
+  max-height: 480px;
+}
 </style>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { taskEditorStore } from '@/store';
-import { MemoryCard, MemoryTask } from '@/models/TaskDefinition';
+import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';
 import EditedMemoryCard from '@/components/EditedMemoryCard.vue';
+import FileUpload from '@/components/FileUpload.vue';
+import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'MemoryEditor',
-  components: { EditedMemoryCard },
+  components: { FileUpload, EditedMemoryCard },
   props: {},
   data() {
     return {
@@ -123,6 +159,7 @@ export default defineComponent({
     }
   },
   methods: {
+    fileIdToUrl,
     $gettext,
     urlForIcon(iconName: string) {
       return (
@@ -176,6 +213,29 @@ export default defineComponent({
       if (index <= this.selectedCardIndex) {
         this.selectedCardIndex = this.selectedCardIndex - 1;
       }
+    },
+    onFlipsideImageUploaded(file: FileRef): void {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.flipside = {
+          uuid: v4(),
+          v: 2,
+          file_id: file.id,
+          altText: '',
+        };
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
+    },
+    deleteFlipsideImage(): void {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.flipside = undefined;
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
     },
   },
   computed: {

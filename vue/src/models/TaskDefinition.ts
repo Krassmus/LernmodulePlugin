@@ -157,6 +157,7 @@ export const memoryTaskSchema = z.object({
   task_type: z.literal('Memory'),
   cards: z.array(memoryCardSchema),
   squareLayout: z.boolean().optional(),
+  flipside: imageSchema.optional(),
   strings: z.object({
     checkButton: z.string(),
     retryButton: z.string(),
