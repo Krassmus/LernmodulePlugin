@@ -79,16 +79,15 @@ export default defineComponent({
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  backface-visibility: hidden;
 }
 
 .memory-card-front {
   transform: rotateY(180deg); /* Start rotated, flipped with the back side */
-  backface-visibility: visible;
 }
 
 .memory-card-back {
   transform: rotateY(0deg); /* Back side is initially visible */
-  backface-visibility: hidden;
 }
 
 .memory-card:not(.flipped):hover {
