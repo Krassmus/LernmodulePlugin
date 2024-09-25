@@ -6,6 +6,7 @@
   >
     <div class="memory-card-front">
       <img
+        v-if="card.file_id"
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"
         class="memory-card-image"
