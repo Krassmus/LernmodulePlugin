@@ -12,15 +12,13 @@
           }"
           @click="selectCard(index)"
         >
-          {{ index }}.
-          {{
-            card.first.altText === '' ? $gettext('Karte') : card.first.altText
-          }}
+          <div v-text="listEntryText(index, card)" class="list-entry-text" />
+
           <!-- Apply .stop modifier so that the selectCard event handler on the
             parent element doesn't get called when the delete button is clicked -->
           <button
             type="button"
-            class="flex-child-element removeAnswerButton"
+            class="flex-child-element remove-answer-button"
             @click.stop="deleteCard(index)"
           >
             <img :src="urlForIcon('trash')" :alt="$gettext('Karte löschen')" />
@@ -69,6 +67,8 @@
 .cards-list-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  border: transparent 2px solid;
 }
 
 .selected-card {
@@ -85,12 +85,24 @@
   justify-content: center;
   height: 200px;
 }
+
+.list-entry-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
+}
+
+.remove-answer-button {
+  aspect-ratio: 1;
+  display: flex;
+}
 </style>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { taskEditorStore } from '@/store';
-import { MemoryTask } from '@/models/TaskDefinition';
+import { MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';
@@ -119,6 +131,20 @@ export default defineComponent({
     },
     selectCard(index: number) {
       this.selectedCardIndex = index;
+    },
+    listEntryText(index: number, card: MemoryCard) {
+      let text = index + 1 + '. ';
+
+      if (card.first.altText != '') {
+        text += card.first.altText;
+
+        if (card.second && card.second?.altText != '') {
+          text += ' ' + $gettext('und') + ' ' + card.second.altText;
+        }
+      } else {
+        text += $gettext('Paar');
+      }
+      return text;
     },
     addCard() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
