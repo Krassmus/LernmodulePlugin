@@ -114,17 +114,10 @@ export default defineComponent({
 }
 
 @keyframes foundPairEffect {
-  0% {
-    transform: scale(1);
-  }
-  25% {
-    transform: scale(1.05);
-  }
-  75% {
+  50% {
     opacity: 1;
   }
   100% {
-    transform: scale(1);
     opacity: 0.6;
   }
 }
