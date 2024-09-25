@@ -13,7 +13,9 @@
           @click="selectCard(index)"
         >
           {{ index }}.
-          {{ card.altText === '' ? $gettext('Karte') : card.altText }}
+          {{
+            card.first.altText === '' ? $gettext('Karte') : card.first.altText
+          }}
           <!-- Apply .stop modifier so that the selectCard event handler on the
             parent element doesn't get called when the delete button is clicked -->
           <button
@@ -121,10 +123,12 @@ export default defineComponent({
     addCard() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.cards.push({
-          v: 2,
-          uuid: v4(),
-          file_id: '',
-          altText: '',
+          first: {
+            v: 2,
+            uuid: v4(),
+            file_id: '',
+            altText: '',
+          },
         });
       });
       taskEditorStore.performEdit({

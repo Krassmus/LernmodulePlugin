@@ -4,17 +4,43 @@
       <legend>{{ $gettext('Karte') }}</legend>
       <label
         >{{ $gettext('Bild') }}
-        <EditedMemoryCardImage v-if="card.file_id" :card="card" />
+        <EditedMemoryCardImage v-if="card.first.file_id" :image="card.first" />
         <FileUpload v-else @file-uploaded="onImageUploaded" />
       </label>
       <label
         >{{ $gettext('Alternativer Text') }}
         <input
           type="text"
-          :value="taskDefinition.cards[cardIndex].altText"
+          :value="taskDefinition.cards[cardIndex].first.altText"
           @input="onInputAltText"
         />
       </label>
+      <template v-if="card.second">
+        <label
+          >{{ $gettext('Bild') }}
+          <EditedMemoryCardImage
+            v-if="card.second.file_id"
+            :image="card.second"
+          />
+          <FileUpload v-else @file-uploaded="onBacksideImageUploaded" />
+        </label>
+        <label
+          >{{ $gettext('Alternativer Text') }}
+          <input
+            type="text"
+            :value="taskDefinition.cards[cardIndex].second?.altText"
+            @input="onInputBacksideAltText"
+          />
+        </label>
+      </template>
+      <button
+        v-else
+        type="button"
+        @click="addSecondImage"
+        class="memory-card-delete-image-button"
+      >
+        {{ $gettext('Zweites Bild hinzufügen') }}
+      </button>
     </fieldset>
   </form>
 </template>
@@ -28,6 +54,7 @@ import { $gettext } from '@/language/gettext';
 import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
+import { v4 } from 'uuid';
 
 export default defineComponent({
   name: 'EditedMemoryCard',
@@ -49,7 +76,21 @@ export default defineComponent({
     $gettext,
     onImageUploaded(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.cards[this.cardIndex].file_id = file.id;
+        draft.cards[this.cardIndex].first.file_id = file.id;
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition: newTaskDefinition,
+        undoBatch: {},
+      });
+    },
+    onBacksideImageUploaded(file: FileRef): void {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.cards[this.cardIndex].second = {
+          uuid: v4(),
+          v: 2,
+          file_id: file.id,
+          altText: '',
+        };
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
@@ -60,7 +101,7 @@ export default defineComponent({
     onInputAltText(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.cards[this.cardIndex].altText = value;
+        draft.cards[this.cardIndex].first.altText = value;
       });
       taskEditorStore.performEdit({
         newTaskDefinition,
@@ -70,7 +111,35 @@ export default defineComponent({
     // This is what results if you write v-model="taskDefinition.cards[this.cardIndex].altText"
     onInputAltTextBAD(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
-      this.taskDefinition.cards[this.cardIndex].altText = value;
+      this.taskDefinition.cards[this.cardIndex].first.altText = value;
+    },
+
+    onInputBacksideAltText(ev: InputEvent): void {
+      const value = (ev.target as HTMLInputElement).value;
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        const card = draft.cards[this.cardIndex];
+        if (card && card.second) {
+          draft.cards[this.cardIndex].second!.altText = value;
+        }
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition,
+        undoBatch: { type: 'EditedAltText' },
+      });
+    },
+    addSecondImage(): void {
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.cards[this.cardIndex].second = {
+          uuid: v4(),
+          v: 2,
+          file_id: '',
+          altText: '',
+        };
+      });
+      taskEditorStore.performEdit({
+        newTaskDefinition,
+        undoBatch: { type: 'AddedSecondImage' },
+      });
     },
   },
 });

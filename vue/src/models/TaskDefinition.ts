@@ -147,7 +147,10 @@ export const markTheWordsTaskSchema = z.object({
 });
 export type MarkTheWordsTask = z.infer<typeof markTheWordsTaskSchema>;
 
-export const memoryCardSchema = imageSchema;
+export const memoryCardSchema = z.object({
+  first: imageSchema,
+  second: imageSchema.optional(),
+});
 export type MemoryCard = z.infer<typeof memoryCardSchema>;
 
 export const memoryTaskSchema = z.object({
@@ -468,10 +471,12 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'Memory',
         cards: [
           {
-            uuid: v4(),
-            v: 2,
-            file_id: '',
-            altText: '',
+            first: {
+              uuid: v4(),
+              v: 2,
+              file_id: '',
+              altText: '',
+            },
           },
         ],
         squareLayout: true,

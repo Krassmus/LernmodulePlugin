@@ -69,12 +69,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MemoryTask, MemoryCard } from '@/models/TaskDefinition';
+import { MemoryTask, Image } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import MemoryCardComponent from '@/components/MemoryCard.vue';
 import { v4 } from 'uuid';
 
-export interface ViewerMemoryCard extends MemoryCard {
+export interface ViewerMemoryCard extends Image {
   flipped: boolean;
   solved: boolean;
   matchingCardId: string | undefined;
@@ -132,7 +132,12 @@ export default defineComponent({
           card.solved = true;
           const firstCard = this.getCardById(this.firstFlippedCardId);
           firstCard.solved = true;
-          console.log('Found a pair of', card.altText);
+          console.log(
+            'Found a pair of',
+            card.altText,
+            'and',
+            firstCard.altText
+          );
         }
 
         this.firstFlippedCardId = undefined;
@@ -255,28 +260,48 @@ export default defineComponent({
         console.log('watcher for this.task');
         this.firstFlippedCardId = undefined;
         this.amountOfFlips = 0;
+
         // Make two copies of each card in the task. Add the flipped, solved and matchingCardId attributes
         this.cards = this.task.cards.flatMap((card) => {
-          // The two copies of each card are linked to each other through the matchingCardId attribute
-          const duplicateCardId = v4();
-          return [
-            // The original card with the set matchingCardId attribute
-            {
-              ...card,
-              flipped: false,
-              solved: false,
-              uuid: card.uuid,
-              matchingCardId: duplicateCardId,
-            },
-            // The duplicate card
-            {
-              ...card,
-              flipped: false,
-              solved: false,
-              uuid: duplicateCardId,
-              matchingCardId: card.uuid,
-            },
-          ];
+          if (!card.second) {
+            // The two copies of each card are linked to each other through the matchingCardId attribute
+            const duplicateCardId = v4();
+            return [
+              // The original card with the set matchingCardId attribute
+              {
+                ...card.first,
+                flipped: false,
+                solved: false,
+                uuid: card.first.uuid,
+                matchingCardId: duplicateCardId,
+              },
+              // The duplicate card
+              {
+                ...card.first,
+                flipped: false,
+                solved: false,
+                uuid: duplicateCardId,
+                matchingCardId: card.first.uuid,
+              },
+            ];
+          } else {
+            return [
+              // The original card with the set matchingCardId attribute
+              {
+                ...card.first,
+                flipped: false,
+                solved: false,
+                matchingCardId: card.second.uuid,
+              },
+              // The second card
+              {
+                ...card.second,
+                flipped: false,
+                solved: false,
+                matchingCardId: card.first.uuid,
+              },
+            ];
+          }
         });
 
         // Shuffle the cards

@@ -1,8 +1,8 @@
 <template>
   <div class="memory-card-image-and-button-container">
     <img
-      :src="fileIdToUrl(card.file_id)"
-      :alt="card.altText"
+      :src="fileIdToUrl(image.file_id)"
+      :alt="image.altText"
       class="memory-card-image"
     />
     <button
@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
+import { fileIdToUrl, Image, MemoryTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
@@ -25,8 +25,8 @@ import { $gettext } from '@/language/gettext';
 export default defineComponent({
   name: 'EditedMemoryCardImage',
   props: {
-    card: {
-      type: Object as PropType<MemoryCard>,
+    image: {
+      type: Object as PropType<Image>,
       required: true,
     },
   },
@@ -39,9 +39,18 @@ export default defineComponent({
     deleteImage(): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         const cardIndex = draft.cards.findIndex(
-          (card) => card.uuid === this.card.uuid
+          (card) =>
+            card.first.uuid === this.image.uuid ||
+            card.second?.uuid === this.image.uuid
         );
-        draft.cards[cardIndex].file_id = '';
+        if (draft.cards[cardIndex].first.uuid === this.image.uuid) {
+          draft.cards[cardIndex].first.file_id = '';
+        }
+        if (draft.cards[cardIndex].second) {
+          if (draft.cards[cardIndex].second!.uuid === this.image.uuid) {
+            draft.cards[cardIndex].second = undefined;
+          }
+        }
       });
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
@@ -55,9 +64,9 @@ export default defineComponent({
 <style scoped>
 .memory-card-image-and-button-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
   gap: 0.5em;
 }
 
