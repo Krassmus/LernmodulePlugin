@@ -22,14 +22,14 @@
             v-if="card.second.file_id"
             :image="card.second"
           />
-          <FileUpload v-else @file-uploaded="onBacksideImageUploaded" />
+          <FileUpload v-else @file-uploaded="onSecondImageUploaded" />
         </label>
         <label
           >{{ $gettext('Alternativer Text') }}
           <input
             type="text"
             :value="taskDefinition.cards[cardIndex].second?.altText"
-            @input="onInputBacksideAltText"
+            @input="onInputSecondImageAltText"
           />
         </label>
       </template>
@@ -83,7 +83,7 @@ export default defineComponent({
         undoBatch: {},
       });
     },
-    onBacksideImageUploaded(file: FileRef): void {
+    onSecondImageUploaded(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.cards[this.cardIndex].second = {
           uuid: v4(),
@@ -114,7 +114,7 @@ export default defineComponent({
       this.taskDefinition.cards[this.cardIndex].first.altText = value;
     },
 
-    onInputBacksideAltText(ev: InputEvent): void {
+    onInputSecondImageAltText(ev: InputEvent): void {
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         const card = draft.cards[this.cardIndex];
