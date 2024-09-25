@@ -11,6 +11,7 @@
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"
         class="memory-card-image"
+        :class="{ 'solved-card': card.solved }"
       />
     </span>
     <span class="memory-card-back">
@@ -105,5 +106,26 @@ export default defineComponent({
 .memory-card:not(.flipped):hover {
   border-color: rgb(0, 78, 159);
   box-shadow: 0 0 8px rgb(0, 78, 159);
+}
+
+.solved-card {
+  animation: foundPairEffect 1s ease-in-out;
+  animation-fill-mode: forwards; /* Ensures final state persists */
+}
+
+@keyframes foundPairEffect {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.05);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
 }
 </style>
