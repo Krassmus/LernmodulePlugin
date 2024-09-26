@@ -1,3 +1,14 @@
+#stud5p-app {
+  max-width: 1095px;
+  box-sizing: border-box;
+}
+
+.stud5p-viewer {
+  border: 2px solid #eee;
+  padding: 0.5em;
+  line-height: 1.75em;
+}
+
 /* Replace the border between toolbar and WYSIWYG textarea that is missing
 when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 */
@@ -10,18 +21,12 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 }
 
 .lernmodule_infotext {
+  max-width: 1095px;
+  box-sizing: border-box;
   font-size: 18px;
   font-weight: bold;
   line-height: 1.75em;
   font-family: Lato, sans-serif;
-  max-width: 1095px;
-  box-sizing: border-box;
-}
-
-.h5p-module {
-  border: 2px solid #eee;
-  padding: 0.5em 0.5em 0.5em 0.5em;
-  line-height: 1.75em;
 }
 
 .h5p-button-panel {

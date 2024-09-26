@@ -1,5 +1,5 @@
 <template>
-  <div class="h5p-module" ref="wrapperElement">
+  <div class="stud5p-drag-the-words" ref="wrapperElement">
     <div class="text-and-answers-container">
       <div class="drag-the-words-text">
         <template v-for="element in parsedTemplate" :key="element.uuid">

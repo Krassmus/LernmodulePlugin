@@ -1,5 +1,5 @@
 <template>
-  <div class="sequencing-viewer">
+  <div class="stud5p-sequencing">
     <div
       v-for="image in this.images"
       :key="image.uuid"
@@ -189,7 +189,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.sequencing-viewer {
+.stud5p-sequencing {
   display: flex;
   flex-direction: row;
   padding-bottom: 1em;

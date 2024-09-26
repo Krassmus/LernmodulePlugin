@@ -1,5 +1,5 @@
 <template>
-  <div class="pairingRow">
+  <div class="stud5p-pairing">
     <div
       class="draggableElementsColumn"
       draggable="false"
@@ -367,7 +367,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.pairingRow {
+.stud5p-pairing {
   display: flex;
   flex-direction: row;
 }

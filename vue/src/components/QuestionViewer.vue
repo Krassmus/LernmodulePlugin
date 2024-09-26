@@ -1,6 +1,6 @@
 <template>
-  <div class="h5p-module">
-    <div class="h5pQuestion" v-html="this.task.question" />
+  <div class="stud5p-question">
+    <div v-html="this.task.question" />
     <template v-if="task.canAnswerMultiple">
       <template v-for="(answer, i) in answers" :key="i">
         <label :class="classForAnswer(answer)">
