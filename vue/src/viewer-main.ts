@@ -7,4 +7,4 @@ import './assets/global.css';
 const app = createApp(LernmoduleViewer);
 app.directive('disable-drag', disableDrag);
 app.use(gettextPlugin);
-app.mount('#app');
+app.mount('#stud5p-app');

@@ -1,5 +1,5 @@
 <!--<div>--><?php //= Config::get()->LERNMODULE_DEBUG ? 'LERNMODULE_DEBUG = ' . Config::get()->LERNMODULE_DEBUG : '' ?><!--</div>-->
-<div id="app">
+<div id="stud5p-app">
     <?php if (!Config::get()->LERNMODULE_DEBUG) : ?>
   <div style='display: none;'> <?php endif ?>
     <h1>Vuejs View template</h1>

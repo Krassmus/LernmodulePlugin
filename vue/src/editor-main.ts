@@ -17,7 +17,7 @@ function init() {
     const app = createApp(ErrorMessage, {
       error: errorMessage,
     });
-    app.mount('#app');
+    app.mount('#stud5p-app');
     return;
   }
 
@@ -33,5 +33,5 @@ function init() {
   // task editor.
   // https://vuejs.org/guide/components/provide-inject.html#working-with-reactivity
   app.config.unwrapInjectedRef = true;
-  app.mount('#app');
+  app.mount('#stud5p-app');
 }
