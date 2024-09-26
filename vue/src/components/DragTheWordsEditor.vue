@@ -26,6 +26,10 @@
 
       <label style="margin-top: 1.5ex">
         {{ $gettext('Irreführende Antworten') }}
+        <span
+          class="tooltip tooltip-icon"
+          :data-tooltip="distratorInstructions"
+        />
         <input type="text" v-model="taskDefinition.distractors" />
       </label>
     </fieldset>
@@ -203,8 +207,13 @@ export default defineComponent({
 
     instructions(): string {
       return $gettext(
-        'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den „Lücke hinzufügen“–Button.' +
-          ' Außerdem können Sie einen Tooltip mit einem Doppelpunkt (:) hinzufügen.'
+        'Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button „Lücke hinzufügen“. Sie können auch einen Tooltip hinzufügen, indem Sie einen Doppelpunkt (:) vor den Tooltip-Text schreiben.'
+      );
+    },
+
+    distratorInstructions(): string {
+      return $gettext(
+        'Geben Sie falsche Antworten als Distraktoren ein. Verwenden Sie das gleiche Sternchen (*)-Schema wie im Text.'
       );
     },
 
