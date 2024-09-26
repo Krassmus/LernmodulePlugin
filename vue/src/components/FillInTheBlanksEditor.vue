@@ -235,9 +235,7 @@ export default defineComponent({
 
     instructions(): string {
       return $gettext(
-        'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den „Lücke hinzufügen“–Button.' +
-          ' Sie können alternative Antworten mit einem Schrägstrich (/) hinzufügen.' +
-          ' Außerdem können Sie einen Tooltip mit einem Doppelpunkt (:) hinzufügen.'
+        'Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button „Lücke hinzufügen“. Sie können auch einen Tooltip hinzufügen, indem Sie einen Doppelpunkt (:) vor den Tooltip-Text schreiben.'
       );
     },
   },
