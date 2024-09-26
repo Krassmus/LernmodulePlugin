@@ -1,7 +1,7 @@
 <template>
   <div class="h5p-module">
     <div
-      class="h5pMemoryGame"
+      class="memory-grid"
       :style="{
         gridTemplateColumns: gridTemplateColumns,
         gridTemplateRows: gridTemplateRows,
@@ -320,9 +320,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.h5pMemoryGame {
+.memory-grid {
   display: grid;
   grid-gap: 1em;
+  justify-items: center;
 }
 
 .memory-info-header {
