@@ -12,7 +12,7 @@
             :disabled="isSubmitted"
           />
           {{ answer.text }}
-          <div
+          <span
             v-if="answer.strings.hint && !isSubmitted"
             class="tooltip tooltip-icon answer-tooltip"
             :data-tooltip="answer.strings.hint"
