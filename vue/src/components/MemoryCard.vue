@@ -61,6 +61,7 @@ export default defineComponent({
   align-items: center;
 
   width: 100%;
+  max-width: 14em;
   aspect-ratio: 1;
 
   border: 2px solid #d0d7e3;
@@ -70,7 +71,7 @@ export default defineComponent({
   transform-style: preserve-3d;
   perspective: 1000px;
 
-  transition: transform 0.64s ease-in-out, border-color 0.12s ease-in-out,
+  transition: transform 0.48s ease-in-out, border-color 0.12s ease-in-out,
     box-shadow 0.24s ease-in-out;
 }
 
