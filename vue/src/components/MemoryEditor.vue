@@ -150,8 +150,8 @@
 }
 
 .flipside-image {
-  max-width: 100%;
-  max-height: 480px;
+  max-width: 14em;
+  max-height: 14em;
 }
 </style>
 
