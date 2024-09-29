@@ -20,8 +20,9 @@
             type="button"
             class="flex-child-element remove-card-button"
             @click.stop="deleteCard(index)"
+            :aria-label="$pgettext('Karte im Memory Spiel', 'Karte löschen')"
           >
-            <img :src="urlForIcon('trash')" :alt="$gettext('Karte löschen')" />
+            <img :src="urlForIcon('trash')" alt="" />
           </button>
         </div>
         <button type="button" class="button add-card-button" @click="addCard">
@@ -94,6 +95,7 @@
   justify-content: space-between;
   align-items: center;
   border: transparent 2px solid;
+  padding: 2px;
 }
 
 .selected-card {
@@ -121,6 +123,10 @@
 .remove-card-button {
   aspect-ratio: 1;
   display: flex;
+  border: 1px solid #28497c;
+  color: #28497c;
+  background: #fff;
+  cursor: pointer;
 }
 
 .remove-card-button:hover {
