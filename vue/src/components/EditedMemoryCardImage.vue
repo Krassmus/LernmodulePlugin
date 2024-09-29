@@ -72,6 +72,6 @@ export default defineComponent({
 
 .memory-card-image {
   max-width: 100%;
-  max-height: 480px;
+  max-height: 14em;
 }
 </style>
