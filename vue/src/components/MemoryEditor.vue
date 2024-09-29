@@ -18,13 +18,13 @@
             parent element doesn't get called when the delete button is clicked -->
           <button
             type="button"
-            class="flex-child-element remove-answer-button"
+            class="flex-child-element remove-card-button"
             @click.stop="deleteCard(index)"
           >
             <img :src="urlForIcon('trash')" :alt="$gettext('Karte löschen')" />
           </button>
         </div>
-        <button type="button" @click="addCard">
+        <button type="button" class="button add-card-button" @click="addCard">
           {{ $gettext('Karte hinzufügen') }}
         </button>
       </div>
@@ -60,7 +60,11 @@
             :alt="this.taskDefinition.flipside.altText"
             class="flipside-image"
           />
-          <button type="button" @click="deleteFlipsideImage">
+          <button
+            type="button"
+            class="button delete-flipside-image-button"
+            @click="deleteFlipsideImage"
+          >
             {{ $gettext('Bild Löschen') }}
           </button>
         </div>
@@ -114,9 +118,21 @@
   max-width: 80%;
 }
 
-.remove-answer-button {
+.remove-card-button {
   aspect-ratio: 1;
   display: flex;
+}
+
+.remove-card-button:hover {
+  background: rgba(109, 114, 122, 0.2);
+}
+
+.add-card-button {
+  margin: 0.8em 0 0 0;
+}
+
+.delete-flipside-image-button {
+  margin: 0;
 }
 
 .flipside-image-and-button-container {

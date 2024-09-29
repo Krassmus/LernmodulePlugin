@@ -8,7 +8,7 @@
     <button
       type="button"
       @click="deleteImage"
-      class="memory-card-delete-image-button"
+      class="button delete-image-button"
     >
       {{ $gettext('Bild Löschen') }}
     </button>
@@ -73,5 +73,9 @@ export default defineComponent({
 .memory-card-image {
   max-width: 100%;
   max-height: 14em;
+}
+
+.delete-image-button {
+  margin: 0;
 }
 </style>

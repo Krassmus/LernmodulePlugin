@@ -37,7 +37,7 @@
         v-else
         type="button"
         @click="addSecondImage"
-        class="memory-card-delete-image-button"
+        class="button add-image-button"
       >
         {{ $gettext('Zweites Bild hinzufügen') }}
       </button>
@@ -145,4 +145,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.add-image-button {
+  margin: 0;
+}
+</style>
