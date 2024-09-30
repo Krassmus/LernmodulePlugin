@@ -38,20 +38,21 @@ export default defineComponent({
     $gettext,
     deleteImage(): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        const cardIndex = draft.cards.findIndex(
+        const card = draft.cards.find(
           (card) =>
             card.first.uuid === this.image.uuid ||
             card.second?.uuid === this.image.uuid
         );
-        if (draft.cards[cardIndex].first.uuid === this.image.uuid) {
-          draft.cards[cardIndex].first.file_id = '';
-        }
-        if (draft.cards[cardIndex].second) {
-          if (draft.cards[cardIndex].second!.uuid === this.image.uuid) {
-            draft.cards[cardIndex].second = undefined;
+
+        if (card) {
+          if (card.first.uuid === this.image.uuid) {
+            card.first.file_id = '';
+          } else if (card.second?.uuid === this.image.uuid) {
+            card.second = undefined;
           }
         }
       });
+
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
