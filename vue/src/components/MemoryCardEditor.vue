@@ -2,12 +2,14 @@
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Karte') }}</legend>
-      <label
-        >{{ $gettext('Bild') }}
+      <label for="firstImage">{{
+        $gettext(card.second ? 'Erstes Bild' : 'Bild')
+      }}</label>
+      <div id="firstImage" class="memory-card-preview-and-upload-container">
         <MemoryCardEditorImage v-if="card.first.file_id" :image="card.first" />
         <FileUpload v-else @file-uploaded="onImageUploaded" />
-      </label>
-      <label
+      </div>
+      <label v-if="card.first.file_id"
         >{{ $gettext('Alternativer Text') }}
         <input
           type="text"
@@ -16,14 +18,14 @@
         />
       </label>
       <template v-if="card.second">
-        <label
-          >{{ $gettext('Bild') }}
+        <label for="secondImage">{{ $gettext('Zweites Bild') }} </label>
+        <div id="secondImage" class="memory-card-preview-and-upload-container">
           <MemoryCardEditorImage
             v-if="card.second.file_id"
             :image="card.second"
           />
           <FileUpload v-else @file-uploaded="onSecondImageUploaded" />
-        </label>
+        </div>
         <label
           >{{ $gettext('Alternativer Text') }}
           <input
@@ -148,5 +150,9 @@ export default defineComponent({
 <style scoped>
 .add-image-button {
   margin: 0;
+}
+
+.memory-card-preview-and-upload-container {
+  margin-bottom: 0.5em;
 }
 </style>
