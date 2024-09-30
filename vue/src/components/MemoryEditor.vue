@@ -50,7 +50,7 @@
 
       <label
         >{{ $gettext('Rückseite') }}
-        <div
+        <span
           v-if="
             this.taskDefinition.flipside && this.taskDefinition.flipside.file_id
           "
@@ -68,7 +68,7 @@
           >
             {{ $gettext('Bild Löschen') }}
           </button>
-        </div>
+        </span>
 
         <FileUpload v-else @file-uploaded="onFlipsideImageUploaded" />
       </label>
