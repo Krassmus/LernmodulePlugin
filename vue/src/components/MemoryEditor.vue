@@ -81,8 +81,6 @@
 <style scoped>
 .main-flex {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
   gap: 1em;
 }
 
@@ -90,6 +88,7 @@
   display: flex;
   flex-direction: column;
   flex: 0 0 200px;
+  max-width: 14em;
 }
 
 .cards-list-item {
@@ -98,6 +97,8 @@
   align-items: center;
   border: transparent 2px solid;
   padding: 2px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .selected-card {
@@ -119,7 +120,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 80%;
+  max-width: 11em;
 }
 
 .remove-card-button {
