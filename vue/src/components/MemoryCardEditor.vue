@@ -4,7 +4,7 @@
       <legend>{{ $gettext('Karte') }}</legend>
       <label
         >{{ $gettext('Bild') }}
-        <EditedMemoryCardImage v-if="card.first.file_id" :image="card.first" />
+        <MemoryCardEditorImage v-if="card.first.file_id" :image="card.first" />
         <FileUpload v-else @file-uploaded="onImageUploaded" />
       </label>
       <label
@@ -18,7 +18,7 @@
       <template v-if="card.second">
         <label
           >{{ $gettext('Bild') }}
-          <EditedMemoryCardImage
+          <MemoryCardEditorImage
             v-if="card.second.file_id"
             :image="card.second"
           />
@@ -51,14 +51,14 @@ import { MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
-import EditedMemoryCardImage from '@/components/EditedMemoryCardImage.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 import { v4 } from 'uuid';
+import MemoryCardEditorImage from '@/components/MemoryCardEditorImage.vue';
 
 export default defineComponent({
-  name: 'EditedMemoryCard',
-  components: { FileUpload, EditedMemoryCardImage },
+  name: 'MemoryCardEditor',
+  components: { MemoryCardEditorImage, FileUpload },
   props: {
     card: {
       type: Object as PropType<MemoryCard>,

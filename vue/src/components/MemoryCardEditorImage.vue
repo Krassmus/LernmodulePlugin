@@ -23,7 +23,7 @@ import produce from 'immer';
 import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
-  name: 'EditedMemoryCardImage',
+  name: 'MemoryCardEditorImage',
   props: {
     image: {
       type: Object as PropType<Image>,

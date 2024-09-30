@@ -30,7 +30,7 @@
         </button>
       </div>
 
-      <EditedMemoryCard
+      <MemoryCardEditor
         v-if="this.taskDefinition.cards[this.selectedCardIndex]"
         class="edited-memory-card"
         :card="this.taskDefinition.cards[this.selectedCardIndex]"
@@ -162,13 +162,13 @@ import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';
-import EditedMemoryCard from '@/components/EditedMemoryCard.vue';
+import MemoryCardEditor from '@/components/MemoryCardEditor.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'MemoryEditor',
-  components: { FileUpload, EditedMemoryCard },
+  components: { FileUpload, MemoryCardEditor },
   props: {},
   data() {
     return {
