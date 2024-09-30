@@ -56,11 +56,13 @@
           "
           class="flipside-image-and-button-container"
         >
-          <img
-            :src="fileIdToUrl(this.taskDefinition.flipside.file_id)"
-            :alt="this.taskDefinition.flipside.altText"
-            class="flipside-image"
-          />
+          <span class="memory-card-flipside">
+            <img
+              :src="fileIdToUrl(this.taskDefinition.flipside.file_id)"
+              :alt="this.taskDefinition.flipside.altText"
+              class="flipside-image"
+            />
+          </span>
           <button
             type="button"
             class="button delete-flipside-image-button"
@@ -149,9 +151,24 @@
   gap: 0.5em;
 }
 
-.flipside-image {
+.memory-card-flipside {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
   max-width: 14em;
-  max-height: 14em;
+  aspect-ratio: 1;
+
+  border: 2px solid #d0d7e3;
+  color: #28497c;
+  background: #e7ebf1;
+}
+
+.flipside-image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 </style>
 
