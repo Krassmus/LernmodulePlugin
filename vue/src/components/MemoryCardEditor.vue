@@ -26,7 +26,7 @@
           />
           <FileUpload v-else @file-uploaded="onSecondImageUploaded" />
         </div>
-        <label
+        <label v-if="card.second.file_id"
           >{{ $gettext('Alternativer Text') }}
           <input
             type="text"
@@ -36,7 +36,7 @@
         </label>
       </template>
       <button
-        v-else
+        v-else-if="card.first.file_id"
         type="button"
         @click="addSecondImage"
         class="button add-image-button"
