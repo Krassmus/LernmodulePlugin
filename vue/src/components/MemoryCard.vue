@@ -8,6 +8,7 @@
     <span class="memory-card-front">
       <img
         v-if="card.file_id"
+        v-disable-drag
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"
         class="memory-card-image"
@@ -17,12 +18,14 @@
     <span class="memory-card-back">
       <img
         v-if="flipside"
+        v-disable-drag
         :src="fileIdToUrl(flipside.file_id)"
         :alt="flipside.altText"
         class="memory-card-image"
       />
       <img
         v-else
+        v-disable-drag
         src="../assets/memoryCardBack.png"
         alt="The back of a card in the memory game."
         class="memory-card-image"

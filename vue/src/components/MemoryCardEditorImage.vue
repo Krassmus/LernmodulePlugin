@@ -1,10 +1,12 @@
 <template>
-  <div class="memory-card-image-and-button-container">
-    <img
-      :src="fileIdToUrl(image.file_id)"
-      :alt="image.altText"
-      class="memory-card-image"
-    />
+  <div class="memory-card-image-and-button-container" v-disable-drag>
+    <div class="memory-card">
+      <img
+        :src="fileIdToUrl(image.file_id)"
+        :alt="image.altText"
+        class="memory-card-image"
+      />
+    </div>
     <button
       type="button"
       @click="deleteImage"
@@ -71,9 +73,24 @@ export default defineComponent({
   gap: 0.5em;
 }
 
+.memory-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  max-width: 14em;
+  aspect-ratio: 1;
+
+  border: 2px solid #d0d7e3;
+  color: #28497c;
+  background: #e7ebf1;
+}
+
 .memory-card-image {
-  max-width: 100%;
-  max-height: 14em;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
 }
 
 .delete-image-button {
