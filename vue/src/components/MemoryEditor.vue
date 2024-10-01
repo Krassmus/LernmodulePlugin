@@ -25,7 +25,11 @@
             <img :src="urlForIcon('trash')" alt="" />
           </button>
         </div>
-        <button type="button" class="button add-card-button" @click="addCard">
+        <button
+          type="button"
+          class="button add add-card-button"
+          @click="addCard"
+        >
           {{ $gettext('Karte hinzufügen') }}
         </button>
       </div>
