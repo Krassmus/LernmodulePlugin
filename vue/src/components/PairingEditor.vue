@@ -76,6 +76,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { taskEditorStore } from '@/store';
 
 export default defineComponent({
   name: 'PairingEditor',
@@ -90,12 +91,6 @@ export default defineComponent({
     return {
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
-  },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<PairingTask>,
-      required: true,
-    },
   },
   data() {
     return {
@@ -186,7 +181,10 @@ export default defineComponent({
     },
   },
   computed: {
+    taskDefinition: () => taskEditorStore.taskDefinition as PairingTask,
+
     debug: () => window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG,
+
     selectedPair(): Pair | undefined {
       return this.taskDefinition.pairs[this.selectedPairIndex];
     },

@@ -195,13 +195,9 @@ export default defineComponent({
     };
   },
   components: { StudipWysiwyg },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<DragTheWordsTask>,
-      required: true,
-    },
-  },
   computed: {
+    taskDefinition: () => taskEditorStore.taskDefinition as DragTheWordsTask,
+
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
 

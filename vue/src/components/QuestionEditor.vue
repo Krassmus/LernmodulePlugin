@@ -211,12 +211,6 @@ export default defineComponent({
     };
   },
   components: { StudipWysiwyg },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<QuestionTask>,
-      required: true,
-    },
-  },
   methods: {
     $gettext,
     addAnswer(): void {
@@ -290,6 +284,8 @@ export default defineComponent({
     },
   },
   computed: {
+    taskDefinition: () => taskEditorStore.taskDefinition as QuestionTask,
+
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
 

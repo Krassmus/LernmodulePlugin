@@ -108,12 +108,6 @@ import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 export default defineComponent({
   name: 'MarkTheWordsEditor',
   components: { StudipWysiwyg },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<MarkTheWordsTask>,
-      required: true,
-    },
-  },
   methods: {
     $gettext,
 
@@ -168,6 +162,8 @@ export default defineComponent({
   },
 
   computed: {
+    taskDefinition: () => taskEditorStore.taskDefinition as MarkTheWordsTask,
+
     instructions(): string {
       return $gettext(
         'Markieren Sie ein Wort als Lösung, indem Sie ein Sternchen (*) vor und hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den „Richtiges Wort markieren“–Button.'

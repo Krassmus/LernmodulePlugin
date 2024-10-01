@@ -191,7 +191,6 @@ import { FileRef } from '@/routes/jsonApi';
 export default defineComponent({
   name: 'MemoryEditor',
   components: { FileUpload, MemoryCardEditor },
-  props: {},
   data() {
     return {
       selectedCardIndex: -1,

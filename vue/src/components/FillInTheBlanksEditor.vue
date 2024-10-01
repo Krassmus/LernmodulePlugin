@@ -220,13 +220,9 @@ export default defineComponent({
     };
   },
   components: { StudipWysiwyg },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<FillInTheBlanksTask>,
-      required: true,
-    },
-  },
   computed: {
+    taskDefinition: () => taskEditorStore.taskDefinition as FillInTheBlanksTask,
+
     feedbackSortedByScore(): Feedback[] {
       return this.taskDefinition.feedback
         .map((value) => value)
