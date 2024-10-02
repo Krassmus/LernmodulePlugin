@@ -1,15 +1,15 @@
 <template>
   <div class="stud5p-sequencing">
     <div
-      v-for="(image, index) in this.images"
+      v-for="(image, index) in images"
       :key="image.uuid"
       class="image-container"
       :class="{
-        grabbable: !this.showResults,
-        correct: this.showResults && isImageInCorrectPosition[index],
-        incorrect: this.showResults && !isImageInCorrectPosition[index],
+        grabbable: !showResults,
+        correct: showResults && isImageInCorrectPosition[index],
+        incorrect: showResults && !isImageInCorrectPosition[index],
       }"
-      :draggable="!this.showResults"
+      :draggable="!showResults"
       @dragstart="startDragImage(image)"
       @dragover="onDragOver(image)"
       @drop="onDropImage()"
@@ -38,16 +38,16 @@
 
   <div class="h5p-button-panel">
     <button
-      v-if="!this.showResults"
-      v-text="this.task.strings.checkButton"
+      v-if="!showResults"
+      v-text="task.strings.checkButton"
       @click="checkResults()"
       type="button"
       class="h5p-button"
     />
 
     <button
-      v-if="this.showResults"
-      v-text="this.task.strings.retryButton"
+      v-if="showResults"
+      v-text="task.strings.retryButton"
       @click="reset()"
       type="button"
       class="h5p-button"
