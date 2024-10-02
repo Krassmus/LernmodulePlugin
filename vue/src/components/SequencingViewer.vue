@@ -5,14 +5,16 @@
       :key="image.uuid"
       class="image-container"
       :class="{
+        dragged: imageInteractedWith === image,
         disabled: showResults,
         correct: showResults && isImageInCorrectPosition(image),
         incorrect: showResults && !isImageInCorrectPosition(image),
       }"
       :draggable="!showResults"
-      @dragstart="startDragImage(image)"
+      @dragstart="(event) => startDragImage(image, event)"
+      @drag="onDrag(image)"
+      @dragend="endDragImage(image)"
       @dragover="onDragOver(image)"
-      @drop="onDropImage()"
     >
       <img
         class="image"
@@ -89,13 +91,34 @@ export default defineComponent({
     fileIdToUrl,
     $gettext,
 
-    startDragImage(image: Image) {
-      console.log('Dragging image', image.altText);
+    startDragImage(image: Image, event: DragEvent) {
+      console.log('Starting to drag image', image.altText);
       this.imageInteractedWith = image;
+
+      if (event.dataTransfer) {
+        const emptyDiv = document.createElement('div');
+
+        emptyDiv.style.background = 'white';
+        emptyDiv.style.width = '1px';
+        emptyDiv.style.height = '1px';
+        emptyDiv.style.opacity = '0.01';
+
+        document.body.appendChild(emptyDiv);
+        event.dataTransfer.setDragImage(emptyDiv, 0, 0);
+
+        // Remove the div after the drag has started
+        setTimeout(() => {
+          document.body.removeChild(emptyDiv);
+        }, 0);
+      }
     },
 
-    onDropImage(): void {
-      console.log('Dropped image', this.imageInteractedWith?.altText);
+    onDrag(image: Image) {
+      console.log('Dragging image', image.altText);
+    },
+
+    endDragImage(image: Image) {
+      console.log('Ending to drag image', image.altText);
       this.imageInteractedWith = undefined;
     },
 
@@ -209,18 +232,22 @@ export default defineComponent({
   border-radius: 6px;
   margin: 6px;
   padding: 6px;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.12s ease, border 0.12s ease,
+    box-shadow 0.12s ease;
   cursor: grab;
   user-select: none;
+  background: #fff;
 }
 
-.image-container.selected {
-  border: 2px solid #7ba4d3;
-}
-
-.image-container:not(.disabled):not(.selected):hover {
+.image-container:not(.disabled):hover {
   border: 2px solid #7ba4d3;
   box-shadow: 0 0 10px 0 #406ef3;
+}
+
+.dragged {
+  border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
+  background-color: #dcf6ff;
 }
 
 .correct {
