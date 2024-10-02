@@ -3,6 +3,7 @@
     <div class="fill-in-the-blanks-text">
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <span v-if="element.type === 'staticText'" v-html="element.text" />
+
         <template v-else-if="element.type === 'blank'">
           <input
             type="text"
@@ -15,9 +16,11 @@
             @input="onInput"
             ref="blanks"
           />
+
           <label v-if="element.hint">
             <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
           </label>
+
           <span
             v-if="showSolutions && !submittedAnswerIsCorrect(element)"
             class="h5p-solution"
@@ -82,32 +85,38 @@ import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
 type FillInTheBlanksElement = Blank | StaticText;
+
 type Blank = {
   type: 'blank';
   uuid: Uuid;
   solutions: string[];
   hint: string;
 };
+
 type StaticText = {
   type: 'staticText';
   uuid: Uuid;
   text: string;
 };
+
 type Uuid = string;
 
 const dljs = require('damerau-levenshtein-js');
 
 export default defineComponent({
   name: 'FillInTheBlanksViewer',
+
   components: {
     FeedbackElement,
   },
+
   props: {
     task: {
       type: Object as PropType<FillInTheBlanksTask>,
       required: true,
     },
   },
+
   data() {
     return {
       userInputs: {} as Record<Uuid, string>,
@@ -116,6 +125,7 @@ export default defineComponent({
       editable: true,
     };
   },
+
   methods: {
     $gettext,
 
@@ -331,6 +341,7 @@ export default defineComponent({
       );
     },
   },
+
   computed: {
     splitTemplate(): string[] {
       // Returns an array where the even indexes are the static text portions,
@@ -486,12 +497,10 @@ export default defineComponent({
 <style scoped>
 input[type='text'] {
   max-height: 1em;
-  font-family: Lato, sans-serif;
 }
 
 .fill-in-the-blanks-text {
   word-break: break-word;
-  font-size: 16px;
 }
 
 .h5pBlankCorrect {
@@ -524,9 +533,7 @@ input[type='text'] {
 }
 
 .h5pMessage {
-  font-size: 1em;
   color: #1a73d9;
-  font-weight: 700;
   padding-top: 0.5em;
 }
 </style>
