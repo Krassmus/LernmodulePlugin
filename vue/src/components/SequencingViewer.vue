@@ -59,21 +59,24 @@
 import { defineComponent, PropType } from 'vue';
 import { fileIdToUrl, Image, SequencingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
-import { taskEditorStore } from '@/store';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
 export default defineComponent({
   name: 'SequencingViewer',
+
   components: {
     FeedbackElement,
   },
+
   props: {
     task: {
       type: Object as PropType<SequencingTask>,
       required: true,
     },
   },
+
   emits: ['updateAttempt'],
+
   data() {
     return {
       images: [] as Image[],
@@ -81,18 +84,10 @@ export default defineComponent({
       showResults: false as boolean,
     };
   },
-  beforeMount(): void {
-    console.log('Before Mount');
-  },
+
   methods: {
     fileIdToUrl,
     $gettext,
-
-    urlForIcon(iconName: string) {
-      return (
-        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
-      );
-    },
 
     startDragImage(image: Image) {
       console.log('Dragging image', image.altText);
@@ -149,8 +144,8 @@ export default defineComponent({
         .map(({ image }) => image);
     },
   },
+
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as SequencingTask,
     correctAnswers(): Number {
       let correctAnswers = 0;
       for (let i = 0; i < this.task.images.length; i++) {
@@ -160,9 +155,11 @@ export default defineComponent({
       }
       return correctAnswers;
     },
+
     maxPoints(): Number {
       return this.task.images.length;
     },
+
     resultMessage(): string {
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
@@ -183,6 +180,7 @@ export default defineComponent({
       });
     },
   },
+
   watch: {
     task: {
       handler() {
