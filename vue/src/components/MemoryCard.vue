@@ -108,8 +108,9 @@ export default defineComponent({
 }
 
 .memory-card:not(.flipped):hover {
-  border-color: rgb(0, 78, 159);
-  box-shadow: 0 0 8px rgb(0, 78, 159);
+  cursor: grab;
+  border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
 }
 
 .solved-card {
