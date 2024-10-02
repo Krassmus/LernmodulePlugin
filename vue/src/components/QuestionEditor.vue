@@ -315,6 +315,7 @@ export default defineComponent({
 .removeAnswerButton {
   align-self: stretch; /* Make the item fill the available height */
   display: flex;
+  align-items: center;
 }
 
 .feedback {
