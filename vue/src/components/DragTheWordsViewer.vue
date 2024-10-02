@@ -549,18 +549,15 @@ export default defineComponent({
   display: inline;
   background: #ffffff;
   color: #000000;
-  font-size: 16px;
 }
 
 .blank {
   display: inline-block;
   background: #cee0f4;
   color: #1a4473;
-  font-size: 16px;
   border: 1px solid #a9c3d0;
   border-radius: 0.25em;
   min-width: 9em;
-  line-height: 1.5;
 }
 
 .filled-blank {
@@ -603,11 +600,9 @@ span.item:empty:before {
   background: #ddd;
   box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
 
-  font-size: 16px;
   border-radius: 0.25em;
   min-width: 9em;
   max-width: 9em;
-  line-height: 1.5;
 }
 
 .unused-answer:not(.disabled):hover {
@@ -629,9 +624,7 @@ span.item:empty:before {
 }
 
 .message {
-  font-size: 1em;
   color: #1a73d9;
-  font-weight: 700;
   padding-top: 0.5em;
 }
 
@@ -647,7 +640,6 @@ span.item:empty:before {
 
 .drag-the-words-text {
   flex-grow: 1;
-  line-height: 1.875;
 }
 
 .feedback-and-button-container {
