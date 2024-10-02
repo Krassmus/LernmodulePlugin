@@ -5,7 +5,7 @@
       :key="image.uuid"
       class="image-container"
       :class="{
-        grabbable: !showResults,
+        disabled: showResults,
         correct: showResults && isImageInCorrectPosition[index],
         incorrect: showResults && !isImageInCorrectPosition[index],
       }"
@@ -213,6 +213,17 @@ export default defineComponent({
   margin: 6px;
   padding: 6px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: grab;
+  user-select: none;
+}
+
+.image-container.selected {
+  border: 2px solid #7ba4d3;
+}
+
+.image-container:not(.disabled):not(.selected):hover {
+  border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
 }
 
 .correct {
@@ -225,8 +236,8 @@ export default defineComponent({
   border-color: #f7d0d0;
 }
 
-.grabbable {
-  cursor: grab;
+.disabled {
+  cursor: default;
 }
 
 .image {
