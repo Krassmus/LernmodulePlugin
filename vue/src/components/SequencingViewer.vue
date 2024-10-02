@@ -1,13 +1,13 @@
 <template>
   <div class="stud5p-sequencing">
     <div
-      v-for="(image, index) in images"
+      v-for="image in images"
       :key="image.uuid"
       class="image-container"
       :class="{
         disabled: showResults,
-        correct: showResults && isImageInCorrectPosition[index],
-        incorrect: showResults && !isImageInCorrectPosition[index],
+        correct: showResults && isImageInCorrectPosition(image),
+        incorrect: showResults && !isImageInCorrectPosition(image),
       }"
       :draggable="!showResults"
       @dragstart="startDragImage(image)"
@@ -126,6 +126,11 @@ export default defineComponent({
       array.splice(toIndex, 0, element);
     },
 
+    isImageInCorrectPosition(image: Image): boolean {
+      const index = this.images.findIndex((img) => img.uuid === image.uuid);
+      return index !== -1 && this.task.images[index].uuid === image.uuid;
+    },
+
     checkResults(): void {
       this.showResults = true;
     },
@@ -172,12 +177,6 @@ export default defineComponent({
       );
 
       return resultMessage;
-    },
-
-    isImageInCorrectPosition(): boolean[] {
-      return this.images.map((image, index) => {
-        return image.uuid === this.task.images[index].uuid;
-      });
     },
   },
 
