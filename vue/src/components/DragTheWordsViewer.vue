@@ -1,14 +1,20 @@
 <template>
   <div class="stud5p-drag-the-words" ref="wrapperElement">
+    <!-- Main container for text and answers -->
     <div class="text-and-answers-container">
+      <!-- Render the text and blank elements from parsedTemplate -->
       <div class="drag-the-words-text">
         <template v-for="element in parsedTemplate" :key="element.uuid">
+          <!-- Static text elements -->
           <span
             v-if="element.type === 'staticText'"
             class="static-text"
             v-html="element.text"
           />
+
+          <!-- Blank elements (interactive part of the template) -->
           <template v-else-if="element.type === 'blank'">
+            <!-- If user has provided input for this blank -->
             <span
               v-if="userInputs[element.uuid]"
               class="blank"
@@ -24,6 +30,8 @@
             >
               {{ getAnswerById(userInputs[element.uuid])?.text }}
             </span>
+
+            <!-- If blank is empty and awaiting input -->
             <span
               v-else
               class="blank"
@@ -31,11 +39,16 @@
               @dragover.prevent
               @dragenter.prevent
               @click="onClickBlank(element)"
-              >&#8203;
+            >
+              &#8203;
             </span>
+
+            <!-- Hint label (if available) -->
             <label v-if="element.hint">
               <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
             </label>
+
+            <!-- Show solution if incorrect and solutions are revealed -->
             <span
               v-if="showSolutions && !submittedAnswerIsCorrect(element)"
               class="h5p-solution"
@@ -46,6 +59,7 @@
         </template>
       </div>
 
+      <!-- Container for unused answers (draggable answers) -->
       <div
         class="unused-answers-list"
         @drop="onDropUnusedAnswers($event)"
@@ -69,13 +83,16 @@
       </div>
     </div>
 
+    <!-- Message prompting user to fill in all blanks -->
     <div
       v-if="showFillInAllTheBlanksMessage"
       class="message"
       v-text="fillInAllTheBlanksMessage"
     />
 
+    <!-- Feedback and button section -->
     <div class="feedback-and-button-container">
+      <!-- Feedback element displaying points and feedback -->
       <FeedbackElement
         v-if="showResults"
         :achieved-points="correctAnswers"
@@ -84,27 +101,30 @@
         :result-message="resultMessage"
       />
 
+      <!-- Button panel -->
       <div class="h5p-button-panel">
+        <!-- Check button -->
         <button
           v-if="showCheckButton"
-          v-text="this.task.strings.checkButton"
+          v-text="task.strings.checkButton"
           @click="onClickCheck"
           type="button"
           class="h5p-button"
         />
 
+        <!-- Extra buttons (retry, show solutions) -->
         <template v-if="showExtraButtons">
           <button
-            v-if="!showSolutions && this.task.showSolutionsAllowed"
-            v-text="this.task.strings.solutionsButton"
+            v-if="!showSolutions && task.showSolutionsAllowed"
+            v-text="task.strings.solutionsButton"
             @click="onClickShowSolution"
             type="button"
             class="h5p-button"
           />
 
           <button
-            v-if="this.task.retryAllowed"
-            v-text="this.task.strings.retryButton"
+            v-if="task.retryAllowed"
+            v-text="task.strings.retryButton"
             @click="onClickTryAgain"
             type="button"
             class="h5p-button"
