@@ -25,7 +25,6 @@
               "
               @drop="onDropBlank($event, element)"
               @dragover.prevent
-              @dragenter.prevent
               @click="onClickFilledBlank(element)"
             >
               {{ getAnswerById(userInputs[element.uuid])?.text }}
@@ -36,8 +35,9 @@
               v-else
               class="blank"
               @drop="onDropBlank($event, element)"
+              @dragenter="onDragEnter($event, element)"
+              @dragleave="onDragLeave($event, element)"
               @dragover.prevent
-              @dragenter.prevent
               @click="onClickBlank(element)"
             >
               &#8203;
@@ -64,7 +64,6 @@
         class="unused-answers-list"
         @drop="onDropUnusedAnswers($event)"
         @dragover.prevent
-        @dragenter.prevent
       >
         <span
           v-for="answer in unusedAnswers"
@@ -296,6 +295,19 @@ export default defineComponent({
       );
       if (blank) {
         delete this.userInputs[blank.uuid];
+      }
+    },
+
+    onDragEnter(event: DragEvent, element: Blank) {
+      const target = event.target as HTMLElement | null;
+      if (target) {
+        target.style.backgroundColor = '#80b4ed';
+      }
+    },
+    onDragLeave(event: DragEvent, element: Blank) {
+      const target = event.target as HTMLElement | null;
+      if (target) {
+        target.style.backgroundColor = '';
       }
     },
 
