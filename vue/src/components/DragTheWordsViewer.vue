@@ -12,9 +12,9 @@
             v-html="element.text"
           />
 
-          <!-- Blank elements (interactive part of the template) -->
+          <!-- Blanks -->
           <template v-else-if="element.type === 'blank'">
-            <!-- If user has provided input for this blank -->
+            <!-- Filled blank -->
             <span
               v-if="userInputs[element.uuid]"
               class="blank"
@@ -31,7 +31,7 @@
               {{ getAnswerById(userInputs[element.uuid])?.text }}
             </span>
 
-            <!-- If blank is empty and awaiting input -->
+            <!-- Empty blank -->
             <span
               v-else
               class="blank"
@@ -43,7 +43,7 @@
               &#8203;
             </span>
 
-            <!-- Hint label (if available) -->
+            <!-- Hint tooltip -->
             <label v-if="element.hint">
               <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
             </label>
@@ -83,7 +83,7 @@
       </div>
     </div>
 
-    <!-- Message prompting user to fill in all blanks -->
+    <!-- Message prompting user to fill in all blanks before they can show solutions-->
     <div
       v-if="showFillInAllTheBlanksMessage"
       class="message"
