@@ -327,11 +327,10 @@ export default defineComponent({
 }
 
 .memory-info-header {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 .result-message {
-  font-size: 18px;
   font-weight: bold;
   color: #1a73d9;
   margin: 8px 0;

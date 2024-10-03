@@ -271,6 +271,5 @@ export default defineComponent({
 
 .image-description {
   margin-top: 6px;
-  font-size: 18px;
 }
 </style>

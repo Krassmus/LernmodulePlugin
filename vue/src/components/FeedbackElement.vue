@@ -126,7 +126,7 @@ export default defineComponent({
 
 <style>
 .feedback-text {
-  font-size: 18px;
+  font-size: 1.25em;
   font-weight: bold;
   color: #1a73d9;
   padding-bottom: 8px;
@@ -139,7 +139,7 @@ export default defineComponent({
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-size: 16px;
+  font-size: 1em;
   font-weight: bold;
   color: #000;
 }
