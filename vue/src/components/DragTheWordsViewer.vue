@@ -66,20 +66,20 @@
         @dragover.prevent
         @dragenter.prevent
       >
-        <div v-for="answer in unusedAnswers" :key="answer.uuid">
-          <span
-            class="unused-answer"
-            :class="{
-              disabled: !this.editable,
-              selected: answer.uuid === this.clickedAnswerId,
-            }"
-            :draggable="editable"
-            @dragstart="startDragUnusedAnswer($event, answer)"
-            @click="onClickUnusedAnswer(answer)"
-          >
-            {{ answer.text }}
-          </span>
-        </div>
+        <span
+          v-for="answer in unusedAnswers"
+          :key="answer.uuid"
+          class="unused-answer"
+          :class="{
+            disabled: !this.editable,
+            selected: answer.uuid === this.clickedAnswerId,
+          }"
+          :draggable="editable"
+          @dragstart="startDragUnusedAnswer($event, answer)"
+          @click="onClickUnusedAnswer(answer)"
+        >
+          {{ answer.text }}
+        </span>
       </div>
     </div>
 
