@@ -17,7 +17,7 @@
             <!-- Filled blank -->
             <span
               v-if="userInputs[element.uuid]"
-              class="blank"
+              class="blank filled"
               :class="classForFilledBlank(element)"
               :draggable="editable"
               @dragstart="
@@ -318,7 +318,7 @@ export default defineComponent({
 
     classForFilledBlank(blank: Blank) {
       if (!this.submittedAnswers && !this.task.instantFeedback) {
-        return 'filled-blank';
+        return '';
       }
 
       if (this.task.instantFeedback) {
@@ -327,9 +327,9 @@ export default defineComponent({
 
       if (this.userInputs?.[blank.uuid]) {
         if (this.submittedAnswerIsCorrect(blank)) {
-          return 'filled-blank correct disabled';
+          return 'correct disabled';
         } else {
-          return 'filled-blank incorrect disabled';
+          return 'incorrect disabled';
         }
       } else {
         return '';
@@ -573,6 +573,8 @@ export default defineComponent({
 
 .blank {
   display: inline-block;
+  line-height: 1.25em;
+  text-align: center;
   background: #cee0f4;
   color: #1a4473;
   border: 1px solid #a9c3d0;
@@ -580,14 +582,12 @@ export default defineComponent({
   min-width: 9em;
 }
 
-.filled-blank {
-  display: inline-flex;
-  justify-content: center;
+.filled {
   cursor: grabbing;
 }
 
-.filled-blank:not(.disabled):hover {
-  border: 0.1em solid rgb(212, 190, 216);
+.filled:not(.disabled):hover {
+  border: 1px solid rgb(212, 190, 216);
   color: #663366;
   background: #edd6e9;
 }
@@ -609,13 +609,26 @@ span.item:empty:before {
   content: '\200b';
 }
 
+.unused-answers-list {
+  flex-grow: 0;
+  display: flex;
+  min-width: 12em;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5em;
+  min-height: 140px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  gap: 1em;
+  padding-top: 0.5em;
+}
+
 .unused-answer {
-  cursor: grabbing;
-  margin: 0.25em;
-  vertical-align: top;
-  text-align: center;
   display: inline-block;
-  border: 0.1em solid #c6c6c6;
+  line-height: 1.25em;
+  cursor: grabbing;
+  text-align: center;
+  border: 1px solid #c6c6c6;
   overflow: auto;
   background: #ddd;
   box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
@@ -629,18 +642,6 @@ span.item:empty:before {
   border: 0.1em solid rgb(212, 190, 216);
   color: #663366;
   background: #edd6e9;
-}
-
-.unused-answers-list {
-  flex-grow: 0;
-  display: flex;
-  min-width: 12em;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 0.5em;
-  min-height: 140px;
-  border: 1px solid #eee;
-  border-radius: 5px;
 }
 
 .message {
