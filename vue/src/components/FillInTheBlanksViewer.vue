@@ -10,7 +10,11 @@
             v-model="userInputs[element.uuid]"
             :readonly="!this.editable"
             :disabled="!this.editable"
-            :class="classForInput(element)"
+            :class="[
+              'blank',
+              { autocorrect: task.autoCorrect },
+              classForInput(element),
+            ]"
             @blur="onBlur"
             @keyup.enter="onEnter($event)"
             @input="onInput"
@@ -80,7 +84,7 @@
 import { defineComponent, PropType } from 'vue';
 import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEqual, round } from 'lodash';
+import { isEqual } from 'lodash';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
@@ -317,20 +321,20 @@ export default defineComponent({
 
     classForInput(blank: FillInTheBlanksElement) {
       if (!this.submittedAnswers) {
-        return 'h5pBlank';
+        return '';
       }
 
       if (this.submittedAnswers?.[blank.uuid] != undefined) {
         if (this.submittedAnswerIsCorrect(blank)) {
-          return 'h5pBlank h5pBlankCorrect';
+          return 'correct';
         } else {
-          return 'h5pBlank h5pBlankIncorrect';
+          return 'incorrect';
         }
       } else {
         if (this.task.autoCorrect) {
-          return 'h5pBlank';
+          return 'autocorrect';
         } else {
-          return 'h5pBlank h5pBlankIncorrect';
+          return 'autocorrect incorrect';
         }
       }
     },
@@ -496,31 +500,31 @@ export default defineComponent({
 
 <style scoped>
 input[type='text'] {
-  max-height: 1em;
+  height: 1em;
 }
 
 .fill-in-the-blanks-text {
   word-break: break-word;
 }
 
-.h5pBlankCorrect {
+.correct {
   background: #9dd8bb;
   border: 1px solid #9dd8bb;
   color: #255c41;
 }
 
-.h5pBlankIncorrect {
+.incorrect {
   background-color: #f7d0d0;
   border: 1px solid #f7d0d0;
   color: #b71c1c;
   text-decoration: line-through;
 }
 
-.h5pBlank {
+.blank {
   border-radius: 0.25em;
   border: 1px solid #a0a0a0;
   /* top, right, bottom, left */
-  padding: 0.1875em 0em 0.1875em 0.5em;
+  padding: 0.1875em 0 0.1875em 0.5em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -528,8 +532,11 @@ input[type='text'] {
   width: 104px;
 }
 
-.h5pBlank.autocorrect:focus {
-  /*  Irgendwas damit es nicht rot oder grün gehighlightet wird, während noch drin getippt wird */
+.blank.autocorrect:focus {
+  background: unset;
+  color: unset;
+  text-decoration: unset;
+  border: 1px solid #a0a0a0;
 }
 
 .h5pMessage {
