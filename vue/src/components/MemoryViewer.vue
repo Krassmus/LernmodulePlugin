@@ -15,47 +15,57 @@
         @click="onClickCard(card)"
       />
     </div>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 1em;
+        gap: 2em;
+      "
+    >
+      <div>
+        <div>
+          <span class="memory-info-header" v-text="$gettext('Zeit:')" />
+          <span
+            v-text="
+              ' ' +
+              $gettext('%{ time } Sekunden', {
+                time: this.timer.toString(),
+              })
+            "
+          />
+        </div>
 
-    <div style="margin-top: 1em">
-      <span
-        class="memory-info-header"
-        v-text="$gettext('Umgedrehte Karten:')"
-      />
-      <span v-text="' ' + this.amountOfFlips.toString()" />
+        <div>
+          <span
+            class="memory-info-header"
+            v-text="$gettext('Umgedrehte Karten:')"
+          />
+          <span v-text="' ' + this.amountOfFlips.toString()" />
+        </div>
+
+        <div>
+          <span
+            class="memory-info-header"
+            v-text="$gettext('Aufgedeckte Paare:')"
+          />
+          <span
+            v-text="
+              ' ' +
+              $gettext('%{ amountOfPairsSolved } von %{ totalAmountOfPairs }', {
+                amountOfPairsSolved: this.amountOfPairsSolved.toString(),
+                totalAmountOfPairs: this.totalAmountOfPairs.toString(),
+              })
+            "
+          />
+        </div>
+      </div>
+      <div v-if="showResults" class="result-message">
+        {{ this.resultMessage }}
+      </div>
     </div>
-
-    <div>
-      <span class="memory-info-header" v-text="$gettext('Zeit:')" />
-      <span
-        v-text="
-          ' ' +
-          $gettext('%{ time } Sekunden', {
-            time: this.timer.toString(),
-          })
-        "
-      />
-    </div>
-
-    <div>
-      <span
-        class="memory-info-header"
-        v-text="$gettext('Aufgedeckte Paare:')"
-      />
-      <span
-        v-text="
-          ' ' +
-          $gettext('%{ amountOfPairsSolved } von %{ totalAmountOfPairs }', {
-            amountOfPairsSolved: this.amountOfPairsSolved.toString(),
-            totalAmountOfPairs: this.totalAmountOfPairs.toString(),
-          })
-        "
-      />
-    </div>
-
-    <div v-if="showResults" class="result-message">
-      {{ this.resultMessage }}
-    </div>
-
     <div class="h5p-button-panel">
       <button
         v-if="showRetryButton"
@@ -332,6 +342,7 @@ export default defineComponent({
 
 .result-message {
   font-weight: bold;
+  font-size: 2em;
   color: #1a73d9;
   margin: 8px 0;
 }

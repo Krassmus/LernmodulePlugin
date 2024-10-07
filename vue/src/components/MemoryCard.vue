@@ -64,7 +64,7 @@ export default defineComponent({
   align-items: center;
 
   width: 100%;
-  max-width: 14em;
+  max-width: 11em;
   aspect-ratio: 1;
 
   border: 2px solid #d0d7e3;
