@@ -129,63 +129,12 @@
       </label>
     </fieldset>
 
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Feedback') }}</legend>
-      <label>
-        {{
-          $gettext(
-            'Ergebnismitteilung (mögliche Variablen :correct und :total):'
-          )
-        }}
-        <input
-          type="text"
-          v-model="taskDefinition.strings.resultMessage"
-          style="width: 100%"
-        />
-      </label>
-      <label>{{
-        $gettext('Benutzerdefiniertes Feedback für beliebige Punktebereiche:')
-      }}</label>
-      <div class="feedbackContainer">
-        <div class="feedbackPercentagesChild">
-          <label>
-            {{ $gettext('Prozent') }}
-          </label>
-          <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
-            <input
-              type="number"
-              min="0"
-              max="100"
-              v-model="taskDefinition.feedback[i].percentage"
-            />
-          </template>
-        </div>
-
-        <div class="feedbackMessagesChild">
-          <label>
-            {{ $gettext('Mitteilung') }}
-          </label>
-          <div
-            class="feedbackMessagesChildSubdivision"
-            v-for="(feedback, i) in taskDefinition.feedback"
-            :key="i"
-          >
-            <input type="text" v-model="taskDefinition.feedback[i].message" />
-            <button
-              type="button"
-              :title="titleForDeleteButtonForFeedback(feedback)"
-              @click="removeFeedback(feedback)"
-            >
-              <img :src="urlForIcon('trash')" width="16" height="16" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <button type="button" class="button" @click="addFeedback">
-        {{ $gettext('Neuer Bereich') }}
-      </button>
-    </fieldset>
+    <feedback-editor
+      :feedback="taskDefinition.feedback"
+      :result-message="taskDefinition.strings.resultMessage"
+      @update:feedback="updateFeedback"
+      @update:result-message="updateResultMessage"
+    />
   </form>
 </template>
 
@@ -204,6 +153,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import FeedbackEditor from '@/components/FeedbackEditor.vue';
 
 export default defineComponent({
   name: 'QuestionEditor',
@@ -212,7 +162,7 @@ export default defineComponent({
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
   },
-  components: { StudipWysiwyg },
+  components: { FeedbackEditor, StudipWysiwyg },
   methods: {
     $gettext,
 
@@ -240,32 +190,28 @@ export default defineComponent({
       );
     },
 
-    titleForDeleteButtonForFeedback(feedback: Feedback): string {
-      return this.$gettext(
-        'Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt.',
-        { percentage: feedback.percentage.toString() }
-      );
-    },
-
-    addFeedback(): void {
+    updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
           this.taskDefinition,
           (taskDraft: QuestionTask) => {
-            taskDraft.feedback.push({
-              percentage: this.feedbackSortedByScore[0]?.percentage,
-              message: 'Feedback',
-            });
+            taskDraft.feedback = updatedFeedback;
           }
         ),
         undoBatch: {},
       });
     },
 
-    removeFeedback(feedbackToRemove: Feedback): void {
-      this.taskDefinition.feedback = this.taskDefinition.feedback.filter(
-        (feedback) => feedback !== feedbackToRemove
-      );
+    updateResultMessage(updatedResultMessage: string) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: QuestionTask) => {
+            taskDraft.strings.resultMessage = updatedResultMessage;
+          }
+        ),
+        undoBatch: {},
+      });
     },
   },
   computed: {
@@ -273,12 +219,6 @@ export default defineComponent({
 
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
-
-    feedbackSortedByScore(): Feedback[] {
-      return this.taskDefinition.feedback
-        .map((value) => value)
-        .sort((a, b) => b.percentage - a.percentage);
-    },
   },
 });
 </script>
@@ -305,31 +245,5 @@ export default defineComponent({
 
 .feedback {
   margin: 0.5em 0 0 0;
-}
-
-.feedbackContainer {
-  display: flex;
-  gap: 0.5em;
-  justify-content: flex-start;
-  align-items: center;
-  max-width: 48em;
-}
-
-.feedbackPercentagesChild {
-  flex: 0 100px;
-  display: flex;
-  flex-direction: column;
-}
-
-.feedbackMessagesChild {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.feedbackMessagesChildSubdivision {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
 }
 </style>
