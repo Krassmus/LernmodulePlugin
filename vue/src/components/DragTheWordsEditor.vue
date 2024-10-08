@@ -105,73 +105,12 @@
       </label>
     </fieldset>
 
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Feedback') }}</legend>
-      <label>
-        {{
-          $gettext(
-            'Ergebnismitteilung (mögliche Variablen :correct und :total):'
-          )
-        }}
-        <input
-          type="text"
-          v-model="taskDefinition.strings.resultMessage"
-          style="width: 100%"
-        />
-      </label>
-      <label>{{
-        $gettext('Benutzerdefiniertes Feedback für beliebige Punktebereiche:')
-      }}</label>
-      <div class="feedbackContainer">
-        <div class="feedbackPercentagesChild">
-          <label>
-            {{ $gettext('Ab Prozent') }}
-          </label>
-          <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
-            <input
-              type="number"
-              min="0"
-              max="100"
-              v-model="taskDefinition.feedback[i].percentage"
-            />
-          </template>
-        </div>
-
-        <div class="feedbackMessagesChild">
-          <label>
-            {{ $gettext('Mitteilung') }}
-          </label>
-          <div
-            class="feedbackMessagesChildSubdivision"
-            v-for="(feedback, i) in taskDefinition.feedback"
-            :key="i"
-          >
-            <input type="text" v-model="taskDefinition.feedback[i].message" />
-            <button
-              type="button"
-              :title="titleForDeleteButtonForFeedback(feedback)"
-              class="remove-feedback-button"
-              @click="removeFeedback(feedback)"
-            >
-              <img
-                :src="urlForIcon('trash')"
-                :alt="
-                  $gettext(
-                    'Trash can icon in a button used to delete a feedback interval'
-                  )
-                "
-                width="16"
-                height="16"
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <button type="button" class="button" @click="addFeedback">
-        {{ $gettext('Neuer Bereich') }}
-      </button>
-    </fieldset>
+    <feedback-editor
+      :feedback="taskDefinition.feedback"
+      :result-message="taskDefinition.strings.resultMessage"
+      @update:feedback="updateFeedback"
+      @update:result-message="updateResultMessage"
+    />
   </form>
 </template>
 
@@ -185,6 +124,7 @@ import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import produce from 'immer';
+import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import {
   TaskEditorState,
   taskEditorStateSymbol,
@@ -197,7 +137,7 @@ export default defineComponent({
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
   },
-  components: { StudipWysiwyg },
+  components: { StudipWysiwyg, FeedbackEditor },
   computed: {
     taskDefinition: () => taskEditorStore.taskDefinition as DragTheWordsTask,
 
@@ -214,12 +154,6 @@ export default defineComponent({
       return $gettext(
         'Geben Sie falsche Antworten als Distraktoren ein. Verwenden Sie das gleiche Sternchen (*)-Schema wie im Text.'
       );
-    },
-
-    feedbackSortedByScore(): Feedback[] {
-      return this.taskDefinition.feedback
-        .map((value) => value)
-        .sort((a, b) => b.percentage - a.percentage);
     },
   },
   methods: {
@@ -248,33 +182,28 @@ export default defineComponent({
       });
     },
 
-    addFeedback(): void {
-      // Rewrite using provide/inject (will work in all of the cases we are
-      // considering -- Multiple tasks on the same page,or tasks included inside
-      // of each other a la Interactive Video).
-      const percentage =
-        this.feedbackSortedByScore?.length > 0
-          ? Math.min(this.feedbackSortedByScore[0].percentage * 2, 100)
-          : 25; // Default to 100 if no feedback is available
-
+    updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
           this.taskDefinition,
           (taskDraft: DragTheWordsTask) => {
-            taskDraft.feedback.push({
-              percentage: percentage,
-              message: 'Feedback',
-            });
+            taskDraft.feedback = updatedFeedback;
           }
         ),
         undoBatch: {},
       });
     },
 
-    removeFeedback(feedbackToRemove: Feedback): void {
-      this.taskDefinition.feedback = this.taskDefinition.feedback.filter(
-        (feedback) => feedback !== feedbackToRemove
-      );
+    updateResultMessage(updatedResultMessage: string) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: DragTheWordsTask) => {
+            taskDraft.strings.resultMessage = updatedResultMessage;
+          }
+        ),
+        undoBatch: {},
+      });
     },
 
     urlForIcon(iconName: string) {
@@ -282,55 +211,8 @@ export default defineComponent({
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
-
-    titleForDeleteButtonForFeedback(feedback: Feedback): string {
-      return this.$gettext(
-        'Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt.',
-        { percentage: feedback.percentage.toString() }
-      );
-    },
   },
 });
 </script>
 
-<style scoped>
-.h5pTextArea {
-  display: block;
-  width: 100%;
-  height: 4em;
-  resize: none;
-  /*border: none;*/
-}
-
-.feedbackContainer {
-  display: flex;
-  gap: 0.5em;
-  justify-content: flex-start;
-  align-items: center;
-  max-width: 48em;
-}
-
-.feedbackPercentagesChild {
-  flex: 0 100px;
-  display: flex;
-  flex-direction: column;
-}
-
-.feedbackMessagesChild {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.feedbackMessagesChildSubdivision {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-}
-
-.remove-feedback-button {
-  display: flex;
-  align-items: center;
-  height: 28px;
-}
-</style>
+<style scoped></style>
