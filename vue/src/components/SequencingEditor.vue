@@ -46,33 +46,46 @@
         {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
       </div>
     </fieldset>
+
+    <feedback-editor
+      :feedback="taskDefinition.feedback"
+      :result-message="taskDefinition.strings.resultMessage"
+      @update:feedback="updateFeedback"
+      @update:result-message="updateResultMessage"
+    />
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { Image, SequencingTask } from '@/models/TaskDefinition';
+import { defineComponent, inject } from 'vue';
+import { Feedback, Image, SequencingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { v4 } from 'uuid';
 import SequencingEditorImage from '@/components/SequencingEditorImage.vue';
+import FeedbackEditor from '@/components/FeedbackEditor.vue';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'SequencingEditor',
-
-  components: { SequencingEditorImage },
-
+  components: { SequencingEditorImage, FeedbackEditor },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   data() {
     return { selectedImageIndex: -1 };
   },
-
   beforeMount(): void {
     if (this.taskDefinition.images.length > 0) {
       this.selectedImageIndex = 0;
     }
   },
-
   methods: {
     $gettext,
 
@@ -130,6 +143,30 @@ export default defineComponent({
         text += $gettext('Bild');
       }
       return text;
+    },
+
+    updateFeedback(updatedFeedback: Feedback[]) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: SequencingTask) => {
+            taskDraft.feedback = updatedFeedback;
+          }
+        ),
+        undoBatch: {},
+      });
+    },
+
+    updateResultMessage(updatedResultMessage: string) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: SequencingTask) => {
+            taskDraft.strings.resultMessage = updatedResultMessage;
+          }
+        ),
+        undoBatch: {},
+      });
     },
   },
 
