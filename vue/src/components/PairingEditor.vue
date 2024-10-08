@@ -12,6 +12,7 @@
             :pair="taskDefinition.pairs[index]"
             @click="onClickPair(index)"
           />
+
           <button
             type="button"
             class="add-pair-button"
@@ -19,6 +20,7 @@
             :style="addPairButtonBackgroundImage"
           />
         </div>
+
         <div class="h5p-elements-settings">
           <form v-if="selectedPair" class="default" @submit.prevent>
             <div class="h5p-element-setting">
@@ -28,6 +30,7 @@
                 @element-changed="onChangeDraggableElement"
               />
             </div>
+
             <div class="h5p-element-setting">
               <h1>{{ $gettext('Karte B') }}</h1>
               <PairingElement
@@ -35,6 +38,7 @@
                 @element-changed="onChangeTargetElement"
               />
             </div>
+
             <div class="remove-pair-button-container">
               <button
                 type="button"
@@ -47,9 +51,11 @@
         </div>
       </div>
     </TabComponent>
+
     <TabComponent :title="$gettext('2. Vorschau')" icon="visibility-visible">
       <PairingViewer :task="taskDefinition" />
     </TabComponent>
+
     <TabComponent v-if="debug" title="Debug" icon="tools">
       <pre v-text="taskDefinition" />
     </TabComponent>
@@ -57,7 +63,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, PropType } from 'vue';
+import { defineComponent, inject } from 'vue';
 import {
   fileIdToUrl,
   LernmoduleMultimediaElement,
@@ -104,15 +110,19 @@ export default defineComponent({
   },
   methods: {
     fileIdToUrl,
+
     $gettext,
+
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
+
     onClickPair(index: number) {
       this.selectedPairIndex = index;
     },
+
     onClickAddPair() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.push({
@@ -131,21 +141,26 @@ export default defineComponent({
           },
         });
       });
+
       this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
+
       // Select the newly inserted card
       this.selectedPairIndex = newTaskDefinition.pairs.length - 1;
     },
+
     onClickDeletePair(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.pairs.splice(index, 1);
       });
+
       this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
+
       // Adjust the selection index so the selected card doesn't unexpectedly change
       if (this.taskDefinition.pairs.length === 0) {
         this.selectedPairIndex = -1;
@@ -153,6 +168,7 @@ export default defineComponent({
         this.selectedPairIndex = Math.max(0, this.selectedPairIndex - 1);
       }
     },
+
     onChangeDraggableElement(payload: {
       updatedElement: LernmoduleMultimediaElement;
       undoBatch?: unknown;
@@ -161,11 +177,13 @@ export default defineComponent({
         draft.pairs[this.selectedPairIndex].draggableElement =
           payload.updatedElement;
       });
+
       this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: payload.undoBatch ?? {},
       });
     },
+
     onChangeTargetElement(payload: {
       updatedElement: LernmoduleMultimediaElement;
       undoBatch?: unknown;
@@ -174,6 +192,7 @@ export default defineComponent({
         draft.pairs[this.selectedPairIndex].targetElement =
           payload.updatedElement;
       });
+
       this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: payload.undoBatch ?? {},
@@ -188,6 +207,7 @@ export default defineComponent({
     selectedPair(): Pair | undefined {
       return this.taskDefinition.pairs[this.selectedPairIndex];
     },
+
     addPairButtonBackgroundImage() {
       return {
         backgroundImage: `url(${this.urlForIcon('add')})`,
