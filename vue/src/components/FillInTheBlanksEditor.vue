@@ -5,6 +5,7 @@
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Fill in the Blanks') }}</legend>
+
       <div class="h5pEditorTopPanel">
         <button
           @click="addBlank"
@@ -16,6 +17,7 @@
         </button>
         <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
+
       <studip-wysiwyg
         v-model="taskDefinition.template"
         ref="wysiwyg"
@@ -86,6 +88,7 @@
         />
         {{ $gettext('Lösungen können angezeigt werden') }}
       </label>
+
       <label
         :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
       >
@@ -96,6 +99,7 @@
           v-model="taskDefinition.strings.solutionsButton"
         />
       </label>
+
       <label
         :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
       >
@@ -110,6 +114,7 @@
           )
         }}
       </label>
+
       <label
         :class="
           taskDefinition.allBlanksMustBeFilledForSolutions
