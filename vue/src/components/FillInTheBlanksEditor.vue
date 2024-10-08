@@ -177,13 +177,6 @@ export default defineComponent({
   methods: {
     $gettext,
 
-    titleForDeleteButtonForFeedback(feedback: Feedback): string {
-      return this.$gettext(
-        'Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt.',
-        { percentage: feedback.percentage.toString() }
-      );
-    },
-
     /**
      * Surround the selected text with two asterisks
      */
