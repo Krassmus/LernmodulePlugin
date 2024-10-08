@@ -3,13 +3,18 @@
     <fieldset>
       <legend>{{ $gettext('Karte') }}</legend>
       <label for="firstImage">{{
-        $gettext(card.second ? 'Erstes Bild' : 'Bild')
+        $gettext(
+          taskDefinition.cards[cardIndex].second ? 'Erstes Bild' : 'Bild'
+        )
       }}</label>
       <div id="firstImage" class="memory-card-preview-and-upload-container">
-        <MemoryCardEditorImage v-if="card.first.file_id" :image="card.first" />
+        <MemoryCardEditorImage
+          v-if="taskDefinition.cards[cardIndex].first.file_id"
+          :image="taskDefinition.cards[cardIndex].first"
+        />
         <FileUpload v-else @file-uploaded="onImageUploaded" />
       </div>
-      <label v-if="card.first.file_id"
+      <label v-if="taskDefinition.cards[cardIndex].first.file_id"
         >{{ $gettext('Alternativer Text') }}
         <input
           type="text"
@@ -17,16 +22,16 @@
           @input="onInputAltText"
         />
       </label>
-      <template v-if="card.second">
+      <template v-if="taskDefinition.cards[cardIndex].second">
         <label for="secondImage">{{ $gettext('Zweites Bild') }} </label>
         <div id="secondImage" class="memory-card-preview-and-upload-container">
           <MemoryCardEditorImage
-            v-if="card.second.file_id"
-            :image="card.second"
+            v-if="taskDefinition.cards[cardIndex].second.file_id"
+            :image="taskDefinition.cards[cardIndex].second"
           />
           <FileUpload v-else @file-uploaded="onSecondImageUploaded" />
         </div>
-        <label v-if="card.second.file_id"
+        <label v-if="taskDefinition.cards[cardIndex].second.file_id"
           >{{ $gettext('Alternativer Text') }}
           <input
             type="text"
@@ -36,7 +41,7 @@
         </label>
       </template>
       <button
-        v-else-if="card.first.file_id"
+        v-else-if="taskDefinition.cards[cardIndex].first.file_id"
         type="button"
         @click="addSecondImage"
         class="button add-image-button"
@@ -49,7 +54,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MemoryCard, MemoryTask } from '@/models/TaskDefinition';
+import { MemoryTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
@@ -62,10 +67,6 @@ export default defineComponent({
   name: 'MemoryCardEditor',
   components: { MemoryCardEditorImage, FileUpload },
   props: {
-    card: {
-      type: Object as PropType<MemoryCard>,
-      required: true,
-    },
     cardIndex: {
       type: Number as PropType<number>,
       required: true,

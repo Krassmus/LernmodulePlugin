@@ -37,7 +37,6 @@
       <MemoryCardEditor
         v-if="this.taskDefinition.cards[this.selectedCardIndex]"
         class="edited-memory-card"
-        :card="this.taskDefinition.cards[this.selectedCardIndex]"
         :card-index="this.selectedCardIndex"
       />
       <div v-else class="edited-memory-card no-card-selected-placeholder">
@@ -178,7 +177,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { taskEditorStore } from '@/store';
 import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { $gettext, $pgettext } from '@/language/gettext';
