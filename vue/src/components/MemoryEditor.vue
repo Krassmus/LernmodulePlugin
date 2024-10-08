@@ -181,7 +181,7 @@
 import { defineComponent, PropType } from 'vue';
 import { taskEditorStore } from '@/store';
 import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
-import { $gettext } from '@/language/gettext';
+import { $gettext, $pgettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';
 import MemoryCardEditor from '@/components/MemoryCardEditor.vue';
@@ -204,6 +204,7 @@ export default defineComponent({
   methods: {
     fileIdToUrl,
     $gettext,
+    $pgettext,
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
