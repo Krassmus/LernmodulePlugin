@@ -2,6 +2,7 @@
   <form class="default">
     <fieldset class="sequencing-editor">
       <legend>{{ $gettext('Sequencing') }}</legend>
+
       <div class="cards-list">
         <div
           v-for="(card, index) in taskDefinition.images"
@@ -25,6 +26,7 @@
             <img :src="urlForIcon('trash')" alt="" />
           </button>
         </div>
+
         <button
           type="button"
           class="button add add-card-button"
@@ -48,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { Image, SequencingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
@@ -58,25 +60,32 @@ import SequencingEditorImage from '@/components/SequencingEditorImage.vue';
 
 export default defineComponent({
   name: 'SequencingEditor',
+
   components: { SequencingEditorImage },
+
   data() {
     return { selectedImageIndex: -1 };
   },
+
   beforeMount(): void {
     if (this.taskDefinition.images.length > 0) {
       this.selectedImageIndex = 0;
     }
   },
+
   methods: {
     $gettext,
+
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
+
     selectImage(index: number) {
       this.selectedImageIndex = index;
     },
+
     addImage() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.images.push({
@@ -86,26 +95,32 @@ export default defineComponent({
           altText: '',
         });
       });
+
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
+
       // Select the newly inserted image
       this.selectedImageIndex = this.taskDefinition.images.length - 1;
     },
+
     deleteImage(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.images.splice(index, 1);
       });
+
       taskEditorStore.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
+
       // Adjust the selection index so the selected card doesn't unexpectedly change
       if (index <= this.selectedImageIndex) {
         this.selectedImageIndex = this.selectedImageIndex - 1;
       }
     },
+
     listEntryText(index: number, image: Image) {
       let text = index + 1 + '. ';
 
@@ -117,6 +132,7 @@ export default defineComponent({
       return text;
     },
   },
+
   computed: {
     taskDefinition: () => taskEditorStore.taskDefinition as SequencingTask,
   },
