@@ -124,7 +124,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .feedback-text {
   font-size: 1.25em;
   font-weight: bold;
