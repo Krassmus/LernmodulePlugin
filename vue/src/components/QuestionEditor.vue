@@ -1,11 +1,8 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <!--  The current task: {{ task }}-->
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Question') }}</legend>
+
       <label>
         <studip-wysiwyg
           v-model="taskDefinition.question"
@@ -14,34 +11,41 @@
           disable-autoformat
         />
       </label>
+
       <fieldset
         class="collapsable collapsed"
         v-for="(answer, i) in taskDefinition.answers"
         :key="i"
       >
         <legend>{{ answer.text }}</legend>
+
         <div class="flex-parent-element">
           <input
             class="flex-child-element checkbox"
             type="checkbox"
             v-model="taskDefinition.answers[i].correct"
           />
+
           <input
             class="flex-child-element textbox"
             type="text"
             v-model="taskDefinition.answers[i].text"
           />
+
           <button
             type="button"
-            class="flex-child-element removeAnswerButton"
+            class="flex-child-element remove-answer-button"
             @click="removeAnswer(answer)"
+            :aria-label="$gettext('Antwort löschen')"
+            :title="$gettext('Antwort löschen')"
           >
-            <img :src="urlForIcon('trash')" :title="$gettext('Löschen')" />
+            <img :src="urlForIcon('trash')" alt="" />
           </button>
         </div>
 
         <fieldset class="collapsable collapsed feedback">
           <legend>{{ $gettext('Hinweis und Feedback') }}</legend>
+
           <label>
             <span>{{ $gettext('Hinweis') }}</span>
             <input
@@ -70,6 +74,7 @@
           </label>
         </fieldset>
       </fieldset>
+
       <button type="button" class="button" @click="addAnswer">
         {{ $gettext('Neue Antwort') }}
       </button>
@@ -78,9 +83,8 @@
     <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
-      <label
-        >{{ $gettext('Text im Button:') }}
-
+      <label>
+        {{ $gettext('Text im Button:') }}
         <input type="text" v-model="taskDefinition.strings.checkButton" />
       </label>
 
@@ -98,9 +102,9 @@
         <input type="checkbox" v-model="taskDefinition.retryAllowed" />
         {{ $gettext('Mehrere Versuche erlauben') }}
       </label>
-      <label :class="taskDefinition.retryAllowed ? '' : 'setting-disabled'"
-        >{{ $gettext('Text im Button:') }}
 
+      <label :class="taskDefinition.retryAllowed ? '' : 'setting-disabled'">
+        {{ $gettext('Text im Button:') }}
         <input
           type="text"
           :disabled="!taskDefinition.retryAllowed"
@@ -112,10 +116,11 @@
         <input type="checkbox" v-model="taskDefinition.showSolutionsAllowed" />
         {{ $gettext('Lösungen können angezeigt werden') }}
       </label>
+
       <label
         :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
-        >{{ $gettext('Text im Button:') }}
-
+      >
+        {{ $gettext('Text im Button:') }}
         <input
           type="text"
           :disabled="!taskDefinition.showSolutionsAllowed"
@@ -185,10 +190,7 @@
 </template>
 
 <script lang="ts">
-// Allow us to mutate the prop 'taskDefinition' as much as we want
-// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
-/* eslint-disable vue/no-mutating-props */
-import { defineComponent, inject, PropType } from 'vue';
+import { defineComponent, inject } from 'vue';
 import {
   Feedback,
   QuestionAnswer,
@@ -213,6 +215,7 @@ export default defineComponent({
   components: { StudipWysiwyg },
   methods: {
     $gettext,
+
     addAnswer(): void {
       this.taskDefinition.answers.push({
         text: this.$gettext('Neue Antwort'),
@@ -224,45 +227,27 @@ export default defineComponent({
         },
       });
     },
+
     removeAnswer(answerToRemove: QuestionAnswer): void {
       this.taskDefinition.answers = this.taskDefinition.answers.filter(
         (answer) => answer !== answerToRemove
       );
     },
+
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
+
     titleForDeleteButtonForFeedback(feedback: Feedback): string {
       return this.$gettext(
         'Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt.',
         { percentage: feedback.percentage.toString() }
       );
     },
-    addFeedback(): void {
-      // Old version directly mutating taskDefinition (breaks undo/redo)
-      // this.taskDefinition.feedback.push({
-      //   percentage: this.feedbackSortedByScore[0]?.percentage,
-      //   message: 'Feedback',
-      // });
-      // Rewrite to use performEdit over the store (Will not work in Interactive Video)
-      // taskEditorStore.performEdit({
-      //   newTaskDefinition: produce(
-      //     this.taskDefinition,
-      //     (taskDraft: FillInTheBlanksTask) => {
-      //       taskDraft.feedback.push({
-      //         percentage: this.feedbackSortedByScore[0]?.percentage,
-      //         message: 'Feedback',
-      //       });
-      //     }
-      //   ),
-      //   undoBatch: {},
-      // });
 
-      // Rewrite using provide/inject (will work in all of the cases we are
-      // considering -- Multiple tasks on the same page,or tasks included inside
-      // of each other a la Interactive Video).
+    addFeedback(): void {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
           this.taskDefinition,
@@ -312,7 +297,7 @@ export default defineComponent({
   margin-right: 0.25em;
 }
 
-.removeAnswerButton {
+.remove-answer-button {
   align-self: stretch; /* Make the item fill the available height */
   display: flex;
   align-items: center;
