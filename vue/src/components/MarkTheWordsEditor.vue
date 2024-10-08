@@ -1,10 +1,8 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Mark the Words') }}</legend>
+
       <div class="h5pEditorTopPanel">
         <button
           @click="addSolution"
@@ -14,9 +12,11 @@
         >
           {{ $gettext('Richtiges Wort markieren') }}
         </button>
+
         <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
-      <StudipWysiwyg
+
+      <studip-wysiwyg
         v-model="taskDefinition.template"
         ref="wysiwyg"
         force-soft-breaks
@@ -96,10 +96,7 @@
 </template>
 
 <script lang="ts">
-// Allow us to mutate the prop 'taskDefinition' as much as we want
-// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
-/* eslint-disable vue/no-mutating-props */
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { Feedback, MarkTheWordsTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
