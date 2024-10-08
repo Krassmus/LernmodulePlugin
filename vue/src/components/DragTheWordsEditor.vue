@@ -5,6 +5,7 @@
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Drag the Words') }}</legend>
+
       <div class="h5pEditorTopPanel">
         <button
           @click="addBlank"
@@ -16,6 +17,7 @@
         </button>
         <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
+
       <studip-wysiwyg
         v-model="taskDefinition.template"
         ref="wysiwyg"
@@ -67,9 +69,9 @@
         <input type="checkbox" v-model="taskDefinition.retryAllowed" />
         {{ $gettext('Mehrere Versuche erlauben') }}
       </label>
+
       <label :class="taskDefinition.retryAllowed ? '' : 'setting-disabled'"
         >{{ $gettext('Text im Button:') }}
-
         <input
           type="text"
           :disabled="!taskDefinition.retryAllowed"
@@ -90,6 +92,7 @@
         />
         {{ $gettext('Lösungen können angezeigt werden') }}
       </label>
+
       <label
         :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
       >
@@ -176,7 +179,7 @@
 // Allow us to mutate the prop 'taskDefinition' as much as we want.
 // TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
 /* eslint-disable vue/no-mutating-props */
-import { defineComponent, inject, PropType } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
