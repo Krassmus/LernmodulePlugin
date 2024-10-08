@@ -59,12 +59,22 @@
     <TabComponent v-if="debug" title="Debug" icon="tools">
       <pre v-text="taskDefinition" />
     </TabComponent>
+
+    <form class="default">
+      <feedback-editor
+        :feedback="taskDefinition.feedback"
+        :result-message="taskDefinition.strings.resultMessage"
+        @update:feedback="updateFeedback"
+        @update:result-message="updateResultMessage"
+      />
+    </form>
   </TabsComponent>
 </template>
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import {
+  Feedback,
   fileIdToUrl,
   LernmoduleMultimediaElement,
   Pair,
@@ -78,6 +88,7 @@ import TabsComponent from '@/components/courseware-components-ported-to-vue3/Tab
 import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
 import PairingViewer from '@/components/PairingViewer.vue';
 import PairingElement from '@/components/PairingElement.vue';
+import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import {
   TaskEditorState,
   taskEditorStateSymbol,
@@ -92,6 +103,7 @@ export default defineComponent({
     TabsComponent,
     ElementPair,
     PairingElement,
+    FeedbackEditor,
   },
   setup() {
     return {
@@ -196,6 +208,30 @@ export default defineComponent({
       this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: payload.undoBatch ?? {},
+      });
+    },
+
+    updateFeedback(updatedFeedback: Feedback[]) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: PairingTask) => {
+            taskDraft.feedback = updatedFeedback;
+          }
+        ),
+        undoBatch: {},
+      });
+    },
+
+    updateResultMessage(updatedResultMessage: string) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: PairingTask) => {
+            taskDraft.strings.resultMessage = updatedResultMessage;
+          }
+        ),
+        undoBatch: {},
       });
     },
   },
