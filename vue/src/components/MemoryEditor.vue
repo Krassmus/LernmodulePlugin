@@ -55,6 +55,11 @@
         {{ $gettext('Karten in einem Quadrat positionieren') }}
       </label>
 
+      <label>
+        {{ $gettext('Ergebnismitteilung:') }}
+        <input type="text" v-model="taskDefinition.strings.resultMessage" />
+      </label>
+
       <label
         >{{ $gettext('Rückseite') }}
         <span
