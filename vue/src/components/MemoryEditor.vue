@@ -2,13 +2,14 @@
   <form class="default">
     <fieldset class="main-flex">
       <legend>{{ $gettext('Memory') }}</legend>
+
       <div class="cards-list">
         <div
           v-for="(card, index) in taskDefinition.cards"
           :key="card.uuid"
           :class="{
             'cards-list-item': true,
-            'selected-card': index === this.selectedCardIndex,
+            'selected-card': index === selectedCardIndex,
           }"
           @click="selectCard(index)"
         >
@@ -25,6 +26,7 @@
             <img :src="urlForIcon('trash')" alt="" />
           </button>
         </div>
+
         <button
           type="button"
           class="button add add-card-button"
@@ -35,14 +37,16 @@
       </div>
 
       <MemoryCardEditor
-        v-if="this.taskDefinition.cards[this.selectedCardIndex]"
+        v-if="taskDefinition.cards[selectedCardIndex]"
         class="edited-memory-card"
-        :card-index="this.selectedCardIndex"
+        :card-index="selectedCardIndex"
       />
+
       <div v-else class="edited-memory-card no-card-selected-placeholder">
         {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
       </div>
     </fieldset>
+
     <fieldset class="collapsable">
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
@@ -54,18 +58,17 @@
       <label
         >{{ $gettext('Rückseite') }}
         <span
-          v-if="
-            this.taskDefinition.flipside && this.taskDefinition.flipside.file_id
-          "
+          v-if="taskDefinition.flipside && taskDefinition.flipside.file_id"
           class="flipside-image-and-button-container"
         >
           <span class="memory-card-flipside">
             <img
-              :src="fileIdToUrl(this.taskDefinition.flipside.file_id)"
-              :alt="this.taskDefinition.flipside.altText"
+              :src="fileIdToUrl(taskDefinition.flipside.file_id)"
+              :alt="taskDefinition.flipside.altText"
               class="flipside-image"
             />
           </span>
+
           <button
             type="button"
             class="button delete-flipside-image-button"
