@@ -1,9 +1,9 @@
 <template>
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Bild') }}</legend>
-      <div>
-        <h4>{{ $gettext('Das Bild') }}</h4>
+      <legend>{{ $gettext('Karte') }}</legend>
+      <label
+        >{{ $gettext('Bild') }}
         <img
           v-if="image.file_id"
           :src="fileIdToUrl(image.file_id)"
@@ -11,7 +11,7 @@
           class="sequencing-editor-image"
         />
         <FileUpload v-else @file-uploaded="onUploadImage" />
-      </div>
+      </label>
       <label
         >{{ $gettext('Alternativer Text') }}
         <input
