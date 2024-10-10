@@ -271,6 +271,7 @@ export const sequencingTaskSchema = z.object({
   strings: z.object({
     checkButton: z.string(),
     retryButton: z.string(),
+    continueButton: z.string().optional().default($gettext('Fortsetzen')),
     solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
@@ -436,6 +437,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         strings: {
           checkButton: 'Reihenfolge überprüfen',
           retryButton: 'Erneut versuchen',
+          continueButton: 'Fortsetzen',
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Elemente richtig sortiert.',
         },

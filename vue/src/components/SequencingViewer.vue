@@ -48,7 +48,7 @@
     />
 
     <button
-      v-if="isShowingResults && !isShowingSolutions"
+      v-if="isShowingResults && !isShowingSolutions && !allAnswersAreCorrect"
       v-text="task.strings.solutionsButton"
       @click="showSolutions()"
       type="button"
@@ -59,6 +59,14 @@
       v-if="isShowingResults"
       v-text="task.strings.retryButton"
       @click="reset()"
+      type="button"
+      class="h5p-button"
+    />
+
+    <button
+      v-if="isShowingResults && !isShowingSolutions && !allAnswersAreCorrect"
+      v-text="task.strings.continueButton"
+      @click="continueTask()"
       type="button"
       class="h5p-button"
     />
@@ -173,6 +181,10 @@ export default defineComponent({
       this.resetImagesToCorrectOrder();
     },
 
+    continueTask(): void {
+      this.isShowingResults = false;
+    },
+
     reset(): void {
       this.isShowingResults = false;
       this.isShowingSolutions = false;
@@ -194,7 +206,7 @@ export default defineComponent({
   },
 
   computed: {
-    correctAnswers(): Number {
+    correctAnswers(): number {
       let correctAnswers = 0;
       for (let i = 0; i < this.task.images.length; i++) {
         if (this.task.images[i].uuid === this.images[i].uuid) {
@@ -204,8 +216,12 @@ export default defineComponent({
       return correctAnswers;
     },
 
-    maxPoints(): Number {
+    maxPoints(): number {
       return this.task.images.length;
+    },
+
+    allAnswersAreCorrect(): boolean {
+      return this.correctAnswers === this.maxPoints;
     },
 
     resultMessage(): string {
