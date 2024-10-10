@@ -15,6 +15,7 @@
       @drag="onDrag(image)"
       @dragend="endDragImage(image)"
       @dragover="onDragOver(image)"
+      @click="onClick(image)"
     >
       <img
         class="image"
@@ -157,14 +158,34 @@ export default defineComponent({
           ')'
         );
 
-        this.moveInArray(this.images, fromIndex, toIndex);
+        this.moveInArray(fromIndex, toIndex);
       }
     },
 
-    moveInArray(array: Image[], fromIndex: number, toIndex: number) {
-      let element = array[fromIndex];
-      array.splice(fromIndex, 1);
-      array.splice(toIndex, 0, element);
+    onClick(image: Image) {
+      if (this.isShowingSolutions || this.isShowingResults) return;
+
+      if (this.imageInteractedWith) {
+        const fromIndex = this.images.indexOf(this.imageInteractedWith);
+        const toIndex = this.images.indexOf(image);
+        this.swapInArray(fromIndex, toIndex);
+        this.imageInteractedWith = undefined;
+      } else {
+        this.imageInteractedWith = image;
+      }
+    },
+
+    moveInArray(fromIndex: number, toIndex: number) {
+      let element = this.images[fromIndex];
+      this.images.splice(fromIndex, 1);
+      this.images.splice(toIndex, 0, element);
+    },
+
+    swapInArray(fromIndex: number, toIndex: number) {
+      [this.images[fromIndex], this.images[toIndex]] = [
+        this.images[toIndex],
+        this.images[fromIndex],
+      ];
     },
 
     isImageInCorrectPosition(image: Image): boolean {
