@@ -140,7 +140,7 @@ export default defineComponent({
       this.imageInteractedWith = undefined;
     },
 
-    onDragOver(image: Image): void {
+    onDragOver(image: Image) {
       if (this.imageInteractedWith && this.imageInteractedWith != image) {
         const fromIndex = this.images.indexOf(this.imageInteractedWith);
         const toIndex = this.images.indexOf(image);
@@ -172,20 +172,20 @@ export default defineComponent({
       return index !== -1 && this.task.images[index].uuid === image.uuid;
     },
 
-    showResults(): void {
+    showResults() {
       this.isShowingResults = true;
     },
 
-    showSolutions(): void {
+    showSolutions() {
       this.isShowingSolutions = true;
       this.resetImagesToCorrectOrder();
     },
 
-    continueTask(): void {
+    continueTask() {
       this.isShowingResults = false;
     },
 
-    reset(): void {
+    reset() {
       this.isShowingResults = false;
       this.isShowingSolutions = false;
       this.shuffleImages();
