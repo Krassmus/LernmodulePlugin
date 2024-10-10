@@ -6,11 +6,11 @@
       class="image-container"
       :class="{
         dragged: imageInteractedWith === image,
-        disabled: showResults,
-        correct: showResults && isImageInCorrectPosition(image),
-        incorrect: showResults && !isImageInCorrectPosition(image),
+        disabled: isShowingResults,
+        correct: isShowingResults && isImageInCorrectPosition(image),
+        incorrect: isShowingResults && !isImageInCorrectPosition(image),
       }"
-      :draggable="!showResults"
+      :draggable="!isShowingResults"
       @dragstart="(event) => startDragImage(image, event)"
       @drag="onDrag(image)"
       @dragend="endDragImage(image)"
@@ -31,7 +31,7 @@
   </div>
 
   <FeedbackElement
-    v-if="showResults"
+    v-if="isShowingResults && !isShowingSolutions"
     :achievedPoints="correctAnswers"
     :maxPoints="maxPoints"
     :resultMessage="resultMessage"
@@ -40,15 +40,23 @@
 
   <div class="h5p-button-panel">
     <button
-      v-if="!showResults"
+      v-if="!isShowingResults"
       v-text="task.strings.checkButton"
-      @click="checkResults()"
+      @click="showResults()"
       type="button"
       class="h5p-button"
     />
 
     <button
-      v-if="showResults"
+      v-if="isShowingResults && !isShowingSolutions"
+      v-text="task.strings.solutionsButton"
+      @click="showSolutions()"
+      type="button"
+      class="h5p-button"
+    />
+
+    <button
+      v-if="isShowingResults"
       v-text="task.strings.retryButton"
       @click="reset()"
       type="button"
@@ -83,12 +91,14 @@ export default defineComponent({
     return {
       images: [] as Image[],
       imageInteractedWith: undefined as Image | undefined,
-      showResults: false as boolean,
+      isShowingResults: false as boolean,
+      isShowingSolutions: false as boolean,
     };
   },
 
   methods: {
     fileIdToUrl,
+
     $gettext,
 
     startDragImage(image: Image, event: DragEvent) {
@@ -154,12 +164,18 @@ export default defineComponent({
       return index !== -1 && this.task.images[index].uuid === image.uuid;
     },
 
-    checkResults(): void {
-      this.showResults = true;
+    showResults(): void {
+      this.isShowingResults = true;
+    },
+
+    showSolutions(): void {
+      this.isShowingSolutions = true;
+      this.resetImagesToCorrectOrder();
     },
 
     reset(): void {
-      this.showResults = false;
+      this.isShowingResults = false;
+      this.isShowingSolutions = false;
       this.shuffleImages();
     },
 
@@ -170,6 +186,10 @@ export default defineComponent({
         .map((image) => ({ image: image, sort: Math.random() }))
         .sort((image1, image2) => image1.sort - image2.sort)
         .map(({ image }) => image);
+    },
+
+    resetImagesToCorrectOrder() {
+      this.images = this.task.images;
     },
   },
 
