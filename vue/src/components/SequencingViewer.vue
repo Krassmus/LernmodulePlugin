@@ -48,7 +48,6 @@
       <button
         v-if="!isShowingResults"
         v-text="task.strings.checkButton"
-        :aria-label="$gettext('Ergebnis überprüfen')"
         @click="showResults()"
         type="button"
         class="h5p-button"
