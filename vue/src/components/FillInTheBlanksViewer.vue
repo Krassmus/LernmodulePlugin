@@ -344,13 +344,20 @@ export default defineComponent({
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
+
+    removePTags(text: string) {
+      // Remove all opening and closing <p> tags
+      return text.replace(/<\/?p>/g, '');
+    },
   },
 
   computed: {
     splitTemplate(): string[] {
+      const cleanTemplate = this.removePTags(this.task.template);
+
       // Returns an array where the even indexes are the static text portions,
       // and the odd indexes are the blanks.
-      return this.task.template.split(/\*([^*]+)\*/);
+      return cleanTemplate.split(/\*([^*]+)\*/);
     },
 
     parsedTemplate(): FillInTheBlanksElement[] {

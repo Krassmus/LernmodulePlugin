@@ -161,6 +161,11 @@ export default defineComponent({
     isMarked(word: MarkTheWordsElement): boolean {
       return this.markedWords.has(word);
     },
+
+    removePTags(text: string) {
+      // Remove all opening and closing <p> tags
+      return text.replace(/<\/?p>/g, '');
+    },
   },
   computed: {
     /**
@@ -168,8 +173,10 @@ export default defineComponent({
      * and the odd indexes are the correct words to be marked.
      */
     splitTemplate(): string[] {
+      // Clean from <p> tags
+      const cleanTemplate = this.removePTags(this.task.template);
       // Split the text into chunks based on pairs of asterisks
-      return this.task.template.split(/\*([^*]*)\*/);
+      return cleanTemplate.split(/\*([^*]*)\*/);
     },
 
     parsedTemplate(): MarkTheWordsElement[] {

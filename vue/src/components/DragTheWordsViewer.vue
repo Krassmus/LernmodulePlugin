@@ -304,6 +304,7 @@ export default defineComponent({
         target.style.backgroundColor = '#80b4ed';
       }
     },
+
     onDragLeave(event: DragEvent, element: Blank) {
       const target = event.target as HTMLElement | null;
       if (target) {
@@ -372,12 +373,18 @@ export default defineComponent({
         delete this.userInputs[blank.uuid];
       }
     },
+
+    removePTags(text: string) {
+      // Remove all opening and closing <p> tags
+      return text.replace(/<\/?p>/g, '');
+    },
   },
   computed: {
     splitTemplate(): string[] {
+      const cleanTemplate = this.removePTags(this.task.template);
       // Returns an array where the even indexes are the static text portions,
       // and the odd indexes are the blanks.
-      return this.task.template.split(/\*([^*]*)\*/);
+      return cleanTemplate.split(/\*([^*]*)\*/);
     },
 
     parsedTemplate(): DragTheWordsElement[] {
