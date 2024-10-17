@@ -1,6 +1,6 @@
 <template>
-  <div class="h5p-module">
-    <div class="h5pMarkTheWordText" ref="wrapperElement">
+  <div class="stud5p-mark-the-words">
+    <div class="mark-the-words-text">
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <span
           v-if="element.type === 'solution'"
@@ -133,7 +133,6 @@ export default defineComponent({
       debug: false,
     };
   },
-
   methods: {
     onClickCheck() {
       this.showResults = true;
@@ -186,19 +185,19 @@ export default defineComponent({
         // User is done marking words and wants to see the results
         if (this.isMarked(word)) {
           if (word.type === 'solution') {
-            return 'h5pCorrectAnswer';
+            return 'correct-answer';
           } else {
-            return 'h5pIncorrectAnswer';
+            return 'incorrect-answer';
           }
         } else {
-          return 'h5pStaticTextNoHover';
+          return 'static-word-no-hover';
         }
       } else {
         // User is working on the task
         if (this.isMarked(word)) {
-          return 'h5pMarkedWord';
+          return 'marked-word';
         } else {
-          return 'h5pStaticText';
+          return 'static-word';
         }
       }
     },
@@ -332,51 +331,47 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.h5pStaticText {
+.static-word {
   background: #ffffff;
   color: #000000;
 }
 
-.h5pStaticText:hover {
+.static-word:hover {
   box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
 }
 
-.h5pStaticTextNoHover {
+.static-word-no-hover {
   background: #ffffff;
   color: #000000;
 }
 
-.h5pMarkedWord {
+.marked-word {
   box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   background-color: #d4f1f6;
 }
 
-.h5pMarkedWord:hover {
+.marked-word:hover {
   box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
 }
 
-.h5pCorrectAnswer {
+.correct-answer {
   color: #255c41;
   box-shadow: 0 0 0 1px #d4f6e6;
   border-radius: 0.25em;
   background-color: #d4f6e6;
 }
 
-.h5pIncorrectAnswer {
+.incorrect-answer {
   color: #b71c1c;
   box-shadow: 0 0 0 1px #f7d0d0;
   border-radius: 0.25em;
   background-color: #f7d0d0;
   text-decoration: line-through;
-}
-
-.h5pMarkTheWordText {
-  word-break: break-word;
 }
 
 .space {
