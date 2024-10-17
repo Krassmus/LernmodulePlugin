@@ -38,30 +38,33 @@
       </template>
     </div>
 
-    <feedback-element
-      v-if="showResults"
-      :achieved-points="score"
-      :max-points="maxScore"
-      :feedback="this.task.feedback"
-      :result-message="resultMessage"
-    />
-
-    <div class="stud5p-button-panel">
-      <button
-        v-if="showCheckButton"
-        v-text="this.task.strings.checkButton"
-        @click="onClickCheck"
-        type="button"
-        class="stud5p-button"
+    <!-- Feedback and button section -->
+    <div class="feedback-and-button-container">
+      <feedback-element
+        v-if="showResults"
+        :achieved-points="score"
+        :max-points="maxScore"
+        :feedback="this.task.feedback"
+        :result-message="resultMessage"
       />
 
-      <button
-        v-if="showRetryButton"
-        v-text="this.task.strings.retryButton"
-        @click="onClickRetry"
-        type="button"
-        class="stud5p-button"
-      />
+      <div class="stud5p-button-panel">
+        <button
+          v-if="showCheckButton"
+          v-text="this.task.strings.checkButton"
+          @click="onClickCheck"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="showRetryButton"
+          v-text="this.task.strings.retryButton"
+          @click="onClickRetry"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
     </div>
 
     <div v-if="debug">
@@ -382,5 +385,11 @@ export default defineComponent({
 .no-break {
   white-space: nowrap; /* Prevents line break inside the element */
   display: inline-block; /* Makes sure it behaves like a block in inline context */
+}
+
+.feedback-and-button-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 1em;
 }
 </style>
