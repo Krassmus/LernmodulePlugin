@@ -35,47 +35,50 @@
       </template>
     </div>
 
-    <FeedbackElement
-      v-if="showResults"
-      :achievedPoints="correctAnswers"
-      :maxPoints="maxPoints"
-      :feedback="task.feedback"
-      :resultMessage="resultMessage"
-    />
-
-    <div
-      v-if="showFillInAllTheBlanksMessage"
-      class="h5pMessage"
-      v-text="fillInAllTheBlanksMessage"
-    />
-
-    <div class="stud5p-button-panel">
-      <button
-        v-if="showCheckButton"
-        v-text="this.task.strings.checkButton"
-        @click="onClickCheck(false)"
-        type="button"
-        class="stud5p-button"
-        ref="checkButton"
+    <!-- Feedback and button section -->
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="showResults"
+        :achievedPoints="correctAnswers"
+        :maxPoints="maxPoints"
+        :feedback="task.feedback"
+        :resultMessage="resultMessage"
       />
 
-      <template v-if="showExtraButtons">
+      <div
+        v-if="showFillInAllTheBlanksMessage"
+        class="stud5p-message"
+        v-text="fillInAllTheBlanksMessage"
+      />
+
+      <div class="stud5p-button-panel">
         <button
-          v-if="showSolutionButton"
-          v-text="this.task.strings.solutionsButton"
-          @click="onClickShowSolution"
+          v-if="showCheckButton"
+          v-text="this.task.strings.checkButton"
+          @click="onClickCheck(false)"
           type="button"
           class="stud5p-button"
+          ref="checkButton"
         />
 
-        <button
-          v-if="showRetryButton"
-          v-text="this.task.strings.retryButton"
-          @click="onClickTryAgain"
-          type="button"
-          class="stud5p-button"
-        />
-      </template>
+        <template v-if="showExtraButtons">
+          <button
+            v-if="showRetryButton"
+            v-text="this.task.strings.retryButton"
+            @click="onClickTryAgain"
+            type="button"
+            class="stud5p-button"
+          />
+
+          <button
+            v-if="showSolutionButton"
+            v-text="this.task.strings.solutionsButton"
+            @click="onClickShowSolution"
+            type="button"
+            class="stud5p-button"
+          />
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -546,8 +549,14 @@ input[type='text'] {
   border: 1px solid #a0a0a0;
 }
 
-.h5pMessage {
+.stud5p-message {
   color: #1a73d9;
   padding-top: 0.5em;
+}
+
+.feedback-and-button-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 1em;
 }
 </style>
