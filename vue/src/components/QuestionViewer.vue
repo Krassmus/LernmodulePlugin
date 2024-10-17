@@ -94,7 +94,7 @@
         v-text="this.task.strings.checkButton"
         @click="onClickCheck"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
 
       <button
@@ -102,7 +102,7 @@
         v-text="this.task.strings.retryButton"
         @click="onClickTryAgain"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
 
       <button
@@ -110,7 +110,7 @@
         v-text="this.task.strings.solutionsButton"
         @click="onClickShowSolution"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
     </div>
   </div>

@@ -72,7 +72,7 @@
         v-text="this.task.strings.retryButton"
         @click="onClickTryAgain"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
     </div>
   </div>

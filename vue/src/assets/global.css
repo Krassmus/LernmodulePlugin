@@ -35,7 +35,7 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   margin-bottom: 0.4em;
 }
 
-.h5p-button {
+.stud5p-button {
   padding: 0.5em 1em; /* vertical, horizontal */
   margin-right: 0.5em; /* margin between buttons */
   border-radius: 2em;
@@ -47,11 +47,11 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   line-height: 1.25em;
 }
 
-.h5p-button:last-child {
+.stud5p-button:last-child {
   margin-right: 0;
 }
 
-.h5p-button:hover {
+.stud5p-button:hover {
   background: rgb(19, 86, 163);
 }
 

@@ -77,7 +77,7 @@
       v-text="this.task.strings.checkButton"
       @click="checkResults()"
       type="button"
-      class="h5p-button"
+      class="stud5p-button"
     />
 
     <button
@@ -85,7 +85,7 @@
       v-text="this.task.strings.retryButton"
       @click="reset()"
       type="button"
-      class="h5p-button"
+      class="stud5p-button"
     />
   </div>
 </template>

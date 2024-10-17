@@ -108,7 +108,7 @@
           v-text="task.strings.checkButton"
           @click="onClickCheck"
           type="button"
-          class="h5p-button"
+          class="stud5p-button"
         />
 
         <!-- Extra buttons (retry, show solutions) -->
@@ -118,7 +118,7 @@
             v-text="task.strings.solutionsButton"
             @click="onClickShowSolution"
             type="button"
-            class="h5p-button"
+            class="stud5p-button"
           />
 
           <button
@@ -126,7 +126,7 @@
             v-text="task.strings.retryButton"
             @click="onClickTryAgain"
             type="button"
-            class="h5p-button"
+            class="stud5p-button"
           />
         </template>
       </div>

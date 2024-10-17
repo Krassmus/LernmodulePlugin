@@ -50,7 +50,7 @@
         v-text="task.strings.checkButton"
         @click="showResults()"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
 
       <button
@@ -58,7 +58,7 @@
         v-text="task.strings.solutionsButton"
         @click="showSolutions()"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
 
       <button
@@ -66,7 +66,7 @@
         v-text="task.strings.retryButton"
         @click="reset()"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
 
       <button
@@ -74,7 +74,7 @@
         v-text="task.strings.continueButton"
         @click="continueTask()"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
     </div>
     <div
