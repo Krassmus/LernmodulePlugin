@@ -88,7 +88,7 @@
       :feedback="task.feedback"
     />
 
-    <div class="h5p-button-panel">
+    <div class="stud5p-button-panel">
       <button
         v-if="!isSubmitted"
         v-text="this.task.strings.checkButton"

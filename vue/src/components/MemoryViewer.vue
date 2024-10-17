@@ -66,7 +66,7 @@
         {{ this.resultMessage }}
       </div>
     </div>
-    <div class="h5p-button-panel">
+    <div class="stud5p-button-panel">
       <button
         v-if="showRetryButton"
         v-text="this.task.strings.retryButton"

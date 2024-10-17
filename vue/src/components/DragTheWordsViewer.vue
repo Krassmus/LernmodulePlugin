@@ -101,7 +101,7 @@
       />
 
       <!-- Button panel -->
-      <div class="h5p-button-panel">
+      <div class="stud5p-button-panel">
         <!-- Check button -->
         <button
           v-if="showCheckButton"
