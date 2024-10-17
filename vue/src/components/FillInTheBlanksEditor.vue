@@ -6,7 +6,7 @@
     <fieldset>
       <legend>{{ $gettext('Fill in the Blanks') }}</legend>
 
-      <div class="h5pEditorTopPanel">
+      <div class="fill-in-the-blanks-editor-top-panel">
         <button
           @click="addBlank"
           class="button"
@@ -234,7 +234,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.h5pEditorTopPanel {
+.fill-in-the-blanks-editor-top-panel {
   display: flex;
   justify-content: flex-start;
   align-items: center;
