@@ -35,8 +35,8 @@
               v-else
               class="blank"
               @drop="onDropBlank($event, element)"
-              @dragenter="onDragEnter($event, element)"
-              @dragleave="onDragLeave($event, element)"
+              @dragenter="onDragEnter($event)"
+              @dragleave="onDragLeave($event)"
               @dragover.prevent
               @click="onClickBlank(element)"
             >
@@ -136,9 +136,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
+import { DragTheWordsTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEqual, round } from 'lodash';
+import { isEqual } from 'lodash';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
@@ -298,14 +298,14 @@ export default defineComponent({
       }
     },
 
-    onDragEnter(event: DragEvent, element: Blank) {
+    onDragEnter(event: DragEvent) {
       const target = event.target as HTMLElement | null;
       if (target) {
         target.style.backgroundColor = '#80b4ed';
       }
     },
 
-    onDragLeave(event: DragEvent, element: Blank) {
+    onDragLeave(event: DragEvent) {
       const target = event.target as HTMLElement | null;
       if (target) {
         target.style.backgroundColor = '';
