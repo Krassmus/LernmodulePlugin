@@ -51,7 +51,7 @@
             <!-- Show solution if incorrect and solutions are revealed -->
             <span
               v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-              class="h5p-solution"
+              class="stud5p-solution"
             >
               {{ element.solution }}
             </span>

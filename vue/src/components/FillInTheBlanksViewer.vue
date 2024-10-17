@@ -27,7 +27,7 @@
 
           <span
             v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-            class="h5p-solution"
+            class="stud5p-solution"
           >
             {{ element.solutions[0] }}
           </span>
