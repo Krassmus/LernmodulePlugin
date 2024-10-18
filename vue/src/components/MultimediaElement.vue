@@ -43,8 +43,9 @@ export default defineComponent({
 <style scoped>
 .image-element {
   box-sizing: border-box;
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
   padding: 4px;
   object-fit: contain;
   box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
