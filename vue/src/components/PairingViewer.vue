@@ -1,92 +1,99 @@
 <template>
   <div class="stud5p-pairing">
-    <div
-      class="draggableElementsColumn"
-      draggable="false"
-      @dragover.prevent
-      @dragenter.prevent
-      @drop="onDropOnInteractiveElements($event)"
-    >
-      <button
-        type="button"
-        v-for="draggableElementId in draggableElements"
-        :key="draggableElementId"
-        :draggable="
-          !this.isDraggableElementUsed(draggableElementId) && !this.showResults
-        "
-        @dragstart="startDragElement($event, draggableElementId)"
-        @dragend="endDragElement()"
-        @click="onClickDraggableElement(draggableElementId)"
-        class="draggableElement"
-        :class="{
-          disabled:
-            this.isDraggableElementUsed(draggableElementId) ||
-            this.showResults ||
-            this.draggedElementId === draggableElementId,
-          selected: this.elementIdInteractedWith === draggableElementId,
-        }"
-      >
-        <MultimediaElement
-          :element="getElementById(draggableElementId)"
-          draggable="false"
-          ref="draggableImages"
-        />
-      </button>
-    </div>
-    <div class="targetElementsColumn">
-      <TargetImage
-        v-for="pair in this.task.pairs"
-        :class="{
-          outlined:
-            !this.elementsDraggedOntoTargets.hasOwnProperty(
-              pair.targetElement.uuid
-            ) &&
-            (this.draggedElementId || this.elementIdInteractedWith),
-        }"
-        :draggable-image="getElementDraggedOntoTarget(pair.targetElement.uuid)"
-        :target-image="getElementById(pair.targetElement.uuid)"
-        :isCorrect="this.isAnswerCorrect(pair.targetElement.uuid)"
-        :showResult="this.showResults"
-        :key="pair.uuid"
-        @drop="onDropOnTargetElement($event, pair.targetElement.uuid)"
-        :draggable="
-          getElementDraggedOntoTarget(pair.targetElement.uuid) &&
-          !this.showResults
-        "
-        @dragstart="startDragTargetElement($event, pair.targetElement.uuid)"
-        @dragend="endDragTargetElement()"
+    <div class="stud5p-content pairing-columns">
+      <div
+        class="draggableElementsColumn"
+        draggable="false"
         @dragover.prevent
         @dragenter.prevent
-        @click="onClickTargetElement(pair.targetElement.uuid)"
-      />
+        @drop="onDropOnInteractiveElements($event)"
+      >
+        <button
+          type="button"
+          v-for="draggableElementId in draggableElements"
+          :key="draggableElementId"
+          :draggable="
+            !this.isDraggableElementUsed(draggableElementId) &&
+            !this.showResults
+          "
+          @dragstart="startDragElement($event, draggableElementId)"
+          @dragend="endDragElement()"
+          @click="onClickDraggableElement(draggableElementId)"
+          class="draggableElement"
+          :class="{
+            disabled:
+              this.isDraggableElementUsed(draggableElementId) ||
+              this.showResults ||
+              this.draggedElementId === draggableElementId,
+            selected: this.elementIdInteractedWith === draggableElementId,
+          }"
+        >
+          <MultimediaElement
+            :element="getElementById(draggableElementId)"
+            draggable="false"
+            ref="draggableImages"
+          />
+        </button>
+      </div>
+
+      <div class="targetElementsColumn">
+        <TargetImage
+          v-for="pair in this.task.pairs"
+          :class="{
+            outlined:
+              !this.elementsDraggedOntoTargets.hasOwnProperty(
+                pair.targetElement.uuid
+              ) &&
+              (this.draggedElementId || this.elementIdInteractedWith),
+          }"
+          :draggable-image="
+            getElementDraggedOntoTarget(pair.targetElement.uuid)
+          "
+          :target-image="getElementById(pair.targetElement.uuid)"
+          :isCorrect="this.isAnswerCorrect(pair.targetElement.uuid)"
+          :showResult="this.showResults"
+          :key="pair.uuid"
+          @drop="onDropOnTargetElement($event, pair.targetElement.uuid)"
+          :draggable="
+            getElementDraggedOntoTarget(pair.targetElement.uuid) &&
+            !this.showResults
+          "
+          @dragstart="startDragTargetElement($event, pair.targetElement.uuid)"
+          @dragend="endDragTargetElement()"
+          @dragover.prevent
+          @dragenter.prevent
+          @click="onClickTargetElement(pair.targetElement.uuid)"
+        />
+      </div>
     </div>
-  </div>
-  <br />
 
-  <FeedbackElement
-    v-if="showResults"
-    :achievedPoints="correctAnswers"
-    :maxPoints="maxPoints"
-    :resultMessage="resultMessage"
-    :feedback="task.feedback"
-  />
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="showResults"
+        :achievedPoints="correctAnswers"
+        :maxPoints="maxPoints"
+        :resultMessage="resultMessage"
+        :feedback="task.feedback"
+      />
 
-  <div class="button-panel">
-    <button
-      v-if="!this.showResults"
-      v-text="this.task.strings.checkButton"
-      @click="checkResults()"
-      type="button"
-      class="stud5p-button"
-    />
+      <div class="button-panel">
+        <button
+          v-if="!this.showResults"
+          v-text="this.task.strings.checkButton"
+          @click="checkResults()"
+          type="button"
+          class="stud5p-button"
+        />
 
-    <button
-      v-if="this.showResults"
-      v-text="this.task.strings.retryButton"
-      @click="reset()"
-      type="button"
-      class="stud5p-button"
-    />
+        <button
+          v-if="this.showResults"
+          v-text="this.task.strings.retryButton"
+          @click="reset()"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -368,7 +375,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.stud5p-pairing {
+.pairing-columns {
   display: flex;
   flex-direction: row;
 }

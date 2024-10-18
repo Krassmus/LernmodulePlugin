@@ -1,6 +1,6 @@
 <template>
   <div class="stud5p-fill-in-the-blanks" ref="wrapperElement">
-    <div class="fill-in-the-blanks-text">
+    <div class="stud5p-content fill-in-the-blanks-text">
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <span v-if="element.type === 'staticText'" v-html="element.text" />
 
@@ -37,18 +37,18 @@
 
     <!-- Feedback and button section -->
     <div class="feedback-and-button-container">
+      <div
+        v-if="showFillInAllTheBlanksMessage"
+        class="stud5p-message"
+        v-text="fillInAllTheBlanksMessage"
+      />
+
       <FeedbackElement
         v-if="showResults"
         :achievedPoints="correctAnswers"
         :maxPoints="maxPoints"
         :feedback="task.feedback"
         :resultMessage="resultMessage"
-      />
-
-      <div
-        v-if="showFillInAllTheBlanksMessage"
-        class="stud5p-message"
-        v-text="fillInAllTheBlanksMessage"
       />
 
       <div class="button-panel">
@@ -547,10 +547,5 @@ input[type='text'] {
   color: unset;
   text-decoration: unset;
   border: 1px solid #a0a0a0;
-}
-
-.stud5p-message {
-  color: #1a73d9;
-  padding-top: 0.5em;
 }
 </style>

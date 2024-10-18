@@ -1,117 +1,121 @@
 <template>
   <div class="stud5p-question">
-    <div v-html="this.task.question" />
-    <template v-if="task.canAnswerMultiple">
-      <template v-for="(answer, i) in answers" :key="i">
-        <label :class="classForAnswer(answer)">
-          <input
-            type="checkbox"
-            class="answer-checkbox"
-            :value="answer.text"
-            v-model="selectedAnswers[answer.text]"
-            :disabled="isSubmitted"
-          />
-          {{ answer.text }}
-          <span
-            v-if="answer.strings.hint && !isSubmitted"
-            class="tooltip tooltip-icon answer-tooltip"
-            :data-tooltip="answer.strings.hint"
-          />
-        </label>
+    <div class="stud5p-content">
+      <div v-html="this.task.question" />
+      <template v-if="task.canAnswerMultiple">
+        <template v-for="(answer, i) in answers" :key="i">
+          <label :class="classForAnswer(answer)">
+            <input
+              type="checkbox"
+              class="answer-checkbox"
+              :value="answer.text"
+              v-model="selectedAnswers[answer.text]"
+              :disabled="isSubmitted"
+            />
+            {{ answer.text }}
+            <span
+              v-if="answer.strings.hint && !isSubmitted"
+              class="tooltip tooltip-icon answer-tooltip"
+              :data-tooltip="answer.strings.hint"
+            />
+          </label>
 
-        <template v-if="isSubmitted">
-          <div
-            v-if="
-              answer.strings.feedbackSelected && selectedAnswers[answer.text]
-            "
-            class="answer-feedback"
-          >
-            {{ answer.strings.feedbackSelected }}
-          </div>
+          <template v-if="isSubmitted">
+            <div
+              v-if="
+                answer.strings.feedbackSelected && selectedAnswers[answer.text]
+              "
+              class="answer-feedback"
+            >
+              {{ answer.strings.feedbackSelected }}
+            </div>
 
-          <div
-            v-else-if="
-              answer.strings.feedbackNotSelected &&
-              !selectedAnswers[answer.text]
-            "
-            class="answer-feedback"
-          >
-            {{ answer.strings.feedbackNotSelected }}
-          </div>
+            <div
+              v-else-if="
+                answer.strings.feedbackNotSelected &&
+                !selectedAnswers[answer.text]
+              "
+              class="answer-feedback"
+            >
+              {{ answer.strings.feedbackNotSelected }}
+            </div>
+          </template>
         </template>
       </template>
-    </template>
 
-    <template v-else>
-      <template v-for="(answer, i) in answers" :key="i">
-        <label :class="classForAnswer(answer)">
-          <input
-            type="radio"
-            class="answer-radiobutton"
-            :value="answer"
-            v-model="selectedAnswer"
-            :disabled="isSubmitted"
-          />
-          {{ answer.text }}
-          <div
-            v-if="answer.strings.hint && !isSubmitted"
-            class="tooltip tooltip-icon answer-tooltip"
-            :data-tooltip="answer.strings.hint"
-          />
-        </label>
+      <template v-else>
+        <template v-for="(answer, i) in answers" :key="i">
+          <label :class="classForAnswer(answer)">
+            <input
+              type="radio"
+              class="answer-radiobutton"
+              :value="answer"
+              v-model="selectedAnswer"
+              :disabled="isSubmitted"
+            />
+            {{ answer.text }}
+            <div
+              v-if="answer.strings.hint && !isSubmitted"
+              class="tooltip tooltip-icon answer-tooltip"
+              :data-tooltip="answer.strings.hint"
+            />
+          </label>
 
-        <template v-if="isSubmitted">
-          <div
-            v-if="answer.strings.feedbackSelected && selectedAnswer == answer"
-            class="answer-feedback"
-          >
-            {{ answer.strings.feedbackSelected }}
-          </div>
+          <template v-if="isSubmitted">
+            <div
+              v-if="answer.strings.feedbackSelected && selectedAnswer == answer"
+              class="answer-feedback"
+            >
+              {{ answer.strings.feedbackSelected }}
+            </div>
 
-          <div
-            v-else-if="
-              answer.strings.feedbackNotSelected && selectedAnswer !== answer
-            "
-            class="answer-feedback"
-          >
-            {{ answer.strings.feedbackNotSelected }}
-          </div>
+            <div
+              v-else-if="
+                answer.strings.feedbackNotSelected && selectedAnswer !== answer
+              "
+              class="answer-feedback"
+            >
+              {{ answer.strings.feedbackNotSelected }}
+            </div>
+          </template>
         </template>
       </template>
-    </template>
+    </div>
 
-    <FeedbackElement
-      v-if="isSubmitted"
-      :achieved-points="points"
-      :max-points="maxPoints"
-      :result-message="resultMessage"
-      :feedback="task.feedback"
-    />
-
-    <div class="button-panel">
-      <button
-        v-if="!isSubmitted"
-        v-text="this.task.strings.checkButton"
-        @click="onClickCheck"
-        type="button"
-        class="stud5p-button"
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="isSubmitted"
+        :achieved-points="points"
+        :max-points="maxPoints"
+        :result-message="resultMessage"
+        :feedback="task.feedback"
       />
 
-      <button
-        v-if="this.task.retryAllowed && isSubmitted"
-        v-text="this.task.strings.retryButton"
-        @click="onClickTryAgain"
-        type="button"
-        class="stud5p-button"
-      />
+      <div class="button-panel">
+        <button
+          v-if="!isSubmitted"
+          v-text="this.task.strings.checkButton"
+          @click="onClickCheck"
+          type="button"
+          class="stud5p-button"
+        />
 
-      <button
-        v-if="showSolutionsButton"
-        v-text="this.task.strings.solutionsButton"
-        @click="onClickShowSolution"
-        type="button"
-        class="stud5p-button"
-      />
+        <button
+          v-if="this.task.retryAllowed && isSubmitted"
+          v-text="this.task.strings.retryButton"
+          @click="onClickTryAgain"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="showSolutionsButton"
+          v-text="this.task.strings.solutionsButton"
+          @click="onClickShowSolution"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
     </div>
   </div>
 </template>

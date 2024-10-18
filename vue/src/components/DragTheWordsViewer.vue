@@ -1,7 +1,7 @@
 <template>
   <div class="stud5p-drag-the-words">
     <!-- Main container for text and answers -->
-    <div class="text-and-answers-container">
+    <div class="stud5p-content text-and-answers-container">
       <!-- Render the text and blank elements from parsedTemplate -->
       <div class="drag-the-words-text">
         <template v-for="element in parsedTemplate" :key="element.uuid">
@@ -82,15 +82,15 @@
       </div>
     </div>
 
-    <!-- Message prompting user to fill in all blanks before they can show solutions-->
-    <div
-      v-if="showFillInAllTheBlanksMessage"
-      class="message"
-      v-text="fillInAllTheBlanksMessage"
-    />
-
     <!-- Feedback and button section -->
     <div class="feedback-and-button-container">
+      <!-- Message prompting user to fill in all blanks before they can show solutions-->
+      <div
+        v-if="showFillInAllTheBlanksMessage"
+        class="stud5p-message"
+        v-text="fillInAllTheBlanksMessage"
+      />
+
       <!-- Feedback element displaying points and feedback -->
       <FeedbackElement
         v-if="showResults"

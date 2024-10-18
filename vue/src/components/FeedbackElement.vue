@@ -5,31 +5,33 @@
       class="feedback-text"
       v-text="feedbackMessage"
     />
-    <div v-if="maxPoints" class="feedback-score">
-      <div class="meter-and-star-container">
-        <div class="custom-meter">
-          <div class="custom-meter-bar" ref="meterbar" />
-        </div>
-        <img
-          v-if="achievedMaxPoints"
-          class="star-symbol"
-          :class="{ 'star-show': starVisible }"
-          src="../assets/star.svg"
-          width="38"
-          height="38"
-          :alt="
-            $gettext(
-              'Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt'
-            )
-          "
-        />
-        <div
-          class="result-text"
-          :class="{ 'result-text-offset': achievedMaxPoints }"
-          v-text="resultMessage"
-        />
+
+    <div v-if="maxPoints" class="meter-and-star-container">
+      <div class="custom-meter">
+        <div class="custom-meter-bar" ref="meterbar" />
       </div>
+
+      <img
+        v-if="achievedMaxPoints"
+        class="star-symbol"
+        :class="{ 'star-show': starVisible }"
+        src="../assets/star.svg"
+        width="38"
+        height="38"
+        :alt="
+          $gettext(
+            'Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt'
+          )
+        "
+      />
+
+      <div
+        class="result-text"
+        :class="{ 'result-text-offset': achievedMaxPoints }"
+        v-text="resultMessage"
+      />
     </div>
+
     <div v-else>{{ achievedPoints }}</div>
   </div>
 </template>
@@ -129,7 +131,6 @@ export default defineComponent({
   font-size: 1.25em;
   font-weight: bold;
   color: #1a73d9;
-  padding-bottom: 8px;
 }
 
 .result-text {
@@ -149,13 +150,9 @@ export default defineComponent({
 }
 
 .feedback-container {
-  padding-top: 24px;
-}
-
-.feedback-score {
   display: flex;
-  align-items: center;
-  gap: 0.5em;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .custom-meter {

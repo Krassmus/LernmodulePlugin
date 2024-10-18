@@ -1,7 +1,7 @@
 <template>
   <div class="stud5p-memory">
     <div
-      class="memory-grid"
+      class="stud5p-content memory-grid"
       :style="{
         gridTemplateColumns: gridTemplateColumns,
         gridTemplateRows: gridTemplateRows,
@@ -15,57 +15,57 @@
         @click="onClickCard(card)"
       />
     </div>
+
     <div
       style="
         display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        margin-top: 1em;
-        gap: 2em;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25em;
+        padding-bottom: 0.5em;
       "
     >
       <div>
-        <div>
-          <span class="memory-info-header" v-text="$gettext('Zeit:')" />
-          <span
-            v-text="
-              ' ' +
-              $gettext('%{ time } Sekunden', {
-                time: this.timer.toString(),
-              })
-            "
-          />
-        </div>
-
-        <div>
-          <span
-            class="memory-info-header"
-            v-text="$gettext('Umgedrehte Karten:')"
-          />
-          <span v-text="' ' + this.amountOfFlips.toString()" />
-        </div>
-
-        <div>
-          <span
-            class="memory-info-header"
-            v-text="$gettext('Aufgedeckte Paare:')"
-          />
-          <span
-            v-text="
-              ' ' +
-              $gettext('%{ amountOfPairsSolved } von %{ totalAmountOfPairs }', {
-                amountOfPairsSolved: this.amountOfPairsSolved.toString(),
-                totalAmountOfPairs: this.totalAmountOfPairs.toString(),
-              })
-            "
-          />
-        </div>
+        <span class="memory-info-header" v-text="$gettext('Zeit:')" />
+        <span
+          v-text="
+            ' ' +
+            $gettext('%{ time } Sekunden', {
+              time: this.timer.toString(),
+            })
+          "
+        />
       </div>
+
+      <div>
+        <span
+          class="memory-info-header"
+          v-text="$gettext('Umgedrehte Karten:')"
+        />
+        <span v-text="' ' + this.amountOfFlips.toString()" />
+      </div>
+
+      <div>
+        <span
+          class="memory-info-header"
+          v-text="$gettext('Aufgedeckte Paare:')"
+        />
+        <span
+          v-text="
+            ' ' +
+            $gettext('%{ amountOfPairsSolved } von %{ totalAmountOfPairs }', {
+              amountOfPairsSolved: this.amountOfPairsSolved.toString(),
+              totalAmountOfPairs: this.totalAmountOfPairs.toString(),
+            })
+          "
+        />
+      </div>
+
       <div v-if="showResults" class="result-message">
         {{ this.resultMessage }}
       </div>
     </div>
+
     <div class="button-panel">
       <button
         v-if="showRetryButton"
@@ -344,6 +344,5 @@ export default defineComponent({
   font-weight: bold;
   font-size: 2em;
   color: #1a73d9;
-  margin: 8px 0;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="stud5p-sequencing">
-    <div class="image-row" tabIndex="-1">
+    <div class="stud5p-content image-row" tabIndex="-1">
       <button
         type="button"
         v-for="(image, index) in images"
@@ -30,53 +30,61 @@
           :src="fileIdToUrl(image.file_id)"
           :alt="image.altText"
         />
+
         <span class="image-description" @dragover.prevent @dragenter.prevent>{{
           image.altText
         }}</span>
       </button>
     </div>
 
-    <FeedbackElement
-      v-if="isShowingResults && !isShowingSolutions"
-      :achievedPoints="correctAnswers"
-      :maxPoints="maxPoints"
-      :resultMessage="resultMessage"
-      :feedback="task.feedback"
-    />
-
-    <div class="button-panel">
-      <button
-        v-if="!isShowingResults"
-        v-text="task.strings.checkButton"
-        @click="showResults()"
-        type="button"
-        class="stud5p-button"
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="isShowingResults && !isShowingSolutions"
+        :achievedPoints="correctAnswers"
+        :maxPoints="maxPoints"
+        :resultMessage="resultMessage"
+        :feedback="task.feedback"
       />
 
-      <button
-        v-if="isShowingResults && !isShowingSolutions && !allAnswersAreCorrect"
-        v-text="task.strings.solutionsButton"
-        @click="showSolutions()"
-        type="button"
-        class="stud5p-button"
-      />
+      <div class="button-panel">
+        <button
+          v-if="!isShowingResults"
+          v-text="task.strings.checkButton"
+          @click="showResults()"
+          type="button"
+          class="stud5p-button"
+        />
 
-      <button
-        v-if="isShowingResults"
-        v-text="task.strings.retryButton"
-        @click="reset()"
-        type="button"
-        class="stud5p-button"
-      />
+        <button
+          v-if="isShowingResults"
+          v-text="task.strings.retryButton"
+          @click="reset()"
+          type="button"
+          class="stud5p-button"
+        />
 
-      <button
-        v-if="isShowingResults && !isShowingSolutions && !allAnswersAreCorrect"
-        v-text="task.strings.continueButton"
-        @click="continueTask()"
-        type="button"
-        class="stud5p-button"
-      />
+        <button
+          v-if="
+            isShowingResults && !isShowingSolutions && !allAnswersAreCorrect
+          "
+          v-text="task.strings.continueButton"
+          @click="continueTask()"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="
+            isShowingResults && !isShowingSolutions && !allAnswersAreCorrect
+          "
+          v-text="task.strings.solutionsButton"
+          @click="showSolutions()"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
     </div>
+
     <div
       aria-live="polite"
       aria-atomic="true"

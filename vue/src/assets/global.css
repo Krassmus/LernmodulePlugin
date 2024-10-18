@@ -10,6 +10,10 @@
   padding: 0.5em;
 }
 
+.stud5p-content {
+  padding-bottom: 1em;
+}
+
 /* Replace the border between toolbar and WYSIWYG textarea that is missing
 when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 */
@@ -32,13 +36,18 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 
 .feedback-and-button-container {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 1em;
 }
 
 .button-panel {
-  margin-top: 0.75em; /* margin between button and the feedback above it */
-  margin-bottom: 0.4em;
+}
+
+.stud5p-message {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #1a73d9;
 }
 
 .stud5p-button {
