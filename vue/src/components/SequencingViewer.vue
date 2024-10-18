@@ -44,7 +44,7 @@
       :feedback="task.feedback"
     />
 
-    <div class="stud5p-button-panel">
+    <div class="button-panel">
       <button
         v-if="!isShowingResults"
         v-text="task.strings.checkButton"

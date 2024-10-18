@@ -71,7 +71,7 @@
     :feedback="task.feedback"
   />
 
-  <div class="stud5p-button-panel">
+  <div class="button-panel">
     <button
       v-if="!this.showResults"
       v-text="this.task.strings.checkButton"
@@ -130,6 +130,7 @@ export default defineComponent({
   },
   methods: {
     fileIdToUrl,
+
     isAnswerCorrect(targetId: Uuid): boolean {
       const userInput = this.elementsDraggedOntoTargets[targetId];
       if (!userInput) {

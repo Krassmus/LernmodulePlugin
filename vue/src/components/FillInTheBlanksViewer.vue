@@ -51,7 +51,7 @@
         v-text="fillInAllTheBlanksMessage"
       />
 
-      <div class="stud5p-button-panel">
+      <div class="button-panel">
         <button
           v-if="showCheckButton"
           v-text="this.task.strings.checkButton"
