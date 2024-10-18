@@ -386,10 +386,4 @@ export default defineComponent({
   white-space: nowrap; /* Prevents line break inside the element */
   display: inline-block; /* Makes sure it behaves like a block in inline context */
 }
-
-.feedback-and-button-container {
-  display: flex;
-  align-items: flex-end;
-  gap: 1em;
-}
 </style>

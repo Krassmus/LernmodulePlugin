@@ -682,12 +682,6 @@ span.item:empty:before {
   flex-grow: 1;
 }
 
-.feedback-and-button-container {
-  display: flex;
-  align-items: flex-end;
-  gap: 1em;
-}
-
 .text-and-answers-container {
   display: flex;
   gap: 1em;

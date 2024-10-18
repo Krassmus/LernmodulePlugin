@@ -30,6 +30,12 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
   font-family: Lato, sans-serif;
 }
 
+.feedback-and-button-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 1em;
+}
+
 .button-panel {
   margin-top: 0.75em; /* margin between button and the feedback above it */
   margin-bottom: 0.4em;

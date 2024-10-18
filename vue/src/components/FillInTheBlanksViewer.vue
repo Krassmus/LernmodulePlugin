@@ -553,10 +553,4 @@ input[type='text'] {
   color: #1a73d9;
   padding-top: 0.5em;
 }
-
-.feedback-and-button-container {
-  display: flex;
-  align-items: flex-end;
-  gap: 1em;
-}
 </style>
