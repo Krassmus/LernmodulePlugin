@@ -127,7 +127,6 @@
           type="text"
           :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"
           v-model="taskDefinition.strings.fillInAllBlanksMessage"
-          style="width: 100%"
         />
       </label>
     </fieldset>
