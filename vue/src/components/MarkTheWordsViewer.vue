@@ -58,6 +58,14 @@
         />
 
         <button
+          v-if="showSolutionsButton"
+          v-text="task.strings.solutionsButton"
+          @click="onClickShowSolutions"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
           v-if="showRetryButton"
           v-text="this.task.strings.retryButton"
           @click="onClickRetry"
@@ -133,6 +141,7 @@ export default defineComponent({
     return {
       markedWords: new Set<MarkTheWordsElement>(),
       showResults: false,
+      showSolutions: false,
       debug: false,
     };
   },
@@ -141,8 +150,13 @@ export default defineComponent({
       this.showResults = true;
     },
 
+    onClickShowSolutions() {
+      this.showSolutions = true;
+    },
+
     onClickRetry() {
       this.showResults = false;
+      this.showSolutions = false;
       this.markedWords.clear();
     },
 
@@ -187,22 +201,18 @@ export default defineComponent({
       if (this.showResults) {
         // User is done marking words and wants to see the results
         if (this.isMarked(word)) {
-          if (word.type === 'solution') {
-            return 'correct-answer';
-          } else {
-            return 'incorrect-answer';
-          }
-        } else {
-          return 'static-word-no-hover';
+          return word.type === 'solution'
+            ? 'correct-answer'
+            : 'incorrect-answer';
         }
-      } else {
-        // User is working on the task
-        if (this.isMarked(word)) {
-          return 'marked-word';
-        } else {
-          return 'static-word';
-        }
+        // Word is not marked
+        return this.showSolutions && word.type === 'solution'
+          ? 'solution'
+          : 'static-word-no-hover';
       }
+
+      // User is still working on the task
+      return this.isMarked(word) ? 'marked-word' : 'static-word';
     },
 
     isMarked(word: MarkTheWordsElement): boolean {
@@ -293,6 +303,14 @@ export default defineComponent({
       return this.task.retryAllowed && this.showResults;
     },
 
+    showSolutionsButton(): boolean {
+      return (
+        this.task.showSolutionsAllowed &&
+        this.showResults &&
+        !this.showSolutions
+      );
+    },
+
     score(): number {
       let score = 0;
 
@@ -367,6 +385,14 @@ export default defineComponent({
   box-shadow: 0 0 0 1px #d4f6e6;
   border-radius: 0.25em;
   background-color: #d4f6e6;
+}
+
+.solution {
+  color: #255c41;
+  box-shadow: 0 0 0 1px #d4f6e6;
+  border-radius: 0.25em;
+  background-color: #d4f6e6;
+  border: 1px #255c41 dashed;
 }
 
 .incorrect-answer {
