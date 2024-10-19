@@ -63,17 +63,17 @@
 
         <template v-if="showExtraButtons">
           <button
-            v-if="showRetryButton"
-            v-text="this.task.strings.retryButton"
-            @click="onClickTryAgain"
+            v-if="showSolutionButton"
+            v-text="this.task.strings.solutionsButton"
+            @click="onClickShowSolution"
             type="button"
             class="stud5p-button"
           />
 
           <button
-            v-if="showSolutionButton"
-            v-text="this.task.strings.solutionsButton"
-            @click="onClickShowSolution"
+            v-if="showRetryButton"
+            v-text="this.task.strings.retryButton"
+            @click="onClickTryAgain"
             type="button"
             class="stud5p-button"
           />
