@@ -51,7 +51,11 @@
       </label>
 
       <label>
-        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
+        <input
+          v-model="taskDefinition.showSolutionsAllowed"
+          @change="updateAllBlanksRequirement"
+          type="checkbox"
+        />
         {{ $gettext('Lösungen anzeigen erlauben') }}
       </label>
 
@@ -190,6 +194,12 @@ export default defineComponent({
         writer.insertText('*', end);
         writer.insertText('*', start);
       });
+    },
+
+    updateAllBlanksRequirement() {
+      if (!this.taskDefinition.showSolutionsAllowed) {
+        this.taskDefinition.allBlanksMustBeFilledForSolutions = false;
+      }
     },
 
     updateFeedback(updatedFeedback: Feedback[]) {
