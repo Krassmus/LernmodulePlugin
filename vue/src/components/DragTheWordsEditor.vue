@@ -55,8 +55,25 @@
       </label>
 
       <label>
-        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
+        <input
+          v-model="taskDefinition.showSolutionsAllowed"
+          @change="updateAllBlanksRequirement"
+          type="checkbox"
+        />
         {{ $gettext('Lösungen anzeigen erlauben') }}
+      </label>
+
+      <label
+        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+      >
+        <input
+          v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
+          :disabled="!taskDefinition.showSolutionsAllowed"
+          type="checkbox"
+        />
+        {{
+          $gettext('Lösungen nur anzeigen, wenn alle Lücken ausgefüllt sind')
+        }}
       </label>
     </fieldset>
 
@@ -88,6 +105,24 @@
         <input
           v-model="taskDefinition.strings.solutionsButton"
           :disabled="!taskDefinition.showSolutionsAllowed"
+          type="text"
+        />
+      </label>
+
+      <label
+        :class="{
+          'setting-disabled':
+            !taskDefinition.showSolutionsAllowed ||
+            !taskDefinition.allBlanksMustBeFilledForSolutions,
+        }"
+      >
+        {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
+        <input
+          v-model="taskDefinition.strings.fillInAllBlanksMessage"
+          :disabled="
+            !taskDefinition.showSolutionsAllowed ||
+            !taskDefinition.allBlanksMustBeFilledForSolutions
+          "
           type="text"
         />
       </label>
@@ -168,6 +203,12 @@ export default defineComponent({
         writer.insertText('*', end);
         writer.insertText('*', start);
       });
+    },
+
+    updateAllBlanksRequirement() {
+      if (!this.taskDefinition.showSolutionsAllowed) {
+        this.taskDefinition.allBlanksMustBeFilledForSolutions = false;
+      }
     },
 
     updateFeedback(updatedFeedback: Feedback[]) {
