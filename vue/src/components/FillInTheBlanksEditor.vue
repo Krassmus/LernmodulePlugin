@@ -31,34 +31,37 @@
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.caseSensitive" />
+        <input v-model="taskDefinition.caseSensitive" type="checkbox" />
         {{ $gettext('Groß- und Kleinschreibung beachten') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.acceptTypos" />
+        <input v-model="taskDefinition.acceptTypos" type="checkbox" />
         {{ $gettext('Rechtschreib- und Tippfehler ignorieren') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.autoCorrect" />
+        <input v-model="taskDefinition.autoCorrect" type="checkbox" />
         {{ $gettext('Lücken automatisch prüfen') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
         {{ $gettext('Mehrere Versuche erlauben') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.showSolutionsAllowed" />
+        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
         {{ $gettext('Lösungen anzeigen erlauben') }}
       </label>
 
-      <label v-if="taskDefinition.showSolutionsAllowed">
+      <label
+        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+      >
         <input
-          type="checkbox"
           v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
+          :disabled="!taskDefinition.showSolutionsAllowed"
+          type="checkbox"
         />
         {{
           $gettext('Lösungen nur anzeigen, wenn alle Lücken ausgefüllt sind')
@@ -69,26 +72,50 @@
     <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Beschriftungen') }}</legend>
 
-      <label v-if="!taskDefinition.autoCorrect">
+      <label :class="{ 'setting-disabled': taskDefinition.autoCorrect }">
         {{ $gettext('Text für Überprüfen-Button:') }}
-        <input type="text" v-model="taskDefinition.strings.checkButton" />
+        <input
+          v-model="taskDefinition.strings.checkButton"
+          :disabled="taskDefinition.autoCorrect"
+          type="text"
+        />
       </label>
 
-      <label v-if="taskDefinition.retryAllowed">
+      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
         {{ $gettext('Text für Wiederholen-Button:') }}
-        <input type="text" v-model="taskDefinition.strings.retryButton" />
+        <input
+          v-model="taskDefinition.strings.retryButton"
+          :disabled="!taskDefinition.retryAllowed"
+          type="text"
+        />
       </label>
 
-      <label v-if="taskDefinition.showSolutionsAllowed">
+      <label
+        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+      >
         {{ $gettext('Text für Lösungen-Button:') }}
-        <input type="text" v-model="taskDefinition.strings.solutionsButton" />
+        <input
+          v-model="taskDefinition.strings.solutionsButton"
+          :disabled="!taskDefinition.showSolutionsAllowed"
+          type="text"
+        />
       </label>
 
-      <label v-if="taskDefinition.allBlanksMustBeFilledForSolutions">
+      <label
+        :class="{
+          'setting-disabled':
+            !taskDefinition.showSolutionsAllowed ||
+            !taskDefinition.allBlanksMustBeFilledForSolutions,
+        }"
+      >
         {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
         <input
-          type="text"
           v-model="taskDefinition.strings.fillInAllBlanksMessage"
+          :disabled="
+            !taskDefinition.showSolutionsAllowed ||
+            !taskDefinition.allBlanksMustBeFilledForSolutions
+          "
+          type="text"
         />
       </label>
     </fieldset>
@@ -133,6 +160,10 @@ export default defineComponent({
       return $gettext(
         'Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button „Lücke hinzufügen“. Sie können auch einen Tooltip hinzufügen, indem Sie einen Doppelpunkt (:) vor den Tooltip-Text schreiben.'
       );
+    },
+
+    isShowSolutionsButtonEnabled() {
+      return this.taskDefinition.showSolutionsAllowed;
     },
   },
   methods: {
