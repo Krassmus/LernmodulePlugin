@@ -114,17 +114,17 @@
         <!-- Extra buttons (retry, show solutions) -->
         <template v-if="showExtraButtons">
           <button
-            v-if="task.retryAllowed"
-            v-text="task.strings.retryButton"
-            @click="onClickTryAgain"
+            v-if="!showSolutions && task.showSolutionsAllowed"
+            v-text="task.strings.solutionsButton"
+            @click="onClickShowSolution"
             type="button"
             class="stud5p-button"
           />
 
           <button
-            v-if="!showSolutions && task.showSolutionsAllowed"
-            v-text="task.strings.solutionsButton"
-            @click="onClickShowSolution"
+            v-if="task.retryAllowed"
+            v-text="task.strings.retryButton"
+            @click="onClickTryAgain"
             type="button"
             class="stud5p-button"
           />
