@@ -37,95 +37,57 @@
 
       <label>
         <input type="checkbox" v-model="taskDefinition.acceptTypos" />
-        {{ $gettext('Rechtschreib- oder Tippfehler ignorieren') }}
+        {{ $gettext('Rechtschreib- und Tippfehler ignorieren') }}
       </label>
 
       <label>
-        {{ $gettext('Korrigiert wird') }}
-        <select v-model="taskDefinition.autoCorrect">
-          <option :value="false">
-            {{ $gettext('manuell per Button') }}
-          </option>
-          <option :value="true">
-            {{ $gettext('automatisch nach Eingabe') }}
-          </option>
-        </select>
-      </label>
-
-      <label :class="taskDefinition.autoCorrect ? 'setting-disabled' : ''">
-        {{ $gettext('Text im Button:') }}
-        <input
-          type="text"
-          :disabled="taskDefinition.autoCorrect"
-          v-model="taskDefinition.strings.checkButton"
-        />
+        <input type="checkbox" v-model="taskDefinition.autoCorrect" />
+        {{ $gettext('Lücken automatisch prüfen') }}
       </label>
 
       <label>
         <input type="checkbox" v-model="taskDefinition.retryAllowed" />
         {{ $gettext('Mehrere Versuche erlauben') }}
       </label>
-      <label :class="taskDefinition.retryAllowed ? '' : 'setting-disabled'"
-        >{{ $gettext('Text im Button:') }}
-
-        <input
-          type="text"
-          :disabled="!taskDefinition.retryAllowed"
-          v-model="taskDefinition.strings.retryButton"
-        />
-      </label>
 
       <label>
-        <input
-          type="checkbox"
-          v-model="taskDefinition.showSolutionsAllowed"
-          @change="
-            !taskDefinition.showSolutionsAllowed
-              ? (taskDefinition.allBlanksMustBeFilledForSolutions =
-                  taskDefinition.showSolutionsAllowed)
-              : ''
-          "
-        />
-        {{ $gettext('Lösungen können angezeigt werden') }}
+        <input type="checkbox" v-model="taskDefinition.showSolutionsAllowed" />
+        {{ $gettext('Lösungen anzeigen erlauben') }}
       </label>
 
-      <label
-        :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
-      >
-        {{ $gettext('Text im Button:') }}
-        <input
-          type="text"
-          :disabled="!taskDefinition.showSolutionsAllowed"
-          v-model="taskDefinition.strings.solutionsButton"
-        />
-      </label>
-
-      <label
-        :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
-      >
+      <label v-if="taskDefinition.showSolutionsAllowed">
         <input
           type="checkbox"
-          :disabled="!taskDefinition.showSolutionsAllowed"
           v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
         />
         {{
-          $gettext(
-            'Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen.'
-          )
+          $gettext('Lösungen nur anzeigen, wenn alle Lücken ausgefüllt sind')
         }}
       </label>
+    </fieldset>
 
-      <label
-        :class="
-          taskDefinition.allBlanksMustBeFilledForSolutions
-            ? ''
-            : 'setting-disabled'
-        "
-      >
-        {{ $gettext('Mitteilung, wenn nicht alle Lücken ausgefüllt sind:') }}
+    <fieldset class="collapsable collapsed">
+      <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+      <label v-if="!taskDefinition.autoCorrect">
+        {{ $gettext('Text für Überprüfen-Button:') }}
+        <input type="text" v-model="taskDefinition.strings.checkButton" />
+      </label>
+
+      <label v-if="taskDefinition.retryAllowed">
+        {{ $gettext('Text für Wiederholen-Button:') }}
+        <input type="text" v-model="taskDefinition.strings.retryButton" />
+      </label>
+
+      <label v-if="taskDefinition.showSolutionsAllowed">
+        {{ $gettext('Text für Lösungen-Button:') }}
+        <input type="text" v-model="taskDefinition.strings.solutionsButton" />
+      </label>
+
+      <label v-if="taskDefinition.allBlanksMustBeFilledForSolutions">
+        {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
         <input
           type="text"
-          :disabled="!taskDefinition.allBlanksMustBeFilledForSolutions"
           v-model="taskDefinition.strings.fillInAllBlanksMessage"
         />
       </label>
