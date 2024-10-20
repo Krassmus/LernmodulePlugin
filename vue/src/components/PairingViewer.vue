@@ -78,17 +78,17 @@
 
       <div class="button-panel">
         <button
-          v-if="!this.showResults"
+          v-if="showCheckButton"
           v-text="this.task.strings.checkButton"
-          @click="checkResults()"
+          @click="onClickCheck()"
           type="button"
           class="stud5p-button"
         />
 
         <button
-          v-if="this.showResults"
+          v-if="showRetryButton"
           v-text="this.task.strings.retryButton"
-          @click="reset()"
+          @click="onClickTryAgain()"
           type="button"
           class="stud5p-button"
         />
@@ -317,11 +317,11 @@ export default defineComponent({
       this.elementIdInteractedWith = undefined;
     },
 
-    checkResults(): void {
+    onClickCheck(): void {
       this.showResults = true;
     },
 
-    reset(): void {
+    onClickTryAgain(): void {
       this.showResults = false;
       this.elementsDraggedOntoTargets = {};
     },
@@ -369,6 +369,18 @@ export default defineComponent({
       );
 
       return resultMessage;
+    },
+
+    showCheckButton(): boolean {
+      return !this.showResults;
+    },
+
+    showRetryButton(): boolean {
+      return this.showResults && !this.allAnswersAreCorrect;
+    },
+
+    allAnswersAreCorrect(): boolean {
+      return this.correctAnswers === this.maxPoints;
     },
   },
 });
