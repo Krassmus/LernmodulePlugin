@@ -188,6 +188,7 @@ export const fillInTheBlanksTaskSchema = z.object({
 export type FillInTheBlanksTask = z.infer<typeof fillInTheBlanksTaskSchema>;
 
 export const questionAnswerSchema = z.object({
+  uuid: z.string(),
   text: z.string(),
   correct: z.boolean(),
   strings: z.object({
@@ -497,6 +498,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           'Wie nennt man die strukturell abgrenzbaren Bereiche einer Zelle?',
         answers: [
           {
+            uuid: v4(),
             text: 'Organellen',
             correct: true,
             strings: {
@@ -506,6 +508,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
+            uuid: v4(),
             text: 'Mitochondrien',
             correct: false,
             strings: {
@@ -515,6 +518,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
+            uuid: v4(),
             text: 'Ribosomen',
             correct: false,
             strings: {
@@ -524,6 +528,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
+            uuid: v4(),
             text: 'Plasma',
             correct: false,
             strings: {

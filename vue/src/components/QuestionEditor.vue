@@ -15,7 +15,7 @@
       <fieldset
         class="collapsable collapsed"
         v-for="(answer, i) in taskDefinition.answers"
-        :key="i"
+        :key="answer.uuid"
       >
         <legend>{{ answer.text }}</legend>
 
@@ -158,6 +158,7 @@ import {
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
+import { v4 } from 'uuid';
 
 export default defineComponent({
   name: 'QuestionEditor',
@@ -172,6 +173,7 @@ export default defineComponent({
 
     addAnswer(): void {
       this.taskDefinition.answers.push({
+        uuid: v4(),
         text: this.$gettext('Neue Antwort'),
         correct: true,
         strings: {
