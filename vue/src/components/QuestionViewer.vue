@@ -243,7 +243,11 @@ export default defineComponent({
     },
 
     showSolutionsButton(): boolean {
-      return this.task.showSolutionsAllowed && this.isSubmitted;
+      return (
+        this.task.showSolutionsAllowed &&
+        this.isSubmitted &&
+        !this.showSolutions
+      );
     },
 
     resultMessage(): string {
