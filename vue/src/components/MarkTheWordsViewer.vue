@@ -300,14 +300,17 @@ export default defineComponent({
     },
 
     showRetryButton(): boolean {
-      return this.task.retryAllowed && this.showResults;
+      return (
+        this.task.retryAllowed && this.showResults && !this.allAnswersAreCorrect
+      );
     },
 
     showSolutionsButton(): boolean {
       return (
         this.task.showSolutionsAllowed &&
         this.showResults &&
-        !this.showSolutions
+        !this.showSolutions &&
+        !this.allAnswersAreCorrect
       );
     },
 
@@ -329,11 +332,13 @@ export default defineComponent({
 
     maxScore(): number {
       let maxScore = 0;
+
       for (const element of this.parsedTemplate) {
         if (element.type === 'solution') {
           maxScore++;
         }
       }
+
       return maxScore;
     },
 
@@ -346,6 +351,10 @@ export default defineComponent({
       resultMessage = resultMessage.replace(':total', this.maxScore.toString());
 
       return resultMessage;
+    },
+
+    allAnswersAreCorrect(): boolean {
+      return this.score === this.maxScore;
     },
   },
 });
