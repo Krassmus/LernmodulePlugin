@@ -15,26 +15,25 @@
       <fieldset
         v-for="(answer, i) in taskDefinition.answers"
         :key="answer.uuid"
-        class="collapsable collapsed"
+        class="answer collapsable collapsed"
       >
-        <legend>{{ answer.text }}</legend>
+        <legend class="answer-title">
+          {{ answer.text }}
+          <button
+            :title="$gettext('Antwort löschen')"
+            :aria-label="$gettext('Antwort löschen')"
+            @click="removeAnswer(answer)"
+            type="button"
+            class="button-with-icon"
+          >
+            <img :src="urlForIcon('trash')" alt="" />
+          </button>
+        </legend>
 
         <div class="answer-row">
           <input v-model="taskDefinition.answers[i].correct" type="checkbox" />
 
           <input v-model="taskDefinition.answers[i].text" type="text" />
-
-          <div>
-            <button
-              :title="$gettext('Antwort löschen')"
-              :aria-label="$gettext('Antwort löschen')"
-              @click="removeAnswer(answer)"
-              type="button"
-              class="button-with-icon"
-            >
-              <img :src="urlForIcon('trash')" alt="" />
-            </button>
-          </div>
         </div>
 
         <fieldset class="collapsable collapsed feedback">
@@ -224,6 +223,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.answer {
+  max-width: 48em;
+}
+
+.answer-title {
+  position: relative;
+}
+
 .answer-row {
   display: flex;
   gap: 0.25em;
@@ -231,11 +238,30 @@ export default defineComponent({
 }
 
 .button-with-icon {
+  /* Positioning */
+  position: absolute;
+  top: 50%;
+  right: 0.1em;
+  transform: translateY(-50%);
+  z-index: 10;
+
+  /* Children layout*/
   display: flex;
-  justify-content: center; /* Center the icon both vertically and horizontally */
+  justify-content: center;
   align-items: center;
-  aspect-ratio: 1 / 1; /* Force the button to be square by maintaining 1:1 aspect ratio */
+
+  /* Shape & size */
+  aspect-ratio: 1 / 1;
   height: 100%;
+  width: auto;
+  border-radius: 50%;
+
+  /* Appearance */
+  border: 1px solid rgba(40, 73, 124, 0.1); /* Light translucent border for depth */
+}
+
+.button-with-icon:hover {
+  background: rgba(100%, 100%, 100%, 0.75); /* Lighter background on hover */
 }
 
 .feedback {
