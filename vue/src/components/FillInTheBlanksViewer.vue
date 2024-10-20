@@ -128,7 +128,7 @@ export default defineComponent({
     return {
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
-      userWantsToSeeSolutions: false,
+      showSolutions: false,
       editable: true,
     };
   },
@@ -261,7 +261,7 @@ export default defineComponent({
     },
 
     onClickShowSolution() {
-      this.userWantsToSeeSolutions = true;
+      this.showSolutions = true;
     },
 
     onClickTryAgain() {
@@ -270,7 +270,7 @@ export default defineComponent({
     },
 
     resetTask() {
-      this.userWantsToSeeSolutions = false;
+      this.showSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
       this.editable = true;
@@ -294,7 +294,7 @@ export default defineComponent({
     },
 
     handleFilledBlank() {
-      this.userWantsToSeeSolutions = false;
+      this.showSolutions = false;
       if (this.task.autoCorrect) {
         this.onClickCheck(true);
       }
@@ -444,25 +444,21 @@ export default defineComponent({
     },
 
     showSolutionButton(): boolean {
-      return !this.showSolutions && this.task.showSolutionsAllowed;
+      return (
+        this.task.showSolutionsAllowed &&
+        this.showResults &&
+        !this.showSolutions
+      );
     },
 
     showRetryButton(): boolean {
       return this.task.retryAllowed && this.submittedAnswers !== null;
     },
 
-    showSolutions(): boolean {
-      return (
-        this.userWantsToSeeSolutions &&
-        (this.allBlanksAreFilled ||
-          !this.task.allBlanksMustBeFilledForSolutions)
-      );
-    },
-
     showFillInAllTheBlanksMessage(): boolean {
       return (
         this.task.allBlanksMustBeFilledForSolutions &&
-        this.userWantsToSeeSolutions &&
+        this.showSolutions &&
         !this.allBlanksAreFilled &&
         !this.inputHasChanged
       );
