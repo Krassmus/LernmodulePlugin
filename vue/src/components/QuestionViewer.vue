@@ -54,7 +54,7 @@
               :disabled="isSubmitted"
             />
             {{ answer.text }}
-            <div
+            <span
               v-if="answer.strings.hint && !isSubmitted"
               class="tooltip tooltip-icon answer-tooltip"
               :data-tooltip="answer.strings.hint"
@@ -145,22 +145,21 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+
     onClickCheck(): void {
       this.isSubmitted = true;
     },
+
     onClickTryAgain(): void {
       this.isSubmitted = false;
       this.showSolutions = false;
       this.selectedAnswers = {};
     },
+
     onClickShowSolution(): void {
       this.showSolutions = true;
     },
-    selectAnswer(answer: QuestionAnswer): void {
-      if (this.isSubmitted) return;
 
-      this.selectedAnswers[answer.text] = !this.selectedAnswers[answer.text];
-    },
     classForAnswer(answer: QuestionAnswer): string {
       if (this.showSolutions) {
         if (answer.correct) return 'answer correct';
@@ -207,6 +206,7 @@ export default defineComponent({
         return 1;
       }
     },
+
     points(): number {
       if (this.task.canAnswerMultiple) {
         let points = 0;
@@ -229,6 +229,7 @@ export default defineComponent({
         return this.selectedAnswer.correct ? 1 : 0;
       }
     },
+
     answers(): QuestionAnswer[] {
       if (this.task.randomOrder) {
         // https://stackoverflow.com/a/46545530
@@ -240,9 +241,11 @@ export default defineComponent({
         return this.task.answers;
       }
     },
+
     showSolutionsButton(): boolean {
       return this.task.showSolutionsAllowed && this.isSubmitted;
     },
+
     resultMessage(): string {
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
