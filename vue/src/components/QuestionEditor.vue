@@ -84,47 +84,51 @@
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
       <label>
-        {{ $gettext('Text im Button:') }}
-        <input type="text" v-model="taskDefinition.strings.checkButton" />
+        <input v-model="taskDefinition.canAnswerMultiple" type="checkbox" />
+        {{ $gettext('Mehrfachauswahl erlauben') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
-        {{ $gettext('Mehrere Antworten können ausgewählt werden') }}
+        <input v-model="taskDefinition.randomOrder" type="checkbox" />
+        {{ $gettext('Antworten in zufälliger Reihenfolge anzeigen') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.randomOrder" />
-        {{ $gettext('Zeige Antworten in zufälliger Reihenfolge') }}
-      </label>
-
-      <label>
-        <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
         {{ $gettext('Mehrere Versuche erlauben') }}
       </label>
 
-      <label :class="taskDefinition.retryAllowed ? '' : 'setting-disabled'">
-        {{ $gettext('Text im Button:') }}
+      <label>
+        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
+        {{ $gettext('Lösungen anzeigen erlauben') }}
+      </label>
+    </fieldset>
+
+    <fieldset class="collapsable collapsed">
+      <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+      <label>
+        {{ $gettext('Text für Überprüfen-Button:') }}
+        <input v-model="taskDefinition.strings.checkButton" type="text" />
+      </label>
+
+      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+        {{ $gettext('Text für Wiederholen-Button:') }}
         <input
-          type="text"
-          :disabled="!taskDefinition.retryAllowed"
           v-model="taskDefinition.strings.retryButton"
+          :disabled="!taskDefinition.retryAllowed"
+          type="text"
         />
       </label>
 
-      <label>
-        <input type="checkbox" v-model="taskDefinition.showSolutionsAllowed" />
-        {{ $gettext('Lösungen können angezeigt werden') }}
-      </label>
-
       <label
-        :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
+        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
       >
-        {{ $gettext('Text im Button:') }}
+        {{ $gettext('Text für Lösungen-Button:') }}
         <input
-          type="text"
-          :disabled="!taskDefinition.showSolutionsAllowed"
           v-model="taskDefinition.strings.solutionsButton"
+          :disabled="!taskDefinition.showSolutionsAllowed"
+          type="text"
         />
       </label>
     </fieldset>
