@@ -13,69 +13,63 @@
       </label>
 
       <fieldset
-        class="collapsable collapsed"
         v-for="(answer, i) in taskDefinition.answers"
         :key="answer.uuid"
+        class="collapsable collapsed"
       >
         <legend>{{ answer.text }}</legend>
 
-        <div class="flex-parent-element">
-          <input
-            class="flex-child-element checkbox"
-            type="checkbox"
-            v-model="taskDefinition.answers[i].correct"
-          />
+        <div class="answer-row">
+          <input v-model="taskDefinition.answers[i].correct" type="checkbox" />
 
-          <input
-            class="flex-child-element textbox"
-            type="text"
-            v-model="taskDefinition.answers[i].text"
-          />
+          <input v-model="taskDefinition.answers[i].text" type="text" />
 
-          <button
-            type="button"
-            class="flex-child-element remove-answer-button"
-            @click="removeAnswer(answer)"
-            :aria-label="$gettext('Antwort löschen')"
-            :title="$gettext('Antwort löschen')"
-          >
-            <img :src="urlForIcon('trash')" alt="" />
-          </button>
+          <div>
+            <button
+              :title="$gettext('Antwort löschen')"
+              :aria-label="$gettext('Antwort löschen')"
+              @click="removeAnswer(answer)"
+              type="button"
+              class="button-with-icon"
+            >
+              <img :src="urlForIcon('trash')" alt="" />
+            </button>
+          </div>
         </div>
 
         <fieldset class="collapsable collapsed feedback">
           <legend>{{ $gettext('Hinweis und Feedback') }}</legend>
 
           <label>
-            <span>{{ $gettext('Hinweis') }}</span>
+            <span>{{ $gettext('Hinweis:') }}</span>
             <input
-              class="textbox"
-              type="text"
               v-model="taskDefinition.answers[i].strings.hint"
+              type="text"
+              class="textbox"
             />
           </label>
 
           <label>
-            <span>{{ $gettext('Feedback, wenn ausgewählt') }}</span>
+            <span>{{ $gettext('Feedback, wenn ausgewählt:') }}</span>
             <input
-              class="textbox"
-              type="text"
               v-model="taskDefinition.answers[i].strings.feedbackSelected"
+              type="text"
+              class="textbox"
             />
           </label>
 
           <label>
-            <span>{{ $gettext('Feedback, wenn nicht ausgewählt') }}</span>
+            <span>{{ $gettext('Feedback, wenn nicht ausgewählt:') }}</span>
             <input
-              class="textbox"
-              type="text"
               v-model="taskDefinition.answers[i].strings.feedbackNotSelected"
+              type="text"
+              class="textbox"
             />
           </label>
         </fieldset>
       </fieldset>
 
-      <button type="button" class="button" @click="addAnswer">
+      <button @click="addAnswer" type="button" class="button">
         {{ $gettext('Neue Antwort') }}
       </button>
     </fieldset>
@@ -230,23 +224,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.flex-parent-element {
+.answer-row {
   display: flex;
-  width: 100%;
-  max-width: 480em;
-  align-items: center;
-  justify-content: flex-start;
-  padding-bottom: 1ex;
+  gap: 0.25em;
+  margin-bottom: 0.75em;
 }
 
-.flex-child-element {
-  margin-right: 0.25em;
-}
-
-.remove-answer-button {
-  align-self: stretch; /* Make the item fill the available height */
+.button-with-icon {
   display: flex;
+  justify-content: center; /* Center the icon both vertically and horizontally */
   align-items: center;
+  aspect-ratio: 1 / 1; /* Force the button to be square by maintaining 1:1 aspect ratio */
+  height: 100%;
 }
 
 .feedback {
