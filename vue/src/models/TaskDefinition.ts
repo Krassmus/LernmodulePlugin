@@ -256,6 +256,7 @@ export type Pair = z.infer<typeof pairSchema>;
 export const pairingTaskSchema = z.object({
   task_type: z.literal('Pairing'),
   pairs: z.array(pairSchema),
+  retryAllowed: z.boolean().optional().default(true),
   showSolutionsAllowed: z.boolean().optional().default(true),
   strings: z.object({
     checkButton: z.string(),
@@ -420,6 +421,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
         ],
+        retryAllowed: true,
         showSolutionsAllowed: true,
         strings: {
           checkButton: 'Antworten überprüfen',

@@ -404,7 +404,9 @@ export default defineComponent({
     },
 
     showRetryButton(): boolean {
-      return this.showResults && !this.allAnswersAreCorrect;
+      return (
+        this.task.retryAllowed && this.showResults && !this.allAnswersAreCorrect
+      );
     },
 
     showSolutionsButton(): boolean {

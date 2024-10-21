@@ -60,7 +60,53 @@
       <pre v-text="taskDefinition" />
     </TabComponent>
 
-    <form class="default">
+    <form class="default" style="margin-top: 0.5em">
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Einstellungen') }}</legend>
+
+        <label>
+          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          {{ $gettext('Mehrere Versuche erlauben') }}
+        </label>
+
+        <label>
+          <input
+            v-model="taskDefinition.showSolutionsAllowed"
+            type="checkbox"
+          />
+          {{ $gettext('Lösungen anzeigen erlauben') }}
+        </label>
+      </fieldset>
+
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+        <label>
+          {{ $gettext('Text für Überprüfen-Button:') }}
+          <input v-model="taskDefinition.strings.checkButton" type="text" />
+        </label>
+
+        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.retryButton"
+            :disabled="!taskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+        >
+          {{ $gettext('Text für Lösungen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.solutionsButton"
+            :disabled="!taskDefinition.showSolutionsAllowed"
+            type="text"
+          />
+        </label>
+      </fieldset>
+
       <feedback-editor
         :feedback="taskDefinition.feedback"
         :result-message="taskDefinition.strings.resultMessage"
