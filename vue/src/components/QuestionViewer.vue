@@ -93,17 +93,17 @@
 
       <div class="button-panel">
         <button
-          v-if="!isSubmitted"
+          v-if="showCheckButton"
           v-text="this.task.strings.checkButton"
-          @click="onClickCheck"
+          @click="onClickCheckButton"
           type="button"
           class="stud5p-button"
         />
 
         <button
-          v-if="this.task.retryAllowed && isSubmitted"
+          v-if="showRetryButton"
           v-text="this.task.strings.retryButton"
-          @click="onClickTryAgain"
+          @click="onClickRetryButton"
           type="button"
           class="stud5p-button"
         />
@@ -111,7 +111,7 @@
         <button
           v-if="showSolutionsButton"
           v-text="this.task.strings.solutionsButton"
-          @click="onClickShowSolution"
+          @click="onClickShowSolutionsButton"
           type="button"
           class="stud5p-button"
         />
@@ -137,8 +137,9 @@ export default defineComponent({
   components: { FeedbackElement },
   data() {
     return {
+      answers: [...this.task.answers],
       selectedAnswers: {} as Record<string, boolean>,
-      selectedAnswer: this.task.answers[0],
+      selectedAnswer: {} as QuestionAnswer | undefined,
       isSubmitted: false,
       showSolutions: false,
     };
@@ -146,17 +147,20 @@ export default defineComponent({
   methods: {
     $gettext,
 
-    onClickCheck(): void {
+    onClickCheckButton(): void {
       this.isSubmitted = true;
     },
 
-    onClickTryAgain(): void {
+    onClickRetryButton(): void {
       this.isSubmitted = false;
       this.showSolutions = false;
+      this.answers = [...this.task.answers];
+      this.shuffleAnswers();
       this.selectedAnswers = {};
+      this.selectedAnswer = undefined;
     },
 
-    onClickShowSolution(): void {
+    onClickShowSolutionsButton(): void {
       this.showSolutions = true;
     },
 
@@ -190,6 +194,15 @@ export default defineComponent({
       } else {
         return 'answer unsubmitted';
       }
+    },
+
+    shuffleAnswers() {
+      // Shuffle the answers
+      // https://stackoverflow.com/a/46545530
+      this.answers = this.answers
+        .map((answer) => ({ answer: answer, sort: Math.random() }))
+        .sort((answer1, answer2) => answer1.sort - answer2.sort)
+        .map(({ answer }) => answer);
     },
   },
   computed: {
@@ -226,27 +239,30 @@ export default defineComponent({
 
         return points;
       } else {
-        return this.selectedAnswer.correct ? 1 : 0;
+        return this.selectedAnswer && this.selectedAnswer.correct ? 1 : 0;
       }
     },
 
-    answers(): QuestionAnswer[] {
-      if (this.task.randomOrder) {
-        // https://stackoverflow.com/a/46545530
-        return this.task.answers
-          .map((value) => ({ value, sort: Math.random() }))
-          .sort((a, b) => a.sort - b.sort)
-          .map(({ value }) => value);
-      } else {
-        return this.task.answers;
-      }
+    reachedMaxPoints(): boolean {
+      return this.points === this.maxPoints;
+    },
+
+    showCheckButton(): boolean {
+      return !this.isSubmitted;
+    },
+
+    showRetryButton(): boolean {
+      return (
+        this.task.retryAllowed && this.isSubmitted && !this.reachedMaxPoints
+      );
     },
 
     showSolutionsButton(): boolean {
       return (
         this.task.showSolutionsAllowed &&
         this.isSubmitted &&
-        !this.showSolutions
+        !this.showSolutions &&
+        !this.reachedMaxPoints
       );
     },
 
@@ -262,6 +278,16 @@ export default defineComponent({
       );
 
       return resultMessage;
+    },
+  },
+
+  watch: {
+    task: {
+      handler() {
+        this.answers = [...this.task.answers];
+        this.shuffleAnswers();
+      },
+      immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
   },
 });
