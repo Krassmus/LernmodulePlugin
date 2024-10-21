@@ -47,17 +47,17 @@
       </div>
     </fieldset>
 
-    <fieldset class="collapsable">
+    <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.squareLayout" />
-        {{ $gettext('Karten in einem Quadrat positionieren') }}
+        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+        {{ $gettext('Mehrere Versuche erlauben') }}
       </label>
 
       <label>
-        {{ $gettext('Ergebnismitteilung:') }}
-        <input type="text" v-model="taskDefinition.strings.resultMessage" />
+        <input v-model="taskDefinition.squareLayout" type="checkbox" />
+        {{ $gettext('Karten in einem Quadrat positionieren') }}
       </label>
 
       <label
@@ -75,15 +75,37 @@
           </span>
 
           <button
+            @click="deleteFlipsideImage"
             type="button"
             class="button delete-flipside-image-button"
-            @click="deleteFlipsideImage"
           >
             {{ $gettext('Bild Löschen') }}
           </button>
         </span>
 
         <FileUpload v-else @file-uploaded="onFlipsideImageUploaded" />
+      </label>
+    </fieldset>
+
+    <fieldset class="collapsable collapsed">
+      <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+        {{ $gettext('Text für Wiederholen-Button:') }}
+        <input
+          v-model="taskDefinition.strings.retryButton"
+          :disabled="!taskDefinition.retryAllowed"
+          type="text"
+        />
+      </label>
+    </fieldset>
+
+    <fieldset class="collapsable collapsed">
+      <legend>{{ $gettext('Feedback') }}</legend>
+
+      <label>
+        {{ $gettext('Ergebnismitteilung:') }}
+        <input v-model="taskDefinition.strings.resultMessage" type="text" />
       </label>
     </fieldset>
   </form>

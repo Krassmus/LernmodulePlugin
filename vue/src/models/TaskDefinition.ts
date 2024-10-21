@@ -156,12 +156,11 @@ export type MemoryCard = z.infer<typeof memoryCardSchema>;
 export const memoryTaskSchema = z.object({
   task_type: z.literal('Memory'),
   cards: z.array(memoryCardSchema),
-  squareLayout: z.boolean().optional(),
+  squareLayout: z.boolean(),
   flipside: imageSchema.optional(),
+  retryAllowed: z.boolean(),
   strings: z.object({
-    checkButton: z.string(),
     retryButton: z.string(),
-    solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
 });
@@ -493,11 +492,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
         ],
+        retryAllowed: true,
         squareLayout: true,
         strings: {
-          checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
-          solutionsButton: 'Lösungen anzeigen',
           resultMessage: 'Gut gemacht!',
         },
       };
