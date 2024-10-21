@@ -294,14 +294,19 @@ export default defineComponent({
     },
 
     showRetryButton(): boolean {
-      return this.task.retryAllowed && this.isShowingResults;
+      return (
+        this.task.retryAllowed &&
+        this.isShowingResults &&
+        !this.allAnswersAreCorrect
+      );
     },
 
     showResumeButton(): boolean {
       return (
         this.task.resumeAllowed &&
         this.isShowingResults &&
-        !this.isShowingSolutions
+        !this.isShowingSolutions &&
+        !this.allAnswersAreCorrect
       );
     },
 
