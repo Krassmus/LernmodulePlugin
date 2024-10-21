@@ -86,6 +86,14 @@
         />
 
         <button
+          v-if="showSolutionsButton"
+          v-text="task.strings.solutionsButton"
+          @click="onClickShowSolution()"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
           v-if="showRetryButton"
           v-text="this.task.strings.retryButton"
           @click="onClickTryAgain()"
@@ -133,6 +141,8 @@ export default defineComponent({
       // Record from target ID -> draggable element ID.
       elementsDraggedOntoTargets: {} as Record<Uuid, Uuid>,
       showResults: false as boolean,
+      showSolutions: false as boolean,
+      originalScore: null as number | null,
     };
   },
   methods: {
@@ -319,11 +329,24 @@ export default defineComponent({
 
     onClickCheck(): void {
       this.showResults = true;
+      this.originalScore = this.correctAnswers;
+    },
+
+    onClickShowSolution(): void {
+      this.showSolutions = true;
+
+      // Fill elementsDraggedOntoTargets with the correct answers
+      this.task.pairs.forEach((pair) => {
+        this.elementsDraggedOntoTargets[pair.targetElement.uuid] =
+          pair.draggableElement.uuid;
+      });
     },
 
     onClickTryAgain(): void {
       this.showResults = false;
+      this.showSolutions = false;
       this.elementsDraggedOntoTargets = {};
+      this.originalScore = null;
     },
   },
   computed: {
@@ -346,6 +369,11 @@ export default defineComponent({
     },
 
     correctAnswers(): number {
+      // If solutions are shown, return the original score instead of recalculating
+      if (this.showSolutions && this.originalScore !== null) {
+        return this.originalScore;
+      }
+
       let correctAnswers = 0;
       for (const pair of this.task.pairs) {
         if (this.isAnswerCorrect(pair.targetElement.uuid)) correctAnswers++;
@@ -377,6 +405,15 @@ export default defineComponent({
 
     showRetryButton(): boolean {
       return this.showResults && !this.allAnswersAreCorrect;
+    },
+
+    showSolutionsButton(): boolean {
+      return (
+        this.task.showSolutionsAllowed &&
+        this.showResults &&
+        !this.showSolutions &&
+        !this.allAnswersAreCorrect
+      );
     },
 
     allAnswersAreCorrect(): boolean {
