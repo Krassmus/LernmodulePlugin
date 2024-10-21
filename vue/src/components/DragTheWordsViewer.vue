@@ -100,9 +100,7 @@
         :result-message="resultMessage"
       />
 
-      <!-- Button panel -->
       <div class="button-panel">
-        <!-- Check button -->
         <button
           v-if="showCheckButton"
           v-text="task.strings.checkButton"
@@ -111,24 +109,21 @@
           class="stud5p-button"
         />
 
-        <!-- Extra buttons (retry, show solutions) -->
-        <template v-if="showExtraButtons">
-          <button
-            v-if="!showSolutions && task.showSolutionsAllowed"
-            v-text="task.strings.solutionsButton"
-            @click="onClickSolutionsButton"
-            type="button"
-            class="stud5p-button"
-          />
+        <button
+          v-if="showSolutionsButton"
+          v-text="task.strings.solutionsButton"
+          @click="onClickSolutionsButton"
+          type="button"
+          class="stud5p-button"
+        />
 
-          <button
-            v-if="task.retryAllowed"
-            v-text="task.strings.retryButton"
-            @click="onClickRetryButton"
-            type="button"
-            class="stud5p-button"
-          />
-        </template>
+        <button
+          v-if="showRetryButton"
+          v-text="task.strings.retryButton"
+          @click="onClickRetryButton"
+          type="button"
+          class="stud5p-button"
+        />
       </div>
     </div>
   </div>
@@ -497,26 +492,6 @@ export default defineComponent({
       return !isEqual(this.submittedAnswers, this.userInputs);
     },
 
-    showExtraButtons(): boolean {
-      if (this.task.instantFeedback) {
-        if (this.allBlanksAreFilled) {
-          return (
-            this.submittedAnswers !== null &&
-            !this.inputHasChanged &&
-            !this.allAnswersAreCorrect
-          );
-        } else {
-          return false;
-        }
-      } else {
-        return (
-          this.submittedAnswers !== null &&
-          !this.inputHasChanged &&
-          !this.allAnswersAreCorrect
-        );
-      }
-    },
-
     showCheckButton(): boolean {
       return (
         (this.submittedAnswers === null || this.inputHasChanged) &&
@@ -524,12 +499,22 @@ export default defineComponent({
       );
     },
 
-    showSolutionButton(): boolean {
-      return !this.showSolutions && this.task.showSolutionsAllowed;
+    showSolutionsButton(): boolean {
+      return (
+        this.task.showSolutionsAllowed &&
+        !this.showSolutions &&
+        this.showResults &&
+        !this.allAnswersAreCorrect
+      );
     },
 
     showRetryButton(): boolean {
-      return this.task.retryAllowed && this.submittedAnswers !== null;
+      return (
+        this.task.retryAllowed &&
+        this.showResults &&
+        !this.allAnswersAreCorrect &&
+        this.submittedAnswers !== null
+      );
     },
 
     showSolutions(): boolean {
