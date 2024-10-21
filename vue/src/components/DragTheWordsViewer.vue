@@ -106,7 +106,7 @@
         <button
           v-if="showCheckButton"
           v-text="task.strings.checkButton"
-          @click="onClickCheck"
+          @click="onClickCheckButton"
           type="button"
           class="stud5p-button"
         />
@@ -116,7 +116,7 @@
           <button
             v-if="!showSolutions && task.showSolutionsAllowed"
             v-text="task.strings.solutionsButton"
-            @click="onClickShowSolution"
+            @click="onClickSolutionsButton"
             type="button"
             class="stud5p-button"
           />
@@ -124,7 +124,7 @@
           <button
             v-if="task.retryAllowed"
             v-text="task.strings.retryButton"
-            @click="onClickTryAgain"
+            @click="onClickRetryButton"
             type="button"
             class="stud5p-button"
           />
@@ -312,17 +312,17 @@ export default defineComponent({
       }
     },
 
-    onClickCheck() {
+    onClickCheckButton() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
       this.editable = false;
     },
 
-    onClickShowSolution() {
+    onClickSolutionsButton() {
       this.userWantsToSeeSolutions = true;
     },
 
-    onClickTryAgain() {
+    onClickRetryButton() {
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
