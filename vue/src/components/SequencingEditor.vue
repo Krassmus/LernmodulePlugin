@@ -47,6 +47,63 @@
       </div>
     </fieldset>
 
+    <fieldset class="collapsable collapsed">
+      <legend>{{ $gettext('Einstellungen') }}</legend>
+
+      <label>
+        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+        {{ $gettext('Mehrere Versuche erlauben') }}
+      </label>
+
+      <label>
+        <input v-model="taskDefinition.resumeAllowed" type="checkbox" />
+        {{ $gettext('Fortsetzen des aktuellen Spielstands erlauben') }}
+      </label>
+
+      <label>
+        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
+        {{ $gettext('Lösungen anzeigen erlauben') }}
+      </label>
+    </fieldset>
+
+    <fieldset class="collapsable collapsed">
+      <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+      <label>
+        {{ $gettext('Text für Überprüfen-Button:') }}
+        <input v-model="taskDefinition.strings.checkButton" type="text" />
+      </label>
+
+      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+        {{ $gettext('Text für Wiederholen-Button:') }}
+        <input
+          v-model="taskDefinition.strings.retryButton"
+          :disabled="!taskDefinition.retryAllowed"
+          type="text"
+        />
+      </label>
+
+      <label :class="{ 'setting-disabled': !taskDefinition.resumeAllowed }">
+        {{ $gettext('Text für Fortsetzen-Button:') }}
+        <input
+          v-model="taskDefinition.strings.resumeButton"
+          :disabled="!taskDefinition.resumeAllowed"
+          type="text"
+        />
+      </label>
+
+      <label
+        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+      >
+        {{ $gettext('Text für Lösungen-Button:') }}
+        <input
+          v-model="taskDefinition.strings.solutionsButton"
+          :disabled="!taskDefinition.showSolutionsAllowed"
+          type="text"
+        />
+      </label>
+    </fieldset>
+
     <feedback-editor
       :feedback="taskDefinition.feedback"
       :result-message="taskDefinition.strings.resultMessage"

@@ -19,7 +19,7 @@
         @drag="onDrag(image)"
         @dragend="endDragImage(image)"
         @dragover="onDragOver(image)"
-        @click="onClick(image)"
+        @click="onClickImage(image)"
         @keydown="(event) => onKeydown(image, event)"
       >
         <img
@@ -48,37 +48,33 @@
 
       <div class="button-panel">
         <button
-          v-if="!isShowingResults"
+          v-if="showCheckButton"
           v-text="task.strings.checkButton"
-          @click="showResults()"
+          @click="onClickCheckButton"
           type="button"
           class="stud5p-button"
         />
 
         <button
-          v-if="isShowingResults"
+          v-if="showRetryButton"
           v-text="task.strings.retryButton"
-          @click="reset()"
+          @click="onClickRetryButton"
           type="button"
           class="stud5p-button"
         />
 
         <button
-          v-if="
-            isShowingResults && !isShowingSolutions && !allAnswersAreCorrect
-          "
-          v-text="task.strings.continueButton"
-          @click="continueTask()"
+          v-if="showResumeButton"
+          v-text="task.strings.resumeButton"
+          @click="onClickResumeButton"
           type="button"
           class="stud5p-button"
         />
 
         <button
-          v-if="
-            isShowingResults && !isShowingSolutions && !allAnswersAreCorrect
-          "
+          v-if="showSolutionsButton"
           v-text="task.strings.solutionsButton"
-          @click="showSolutions()"
+          @click="onClickSolutionsButton"
           type="button"
           class="stud5p-button"
         />
@@ -167,7 +163,7 @@ export default defineComponent({
       }
     },
 
-    onClick(image: Image) {
+    onClickImage(image: Image) {
       if (this.isShowingSolutions || this.isShowingResults) return;
 
       if (this.imageInteractedWith) {
@@ -258,21 +254,21 @@ export default defineComponent({
       return index !== -1 && this.task.images[index].uuid === image.uuid;
     },
 
-    showResults() {
+    onClickCheckButton() {
       this.isShowingResults = true;
       this.screenReaderAnnouncement = this.resultMessage;
     },
 
-    showSolutions() {
+    onClickSolutionsButton() {
       this.isShowingSolutions = true;
       this.resetImagesToCorrectOrder();
     },
 
-    continueTask() {
+    onClickResumeButton() {
       this.isShowingResults = false;
     },
 
-    reset() {
+    onClickRetryButton() {
       this.isShowingResults = false;
       this.isShowingSolutions = false;
       this.shuffleImages();
@@ -293,6 +289,31 @@ export default defineComponent({
   },
 
   computed: {
+    showCheckButton(): boolean {
+      return !this.isShowingResults;
+    },
+
+    showRetryButton(): boolean {
+      return this.task.retryAllowed && this.isShowingResults;
+    },
+
+    showResumeButton(): boolean {
+      return (
+        this.task.resumeAllowed &&
+        this.isShowingResults &&
+        !this.isShowingSolutions
+      );
+    },
+
+    showSolutionsButton(): boolean {
+      return (
+        this.task.showSolutionsAllowed &&
+        this.isShowingResults &&
+        !this.isShowingSolutions &&
+        !this.allAnswersAreCorrect
+      );
+    },
+
     correctAnswers(): number {
       let correctAnswers = 0;
       for (let i = 0; i < this.task.images.length; i++) {
