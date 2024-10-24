@@ -10,9 +10,6 @@
           <option :value="'text'">
             {{ $gettext('Text') }}
           </option>
-          <option :value="'audio'">
-            {{ $gettext('Audio') }}
-          </option>
         </select>
       </label>
       <div
