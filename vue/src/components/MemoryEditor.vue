@@ -159,6 +159,7 @@
 .remove-card-button {
   aspect-ratio: 1;
   display: flex;
+  align-items: center;
   border: 1px solid #28497c;
   color: #28497c;
   background: #fff;
