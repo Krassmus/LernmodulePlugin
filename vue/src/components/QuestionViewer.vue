@@ -3,7 +3,7 @@
     <div class="stud5p-content">
       <div v-html="this.task.question" />
       <template v-if="task.canAnswerMultiple">
-        <template v-for="(answer, i) in answers" :key="i">
+        <template v-for="answer in answers" :key="answer.uuid">
           <label :class="classForAnswer(answer)">
             <input
               type="checkbox"
@@ -137,7 +137,6 @@ export default defineComponent({
   components: { FeedbackElement },
   data() {
     return {
-      answers: [...this.task.answers],
       selectedAnswers: {} as Record<string, boolean>,
       selectedAnswer: {} as QuestionAnswer | undefined,
       isSubmitted: false,
@@ -154,8 +153,6 @@ export default defineComponent({
     onClickRetryButton(): void {
       this.isSubmitted = false;
       this.showSolutions = false;
-      this.answers = [...this.task.answers];
-      this.shuffleAnswers();
       this.selectedAnswers = {};
       this.selectedAnswer = undefined;
     },
@@ -195,17 +192,19 @@ export default defineComponent({
         return 'answer unsubmitted';
       }
     },
-
-    shuffleAnswers() {
-      // Shuffle the answers
-      // https://stackoverflow.com/a/46545530
-      this.answers = this.answers
-        .map((answer) => ({ answer: answer, sort: Math.random() }))
-        .sort((answer1, answer2) => answer1.sort - answer2.sort)
-        .map(({ answer }) => answer);
-    },
   },
   computed: {
+    answers(): QuestionAnswer[] {
+      if (this.task.randomOrder) {
+        return this.task.answers
+          .map((answer) => ({ answer: answer, sort: Math.random() }))
+          .sort((answer1, answer2) => answer1.sort - answer2.sort)
+          .map(({ answer }) => answer);
+      } else {
+        return this.task.answers;
+      }
+    },
+
     maxPoints(): number {
       if (this.task.canAnswerMultiple) {
         let maxPoints = 0;
@@ -278,16 +277,6 @@ export default defineComponent({
       );
 
       return resultMessage;
-    },
-  },
-
-  watch: {
-    task: {
-      handler() {
-        this.answers = [...this.task.answers];
-        this.shuffleAnswers();
-      },
-      immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
   },
 });
