@@ -270,16 +270,19 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
         // Map from file_id => ['name' => name, 'description' => description]
         $files_metadata = [];
         foreach ($file_ids as $file_id) {
+            if (!$file_id) {
+                continue; // Prevent an empty or undefined file_id from causing the export to fail.
+            }
             $file_ref = FileRef::find($file_id);
             if (is_null($file_ref)) {
-                throw new Exception("Es wurde kein File-Ref mit der ID $file_id gefunden.");
+                throw new Exception("Es wurde kein File-Ref mit der ID '$file_id' gefunden.");
             }
             if (!$file_ref->getFileType()->isDownloadable($GLOBALS['user']->id)) {
-                throw new Exception("Die Datei mit der ID $file_id ist für den eingeloggen Nutzer nicht verfügbar.");
+                throw new Exception("Die Datei mit der ID '$file_id' ist für den eingeloggten Nutzer nicht verfügbar.");
             }
             $path = $file_ref->file->getPath();
             if (is_null($path)) {
-                throw new Exception("getPath() hat für das File-Ref mit der ID {$file_id} null geliefert.");
+                throw new Exception("getPath() hat für das File-Ref mit der ID '{$file_id}' null geliefert.");
             }
             $file_paths_by_id[$file_id] = $path;
             $files_metadata[$file_id] = [

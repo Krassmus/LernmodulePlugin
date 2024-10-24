@@ -1,114 +1,121 @@
 <template>
-  <div class="h5p-module">
-    <div class="h5pQuestion" v-html="this.task.question" />
-    <template v-if="task.canAnswerMultiple">
-      <template v-for="(answer, i) in answers" :key="i">
-        <label :class="classForAnswer(answer)">
-          <input
-            type="checkbox"
-            :value="answer.text"
-            v-model="selectedAnswers[answer.text]"
-            :disabled="isSubmitted"
-          />
-          {{ answer.text }}
-          <div
-            v-if="answer.strings.hint && !isSubmitted"
-            class="tooltip tooltip-icon h5pTooltip"
-            :data-tooltip="answer.strings.hint"
-          />
-        </label>
+  <div class="stud5p-question">
+    <div class="stud5p-content">
+      <div v-html="this.task.question" />
+      <template v-if="task.canAnswerMultiple">
+        <template v-for="answer in answers" :key="answer.uuid">
+          <label :class="classForAnswer(answer)">
+            <input
+              type="checkbox"
+              class="answer-checkbox"
+              :value="answer.text"
+              v-model="selectedAnswers[answer.text]"
+              :disabled="isSubmitted"
+            />
+            {{ answer.text }}
+            <span
+              v-if="answer.strings.hint && !isSubmitted"
+              class="tooltip tooltip-icon answer-tooltip"
+              :data-tooltip="answer.strings.hint"
+            />
+          </label>
 
-        <template v-if="isSubmitted">
-          <div
-            v-if="
-              answer.strings.feedbackSelected && selectedAnswers[answer.text]
-            "
-            class="answerFeedback"
-          >
-            {{ answer.strings.feedbackSelected }}
-          </div>
+          <template v-if="isSubmitted">
+            <div
+              v-if="
+                answer.strings.feedbackSelected && selectedAnswers[answer.text]
+              "
+              class="answer-feedback"
+            >
+              {{ answer.strings.feedbackSelected }}
+            </div>
 
-          <div
-            v-else-if="
-              answer.strings.feedbackNotSelected &&
-              !selectedAnswers[answer.text]
-            "
-            class="answerFeedback"
-          >
-            {{ answer.strings.feedbackNotSelected }}
-          </div>
+            <div
+              v-else-if="
+                answer.strings.feedbackNotSelected &&
+                !selectedAnswers[answer.text]
+              "
+              class="answer-feedback"
+            >
+              {{ answer.strings.feedbackNotSelected }}
+            </div>
+          </template>
         </template>
       </template>
-    </template>
 
-    <template v-else>
-      <template v-for="(answer, i) in answers" :key="i">
-        <label :class="classForAnswer(answer)">
-          <input
-            type="radio"
-            class="answerRadioButton"
-            :value="answer"
-            v-model="selectedAnswer"
-            :disabled="isSubmitted"
-          />
-          {{ answer.text }}
-          <div
-            v-if="answer.strings.hint && !isSubmitted"
-            class="tooltip tooltip-icon h5pTooltip"
-            :data-tooltip="answer.strings.hint"
-          />
-        </label>
+      <template v-else>
+        <template v-for="(answer, i) in answers" :key="i">
+          <label :class="classForAnswer(answer)">
+            <input
+              type="radio"
+              class="answer-radiobutton"
+              :value="answer"
+              v-model="selectedAnswer"
+              :disabled="isSubmitted"
+            />
+            {{ answer.text }}
+            <span
+              v-if="answer.strings.hint && !isSubmitted"
+              class="tooltip tooltip-icon answer-tooltip"
+              :data-tooltip="answer.strings.hint"
+            />
+          </label>
 
-        <template v-if="isSubmitted">
-          <div
-            v-if="answer.strings.feedbackSelected && selectedAnswer == answer"
-            class="answerFeedback"
-          >
-            {{ answer.strings.feedbackSelected }}
-          </div>
+          <template v-if="isSubmitted">
+            <div
+              v-if="answer.strings.feedbackSelected && selectedAnswer == answer"
+              class="answer-feedback"
+            >
+              {{ answer.strings.feedbackSelected }}
+            </div>
 
-          <div
-            v-else-if="
-              answer.strings.feedbackNotSelected && selectedAnswer !== answer
-            "
-            class="answerFeedback"
-          >
-            {{ answer.strings.feedbackNotSelected }}
-          </div>
+            <div
+              v-else-if="
+                answer.strings.feedbackNotSelected && selectedAnswer !== answer
+              "
+              class="answer-feedback"
+            >
+              {{ answer.strings.feedbackNotSelected }}
+            </div>
+          </template>
         </template>
       </template>
-    </template>
+    </div>
 
-    <FeedbackElement
-      v-if="isSubmitted"
-      :achieved-points="points"
-      :max-points="maxPoints"
-    />
-
-    <div class="h5p-button-panel">
-      <button
-        v-if="!isSubmitted"
-        v-text="this.task.strings.checkButton"
-        @click="onClickCheck"
-        type="button"
-        class="h5p-button"
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="isSubmitted"
+        :achieved-points="points"
+        :max-points="maxPoints"
+        :result-message="resultMessage"
+        :feedback="task.feedback"
       />
 
-      <button
-        v-if="this.task.retryAllowed && isSubmitted"
-        v-text="this.task.strings.retryButton"
-        @click="onClickTryAgain"
-        type="button"
-        class="h5p-button"
-      />
+      <div class="button-panel">
+        <button
+          v-if="showCheckButton"
+          v-text="this.task.strings.checkButton"
+          @click="onClickCheckButton"
+          type="button"
+          class="stud5p-button"
+        />
 
-      <button
-        v-if="showSolutionsButton"
-        v-text="this.task.strings.solutionsButton"
-        @click="onClickShowSolution"
-        type="button"
-        class="h5p-button"
-      />
+        <button
+          v-if="showRetryButton"
+          v-text="this.task.strings.retryButton"
+          @click="onClickRetryButton"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="showSolutionsButton"
+          v-text="this.task.strings.solutionsButton"
+          @click="onClickShowSolutionsButton"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -131,62 +138,73 @@ export default defineComponent({
   data() {
     return {
       selectedAnswers: {} as Record<string, boolean>,
-      selectedAnswer: this.task.answers[0],
+      selectedAnswer: {} as QuestionAnswer | undefined,
       isSubmitted: false,
       showSolutions: false,
     };
   },
   methods: {
     $gettext,
-    onClickCheck(): void {
+
+    onClickCheckButton(): void {
       this.isSubmitted = true;
     },
-    onClickTryAgain(): void {
+
+    onClickRetryButton(): void {
       this.isSubmitted = false;
       this.showSolutions = false;
       this.selectedAnswers = {};
+      this.selectedAnswer = undefined;
     },
-    onClickShowSolution(): void {
+
+    onClickShowSolutionsButton(): void {
       this.showSolutions = true;
     },
-    selectAnswer(answer: QuestionAnswer): void {
-      if (this.isSubmitted) return;
 
-      this.selectedAnswers[answer.text] = !this.selectedAnswers[answer.text];
-    },
     classForAnswer(answer: QuestionAnswer): string {
       if (this.showSolutions) {
-        if (answer.correct) return 'correctAnswer';
+        if (answer.correct) return 'answer correct';
       }
 
       if (this.isSubmitted) {
         if (this.task.canAnswerMultiple) {
           if (this.selectedAnswers[answer.text]) {
             if (answer.correct) {
-              return 'correctAnswer';
+              return 'answer correct';
             } else {
-              return 'incorrectAnswer';
+              return 'answer incorrect';
             }
           } else {
-            return 'submittedAnswer';
+            return 'answer submitted';
           }
         } else {
           if (this.selectedAnswer === answer) {
             if (answer.correct) {
-              return 'correctAnswer';
+              return 'answer correct';
             } else {
-              return 'incorrectAnswer';
+              return 'answer incorrect';
             }
           } else {
-            return 'submittedAnswer';
+            return 'answer submitted';
           }
         }
       } else {
-        return 'answer';
+        return 'answer unsubmitted';
       }
     },
   },
   computed: {
+    answers(): QuestionAnswer[] {
+      if (this.task.randomOrder) {
+        return this.task.answers
+          .map((answer) => ({ answer: answer, sort: Math.random() }))
+          .sort((answer1, answer2) => answer1.sort - answer2.sort)
+          .map(({ answer }) => answer);
+      } else {
+        return this.task.answers;
+      }
+    },
+
     maxPoints(): number {
       if (this.task.canAnswerMultiple) {
         let maxPoints = 0;
@@ -200,6 +218,7 @@ export default defineComponent({
         return 1;
       }
     },
+
     points(): number {
       if (this.task.canAnswerMultiple) {
         let points = 0;
@@ -219,22 +238,45 @@ export default defineComponent({
 
         return points;
       } else {
-        return this.selectedAnswer.correct ? 1 : 0;
+        return this.selectedAnswer && this.selectedAnswer.correct ? 1 : 0;
       }
     },
-    answers(): QuestionAnswer[] {
-      if (this.task.randomOrder) {
-        // https://stackoverflow.com/a/46545530
-        return this.task.answers
-          .map((value) => ({ value, sort: Math.random() }))
-          .sort((a, b) => a.sort - b.sort)
-          .map(({ value }) => value);
-      } else {
-        return this.task.answers;
-      }
+
+    reachedMaxPoints(): boolean {
+      return this.points === this.maxPoints;
     },
+
+    showCheckButton(): boolean {
+      return !this.isSubmitted;
+    },
+
+    showRetryButton(): boolean {
+      return (
+        this.task.retryAllowed && this.isSubmitted && !this.reachedMaxPoints
+      );
+    },
+
     showSolutionsButton(): boolean {
-      return this.task.showSolutionsAllowed && this.isSubmitted;
+      return (
+        this.task.showSolutionsAllowed &&
+        this.isSubmitted &&
+        !this.showSolutions &&
+        !this.reachedMaxPoints
+      );
+    },
+
+    resultMessage(): string {
+      let resultMessage = this.task.strings.resultMessage.replace(
+        ':correct',
+        this.points.toString()
+      );
+
+      resultMessage = resultMessage.replace(
+        ':total',
+        this.maxPoints.toString()
+      );
+
+      return resultMessage;
     },
   },
 });
@@ -248,57 +290,47 @@ export default defineComponent({
   border-radius: 0.3em;
   margin: 0.5em 0;
 
+  border: 0.1em solid transparent;
+  background: #ddd;
+}
+
+.unsubmitted {
   cursor: pointer;
-  border: 0.1em solid transparent;
-  background: rgba(230, 230, 230, 0.9);
 }
 
-.submittedAnswer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 0.3em;
-  margin: 0.5em 0;
-
-  border: 0.1em solid transparent;
-  background: rgba(230, 230, 230, 0.9);
+.unsubmitted:hover {
+  background: #ececec;
 }
 
-.correctAnswer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 0.3em;
-  margin: 0.5em 0;
+.submitted {
+  cursor: default;
+}
 
+.correct {
   border: 0.1em solid #b6e4ce;
   background: #b6e4ce;
   color: #255c41;
   box-shadow: 0 0.1em 0 #a2bdb0;
 }
 
-.incorrectAnswer {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 0.3em;
-  margin: 0.5em 0;
-
+.incorrect {
   border: 0.1em solid #fbd7d8;
   background: #fbd7d8;
   color: #b71c1c;
   box-shadow: 0 0.1em 0 #deb8b8;
 }
 
-.answerRadioButton {
-  margin-top: 0px;
+.answer-checkbox,
+.answer-radiobutton {
+  margin: 0 0.4em 0 0.4em;
 }
 
-.h5pTooltip {
+.answer-tooltip {
+  display: flex;
   margin-left: 0.25em;
 }
 
-.answerFeedback {
+.answer-feedback {
   margin-left: 0.25em;
   border-left: 6px solid rgba(10, 10, 10, 0.1) !important;
   padding: 0.01em 16px;

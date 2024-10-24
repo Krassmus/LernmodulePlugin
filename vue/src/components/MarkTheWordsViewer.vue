@@ -1,46 +1,78 @@
 <template>
-  <div class="h5p-module">
-    <div class="h5pMarkTheWordText" ref="wrapperElement">
-      <span v-for="(element, index) in parsedTemplate" :key="element.uuid">
+  <div class="stud5p-mark-the-words">
+    <div class="stud5p-content mark-the-words-text">
+      <template v-for="element in parsedTemplate" :key="element.uuid">
         <span
+          v-if="element.type === 'solution'"
           tabindex="0"
           role="button"
           :aria-pressed="isMarked(element)"
           @click="onClickWord(element)"
           @keydown="(event) => onWordKeydown(event, element)"
           @keyup="(event) => onWordKeyup(event, element)"
-          :class="classForWord(element)"
+          :class="['no-break', classForWord(element)]"
           v-html="element.text"
-        />
+        ></span>
+
+        <span
+          v-else-if="element.type === 'word'"
+          tabindex="0"
+          role="button"
+          :aria-pressed="isMarked(element)"
+          @click="onClickWord(element)"
+          @keydown="(event) => onWordKeydown(event, element)"
+          @keyup="(event) => onWordKeyup(event, element)"
+          :class="['no-break', classForWord(element)]"
+          v-html="element.text"
+        ></span>
+
+        <span
+          v-else-if="element.type === 'punctuation'"
+          v-html="element.text"
+        ></span>
+
+        <br v-else-if="element.type === 'line-break'" />
+
         <!--  prettier-ignore-->
-        <pre v-if="index < parsedTemplate.length" class="space"> </pre>
-      </span>
+        <pre v-else-if="element.type === 'space'" class="space"> </pre>
+      </template>
     </div>
 
-    <feedback-element
-      v-if="showResults"
-      :achieved-points="score"
-      :max-points="maxScore"
-      :feedback="this.task.feedback"
-      :result-message="resultMessage"
-    />
-
-    <div class="h5p-button-panel">
-      <button
-        v-if="showCheckButton"
-        v-text="this.task.strings.checkButton"
-        @click="onClickCheck"
-        type="button"
-        class="h5p-button"
+    <!-- Feedback and button section -->
+    <div class="feedback-and-button-container">
+      <feedback-element
+        v-if="showResults"
+        :achieved-points="score"
+        :max-points="maxScore"
+        :feedback="this.task.feedback"
+        :result-message="resultMessage"
       />
 
-      <button
-        v-if="showRetryButton"
-        v-text="this.task.strings.retryButton"
-        @click="onClickRetry"
-        type="button"
-        class="h5p-button"
-      />
+      <div class="button-panel">
+        <button
+          v-if="showCheckButton"
+          v-text="this.task.strings.checkButton"
+          @click="onClickCheck"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="showSolutionsButton"
+          v-text="task.strings.solutionsButton"
+          @click="onClickShowSolutions"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="showRetryButton"
+          v-text="this.task.strings.retryButton"
+          @click="onClickRetry"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
     </div>
 
     <div v-if="debug">
@@ -62,13 +94,37 @@ import { MarkTheWordsTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
-type MarkTheWordsElement = {
+type Uuid = string;
+
+type MarkTheWordsElement = Solution | Word | Space | Punctuation | LineBreak;
+
+interface Solution {
+  type: 'solution';
   uuid: Uuid;
   text: string;
-  correct: boolean;
-};
+}
 
-type Uuid = string;
+interface Word {
+  type: 'word';
+  uuid: Uuid;
+  text: string;
+}
+
+interface Space {
+  type: 'space';
+  uuid: Uuid;
+}
+
+interface Punctuation {
+  type: 'punctuation';
+  uuid: Uuid;
+  text: string;
+}
+
+interface LineBreak {
+  type: 'line-break';
+  uuid: Uuid;
+}
 
 export default defineComponent({
   name: 'MarkTheWordsViewer',
@@ -85,17 +141,22 @@ export default defineComponent({
     return {
       markedWords: new Set<MarkTheWordsElement>(),
       showResults: false,
+      showSolutions: false,
       debug: false,
     };
   },
-
   methods: {
     onClickCheck() {
       this.showResults = true;
     },
 
+    onClickShowSolutions() {
+      this.showSolutions = true;
+    },
+
     onClickRetry() {
       this.showResults = false;
+      this.showSolutions = false;
       this.markedWords.clear();
     },
 
@@ -140,62 +201,97 @@ export default defineComponent({
       if (this.showResults) {
         // User is done marking words and wants to see the results
         if (this.isMarked(word)) {
-          if (word.correct) {
-            return 'h5pCorrectAnswer';
-          } else {
-            return 'h5pIncorrectAnswer';
-          }
-        } else {
-          return 'h5pStaticTextNoHover';
+          return word.type === 'solution'
+            ? 'correct-answer'
+            : 'incorrect-answer';
         }
-      } else {
-        // User is working on the task
-        if (this.isMarked(word)) {
-          return 'h5pMarkedWord';
-        } else {
-          return 'h5pStaticText';
-        }
+        // Word is not marked
+        return this.showSolutions && word.type === 'solution'
+          ? 'solution'
+          : 'static-word-no-hover';
       }
+
+      // User is still working on the task
+      return this.isMarked(word) ? 'marked-word' : 'static-word';
     },
 
     isMarked(word: MarkTheWordsElement): boolean {
       return this.markedWords.has(word);
     },
+
+    sanitizeText(text: string) {
+      // Remove all opening and closing <p> tags and all occurrences of &nbsp;
+      return text.replace(/<\/?p>/g, '').replace(/&nbsp;/g, ' ');
+    },
   },
   computed: {
-    /**
-     * Returns an array where the even indexes are the static text portions,
-     * and the odd indexes are the correct words to be marked.
-     */
     splitTemplate(): string[] {
-      // Split the text into chunks based on pairs of asterisks
-      return this.task.template.split(/\*([^*]*)\*/);
+      // Step 1: Sanitize the template (removes <p> tags and &nbsp;)
+      const cleanTemplate = this.sanitizeText(this.task.template);
+
+      // Step 2: Split by solutions (words surrounded by asterisks)
+      // This captures solutions as one piece and separates the rest of the text.
+      const splitBySolutions = cleanTemplate.split(/(\*[^*]+\*)/g);
+
+      // Step 3: Process each chunk: If it's a solution, leave it intact.
+      // If it's not a solution, split it further by line breaks, punctuation and spaces.
+      const finalSplit = splitBySolutions.flatMap((part) => {
+        if (/^\*[^*]+\*$/.test(part)) {
+          // This part is a solution (surrounded by asterisks), leave it intact
+          return part;
+        } else {
+          // This part is regular text, split by line breaks, spaces, and punctuation
+          return part.split(/(<br\s*\/?>|\s+|[.,!?;:()–—])/g).filter(Boolean); // Remove empty parts
+        }
+      });
+
+      // Step 4: Return the final split array
+      return finalSplit;
     },
 
     parsedTemplate(): MarkTheWordsElement[] {
       let parsedTemplate: MarkTheWordsElement[] = [];
-      this.splitTemplate.forEach((templateElement, i) => {
-        if (i % 2 === 0) {
-          // Even indexes are the static text portions which we split further by spaces here
-          templateElement
-            .trim()
-            .split(' ')
-            .filter((el) => el !== '')
-            .forEach((staticWord) => {
-              parsedTemplate.push({
-                uuid: uuidv4(),
-                text: staticWord,
-                correct: false,
-              });
-            });
-        } else {
+
+      this.splitTemplate.forEach((templateElement) => {
+        if (/^\*[^*]+\*$/.test(templateElement)) {
+          // If it's a solution (word surrounded by asterisks)
+          // Remove the asterisks first
+          const content = templateElement.replace(/\*/g, '');
+
           parsedTemplate.push({
+            type: 'solution',
+            uuid: uuidv4(),
+            text: content,
+          });
+        } else if (/^\s+$/.test(templateElement)) {
+          // If it's a space
+          parsedTemplate.push({
+            type: 'space',
+            uuid: uuidv4(),
+          });
+        } else if (/^<br\s*\/?>$/.test(templateElement)) {
+          // If it's a line break
+          parsedTemplate.push({
+            type: 'line-break',
+            uuid: uuidv4(),
+          });
+        } else if (/[.,!?;:()–—]/.test(templateElement)) {
+          // If it's a punctuation mark
+          parsedTemplate.push({
+            type: 'punctuation',
             uuid: uuidv4(),
             text: templateElement,
-            correct: true,
+          });
+        } else {
+          // It's a regular word (including hyphenated words)
+          parsedTemplate.push({
+            type: 'word',
+            uuid: uuidv4(),
+            text: templateElement,
           });
         }
       });
+
       return parsedTemplate;
     },
 
@@ -204,14 +300,25 @@ export default defineComponent({
     },
 
     showRetryButton(): boolean {
-      return this.task.retryAllowed && this.showResults;
+      return (
+        this.task.retryAllowed && this.showResults && !this.allAnswersAreCorrect
+      );
+    },
+
+    showSolutionsButton(): boolean {
+      return (
+        this.task.showSolutionsAllowed &&
+        this.showResults &&
+        !this.showSolutions &&
+        !this.allAnswersAreCorrect
+      );
     },
 
     score(): number {
       let score = 0;
 
       for (const element of this.markedWords) {
-        if (element.correct) {
+        if (element.type === 'solution') {
           score++;
         } else {
           score--;
@@ -225,9 +332,13 @@ export default defineComponent({
 
     maxScore(): number {
       let maxScore = 0;
+
       for (const element of this.parsedTemplate) {
-        if (element.correct) maxScore++;
+        if (element.type === 'solution') {
+          maxScore++;
+        }
       }
+
       return maxScore;
     },
 
@@ -241,47 +352,59 @@ export default defineComponent({
 
       return resultMessage;
     },
+
+    allAnswersAreCorrect(): boolean {
+      return this.score === this.maxScore;
+    },
   },
 });
 </script>
 
 <style scoped>
-.h5pStaticText {
+.static-word {
   background: #ffffff;
   color: #000000;
 }
 
-.h5pStaticText:hover {
+.static-word:hover {
   box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
 }
 
-.h5pStaticTextNoHover {
+.static-word-no-hover {
   background: #ffffff;
   color: #000000;
 }
 
-.h5pMarkedWord {
+.marked-word {
   box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   background-color: #d4f1f6;
 }
 
-.h5pMarkedWord:hover {
+.marked-word:hover {
   box-shadow: 0 0 0 1px #cee0f4;
   border-radius: 0.25em;
   cursor: pointer;
 }
 
-.h5pCorrectAnswer {
+.correct-answer {
   color: #255c41;
   box-shadow: 0 0 0 1px #d4f6e6;
   border-radius: 0.25em;
   background-color: #d4f6e6;
 }
 
-.h5pIncorrectAnswer {
+.solution {
+  color: #255c41;
+  box-shadow: 0 0 0 1px #d4f6e6;
+  border-radius: 0.25em;
+  background-color: #d4f6e6;
+  border: 1px #255c41 dashed;
+}
+
+.incorrect-answer {
   color: #b71c1c;
   box-shadow: 0 0 0 1px #f7d0d0;
   border-radius: 0.25em;
@@ -289,12 +412,13 @@ export default defineComponent({
   text-decoration: line-through;
 }
 
-.h5pMarkTheWordText {
-  word-break: break-word;
-}
-
 .space {
   font-family: Sans-Serif;
   display: inline;
+}
+
+.no-break {
+  white-space: nowrap; /* Prevents line break inside the element */
+  display: inline-block; /* Makes sure it behaves like a block in inline context */
 }
 </style>

@@ -1,104 +1,111 @@
 <template>
-  <!--  <h1>Variables passed from server:</h1>-->
-  <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
-  <teleport to="#sidebar-actions .sidebar-widget-content .widget-list">
-    <li
-      class="save-row"
-      @click="saveTask"
-      :class="saveStatus.status !== 'saving' ? 'action' : 'action disabled'"
-    >
-      <span>{{ $gettext('Speichern') }}</span>
-      <span
-        :class="
-          saveStatus.status === 'saved' && this.hasUnsavedChanges
-            ? 'save-status-modified'
-            : ''
-        "
-        >{{ saveStatusText }}</span
+  <div class="stud5p-editor">
+    <!--  <h1>Variables passed from server:</h1>-->
+    <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
+    <teleport to="#sidebar-actions .sidebar-widget-content .widget-list">
+      <li
+        class="save-row"
+        @click="saveTask"
+        :class="saveStatus.status !== 'saving' ? 'action' : 'action disabled'"
       >
-    </li>
-    <template v-if="LernmoduleVueJS.LERNMODULE_DEBUG">
-      <!-- As the undo/redo functionality is still not complete, these buttons
-           are to be hidden except when in development mode. -->
-      <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">
-        {{ $pgettext('Im Sinne von undo/redo', 'Rückgängig') }}
+        <span>{{ $gettext('Speichern') }}</span>
+        <span
+          :class="
+            saveStatus.status === 'saved' && this.hasUnsavedChanges
+              ? 'save-status-modified'
+              : ''
+          "
+          >{{ saveStatusText }}</span
+        >
       </li>
-      <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">
-        {{ $pgettext('Im Sinne von undo/redo', 'Wiederherstellen') }}
-      </li>
-    </template>
-  </teleport>
-
-  <form class="default">
-    <fieldset>
-      <legend>{{ $gettext('Grunddaten') }}</legend>
-      <label>
-        {{ $gettext('Titel') }}
-        <input type="text" :value="moduleName" @input="onInputModuleName" />
-      </label>
-      <label>
-        {{ $gettext('Aufgabenbeschreibung') }}
-        <studip-wysiwyg
-          :model-value="infotext"
-          id="ckeditorElement"
-          @update:modelValue="onInputInfotext"
-          insert-html-comment
-          remove-wrapping-p-tag
-        />
-      </label>
-    </fieldset>
-  </form>
-  <div style="margin-bottom: 1em; margin-top: 1em">
-    <label>{{ $gettext('Aufgabentyp auswählen:') }}</label>
-    <select
-      :value="taskDefinition.task_type"
-      @input="onSelectTaskType"
-      style="margin-left: 0.5em"
-    >
-      <option value="FillInTheBlanks">
-        {{ $gettext('Fill In The Blanks') }}
-      </option>
-      <option value="Question">{{ $gettext('Question') }}</option>
-      <option value="DragTheWords">{{ $gettext('Drag The Words') }}</option>
-      <option value="MarkTheWords">{{ $gettext('Mark The Words') }}</option>
       <template v-if="LernmoduleVueJS.LERNMODULE_DEBUG">
-        <option value="FindTheHotspot">
-          {{ $gettext('Find The Hotspot') }}
-        </option>
-        <option value="Memory">{{ $gettext('Memory') }}</option>
-        <option value="FindTheWords">{{ $gettext('Find The Words') }}</option>
-        <option value="Pairing">{{ $gettext('Pairing') }}</option>
-        <option value="Sequencing">
-          {{ $gettext('Sequencing') }}
-        </option>
+        <!-- As the undo/redo functionality is still not complete, these buttons
+           are to be hidden except when in development mode. -->
+        <li @click="undo" :class="canUndo ? 'action' : 'action disabled'">
+          {{ $pgettext('Im Sinne von undo/redo', 'Rückgängig') }}
+        </li>
+        <li @click="redo" :class="canRedo ? 'action' : 'action disabled'">
+          {{ $pgettext('Im Sinne von undo/redo', 'Wiederherstellen') }}
+        </li>
       </template>
-    </select>
-  </div>
+    </teleport>
 
-  <div>
-    <div class="editor">
+    <form class="default">
+      <fieldset>
+        <legend>{{ $gettext('Grunddaten') }}</legend>
+        <label>
+          {{ $gettext('Titel') }}
+          <input type="text" :value="moduleName" @input="onInputModuleName" />
+        </label>
+        <label>
+          {{ $gettext('Aufgabenbeschreibung') }}
+          <studip-wysiwyg
+            :model-value="infotext"
+            id="ckeditorElement"
+            @update:modelValue="onInputInfotext"
+            insert-html-comment
+            remove-wrapping-p-tag
+          />
+        </label>
+      </fieldset>
+    </form>
+
+    <div style="margin-bottom: 1em; margin-top: 1em">
+      <label>{{ $gettext('Aufgabentyp auswählen:') }}</label>
+      <select
+        :value="taskDefinition.task_type"
+        @input="onSelectTaskType"
+        style="margin-left: 0.5em"
+      >
+        <option value="FillInTheBlanks">
+          {{ $gettext('Fill in the Blanks') }}
+        </option>
+        <option value="DragTheWords">{{ $gettext('Drag the Words') }}</option>
+        <option value="MarkTheWords">{{ $gettext('Mark the Words') }}</option>
+        <option value="Question">{{ $gettext('Question') }}</option>
+        <template v-if="LernmoduleVueJS.LERNMODULE_DEBUG">
+          <option value="Pairing">{{ $gettext('Pairing') }}</option>
+          <option value="Sequencing">{{ $gettext('Sequencing') }}</option>
+          <option value="Memory">{{ $gettext('Memory') }}</option>
+        </template>
+      </select>
+    </div>
+
+    <div>
       <component
         :is="editorForTaskType(taskDefinition.task_type)"
         :taskDefinition="taskDefinition"
       />
-    </div>
 
-    <div class="save-undo-redo">
-      <button
-        class="button"
-        @click="saveTask"
-        :disabled="saveStatus.status === 'saving'"
-      >
-        {{ $gettext('Speichern') }}
-      </button>
-    </div>
+      <div class="save-undo-redo">
+        <button
+          class="button"
+          @click="saveTask"
+          :disabled="saveStatus.status === 'saving'"
+        >
+          {{ $gettext('Speichern') }}
+        </button>
+        <button class="button" @click="onResetPreview">
+          {{ $gettext('Vorschau zurücksetzen') }}
+          <!--        <img-->
+          <!--          :src="urlForIcon('refresh')"-->
+          <!--          :alt="$gettext('A refresh symbol consisting of two circular arrows.')"-->
+          <!--          width="16"-->
+          <!--          height="16"-->
+          <!--        />-->
+        </button>
+      </div>
 
-    <div class="viewer">
-      <h1 style="margin-top: 1em">{{ $gettext('Vorschau') }}</h1>
-      <component
-        :is="viewerForTaskType(taskDefinition.task_type)"
-        :task="taskDefinition"
-      />
+      <div v-if="showViewerAboveEditor(taskDefinition.task_type)">
+        <h1 style="margin-top: 1em">{{ $gettext('Vorschau') }}</h1>
+        <div class="stud5p-viewer">
+          <component
+            :is="viewerForTaskType(taskDefinition.task_type)"
+            :task="taskDefinition"
+            :key="viewerKey"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -108,16 +115,30 @@ import { defineComponent } from 'vue';
 import {
   editorForTaskType,
   newTask,
+  showViewerAboveEditor,
   TaskDefinition,
   viewerForTaskType,
 } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext, $pgettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
+import { taskEditorStateSymbol } from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'LernmoduleEditor',
   components: { StudipWysiwyg },
+  data() {
+    return {
+      viewerKey: 0,
+    };
+  },
+  provide() {
+    return {
+      [taskEditorStateSymbol as symbol]: {
+        performEdit: taskEditorStore.performEdit,
+      },
+    };
+  },
   mounted() {
     // Prompt about unsaved changes when leaving the page
     window.addEventListener('beforeunload', this.onBeforeUnload, {
@@ -155,6 +176,7 @@ export default defineComponent({
     },
   },
   methods: {
+    showViewerAboveEditor,
     $pgettext,
     $gettext,
     editorForTaskType,
@@ -181,6 +203,14 @@ export default defineComponent({
         newTaskDefinition: newTask(taskType as TaskDefinition['task_type']),
         undoBatch: {},
       });
+    },
+    onResetPreview() {
+      this.viewerKey += 1;
+    },
+    urlForIcon(iconName: string) {
+      return (
+        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
+      );
     },
   },
 });
@@ -219,13 +249,5 @@ export default defineComponent({
 
 .task-name-input:focus {
   outline: none;
-}
-
-.editor {
-  max-width: 1095px;
-}
-
-.viewer {
-  max-width: 1095px;
 }
 </style>

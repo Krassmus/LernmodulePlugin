@@ -1,55 +1,93 @@
 <template>
-  <div class="sequencing-viewer">
-    <div
-      v-for="image in this.images"
-      :key="image.uuid"
-      class="image-container"
-      :class="{
-        grabbable: !this.showResults,
-      }"
-      :draggable="!this.showResults"
-      @dragstart="startDragImage(image)"
-      @dragover="onDragOver(image)"
-      @drop="onDropImage()"
-    >
-      <img
-        class="image"
-        draggable="false"
-        @dragover.prevent
-        @dragenter.prevent
-        :src="fileIdToUrl(image.file_id)"
-        :alt="image.altText"
-      />
-      <span class="image-description" @dragover.prevent @dragenter.prevent>{{
-        image.altText
-      }}</span>
+  <div class="stud5p-sequencing">
+    <div class="stud5p-content image-row" tabIndex="-1">
+      <button
+        type="button"
+        v-for="(image, index) in images"
+        :aria-label="getAriaLabel(image, index)"
+        :key="image.uuid"
+        :ref="'imageButton-' + index"
+        class="image-container"
+        :class="{
+          dragged: imageInteractedWith === image,
+          disabled: isShowingResults,
+          correct: isShowingResults && isImageInCorrectPosition(image),
+          incorrect: isShowingResults && !isImageInCorrectPosition(image),
+        }"
+        :draggable="!isShowingResults"
+        @dragstart="(event) => startDragImage(image, event)"
+        @drag="onDrag(image)"
+        @dragend="endDragImage(image)"
+        @dragover="onDragOver(image)"
+        @click="onClickImage(image)"
+        @keydown="(event) => onKeydown(image, event)"
+      >
+        <img
+          class="image"
+          draggable="false"
+          @dragover.prevent
+          @dragenter.prevent
+          :src="fileIdToUrl(image.file_id)"
+          :alt="image.altText"
+        />
+
+        <span class="image-description" @dragover.prevent @dragenter.prevent>{{
+          image.altText
+        }}</span>
+      </button>
     </div>
-  </div>
 
-  <FeedbackElement
-    v-if="showResults"
-    :achievedPoints="correctAnswers"
-    :maxPoints="maxPoints"
-    :resultMessage="resultMessage"
-    :feedback="task.feedback"
-  />
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="isShowingResults && !isShowingSolutions"
+        :achievedPoints="correctAnswers"
+        :maxPoints="maxPoints"
+        :resultMessage="resultMessage"
+        :feedback="task.feedback"
+      />
 
-  <div class="h5p-button-panel">
-    <button
-      v-if="!this.showResults"
-      v-text="this.task.strings.checkButton"
-      @click="checkResults()"
-      type="button"
-      class="h5p-button"
-    />
+      <div class="button-panel">
+        <button
+          v-if="showCheckButton"
+          v-text="task.strings.checkButton"
+          @click="onClickCheckButton"
+          type="button"
+          class="stud5p-button"
+        />
 
-    <button
-      v-if="this.showResults"
-      v-text="this.task.strings.retryButton"
-      @click="reset()"
-      type="button"
-      class="h5p-button"
-    />
+        <button
+          v-if="showRetryButton"
+          v-text="task.strings.retryButton"
+          @click="onClickRetryButton"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="showResumeButton"
+          v-text="task.strings.resumeButton"
+          @click="onClickResumeButton"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="showSolutionsButton"
+          v-text="task.strings.solutionsButton"
+          @click="onClickSolutionsButton"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
+    </div>
+
+    <div
+      aria-live="polite"
+      aria-atomic="true"
+      style="position: absolute; width: 1px; height: 1px; overflow: hidden"
+    >
+      {{ screenReaderAnnouncement }}
+    </div>
   </div>
 </template>
 
@@ -57,52 +95,54 @@
 import { defineComponent, PropType } from 'vue';
 import { fileIdToUrl, Image, SequencingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
-import { taskEditorStore } from '@/store';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
 export default defineComponent({
   name: 'SequencingViewer',
+
   components: {
     FeedbackElement,
   },
+
   props: {
     task: {
       type: Object as PropType<SequencingTask>,
       required: true,
     },
   },
+
   emits: ['updateAttempt'],
+
   data() {
     return {
       images: [] as Image[],
       imageInteractedWith: undefined as Image | undefined,
-      showResults: false as boolean,
+      isShowingResults: false as boolean,
+      isShowingSolutions: false as boolean,
+      screenReaderAnnouncement: '' as string,
     };
   },
-  beforeMount(): void {
-    console.log('Before Mount');
-  },
+
   methods: {
     fileIdToUrl,
+
     $gettext,
 
-    urlForIcon(iconName: string) {
-      return (
-        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
-      );
-    },
-
-    startDragImage(image: Image) {
-      console.log('Dragging image', image.altText);
+    startDragImage(image: Image, event: DragEvent) {
+      console.log('Starting to drag image', image.altText);
       this.imageInteractedWith = image;
     },
 
-    onDropImage(): void {
-      console.log('Dropped image', this.imageInteractedWith?.altText);
+    onDrag(image: Image) {
+      console.log('Dragging image', image.altText);
+    },
+
+    endDragImage(image: Image) {
+      console.log('Ending to drag image', image.altText);
       this.imageInteractedWith = undefined;
     },
 
-    onDragOver(image: Image): void {
+    onDragOver(image: Image) {
       if (this.imageInteractedWith && this.imageInteractedWith != image) {
         const fromIndex = this.images.indexOf(this.imageInteractedWith);
         const toIndex = this.images.indexOf(image);
@@ -119,22 +159,118 @@ export default defineComponent({
           ')'
         );
 
-        this.moveInArray(this.images, fromIndex, toIndex);
+        this.moveInArray(fromIndex, toIndex);
       }
     },
 
-    moveInArray(array: Image[], fromIndex: number, toIndex: number) {
-      let element = array[fromIndex];
-      array.splice(fromIndex, 1);
-      array.splice(toIndex, 0, element);
+    onClickImage(image: Image) {
+      if (this.isShowingSolutions || this.isShowingResults) return;
+
+      if (this.imageInteractedWith) {
+        const fromIndex = this.images.indexOf(this.imageInteractedWith);
+        const toIndex = this.images.indexOf(image);
+        this.moveInArray(fromIndex, toIndex);
+        this.imageInteractedWith = undefined;
+      } else {
+        this.imageInteractedWith = image;
+      }
     },
 
-    checkResults(): void {
-      this.showResults = true;
+    onKeydown(image: Image, event: KeyboardEvent) {
+      if (this.isShowingResults || this.isShowingSolutions) return;
+
+      const currentlySelectedIndex = this.images.indexOf(image);
+      const previouslySelectedIndex = this.imageInteractedWith
+        ? this.images.indexOf(this.imageInteractedWith)
+        : -1;
+
+      switch (event.key) {
+        case 'Enter':
+        case ' ':
+          event.preventDefault();
+          // If an image is already selected and it's different from the current one
+          if (this.imageInteractedWith && this.imageInteractedWith !== image) {
+            // Move the already selected image to the position of the currently selected image
+            this.moveInArray(previouslySelectedIndex, currentlySelectedIndex);
+            this.screenReaderAnnouncement = this.$gettext(
+              'Moved %1 to position %2.'
+            )
+              .replace('%1', this.imageInteractedWith.altText)
+              .replace('%2', String(currentlySelectedIndex + 1)); // Convert number to string
+
+            this.imageInteractedWith = undefined;
+            this.moveFocus(currentlySelectedIndex);
+          } else {
+            // Select or deselect the image
+            this.imageInteractedWith = this.imageInteractedWith
+              ? undefined
+              : image;
+            this.screenReaderAnnouncement = this.imageInteractedWith
+              ? `Selected ${image.altText} on position ${
+                  currentlySelectedIndex + 1
+                } for moving.`
+              : 'Selection cleared.';
+          }
+          break;
+
+        case 'Escape':
+          this.imageInteractedWith = undefined;
+          this.screenReaderAnnouncement = 'Selection canceled.';
+          break;
+      }
     },
 
-    reset(): void {
-      this.showResults = false;
+    moveFocus(indexOfButtonToFocus: number) {
+      // Wait for the DOM to update before applying focus
+      this.$nextTick(() => {
+        const buttonRef = this.$refs[
+          `imageButton-${indexOfButtonToFocus}`
+        ] as HTMLButtonElement[];
+        if (buttonRef && buttonRef[0]) {
+          // Check if the buttonRef exists and is not undefined
+          buttonRef[0].focus(); // Set focus on the new button
+        }
+      });
+    },
+
+    getAriaLabel(image: Image, index: number) {
+      if (!this.isShowingResults) {
+        return `${image.altText} on position ${index + 1}`;
+      } else {
+        return `${image.altText} on position ${index + 1} is ${
+          this.isImageInCorrectPosition(image) ? 'correct' : 'not correct'
+        }`;
+      }
+    },
+
+    moveInArray(fromIndex: number, toIndex: number) {
+      let element = this.images[fromIndex];
+      this.images.splice(fromIndex, 1);
+      this.images.splice(toIndex, 0, element);
+    },
+
+    isImageInCorrectPosition(image: Image): boolean {
+      const index = this.images.findIndex((img) => img.uuid === image.uuid);
+      return index !== -1 && this.task.images[index].uuid === image.uuid;
+    },
+
+    onClickCheckButton() {
+      this.isShowingResults = true;
+      this.screenReaderAnnouncement = this.resultMessage;
+    },
+
+    onClickSolutionsButton() {
+      this.isShowingSolutions = true;
+      this.resetImagesToCorrectOrder();
+    },
+
+    onClickResumeButton() {
+      this.isShowingResults = false;
+    },
+
+    onClickRetryButton() {
+      this.isShowingResults = false;
+      this.isShowingSolutions = false;
       this.shuffleImages();
     },
 
@@ -146,10 +282,44 @@ export default defineComponent({
         .sort((image1, image2) => image1.sort - image2.sort)
         .map(({ image }) => image);
     },
+
+    resetImagesToCorrectOrder() {
+      this.images = this.task.images;
+    },
   },
+
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as SequencingTask,
-    correctAnswers(): Number {
+    showCheckButton(): boolean {
+      return !this.isShowingResults;
+    },
+
+    showRetryButton(): boolean {
+      return (
+        this.task.retryAllowed &&
+        this.isShowingResults &&
+        !this.allAnswersAreCorrect
+      );
+    },
+
+    showResumeButton(): boolean {
+      return (
+        this.task.resumeAllowed &&
+        this.isShowingResults &&
+        !this.isShowingSolutions &&
+        !this.allAnswersAreCorrect
+      );
+    },
+
+    showSolutionsButton(): boolean {
+      return (
+        this.task.showSolutionsAllowed &&
+        this.isShowingResults &&
+        !this.isShowingSolutions &&
+        !this.allAnswersAreCorrect
+      );
+    },
+
+    correctAnswers(): number {
       let correctAnswers = 0;
       for (let i = 0; i < this.task.images.length; i++) {
         if (this.task.images[i].uuid === this.images[i].uuid) {
@@ -158,9 +328,15 @@ export default defineComponent({
       }
       return correctAnswers;
     },
-    maxPoints(): Number {
+
+    maxPoints(): number {
       return this.task.images.length;
     },
+
+    allAnswersAreCorrect(): boolean {
+      return this.correctAnswers === this.maxPoints;
+    },
+
     resultMessage(): string {
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
@@ -175,6 +351,7 @@ export default defineComponent({
       return resultMessage;
     },
   },
+
   watch: {
     task: {
       handler() {
@@ -189,7 +366,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.sequencing-viewer {
+.stud5p-sequencing {
+}
+
+.image-row {
   display: flex;
   flex-direction: row;
   padding-bottom: 1em;
@@ -204,10 +384,38 @@ export default defineComponent({
   border-radius: 6px;
   margin: 6px;
   padding: 6px;
+  transition: background-color 0.12s ease, border 0.12s ease,
+    box-shadow 0.12s ease;
+  cursor: grab;
+  user-select: none;
+  background: #fff;
 }
 
-.grabbable {
-  cursor: grab;
+.image-container:not(.disabled):focus,
+.image-container:not(.disabled):active,
+.image-container:not(.disabled):hover {
+  border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
+}
+
+.dragged {
+  border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
+  background-color: #dcf6ff;
+}
+
+.correct {
+  background-color: #9dd8bb;
+  border-color: #9dd8bb;
+}
+
+.incorrect {
+  background-color: #f7d0d0;
+  border-color: #f7d0d0;
+}
+
+.disabled {
+  cursor: default;
 }
 
 .image {
@@ -217,6 +425,5 @@ export default defineComponent({
 
 .image-description {
   margin-top: 6px;
-  font-size: 18px;
 }
 </style>

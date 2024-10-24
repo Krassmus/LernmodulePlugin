@@ -1,98 +1,117 @@
 <template>
-  <div class="pairingRow">
-    <div
-      class="draggableElementsColumn"
-      draggable="false"
-      @dragover.prevent
-      @dragenter.prevent
-      @drop="onDropOnInteractiveElements($event)"
-    >
-      <button
-        type="button"
-        v-for="draggableElementId in draggableElements"
-        :key="draggableElementId"
-        :draggable="
-          !this.isDraggableElementUsed(draggableElementId) && !this.showResults
-        "
-        @dragstart="startDragElement($event, draggableElementId)"
-        @dragend="endDragElement()"
-        @click="onClickDraggableElement(draggableElementId)"
-        class="draggableElement"
-        :class="{
-          disabled:
-            this.isDraggableElementUsed(draggableElementId) ||
-            this.showResults ||
-            this.draggedElementId === draggableElementId,
-          selected: this.elementIdInteractedWith === draggableElementId,
-        }"
-      >
-        <MultimediaElement
-          :element="getElementById(draggableElementId)"
-          draggable="false"
-          ref="draggableImages"
-        />
-      </button>
-    </div>
-    <div class="targetElementsColumn">
-      <TargetImage
-        v-for="pair in this.task.pairs"
-        :class="{
-          outlined:
-            !this.elementsDraggedOntoTargets.hasOwnProperty(
-              pair.targetElement.uuid
-            ) &&
-            (this.draggedElementId || this.elementIdInteractedWith),
-        }"
-        :draggable-image="getElementDraggedOntoTarget(pair.targetElement.uuid)"
-        :target-image="getElementById(pair.targetElement.uuid)"
-        :isCorrect="this.isAnswerCorrect(pair.targetElement.uuid)"
-        :showResult="this.showResults"
-        :key="pair.uuid"
-        @drop="onDropOnTargetElement($event, pair.targetElement.uuid)"
-        :draggable="
-          getElementDraggedOntoTarget(pair.targetElement.uuid) &&
-          !this.showResults
-        "
-        @dragstart="startDragTargetElement($event, pair.targetElement.uuid)"
-        @dragend="endDragTargetElement()"
+  <div class="stud5p-pairing">
+    <div class="stud5p-content pairing-columns">
+      <div
+        class="draggableElementsColumn"
+        draggable="false"
         @dragover.prevent
         @dragenter.prevent
-        @click="onClickTargetElement(pair.targetElement.uuid)"
-      />
+        @drop="onDropOnInteractiveElements($event)"
+      >
+        <button
+          type="button"
+          v-for="draggableElementId in draggableElements"
+          :key="draggableElementId"
+          :draggable="
+            !this.isDraggableElementUsed(draggableElementId) &&
+            !this.showResults
+          "
+          @dragstart="startDragElement($event, draggableElementId)"
+          @dragend="endDragElement()"
+          @click="onClickDraggableElement(draggableElementId)"
+          class="draggableElement"
+          :class="{
+            disabled:
+              this.isDraggableElementUsed(draggableElementId) ||
+              this.showResults ||
+              this.draggedElementId === draggableElementId,
+            selected: this.elementIdInteractedWith === draggableElementId,
+          }"
+        >
+          <MultimediaElement
+            :element="getElementById(draggableElementId)"
+            draggable="false"
+            ref="draggableImages"
+          />
+        </button>
+      </div>
+
+      <div class="targetElementsColumn">
+        <TargetImage
+          v-for="pair in this.task.pairs"
+          :class="{
+            outlined:
+              !this.elementsDraggedOntoTargets.hasOwnProperty(
+                pair.targetElement.uuid
+              ) &&
+              (this.draggedElementId || this.elementIdInteractedWith),
+          }"
+          :draggable-image="
+            getElementDraggedOntoTarget(pair.targetElement.uuid)
+          "
+          :target-image="getElementById(pair.targetElement.uuid)"
+          :isCorrect="this.isAnswerCorrect(pair.targetElement.uuid)"
+          :showResult="this.showResults"
+          :key="pair.uuid"
+          @drop="onDropOnTargetElement($event, pair.targetElement.uuid)"
+          :draggable="
+            getElementDraggedOntoTarget(pair.targetElement.uuid) &&
+            !this.showResults
+          "
+          @dragstart="startDragTargetElement($event, pair.targetElement.uuid)"
+          @dragend="endDragTargetElement()"
+          @dragover.prevent
+          @dragenter.prevent
+          @click="onClickTargetElement(pair.targetElement.uuid)"
+        />
+      </div>
     </div>
-  </div>
-  <br />
 
-  <FeedbackElement
-    v-if="showResults"
-    :achievedPoints="correctAnswers"
-    :maxPoints="maxPoints"
-    :resultMessage="resultMessage"
-    :feedback="task.feedback"
-  />
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="showResults"
+        :achievedPoints="correctAnswers"
+        :maxPoints="maxPoints"
+        :resultMessage="resultMessage"
+        :feedback="task.feedback"
+      />
 
-  <div class="h5p-button-panel">
-    <button
-      v-if="!this.showResults"
-      v-text="this.task.strings.checkButton"
-      @click="checkResults()"
-      type="button"
-      class="h5p-button"
-    />
+      <div class="button-panel">
+        <button
+          v-if="showCheckButton"
+          v-text="this.task.strings.checkButton"
+          @click="onClickCheck()"
+          type="button"
+          class="stud5p-button"
+        />
 
-    <button
-      v-if="this.showResults"
-      v-text="this.task.strings.retryButton"
-      @click="reset()"
-      type="button"
-      class="h5p-button"
-    />
+        <button
+          v-if="showSolutionsButton"
+          v-text="task.strings.solutionsButton"
+          @click="onClickShowSolution()"
+          type="button"
+          class="stud5p-button"
+        />
+
+        <button
+          v-if="showRetryButton"
+          v-text="this.task.strings.retryButton"
+          @click="onClickTryAgain()"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, PairElement, PairingTask } from '@/models/TaskDefinition';
+import {
+  fileIdToUrl,
+  LernmoduleMultimediaElement,
+  PairingTask,
+} from '@/models/TaskDefinition';
 import TargetImage from '@/components/TargetImage.vue';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 import MultimediaElement from '@/components/MultimediaElement.vue';
@@ -122,10 +141,13 @@ export default defineComponent({
       // Record from target ID -> draggable element ID.
       elementsDraggedOntoTargets: {} as Record<Uuid, Uuid>,
       showResults: false as boolean,
+      showSolutions: false as boolean,
+      originalScore: null as number | null,
     };
   },
   methods: {
     fileIdToUrl,
+
     isAnswerCorrect(targetId: Uuid): boolean {
       const userInput = this.elementsDraggedOntoTargets[targetId];
       if (!userInput) {
@@ -151,7 +173,9 @@ export default defineComponent({
       return pair.draggableElement.uuid === userInput;
     },
 
-    getElementDraggedOntoTarget(targetId: Uuid): PairElement | undefined {
+    getElementDraggedOntoTarget(
+      targetId: Uuid
+    ): LernmoduleMultimediaElement | undefined {
       const draggedElementId = this.elementsDraggedOntoTargets[targetId];
       if (draggedElementId) {
         return this.getElementById(draggedElementId);
@@ -240,7 +264,7 @@ export default defineComponent({
       this.draggedElementId = undefined;
     },
 
-    getElementById(elementId: string): PairElement {
+    getElementById(elementId: string): LernmoduleMultimediaElement {
       const element = this.elementsById[elementId];
       if (!element) {
         throw new Error('No element found with the given ID: ' + elementId);
@@ -303,13 +327,26 @@ export default defineComponent({
       this.elementIdInteractedWith = undefined;
     },
 
-    checkResults(): void {
+    onClickCheck(): void {
       this.showResults = true;
+      this.originalScore = this.correctAnswers;
     },
 
-    reset(): void {
+    onClickShowSolution(): void {
+      this.showSolutions = true;
+
+      // Fill elementsDraggedOntoTargets with the correct answers
+      this.task.pairs.forEach((pair) => {
+        this.elementsDraggedOntoTargets[pair.targetElement.uuid] =
+          pair.draggableElement.uuid;
+      });
+    },
+
+    onClickTryAgain(): void {
       this.showResults = false;
+      this.showSolutions = false;
       this.elementsDraggedOntoTargets = {};
+      this.originalScore = null;
     },
   },
   computed: {
@@ -322,8 +359,8 @@ export default defineComponent({
         .map(({ pair }) => pair.draggableElement.uuid);
     },
 
-    elementsById(): Record<Uuid, PairElement> {
-      const elementsById: Record<Uuid, PairElement> = {};
+    elementsById(): Record<Uuid, LernmoduleMultimediaElement> {
+      const elementsById: Record<Uuid, LernmoduleMultimediaElement> = {};
       for (const pair of this.task.pairs) {
         elementsById[pair.draggableElement.uuid] = pair.draggableElement;
         elementsById[pair.targetElement.uuid] = pair.targetElement;
@@ -332,6 +369,11 @@ export default defineComponent({
     },
 
     correctAnswers(): number {
+      // If solutions are shown, return the original score instead of recalculating
+      if (this.showSolutions && this.originalScore !== null) {
+        return this.originalScore;
+      }
+
       let correctAnswers = 0;
       for (const pair of this.task.pairs) {
         if (this.isAnswerCorrect(pair.targetElement.uuid)) correctAnswers++;
@@ -356,39 +398,64 @@ export default defineComponent({
 
       return resultMessage;
     },
+
+    showCheckButton(): boolean {
+      return !this.showResults;
+    },
+
+    showRetryButton(): boolean {
+      return (
+        this.task.retryAllowed && this.showResults && !this.allAnswersAreCorrect
+      );
+    },
+
+    showSolutionsButton(): boolean {
+      return (
+        this.task.showSolutionsAllowed &&
+        this.showResults &&
+        !this.showSolutions &&
+        !this.allAnswersAreCorrect
+      );
+    },
+
+    allAnswersAreCorrect(): boolean {
+      return this.correctAnswers === this.maxPoints;
+    },
   },
 });
 </script>
 
-<style scoped>
-.pairingRow {
+<style scoped lang="scss">
+.pairing-columns {
   display: flex;
   flex-direction: row;
 }
 
 .draggableElementsColumn {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  @extend .pairing-elements-grid;
+  flex-grow: 1;
   user-select: none;
-  border: 1px solid #cbd5de;
-  gap: 0.5em;
-  padding: 0.5em;
+  margin: 0.5em;
 }
 
 .targetElementsColumn {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  @extend .pairing-elements-grid;
+  flex-grow: 1;
   user-select: none;
-  border: 1px solid #cbd5de;
-  gap: 0.5em;
-  padding: 0.5em;
+  margin: 0.5em;
+  border-radius: 0.25em;
   background-color: #eef1f4;
+}
+
+.pairing-elements-grid {
+  /* Adapted from https://stackoverflow.com/a/46099319/7359454 */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 8em);
+  grid-auto-rows: max-content;
+  justify-content: space-around;
+  row-gap: 1em;
+  column-gap: 0.5em;
+  padding: 0.5em;
 }
 
 .disabled {

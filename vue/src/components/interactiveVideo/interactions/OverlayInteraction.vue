@@ -1,9 +1,9 @@
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
 import {
-  EditorState,
-  editorStateSymbol,
-} from '@/components/interactiveVideo/editorState';
+  InteractiveVideoEditorState,
+  interactiveVideoEditorStateSymbol,
+} from '@/components/interactiveVideo/interactiveVideoEditorState';
 import { OverlayInteraction } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
 
@@ -35,7 +35,9 @@ export default defineComponent({
   },
   setup() {
     return {
-      editor: inject<EditorState>(editorStateSymbol),
+      editor: inject<InteractiveVideoEditorState>(
+        interactiveVideoEditorStateSymbol
+      ),
     };
   },
   data() {

@@ -1,5 +1,5 @@
 <!--<div>--><?php //= Config::get()->LERNMODULE_DEBUG ? 'LERNMODULE_DEBUG = ' . Config::get()->LERNMODULE_DEBUG : '' ?><!--</div>-->
-<div id="app">
+<div id="stud5p-app">
     <?php if (!Config::get()->LERNMODULE_DEBUG) : ?>
   <div style='display: none;'> <?php endif ?>
     <h1>Vue.js Edit Template</h1>
@@ -36,11 +36,16 @@ $actions->addLink(
     PluginEngine::getURL($plugin, array(), "lernmodule/edit/" . $mod->getId()),
     Icon::create("edit", "clickable")
 );
+$actions->addLink(
+    dgettext("lernmoduleplugin","Lernmodul herunterladen"),
+    $mod->getDownloadURL(),
+    Icon::create("download", "clickable")
+);
 Sidebar::get()->addWidget($actions);
 
 $views = new ViewsWidget();
 $views->addLink(
-    $mod['name'],
+    dgettext("lernmoduleplugin", "Vorschau"),
     PluginEngine::getURL($plugin, array(), "lernmodule/view/" . $mod->getId()),
     null,
     array()

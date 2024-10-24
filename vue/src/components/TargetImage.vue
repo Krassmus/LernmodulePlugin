@@ -1,41 +1,42 @@
 <template>
   <button
-    v-if="draggableImage"
     type="button"
-    class="grid-square two-images"
+    class="grid-square"
     :class="{
+      'two-images': !!this.draggableImage,
+      'one-image': !this.draggableImage,
       correct: this.isCorrect,
       incorrect: !this.isCorrect,
       showResult: this.showResult,
     }"
   >
-    <div class="image-container back">
-      <MultimediaElement
-        :element="targetImage"
-        draggable="false"
-        class="image"
-        :class="{
-          correct: this.isCorrect,
-          incorrect: !this.isCorrect,
-          showResult: this.showResult,
-        }"
-      />
-    </div>
-    <div class="image-container front">
-      <MultimediaElement
-        :element="draggableImage"
-        draggable="false"
-        class="image"
-        :class="{
-          correct: this.isCorrect,
-          incorrect: !this.isCorrect,
-          showResult: this.showResult,
-        }"
-      />
-    </div>
-  </button>
-  <button v-else type="button" class="grid-square one-image">
-    <MultimediaElement :element="targetImage" draggable="false" />
+    <template v-if="this.draggableImage">
+      <div class="image-container back">
+        <MultimediaElement
+          :element="targetImage"
+          draggable="false"
+          class="image"
+          :class="{
+            correct: this.isCorrect,
+            incorrect: !this.isCorrect,
+            showResult: this.showResult,
+          }"
+        />
+      </div>
+      <div class="image-container front">
+        <MultimediaElement
+          :element="draggableImage"
+          draggable="false"
+          class="image"
+          :class="{
+            correct: this.isCorrect,
+            incorrect: !this.isCorrect,
+            showResult: this.showResult,
+          }"
+        />
+      </div>
+    </template>
+    <MultimediaElement v-else :element="targetImage" draggable="false" />
   </button>
 </template>
 

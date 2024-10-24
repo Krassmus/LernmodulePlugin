@@ -1610,7 +1610,7 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"306c4593-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=31d93740&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"09ffa008-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=31d93740&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c(_vm.coursewarePluginComponents.CoursewareDefaultBlock,{ref:"defaultBlock",tag:"component",staticClass:"cw-lernmodule-block cw-block",attrs:{"block":_vm.block,"canEdit":_vm.canEdit,"isTeacher":_vm.isTeacher,"preview":true,"defaultGrade":false},on:{"storeEdit":_vm.storeBlock,"showEdit":_vm.onShowEditChange},scopedSlots:_vm._u([{key:"content",fn:function(){return [(false)?undefined:_vm._e(),_c('iframe',{ref:"lernmoduleIframe",staticClass:"lernmodule-iframe",attrs:{"src":_vm.iframeUrl},on:{"load":_vm.onIframeLoad}})]},proxy:true}])})}
 var staticRenderFns = []
 

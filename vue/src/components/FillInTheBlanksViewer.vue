@@ -1,25 +1,33 @@
 <template>
-  <div class="h5p-module" ref="wrapperElement">
-    <div class="fill-in-the-blanks-text">
+  <div class="stud5p-fill-in-the-blanks" ref="wrapperElement">
+    <div class="stud5p-content fill-in-the-blanks-text">
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <span v-if="element.type === 'staticText'" v-html="element.text" />
+
         <template v-else-if="element.type === 'blank'">
           <input
             type="text"
             v-model="userInputs[element.uuid]"
             :readonly="!this.editable"
             :disabled="!this.editable"
-            :class="classForInput(element)"
-            @blur="onInputBlurOrEnter"
-            @keyup.enter="onInputBlurOrEnter"
+            :class="[
+              'blank',
+              { autocorrect: task.autoCorrect },
+              classForInput(element),
+            ]"
+            @blur="onBlur"
+            @keyup.enter="onEnter($event)"
             @input="onInput"
+            ref="blanks"
           />
+
           <label v-if="element.hint">
             <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
           </label>
+
           <span
             v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-            class="h5p-solution"
+            class="stud5p-solution"
           >
             {{ element.solutions[0] }}
           </span>
@@ -27,46 +35,50 @@
       </template>
     </div>
 
-    <FeedbackElement
-      v-if="showResults"
-      :achievedPoints="correctAnswers"
-      :maxPoints="maxPoints"
-      :feedback="task.feedback"
-      :resultMessage="resultMessage"
-    />
-
-    <div
-      v-if="showFillInAllTheBlanksMessage"
-      class="h5pMessage"
-      v-text="fillInAllTheBlanksMessage"
-    />
-
-    <div class="h5p-button-panel">
-      <button
-        v-if="showCheckButton"
-        v-text="this.task.strings.checkButton"
-        @click="onClickCheck(false)"
-        type="button"
-        class="h5p-button"
+    <!-- Feedback and button section -->
+    <div class="feedback-and-button-container">
+      <div
+        v-if="showFillInAllTheBlanksMessage"
+        class="stud5p-message"
+        v-text="fillInAllTheBlanksMessage"
       />
 
-      <template v-if="showExtraButtons">
+      <FeedbackElement
+        v-if="showResults"
+        :achievedPoints="correctAnswers"
+        :maxPoints="maxPoints"
+        :feedback="task.feedback"
+        :resultMessage="resultMessage"
+      />
+
+      <div class="button-panel">
         <button
-          v-if="showSolutionButton"
-          v-text="this.task.strings.solutionsButton"
-          @click="onClickShowSolution"
+          v-if="showCheckButton"
+          v-text="this.task.strings.checkButton"
+          @click="onClickCheck(false)"
           type="button"
-          class="h5p-button"
+          class="stud5p-button"
+          ref="checkButton"
         />
 
-        <button
-          v-if="showRetryButton"
-          v-text="this.task.strings.retryButton"
-          @click="onClickTryAgain"
-          type="button"
-          class="h5p-button"
-        />
-      </template>
+        <template v-if="showExtraButtons">
+          <button
+            v-if="showSolutionButton"
+            v-text="this.task.strings.solutionsButton"
+            @click="onClickShowSolution"
+            type="button"
+            class="stud5p-button"
+          />
+
+          <button
+            v-if="showRetryButton"
+            v-text="this.task.strings.retryButton"
+            @click="onClickTryAgain"
+            type="button"
+            class="stud5p-button"
+          />
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -75,45 +87,52 @@
 import { defineComponent, PropType } from 'vue';
 import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEqual, round } from 'lodash';
+import { isEqual } from 'lodash';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
 type FillInTheBlanksElement = Blank | StaticText;
+
 type Blank = {
   type: 'blank';
   uuid: Uuid;
   solutions: string[];
   hint: string;
 };
+
 type StaticText = {
   type: 'staticText';
   uuid: Uuid;
   text: string;
 };
+
 type Uuid = string;
 
 const dljs = require('damerau-levenshtein-js');
 
 export default defineComponent({
   name: 'FillInTheBlanksViewer',
+
   components: {
     FeedbackElement,
   },
+
   props: {
     task: {
       type: Object as PropType<FillInTheBlanksTask>,
       required: true,
     },
   },
+
   data() {
     return {
       userInputs: {} as Record<Uuid, string>,
       submittedAnswers: null as Record<Uuid, string> | null,
-      userWantsToSeeSolutions: false,
+      showSolutions: false,
       editable: true,
     };
   },
+
   methods: {
     $gettext,
 
@@ -242,20 +261,60 @@ export default defineComponent({
     },
 
     onClickShowSolution() {
-      this.userWantsToSeeSolutions = true;
+      this.showSolutions = true;
     },
 
     onClickTryAgain() {
-      this.userWantsToSeeSolutions = false;
+      this.resetTask();
+      this.resetBlankWidths();
+    },
+
+    resetTask() {
+      this.showSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
       this.editable = true;
     },
 
-    onInputBlurOrEnter() {
-      this.userWantsToSeeSolutions = false;
+    resetBlankWidths() {
+      (this.$refs.blanks as HTMLInputElement[]).forEach(
+        (input: HTMLInputElement) => {
+          this.autoGrowTextField(input);
+        }
+      );
+    },
+
+    onBlur() {
+      this.handleFilledBlank();
+    },
+
+    onEnter(event: KeyboardEvent) {
+      this.handleFilledBlank();
+      this.focusNextBlank(event.target as HTMLInputElement);
+    },
+
+    handleFilledBlank() {
+      this.showSolutions = false;
       if (this.task.autoCorrect) {
         this.onClickCheck(true);
+      }
+    },
+
+    focusNextBlank(blank: HTMLInputElement) {
+      const blanks = this.$refs.blanks as HTMLInputElement[];
+
+      // Find the index of the current input in the blanks array
+      const currentIndex = blanks.indexOf(blank);
+
+      // Move to the next input if available
+      if (currentIndex !== -1 && currentIndex < blanks.length - 1) {
+        const nextInput = blanks[currentIndex + 1];
+        nextInput.focus();
+      } else {
+        // This is the last blank, jump to the check button if it is there
+        if (this.showCheckButton) {
+          (this.$refs.checkButton as HTMLInputElement).focus();
+        }
       }
     },
 
@@ -265,20 +324,20 @@ export default defineComponent({
 
     classForInput(blank: FillInTheBlanksElement) {
       if (!this.submittedAnswers) {
-        return 'h5pBlank';
+        return '';
       }
 
       if (this.submittedAnswers?.[blank.uuid] != undefined) {
         if (this.submittedAnswerIsCorrect(blank)) {
-          return 'h5pBlank h5pBlankCorrect';
+          return 'correct';
         } else {
-          return 'h5pBlank h5pBlankIncorrect';
+          return 'incorrect';
         }
       } else {
         if (this.task.autoCorrect) {
-          return 'h5pBlank';
+          return 'autocorrect';
         } else {
-          return 'h5pBlank h5pBlankIncorrect';
+          return 'autocorrect incorrect';
         }
       }
     },
@@ -288,12 +347,20 @@ export default defineComponent({
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
+
+    removePTags(text: string) {
+      // Remove all opening and closing <p> tags
+      return text.replace(/<\/?p>/g, '');
+    },
   },
+
   computed: {
     splitTemplate(): string[] {
+      const cleanTemplate = this.removePTags(this.task.template);
+
       // Returns an array where the even indexes are the static text portions,
       // and the odd indexes are the blanks.
-      return this.task.template.split(/\*([^*]*)\*/);
+      return cleanTemplate.split(/\*([^*]+)\*/);
     },
 
     parsedTemplate(): FillInTheBlanksElement[] {
@@ -377,25 +444,21 @@ export default defineComponent({
     },
 
     showSolutionButton(): boolean {
-      return !this.showSolutions && this.task.showSolutionsAllowed;
+      return (
+        this.task.showSolutionsAllowed &&
+        this.showResults &&
+        !this.showSolutions
+      );
     },
 
     showRetryButton(): boolean {
       return this.task.retryAllowed && this.submittedAnswers !== null;
     },
 
-    showSolutions(): boolean {
-      return (
-        this.userWantsToSeeSolutions &&
-        (this.allBlanksAreFilled ||
-          !this.task.allBlanksMustBeFilledForSolutions)
-      );
-    },
-
     showFillInAllTheBlanksMessage(): boolean {
       return (
         this.task.allBlanksMustBeFilledForSolutions &&
-        this.userWantsToSeeSolutions &&
+        this.showSolutions &&
         !this.allBlanksAreFilled &&
         !this.inputHasChanged
       );
@@ -443,47 +506,42 @@ export default defineComponent({
 
 <style scoped>
 input[type='text'] {
-  max-height: 1em;
-  font-family: Lato, sans-serif;
+  height: 1em;
 }
 
 .fill-in-the-blanks-text {
   word-break: break-word;
 }
 
-.h5pBlankCorrect {
+.correct {
   background: #9dd8bb;
   border: 1px solid #9dd8bb;
   color: #255c41;
 }
 
-.h5pBlankIncorrect {
+.incorrect {
   background-color: #f7d0d0;
   border: 1px solid #f7d0d0;
   color: #b71c1c;
   text-decoration: line-through;
 }
 
-.h5pBlank {
+.blank {
   border-radius: 0.25em;
   border: 1px solid #a0a0a0;
   /* top, right, bottom, left */
-  padding: 0.1875em 0em 0.1875em 0.5em;
+  padding: 0.1875em 0 0.1875em 0.5em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   /* Calculated to be the minPx number spit out by autoGrowTextField */
-  width: 91px;
+  width: 104px;
 }
 
-.h5pBlank.autocorrect:focus {
-  /*  Irgendwas damit es nicht rot oder grün gehighlightet wird, während noch drin getippt wird */
-}
-
-.h5pMessage {
-  font-size: 1em;
-  color: #1a73d9;
-  font-weight: 700;
-  padding-top: 0.5em;
+.blank.autocorrect:focus {
+  background: unset;
+  color: unset;
+  text-decoration: unset;
+  border: 1px solid #a0a0a0;
 }
 </style>

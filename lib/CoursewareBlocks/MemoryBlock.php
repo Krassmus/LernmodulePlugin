@@ -27,7 +27,7 @@ class MemoryBlock extends BlockType
     {
         return dgettext(
             'lernmoduleplugin',
-            'TODO'
+            'Das klassische Memory Spiel.'
         );
     }
 

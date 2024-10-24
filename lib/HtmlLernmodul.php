@@ -126,12 +126,16 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         return $output;
     }
 
-    public function getStartURL($secret = null)
+    public function getStartURL($secret = null, $urlencode = false)
     {
         if ($this['url']) {
             return URLHelper::getURL($this['url'], array('vanillalm_secret' => $secret), true);
         } else {
-            return $this->getDataURL() . "/" . ($this['customdata']['start_file'] ?? "index.html") . ($secret ? "?vanillalm_secret=" . urlencode($secret) : "");
+            $url = $this['customdata']['start_file'] ?? "index.html";
+            if ($urlencode) {
+                $url = implode('/', array_map('rawurlencode', explode('/', $url)));
+            }
+            return $this->getDataURL() . "/" . $url . ($secret ? "?vanillalm_secret=" . urlencode($secret) : "");
         }
     }
 }

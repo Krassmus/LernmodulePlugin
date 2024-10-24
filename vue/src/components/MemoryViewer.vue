@@ -1,48 +1,78 @@
 <template>
-  <div class="h5p-module">
-    <div>{{ $gettext('Umgedrehte Karten: ') + this.amountOfFlips }}</div>
-
-    <div>
-      {{
-        $gettext(
-          'Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }',
-          {
-            amountOfPairsSolved: this.amountOfPairsSolved.toString(),
-            totalAmountOfPairs: this.totalAmountOfPairs.toString(),
-          }
-        )
-      }}
-    </div>
-
-    <div class="h5pMemoryGame">
+  <div class="stud5p-memory">
+    <div
+      class="stud5p-content memory-grid"
+      :style="{
+        gridTemplateColumns: gridTemplateColumns,
+        gridTemplateRows: gridTemplateRows,
+      }"
+    >
       <MemoryCardComponent
         v-for="card in this.cards"
         :key="card.uuid"
         :card="card"
+        :flipside="task.flipside"
         @click="onClickCard(card)"
-      ></MemoryCardComponent>
+      />
     </div>
 
-    <div class="h5pFeedbackContainer">
-      <div class="h5pFeedbackContainerTop">
-        <label v-if="showResults && feedbackMessage" class="h5pFeedbackText">
-          {{ this.feedbackMessage }}
-        </label>
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25em;
+        padding-bottom: 0.5em;
+      "
+    >
+      <div>
+        <span class="memory-info-header" v-text="$gettext('Zeit:')" />
+        <span
+          v-text="
+            ' ' +
+            $gettext('%{ time } Sekunden', {
+              time: this.timer.toString(),
+            })
+          "
+        />
       </div>
-      <div class="h5pFeedbackContainerCenter">
-        <label v-if="showResults" class="h5pFeedbackText">
-          {{ this.resultMessage }}
-        </label>
+
+      <div>
+        <span
+          class="memory-info-header"
+          v-text="$gettext('Umgedrehte Karten:')"
+        />
+        <span v-text="' ' + this.amountOfFlips.toString()" />
+      </div>
+
+      <div>
+        <span
+          class="memory-info-header"
+          v-text="$gettext('Aufgedeckte Paare:')"
+        />
+        <span
+          v-text="
+            ' ' +
+            $gettext('%{ amountOfPairsSolved } von %{ totalAmountOfPairs }', {
+              amountOfPairsSolved: this.amountOfPairsSolved.toString(),
+              totalAmountOfPairs: this.totalAmountOfPairs.toString(),
+            })
+          "
+        />
+      </div>
+
+      <div v-if="showResults" class="result-message">
+        {{ this.resultMessage }}
       </div>
     </div>
 
-    <div class="h5p-button-panel">
+    <div class="button-panel">
       <button
         v-if="showRetryButton"
         v-text="this.task.strings.retryButton"
         @click="onClickTryAgain"
         type="button"
-        class="h5p-button"
+        class="stud5p-button"
       />
     </div>
   </div>
@@ -50,12 +80,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MemoryTask, MemoryCard } from '@/models/TaskDefinition';
+import { MemoryTask, Image } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import MemoryCardComponent from '@/components/MemoryCard.vue';
 import { v4 } from 'uuid';
 
-export interface ViewerMemoryCard extends MemoryCard {
+export interface ViewerMemoryCard extends Image {
   flipped: boolean;
   solved: boolean;
   matchingCardId: string | undefined;
@@ -76,9 +106,10 @@ export default defineComponent({
       cards: [] as ViewerMemoryCard[],
       firstFlippedCardId: undefined as string | undefined,
       amountOfFlips: 0 as number,
-      showResults: false as boolean,
-      feedbackMessage: undefined as string | undefined,
-      resultMessage: undefined as string | undefined,
+
+      timer: 0, // Track elapsed time in seconds
+      timerStarted: false, // Flag to check if timer has started
+      timerInterval: null as number | null, // Store interval ID to control timer
     };
   },
   methods: {
@@ -90,6 +121,11 @@ export default defineComponent({
 
       card.flipped = true;
       console.log('Flipped', card.altText);
+
+      // Start timer
+      if (!this.timerStarted) {
+        this.startTimer();
+      }
 
       this.amountOfFlips++;
 
@@ -107,11 +143,35 @@ export default defineComponent({
           card.solved = true;
           const firstCard = this.getCardById(this.firstFlippedCardId);
           firstCard.solved = true;
-          console.log('Found a pair of', card.altText);
+          console.log(
+            'Found a pair of',
+            card.altText,
+            'and',
+            firstCard.altText
+          );
         }
 
         this.firstFlippedCardId = undefined;
       }
+    },
+
+    startTimer() {
+      this.timerStarted = true;
+
+      // Start a timer that increments every second
+      this.timerInterval = setInterval(() => {
+        this.timer++;
+      }, 1000) as unknown as number;
+    },
+
+    stopTimer() {
+      // Stop the timer and clear the interval
+      if (this.timerInterval !== null) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null; // Reset after clearing
+      }
+
+      this.timerStarted = false;
     },
 
     resetAllUnsolvedCardsExcept(exceptionId: string): void {
@@ -124,6 +184,7 @@ export default defineComponent({
 
     onClickTryAgain(): void {
       this.amountOfFlips = 0;
+      this.timer = 0;
       this.firstFlippedCardId = undefined;
       this.resetCards();
       this.shuffleCards();
@@ -168,8 +229,40 @@ export default defineComponent({
       return amountOfCardsSolved / 2;
     },
 
-    showRetryButton(): boolean {
+    gameIsOver(): boolean {
       return this.amountOfPairsSolved === this.totalAmountOfPairs;
+    },
+
+    showResults(): boolean {
+      return this.gameIsOver;
+    },
+
+    showRetryButton(): boolean {
+      return this.gameIsOver;
+    },
+
+    resultMessage(): string {
+      return this.task.strings.resultMessage;
+    },
+
+    gridTemplateColumns(): string {
+      if (this.task.squareLayout) {
+        const columns = Math.ceil(Math.sqrt(this.cards.length));
+        return `repeat(${columns}, 1fr)`;
+      } else {
+        return 'repeat(auto-fill, minmax(12em, 1fr))'; // Responsive behavior
+      }
+    },
+
+    gridTemplateRows(): string {
+      if (this.task.squareLayout) {
+        const rows = Math.ceil(
+          this.cards.length / Math.ceil(Math.sqrt(this.cards.length))
+        );
+        return `repeat(${rows}, 1fr)`;
+      } else {
+        return 'auto'; // For responsive layout, let the rows be created automatically
+      }
     },
   },
   watch: {
@@ -178,28 +271,48 @@ export default defineComponent({
         console.log('watcher for this.task');
         this.firstFlippedCardId = undefined;
         this.amountOfFlips = 0;
+
         // Make two copies of each card in the task. Add the flipped, solved and matchingCardId attributes
         this.cards = this.task.cards.flatMap((card) => {
-          // The two copies of each card are linked to each other through the matchingCardId attribute
-          const duplicateCardId = v4();
-          return [
-            // The original card with the set matchingCardId attribute
-            {
-              ...card,
-              flipped: false,
-              solved: false,
-              uuid: card.uuid,
-              matchingCardId: duplicateCardId,
-            },
-            // The duplicate card
-            {
-              ...card,
-              flipped: false,
-              solved: false,
-              uuid: duplicateCardId,
-              matchingCardId: card.uuid,
-            },
-          ];
+          if (!card.second) {
+            // The two copies of each card are linked to each other through the matchingCardId attribute
+            const duplicateCardId = v4();
+            return [
+              // The original card with the set matchingCardId attribute
+              {
+                ...card.first,
+                flipped: false,
+                solved: false,
+                uuid: card.first.uuid,
+                matchingCardId: duplicateCardId,
+              },
+              // The duplicate card
+              {
+                ...card.first,
+                flipped: false,
+                solved: false,
+                uuid: duplicateCardId,
+                matchingCardId: card.first.uuid,
+              },
+            ];
+          } else {
+            return [
+              // The original card with the set matchingCardId attribute
+              {
+                ...card.first,
+                flipped: false,
+                solved: false,
+                matchingCardId: card.second.uuid,
+              },
+              // The second card
+              {
+                ...card.second,
+                flipped: false,
+                solved: false,
+                matchingCardId: card.first.uuid,
+              },
+            ];
+          }
         });
 
         // Shuffle the cards
@@ -207,15 +320,29 @@ export default defineComponent({
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
+    gameIsOver(newValue) {
+      if (newValue) {
+        this.stopTimer();
+      }
+    },
   },
 });
 </script>
 
 <style scoped>
-.h5pMemoryGame {
+.memory-grid {
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
-  /*grid-template-rows: repeat(auto-fit, minmax(250px, 1fr));*/
+  justify-items: center;
+}
+
+.memory-info-header {
+  font-weight: bold;
+}
+
+.result-message {
+  font-weight: bold;
+  font-size: 2em;
+  color: #1a73d9;
 }
 </style>

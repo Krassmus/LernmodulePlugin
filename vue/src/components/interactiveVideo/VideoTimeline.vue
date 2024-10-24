@@ -16,9 +16,9 @@ import {
 } from '@/models/InteractiveVideoTask';
 import { $gettext } from '../../language/gettext';
 import {
-  EditorState,
-  editorStateSymbol,
-} from '@/components/interactiveVideo/editorState';
+  InteractiveVideoEditorState,
+  interactiveVideoEditorStateSymbol,
+} from '@/components/interactiveVideo/interactiveVideoEditorState';
 import getEmValueFromElement from '@/components/interactiveVideo/getEmValueFromElement';
 import { select } from 'd3-selection';
 import { D3DragEvent, drag } from 'd3-drag';
@@ -48,7 +48,9 @@ export default defineComponent({
   name: 'VideoTimeline',
   setup() {
     return {
-      editor: inject<EditorState>(editorStateSymbol),
+      editor: inject<InteractiveVideoEditorState>(
+        interactiveVideoEditorStateSymbol
+      ),
     };
   },
   props: {

@@ -15,9 +15,9 @@ import {
   YoutubeVideo,
 } from '@/models/InteractiveVideoTask';
 import {
-  EditorState,
-  editorStateSymbol,
-} from '@/components/interactiveVideo/editorState';
+  InteractiveVideoEditorState,
+  interactiveVideoEditorStateSymbol,
+} from '@/components/interactiveVideo/interactiveVideoEditorState';
 import LmbTaskInteraction from '@/components/interactiveVideo/interactions/LmbTaskInteraction.vue';
 import { printTaskType, viewerForTaskType } from '@/models/TaskDefinition';
 import { $gettext } from '../../language/gettext';
@@ -58,7 +58,9 @@ export default defineComponent({
   components: { OverlayInteraction, LmbTaskInteraction },
   setup() {
     return {
-      editor: inject<EditorState>(editorStateSymbol),
+      editor: inject<InteractiveVideoEditorState>(
+        interactiveVideoEditorStateSymbol
+      ),
     };
   },
   props: {

@@ -1,9 +1,9 @@
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
 import {
-  EditorState,
-  editorStateSymbol,
-} from '@/components/interactiveVideo/editorState';
+  InteractiveVideoEditorState,
+  interactiveVideoEditorStateSymbol,
+} from '@/components/interactiveVideo/interactiveVideoEditorState';
 import { Interaction, LmbTaskInteraction } from '@/models/InteractiveVideoTask';
 import { iconForTaskType, printTaskType } from '../../../models/TaskDefinition';
 
@@ -12,7 +12,9 @@ export default defineComponent({
   methods: { iconForTaskType, printTaskType },
   setup() {
     return {
-      editor: inject<EditorState>(editorStateSymbol),
+      editor: inject<InteractiveVideoEditorState>(
+        interactiveVideoEditorStateSymbol
+      ),
     };
   },
   props: {

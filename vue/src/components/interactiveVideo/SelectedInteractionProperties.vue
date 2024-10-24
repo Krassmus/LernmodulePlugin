@@ -107,9 +107,9 @@ import {
 import { editorForTaskType, viewerForTaskType } from '@/models/TaskDefinition';
 import { $gettext } from '../../language/gettext';
 import {
-  EditorState,
-  editorStateSymbol,
-} from '@/components/interactiveVideo/editorState';
+  InteractiveVideoEditorState,
+  interactiveVideoEditorStateSymbol,
+} from '@/components/interactiveVideo/interactiveVideoEditorState';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
@@ -118,7 +118,9 @@ export default defineComponent({
   components: { VideoTimeInput, StudipWysiwyg },
   setup() {
     return {
-      editor: inject<EditorState>(editorStateSymbol),
+      editor: inject<InteractiveVideoEditorState>(
+        interactiveVideoEditorStateSymbol
+      ),
     };
   },
   props: {

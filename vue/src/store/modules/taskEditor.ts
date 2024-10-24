@@ -7,6 +7,7 @@ import {
 import { isArray, isEqual } from 'lodash';
 import { saveTask, SaveTaskResponse } from '@/routes/lernmodule';
 import { setAutoFreeze } from 'immer';
+import { formatInvalidTaskDefinitionErrorMessage } from '@/functions';
 
 // Prevent immer from freezing objects.  This behavior causes trouble when we
 // attempt to use v-model with an object produced by immer, because v-model
@@ -143,9 +144,22 @@ export class TaskEditorModule extends VuexModule {
       window.STUDIP.LernmoduleVueJS.module.customdata &&
       !isArray(window.STUDIP.LernmoduleVueJS.module.customdata)
     ) {
-      this.serverTaskDefinition = taskDefinitionSchema.parse(
-        window.STUDIP.LernmoduleVueJS.module.customdata
-      );
+      try {
+        this.serverTaskDefinition = taskDefinitionSchema.parse(
+          window.STUDIP.LernmoduleVueJS.module.customdata
+        );
+      } catch (e: unknown) {
+        const errorMessage = formatInvalidTaskDefinitionErrorMessage(
+          e,
+          window.STUDIP.LernmoduleVueJS.module.customdata
+        );
+        console.error(errorMessage, e);
+        console.error(
+          'task_json: ',
+          window.STUDIP.LernmoduleVueJS.module.customdata
+        );
+        throw new Error(errorMessage, { cause: e });
+      }
       this.undoRedoStack = [
         { taskDefinition: this.serverTaskDefinition, undoBatch: {} },
       ];

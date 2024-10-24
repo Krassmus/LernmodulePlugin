@@ -1,34 +1,43 @@
 <template>
-  <div class="h5pFeedbackContainer">
-    <div class="h5pFeedbackText">
-      {{ resultMessage }}
-    </div>
-    <template v-if="maxPoints">
-      <meter
-        min="0"
-        :low="lowNumber"
-        :high="highNumber"
-        :optimum="maxPoints"
-        :max="maxPoints"
-        :value="achievedPoints"
-      />
+  <div class="feedback-container">
+    <div
+      v-if="feedbackMessage"
+      class="feedback-text"
+      v-text="feedbackMessage"
+    />
+
+    <div v-if="maxPoints" class="meter-and-star-container">
+      <div class="custom-meter">
+        <div class="custom-meter-bar" ref="meterbar" />
+      </div>
+
       <img
         v-if="achievedMaxPoints"
-        :src="urlForIcon('star')"
-        width="36"
-        height="36"
+        class="star-symbol"
+        :class="{ 'star-show': starVisible }"
+        src="../assets/star.svg"
+        width="38"
+        height="38"
+        :alt="
+          $gettext(
+            'Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt'
+          )
+        "
       />
-    </template>
-    <div v-else>{{ achievedPoints }}</div>
-    <div v-if="feedbackMessage" class="h5pFeedbackText">
-      {{ feedbackMessage }}
+
+      <div
+        class="result-text"
+        :class="{ 'result-text-offset': achievedMaxPoints }"
+        v-text="resultMessage"
+      />
     </div>
+
+    <div v-else>{{ achievedPoints }}</div>
   </div>
 </template>
 
 <script lang="ts">
-// need v-model to provide and get content -> <studip-wysiwyg v-model="content" />
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, nextTick, PropType } from 'vue';
 import { Feedback } from '@/models/TaskDefinition';
 import { round } from 'lodash';
 
@@ -41,10 +50,32 @@ export default defineComponent({
     feedback: Object as PropType<Feedback[]>,
   },
   data() {
-    return {};
+    return {
+      starVisible: false,
+    };
   },
-  mounted() {},
+  mounted() {
+    this.startTransition();
+  },
   methods: {
+    async startTransition() {
+      // Wait for the next DOM update cycle
+      await nextTick();
+
+      // Access the ref safely and apply the style
+      const meterBar = this.$refs.meterbar as HTMLElement;
+      if (meterBar) {
+        // Trigger a reflow to ensure the width change is animated
+        meterBar.offsetHeight; // Trigger reflow
+
+        meterBar.style.width = `${this.percentageCorrect}%`;
+
+        // Show the star after the meter fills up
+        setTimeout(() => {
+          this.starVisible = true;
+        }, 500); // Adjust this delay to match the duration of the meter fill
+      }
+    },
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
@@ -52,16 +83,6 @@ export default defineComponent({
     },
   },
   computed: {
-    lowNumber(): Number {
-      if (this.maxPoints) return this.maxPoints / 3;
-      return 0;
-    },
-
-    highNumber(): Number {
-      if (this.maxPoints) return (this.maxPoints * 2) / 3;
-      return 0;
-    },
-
     feedbackSortedByScore(): Feedback[] {
       if (this.feedback) {
         return this.feedback
@@ -92,6 +113,12 @@ export default defineComponent({
       return undefined;
     },
 
+    percentageCorrect(): number {
+      if (this.achievedPoints && this.maxPoints)
+        return round((this.achievedPoints / this.maxPoints) * 100);
+      else return 0;
+    },
+
     achievedMaxPoints(): boolean {
       return this.achievedPoints === this.maxPoints;
     },
@@ -99,52 +126,89 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.h5pFeedbackText {
-  font-size: 1em;
+<style scoped>
+.feedback-text {
+  font-size: 1.25em;
+  font-weight: bold;
   color: #1a73d9;
-  font-weight: 700;
 }
 
-.h5pFeedbackContainer {
-  padding-top: 0.5em;
+.result-text {
+  flex-grow: 1;
+  min-width: 0;
+  padding-left: 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 1em;
+  font-weight: bold;
+  color: #000;
 }
 
-meter {
-  width: 15em;
-  height: 30px;
+.result-text-offset {
+  padding-left: 24px;
+}
 
-  /* For Firefox */
-  background: #fff;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2) inset;
-  border-radius: 1.5em;
+.feedback-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-  max-width: 100%;
-  padding: 0.625em;
+.custom-meter {
+  flex-shrink: 0;
+  background: #e0e0e0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 140px;
+  height: 16px;
+  overflow: hidden; /* Ensure the bar doesn’t overflow */
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.custom-meter-bar {
+  height: 100%;
+  background: linear-gradient(to right, #34a86e, #2b8c5c);
+  width: 0; /* Initial width is 0% */
+  transition: width 0.5s ease; /* Smooth fade-in */
+}
+
+.meter-and-star-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;
+  border-radius: 2em;
+  padding: 6px 12px 6px 12px;
+  max-width: 480px;
+  position: relative;
 }
 
-meter::-webkit-meter-bar {
-  background: none; /* Required to get rid of the default background property */
-  background-color: whiteSmoke;
-  box-shadow: 0 5px 5px -5px #333 inset;
+.star-symbol {
+  position: absolute;
+  left: 134px;
+  top: 1px;
+  opacity: 0;
+  transition: opacity 0.5s ease; /* Smooth fade-in */
 }
 
-meter::-webkit-meter-optimum-value {
-  box-shadow: 0 5px 5px -5px #999 inset;
-  background-image: linear-gradient(
-    90deg,
-    #8bcf69 5%,
-    #e6d450 5%,
-    #e6d450 15%,
-    #f28f68 15%,
-    #f28f68 55%,
-    #cf82bf 55%,
-    #cf82bf 95%,
-    #719fd1 95%,
-    #719fd1 100%
-  );
-  background-size: 100% 100%;
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.star-show {
+  opacity: 1; /* Show the star */
+  animation: pulse 0.5s ease-in-out 0s 1; /* Apply the pulse animation */
 }
 </style>

@@ -1,3 +1,19 @@
+#stud5p-app {
+  max-width: 1095px;
+  box-sizing: border-box;
+  font: 16px Lato, sans-serif;
+  line-height: 1.625; /* 16px x 1.625 = 26px */
+}
+
+.stud5p-viewer {
+  border: 2px solid #eee;
+  padding: 0.5em;
+}
+
+.stud5p-content {
+  padding-bottom: 1em;
+}
+
 /* Replace the border between toolbar and WYSIWYG textarea that is missing
 when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 */
@@ -10,49 +26,61 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 }
 
 .lernmodule_infotext {
+  max-width: 1095px;
+  box-sizing: border-box;
   font-size: 18px;
   font-weight: bold;
   line-height: 1.75em;
   font-family: Lato, sans-serif;
 }
 
-.h5p-module {
-  border: 2px solid #eee;
-  padding: 0.5em 0.5em 0.5em 0.5em;
-  line-height: 1.75em;
+.feedback-and-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1em;
 }
 
-.h5p-button-panel {
-  margin-top: 0.75em; /* margin between button and the feedback above it */
+.button-panel {
 }
 
-.h5p-button {
-  padding: 0.25em 1.25em; /* vertical, horizontal */
-  margin-right: 0.75em; /* margin between buttons */
+.stud5p-message {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #1a73d9;
+}
+
+.stud5p-button {
+  padding: 0.5em 1em; /* vertical, horizontal */
+  margin-right: 0.5em; /* margin between buttons */
   border-radius: 2em;
-  background: #1a73d9;
+  background: rgb(26, 115, 217);
   color: #fff;
   cursor: pointer;
   border: none;
-  box-shadow: none;
-  display: inline-block;
-  text-align: center;
-  text-shadow: none;
-  text-decoration: none;
-  vertical-align: baseline;
-  white-space: nowrap;
+  font-size: 16px;
+  line-height: 1.25em;
 }
 
-.h5p-button:last-child {
+.stud5p-button:last-child {
   margin-right: 0;
 }
 
-.h5p-solution {
+.stud5p-button:hover {
+  background: rgb(19, 86, 163);
+}
+
+.stud5p-solution {
   color: #255c41;
   font-weight: bold;
+  font-size: 16px;
   border: 1px #255c41 dashed;
   background-color: #d4f6e6;
   padding: 0.15em;
   border-radius: 0.25em;
   margin-left: 0.25em;
+}
+
+.no-select {
+  user-select: none;
 }

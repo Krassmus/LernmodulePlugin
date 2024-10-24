@@ -98,9 +98,11 @@ export function fileDetailsUrl(fileId: string): string {
   return window.STUDIP.URLHelper.getURL(`dispatch.php/file/details/${fileId}`);
 }
 
+// Drag the Words task schema
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
   template: z.string(),
+  distractors: z.string().optional().default(''),
   retryAllowed: z.boolean(),
   showSolutionsAllowed: z.boolean(),
   instantFeedback: z.boolean(),
@@ -115,6 +117,7 @@ export const dragTheWordsTaskSchema = z.object({
   }),
   feedback: z.array(feedbackSchema),
 });
+
 export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 
 export const findTheHotspotTaskSchema = z.object({
@@ -144,16 +147,20 @@ export const markTheWordsTaskSchema = z.object({
 });
 export type MarkTheWordsTask = z.infer<typeof markTheWordsTaskSchema>;
 
-export const memoryCardSchema = imageSchema;
+export const memoryCardSchema = z.object({
+  first: imageSchema,
+  second: imageSchema.optional(),
+});
 export type MemoryCard = z.infer<typeof memoryCardSchema>;
 
 export const memoryTaskSchema = z.object({
   task_type: z.literal('Memory'),
   cards: z.array(memoryCardSchema),
+  squareLayout: z.boolean(),
+  flipside: imageSchema.optional(),
+  retryAllowed: z.boolean(),
   strings: z.object({
-    checkButton: z.string(),
     retryButton: z.string(),
-    solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
 });
@@ -180,6 +187,7 @@ export const fillInTheBlanksTaskSchema = z.object({
 export type FillInTheBlanksTask = z.infer<typeof fillInTheBlanksTaskSchema>;
 
 export const questionAnswerSchema = z.object({
+  uuid: z.string(),
   text: z.string(),
   correct: z.boolean(),
   strings: z.object({
@@ -202,7 +210,9 @@ export const questionTaskSchema = z.object({
     checkButton: z.string(),
     retryButton: z.string(),
     solutionsButton: z.string(),
+    resultMessage: z.string(),
   }),
+  feedback: z.array(feedbackSchema).default(() => defaultFeedback()),
 });
 export type QuestionTask = z.infer<typeof questionTaskSchema>;
 
@@ -212,34 +222,41 @@ const imageElementSchema = z.object({
   file_id: z.string(),
   altText: z.string(),
 });
+export type ImageElement = z.infer<typeof imageElementSchema>;
 const audioElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('audio'),
   file_id: z.string(),
   altText: z.string(),
 });
+export type AudioElement = z.infer<typeof audioElementSchema>;
 const textElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('text'),
   content: z.string(),
 });
-export const pairElementSchema = z.union([
+export const multimediaElementSchema = z.union([
   imageElementSchema,
   audioElementSchema,
   textElementSchema,
 ]);
-export type PairElement = z.infer<typeof pairElementSchema>;
+export type LernmoduleMultimediaElement = z.infer<
+  typeof multimediaElementSchema
+>;
+export type MultimediaElementType = LernmoduleMultimediaElement['type'];
 
 export const pairSchema = z.object({
   uuid: z.string(),
-  draggableElement: pairElementSchema,
-  targetElement: pairElementSchema,
+  draggableElement: multimediaElementSchema,
+  targetElement: multimediaElementSchema,
 });
 export type Pair = z.infer<typeof pairSchema>;
 
 export const pairingTaskSchema = z.object({
   task_type: z.literal('Pairing'),
   pairs: z.array(pairSchema),
+  retryAllowed: z.boolean().optional().default(true),
+  showSolutionsAllowed: z.boolean().optional().default(true),
   strings: z.object({
     checkButton: z.string(),
     retryButton: z.string(),
@@ -253,9 +270,13 @@ export type PairingTask = z.infer<typeof pairingTaskSchema>;
 export const sequencingTaskSchema = z.object({
   task_type: z.literal('Sequencing'),
   images: z.array(imageSchema),
+  retryAllowed: z.boolean().optional().default(true),
+  resumeAllowed: z.boolean().optional().default(true),
+  showSolutionsAllowed: z.boolean().optional().default(true),
   strings: z.object({
     checkButton: z.string(),
     retryButton: z.string(),
+    resumeButton: z.string().optional().default($gettext('Fortsetzen')),
     solutionsButton: z.string(),
     resultMessage: z.string(),
   }),
@@ -263,7 +284,7 @@ export const sequencingTaskSchema = z.object({
 });
 export type SequencingTask = z.infer<typeof sequencingTaskSchema>;
 
-export const taskDefinitionSchema = z.union([
+export const taskDefinitionSchema = z.discriminatedUnion('task_type', [
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotTaskSchema,
@@ -283,17 +304,20 @@ export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 // I at first used the workaround described at https://github.com/colinhacks/zod#recursive-types
 // but I later ran into hard-to-resolve typechecking errors when I started to
 // use .optional() inside of schemas. I decided this is the better option for now. -Ann
-export const taskDefinitionSchemaMinusInteractiveVideo = z.union([
-  dragTheWordsTaskSchema,
-  fillInTheBlanksTaskSchema,
-  findTheHotspotTaskSchema,
-  findTheWordsTaskSchema,
-  sequencingTaskSchema,
-  markTheWordsTaskSchema,
-  memoryTaskSchema,
-  pairingTaskSchema,
-  questionTaskSchema,
-]);
+export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
+  'task_type',
+  [
+    dragTheWordsTaskSchema,
+    fillInTheBlanksTaskSchema,
+    findTheHotspotTaskSchema,
+    findTheWordsTaskSchema,
+    sequencingTaskSchema,
+    markTheWordsTaskSchema,
+    memoryTaskSchema,
+    pairingTaskSchema,
+    questionTaskSchema,
+  ]
+);
 
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
@@ -325,6 +349,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'DragTheWords',
         template: 'Drag the *words* to the matching *gaps*.',
+        distractors: '',
         retryAllowed: true,
         showSolutionsAllowed: true,
         instantFeedback: false,
@@ -346,10 +371,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         template: 'Hier entsteht der *Lücken*text.',
         retryAllowed: true,
         showSolutionsAllowed: true,
-        caseSensitive: false,
+        caseSensitive: true,
         autoCorrect: false,
         allBlanksMustBeFilledForSolutions: false,
-        acceptTypos: true,
+        acceptTypos: false,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
@@ -395,6 +420,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
         ],
+        retryAllowed: true,
+        showSolutionsAllowed: true,
         strings: {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
@@ -414,9 +441,13 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             altText: '',
           },
         ],
+        retryAllowed: true,
+        resumeAllowed: true,
+        showSolutionsAllowed: true,
         strings: {
           checkButton: 'Reihenfolge überprüfen',
           retryButton: 'Erneut versuchen',
+          resumeButton: 'Fortsetzen',
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Elemente richtig sortiert.',
         },
@@ -453,36 +484,30 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'Memory',
         cards: [
           {
-            uuid: v4(),
-            v: 2,
-            file_id: '',
-            altText: '',
+            first: {
+              uuid: v4(),
+              v: 2,
+              file_id: '',
+              altText: '',
+            },
           },
         ],
+        retryAllowed: true,
+        squareLayout: true,
         strings: {
-          checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
-          solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+          resultMessage: 'Gut gemacht!',
         },
       };
     case 'Question':
       return {
         task_type: 'Question',
         question:
-          'Welche dieser Himmelskörper sind Planeten in unserem Sonnensystem?',
+          'Wie nennt man die strukturell abgrenzbaren Bereiche einer Zelle?',
         answers: [
           {
-            text: 'Mond',
-            correct: false,
-            strings: {
-              hint: '',
-              feedbackSelected: 'Dies ist ein Mond, kein Planet.',
-              feedbackNotSelected: 'Genau, der Mond ist ein Mond.',
-            },
-          },
-          {
-            text: 'Merkur',
+            uuid: v4(),
+            text: 'Organellen',
             correct: true,
             strings: {
               hint: '',
@@ -491,8 +516,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
-            text: 'Venus',
-            correct: true,
+            uuid: v4(),
+            text: 'Mitochondrien',
+            correct: false,
             strings: {
               hint: '',
               feedbackSelected: '',
@@ -500,8 +526,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
-            text: 'Mars',
-            correct: true,
+            uuid: v4(),
+            text: 'Ribosomen',
+            correct: false,
             strings: {
               hint: '',
               feedbackSelected: '',
@@ -509,32 +536,13 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             },
           },
           {
-            text: 'Pluto',
+            uuid: v4(),
+            text: 'Plasma',
             correct: false,
             strings: {
-              hint: 'Hat sich hier was geändert?',
+              hint: '',
               feedbackSelected: '',
               feedbackNotSelected: '',
-            },
-          },
-          {
-            text: 'Titan',
-            correct: false,
-            strings: {
-              hint: '',
-              feedbackSelected:
-                'Das ist leider nicht richtig. Der Titan ist ein Mond vom Saturn.',
-              feedbackNotSelected: 'Genau, der Titan ist ein Mond vom Saturn.',
-            },
-          },
-          {
-            text: 'Sonne',
-            correct: false,
-            strings: {
-              hint: '',
-              feedbackSelected:
-                'Das ist leider nicht richtig. Die Sonne ist ein Stern.',
-              feedbackNotSelected: 'Genau, die Sonne ist ein Stern.',
             },
           },
         ],
@@ -546,7 +554,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct/:total',
         },
+        feedback: defaultFeedback(),
       };
     default:
       throw new Error('Unimplemented type: ' + type);
@@ -639,7 +649,13 @@ export function printTaskType(type: TaskDefinition['task_type']): string {
 export function showViewerAboveEditor(
   type: TaskDefinition['task_type']
 ): boolean {
-  return type !== 'InteractiveVideo';
+  switch (type) {
+    case 'InteractiveVideo':
+    case 'Pairing':
+      return false;
+    default:
+      return true;
+  }
 }
 
 export function iconForTaskType(type: TaskDefinition['task_type']): string {

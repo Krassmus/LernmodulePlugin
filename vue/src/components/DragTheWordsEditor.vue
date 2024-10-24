@@ -4,7 +4,8 @@
 <template>
   <form class="default">
     <fieldset>
-      <legend>{{ $gettext('Drag The Words') }}</legend>
+      <legend>{{ $gettext('Drag the Words') }}</legend>
+
       <div class="h5pEditorTopPanel">
         <button
           @click="addBlank"
@@ -16,6 +17,7 @@
         </button>
         <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
       </div>
+
       <studip-wysiwyg
         v-model="taskDefinition.template"
         ref="wysiwyg"
@@ -23,133 +25,115 @@
         remove-wrapping-p-tag
         disable-autoformat
       />
+
+      <label style="margin-top: 1.5ex">
+        {{ $gettext('Irreführende Antworten') }}
+        <span
+          class="tooltip tooltip-icon"
+          :data-tooltip="distratorInstructions"
+        />
+        <input type="text" v-model="taskDefinition.distractors" />
+      </label>
     </fieldset>
 
     <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
       <label>
-        {{ $gettext('Korrigiert wird') }}
-        <select v-model="taskDefinition.instantFeedback">
-          <option :value="false">
-            {{ $gettext('manuell per Button') }}
-          </option>
-          <option :value="true">
-            {{ $gettext('automatisch nach Eingabe') }}
-          </option>
-        </select>
-      </label>
-
-      <label :class="taskDefinition.instantFeedback ? 'setting-disabled' : ''">
-        {{ $gettext('Text im Button:') }}
-        <input
-          type="text"
-          :disabled="taskDefinition.instantFeedback"
-          v-model="taskDefinition.strings.checkButton"
-        />
+        <input v-model="taskDefinition.instantFeedback" type="checkbox" />
+        {{ $gettext('Lücken automatisch prüfen') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.alphabeticOrder" />
+        <input v-model="taskDefinition.alphabeticOrder" type="checkbox" />
         {{ $gettext('Antworten alphabetisch sortieren') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
         {{ $gettext('Mehrere Versuche erlauben') }}
-      </label>
-      <label :class="taskDefinition.retryAllowed ? '' : 'setting-disabled'"
-        >{{ $gettext('Text im Button:') }}
-
-        <input
-          type="text"
-          :disabled="!taskDefinition.retryAllowed"
-          v-model="taskDefinition.strings.retryButton"
-        />
       </label>
 
       <label>
         <input
-          type="checkbox"
           v-model="taskDefinition.showSolutionsAllowed"
-          @change="
-            !taskDefinition.showSolutionsAllowed
-              ? (taskDefinition.allBlanksMustBeFilledForSolutions =
-                  taskDefinition.showSolutionsAllowed)
-              : ''
-          "
+          @change="updateAllBlanksRequirement"
+          type="checkbox"
         />
-        {{ $gettext('Lösungen können angezeigt werden') }}
+        {{ $gettext('Lösungen anzeigen erlauben') }}
       </label>
+
       <label
-        :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
+        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
       >
-        {{ $gettext('Text im Button:') }}
         <input
-          type="text"
+          v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
           :disabled="!taskDefinition.showSolutionsAllowed"
-          v-model="taskDefinition.strings.solutionsButton"
+          type="checkbox"
         />
+        {{
+          $gettext('Lösungen nur anzeigen, wenn alle Lücken ausgefüllt sind')
+        }}
       </label>
     </fieldset>
 
     <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Feedback') }}</legend>
-      <label>
-        {{
-          $gettext(
-            'Ergebnismitteilung (mögliche Variablen :correct und :total):'
-          )
-        }}
+      <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+      <label :class="{ 'setting-disabled': taskDefinition.instantFeedback }">
+        {{ $gettext('Text für Überprüfen-Button:') }}
         <input
+          v-model="taskDefinition.strings.checkButton"
+          :disabled="taskDefinition.instantFeedback"
           type="text"
-          v-model="taskDefinition.strings.resultMessage"
-          style="width: 100%"
         />
       </label>
-      <label>{{
-        $gettext('Benutzerdefiniertes Feedback für beliebige Punktebereiche:')
-      }}</label>
-      <div class="feedbackContainer">
-        <div class="feedbackPercentagesChild">
-          <label>
-            {{ $gettext('Prozent') }}
-          </label>
-          <template v-for="(feedback, i) in taskDefinition.feedback" :key="i">
-            <input
-              type="number"
-              min="0"
-              max="100"
-              v-model="taskDefinition.feedback[i].percentage"
-            />
-          </template>
-        </div>
 
-        <div class="feedbackMessagesChild">
-          <label>
-            {{ $gettext('Mitteilung') }}
-          </label>
-          <div
-            class="feedbackMessagesChildSubdivision"
-            v-for="(feedback, i) in taskDefinition.feedback"
-            :key="i"
-          >
-            <input type="text" v-model="taskDefinition.feedback[i].message" />
-            <button
-              type="button"
-              :title="titleForDeleteButtonForFeedback(feedback)"
-              @click="removeFeedback(feedback)"
-            >
-              <img :src="urlForIcon('trash')" width="16" height="16" />
-            </button>
-          </div>
-        </div>
-      </div>
+      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+        {{ $gettext('Text für Wiederholen-Button:') }}
+        <input
+          v-model="taskDefinition.strings.retryButton"
+          :disabled="!taskDefinition.retryAllowed"
+          type="text"
+        />
+      </label>
 
-      <button type="button" class="button" @click="addFeedback">
-        {{ $gettext('Neuer Bereich') }}
-      </button>
+      <label
+        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+      >
+        {{ $gettext('Text für Lösungen-Button:') }}
+        <input
+          v-model="taskDefinition.strings.solutionsButton"
+          :disabled="!taskDefinition.showSolutionsAllowed"
+          type="text"
+        />
+      </label>
+
+      <label
+        :class="{
+          'setting-disabled':
+            !taskDefinition.showSolutionsAllowed ||
+            !taskDefinition.allBlanksMustBeFilledForSolutions,
+        }"
+      >
+        {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
+        <input
+          v-model="taskDefinition.strings.fillInAllBlanksMessage"
+          :disabled="
+            !taskDefinition.showSolutionsAllowed ||
+            !taskDefinition.allBlanksMustBeFilledForSolutions
+          "
+          type="text"
+        />
+      </label>
     </fieldset>
+
+    <feedback-editor
+      :feedback="taskDefinition.feedback"
+      :result-message="taskDefinition.strings.resultMessage"
+      @update:feedback="updateFeedback"
+      @update:result-message="updateResultMessage"
+    />
   </form>
 </template>
 
@@ -157,36 +141,42 @@
 // Allow us to mutate the prop 'taskDefinition' as much as we want.
 // TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
 /* eslint-disable vue/no-mutating-props */
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
+import produce from 'immer';
+import FeedbackEditor from '@/components/FeedbackEditor.vue';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'DragTheWordsEditor',
-  components: { StudipWysiwyg },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<DragTheWordsTask>,
-      required: true,
-    },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
   },
+  components: { StudipWysiwyg, FeedbackEditor },
   computed: {
+    taskDefinition: () => taskEditorStore.taskDefinition as DragTheWordsTask,
+
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
 
     instructions(): string {
       return $gettext(
-        'Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und klicken Sie den "Lücke hinzufügen"–Button.' +
-          ' Außerdem können Sie einen Tooltip mit einem Doppelpunkt (:) hinzufügen.'
+        'Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button „Lücke hinzufügen“. Sie können auch einen Tooltip hinzufügen, indem Sie einen Doppelpunkt (:) vor den Tooltip-Text schreiben.'
       );
     },
 
-    feedbackSortedByScore(): Feedback[] {
-      return this.taskDefinition.feedback
-        .map((value) => value)
-        .sort((a, b) => b.percentage - a.percentage);
+    distratorInstructions(): string {
+      return $gettext(
+        'Geben Sie falsche Antworten als Distraktoren ein. Verwenden Sie das gleiche Sternchen (*)-Schema wie im Text.'
+      );
     },
   },
   methods: {
@@ -215,17 +205,34 @@ export default defineComponent({
       });
     },
 
-    addFeedback(): void {
-      this.taskDefinition.feedback.push({
-        percentage: this.feedbackSortedByScore[0]?.percentage,
-        message: 'Feedback',
+    updateAllBlanksRequirement() {
+      if (!this.taskDefinition.showSolutionsAllowed) {
+        this.taskDefinition.allBlanksMustBeFilledForSolutions = false;
+      }
+    },
+
+    updateFeedback(updatedFeedback: Feedback[]) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: DragTheWordsTask) => {
+            taskDraft.feedback = updatedFeedback;
+          }
+        ),
+        undoBatch: {},
       });
     },
 
-    removeFeedback(feedbackToRemove: Feedback): void {
-      this.taskDefinition.feedback = this.taskDefinition.feedback.filter(
-        (feedback) => feedback !== feedbackToRemove
-      );
+    updateResultMessage(updatedResultMessage: string) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: DragTheWordsTask) => {
+            taskDraft.strings.resultMessage = updatedResultMessage;
+          }
+        ),
+        undoBatch: {},
+      });
     },
 
     urlForIcon(iconName: string) {
@@ -233,49 +240,8 @@ export default defineComponent({
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
-
-    titleForDeleteButtonForFeedback(feedback: Feedback): string {
-      return this.$gettext(
-        'Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt.',
-        { percentage: feedback.percentage.toString() }
-      );
-    },
   },
 });
 </script>
 
-<style scoped>
-.h5pTextArea {
-  display: block;
-  width: 100%;
-  height: 4em;
-  resize: none;
-  /*border: none;*/
-}
-
-.feedbackContainer {
-  display: flex;
-  gap: 0.5em;
-  justify-content: flex-start;
-  align-items: center;
-  max-width: 48em;
-}
-
-.feedbackPercentagesChild {
-  flex: 0 100px;
-  display: flex;
-  flex-direction: column;
-}
-
-.feedbackMessagesChild {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.feedbackMessagesChildSubdivision {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-}
-</style>
+<style scoped></style>

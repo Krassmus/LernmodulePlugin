@@ -1,52 +1,78 @@
 <template>
-  <div class="h5p-module" ref="wrapperElement">
-    <template v-for="element in parsedTemplate" :key="element.uuid">
-      <span v-if="element.type === 'staticText'" v-html="element.text" />
-      <template v-else-if="element.type === 'blank'">
-        <span
-          v-if="userInputs[element.uuid]"
-          :class="classForFilledBlank(element)"
-          :draggable="editable"
-          @dragstart="
-            startDragUsedAnswer($event, element, userInputs[element.uuid])
-          "
-          @drop="onDropBlank($event, element)"
-          @dragover.prevent
-          @dragenter.prevent
-        >
-          {{ getAnswerById(userInputs[element.uuid])?.text }}
-        </span>
-        <span
-          v-else
-          class="h5pBlank"
-          @drop="onDropBlank($event, element)"
-          @dragover.prevent
-          @dragenter.prevent
-          @click="onClickBlank(element)"
-          >&#8203;
-        </span>
-        <label v-if="element.hint">
-          <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
-        </label>
-        <span
-          v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-          class="h5p-solution"
-        >
-          {{ element.solution }}
-        </span>
-      </template>
-    </template>
+  <div class="stud5p-drag-the-words">
+    <!-- Main container for text and answers -->
+    <div class="stud5p-content text-and-answers-container">
+      <!-- Render the text and blank elements from parsedTemplate -->
+      <div class="drag-the-words-text">
+        <template v-for="element in parsedTemplate" :key="element.uuid">
+          <!-- Static text elements -->
+          <span
+            v-if="element.type === 'staticText'"
+            class="static-text"
+            v-html="element.text"
+          />
 
-    <div
-      class="unused-answers-list"
-      @drop="onDropUnusedAnswers($event)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <div v-for="answer in unusedAnswers" :key="answer.uuid">
+          <!-- Blanks -->
+          <template v-else-if="element.type === 'blank'">
+            <!-- Filled blank -->
+            <span
+              v-if="userInputs[element.uuid]"
+              class="blank filled"
+              :class="classForFilledBlank(element)"
+              :draggable="editable"
+              @dragstart="
+                startDragUsedAnswer($event, element, userInputs[element.uuid])
+              "
+              @drop="onDropBlank($event, element)"
+              @dragover.prevent
+              @click="onClickFilledBlank(element)"
+            >
+              {{ getAnswerById(userInputs[element.uuid])?.text }}
+            </span>
+
+            <!-- Empty blank -->
+            <span
+              v-else
+              class="blank"
+              @drop="onDropBlank($event, element)"
+              @dragenter="onDragEnter($event)"
+              @dragleave="onDragLeave($event)"
+              @dragover.prevent
+              @click="onClickBlank(element)"
+            >
+              &#8203;
+            </span>
+
+            <!-- Hint tooltip -->
+            <label v-if="element.hint">
+              <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
+            </label>
+
+            <!-- Show solution if incorrect and solutions are revealed -->
+            <span
+              v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+              class="stud5p-solution"
+            >
+              {{ element.solution }}
+            </span>
+          </template>
+        </template>
+      </div>
+
+      <!-- Container for unused answers (draggable answers) -->
+      <div
+        class="unused-answers-list"
+        @drop="onDropUnusedAnswers($event)"
+        @dragover.prevent
+      >
         <span
-          class="h5pBlankSolution"
-          :class="{ disabled: !this.editable }"
+          v-for="answer in unusedAnswers"
+          :key="answer.uuid"
+          class="unused-answer"
+          :class="{
+            disabled: !this.editable,
+            selected: answer.uuid === this.clickedAnswerId,
+          }"
           :draggable="editable"
           @dragstart="startDragUnusedAnswer($event, answer)"
           @click="onClickUnusedAnswer(answer)"
@@ -56,55 +82,58 @@
       </div>
     </div>
 
-    <FeedbackElement
-      v-if="showResults"
-      :achieved-points="correctAnswers"
-      :max-points="maxPoints"
-      :feedback="task.feedback"
-      :result-message="resultMessage"
-    />
-
-    <div
-      v-if="showFillInAllTheBlanksMessage"
-      class="h5pMessage"
-      v-text="fillInAllTheBlanksMessage"
-    />
-
-    <div class="h5p-button-panel">
-      <button
-        v-if="showCheckButton"
-        v-text="this.task.strings.checkButton"
-        @click="onClickCheck"
-        type="button"
-        class="h5p-button"
+    <!-- Feedback and button section -->
+    <div class="feedback-and-button-container">
+      <!-- Message prompting user to fill in all blanks before they can show solutions-->
+      <div
+        v-if="showFillInAllTheBlanksMessage"
+        class="stud5p-message"
+        v-text="fillInAllTheBlanksMessage"
       />
 
-      <template v-if="showExtraButtons">
+      <!-- Feedback element displaying points and feedback -->
+      <FeedbackElement
+        v-if="showResults"
+        :achieved-points="correctAnswers"
+        :max-points="maxPoints"
+        :feedback="task.feedback"
+        :result-message="resultMessage"
+      />
+
+      <div class="button-panel">
         <button
-          v-if="!showSolutions && this.task.showSolutionsAllowed"
-          v-text="this.task.strings.solutionsButton"
-          @click="onClickShowSolution"
+          v-if="showCheckButton"
+          v-text="task.strings.checkButton"
+          @click="onClickCheckButton"
           type="button"
-          class="h5p-button"
+          class="stud5p-button"
         />
 
         <button
-          v-if="this.task.retryAllowed"
-          v-text="this.task.strings.retryButton"
-          @click="onClickTryAgain"
+          v-if="showSolutionsButton"
+          v-text="task.strings.solutionsButton"
+          @click="onClickSolutionsButton"
           type="button"
-          class="h5p-button"
+          class="stud5p-button"
         />
-      </template>
+
+        <button
+          v-if="showRetryButton"
+          v-text="task.strings.retryButton"
+          @click="onClickRetryButton"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
+import { DragTheWordsTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
-import { isEqual, round } from 'lodash';
+import { isEqual } from 'lodash';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 
@@ -251,7 +280,6 @@ export default defineComponent({
     },
 
     onDropUnusedAnswers(ev: DragEvent): void {
-      console.error('Not implemented');
       ev.preventDefault(); // Indicate that dropping is al
       if (!this.draggedAnswer) {
         throw new Error('draggedAnswer is undefined');
@@ -265,17 +293,31 @@ export default defineComponent({
       }
     },
 
-    onClickCheck() {
+    onDragEnter(event: DragEvent) {
+      const target = event.target as HTMLElement | null;
+      if (target) {
+        target.style.backgroundColor = '#80b4ed';
+      }
+    },
+
+    onDragLeave(event: DragEvent) {
+      const target = event.target as HTMLElement | null;
+      if (target) {
+        target.style.backgroundColor = '';
+      }
+    },
+
+    onClickCheckButton() {
       // Save a copy of the user's inputs.
       this.submittedAnswers = { ...this.userInputs };
       this.editable = false;
     },
 
-    onClickShowSolution() {
+    onClickSolutionsButton() {
       this.userWantsToSeeSolutions = true;
     },
 
-    onClickTryAgain() {
+    onClickRetryButton() {
       this.userWantsToSeeSolutions = false;
       this.userInputs = {};
       this.submittedAnswers = null;
@@ -284,7 +326,7 @@ export default defineComponent({
 
     classForFilledBlank(blank: Blank) {
       if (!this.submittedAnswers && !this.task.instantFeedback) {
-        return 'h5pFilledBlank';
+        return '';
       }
 
       if (this.task.instantFeedback) {
@@ -293,12 +335,12 @@ export default defineComponent({
 
       if (this.userInputs?.[blank.uuid]) {
         if (this.submittedAnswerIsCorrect(blank)) {
-          return 'h5pFilledBlank h5pBlankCorrect disabled';
+          return 'correct disabled';
         } else {
-          return 'h5pFilledBlank h5pBlankIncorrect disabled';
+          return 'incorrect disabled';
         }
       } else {
-        return 'h5pBlank';
+        return '';
       }
     },
 
@@ -317,12 +359,27 @@ export default defineComponent({
       this.userInputs[blank.uuid] = this.clickedAnswerId;
       this.clickedAnswerId = undefined;
     },
+
+    onClickFilledBlank(blank: Blank): void {
+      console.log('Clicked filled blank:', blank);
+      if (!this.editable) return;
+
+      if (blank) {
+        delete this.userInputs[blank.uuid];
+      }
+    },
+
+    removePTags(text: string) {
+      // Remove all opening and closing <p> tags
+      return text.replace(/<\/?p>/g, '');
+    },
   },
   computed: {
     splitTemplate(): string[] {
+      const cleanTemplate = this.removePTags(this.task.template);
       // Returns an array where the even indexes are the static text portions,
       // and the odd indexes are the blanks.
-      return this.task.template.split(/\*([^*]*)\*/);
+      return cleanTemplate.split(/\*([^*]*)\*/);
     },
 
     parsedTemplate(): DragTheWordsElement[] {
@@ -343,6 +400,14 @@ export default defineComponent({
       });
     },
 
+    parsedDistractors(): string[] {
+      // Extract distractors from the input
+      const distractors = (this.task.distractors.match(/\*(.*?)\*/g) || []) // Handle cases with no matches
+        .map((distractor) => distractor.replace(/\*/g, '').trim());
+
+      return distractors;
+    },
+
     blanks(): Blank[] {
       return this.parsedTemplate.filter(
         (word) => word.type === 'blank'
@@ -350,10 +415,17 @@ export default defineComponent({
     },
 
     answers(): Answer[] {
-      return this.blanks.map((blank) => ({
+      const correctAnswers = this.blanks.map((blank) => ({
         uuid: uuidv4(),
         text: blank.solution,
       }));
+
+      const distractorAnswers = this.parsedDistractors.map((distractor) => ({
+        uuid: uuidv4(),
+        text: distractor,
+      }));
+
+      return [...correctAnswers, ...distractorAnswers];
     },
 
     draggedAnswer(): Answer | undefined {
@@ -420,26 +492,6 @@ export default defineComponent({
       return !isEqual(this.submittedAnswers, this.userInputs);
     },
 
-    showExtraButtons(): boolean {
-      if (this.task.instantFeedback) {
-        if (this.allBlanksAreFilled) {
-          return (
-            this.submittedAnswers !== null &&
-            !this.inputHasChanged &&
-            !this.allAnswersAreCorrect
-          );
-        } else {
-          return false;
-        }
-      } else {
-        return (
-          this.submittedAnswers !== null &&
-          !this.inputHasChanged &&
-          !this.allAnswersAreCorrect
-        );
-      }
-    },
-
     showCheckButton(): boolean {
       return (
         (this.submittedAnswers === null || this.inputHasChanged) &&
@@ -447,12 +499,22 @@ export default defineComponent({
       );
     },
 
-    showSolutionButton(): boolean {
-      return !this.showSolutions && this.task.showSolutionsAllowed;
+    showSolutionsButton(): boolean {
+      return (
+        this.task.showSolutionsAllowed &&
+        !this.showSolutions &&
+        this.showResults &&
+        !this.allAnswersAreCorrect
+      );
     },
 
     showRetryButton(): boolean {
-      return this.task.retryAllowed && this.submittedAnswers !== null;
+      return (
+        this.task.retryAllowed &&
+        this.showResults &&
+        !this.allAnswersAreCorrect &&
+        this.submittedAnswers !== null
+      );
     },
 
     showSolutions(): boolean {
@@ -507,62 +569,40 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.h5pStaticText {
+.static-text {
   display: inline;
   background: #ffffff;
   color: #000000;
-  line-height: 1.875em; /* makes the static text line height the same as the blanks 1.75em line height + 1px border top and bottom */
-  margin: 0.1em 0 0 0; /* top, right, bottom, left */
 }
 
-.h5pBlank {
+.blank {
   display: inline-block;
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #a0a0a0;
-  border-radius: 0.25em;
-  margin: 0.1em 0.1em 0 0.1em; /* top, right, bottom, left */
-  min-width: 9em;
-}
-
-.h5pFilledBlank {
-  display: inline-flex;
-  justify-content: center;
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #a0a0a0;
-  border-radius: 0.25em;
-  margin: 0.1em 0.1em 0 0.1em; /* top, right, bottom, left */
-  min-width: 9em;
-  cursor: grabbing;
-}
-
-.h5pBlankSolution {
-  line-height: 1.25;
-  cursor: grabbing;
-  border-radius: 0.25em;
-  padding: 0.1em 0.6em;
-  margin: 0.3em;
-  vertical-align: top;
+  line-height: 1.25em;
   text-align: center;
-  display: inline-block;
-  border: 0.1em solid #c6c6c6;
-  overflow: hidden;
-  background: #ddd;
-  box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
-  z-index: 3;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  background: #cee0f4;
+  color: #1a4473;
+  border: 1px solid #a9c3d0;
+  border-radius: 0.25em;
+  min-width: 9em;
 }
 
-.h5pBlankCorrect {
+.filled {
+  cursor: grabbing;
+}
+
+.filled:not(.disabled):hover {
+  border: 1px solid rgb(212, 190, 216);
+  color: #663366;
+  background: #edd6e9;
+}
+
+.correct {
   background: #9dd8bb;
   border: 1px solid #9dd8bb;
   color: #255c41;
 }
 
-.h5pBlankIncorrect {
+.incorrect {
   background-color: #f7d0d0;
   border: 1px solid #f7d0d0;
   color: #b71c1c;
@@ -574,20 +614,61 @@ span.item:empty:before {
 }
 
 .unused-answers-list {
+  flex-grow: 0;
+  display: flex;
+  min-width: 12em;
+  flex-direction: column;
+  align-items: center;
   margin-top: 0.5em;
-  min-height: 2rem;
+  min-height: 140px;
   border: 1px solid #eee;
   border-radius: 5px;
+  gap: 1em;
+  padding-top: 0.5em;
 }
 
-.h5pMessage {
-  font-size: 1em;
+.unused-answer {
+  display: inline-block;
+  line-height: 1.25em;
+  cursor: grabbing;
+  text-align: center;
+  border: 1px solid #c6c6c6;
+  overflow: auto;
+  background: #ddd;
+  box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
+
+  border-radius: 0.25em;
+  min-width: 9em;
+  max-width: 9em;
+}
+
+.unused-answer:not(.disabled):hover {
+  border: 0.1em solid rgb(212, 190, 216);
+  color: #663366;
+  background: #edd6e9;
+}
+
+.message {
   color: #1a73d9;
-  font-weight: 700;
   padding-top: 0.5em;
 }
 
 .disabled {
   cursor: default;
+}
+
+.selected:not(.disabled) {
+  border: 0.1em solid rgb(212, 190, 216);
+  color: #663366;
+  background: #edd6e9;
+}
+
+.drag-the-words-text {
+  flex-grow: 1;
+}
+
+.text-and-answers-container {
+  display: flex;
+  gap: 1em;
 }
 </style>

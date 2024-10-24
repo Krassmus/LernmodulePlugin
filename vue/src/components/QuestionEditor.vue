@@ -1,11 +1,8 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <!--  The current task: {{ task }}-->
   <form class="default">
     <fieldset>
       <legend>{{ $gettext('Question') }}</legend>
+
       <label>
         <studip-wysiwyg
           v-model="taskDefinition.question"
@@ -14,63 +11,64 @@
           disable-autoformat
         />
       </label>
+
       <fieldset
-        class="collapsable collapsed"
         v-for="(answer, i) in taskDefinition.answers"
-        :key="i"
+        :key="answer.uuid"
+        class="answer collapsable collapsed"
       >
-        <legend>{{ answer.text }}</legend>
-        <div class="flex-parent-element">
-          <input
-            class="flex-child-element checkbox"
-            type="checkbox"
-            v-model="taskDefinition.answers[i].correct"
-          />
-          <input
-            class="flex-child-element textbox"
-            type="text"
-            v-model="taskDefinition.answers[i].text"
-          />
+        <legend class="answer-title">
+          {{ answer.text }}
           <button
-            type="button"
-            class="flex-child-element removeAnswerButton"
+            :title="$gettext('Antwort löschen')"
+            :aria-label="$gettext('Antwort löschen')"
             @click="removeAnswer(answer)"
+            type="button"
+            class="button-with-icon"
           >
-            <img :src="urlForIcon('trash')" :title="$gettext('Löschen')" />
+            <img :src="urlForIcon('trash')" alt="" />
           </button>
+        </legend>
+
+        <div class="answer-row">
+          <input v-model="taskDefinition.answers[i].correct" type="checkbox" />
+
+          <input v-model="taskDefinition.answers[i].text" type="text" />
         </div>
 
-        <fieldset class="collapsable collapsed">
+        <fieldset class="collapsable collapsed feedback">
           <legend>{{ $gettext('Hinweis und Feedback') }}</legend>
+
           <label>
-            <span>{{ $gettext('Hinweis') }}</span>
+            <span>{{ $gettext('Hinweis:') }}</span>
             <input
-              class="textbox"
-              type="text"
               v-model="taskDefinition.answers[i].strings.hint"
+              type="text"
+              class="textbox"
             />
           </label>
 
           <label>
-            <span>{{ $gettext('Feedback wenn ausgewählt') }}</span>
+            <span>{{ $gettext('Feedback, wenn ausgewählt:') }}</span>
             <input
-              class="textbox"
-              type="text"
               v-model="taskDefinition.answers[i].strings.feedbackSelected"
+              type="text"
+              class="textbox"
             />
           </label>
 
           <label>
-            <span>{{ $gettext('Feedback wenn nicht ausgewählt') }}</span>
+            <span>{{ $gettext('Feedback, wenn nicht ausgewählt:') }}</span>
             <input
-              class="textbox"
-              type="text"
               v-model="taskDefinition.answers[i].strings.feedbackNotSelected"
+              type="text"
+              class="textbox"
             />
           </label>
         </fieldset>
       </fieldset>
-      <button type="button" class="button" @click="addAnswer">
+
+      <button @click="addAnswer" type="button" class="button">
         {{ $gettext('Neue Antwort') }}
       </button>
     </fieldset>
@@ -78,77 +76,97 @@
     <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
 
-      <label
-        >{{ $gettext('Text im Button:') }}
-
-        <input type="text" v-model="taskDefinition.strings.checkButton" />
+      <label>
+        <input v-model="taskDefinition.canAnswerMultiple" type="checkbox" />
+        {{ $gettext('Mehrfachauswahl erlauben') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.canAnswerMultiple" />
-        {{ $gettext('Mehrere Antworten können ausgewählt werden') }}
+        <input v-model="taskDefinition.randomOrder" type="checkbox" />
+        {{ $gettext('Antworten in zufälliger Reihenfolge anzeigen') }}
       </label>
 
       <label>
-        <input type="checkbox" v-model="taskDefinition.randomOrder" />
-        {{ $gettext('Zeige Antworten in zufälliger Reihenfolge') }}
-      </label>
-
-      <label>
-        <input type="checkbox" v-model="taskDefinition.retryAllowed" />
+        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
         {{ $gettext('Mehrere Versuche erlauben') }}
       </label>
-      <label :class="taskDefinition.retryAllowed ? '' : 'setting-disabled'"
-        >{{ $gettext('Text im Button:') }}
 
+      <label>
+        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
+        {{ $gettext('Lösungen anzeigen erlauben') }}
+      </label>
+    </fieldset>
+
+    <fieldset class="collapsable collapsed">
+      <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+      <label>
+        {{ $gettext('Text für Überprüfen-Button:') }}
+        <input v-model="taskDefinition.strings.checkButton" type="text" />
+      </label>
+
+      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+        {{ $gettext('Text für Wiederholen-Button:') }}
         <input
-          type="text"
-          :disabled="!taskDefinition.retryAllowed"
           v-model="taskDefinition.strings.retryButton"
+          :disabled="!taskDefinition.retryAllowed"
+          type="text"
         />
       </label>
 
-      <label>
-        <input type="checkbox" v-model="taskDefinition.showSolutionsAllowed" />
-        {{ $gettext('Lösungen können angezeigt werden') }}
-      </label>
       <label
-        :class="taskDefinition.showSolutionsAllowed ? '' : 'setting-disabled'"
-        >{{ $gettext('Text im Button:') }}
-
+        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+      >
+        {{ $gettext('Text für Lösungen-Button:') }}
         <input
-          type="text"
-          :disabled="!taskDefinition.showSolutionsAllowed"
           v-model="taskDefinition.strings.solutionsButton"
+          :disabled="!taskDefinition.showSolutionsAllowed"
+          type="text"
         />
       </label>
     </fieldset>
+
+    <feedback-editor
+      :feedback="taskDefinition.feedback"
+      :result-message="taskDefinition.strings.resultMessage"
+      @update:feedback="updateFeedback"
+      @update:result-message="updateResultMessage"
+    />
   </form>
 </template>
 
 <script lang="ts">
-// Allow us to mutate the prop 'taskDefinition' as much as we want
-// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
-/* eslint-disable vue/no-mutating-props */
-import { defineComponent, PropType } from 'vue';
-import { QuestionAnswer, QuestionTask } from '@/models/TaskDefinition';
+import { defineComponent, inject } from 'vue';
+import {
+  Feedback,
+  QuestionAnswer,
+  QuestionTask,
+} from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import { $gettext } from '@/language/gettext';
+import produce from 'immer';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
+import FeedbackEditor from '@/components/FeedbackEditor.vue';
+import { v4 } from 'uuid';
 
 export default defineComponent({
   name: 'QuestionEditor',
-  components: { StudipWysiwyg },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<QuestionTask>,
-      required: true,
-    },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
   },
+  components: { FeedbackEditor, StudipWysiwyg },
   methods: {
     $gettext,
+
     addAnswer(): void {
       this.taskDefinition.answers.push({
+        uuid: v4(),
         text: this.$gettext('Neue Antwort'),
         correct: true,
         strings: {
@@ -158,18 +176,46 @@ export default defineComponent({
         },
       });
     },
+
     removeAnswer(answerToRemove: QuestionAnswer): void {
       this.taskDefinition.answers = this.taskDefinition.answers.filter(
         (answer) => answer !== answerToRemove
       );
     },
+
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
       );
     },
+
+    updateFeedback(updatedFeedback: Feedback[]) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: QuestionTask) => {
+            taskDraft.feedback = updatedFeedback;
+          }
+        ),
+        undoBatch: {},
+      });
+    },
+
+    updateResultMessage(updatedResultMessage: string) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (taskDraft: QuestionTask) => {
+            taskDraft.strings.resultMessage = updatedResultMessage;
+          }
+        ),
+        undoBatch: {},
+      });
+    },
   },
   computed: {
+    taskDefinition: () => taskEditorStore.taskDefinition as QuestionTask,
+
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },
@@ -177,12 +223,48 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.flex-parent-element {
+.answer {
+  max-width: 48em;
+}
+
+.answer-title {
+  position: relative;
+}
+
+.answer-row {
   display: flex;
-  width: 100%;
-  max-width: 480em;
+  gap: 0.25em;
+  margin-bottom: 0.75em;
+}
+
+.button-with-icon {
+  /* Positioning */
+  position: absolute;
+  top: 50%;
+  right: 0.1em;
+  transform: translateY(-50%);
+  z-index: 10;
+
+  /* Children layout*/
+  display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
-  padding-bottom: 1ex;
+
+  /* Shape & size */
+  aspect-ratio: 1 / 1;
+  height: 100%;
+  width: auto;
+  border-radius: 50%;
+
+  /* Appearance */
+  border: 1px solid rgba(40, 73, 124, 0.1); /* Light translucent border for depth */
+}
+
+.button-with-icon:hover {
+  background: rgba(100%, 100%, 100%, 0.75); /* Lighter background on hover */
+}
+
+.feedback {
+  margin: 0.5em 0 0 0;
 }
 </style>

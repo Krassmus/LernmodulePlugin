@@ -1,8 +1,7 @@
 <template>
-  <!--  <h1>Variables passed from server:</h1>-->
-  <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
-  <!--  <h1>Viewer</h1>-->
-  <div class="viewer">
+  <div class="stud5p-viewer">
+    <!--  <h1>Variables passed from server:</h1>-->
+    <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
     <component
       :is="viewerForTaskType(taskDefinition.task_type)"
       :task="taskDefinition"
@@ -40,9 +39,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-.viewer {
-  max-width: 1095px;
-}
-</style>
