@@ -266,6 +266,8 @@ export default defineComponent({
     },
 
     resultMessage(): string {
+      if (!this.task.strings.resultMessage) return '';
+
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
         this.points.toString()
