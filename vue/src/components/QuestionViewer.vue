@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-question">
+  <div class="stud5p-question stud5p-task">
     <div class="stud5p-content">
       <div v-html="this.task.question" />
       <template v-if="task.canAnswerMultiple">
@@ -266,6 +266,8 @@ export default defineComponent({
     },
 
     resultMessage(): string {
+      if (!this.task.strings.resultMessage) return '';
+
       let resultMessage = this.task.strings.resultMessage.replace(
         ':correct',
         this.points.toString()

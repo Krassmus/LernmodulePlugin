@@ -1,13 +1,16 @@
 #stud5p-app {
   max-width: 1095px;
   box-sizing: border-box;
-  font: 16px Lato, sans-serif;
-  line-height: 1.625; /* 16px x 1.625 = 26px */
 }
 
 .stud5p-viewer {
   border: 2px solid #eee;
   padding: 0.5em;
+}
+
+.stud5p-task {
+  font: 16px Lato, sans-serif;
+  line-height: 1.625; /* 16px x 1.625 = 26px */
 }
 
 .stud5p-content {

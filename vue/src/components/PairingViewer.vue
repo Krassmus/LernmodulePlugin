@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-pairing">
+  <div class="stud5p-pairing stud5p-task">
     <div class="stud5p-content pairing-columns">
       <div
         class="draggableElementsColumn"

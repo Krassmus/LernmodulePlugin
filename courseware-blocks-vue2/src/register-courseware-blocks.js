@@ -10,6 +10,7 @@ const taskTypes = [
   'MarkTheWords',
   'Memory',
   'Pairing',
+  'Sequencing',
   'LmbInteractiveVideo',
 ];
 

@@ -187,7 +187,7 @@ export const fillInTheBlanksTaskSchema = z.object({
 export type FillInTheBlanksTask = z.infer<typeof fillInTheBlanksTaskSchema>;
 
 export const questionAnswerSchema = z.object({
-  uuid: z.string(),
+  uuid: z.string().optional().default(v4()),
   text: z.string(),
   correct: z.boolean(),
   strings: z.object({
@@ -210,7 +210,7 @@ export const questionTaskSchema = z.object({
     checkButton: z.string(),
     retryButton: z.string(),
     solutionsButton: z.string(),
-    resultMessage: z.string(),
+    resultMessage: z.string().optional(),
   }),
   feedback: z.array(feedbackSchema).default(() => defaultFeedback()),
 });
