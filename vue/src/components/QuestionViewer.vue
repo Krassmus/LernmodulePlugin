@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-question">
+  <div class="stud5p-question stud5p-task">
     <div class="stud5p-content">
       <div v-html="this.task.question" />
       <template v-if="task.canAnswerMultiple">

@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-memory">
+  <div class="stud5p-memory stud5p-task">
     <div
       class="stud5p-content memory-grid"
       :style="{
