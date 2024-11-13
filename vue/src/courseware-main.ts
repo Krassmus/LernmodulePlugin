@@ -12,6 +12,7 @@ import {
 } from '@/models/CoursewareBlockIframeMessages';
 import ErrorMessage from '@/components/ErrorMessage.vue';
 import { formatInvalidTaskDefinitionErrorMessage } from '@/functions';
+import { disableDrag } from '@/directives/vDisableDrag';
 
 // Wait to load until a message is posted to Window.
 if (!window.frameElement) {
@@ -98,6 +99,7 @@ function initializeApp(initializeMessage: InitializeMessage) {
   coursewareBlockStore.setContext(initializeMessage.context);
   const app = createApp(CoursewareBlock);
   app.directive('model-undoable', modelUndoable);
+  app.directive('disable-drag', disableDrag);
   app.use(store);
   app.use(gettextPlugin);
 
