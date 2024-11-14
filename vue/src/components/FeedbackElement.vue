@@ -15,7 +15,7 @@
         v-if="achievedMaxPoints"
         class="star-symbol"
         :class="{ 'star-show': starVisible }"
-        src="../assets/star.svg"
+        src="../assets/star.png"
         width="38"
         height="38"
         :alt="
