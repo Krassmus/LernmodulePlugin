@@ -7,16 +7,18 @@
         gridTemplateRows: gridTemplateRows,
       }"
     >
-      <MemoryCardComponent
-        v-for="card in this.cards"
-        :key="card.uuid"
-        :card="card"
-        :flipside="task.flipside"
-        @click="onClickCard(card)"
-      />
+      <template v-for="card in this.cards" :key="card.id">
+        <MemoryCardComponent
+          v-if="card.file_id"
+          :card="card"
+          :flipside="task.flipside"
+          @click="onClickCard(card)"
+        />
+      </template>
     </div>
 
     <div
+      v-if="isPlayable"
       style="
         display: flex;
         flex-direction: column;
@@ -221,6 +223,15 @@ export default defineComponent({
       return this.task.cards.length;
     },
 
+    isPlayable(): boolean {
+      for (const card of this.task.cards) {
+        if (card.first.file_id) {
+          return true;
+        }
+      }
+      return false;
+    },
+
     amountOfPairsSolved(): number {
       let amountOfCardsSolved = 0;
       for (const card of this.cards) {
@@ -230,7 +241,10 @@ export default defineComponent({
     },
 
     gameIsOver(): boolean {
-      return this.amountOfPairsSolved === this.totalAmountOfPairs;
+      return (
+        this.totalAmountOfPairs > 0 &&
+        this.amountOfPairsSolved === this.totalAmountOfPairs
+      );
     },
 
     showResults(): boolean {
