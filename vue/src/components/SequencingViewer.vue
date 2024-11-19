@@ -424,6 +424,13 @@ export default defineComponent({
 }
 
 .image-description {
-  margin-top: 6px;
+  margin-top: 0.25em;
+
+  width: 100%;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 </style>
