@@ -380,15 +380,20 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 2px solid #dbe2e8;
-  border-radius: 6px;
+
+  width: 10em;
+  height: 10em;
   margin: 6px;
   padding: 6px;
-  transition: background-color 0.12s ease, border 0.12s ease,
-    box-shadow 0.12s ease;
+  border: 2px solid #dbe2e8;
+  border-radius: 6px;
+  background: #fff;
+
   cursor: grab;
   user-select: none;
-  background: #fff;
+
+  transition: background-color 0.12s ease, border 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .image-container:not(.disabled):focus,
