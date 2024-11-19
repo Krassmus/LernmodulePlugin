@@ -419,8 +419,9 @@ export default defineComponent({
 }
 
 .image {
-  width: 10em;
-  height: 10em;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .image-description {
