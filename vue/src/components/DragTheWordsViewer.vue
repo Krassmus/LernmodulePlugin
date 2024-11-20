@@ -576,19 +576,29 @@ export default defineComponent({
 <style scoped>
 .static-text {
   display: inline;
+  vertical-align: middle;
+
   background: #ffffff;
   color: #000000;
 }
 
 .blank {
   display: inline-block;
+  min-width: 9em;
+  max-width: 9em;
+  vertical-align: middle;
   line-height: 1.25em;
-  text-align: center;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
   background: #cee0f4;
   color: #1a4473;
+  text-align: center;
+
   border: 1px solid #a9c3d0;
   border-radius: 0.25em;
-  min-width: 9em;
 }
 
 .filled {
@@ -620,8 +630,6 @@ span.item:empty:before {
 
 .unused-answers-list {
   min-width: 12em;
-  min-height: 140px;
-  flex-grow: 0;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
 
@@ -636,17 +644,22 @@ span.item:empty:before {
 
 .unused-answer {
   display: inline-block;
-  line-height: 1.25em;
-  cursor: grabbing;
-  text-align: center;
-  border: 1px solid #c6c6c6;
-  overflow: auto;
-  background: #ddd;
-  box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
-
-  border-radius: 0.25em;
   min-width: 9em;
   max-width: 9em;
+  line-height: 1.25em;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  background: #ddd;
+  box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
+  text-align: center;
+
+  border: 1px solid #c6c6c6;
+  border-radius: 0.25em;
+
+  cursor: grabbing;
 }
 
 .unused-answer:not(.disabled):hover {
