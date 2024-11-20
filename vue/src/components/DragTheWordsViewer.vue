@@ -3,60 +3,110 @@
     <!-- Main container for text and answers -->
     <div class="text-and-answers-container">
       <!-- Render the text and blank elements from parsedTemplate -->
-      <div class="drag-the-words-text">
-        <template v-for="element in parsedTemplate" :key="element.uuid">
-          <!-- Static text elements -->
-          <span
-            v-if="element.type === 'staticText'"
-            class="static-text"
-            v-html="element.text"
+      <div class="text-and-feedback-container">
+        <div class="drag-the-words-text">
+          <template v-for="element in parsedTemplate" :key="element.uuid">
+            <!-- Static text elements -->
+            <span
+              v-if="element.type === 'staticText'"
+              class="static-text"
+              v-html="element.text"
+            />
+
+            <!-- Blanks -->
+            <template v-else-if="element.type === 'blank'">
+              <!-- Filled blank -->
+              <span
+                v-if="userInputs[element.uuid]"
+                class="blank filled"
+                :class="classForFilledBlank(element)"
+                :draggable="editable"
+                @dragstart="
+                  startDragUsedAnswer($event, element, userInputs[element.uuid])
+                "
+                @drop="onDropBlank($event, element)"
+                @dragover.prevent
+                @click="onClickFilledBlank(element)"
+              >
+                {{ getAnswerById(userInputs[element.uuid])?.text }}
+              </span>
+
+              <!-- Empty blank -->
+              <span
+                v-else
+                class="blank"
+                @drop="onDropBlank($event, element)"
+                @dragenter="onDragEnter($event)"
+                @dragleave="onDragLeave($event)"
+                @dragover.prevent
+                @click="onClickBlank(element)"
+              >
+                &#8203;
+              </span>
+
+              <!-- Hint tooltip -->
+              <label v-if="element.hint">
+                <span
+                  class="tooltip tooltip-icon"
+                  :data-tooltip="element.hint"
+                />
+              </label>
+
+              <!-- Show solution if incorrect and solutions are revealed -->
+              <span
+                v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+                class="stud5p-solution"
+              >
+                {{ element.solution }}
+              </span>
+            </template>
+          </template>
+        </div>
+
+        <!-- Feedback and button section -->
+        <div class="feedback-and-button-container">
+          <!-- Message prompting user to fill in all blanks before they can show solutions-->
+          <div
+            v-if="showFillInAllTheBlanksMessage"
+            class="stud5p-message"
+            v-text="fillInAllTheBlanksMessage"
           />
 
-          <!-- Blanks -->
-          <template v-else-if="element.type === 'blank'">
-            <!-- Filled blank -->
-            <span
-              v-if="userInputs[element.uuid]"
-              class="blank filled"
-              :class="classForFilledBlank(element)"
-              :draggable="editable"
-              @dragstart="
-                startDragUsedAnswer($event, element, userInputs[element.uuid])
-              "
-              @drop="onDropBlank($event, element)"
-              @dragover.prevent
-              @click="onClickFilledBlank(element)"
-            >
-              {{ getAnswerById(userInputs[element.uuid])?.text }}
-            </span>
+          <!-- Feedback element displaying points and feedback -->
+          <FeedbackElement
+            v-if="showResults"
+            :achieved-points="correctAnswers"
+            :max-points="maxPoints"
+            :feedback="task.feedback"
+            :result-message="resultMessage"
+          />
 
-            <!-- Empty blank -->
-            <span
-              v-else
-              class="blank"
-              @drop="onDropBlank($event, element)"
-              @dragenter="onDragEnter($event)"
-              @dragleave="onDragLeave($event)"
-              @dragover.prevent
-              @click="onClickBlank(element)"
-            >
-              &#8203;
-            </span>
+          <div class="button-panel">
+            <button
+              v-if="showCheckButton"
+              v-text="task.strings.checkButton"
+              @click="onClickCheckButton"
+              type="button"
+              class="stud5p-button"
+            />
 
-            <!-- Hint tooltip -->
-            <label v-if="element.hint">
-              <span class="tooltip tooltip-icon" :data-tooltip="element.hint" />
-            </label>
+            <button
+              v-if="showSolutionsButton"
+              v-text="task.strings.solutionsButton"
+              @click="onClickSolutionsButton"
+              type="button"
+              class="stud5p-button"
+            />
 
-            <!-- Show solution if incorrect and solutions are revealed -->
-            <span
-              v-if="showSolutions && !submittedAnswerIsCorrect(element)"
-              class="stud5p-solution"
-            >
-              {{ element.solution }}
-            </span>
-          </template>
-        </template>
+            <button
+              v-if="showRetryButton"
+              v-text="task.strings.retryButton"
+              @click="onClickRetryButton"
+              type="button"
+              class="stud5p-button"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- Container for unused answers (draggable answers) -->
@@ -79,51 +129,6 @@
         >
           {{ answer.text }}
         </span>
-      </div>
-    </div>
-
-    <!-- Feedback and button section -->
-    <div class="feedback-and-button-container">
-      <!-- Message prompting user to fill in all blanks before they can show solutions-->
-      <div
-        v-if="showFillInAllTheBlanksMessage"
-        class="stud5p-message"
-        v-text="fillInAllTheBlanksMessage"
-      />
-
-      <!-- Feedback element displaying points and feedback -->
-      <FeedbackElement
-        v-if="showResults"
-        :achieved-points="correctAnswers"
-        :max-points="maxPoints"
-        :feedback="task.feedback"
-        :result-message="resultMessage"
-      />
-
-      <div class="button-panel">
-        <button
-          v-if="showCheckButton"
-          v-text="task.strings.checkButton"
-          @click="onClickCheckButton"
-          type="button"
-          class="stud5p-button"
-        />
-
-        <button
-          v-if="showSolutionsButton"
-          v-text="task.strings.solutionsButton"
-          @click="onClickSolutionsButton"
-          type="button"
-          class="stud5p-button"
-        />
-
-        <button
-          v-if="showRetryButton"
-          v-text="task.strings.retryButton"
-          @click="onClickRetryButton"
-          type="button"
-          class="stud5p-button"
-        />
       </div>
     </div>
   </div>
@@ -658,8 +663,14 @@ span.item:empty:before {
   background: #edd6e9;
 }
 
-.drag-the-words-text {
+.text-and-feedback-container {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.drag-the-words-text {
+  flex-grow: 0;
 }
 
 .text-and-answers-container {
