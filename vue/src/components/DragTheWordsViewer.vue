@@ -619,17 +619,19 @@ span.item:empty:before {
 }
 
 .unused-answers-list {
-  flex-grow: 0;
-  display: flex;
   min-width: 12em;
+  min-height: 140px;
+  flex-grow: 0;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+
+  display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 0.5em;
-  min-height: 140px;
+  gap: 0.75em;
+
   border: 1px solid #eee;
   border-radius: 5px;
-  gap: 1em;
-  padding-top: 0.5em;
 }
 
 .unused-answer {
