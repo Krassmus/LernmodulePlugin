@@ -1,7 +1,7 @@
 <template>
   <div class="stud5p-memory stud5p-task">
     <div
-      class="stud5p-content memory-grid"
+      class="memory-grid"
       :style="{
         gridTemplateColumns: gridTemplateColumns,
         gridTemplateRows: gridTemplateRows,
@@ -24,6 +24,7 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 0.25em;
+        padding-top: 1em;
         padding-bottom: 0.5em;
       "
     >

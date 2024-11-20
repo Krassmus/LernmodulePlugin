@@ -1,6 +1,6 @@
 <template>
   <div class="stud5p-sequencing stud5p-task">
-    <div class="stud5p-content image-row" tabIndex="-1">
+    <div class="image-row" tabIndex="-1">
       <button
         type="button"
         v-for="(image, index) in images"

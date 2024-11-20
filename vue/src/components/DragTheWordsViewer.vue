@@ -1,7 +1,7 @@
 <template>
   <div class="stud5p-drag-the-words stud5p-task">
     <!-- Main container for text and answers -->
-    <div class="stud5p-content text-and-answers-container">
+    <div class="text-and-answers-container">
       <!-- Render the text and blank elements from parsedTemplate -->
       <div class="drag-the-words-text">
         <template v-for="element in parsedTemplate" :key="element.uuid">
