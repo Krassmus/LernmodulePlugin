@@ -22,18 +22,20 @@
         @click="onClickImage(image)"
         @keydown="(event) => onKeydown(image, event)"
       >
-        <img
-          class="image"
-          draggable="false"
-          @dragover.prevent
-          @dragenter.prevent
-          :src="fileIdToUrl(image.file_id)"
-          :alt="image.altText"
-        />
+        <span class="image-wrapper">
+          <img
+            class="image"
+            draggable="false"
+            @dragover.prevent
+            @dragenter.prevent
+            :src="fileIdToUrl(image.file_id)"
+            :alt="image.altText"
+          />
+        </span>
 
-        <span class="image-description" @dragover.prevent @dragenter.prevent>{{
-          image.altText
-        }}</span>
+        <span class="image-description" @dragover.prevent @dragenter.prevent>
+          {{ image.altText }}
+        </span>
       </button>
     </div>
 
@@ -372,21 +374,23 @@ export default defineComponent({
 .image-row {
   display: flex;
   flex-direction: row;
-  padding-bottom: 1em;
   flex-wrap: wrap;
+  gap: 0.5em;
 }
 
 .image-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
 
-  width: 10em;
-  height: 10em;
-  margin: 6px;
-  padding: 6px;
+  width: 11.5em;
+  height: 13.5em;
+  padding: 0.25em 0.25em 0 0.25em;
+
   border: 2px solid #dbe2e8;
   border-radius: 6px;
+
   background: #fff;
 
   cursor: grab;
@@ -423,16 +427,29 @@ export default defineComponent({
   cursor: default;
 }
 
-.image {
+.image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 1; /* Occupy remaining vertical space */
   width: 100%;
-  height: 100%;
+
+  overflow: hidden;
+}
+
+.image {
+  max-height: 100%;
+  max-width: 100%;
+
   object-fit: contain;
 }
 
 .image-description {
-  margin-top: 0.25em;
-
   width: 100%;
+  height: 2em;
+
+  padding-top: 0.4em;
 
   white-space: nowrap;
   overflow: hidden;
