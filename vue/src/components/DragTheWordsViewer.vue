@@ -648,11 +648,6 @@ span.item:empty:before {
   background: #edd6e9;
 }
 
-.message {
-  color: #1a73d9;
-  padding-top: 0.5em;
-}
-
 .disabled {
   cursor: default;
 }
