@@ -36,6 +36,7 @@ export default defineComponent({
 
 <style scoped>
 .h5pElementPair {
+  width: 8em;
   display: flex;
   flex-direction: column;
   border: 2px solid rgba(0, 0, 0, 0);
@@ -57,7 +58,6 @@ export default defineComponent({
 }
 
 .h5pMultimediaElement {
-  width: 8em;
-  height: 8em;
+  width: 100%;
 }
 </style>

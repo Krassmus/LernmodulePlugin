@@ -303,7 +303,8 @@ export default defineComponent({
 .main-flex {
   display: flex;
   flex-direction: row;
-  gap: 0.5em;
+  gap: 1em;
+  padding: 1em 0 0 0;
 }
 
 .h5p-elements-overview {
@@ -315,15 +316,14 @@ export default defineComponent({
   justify-content: space-around;
   row-gap: 1em;
   column-gap: 0.5em;
-  padding: 0.5em 0.5em 0;
 }
 
 .h5p-elements-settings {
   flex-grow: 0;
   flex-shrink: 0;
   width: 275px;
-  padding: 0.5em 0.5em 0;
 }
+
 .h5p-element-setting + .h5p-element-setting {
   margin-top: 2ex;
 }
