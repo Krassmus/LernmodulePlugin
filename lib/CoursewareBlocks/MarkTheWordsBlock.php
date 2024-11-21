@@ -27,7 +27,7 @@ class MarkTheWordsBlock extends BlockType
     {
         return dgettext(
             'lernmoduleplugin',
-            'Eine Lernaufgabe, wo bestimmte Wörter in einem Text markiert werden sollen.'
+            'Eine Lernaufgabe, bei der die gesuchten Wörter im Text gefunden und markiert werden sollen.'
         );
     }
 

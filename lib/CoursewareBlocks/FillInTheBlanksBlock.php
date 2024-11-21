@@ -27,7 +27,7 @@ class FillInTheBlanksBlock extends BlockType
     {
         return dgettext(
             'lernmoduleplugin',
-            'Eine Lernaufgabe, wo die Lücken in einem Lückentext ausgefüllt werden sollen.'
+            'Eine Lernaufgabe, bei der die Lücken in einem Text ausgefüllt werden sollen.'
         );
     }
 

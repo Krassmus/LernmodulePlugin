@@ -27,7 +27,7 @@ class DragTheWordsBlock extends BlockType
     {
         return dgettext(
             'lernmoduleplugin',
-            'Eine Lernaufgabe, wo Wörter in die Lücken in einem Text gezogen werden sollen.'
+            'Eine Lernaufgabe, bei der die richtigen Wörter in die passenden Lücken eines Textes gezogen werden sollen.'
         );
     }
 
