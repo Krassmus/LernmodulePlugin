@@ -1,6 +1,6 @@
 <template>
   <div class="stud5p-sequencing stud5p-task">
-    <div class="stud5p-content image-row" tabIndex="-1">
+    <div class="image-row" tabIndex="-1">
       <button
         type="button"
         v-for="(image, index) in images"
@@ -22,18 +22,20 @@
         @click="onClickImage(image)"
         @keydown="(event) => onKeydown(image, event)"
       >
-        <img
-          class="image"
-          draggable="false"
-          @dragover.prevent
-          @dragenter.prevent
-          :src="fileIdToUrl(image.file_id)"
-          :alt="image.altText"
-        />
+        <span class="image-wrapper">
+          <img
+            class="image"
+            draggable="false"
+            @dragover.prevent
+            @dragenter.prevent
+            :src="fileIdToUrl(image.file_id)"
+            :alt="image.altText"
+          />
+        </span>
 
-        <span class="image-description" @dragover.prevent @dragenter.prevent>{{
-          image.altText
-        }}</span>
+        <span class="image-description" @dragover.prevent @dragenter.prevent>
+          {{ image.altText }}
+        </span>
       </button>
     </div>
 
@@ -372,23 +374,30 @@ export default defineComponent({
 .image-row {
   display: flex;
   flex-direction: row;
-  padding-bottom: 1em;
   flex-wrap: wrap;
+  gap: 0.5em;
 }
 
 .image-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+
+  width: 11.5em;
+  height: 13.5em;
+  padding: 0.25em 0.25em 0 0.25em;
+
   border: 2px solid #dbe2e8;
   border-radius: 6px;
-  margin: 6px;
-  padding: 6px;
-  transition: background-color 0.12s ease, border 0.12s ease,
-    box-shadow 0.12s ease;
+
+  background: #fff;
+
   cursor: grab;
   user-select: none;
-  background: #fff;
+
+  transition: background-color 0.12s ease, border 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .image-container:not(.disabled):focus,
@@ -418,12 +427,33 @@ export default defineComponent({
   cursor: default;
 }
 
+.image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 1; /* Occupy remaining vertical space */
+  width: 100%;
+
+  overflow: hidden;
+}
+
 .image {
-  width: 10em;
-  height: 10em;
+  max-height: 100%;
+  max-width: 100%;
+
+  object-fit: contain;
 }
 
 .image-description {
-  margin-top: 6px;
+  width: 100%;
+  height: 2em;
+
+  padding-top: 0.4em;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 </style>

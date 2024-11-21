@@ -13,10 +13,6 @@
   line-height: 1.625; /* 16px x 1.625 = 26px */
 }
 
-.stud5p-content {
-  padding-bottom: 1em;
-}
-
 /* Replace the border between toolbar and WYSIWYG textarea that is missing
 when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 */
@@ -38,6 +34,8 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 }
 
 .feedback-and-button-container {
+  padding-top: 1em;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;

@@ -63,9 +63,11 @@
         <option value="DragTheWords">{{ $gettext('Drag the Words') }}</option>
         <option value="MarkTheWords">{{ $gettext('Mark the Words') }}</option>
         <option value="Question">{{ $gettext('Question') }}</option>
-        <option value="Pairing">{{ $gettext('Pairing') }}</option>
-        <option value="Sequencing">{{ $gettext('Sequencing') }}</option>
-        <option value="Memory">{{ $gettext('Memory') }}</option>
+        <template v-if="LernmoduleVueJS.LERNMODULE_DEBUG">
+          <option value="Pairing">{{ $gettext('Pairing') }}</option>
+          <option value="Sequencing">{{ $gettext('Sequencing') }}</option>
+          <option value="Memory">{{ $gettext('Memory') }}</option>
+        </template>
       </select>
     </div>
 

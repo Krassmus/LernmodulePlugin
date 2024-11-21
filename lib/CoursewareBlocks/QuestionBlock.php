@@ -27,7 +27,7 @@ class QuestionBlock extends BlockType
     {
         return dgettext(
             'lernmoduleplugin',
-            'Eine Lernaufgabe, wo eine Multiple-Choice-Frage beantwortet werden soll.'
+            'Eine Lernaufgabe, bei der eine Frage durch die Auswahl einer oder mehrerer korrekter Antworten beantwortet werden soll.'
         );
     }
 
