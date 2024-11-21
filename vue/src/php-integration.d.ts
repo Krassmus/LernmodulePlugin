@@ -40,6 +40,7 @@ declare global {
         saveRoute: string;
         updateAttemptRoute: string;
         LERNMODULE_DEBUG: boolean;
+        LERNMODULE_PREVIEW: boolean;
       };
     };
     // TODO use correct types for jQuery
