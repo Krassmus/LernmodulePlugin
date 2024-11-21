@@ -39,6 +39,7 @@ class VuejseditorController extends PluginController
             'infotext' => $connection['infotext'] ?? '',
             'saveRoute' => $this->url_for('vuejseditor/save'),
             'LERNMODULE_DEBUG' => Config::get()->LERNMODULE_DEBUG,
+            'LERNMODULE_PREVIEW' => Config::get()->LERNMODULE_PREVIEW,
         ];
 
         if ($this->mod['draft']) {
