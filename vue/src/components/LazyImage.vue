@@ -1,6 +1,6 @@
 <template>
   <img
-    v-if="isVisible"
+    v-if="isLoaded"
     :src="src"
     :alt="alt"
     @load="onLoad"
@@ -12,6 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { requestQueueStore } from '@/store';
 
 export default defineComponent({
   name: 'LazyImage',
@@ -22,21 +23,44 @@ export default defineComponent({
   },
   data() {
     return {
-      isVisible: false, // Tracks whether the image should load
+      isLoaded: false, // Tracks if the image has been successfully loaded
     };
   },
   methods: {
     onLoad() {
       console.log(`Image loaded: ${this.src}`);
     },
+
     onError() {
       console.error(`Failed to load image: ${this.src}`);
+    },
+
+    enqueueImageLoad() {
+      requestQueueStore.enqueue(async () => {
+        try {
+          // Simulate an image load request
+          const img = new Image();
+          img.src = this.src;
+
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => {
+              resolve();
+            };
+            img.onerror = () =>
+              reject(new Error(`Failed to load image: ${this.src}`));
+          });
+
+          this.isLoaded = true;
+        } catch (error) {
+          console.error(error);
+        }
+      });
     },
   },
   mounted() {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        this.isVisible = true; // Load the image
+        this.enqueueImageLoad();
         observer.unobserve(entry.target); // Stop observing
         observer.disconnect(); // Clean up the observer
       }

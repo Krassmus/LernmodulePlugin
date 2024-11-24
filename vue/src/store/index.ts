@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import { getModule } from 'vuex-module-decorators';
 import { TaskEditorModule } from '@/store/modules/taskEditor';
 import { CoursewareBlockModule } from '@/store/modules/coursewareBlock';
+import { RequestQueueModule } from '@/store/modules/requestQueue';
 import { httpClient } from '@/routes/jsonApi';
 const reststateVuex = require('@elan-ev/reststate-vuex');
 const mapResourceModules = reststateVuex.mapResourceModules;
@@ -10,6 +11,7 @@ export const store = createStore({
   modules: {
     taskEditor: TaskEditorModule,
     coursewareBlock: CoursewareBlockModule,
+    requestQueue: RequestQueueModule,
     // Dynamically generated store modules used to access Stud.IP's JSON API
     ...mapResourceModules({
       names: [
@@ -55,3 +57,4 @@ export const store = createStore({
 // the library vuex-module-decorators.
 export const taskEditorStore = getModule(TaskEditorModule, store);
 export const coursewareBlockStore = getModule(CoursewareBlockModule, store);
+export const requestQueueStore = getModule(RequestQueueModule, store);
