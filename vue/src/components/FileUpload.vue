@@ -19,7 +19,13 @@
 import { defineComponent } from 'vue';
 import { $gettext } from '@/language/gettext';
 import { mapActions, mapGetters } from 'vuex';
-import { createFile, FileRef, FolderRef } from '@/routes/jsonApi';
+import {
+  createFile,
+  createFolder,
+  getFolders,
+  FileRef,
+  FolderRef,
+} from '@/routes/jsonApi';
 
 export default defineComponent({
   name: 'FileUpload',
@@ -42,21 +48,57 @@ export default defineComponent({
     };
   },
   async mounted() {
-    await this.getUserFolders();
-    const wysiwigUploads = this.loadedUserFolders.find(
-      (f) => f.attributes.name === 'Wysiwyg Uploads'
+    const folders = await getFolders({ userId: this.userId });
+    folders.forEach((value) =>
+      console.log('Loaded user folder', value.attributes.name)
     );
-    if (wysiwigUploads) {
-      this.selectedFolderId = wysiwigUploads.id;
+
+    const lernmoduleUploads = folders.find(
+      (f) => f.attributes.name === 'Lernmodule Uploads'
+    );
+
+    if (lernmoduleUploads) {
+      console.log('Found Lernmodule Uploads folder.');
+      this.selectedFolderId = lernmoduleUploads.id;
     } else {
-      // TODO just create the folder if it's not present.
-      // TODO Consider using a separate folder, like "Courseware Uploads"?
-      const error = $gettext(
-        'Das Verzeichnis "Wysiwyg Uploads" ist nicht vorhanden. ' +
-          'Es können keine Dateien hochgeladen werden.'
-      );
-      this.errors.push(error);
-      console.error(error);
+      try {
+        const rootFolder = folders.find(
+          (f) => f.attributes['folder-type'] === 'RootFolder'
+        );
+
+        if (!rootFolder) {
+          const errorMessage = $gettext(
+            'Das Stammverzeichnis des Benutzers konnte nicht gefunden werden. ' +
+              'Es können keine Dateien hochgeladen werden.'
+          );
+          this.errors.push(errorMessage);
+          console.error(errorMessage);
+          return;
+        }
+
+        if (rootFolder) {
+          console.log('Loaded root folder', rootFolder);
+        }
+
+        const newFolder = await createFolder({
+          userId: this.userId,
+          name: 'Lernmodule Uploads',
+          parentFolderId: rootFolder.id, // Use the root folder ID
+        });
+
+        if (newFolder) {
+          console.log('Created folder', newFolder.attributes.name);
+        }
+
+        this.selectedFolderId = newFolder.id;
+      } catch (error) {
+        const errorMessage = $gettext(
+          'Das Verzeichnis "Lernmodule Uploads" konnte nicht erstellt werden. ' +
+            'Es können keine Dateien hochgeladen werden.'
+        );
+        this.errors.push(errorMessage);
+        console.error(errorMessage, error);
+      }
     }
   },
   computed: {
