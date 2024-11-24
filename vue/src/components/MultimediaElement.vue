@@ -1,6 +1,6 @@
 <template>
   <template v-if="element.type === 'image'">
-    <img
+    <lazy-image
       v-if="element.file_id"
       :src="fileIdToUrl(element.file_id)"
       :alt="element.altText"
@@ -20,9 +20,11 @@ import {
   fileIdToUrl,
   LernmoduleMultimediaElement,
 } from '@/models/TaskDefinition';
+import LazyImage from '@/components/LazyImage.vue';
 
 export default defineComponent({
   name: 'MultimediaElement',
+  components: { LazyImage },
   props: {
     element: {
       type: Object as PropType<LernmoduleMultimediaElement>,
@@ -38,9 +40,7 @@ export default defineComponent({
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  aspect-ratio: 1;
   padding: 4px;
-  object-fit: contain;
   box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
   border: solid 1px #cbd5de;
   border-radius: 0.25em;

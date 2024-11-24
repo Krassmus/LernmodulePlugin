@@ -23,13 +23,12 @@
         @keydown="(event) => onKeydown(image, event)"
       >
         <span class="image-wrapper">
-          <img
-            class="image"
+          <lazy-image
+            :src="fileIdToUrl(image.file_id)"
+            :alt="image.altText"
             draggable="false"
             @dragover.prevent
             @dragenter.prevent
-            :src="fileIdToUrl(image.file_id)"
-            :alt="image.altText"
           />
         </span>
 
@@ -98,12 +97,14 @@ import { defineComponent, PropType } from 'vue';
 import { fileIdToUrl, Image, SequencingTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
+import LazyImage from '@/components/LazyImage.vue';
 
 export default defineComponent({
   name: 'SequencingViewer',
 
   components: {
     FeedbackElement,
+    LazyImage,
   },
 
   props: {
@@ -436,13 +437,6 @@ export default defineComponent({
   width: 100%;
 
   overflow: hidden;
-}
-
-.image {
-  max-height: 100%;
-  max-width: 100%;
-
-  object-fit: contain;
 }
 
 .image-description {
