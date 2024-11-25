@@ -6,29 +6,26 @@
     v-disable-drag
   >
     <span class="memory-card-front">
-      <img
+      <lazy-image
         v-if="card.file_id"
         v-disable-drag
         :src="fileIdToUrl(card.file_id)"
         :alt="card.altText"
-        class="memory-card-image"
         :class="{ 'solved-card': card.solved }"
       />
     </span>
     <span class="memory-card-back">
-      <img
+      <lazy-image
         v-if="flipside"
         v-disable-drag
         :src="fileIdToUrl(flipside.file_id)"
         :alt="flipside.altText"
-        class="memory-card-image"
       />
-      <img
+      <lazy-image
         v-else
         v-disable-drag
         src="../assets/memoryCardBack.png"
         alt="The back of a card in the memory game."
-        class="memory-card-image"
       />
     </span>
   </button>
@@ -38,9 +35,11 @@
 import { defineComponent, PropType } from 'vue';
 import { ViewerMemoryCard } from '@/components/MemoryViewer.vue';
 import { fileIdToUrl, Image } from '@/models/TaskDefinition';
+import LazyImage from '@/components/LazyImage.vue';
 
 export default defineComponent({
   name: 'MemoryCard',
+  components: { LazyImage },
   props: {
     card: {
       type: Object as PropType<ViewerMemoryCard>,
@@ -80,12 +79,6 @@ export default defineComponent({
 
 .flipped {
   transform: rotate3d(0, 1, 0, 180deg);
-}
-
-.memory-card-image {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: contain;
 }
 
 .memory-card-front,

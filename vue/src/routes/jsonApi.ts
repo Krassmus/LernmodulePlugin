@@ -39,6 +39,71 @@ export async function createFile({
 }
 
 /**
+ * Send a request to the JSON API to create a folder.
+ */
+export async function getFolders({
+  userId,
+}: {
+  userId: string;
+}): Promise<FolderRef[]> {
+  const url = `users/${userId}/folders`;
+
+  // Make the GET request
+  const response = await httpClient.get(url, {
+    headers: {
+      'Content-Type': 'application/vnd.api+json',
+    },
+  });
+
+  // Return the parsed response data
+  return response.data.data as FolderRef[];
+}
+
+/**
+ * Send a request to the JSON API to create a folder.
+ */
+export async function createFolder({
+  userId,
+  name,
+  parentFolderId,
+}: {
+  userId: string;
+  name: string;
+  parentFolderId: string;
+}): Promise<FolderRef> {
+  // Construct the endpoint for creating a folder for a user
+  const url = `users/${userId}/folders`;
+
+  // Prepare the request payload
+  const payload = {
+    data: {
+      type: 'folders',
+      attributes: {
+        name,
+      },
+      relationships: {
+        parent: {
+          data: {
+            type: 'folders',
+            id: parentFolderId,
+          },
+        },
+      },
+    },
+  };
+
+  // Make the POST request
+  const response = await httpClient.post(url, payload, {
+    headers: {
+      'Content-Type': 'application/vnd.api+json',
+    },
+  });
+
+  // Return the parsed response data
+  return response.data.data as FolderRef;
+}
+
+/**
  * Datatype 'file-refs' provided by the Stud.IP JSON API.
  */
 export const fileRefsSchema = z.object({
