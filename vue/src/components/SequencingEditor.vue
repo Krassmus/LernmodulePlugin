@@ -5,13 +5,13 @@
 
       <div class="cards-list">
         <div
-          v-for="(card, index) in taskDefinition.images"
+          v-for="(card, index) in taskDefinition.cards"
           :key="card.uuid"
           :class="{
             'cards-list-item': true,
-            'selected-card': index === this.selectedImageIndex,
+            'selected-card': index === this.selectedCardIndex,
           }"
-          @click="selectImage(index)"
+          @click="selectCard(index)"
         >
           <div v-text="listEntryText(index, card)" class="list-entry-text" />
 
@@ -20,8 +20,8 @@
           <button
             type="button"
             class="flex-child-element remove-card-button"
-            @click.stop="deleteImage(index)"
-            :aria-label="$gettext('Bild löschen')"
+            @click.stop="deleteCard(index)"
+            :aria-label="$gettext('Karte löschen')"
           >
             <img :src="urlForIcon('trash')" alt="" />
           </button>
@@ -30,19 +30,18 @@
         <button
           type="button"
           class="button add add-card-button"
-          @click="addImage"
+          @click="addCard"
         >
-          {{ $gettext('Bild hinzufügen') }}
+          {{ $gettext('Karte hinzufügen') }}
         </button>
       </div>
 
-      <SequencingEditorImage
-        v-if="this.taskDefinition.images[this.selectedImageIndex]"
-        class="edited-memory-card"
-        :image="this.taskDefinition.images[this.selectedImageIndex]"
-        :image-index="this.selectedImageIndex"
+      <SequencingElement
+        v-if="this.taskDefinition.cards[this.selectedCardIndex]"
+        :card="this.taskDefinition.cards[this.selectedCardIndex]"
+        :card-index="this.selectedCardIndex"
       />
-      <div v-else class="edited-memory-card no-card-selected-placeholder">
+      <div v-else class="edited-card no-card-selected-placeholder">
         {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
       </div>
     </fieldset>
@@ -115,12 +114,16 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
-import { Feedback, Image, SequencingTask } from '@/models/TaskDefinition';
+import {
+  Feedback,
+  LernmoduleMultimediaElement,
+  SequencingTask,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { v4 } from 'uuid';
-import SequencingEditorImage from '@/components/SequencingEditorImage.vue';
+import SequencingElement from '@/components/SequencingElement.vue';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import {
   TaskEditorState,
@@ -129,18 +132,18 @@ import {
 
 export default defineComponent({
   name: 'SequencingEditor',
-  components: { SequencingEditorImage, FeedbackEditor },
+  components: { SequencingElement, FeedbackEditor },
   setup() {
     return {
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
   },
   data() {
-    return { selectedImageIndex: -1 };
+    return { selectedCardIndex: -1 };
   },
   beforeMount(): void {
-    if (this.taskDefinition.images.length > 0) {
-      this.selectedImageIndex = 0;
+    if (this.taskDefinition.cards.length > 0) {
+      this.selectedCardIndex = 0;
     }
   },
   methods: {
@@ -152,14 +155,14 @@ export default defineComponent({
       );
     },
 
-    selectImage(index: number) {
-      this.selectedImageIndex = index;
+    selectCard(index: number) {
+      this.selectedCardIndex = index;
     },
 
-    addImage() {
+    addCard() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.images.push({
-          v: 2,
+        draft.cards.push({
+          type: 'image',
           uuid: v4(),
           file_id: '',
           altText: '',
@@ -172,12 +175,12 @@ export default defineComponent({
       });
 
       // Select the newly inserted image
-      this.selectedImageIndex = this.taskDefinition.images.length - 1;
+      this.selectedCardIndex = this.taskDefinition.cards.length - 1;
     },
 
-    deleteImage(index: number) {
+    deleteCard(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.images.splice(index, 1);
+        draft.cards.splice(index, 1);
       });
 
       taskEditorStore.performEdit({
@@ -186,16 +189,16 @@ export default defineComponent({
       });
 
       // Adjust the selection index so the selected card doesn't unexpectedly change
-      if (index <= this.selectedImageIndex) {
-        this.selectedImageIndex = this.selectedImageIndex - 1;
+      if (index <= this.selectedCardIndex) {
+        this.selectedCardIndex = this.selectedCardIndex - 1;
       }
     },
 
-    listEntryText(index: number, image: Image) {
+    listEntryText(index: number, card: LernmoduleMultimediaElement) {
       let text = index + 1 + '. ';
 
-      if (image.altText != '') {
-        text += image.altText;
+      if (card.type === 'image' && card.altText != '') {
+        text += card.altText;
       } else {
         text += $gettext('Bild');
       }
@@ -285,7 +288,7 @@ export default defineComponent({
   margin: 0.8em 0 0 0;
 }
 
-.edited-memory-card {
+.edited-card {
   flex: 1 1 auto;
 }
 </style>

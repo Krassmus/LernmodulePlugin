@@ -269,7 +269,7 @@ export type PairingTask = z.infer<typeof pairingTaskSchema>;
 
 export const sequencingTaskSchema = z.object({
   task_type: z.literal('Sequencing'),
-  images: z.array(imageSchema),
+  cards: z.array(multimediaElementSchema),
   retryAllowed: z.boolean().optional().default(true),
   resumeAllowed: z.boolean().optional().default(true),
   showSolutionsAllowed: z.boolean().optional().default(true),
@@ -433,10 +433,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'Sequencing':
       return {
         task_type: 'Sequencing',
-        images: [
+        cards: [
           {
+            type: 'image',
             uuid: v4(),
-            v: 2,
             file_id: '',
             altText: '',
           },
