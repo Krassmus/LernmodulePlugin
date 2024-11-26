@@ -21,11 +21,12 @@
         :src="fileIdToUrl(flipside.file_id)"
         :alt="flipside.altText"
       />
-      <lazy-image
+      <img
         v-else
         v-disable-drag
         src="../assets/memoryCardBack.png"
-        alt="The back of a card in the memory game."
+        :alt="$gettext('Rückseite einer Memory Karte.')"
+        class="memory-card-back-image"
       />
     </span>
   </button>
@@ -36,6 +37,7 @@ import { defineComponent, PropType } from 'vue';
 import { ViewerMemoryCard } from '@/components/MemoryViewer.vue';
 import { fileIdToUrl, Image } from '@/models/TaskDefinition';
 import LazyImage from '@/components/LazyImage.vue';
+import { $gettext } from '@/language/gettext';
 
 export default defineComponent({
   name: 'MemoryCard',
@@ -51,7 +53,7 @@ export default defineComponent({
     },
   },
   computed: {},
-  methods: { fileIdToUrl },
+  methods: { $gettext, fileIdToUrl },
 });
 </script>
 
@@ -98,6 +100,12 @@ export default defineComponent({
 
 .memory-card-back {
   transform: rotateY(0deg); /* Back side is initially visible */
+}
+
+.memory-card-back-image {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 
 .memory-card:not(.flipped):hover {
