@@ -34,7 +34,7 @@
           @file-uploaded="onUploadImage($event)"
         />
         <label style="align-self: stretch">
-          {{ $gettext('Alt-Text') }}
+          {{ $gettext('Bildbeschreibung') }}
           <input
             type="text"
             :value="multimediaElement.altText"
