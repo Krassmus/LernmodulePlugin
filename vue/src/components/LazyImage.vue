@@ -75,6 +75,8 @@ export default defineComponent({
 .lazy-image {
   height: 100%;
   width: 100%;
+  padding: 0;
+  margin: 0;
   object-fit: contain;
 }
 
