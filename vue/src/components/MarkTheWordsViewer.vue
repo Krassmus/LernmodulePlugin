@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-mark-the-words stud5p-task">
+  <div class="stud5p-task">
     <div class="mark-the-words-text">
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <span

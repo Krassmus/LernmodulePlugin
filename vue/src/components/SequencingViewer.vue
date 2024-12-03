@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-sequencing stud5p-task">
+  <div class="stud5p-task">
     <div class="card-row" tabIndex="-1">
       <button
         type="button"
