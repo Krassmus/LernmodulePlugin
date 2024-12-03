@@ -6,6 +6,7 @@
     @load="onLoad"
     @error="onError"
     class="lazy-image"
+    v-bind="$attrs"
   />
   <span v-else class="placeholder" />
 </template>
