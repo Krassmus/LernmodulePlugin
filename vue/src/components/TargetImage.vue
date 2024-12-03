@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, Image } from '@/models/TaskDefinition';
+import { fileIdToUrl, ImageElement } from '@/models/TaskDefinition';
 import MultimediaElement from '@/components/MultimediaElement.vue';
 
 export default defineComponent({
@@ -50,11 +50,11 @@ export default defineComponent({
   components: { MultimediaElement },
   props: {
     draggableImage: {
-      type: Object as PropType<Image>,
+      type: Object as PropType<ImageElement>,
       required: false,
     },
     targetImage: {
-      type: Object as PropType<Image>,
+      type: Object as PropType<ImageElement>,
       required: true,
     },
     isCorrect: {
