@@ -36,15 +36,15 @@
         </button>
       </div>
 
-      <SequencingElement
-        v-if="this.taskDefinition.cards[this.selectedCardIndex]"
-        :card="this.taskDefinition.cards[this.selectedCardIndex]"
-        :card-index="this.selectedCardIndex"
-      />
       <div v-else class="edited-card no-card-selected-placeholder">
         {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
       </div>
     </fieldset>
+        <SequencingEditorCard
+          v-if="this.taskDefinition.cards[this.selectedCardIndex]"
+          :card="this.taskDefinition.cards[this.selectedCardIndex]"
+          :card-index="this.selectedCardIndex"
+        />
 
     <fieldset class="collapsable collapsed">
       <legend>{{ $gettext('Einstellungen') }}</legend>
@@ -123,7 +123,7 @@ import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { v4 } from 'uuid';
-import SequencingElement from '@/components/SequencingElement.vue';
+import SequencingEditorCard from '@/components/SequencingEditorCard.vue';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import {
   TaskEditorState,
@@ -132,7 +132,7 @@ import {
 
 export default defineComponent({
   name: 'SequencingEditor',
-  components: { SequencingElement, FeedbackEditor },
+  components: { SequencingEditorCard, FeedbackEditor },
   setup() {
     return {
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),

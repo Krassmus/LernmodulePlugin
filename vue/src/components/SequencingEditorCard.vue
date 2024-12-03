@@ -1,48 +1,37 @@
 <template>
-  <div>
-    <label v-if="debug">
-      {{ $gettext('Typ') }}
-      <select :value="card.type" @change="onChangeType($event)">
-        <option :value="'image'">
-          {{ $gettext('Bild') }}
-        </option>
-        <option :value="'text'">
-          {{ $gettext('Text') }}
-        </option>
-      </select>
-    </label>
+  <fieldset class="sequencing-editor-card">
+    <legend>{{ $gettext('Karte') }}</legend>
 
-    <div v-if="card.type == 'image'" class="h5p-element-image-container">
-      <template v-if="card.file_id">
-        <MultimediaElement :element="card" />
-        <button
-          type="button"
-          @click="onClickDeleteImage()"
-          v-text="$gettext('Bild löschen')"
-          class="button trash element-pair-settings-item"
-        />
-      </template>
-      <FileUpload
-        class="pairing-file-upload"
-        v-else
-        @file-uploaded="onUploadImage($event)"
-      />
+    <label>{{ $gettext('Bild') }}</label>
+    <div
+      v-if="card.type == 'image' && card.file_id"
+      class="image-card-container"
+    >
+      <div class="multimedia-element-wrapper">
+        <MultimediaElement :element="card" class="multimedia-element" />
+      </div>
+
+      <button
+        type="button"
+        @click="onClickDeleteImage"
+        class="button trash settings-item"
+      >
+        {{ $gettext('Bild löschen') }}
+      </button>
+
       <label style="align-self: stretch">
         {{ $gettext('Bildbeschreibung') }}
         <input
           type="text"
           :value="card.altText"
-          :placeholder="
-            $gettext(
-              'Geben Sie eine Bildbeschreibung ein, diese wird als Beschriftung und für Screenreader verwendet.'
-            )
-          "
-          @input="onInputAltText($event)"
-          class="element-pair-settings-item"
+          @input="onInputAltText"
+          class="settings-item"
         />
       </label>
     </div>
-  </div>
+
+    <FileUpload v-else @file-uploaded="onUploadImage" />
+  </fieldset>
 </template>
 
 <script lang="ts">
@@ -63,7 +52,7 @@ import MultimediaElement from '@/components/MultimediaElement.vue';
 import { v4 } from 'uuid';
 
 export default defineComponent({
-  name: 'SequencingEditorImage',
+  name: 'SequencingEditorCard',
   components: { MultimediaElement, FileUpload },
   props: {
     card: {
@@ -168,11 +157,25 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.h5p-element-image-container {
+.sequencing-editor-card {
+  flex: 1 1 auto;
+}
+
+.multimedia-element {
+  width: 10em;
+  height: 10em;
+}
+
+.image-card-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5em;
+}
+
+.settings-item {
+  /* top | right | bottom | left */
+  margin: 0.25em 0 0 0;
 }
 </style>
