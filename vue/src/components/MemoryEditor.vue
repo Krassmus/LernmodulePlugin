@@ -214,13 +214,13 @@ import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { $gettext, $pgettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';
-import MemoryCardEditor from '@/components/MemoryCardEditor.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
+import MemoryEditorCard from '@/components/MemoryEditorCard.vue';
 
 export default defineComponent({
   name: 'MemoryEditor',
-  components: { FileUpload, MemoryCardEditor },
+  components: { MemoryEditorCard, FileUpload },
   data() {
     return {
       selectedCardIndex: -1,
