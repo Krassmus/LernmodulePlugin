@@ -5,25 +5,18 @@
     :class="{ flipped: card.flipped }"
     v-disable-drag
   >
-    <span class="memory-card-front">
-      <lazy-image
-        v-if="card.file_id"
-        v-disable-drag
-        :src="fileIdToUrl(card.file_id)"
-        :alt="card.altText"
-        :class="{ 'solved-card': card.solved }"
-      />
+    <span class="memory-card-front" :class="{ 'solved-card': card.solved }">
+      <MultimediaElement :element="card" />
     </span>
     <span class="memory-card-back">
       <lazy-image
         v-if="flipside"
-        v-disable-drag
         :src="fileIdToUrl(flipside.file_id)"
         :alt="flipside.altText"
+        class="memory-card-back-image"
       />
       <img
         v-else
-        v-disable-drag
         src="../assets/memoryCardBack.png"
         :alt="$gettext('Rückseite einer Memory Karte.')"
         class="memory-card-back-image"
@@ -35,20 +28,21 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { ViewerMemoryCard } from '@/components/MemoryViewer.vue';
-import { fileIdToUrl, Image } from '@/models/TaskDefinition';
+import { fileIdToUrl, ImageElement } from '@/models/TaskDefinition';
 import LazyImage from '@/components/LazyImage.vue';
 import { $gettext } from '@/language/gettext';
+import MultimediaElement from '@/components/MultimediaElement.vue';
 
 export default defineComponent({
-  name: 'MemoryCard',
-  components: { LazyImage },
+  name: 'MemoryViewerCard',
+  components: { MultimediaElement, LazyImage },
   props: {
     card: {
       type: Object as PropType<ViewerMemoryCard>,
       required: true,
     },
     flipside: {
-      type: Object as PropType<Image>,
+      type: Object as PropType<ImageElement>,
       required: false,
     },
   },
@@ -58,25 +52,31 @@ export default defineComponent({
 </script>
 
 <style scoped>
+button {
+  all: unset; /* Reset browser styles for all buttons in this component */
+}
+
 .memory-card {
+  width: 12em;
+  height: 12em;
+
   position: relative;
+
   display: flex;
   justify-content: center;
   align-items: center;
 
-  width: 100%;
-  max-width: 11em;
-  aspect-ratio: 1;
+  border: 2px solid #dbe2e8;
+  border-radius: 0.5em;
+  background-color: #e7ebf1;
 
-  border: 2px solid #d0d7e3;
-  color: #28497c;
-  background: #e7ebf1;
+  padding: 0.5em;
+  margin: 0;
 
   transform-style: preserve-3d;
   perspective: 1000px;
 
-  transition: transform 0.48s ease-in-out, border-color 0.12s ease-in-out,
-    box-shadow 0.24s ease-in-out;
+  transition: transform 0.48s ease-in-out, box-shadow 0.24s ease-in-out;
 }
 
 .flipped {
@@ -85,12 +85,15 @@ export default defineComponent({
 
 .memory-card-front,
 .memory-card-back {
-  width: 100%;
+  width: 12em;
+  height: 12em;
+
   position: absolute;
+
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+
   backface-visibility: hidden;
 }
 
@@ -106,6 +109,8 @@ export default defineComponent({
   height: 100%;
   width: 100%;
   object-fit: contain;
+
+  border-radius: 0.25em;
 }
 
 .memory-card:not(.flipped):hover {

@@ -8,8 +8,7 @@
       }"
     >
       <template v-for="card in this.cards" :key="card.id">
-        <MemoryCardComponent
-          v-if="card.file_id"
+        <MemoryViewerCard
           :card="card"
           :flipside="task.flipside"
           @click="onClickCard(card)"
@@ -85,7 +84,7 @@
 import { defineComponent, PropType } from 'vue';
 import { MemoryTask, Image } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
-import MemoryCardComponent from '@/components/MemoryCard.vue';
+import MemoryViewerCard from '@/components/MemoryViewerCard.vue';
 import { v4 } from 'uuid';
 
 export interface ViewerMemoryCard extends Image {
@@ -96,7 +95,7 @@ export interface ViewerMemoryCard extends Image {
 
 export default defineComponent({
   name: 'MemoryViewer',
-  components: { MemoryCardComponent },
+  components: { MemoryViewerCard },
   emits: ['updateAttempt'],
   props: {
     task: {
