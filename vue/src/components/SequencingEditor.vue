@@ -1,115 +1,123 @@
 <template>
-  <form class="default">
-    <fieldset class="sequencing-editor">
-      <legend>{{ $gettext('Sequencing') }}</legend>
+  <div class="stud5p-task">
+    <form class="default">
+      <fieldset class="sequencing-editor">
+        <legend>{{ $gettext('Sequencing') }}</legend>
 
-      <div class="cards-list">
-        <div
-          v-for="(card, index) in taskDefinition.cards"
-          :key="card.uuid"
-          :class="{
-            'cards-list-item': true,
-            'selected-card': index === this.selectedCardIndex,
-          }"
-          @click="selectCard(index)"
-        >
-          <div v-text="listEntryText(index, card)" class="list-entry-text" />
+        <div class="cards-list">
+          <div
+            v-for="(card, index) in taskDefinition.cards"
+            :key="card.uuid"
+            :class="{
+              'cards-list-item': true,
+              'selected-card': index === this.selectedCardIndex,
+            }"
+            @click="selectCard(index)"
+          >
+            <div v-text="listEntryText(index, card)" class="list-entry-text" />
 
-          <!-- Apply .stop modifier so that the selectCard event handler on the
+            <!-- Apply .stop modifier so that the selectCard event handler on the
             parent element doesn't get called when the delete button is clicked -->
+            <button
+              type="button"
+              class="remove-card-button"
+              @click.stop="deleteCard(index)"
+              :aria-label="$gettext('Karte löschen')"
+            >
+              <img :src="urlForIcon('trash')" alt="" />
+            </button>
+          </div>
+
           <button
             type="button"
-            class="flex-child-element remove-card-button"
-            @click.stop="deleteCard(index)"
-            :aria-label="$gettext('Karte löschen')"
+            class="button add add-card-button"
+            @click="addCard"
           >
-            <img :src="urlForIcon('trash')" alt="" />
+            {{ $gettext('Karte hinzufügen') }}
           </button>
         </div>
 
-        <button
-          type="button"
-          class="button add add-card-button"
-          @click="addCard"
-        >
-          {{ $gettext('Karte hinzufügen') }}
-        </button>
-      </div>
-
-      <div v-else class="edited-card no-card-selected-placeholder">
-        {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
-      </div>
-    </fieldset>
         <SequencingEditorCard
           v-if="this.taskDefinition.cards[this.selectedCardIndex]"
           :card="this.taskDefinition.cards[this.selectedCardIndex]"
           :card-index="this.selectedCardIndex"
         />
 
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Einstellungen') }}</legend>
+        <fieldset v-else class="no-card-selected-placeholder">
+          <legend>
+            {{ $gettext('Keine Karte ausgewählt') }}
+          </legend>
+        </fieldset>
+      </fieldset>
 
-      <label>
-        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
-        {{ $gettext('Mehrere Versuche erlauben') }}
-      </label>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Einstellungen') }}</legend>
 
-      <label>
-        <input v-model="taskDefinition.resumeAllowed" type="checkbox" />
-        {{ $gettext('Fortsetzen des aktuellen Spielstands erlauben') }}
-      </label>
+        <label>
+          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          {{ $gettext('Mehrere Versuche erlauben') }}
+        </label>
 
-      <label>
-        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
-        {{ $gettext('Lösungen anzeigen erlauben') }}
-      </label>
-    </fieldset>
+        <label>
+          <input v-model="taskDefinition.resumeAllowed" type="checkbox" />
+          {{ $gettext('Fortsetzen des aktuellen Spielstands erlauben') }}
+        </label>
 
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Beschriftungen') }}</legend>
+        <label>
+          <input
+            v-model="taskDefinition.showSolutionsAllowed"
+            type="checkbox"
+          />
+          {{ $gettext('Lösungen anzeigen erlauben') }}
+        </label>
+      </fieldset>
 
-      <label>
-        {{ $gettext('Text für Überprüfen-Button:') }}
-        <input v-model="taskDefinition.strings.checkButton" type="text" />
-      </label>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Beschriftungen') }}</legend>
 
-      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-        {{ $gettext('Text für Wiederholen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.retryButton"
-          :disabled="!taskDefinition.retryAllowed"
-          type="text"
-        />
-      </label>
+        <label>
+          {{ $gettext('Text für Überprüfen-Button:') }}
+          <input v-model="taskDefinition.strings.checkButton" type="text" />
+        </label>
 
-      <label :class="{ 'setting-disabled': !taskDefinition.resumeAllowed }">
-        {{ $gettext('Text für Fortsetzen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.resumeButton"
-          :disabled="!taskDefinition.resumeAllowed"
-          type="text"
-        />
-      </label>
+        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.retryButton"
+            :disabled="!taskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
 
-      <label
-        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
-      >
-        {{ $gettext('Text für Lösungen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.solutionsButton"
-          :disabled="!taskDefinition.showSolutionsAllowed"
-          type="text"
-        />
-      </label>
-    </fieldset>
+        <label :class="{ 'setting-disabled': !taskDefinition.resumeAllowed }">
+          {{ $gettext('Text für Fortsetzen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.resumeButton"
+            :disabled="!taskDefinition.resumeAllowed"
+            type="text"
+          />
+        </label>
 
-    <feedback-editor
-      :feedback="taskDefinition.feedback"
-      :result-message="taskDefinition.strings.resultMessage"
-      @update:feedback="updateFeedback"
-      @update:result-message="updateResultMessage"
-    />
-  </form>
+        <label
+          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+        >
+          {{ $gettext('Text für Lösungen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.solutionsButton"
+            :disabled="!taskDefinition.showSolutionsAllowed"
+            type="text"
+          />
+        </label>
+      </fieldset>
+
+      <FeedbackEditor
+        :feedback="taskDefinition.feedback"
+        :result-message="taskDefinition.strings.resultMessage"
+        @update:feedback="updateFeedback"
+        @update:result-message="updateResultMessage"
+      />
+    </form>
+  </div>
 </template>
 
 <script lang="ts">
@@ -259,6 +267,10 @@ export default defineComponent({
   user-select: none;
 }
 
+.cards-list-item:last-of-type {
+  margin-bottom: 0.8em;
+}
+
 .selected-card {
   border: #0a78d1 2px solid;
 }
@@ -285,10 +297,11 @@ export default defineComponent({
 }
 
 .add-card-button {
-  margin: 0.8em 0 0 0;
+  margin: 0 0 0 0;
 }
 
-.edited-card {
+.no-card-selected-placeholder {
   flex: 1 1 auto;
+  height: 150px;
 }
 </style>
