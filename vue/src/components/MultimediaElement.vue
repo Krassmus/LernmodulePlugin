@@ -1,17 +1,18 @@
 <template>
-  <template v-if="element.type === 'image'">
-    <lazy-image
-      v-if="element.file_id"
-      :src="fileIdToUrl(element.file_id)"
-      :alt="element.altText"
-      class="image-element"
-      draggable="false"
-    />
-    <div v-else class="image-element" />
-  </template>
-  <template v-else-if="element.type === 'text'">
-    <div class="text-element" draggable="false" v-text="element.content" />
-  </template>
+  <span class="multimedia-element">
+    <span v-if="element.type === 'image'" class="image-element-wrapper">
+      <lazy-image
+        v-if="element.file_id"
+        :src="fileIdToUrl(element.file_id)"
+        :alt="element.altText"
+        class="image-element"
+      />
+      <span v-else class="image-element-placeholder" />
+    </span>
+    <span v-else-if="element.type === 'text'" class="text-element">
+      <span> {{ element.content }} </span>
+    </span>
+  </span>
 </template>
 
 <script lang="ts">
@@ -36,28 +37,35 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.image-element {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  padding: 4px;
-  box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
-  border: solid 1px #cbd5de;
-  border-radius: 0.25em;
-  background-color: white;
-}
-
-.text-element {
-  box-sizing: border-box;
-  max-width: 100%;
-  max-height: 100%;
-  box-shadow: inset 0 0 72px #cbd5de; /* x-offset, y-offset, blur-radius */
-  border: solid 1px #cbd5de;
-  border-radius: 0.25em;
-  background-color: white;
+.multimedia-element {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: auto;
+}
+
+.image-element {
+  border-radius: 0.25em;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.image-element-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-element-placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.text-element {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
