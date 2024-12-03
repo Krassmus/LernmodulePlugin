@@ -1,61 +1,61 @@
 <template>
-  <div>
-    <div class="h5p-element-settings">
-      <label>
-        {{ $gettext('Typ') }}
-        <select :value="multimediaElement.type" @change="onChangeType($event)">
-          <option :value="'image'">
-            {{ $gettext('Bild') }}
-          </option>
-          <option :value="'text'">
-            {{ $gettext('Text') }}
-          </option>
-        </select>
-      </label>
-      <div
-        v-if="multimediaElement.type == 'image'"
-        class="h5p-element-image-container"
-      >
-        <template v-if="multimediaElement.file_id">
-          <MultimediaElement
-            :element="multimediaElement"
-            class="h5pMultimediaElement"
-          />
-          <button
-            type="button"
-            @click="onClickRemoveImage()"
-            v-text="$gettext('Bild löschen')"
-            class="button trash element-pair-settings-item"
-          />
-        </template>
-        <FileUpload
-          class="pairing-file-upload"
-          v-else
-          @file-uploaded="onUploadImage($event)"
+  <fieldset class="pairing-editor-card">
+    <legend>{{ title }}</legend>
+
+    <label>
+      {{ $gettext('Typ') }}
+      <select :value="multimediaElement.type" @change="onChangeType($event)">
+        <option :value="'image'">
+          {{ $gettext('Bild') }}
+        </option>
+        <option :value="'text'">
+          {{ $gettext('Text') }}
+        </option>
+      </select>
+    </label>
+
+    <div
+      v-if="multimediaElement.type == 'image'"
+      class="multimedia-element-container"
+    >
+      <template v-if="multimediaElement.file_id">
+        <div class="multimedia-element-wrapper">
+          <MultimediaElement :element="multimediaElement" />
+        </div>
+        <button
+          type="button"
+          @click="onClickRemoveImage()"
+          v-text="$gettext('Bild löschen')"
+          class="button trash element-pair-settings-item"
         />
-        <label style="align-self: stretch">
-          {{ $gettext('Bildbeschreibung') }}
-          <input
-            type="text"
-            :value="multimediaElement.altText"
-            @input="onInputAltText($event)"
-            class="element-pair-settings-item"
-          />
-        </label>
+      </template>
+      <div v-else class="pairing-file-upload">
+        <FileUpload @file-uploaded="onUploadImage($event)" />
       </div>
-      <div v-else-if="multimediaElement.type == 'text'">
-        <label style="align-self: stretch">
-          {{ $gettext('Inhalt') }}
-          <textarea
-            type="text"
-            :value="multimediaElement.content"
-            @input="onInputContent($event)"
-            class="element-pair-settings-item"
-          />
-        </label>
-      </div>
+
+      <label style="align-self: stretch">
+        {{ $gettext('Bildbeschreibung') }}
+        <input
+          type="text"
+          :value="multimediaElement.altText"
+          @input="onInputAltText($event)"
+          class="element-pair-settings-item"
+        />
+      </label>
     </div>
-  </div>
+
+    <div v-else-if="multimediaElement.type == 'text'">
+      <label style="align-self: stretch">
+        {{ $gettext('Inhalt') }}
+        <textarea
+          type="text"
+          :value="multimediaElement.content"
+          @input="onInputContent($event)"
+          class="element-pair-settings-item"
+        />
+      </label>
+    </div>
+  </fieldset>
 </template>
 
 <script lang="ts">
@@ -72,9 +72,13 @@ import { v4 } from 'uuid';
 import { FileRef } from '@/routes/jsonApi';
 
 export default defineComponent({
-  name: 'PairingElement',
+  name: 'PairingEditorCard',
   components: { FileUpload, MultimediaElement },
   props: {
+    title: {
+      type: Object as PropType<String>,
+      required: true,
+    },
     multimediaElement: {
       type: Object as PropType<LernmoduleMultimediaElement>,
       required: true,
@@ -165,15 +169,12 @@ export default defineComponent({
 });
 </script>
 
-<style>
-.pairing-file-upload,
-.pairing-file-upload input[type='file'] {
-  max-width: 100%;
-}
-</style>
-
 <style scoped>
-.h5p-element-image-container {
+.pairing-editor-card {
+  flex: 1 1 auto;
+}
+
+.multimedia-element-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -181,7 +182,7 @@ export default defineComponent({
   gap: 0.5em;
 }
 
-.h5pMultimediaElement {
+.multimedia-element-wrapper {
   width: 8em;
   height: 8em;
 }
@@ -189,5 +190,10 @@ export default defineComponent({
 .element-pair-settings-item {
   /* top | right | bottom | left */
   margin: 0.25em 0 0 0;
+}
+
+.pairing-file-upload,
+.pairing-file-upload input[type='file'] {
+  max-width: 100%;
 }
 </style>
