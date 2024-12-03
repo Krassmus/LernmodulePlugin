@@ -1,118 +1,124 @@
 <template>
-  <form class="default">
-    <fieldset class="main-flex">
-      <legend>{{ $gettext('Memory') }}</legend>
+  <div class="stud5p-task">
+    <form class="default">
+      <fieldset class="memory-editor">
+        <legend>{{ $gettext('Memory') }}</legend>
 
-      <div class="cards-list">
-        <div
-          v-for="(card, index) in taskDefinition.cards"
-          :key="card.uuid"
-          :class="{
-            'cards-list-item': true,
-            'selected-card': index === selectedCardIndex,
-          }"
-          @click="selectCard(index)"
-        >
-          <div v-text="listEntryText(index, card)" class="list-entry-text" />
+        <div class="cards-list">
+          <div
+            v-for="(card, index) in taskDefinition.cards"
+            :key="card.uuid"
+            :class="{
+              'cards-list-item': true,
+              'selected-card': index === selectedCardIndex,
+            }"
+            @click="selectCard(index)"
+          >
+            <div v-text="listEntryText(index, card)" class="list-entry-text" />
 
-          <!-- Apply .stop modifier so that the selectCard event handler on the
+            <!-- Apply .stop modifier so that the selectCard event handler on the
             parent element doesn't get called when the delete button is clicked -->
+            <button
+              type="button"
+              class="flex-child-element remove-card-button"
+              @click.stop="deleteCard(index)"
+              :aria-label="$pgettext('Karte im Memory Spiel', 'Karte löschen')"
+            >
+              <img :src="urlForIcon('trash')" alt="" />
+            </button>
+          </div>
+
           <button
             type="button"
-            class="flex-child-element remove-card-button"
-            @click.stop="deleteCard(index)"
-            :aria-label="$pgettext('Karte im Memory Spiel', 'Karte löschen')"
+            class="button add add-card-button"
+            @click="addCard"
           >
-            <img :src="urlForIcon('trash')" alt="" />
+            {{ $gettext('Karte hinzufügen') }}
           </button>
         </div>
 
-        <button
-          type="button"
-          class="button add add-card-button"
-          @click="addCard"
+        <div
+          v-if="taskDefinition.cards[selectedCardIndex]"
+          class="edited-memory-card"
         >
-          {{ $gettext('Karte hinzufügen') }}
-        </button>
-      </div>
+          <MemoryEditorCard
+            :card="taskDefinition.cards[selectedCardIndex]"
+            :card-index="selectedCardIndex"
+          />
+        </div>
 
-      <MemoryCardEditor
-        v-if="taskDefinition.cards[selectedCardIndex]"
-        class="edited-memory-card"
-        :card-index="selectedCardIndex"
-      />
+        <fieldset v-else class="no-card-selected-placeholder">
+          <legend>
+            {{ $gettext('Keine Karte ausgewählt') }}
+          </legend>
+        </fieldset>
+      </fieldset>
 
-      <div v-else class="edited-memory-card no-card-selected-placeholder">
-        {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
-      </div>
-    </fieldset>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Einstellungen') }}</legend>
 
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Einstellungen') }}</legend>
+        <label>
+          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          {{ $gettext('Mehrere Versuche erlauben') }}
+        </label>
 
-      <label>
-        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
-        {{ $gettext('Mehrere Versuche erlauben') }}
-      </label>
+        <label>
+          <input v-model="taskDefinition.squareLayout" type="checkbox" />
+          {{ $gettext('Karten in einem Quadrat positionieren') }}
+        </label>
 
-      <label>
-        <input v-model="taskDefinition.squareLayout" type="checkbox" />
-        {{ $gettext('Karten in einem Quadrat positionieren') }}
-      </label>
-
-      <label
-        >{{ $gettext('Rückseite') }}
-        <span
-          v-if="taskDefinition.flipside && taskDefinition.flipside.file_id"
-          class="flipside-image-and-button-container"
-        >
-          <span class="memory-card-flipside">
-            <img
+        <label
+          >{{ $gettext('Rückseite') }}
+          <span
+            v-if="taskDefinition.flipside && taskDefinition.flipside.file_id"
+            class="flipside-image-and-button-container"
+          >
+            <LazyImage
               :src="fileIdToUrl(taskDefinition.flipside.file_id)"
               :alt="taskDefinition.flipside.altText"
               class="flipside-image"
             />
+
+            <button
+              @click="deleteFlipsideImage"
+              type="button"
+              class="button delete-flipside-image-button"
+            >
+              {{ $gettext('Bild Löschen') }}
+            </button>
           </span>
 
-          <button
-            @click="deleteFlipsideImage"
-            type="button"
-            class="button delete-flipside-image-button"
-          >
-            {{ $gettext('Bild Löschen') }}
-          </button>
-        </span>
+          <FileUpload v-else @file-uploaded="onFlipsideImageUploaded" />
+        </label>
+      </fieldset>
 
-        <FileUpload v-else @file-uploaded="onFlipsideImageUploaded" />
-      </label>
-    </fieldset>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Beschriftungen') }}</legend>
 
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Beschriftungen') }}</legend>
+        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.retryButton"
+            :disabled="!taskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+      </fieldset>
 
-      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-        {{ $gettext('Text für Wiederholen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.retryButton"
-          :disabled="!taskDefinition.retryAllowed"
-          type="text"
-        />
-      </label>
-    </fieldset>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Feedback') }}</legend>
 
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Feedback') }}</legend>
-
-      <label>
-        {{ $gettext('Ergebnismitteilung:') }}
-        <input v-model="taskDefinition.strings.resultMessage" type="text" />
-      </label>
-    </fieldset>
-  </form>
+        <label>
+          {{ $gettext('Ergebnismitteilung:') }}
+          <input v-model="taskDefinition.strings.resultMessage" type="text" />
+        </label>
+      </fieldset>
+    </form>
+  </div>
 </template>
 
 <style scoped>
-.main-flex {
+.memory-editor {
   display: flex;
   gap: 1em;
 }
@@ -143,10 +149,8 @@
 }
 
 .no-card-selected-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
+  flex: 1 1 auto;
+  height: 150px;
 }
 
 .list-entry-text {
@@ -201,9 +205,16 @@
 }
 
 .flipside-image {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: contain;
+  width: 12em;
+  height: 12em;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 2px solid #dbe2e8;
+  border-radius: 0.5em;
+  margin: 0;
 }
 </style>
 
@@ -217,10 +228,11 @@ import { v4 } from 'uuid';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 import MemoryEditorCard from '@/components/MemoryEditorCard.vue';
+import LazyImage from '@/components/LazyImage.vue';
 
 export default defineComponent({
   name: 'MemoryEditor',
-  components: { MemoryEditorCard, FileUpload },
+  components: { LazyImage, MemoryEditorCard, FileUpload },
   data() {
     return {
       selectedCardIndex: -1,
@@ -245,7 +257,9 @@ export default defineComponent({
     },
     listEntryText(index: number, card: MemoryCard) {
       let text = index + 1 + '. ';
+      text += $gettext('Paar');
 
+      /*
       if (card.first.altText != '') {
         text += card.first.altText;
 
@@ -255,14 +269,17 @@ export default defineComponent({
       } else {
         text += $gettext('Paar');
       }
+      */
+
       return text;
     },
     addCard() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.cards.push({
+          uuid: v4(),
           first: {
-            v: 2,
             uuid: v4(),
+            type: 'image',
             file_id: '',
             altText: '',
           },
@@ -292,7 +309,7 @@ export default defineComponent({
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.flipside = {
           uuid: v4(),
-          v: 2,
+          type: 'image',
           file_id: file.id,
           altText: '',
         };
