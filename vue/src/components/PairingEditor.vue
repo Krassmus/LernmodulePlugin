@@ -1,9 +1,11 @@
 <template>
-  <TabsComponent>
-    <TabComponent :title="$gettext('1. Aufgabe bearbeiten')" icon="content">
-      <div class="main-flex">
-        <div class="h5p-elements-overview">
-          <ElementPair
+  <div class="stud5p-task">
+    <form class="default">
+      <fieldset class="pairing-editor">
+        <legend>{{ $gettext('Pairing') }}</legend>
+
+        <div class="pairs-overview">
+          <PairingEditorPair
             v-for="(pair, index) in taskDefinition.pairs"
             :key="pair.uuid"
             :class="{
@@ -21,46 +23,32 @@
           />
         </div>
 
-        <div class="h5p-elements-settings">
-          <form v-if="selectedPair" class="default" @submit.prevent>
-            <div class="h5p-element-setting">
-              <h1>{{ $gettext('Karte A') }}</h1>
-              <PairingElement
-                :multimedia-element="selectedPair.draggableElement"
-                @element-changed="onChangeDraggableElement"
-              />
-            </div>
+        <fieldset v-if="selectedPair" class="selected-pair">
+          <legend>{{ $gettext('Paar') }}</legend>
 
-            <div class="h5p-element-setting">
-              <h1>{{ $gettext('Karte B') }}</h1>
-              <PairingElement
-                :multimedia-element="selectedPair.targetElement"
-                @element-changed="onChangeTargetElement"
-              />
-            </div>
+          <PairingEditorCard
+            :title="$gettext('Karte 1')"
+            :multimedia-element="selectedPair.draggableElement"
+            @element-changed="onChangeDraggableElement"
+          />
 
-            <div class="remove-pair-button-container">
-              <button
-                type="button"
-                @click="onClickDeletePair(selectedPairIndex)"
-                v-text="$gettext('Paar löschen')"
-                class="button trash remove-pair-button"
-              />
-            </div>
-          </form>
-        </div>
-      </div>
-    </TabComponent>
+          <PairingEditorCard
+            :title="$gettext('Karte 2')"
+            :multimedia-element="selectedPair.targetElement"
+            @element-changed="onChangeTargetElement"
+          />
 
-    <TabComponent :title="$gettext('2. Vorschau')" icon="visibility-visible">
-      <PairingViewer :task="taskDefinition" />
-    </TabComponent>
+          <div class="remove-pair-button-container">
+            <button
+              type="button"
+              @click="onClickDeletePair(selectedPairIndex)"
+              v-text="$gettext('Paar löschen')"
+              class="button trash remove-pair-button"
+            />
+          </div>
+        </fieldset>
+      </fieldset>
 
-    <TabComponent v-if="debug" title="Debug" icon="tools">
-      <pre v-text="taskDefinition" />
-    </TabComponent>
-
-    <form class="default" style="margin-top: 0.5em">
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
@@ -107,14 +95,14 @@
         </label>
       </fieldset>
 
-      <feedback-editor
+      <FeedbackEditor
         :feedback="taskDefinition.feedback"
         :result-message="taskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
     </form>
-  </TabsComponent>
+  </div>
 </template>
 
 <script lang="ts">
@@ -129,11 +117,8 @@ import {
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';
-import ElementPair from '@/components/ElementPair.vue';
-import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
-import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
-import PairingViewer from '@/components/PairingViewer.vue';
-import PairingElement from '@/components/PairingElement.vue';
+import PairingEditorPair from '@/components/PairingEditorPair.vue';
+import PairingEditorCard from '@/components/PairingEditorCard.vue';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import {
   TaskEditorState,
@@ -144,11 +129,8 @@ import { taskEditorStore } from '@/store';
 export default defineComponent({
   name: 'PairingEditor',
   components: {
-    PairingViewer,
-    TabComponent,
-    TabsComponent,
-    ElementPair,
-    PairingElement,
+    PairingEditorPair,
+    PairingEditorCard,
     FeedbackEditor,
   },
   setup() {
@@ -300,14 +282,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.main-flex {
+.pairing-editor {
   display: flex;
-  flex-direction: row;
   gap: 1em;
-  padding: 1em 0 0 0;
 }
 
-.h5p-elements-overview {
+.pairs-overview {
   flex-grow: 1;
   /* Adapted from https://stackoverflow.com/a/46099319/7359454 */
   display: grid;
@@ -318,22 +298,18 @@ export default defineComponent({
   column-gap: 0.5em;
 }
 
-.h5p-elements-settings {
+.selected-pair {
   flex-grow: 0;
   flex-shrink: 0;
   width: 275px;
 }
 
-.h5p-element-setting + .h5p-element-setting {
-  margin-top: 2ex;
-}
-
 .add-pair-button {
   box-sizing: border-box;
-  height: 8em;
-  width: 8em;
+  width: 100%;
+  aspect-ratio: 1;
 
-  margin: 2px;
+  margin: 0;
   padding: 0;
 
   border: solid 2px rgba(0, 0, 0, 0);
