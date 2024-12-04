@@ -2,7 +2,7 @@
   <fieldset class="pairing-editor-card">
     <legend>{{ title }}</legend>
 
-    <label>
+    <!--    <label>
       {{ $gettext('Typ') }}
       <select :value="multimediaElement.type" @change="onChangeType($event)">
         <option :value="'image'">
@@ -12,7 +12,7 @@
           {{ $gettext('Text') }}
         </option>
       </select>
-    </label>
+    </label>-->
 
     <div
       v-if="multimediaElement.type == 'image'"
