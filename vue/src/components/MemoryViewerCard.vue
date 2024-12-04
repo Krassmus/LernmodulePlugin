@@ -95,6 +95,7 @@ button {
   align-items: center;
 
   backface-visibility: hidden;
+  overflow: hidden;
 }
 
 .memory-card-front {

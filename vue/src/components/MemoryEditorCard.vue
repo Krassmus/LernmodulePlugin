@@ -240,6 +240,8 @@ export default defineComponent({
 
   padding: 0.5em;
   margin: 0;
+
+  overflow: hidden;
 }
 
 .image-memory-card-container {
