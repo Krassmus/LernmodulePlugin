@@ -291,7 +291,7 @@ export default defineComponent({
   flex-grow: 1;
   /* Adapted from https://stackoverflow.com/a/46099319/7359454 */
   display: grid;
-  grid-template-columns: repeat(auto-fill, 8em);
+  grid-template-columns: repeat(auto-fill, minmax(8em, auto));
   grid-auto-rows: max-content;
   justify-content: space-around;
   row-gap: 1em;

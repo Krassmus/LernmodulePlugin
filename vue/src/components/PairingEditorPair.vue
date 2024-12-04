@@ -1,13 +1,17 @@
 <template>
   <button type="button" class="pairing-editor-pair">
-    <MultimediaElement
-      v-if="pair.draggableElement"
-      :element="pair.draggableElement"
-    />
-    <MultimediaElement
-      v-if="pair.targetElement"
-      :element="pair.targetElement"
-    />
+    <span class="pair-element">
+      <MultimediaElement
+        v-if="pair.draggableElement"
+        :element="pair.draggableElement"
+      />
+    </span>
+    <span class="pair-element">
+      <MultimediaElement
+        v-if="pair.targetElement"
+        :element="pair.targetElement"
+      />
+    </span>
   </button>
 </template>
 
@@ -57,5 +61,16 @@ export default defineComponent({
   cursor: grab;
   border: 2px solid #0a78d1;
   box-shadow: 0 0 8px #0a78d1 inset;
+}
+
+.pair-element {
+  width: 8em;
+  height: 8em;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
 }
 </style>
