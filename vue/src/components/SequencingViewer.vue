@@ -389,12 +389,11 @@ export default defineComponent({
 
   width: 11.5em;
   height: 13.5em;
-  padding: 0.25em 0.25em 0 0.25em;
+  padding: 0.5em 0.5em 0 0.5em;
 
   border: 2px solid #dbe2e8;
-  border-radius: 6px;
-
-  background: #fff;
+  border-radius: 0.5em;
+  background: white;
 
   cursor: grab;
   user-select: none;
