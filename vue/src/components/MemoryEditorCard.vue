@@ -236,7 +236,7 @@ export default defineComponent({
 
   border: 2px solid #dbe2e8;
   border-radius: 0.5em;
-  background-color: #e7ebf1;
+  background: white;
 
   padding: 0.5em;
   margin: 0;
