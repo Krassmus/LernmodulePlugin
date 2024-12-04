@@ -58,16 +58,28 @@ export default defineComponent({
       });
     },
   },
+  computed: {
+    useLazyLoading(): boolean {
+      return window.STUDIP.LernmoduleVueJS.LERNMODULE_LAZYLOADING;
+    },
+  },
   mounted() {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        this.enqueueImageLoad();
-        observer.unobserve(entry.target); // Stop observing
-        observer.disconnect(); // Clean up the observer
-      }
-    });
+    if (!this.useLazyLoading) {
+      // Directly load the image
+      this.enqueueImageLoad();
+      return;
+    } else {
+      // Load image when in view
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          this.enqueueImageLoad();
+          observer.unobserve(entry.target); // Stop observing
+          observer.disconnect(); // Clean up the observer
+        }
+      });
 
-    observer.observe(this.$el as HTMLElement);
+      observer.observe(this.$el as HTMLElement);
+    }
   },
 });
 </script>
