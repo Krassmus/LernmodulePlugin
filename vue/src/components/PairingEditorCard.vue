@@ -185,6 +185,10 @@ export default defineComponent({
 .multimedia-element-wrapper {
   width: 8em;
   height: 8em;
+
+  display: flex;
+
+  overflow: hidden;
 }
 
 .element-pair-settings-item {
