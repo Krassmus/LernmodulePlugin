@@ -95,10 +95,15 @@ export default defineComponent({
 }
 
 .grid-square.two-images .image {
-  border-radius: 0.25em;
+  border-radius: 0.5em;
+  border: 2px solid #dbe2e8;
+  padding: 0.25em;
+  background: white;
 }
 
 .grid-square.two-images:not(:hover):not(.showResult) {
+  background: unset;
+  border: 2px solid transparent;
 }
 
 .grid-square.two-images:is(.correct):is(.showResult) {
