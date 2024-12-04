@@ -49,6 +49,8 @@ export default defineComponent({
 .image-element {
   width: 100%;
   height: 100%;
+
+  border-radius: 0.25em;
 }
 
 .image-element-wrapper {
@@ -58,6 +60,10 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+  background: white;
+
+  box-shadow: inset 0 2px 74px 0 #cbd5de;
+  border-radius: 0.25em;
 }
 
 .image-element-placeholder {
