@@ -59,7 +59,7 @@
           <input
             type="text"
             :value="card.second.altText"
-            @input="onInputAltText"
+            @input="onInputAltText($event, true)"
             class="settings-item"
           />
         </label>
