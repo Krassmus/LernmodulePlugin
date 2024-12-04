@@ -40,10 +40,11 @@ export default defineComponent({
 .pairing-editor-pair {
   display: flex;
   flex-direction: column;
+  align-items: center;
 
   border: 2px solid #dbe2e8;
   border-radius: 0.5em;
-  background-color: #e7ebf1;
+  background: white;
 
   gap: 0.25em;
   padding: 0.25em;
