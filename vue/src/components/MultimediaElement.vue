@@ -38,18 +38,23 @@ export default defineComponent({
 
 <style scoped>
 .multimedia-element {
+  width: 100%;
+  height: 100%;
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .image-element {
-  border-radius: 0.25em;
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .image-element-wrapper {
+  width: 100%;
+  height: 100%;
+
   display: flex;
   justify-content: center;
   align-items: center;
