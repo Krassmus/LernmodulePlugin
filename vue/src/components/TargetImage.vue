@@ -75,13 +75,14 @@ export default defineComponent({
 .grid-square {
   display: flex;
   margin: unset;
-  padding: unset;
-  background: unset;
-  border: 2px solid transparent;
-  border-radius: 0.5em;
   width: 8em;
   height: 8em;
   box-sizing: content-box;
+
+  border: 2px solid #dbe2e8;
+  border-radius: 0.5em;
+  background: white;
+  padding: 0.5em;
 }
 
 .grid-square.one-image {
