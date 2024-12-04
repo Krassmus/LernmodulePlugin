@@ -44,6 +44,8 @@ export default defineComponent({
   gap: 0.25em;
   padding: 0.25em;
   margin: 0;
+
+  overflow: hidden;
 }
 
 .pairing-editor-pair.selected {
