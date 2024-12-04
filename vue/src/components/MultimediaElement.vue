@@ -1,7 +1,7 @@
 <template>
   <span class="multimedia-element">
     <span v-if="element.type === 'image'" class="image-element-wrapper">
-      <lazy-image
+      <LazyImage
         v-if="element.file_id"
         :src="fileIdToUrl(element.file_id)"
         :alt="element.altText"
