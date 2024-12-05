@@ -39,7 +39,7 @@ export async function createFile({
 }
 
 /**
- * Send a request to the JSON API to create a folder.
+ * Send a request to the JSON API to get all folders for a given userId.
  */
 export async function getFolders({
   userId,
