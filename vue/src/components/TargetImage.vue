@@ -14,7 +14,6 @@
       <div class="image-container back">
         <MultimediaElement
           :element="targetImage"
-          draggable="false"
           class="image"
           :class="{
             correct: this.isCorrect,
@@ -23,10 +22,9 @@
           }"
         />
       </div>
-      <div class="image-container front">
+      <div class="image-container front" draggable="true">
         <MultimediaElement
           :element="draggableImage"
-          draggable="false"
           class="image"
           :class="{
             correct: this.isCorrect,
@@ -36,7 +34,7 @@
         />
       </div>
     </template>
-    <MultimediaElement v-else :element="targetImage" draggable="false" />
+    <MultimediaElement v-else :element="targetImage" />
   </button>
 </template>
 
