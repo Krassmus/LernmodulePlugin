@@ -19,7 +19,9 @@ if ($template) {
             ],
             'saveRoute' => $controller->url_for('vuejseditor/save'),
             'updateAttemptRoute' => $controller->url_for('lernmodule/update_attempt/' . $attempt->getId()),
-            'LERNMODULE_DEBUG' => Config::get()->LERNMODULE_DEBUG
+            'LERNMODULE_DEBUG' => Config::get()->LERNMODULE_DEBUG,
+            'LERNMODULE_PREVIEW' => Config::get()->LERNMODULE_PREVIEW,
+            'LERNMODULE_LAZYLOADING' => Config::get()->LERNMODULE_LAZYLOADING,
         ]
     );
 }
