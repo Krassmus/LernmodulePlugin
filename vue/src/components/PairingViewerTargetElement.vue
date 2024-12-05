@@ -22,7 +22,7 @@
           }"
         />
       </div>
-      <div class="image-container front" draggable="true">
+      <div class="image-container front" :draggable="!this.showResult">
         <MultimediaElement
           :element="draggableImage"
           class="image"
