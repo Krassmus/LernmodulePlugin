@@ -76,7 +76,7 @@ export default defineComponent({
   components: { FileUpload, MultimediaElement },
   props: {
     title: {
-      type: Object as PropType<String>,
+      type: String,
       required: true,
     },
     multimediaElement: {
