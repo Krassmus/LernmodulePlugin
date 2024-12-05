@@ -105,5 +105,6 @@ export default defineComponent({
 .placeholder {
   height: 100%;
   width: 100%;
+  box-shadow: inset 0 2px 74px 0 #cbd5de;
 }
 </style>
