@@ -30,7 +30,6 @@
         >
           <MultimediaElement
             :element="getElementById(draggableElementId)"
-            draggable="false"
             ref="draggableImages"
           />
         </button>
