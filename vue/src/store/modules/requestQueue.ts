@@ -4,7 +4,7 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
 export class RequestQueueModule extends VuexModule {
   queue: Array<() => Promise<void>> = [];
   active = 0;
-  maxConcurrent = 12;
+  maxConcurrent = 6;
   delay = 0;
 
   // Mutation to add a request to the queue
@@ -27,7 +27,15 @@ export class RequestQueueModule extends VuexModule {
   // Action to handle queue processing
   @Action
   async processQueue() {
-    if (this.active >= this.maxConcurrent || this.queue.length === 0) {
+    if (this.active >= this.maxConcurrent) {
+      console.debug(
+        `Max concurrent limit reached (${this.maxConcurrent}). Active requests: ${this.active}. Queue length: ${this.queue.length}`
+      );
+      return;
+    }
+
+    if (this.queue.length === 0) {
+      console.debug(`Queue is empty. Active requests: ${this.active}`);
       return;
     }
 
