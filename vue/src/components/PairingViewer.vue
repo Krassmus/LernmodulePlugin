@@ -53,10 +53,6 @@
           :showResult="this.showResults"
           :key="pair.uuid"
           @drop="onDropOnTargetElement($event, pair.targetElement.uuid)"
-          :draggable="
-            getElementDraggedOntoTarget(pair.targetElement.uuid) &&
-            !this.showResults
-          "
           @dragstart="startDragTargetElement($event, pair.targetElement.uuid)"
           @dragend="endDragTargetElement()"
           @dragover.prevent
