@@ -70,14 +70,22 @@ export default defineComponent({
       this.enqueueImageLoad();
       return;
     } else {
-      // Load image when in view
-      const observer = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
-          this.enqueueImageLoad();
-          observer.unobserve(entry.target); // Stop observing
-          observer.disconnect(); // Clean up the observer
+      // Load image lazily when half a viewport away
+      const halfViewportHeight = `${window.innerHeight / 2}px`; // Calculate half of viewport height
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            this.enqueueImageLoad();
+            observer.unobserve(entry.target); // Stop observing
+            observer.disconnect(); // Clean up the observer
+          }
+        },
+        {
+          rootMargin: halfViewportHeight, // Use half of the viewport height as the margin
+          threshold: 0.01, // Trigger when a small portion intersects
         }
-      });
+      );
 
       observer.observe(this.$el as HTMLElement);
     }
