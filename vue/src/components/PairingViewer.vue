@@ -36,7 +36,7 @@
       </div>
 
       <div class="targetElementsColumn">
-        <TargetImage
+        <PairingViewerTargetElement
           v-for="pair in this.task.pairs"
           :class="{
             outlined:
@@ -107,7 +107,7 @@ import {
   LernmoduleMultimediaElement,
   PairingTask,
 } from '@/models/TaskDefinition';
-import TargetImage from '@/components/TargetImage.vue';
+import PairingViewerTargetElement from '@/components/PairingViewerTargetElement.vue';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 import MultimediaElement from '@/components/MultimediaElement.vue';
 
@@ -117,7 +117,7 @@ export default defineComponent({
   name: 'PairingViewer',
   components: {
     MultimediaElement,
-    TargetImage,
+    PairingViewerTargetElement,
     FeedbackElement,
   },
   props: {
