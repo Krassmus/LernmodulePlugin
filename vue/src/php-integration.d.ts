@@ -41,6 +41,7 @@ declare global {
         updateAttemptRoute: string;
         LERNMODULE_DEBUG: boolean;
         LERNMODULE_PREVIEW: boolean;
+        LERNMODULE_LAZYLOADING: boolean;
       };
     };
     // TODO use correct types for jQuery

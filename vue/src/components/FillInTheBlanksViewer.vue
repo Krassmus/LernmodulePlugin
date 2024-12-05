@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-fill-in-the-blanks stud5p-task" ref="wrapperElement">
+  <div class="stud5p-task" ref="wrapperElement">
     <div class="fill-in-the-blanks-text">
       <template v-for="element in parsedTemplate" :key="element.uuid">
         <span v-if="element.type === 'staticText'" v-html="element.text" />

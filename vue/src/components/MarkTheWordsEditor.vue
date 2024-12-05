@@ -1,80 +1,85 @@
 <template>
-  <form class="default">
-    <fieldset>
-      <legend>{{ $gettext('Mark the Words') }}</legend>
+  <div class="stud5p-task">
+    <form class="default">
+      <fieldset>
+        <legend>{{ $gettext('Mark the Words') }}</legend>
 
-      <div class="h5pEditorTopPanel">
-        <button
-          @click="addSolution"
-          class="button"
-          type="button"
-          style="margin-right: 0.1em"
+        <div class="h5pEditorTopPanel">
+          <button
+            @click="addSolution"
+            class="button"
+            type="button"
+            style="margin-right: 0.1em"
+          >
+            {{ $gettext('Richtiges Wort markieren') }}
+          </button>
+
+          <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
+        </div>
+
+        <studip-wysiwyg
+          v-model="taskDefinition.template"
+          ref="wysiwyg"
+          force-soft-breaks
+          remove-wrapping-p-tag
+          disable-autoformat
+        />
+      </fieldset>
+
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Einstellungen') }}</legend>
+
+        <label>
+          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          {{ $gettext('Mehrere Versuche erlauben') }}
+        </label>
+
+        <label>
+          <input
+            v-model="taskDefinition.showSolutionsAllowed"
+            type="checkbox"
+          />
+          {{ $gettext('Lösungen anzeigen erlauben') }}
+        </label>
+      </fieldset>
+
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+        <label>
+          {{ $gettext('Text für Überprüfen-Button:') }}
+          <input v-model="taskDefinition.strings.checkButton" type="text" />
+        </label>
+
+        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.retryButton"
+            :disabled="!taskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
         >
-          {{ $gettext('Richtiges Wort markieren') }}
-        </button>
+          {{ $gettext('Text für Lösungen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.solutionsButton"
+            :disabled="!taskDefinition.showSolutionsAllowed"
+            type="text"
+          />
+        </label>
+      </fieldset>
 
-        <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
-      </div>
-
-      <studip-wysiwyg
-        v-model="taskDefinition.template"
-        ref="wysiwyg"
-        force-soft-breaks
-        remove-wrapping-p-tag
-        disable-autoformat
+      <feedback-editor
+        :feedback="taskDefinition.feedback"
+        :result-message="taskDefinition.strings.resultMessage"
+        @update:feedback="updateFeedback"
+        @update:result-message="updateResultMessage"
       />
-    </fieldset>
-
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Einstellungen') }}</legend>
-
-      <label>
-        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
-        {{ $gettext('Mehrere Versuche erlauben') }}
-      </label>
-
-      <label>
-        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
-        {{ $gettext('Lösungen anzeigen erlauben') }}
-      </label>
-    </fieldset>
-
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Beschriftungen') }}</legend>
-
-      <label>
-        {{ $gettext('Text für Überprüfen-Button:') }}
-        <input v-model="taskDefinition.strings.checkButton" type="text" />
-      </label>
-
-      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-        {{ $gettext('Text für Wiederholen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.retryButton"
-          :disabled="!taskDefinition.retryAllowed"
-          type="text"
-        />
-      </label>
-
-      <label
-        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
-      >
-        {{ $gettext('Text für Lösungen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.solutionsButton"
-          :disabled="!taskDefinition.showSolutionsAllowed"
-          type="text"
-        />
-      </label>
-    </fieldset>
-
-    <feedback-editor
-      :feedback="taskDefinition.feedback"
-      :result-message="taskDefinition.strings.resultMessage"
-      @update:feedback="updateFeedback"
-      @update:result-message="updateResultMessage"
-    />
-  </form>
+    </form>
+  </div>
 </template>
 
 <script lang="ts">

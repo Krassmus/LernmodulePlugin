@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-drag-the-words stud5p-task">
+  <div class="stud5p-task">
     <!-- Main container for text and answers -->
     <div class="text-and-answers-container">
       <!-- Render the text and blank elements from parsedTemplate -->

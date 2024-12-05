@@ -40,6 +40,7 @@ class VuejseditorController extends PluginController
             'saveRoute' => $this->url_for('vuejseditor/save'),
             'LERNMODULE_DEBUG' => Config::get()->LERNMODULE_DEBUG,
             'LERNMODULE_PREVIEW' => Config::get()->LERNMODULE_PREVIEW,
+            'LERNMODULE_LAZYLOADING' => Config::get()->LERNMODULE_LAZYLOADING,
         ];
 
         if ($this->mod['draft']) {

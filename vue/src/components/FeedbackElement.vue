@@ -1,5 +1,5 @@
 <template>
-  <div class="feedback-container">
+  <div class="feedback-container" v-disable-drag>
     <div
       v-if="feedbackMessage"
       class="feedback-text"

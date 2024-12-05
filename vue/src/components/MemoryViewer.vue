@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-memory stud5p-task">
+  <div class="stud5p-task">
     <div
       class="memory-grid"
       :style="{
@@ -8,8 +8,7 @@
       }"
     >
       <template v-for="card in this.cards" :key="card.id">
-        <MemoryCardComponent
-          v-if="card.file_id"
+        <MemoryViewerCard
           :card="card"
           :flipside="task.flipside"
           @click="onClickCard(card)"
@@ -83,12 +82,20 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { MemoryTask, Image } from '@/models/TaskDefinition';
+import {
+  MemoryTask,
+  LernmoduleMultimediaElement,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
-import MemoryCardComponent from '@/components/MemoryCard.vue';
+import MemoryViewerCard from '@/components/MemoryViewerCard.vue';
 import { v4 } from 'uuid';
 
-export interface ViewerMemoryCard extends Image {
+export interface ViewerMemoryCard {
+  uuid: string;
+  type: string;
+  file_id: string | undefined;
+  altText: string | undefined;
+  content: string | undefined;
   flipped: boolean;
   solved: boolean;
   matchingCardId: string | undefined;
@@ -96,7 +103,7 @@ export interface ViewerMemoryCard extends Image {
 
 export default defineComponent({
   name: 'MemoryViewer',
-  components: { MemoryCardComponent },
+  components: { MemoryViewerCard },
   emits: ['updateAttempt'],
   props: {
     task: {
@@ -108,6 +115,7 @@ export default defineComponent({
     return {
       cards: [] as ViewerMemoryCard[],
       firstFlippedCardId: undefined as string | undefined,
+      firstFlippedCardMatchingCardId: undefined as string | undefined,
       amountOfFlips: 0 as number,
 
       timer: 0, // Track elapsed time in seconds
@@ -123,7 +131,6 @@ export default defineComponent({
       if (card.flipped) return;
 
       card.flipped = true;
-      console.log('Flipped', card.altText);
 
       // Start timer
       if (!this.timerStarted) {
@@ -138,23 +145,19 @@ export default defineComponent({
         this.resetAllUnsolvedCardsExcept(card.uuid);
 
         this.firstFlippedCardId = card.uuid;
+        this.firstFlippedCardMatchingCardId = card.matchingCardId;
       } else {
         // We flipped the second card around, check if we got a pair
-        if (card.matchingCardId === this.firstFlippedCardId) {
+        if (card.matchingCardId === this.firstFlippedCardMatchingCardId) {
           // We found a pair!
           // Set both cards' solved attribute to true
           card.solved = true;
           const firstCard = this.getCardById(this.firstFlippedCardId);
           firstCard.solved = true;
-          console.log(
-            'Found a pair of',
-            card.altText,
-            'and',
-            firstCard.altText
-          );
         }
 
         this.firstFlippedCardId = undefined;
+        this.firstFlippedCardMatchingCardId = undefined;
       }
     },
 
@@ -217,6 +220,22 @@ export default defineComponent({
       }
       return card;
     },
+
+    createCard(
+      element: LernmoduleMultimediaElement,
+      matchingCardId: string
+    ): ViewerMemoryCard {
+      return {
+        uuid: element.uuid,
+        type: element.type,
+        file_id: element.type !== 'text' ? element.file_id : undefined,
+        altText: element.type !== 'text' ? element.altText : undefined,
+        content: element.type === 'text' ? element.content : undefined,
+        flipped: false,
+        solved: false,
+        matchingCardId,
+      };
+    },
   },
 
   computed: {
@@ -226,7 +245,10 @@ export default defineComponent({
 
     isPlayable(): boolean {
       for (const card of this.task.cards) {
-        if (card.first.file_id) {
+        if (
+          (card.first.type === 'image' || card.first.type === 'audio') &&
+          card.first.file_id
+        ) {
           return true;
         }
       }
@@ -287,46 +309,21 @@ export default defineComponent({
         this.firstFlippedCardId = undefined;
         this.amountOfFlips = 0;
 
-        // Make two copies of each card in the task. Add the flipped, solved and matchingCardId attributes
+        // Generate cards
         this.cards = this.task.cards.flatMap((card) => {
           if (!card.second) {
-            // The two copies of each card are linked to each other through the matchingCardId attribute
-            const duplicateCardId = v4();
-            return [
-              // The original card with the set matchingCardId attribute
-              {
-                ...card.first,
-                flipped: false,
-                solved: false,
-                uuid: card.first.uuid,
-                matchingCardId: duplicateCardId,
-              },
-              // The duplicate card
-              {
-                ...card.first,
-                flipped: false,
-                solved: false,
-                uuid: duplicateCardId,
-                matchingCardId: card.first.uuid,
-              },
-            ];
+            // Single card: create original and duplicate
+            const original = this.createCard(card.first, card.uuid);
+            const duplicate = this.createCard(
+              { ...card.first, uuid: v4() },
+              card.uuid
+            );
+            return [original, duplicate];
           } else {
-            return [
-              // The original card with the set matchingCardId attribute
-              {
-                ...card.first,
-                flipped: false,
-                solved: false,
-                matchingCardId: card.second.uuid,
-              },
-              // The second card
-              {
-                ...card.second,
-                flipped: false,
-                solved: false,
-                matchingCardId: card.first.uuid,
-              },
-            ];
+            // Paired cards: create first and second
+            const firstCard = this.createCard(card.first, card.uuid);
+            const secondCard = this.createCard(card.second, card.uuid);
+            return [firstCard, secondCard];
           }
         });
 

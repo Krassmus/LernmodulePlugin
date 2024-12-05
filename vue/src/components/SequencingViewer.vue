@@ -1,39 +1,33 @@
 <template>
-  <div class="stud5p-sequencing stud5p-task">
-    <div class="image-row" tabIndex="-1">
+  <div class="stud5p-task">
+    <div class="card-row" tabIndex="-1">
       <button
         type="button"
-        v-for="(image, index) in images"
-        :aria-label="getAriaLabel(image, index)"
-        :key="image.uuid"
-        :ref="'imageButton-' + index"
-        class="image-container"
+        v-for="(card, index) in cards"
+        :aria-label="getAriaLabel(card, index)"
+        :key="card.uuid"
+        :ref="'card-' + index"
+        class="card"
         :class="{
-          dragged: imageInteractedWith === image,
+          dragged: cardInteractedWith === card,
           disabled: isShowingResults,
-          correct: isShowingResults && isImageInCorrectPosition(image),
-          incorrect: isShowingResults && !isImageInCorrectPosition(image),
+          correct: isShowingResults && isCardInCorrectPosition(card),
+          incorrect: isShowingResults && !isCardInCorrectPosition(card),
         }"
         :draggable="!isShowingResults"
-        @dragstart="(event) => startDragImage(image, event)"
-        @drag="onDrag(image)"
-        @dragend="endDragImage(image)"
-        @dragover="onDragOver(image)"
-        @click="onClickImage(image)"
-        @keydown="(event) => onKeydown(image, event)"
+        @dragstart="(event) => startDragCard(card, event)"
+        @drag="onDrag(card)"
+        @dragend="endDragCard(card)"
+        @dragover="onDragOver(card)"
+        @click="onClickCard(card)"
+        @keydown="(event) => onKeydown(card, event)"
       >
         <span class="image-wrapper">
-          <lazy-image
-            :src="fileIdToUrl(image.file_id)"
-            :alt="image.altText"
-            draggable="false"
-            @dragover.prevent
-            @dragenter.prevent
-          />
+          <MultimediaElement :element="card" />
         </span>
 
         <span class="image-description" @dragover.prevent @dragenter.prevent>
-          {{ image.altText }}
+          {{ card.altText }}
         </span>
       </button>
     </div>
@@ -94,17 +88,23 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, Image, SequencingTask } from '@/models/TaskDefinition';
+import {
+  fileIdToUrl,
+  SequencingTask,
+  LernmoduleMultimediaElement,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
-import LazyImage from '@/components/LazyImage.vue';
+import MultimediaElement from '@/components/MultimediaElement.vue';
+
+type Uuid = string;
 
 export default defineComponent({
   name: 'SequencingViewer',
 
   components: {
+    MultimediaElement,
     FeedbackElement,
-    LazyImage,
   },
 
   props: {
@@ -118,8 +118,8 @@ export default defineComponent({
 
   data() {
     return {
-      images: [] as Image[],
-      imageInteractedWith: undefined as Image | undefined,
+      cards: [] as LernmoduleMultimediaElement[],
+      cardInteractedWith: undefined as LernmoduleMultimediaElement | undefined,
       isShowingResults: false as boolean,
       isShowingSolutions: false as boolean,
       screenReaderAnnouncement: '' as string,
@@ -131,32 +131,32 @@ export default defineComponent({
 
     $gettext,
 
-    startDragImage(image: Image, event: DragEvent) {
-      console.log('Starting to drag image', image.altText);
-      this.imageInteractedWith = image;
+    startDragCard(card: LernmoduleMultimediaElement, event: DragEvent) {
+      console.log('Starting to drag card', card.uuid);
+      this.cardInteractedWith = card;
     },
 
-    onDrag(image: Image) {
-      console.log('Dragging image', image.altText);
+    onDrag(card: LernmoduleMultimediaElement) {
+      console.log('Dragging card', card.uuid);
     },
 
-    endDragImage(image: Image) {
-      console.log('Ending to drag image', image.altText);
-      this.imageInteractedWith = undefined;
+    endDragCard(card: LernmoduleMultimediaElement) {
+      console.log('Ending to drag card', card.uuid);
+      this.cardInteractedWith = undefined;
     },
 
-    onDragOver(image: Image) {
-      if (this.imageInteractedWith && this.imageInteractedWith != image) {
-        const fromIndex = this.images.indexOf(this.imageInteractedWith);
-        const toIndex = this.images.indexOf(image);
+    onDragOver(card: LernmoduleMultimediaElement) {
+      if (this.cardInteractedWith && this.cardInteractedWith != card) {
+        const fromIndex = this.cards.indexOf(this.cardInteractedWith);
+        const toIndex = this.cards.indexOf(card);
 
         console.log(
-          'Dragging image',
-          this.imageInteractedWith?.altText,
+          'Dragging card',
+          this.cardInteractedWith?.uuid,
           '(',
           fromIndex,
           ') over target',
-          image.altText,
+          card.uuid,
           '(',
           toIndex,
           ')'
@@ -166,50 +166,50 @@ export default defineComponent({
       }
     },
 
-    onClickImage(image: Image) {
+    onClickCard(card: LernmoduleMultimediaElement) {
       if (this.isShowingSolutions || this.isShowingResults) return;
 
-      if (this.imageInteractedWith) {
-        const fromIndex = this.images.indexOf(this.imageInteractedWith);
-        const toIndex = this.images.indexOf(image);
+      if (this.cardInteractedWith) {
+        const fromIndex = this.cards.indexOf(this.cardInteractedWith);
+        const toIndex = this.cards.indexOf(card);
         this.moveInArray(fromIndex, toIndex);
-        this.imageInteractedWith = undefined;
+        this.cardInteractedWith = undefined;
       } else {
-        this.imageInteractedWith = image;
+        this.cardInteractedWith = card;
       }
     },
 
-    onKeydown(image: Image, event: KeyboardEvent) {
+    onKeydown(card: LernmoduleMultimediaElement, event: KeyboardEvent) {
       if (this.isShowingResults || this.isShowingSolutions) return;
 
-      const currentlySelectedIndex = this.images.indexOf(image);
-      const previouslySelectedIndex = this.imageInteractedWith
-        ? this.images.indexOf(this.imageInteractedWith)
+      const currentlySelectedIndex = this.cards.indexOf(card);
+      const previouslySelectedIndex = this.cardInteractedWith
+        ? this.cards.indexOf(this.cardInteractedWith)
         : -1;
 
       switch (event.key) {
         case 'Enter':
         case ' ':
           event.preventDefault();
-          // If an image is already selected and it's different from the current one
-          if (this.imageInteractedWith && this.imageInteractedWith !== image) {
-            // Move the already selected image to the position of the currently selected image
+          // If an card is already selected and it's different from the current one
+          if (this.cardInteractedWith && this.cardInteractedWith !== card) {
+            // Move the already selected card to the position of the currently selected card
             this.moveInArray(previouslySelectedIndex, currentlySelectedIndex);
             this.screenReaderAnnouncement = this.$gettext(
               'Moved %1 to position %2.'
             )
-              .replace('%1', this.imageInteractedWith.altText)
+              .replace('%1', this.cardInteractedWith.uuid)
               .replace('%2', String(currentlySelectedIndex + 1)); // Convert number to string
 
-            this.imageInteractedWith = undefined;
+            this.cardInteractedWith = undefined;
             this.moveFocus(currentlySelectedIndex);
           } else {
-            // Select or deselect the image
-            this.imageInteractedWith = this.imageInteractedWith
+            // Select or deselect the card
+            this.cardInteractedWith = this.cardInteractedWith
               ? undefined
-              : image;
-            this.screenReaderAnnouncement = this.imageInteractedWith
-              ? `Selected ${image.altText} on position ${
+              : card;
+            this.screenReaderAnnouncement = this.cardInteractedWith
+              ? `Selected ${card.uuid} on position ${
                   currentlySelectedIndex + 1
                 } for moving.`
               : 'Selection cleared.';
@@ -217,17 +217,17 @@ export default defineComponent({
           break;
 
         case 'Escape':
-          this.imageInteractedWith = undefined;
+          this.cardInteractedWith = undefined;
           this.screenReaderAnnouncement = 'Selection canceled.';
           break;
       }
     },
 
-    moveFocus(indexOfButtonToFocus: number) {
+    moveFocus(cardIndex: number) {
       // Wait for the DOM to update before applying focus
       this.$nextTick(() => {
         const buttonRef = this.$refs[
-          `imageButton-${indexOfButtonToFocus}`
+          `card-${cardIndex}`
         ] as HTMLButtonElement[];
         if (buttonRef && buttonRef[0]) {
           // Check if the buttonRef exists and is not undefined
@@ -236,25 +236,27 @@ export default defineComponent({
       });
     },
 
-    getAriaLabel(image: Image, index: number) {
+    getAriaLabel(card: LernmoduleMultimediaElement, index: number) {
       if (!this.isShowingResults) {
-        return `${image.altText} on position ${index + 1}`;
+        return `${card.uuid} on position ${index + 1}`;
       } else {
-        return `${image.altText} on position ${index + 1} is ${
-          this.isImageInCorrectPosition(image) ? 'correct' : 'not correct'
+        return `${card.uuid} on position ${index + 1} is ${
+          this.isCardInCorrectPosition(card) ? 'correct' : 'not correct'
         }`;
       }
     },
 
     moveInArray(fromIndex: number, toIndex: number) {
-      let element = this.images[fromIndex];
-      this.images.splice(fromIndex, 1);
-      this.images.splice(toIndex, 0, element);
+      let element = this.cards[fromIndex];
+      this.cards.splice(fromIndex, 1);
+      this.cards.splice(toIndex, 0, element);
     },
 
-    isImageInCorrectPosition(image: Image): boolean {
-      const index = this.images.findIndex((img) => img.uuid === image.uuid);
-      return index !== -1 && this.task.images[index].uuid === image.uuid;
+    isCardInCorrectPosition(card: LernmoduleMultimediaElement): boolean {
+      const index = this.cards.findIndex(
+        (cardToCheck) => cardToCheck.uuid === card.uuid
+      );
+      return index !== -1 && this.task.cards[index].uuid === card.uuid;
     },
 
     onClickCheckButton() {
@@ -264,7 +266,7 @@ export default defineComponent({
 
     onClickSolutionsButton() {
       this.isShowingSolutions = true;
-      this.resetImagesToCorrectOrder();
+      this.resetCards();
     },
 
     onClickResumeButton() {
@@ -274,20 +276,20 @@ export default defineComponent({
     onClickRetryButton() {
       this.isShowingResults = false;
       this.isShowingSolutions = false;
-      this.shuffleImages();
+      this.shuffleCards();
     },
 
-    shuffleImages() {
-      // Shuffle the images
+    shuffleCards() {
+      // Shuffle the cards
       // https://stackoverflow.com/a/46545530
-      this.images = this.images
-        .map((image) => ({ image: image, sort: Math.random() }))
-        .sort((image1, image2) => image1.sort - image2.sort)
-        .map(({ image }) => image);
+      this.cards = this.cards
+        .map((card) => ({ card: card, sort: Math.random() }))
+        .sort((card1, card2) => card1.sort - card2.sort)
+        .map(({ card }) => card);
     },
 
-    resetImagesToCorrectOrder() {
-      this.images = this.task.images;
+    resetCards() {
+      this.cards = this.task.cards;
     },
   },
 
@@ -324,8 +326,8 @@ export default defineComponent({
 
     correctAnswers(): number {
       let correctAnswers = 0;
-      for (let i = 0; i < this.task.images.length; i++) {
-        if (this.task.images[i].uuid === this.images[i].uuid) {
+      for (let i = 0; i < this.task.cards.length; i++) {
+        if (this.task.cards[i].uuid === this.cards[i].uuid) {
           correctAnswers++;
         }
       }
@@ -333,7 +335,7 @@ export default defineComponent({
     },
 
     maxPoints(): number {
-      return this.task.images.length;
+      return this.task.cards.length;
     },
 
     allAnswersAreCorrect(): boolean {
@@ -359,8 +361,8 @@ export default defineComponent({
     task: {
       handler() {
         console.log('watcher for this.task');
-        this.images = [...this.task.images];
-        this.shuffleImages();
+        this.cards = [...this.task.cards];
+        this.shuffleCards();
       },
       immediate: true, // Ensure that the watcher is also called immediately when the component is first mounted
     },
@@ -372,14 +374,14 @@ export default defineComponent({
 .stud5p-sequencing {
 }
 
-.image-row {
+.card-row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 0.5em;
 }
 
-.image-container {
+.card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -387,12 +389,11 @@ export default defineComponent({
 
   width: 11.5em;
   height: 13.5em;
-  padding: 0.25em 0.25em 0 0.25em;
+  padding: 0.5em 0.5em 0 0.5em;
 
   border: 2px solid #dbe2e8;
-  border-radius: 6px;
-
-  background: #fff;
+  border-radius: 0.5em;
+  background: white;
 
   cursor: grab;
   user-select: none;
@@ -401,9 +402,9 @@ export default defineComponent({
     box-shadow 0.12s ease;
 }
 
-.image-container:not(.disabled):focus,
-.image-container:not(.disabled):active,
-.image-container:not(.disabled):hover {
+.card:not(.disabled):focus,
+.card:not(.disabled):active,
+.card:not(.disabled):hover {
   border: 2px solid #7ba4d3;
   box-shadow: 0 0 10px 0 #406ef3;
 }

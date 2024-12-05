@@ -1,126 +1,137 @@
 <template>
-  <form class="default">
-    <fieldset class="sequencing-editor">
-      <legend>{{ $gettext('Sequencing') }}</legend>
+  <div class="stud5p-task">
+    <form class="default">
+      <fieldset class="sequencing-editor">
+        <legend>{{ $gettext('Sequencing') }}</legend>
 
-      <div class="cards-list">
-        <div
-          v-for="(card, index) in taskDefinition.images"
-          :key="card.uuid"
-          :class="{
-            'cards-list-item': true,
-            'selected-card': index === this.selectedImageIndex,
-          }"
-          @click="selectImage(index)"
-        >
-          <div v-text="listEntryText(index, card)" class="list-entry-text" />
+        <div class="cards-list">
+          <div
+            v-for="(card, index) in taskDefinition.cards"
+            :key="card.uuid"
+            :class="{
+              'cards-list-item': true,
+              'selected-card': index === this.selectedCardIndex,
+            }"
+            @click="selectCard(index)"
+          >
+            <div v-text="listEntryText(index, card)" class="list-entry-text" />
 
-          <!-- Apply .stop modifier so that the selectCard event handler on the
+            <!-- Apply .stop modifier so that the selectCard event handler on the
             parent element doesn't get called when the delete button is clicked -->
+            <button
+              type="button"
+              class="remove-card-button"
+              @click.stop="deleteCard(index)"
+              :aria-label="$gettext('Karte löschen')"
+            >
+              <img :src="urlForIcon('trash')" alt="" />
+            </button>
+          </div>
+
           <button
             type="button"
-            class="flex-child-element remove-card-button"
-            @click.stop="deleteImage(index)"
-            :aria-label="$gettext('Bild löschen')"
+            class="button add add-card-button"
+            @click="addCard"
           >
-            <img :src="urlForIcon('trash')" alt="" />
+            {{ $gettext('Karte hinzufügen') }}
           </button>
         </div>
 
-        <button
-          type="button"
-          class="button add add-card-button"
-          @click="addImage"
+        <SequencingEditorCard
+          v-if="this.taskDefinition.cards[this.selectedCardIndex]"
+          :card="this.taskDefinition.cards[this.selectedCardIndex]"
+          :card-index="this.selectedCardIndex"
+        />
+
+        <fieldset v-else class="no-card-selected-placeholder">
+          <legend>
+            {{ $gettext('Keine Karte ausgewählt') }}
+          </legend>
+        </fieldset>
+      </fieldset>
+
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Einstellungen') }}</legend>
+
+        <label>
+          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          {{ $gettext('Mehrere Versuche erlauben') }}
+        </label>
+
+        <label>
+          <input v-model="taskDefinition.resumeAllowed" type="checkbox" />
+          {{ $gettext('Fortsetzen des aktuellen Spielstands erlauben') }}
+        </label>
+
+        <label>
+          <input
+            v-model="taskDefinition.showSolutionsAllowed"
+            type="checkbox"
+          />
+          {{ $gettext('Lösungen anzeigen erlauben') }}
+        </label>
+      </fieldset>
+
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+        <label>
+          {{ $gettext('Text für Überprüfen-Button:') }}
+          <input v-model="taskDefinition.strings.checkButton" type="text" />
+        </label>
+
+        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.retryButton"
+            :disabled="!taskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label :class="{ 'setting-disabled': !taskDefinition.resumeAllowed }">
+          {{ $gettext('Text für Fortsetzen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.resumeButton"
+            :disabled="!taskDefinition.resumeAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
         >
-          {{ $gettext('Bild hinzufügen') }}
-        </button>
-      </div>
+          {{ $gettext('Text für Lösungen-Button:') }}
+          <input
+            v-model="taskDefinition.strings.solutionsButton"
+            :disabled="!taskDefinition.showSolutionsAllowed"
+            type="text"
+          />
+        </label>
+      </fieldset>
 
-      <SequencingEditorImage
-        v-if="this.taskDefinition.images[this.selectedImageIndex]"
-        class="edited-memory-card"
-        :image="this.taskDefinition.images[this.selectedImageIndex]"
-        :image-index="this.selectedImageIndex"
+      <FeedbackEditor
+        :feedback="taskDefinition.feedback"
+        :result-message="taskDefinition.strings.resultMessage"
+        @update:feedback="updateFeedback"
+        @update:result-message="updateResultMessage"
       />
-      <div v-else class="edited-memory-card no-card-selected-placeholder">
-        {{ $gettext('Keine Karte ist zum Bearbeiten ausgewählt.') }}
-      </div>
-    </fieldset>
-
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Einstellungen') }}</legend>
-
-      <label>
-        <input v-model="taskDefinition.retryAllowed" type="checkbox" />
-        {{ $gettext('Mehrere Versuche erlauben') }}
-      </label>
-
-      <label>
-        <input v-model="taskDefinition.resumeAllowed" type="checkbox" />
-        {{ $gettext('Fortsetzen des aktuellen Spielstands erlauben') }}
-      </label>
-
-      <label>
-        <input v-model="taskDefinition.showSolutionsAllowed" type="checkbox" />
-        {{ $gettext('Lösungen anzeigen erlauben') }}
-      </label>
-    </fieldset>
-
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Beschriftungen') }}</legend>
-
-      <label>
-        {{ $gettext('Text für Überprüfen-Button:') }}
-        <input v-model="taskDefinition.strings.checkButton" type="text" />
-      </label>
-
-      <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-        {{ $gettext('Text für Wiederholen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.retryButton"
-          :disabled="!taskDefinition.retryAllowed"
-          type="text"
-        />
-      </label>
-
-      <label :class="{ 'setting-disabled': !taskDefinition.resumeAllowed }">
-        {{ $gettext('Text für Fortsetzen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.resumeButton"
-          :disabled="!taskDefinition.resumeAllowed"
-          type="text"
-        />
-      </label>
-
-      <label
-        :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
-      >
-        {{ $gettext('Text für Lösungen-Button:') }}
-        <input
-          v-model="taskDefinition.strings.solutionsButton"
-          :disabled="!taskDefinition.showSolutionsAllowed"
-          type="text"
-        />
-      </label>
-    </fieldset>
-
-    <feedback-editor
-      :feedback="taskDefinition.feedback"
-      :result-message="taskDefinition.strings.resultMessage"
-      @update:feedback="updateFeedback"
-      @update:result-message="updateResultMessage"
-    />
-  </form>
+    </form>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
-import { Feedback, Image, SequencingTask } from '@/models/TaskDefinition';
+import {
+  Feedback,
+  LernmoduleMultimediaElement,
+  SequencingTask,
+} from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { v4 } from 'uuid';
-import SequencingEditorImage from '@/components/SequencingEditorImage.vue';
+import SequencingEditorCard from '@/components/SequencingEditorCard.vue';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import {
   TaskEditorState,
@@ -129,18 +140,18 @@ import {
 
 export default defineComponent({
   name: 'SequencingEditor',
-  components: { SequencingEditorImage, FeedbackEditor },
+  components: { SequencingEditorCard, FeedbackEditor },
   setup() {
     return {
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
   },
   data() {
-    return { selectedImageIndex: -1 };
+    return { selectedCardIndex: -1 };
   },
   beforeMount(): void {
-    if (this.taskDefinition.images.length > 0) {
-      this.selectedImageIndex = 0;
+    if (this.taskDefinition.cards.length > 0) {
+      this.selectedCardIndex = 0;
     }
   },
   methods: {
@@ -152,14 +163,14 @@ export default defineComponent({
       );
     },
 
-    selectImage(index: number) {
-      this.selectedImageIndex = index;
+    selectCard(index: number) {
+      this.selectedCardIndex = index;
     },
 
-    addImage() {
+    addCard() {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.images.push({
-          v: 2,
+        draft.cards.push({
+          type: 'image',
           uuid: v4(),
           file_id: '',
           altText: '',
@@ -172,12 +183,12 @@ export default defineComponent({
       });
 
       // Select the newly inserted image
-      this.selectedImageIndex = this.taskDefinition.images.length - 1;
+      this.selectedCardIndex = this.taskDefinition.cards.length - 1;
     },
 
-    deleteImage(index: number) {
+    deleteCard(index: number) {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.images.splice(index, 1);
+        draft.cards.splice(index, 1);
       });
 
       taskEditorStore.performEdit({
@@ -186,16 +197,16 @@ export default defineComponent({
       });
 
       // Adjust the selection index so the selected card doesn't unexpectedly change
-      if (index <= this.selectedImageIndex) {
-        this.selectedImageIndex = this.selectedImageIndex - 1;
+      if (index <= this.selectedCardIndex) {
+        this.selectedCardIndex = this.selectedCardIndex - 1;
       }
     },
 
-    listEntryText(index: number, image: Image) {
+    listEntryText(index: number, card: LernmoduleMultimediaElement) {
       let text = index + 1 + '. ';
 
-      if (image.altText != '') {
-        text += image.altText;
+      if (card.type === 'image' && card.altText != '') {
+        text += card.altText;
       } else {
         text += $gettext('Bild');
       }
@@ -256,6 +267,10 @@ export default defineComponent({
   user-select: none;
 }
 
+.cards-list-item:last-of-type {
+  margin-bottom: 0.8em;
+}
+
 .selected-card {
   border: #0a78d1 2px solid;
 }
@@ -282,10 +297,11 @@ export default defineComponent({
 }
 
 .add-card-button {
-  margin: 0.8em 0 0 0;
+  margin: 0 0 0 0;
 }
 
-.edited-memory-card {
+.no-card-selected-placeholder {
   flex: 1 1 auto;
+  height: 150px;
 }
 </style>

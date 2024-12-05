@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-pairing stud5p-task">
+  <div class="stud5p-task">
     <div class="pairing-columns">
       <div
         class="draggableElementsColumn"
@@ -30,7 +30,6 @@
         >
           <MultimediaElement
             :element="getElementById(draggableElementId)"
-            draggable="false"
             ref="draggableImages"
           />
         </button>
@@ -450,7 +449,7 @@ export default defineComponent({
 .pairing-elements-grid {
   /* Adapted from https://stackoverflow.com/a/46099319/7359454 */
   display: grid;
-  grid-template-columns: repeat(auto-fill, 8em);
+  grid-template-columns: repeat(auto-fill, minmax(9em, auto));
   grid-auto-rows: max-content;
   justify-content: space-around;
   row-gap: 1em;
@@ -471,13 +470,14 @@ export default defineComponent({
 .draggableElement {
   display: flex;
   margin: unset;
-  padding: unset;
-  background: unset;
-  border: 2px solid transparent;
-  border-radius: 0.5em;
   width: 8em;
   height: 8em;
   box-sizing: content-box;
+
+  border: 2px solid #dbe2e8;
+  border-radius: 0.5em;
+  background: white;
+  padding: 0.5em;
 }
 
 .draggableElement.selected {

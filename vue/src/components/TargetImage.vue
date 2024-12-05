@@ -14,7 +14,6 @@
       <div class="image-container back">
         <MultimediaElement
           :element="targetImage"
-          draggable="false"
           class="image"
           :class="{
             correct: this.isCorrect,
@@ -23,10 +22,9 @@
           }"
         />
       </div>
-      <div class="image-container front">
+      <div class="image-container front" draggable="true">
         <MultimediaElement
           :element="draggableImage"
-          draggable="false"
           class="image"
           :class="{
             correct: this.isCorrect,
@@ -36,13 +34,13 @@
         />
       </div>
     </template>
-    <MultimediaElement v-else :element="targetImage" draggable="false" />
+    <MultimediaElement v-else :element="targetImage" />
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, Image } from '@/models/TaskDefinition';
+import { fileIdToUrl, ImageElement } from '@/models/TaskDefinition';
 import MultimediaElement from '@/components/MultimediaElement.vue';
 
 export default defineComponent({
@@ -50,11 +48,11 @@ export default defineComponent({
   components: { MultimediaElement },
   props: {
     draggableImage: {
-      type: Object as PropType<Image>,
+      type: Object as PropType<ImageElement>,
       required: false,
     },
     targetImage: {
-      type: Object as PropType<Image>,
+      type: Object as PropType<ImageElement>,
       required: true,
     },
     isCorrect: {
@@ -75,13 +73,14 @@ export default defineComponent({
 .grid-square {
   display: flex;
   margin: unset;
-  padding: unset;
-  background: unset;
-  border: 2px solid transparent;
-  border-radius: 0.5em;
   width: 8em;
   height: 8em;
   box-sizing: content-box;
+
+  border: 2px solid #dbe2e8;
+  border-radius: 0.5em;
+  background: white;
+  padding: 0.5em;
 }
 
 .grid-square.one-image {
@@ -94,10 +93,15 @@ export default defineComponent({
 }
 
 .grid-square.two-images .image {
-  border-radius: 0.25em;
+  border-radius: 0.5em;
+  border: 2px solid #dbe2e8;
+  padding: 0.25em;
+  background: white;
 }
 
 .grid-square.two-images:not(:hover):not(.showResult) {
+  background: unset;
+  border: 2px solid transparent;
 }
 
 .grid-square.two-images:is(.correct):is(.showResult) {
