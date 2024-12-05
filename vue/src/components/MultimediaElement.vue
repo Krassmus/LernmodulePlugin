@@ -1,5 +1,5 @@
 <template>
-  <span class="multimedia-element">
+  <span class="multimedia-element" v-disable-drag>
     <span v-if="element.type === 'image'" class="image-element-wrapper">
       <LazyImage
         v-if="element.file_id"

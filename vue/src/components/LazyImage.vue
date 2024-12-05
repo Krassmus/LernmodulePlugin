@@ -7,6 +7,7 @@
     @error="onError"
     class="lazy-image"
     v-bind="$attrs"
+    v-disable-drag
   />
   <span v-else class="placeholder" />
 </template>
