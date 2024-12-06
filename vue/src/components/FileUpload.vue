@@ -45,22 +45,25 @@ export default defineComponent({
       uploadRequestPromise: undefined as Promise<unknown> | undefined,
       selectedFolderId: undefined as string | undefined,
       errors: [] as string[],
+      uploadFolderName: 'Lernmodule Uploads',
     };
   },
   async mounted() {
     const folders = await getFolders({ userId: this.userId });
-    folders.forEach((value) =>
-      console.log('Loaded user folder', value.attributes.name)
-    );
 
     const lernmoduleUploads = folders.find(
-      (f) => f.attributes.name === 'Lernmodule Uploads'
+      (f) => f.attributes.name === this.uploadFolderName
     );
 
     if (lernmoduleUploads) {
-      console.log('Found Lernmodule Uploads folder.');
+      console.log('Found', this.uploadFolderName, 'folder.');
       this.selectedFolderId = lernmoduleUploads.id;
     } else {
+      console.log(
+        'Folder',
+        this.uploadFolderName,
+        "not found. Trying to create it under the user's root folder."
+      );
       try {
         const rootFolder = folders.find(
           (f) => f.attributes['folder-type'] === 'RootFolder'
@@ -77,23 +80,35 @@ export default defineComponent({
         }
 
         if (rootFolder) {
-          console.log('Loaded root folder', rootFolder);
+          console.log(
+            'Found user root folder',
+            rootFolder.attributes.name,
+            '(' + rootFolder.attributes['folder-type'] + ')'
+          );
         }
 
         const newFolder = await createFolder({
           userId: this.userId,
-          name: 'Lernmodule Uploads',
+          name: this.uploadFolderName,
           parentFolderId: rootFolder.id, // Use the root folder ID
+          folderType: 'PublicFolder',
         });
 
         if (newFolder) {
-          console.log('Created folder', newFolder.attributes.name);
+          console.log(
+            'Created folder',
+            newFolder.attributes.name,
+            'in folder',
+            rootFolder.attributes.name
+          );
         }
 
         this.selectedFolderId = newFolder.id;
       } catch (error) {
         const errorMessage = $gettext(
-          'Das Verzeichnis "Lernmodule Uploads" konnte nicht erstellt werden. ' +
+          'Das Verzeichnis' +
+            this.uploadFolderName +
+            'konnte nicht erstellt werden. ' +
             'Es können keine Dateien hochgeladen werden.'
         );
         this.errors.push(errorMessage);

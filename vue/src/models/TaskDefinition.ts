@@ -374,7 +374,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter richtig ausgewählt.',
+          resultMessage: ':correct von :total Wörtern richtig ausgewählt.',
         },
         feedback: defaultFeedback(),
       };
@@ -425,7 +425,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Antworten überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Bilder richtig zugeordnet.',
+          resultMessage: ':correct von :total Bildern richtig zugeordnet.',
         },
         feedback: defaultFeedback(),
       };
@@ -507,7 +507,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           retryButton: 'Erneut versuchen',
           resumeButton: 'Fortsetzen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Elemente richtig sortiert.',
+          resultMessage: ':correct von :total Elementen richtig sortiert.',
         },
         feedback: defaultFeedback(),
       };
