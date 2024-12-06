@@ -66,10 +66,12 @@ export async function createFolder({
   userId,
   name,
   parentFolderId,
+  folderType,
 }: {
   userId: string;
   name: string;
   parentFolderId: string;
+  folderType: string;
 }): Promise<FolderRef> {
   // Construct the endpoint for creating a folder for a user
   const url = `users/${userId}/folders`;
@@ -79,7 +81,8 @@ export async function createFolder({
     data: {
       type: 'folders',
       attributes: {
-        name,
+        'folder-type': folderType,
+        name: name,
       },
       relationships: {
         parent: {
