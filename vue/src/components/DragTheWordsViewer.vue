@@ -587,7 +587,6 @@ export default defineComponent({
   min-width: 9em;
   max-width: 9em;
   vertical-align: middle;
-  line-height: 1.25em;
 
   overflow: hidden;
   white-space: nowrap;
@@ -646,7 +645,6 @@ span.item:empty:before {
   display: inline-block;
   min-width: 9em;
   max-width: 9em;
-  line-height: 1.25em;
 
   white-space: nowrap;
   overflow: hidden;

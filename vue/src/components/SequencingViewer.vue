@@ -371,9 +371,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.stud5p-sequencing {
-}
-
 .card-row {
   display: flex;
   flex-direction: row;

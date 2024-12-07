@@ -96,7 +96,7 @@
 
       <div v-if="showViewerAboveEditor(taskDefinition.task_type)">
         <h1 style="margin-top: 1em">{{ $gettext('Vorschau') }}</h1>
-        <div class="stud5p-viewer">
+        <div>
           <component
             :is="viewerForTaskType(taskDefinition.task_type)"
             :task="taskDefinition"

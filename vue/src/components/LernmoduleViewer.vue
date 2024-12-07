@@ -1,5 +1,5 @@
 <template>
-  <div class="stud5p-viewer">
+  <div>
     <!--  <h1>Variables passed from server:</h1>-->
     <!--  <pre>{{ LernmoduleVueJS }}</pre>-->
     <component
