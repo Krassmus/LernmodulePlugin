@@ -376,6 +376,7 @@ export default defineComponent({
   flex-direction: row;
   flex-wrap: wrap;
   gap: 0.5em;
+  justify-content: space-around;
 }
 
 .card {

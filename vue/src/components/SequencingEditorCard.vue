@@ -8,7 +8,7 @@
       class="image-card-container"
     >
       <div class="multimedia-element-wrapper">
-        <MultimediaElement :element="card" class="multimedia-element" />
+        <MultimediaElement :element="card" />
       </div>
 
       <button
@@ -161,9 +161,19 @@ export default defineComponent({
   flex: 1 1 auto;
 }
 
-.multimedia-element {
-  width: 10em;
-  height: 10em;
+.multimedia-element-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  width: 11.5em;
+  height: 11.5em;
+  padding: 0.5em;
+
+  border: 2px solid #dbe2e8;
+  border-radius: 0.5em;
+  background: white;
 }
 
 .image-card-container {
