@@ -51,7 +51,7 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 }
 
 .stud5p-button {
-  padding: 0.5em 1em; /* vertical, horizontal */
+  padding: 0.25em 1em; /* vertical, horizontal */
   border-radius: 2em;
   background: rgb(26, 115, 217);
   color: #fff;
