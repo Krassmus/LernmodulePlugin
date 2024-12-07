@@ -344,7 +344,7 @@ export default defineComponent({
 <style scoped>
 .memory-grid {
   display: grid;
-  grid-gap: 1em;
+  grid-gap: 1.5em;
   justify-items: center;
 }
 
