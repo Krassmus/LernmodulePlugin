@@ -187,6 +187,15 @@ export default defineComponent({
   height: 8em;
 
   display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 2px solid #dbe2e8;
+  border-radius: 0.5em;
+  background: white;
+
+  padding: 0.5em;
+  margin: 0;
 
   overflow: hidden;
 }
