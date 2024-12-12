@@ -478,6 +478,7 @@ export default defineComponent({
 
 .draggableElement.selected {
   border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
 }
 
 .draggableElement:not(.disabled):not(.selected):hover {
