@@ -41,12 +41,12 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 
   border: 2px solid #dbe2e8;
   border-radius: 0.5em;
   background: white;
 
-  gap: 0.25em;
   padding: 0.25em;
   margin: 0;
 
