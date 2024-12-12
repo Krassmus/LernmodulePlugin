@@ -598,6 +598,8 @@ export default defineComponent({
 
   border: 1px solid #a9c3d0;
   border-radius: 0.25em;
+
+  line-height: 1.5em;
 }
 
 .filled {
@@ -656,6 +658,8 @@ span.item:empty:before {
 
   border: 1px solid #c6c6c6;
   border-radius: 0.25em;
+
+  line-height: 1.5em;
 
   cursor: grabbing;
 }
