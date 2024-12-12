@@ -318,6 +318,12 @@ export default defineComponent({
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: center;
+
+  cursor: pointer;
+}
+
+.add-pair-button:hover {
+  filter: brightness(0.9);
 }
 
 .remove-pair-button {
