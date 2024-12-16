@@ -57,8 +57,8 @@ button {
 }
 
 .memory-card {
-  width: 12em;
-  height: 12em;
+  width: 11em;
+  height: 11em;
 
   position: relative;
 
@@ -85,8 +85,8 @@ button {
 
 .memory-card-front,
 .memory-card-back {
-  width: 12em;
-  height: 12em;
+  width: 11em;
+  height: 11em;
 
   position: absolute;
 
