@@ -1,16 +1,16 @@
 <template>
-  <span>Find The Hotspot - Viewer</span><br />
+  <span>Find The Hotspots - Viewer</span><br />
   <img :src="fileIdToUrl(task.image.file_id)" />
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, FindTheHotspotTask } from '@/models/TaskDefinition';
+import { fileIdToUrl, FindTheHotspotsTask } from '@/models/TaskDefinition';
 
 export default defineComponent({
-  name: 'FindTheHotspotViewer',
+  name: 'FindTheHotspotsViewer',
   props: {
-    task: { type: Object as PropType<FindTheHotspotTask>, required: true },
+    task: { type: Object as PropType<FindTheHotspotsTask>, required: true },
   },
   emits: ['updateAttempt'],
   data() {

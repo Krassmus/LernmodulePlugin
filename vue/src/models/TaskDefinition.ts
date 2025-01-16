@@ -5,8 +5,8 @@ import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
 import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
-import FindTheHotspotEditor from '@/components/FindTheHotspotEditor.vue';
-import FindTheHotspotViewer from '@/components/FindTheHotspotViewer.vue';
+import FindTheHotspotsEditor from '@/components/FindTheHotspotsEditor.vue';
+import FindTheHotspotsViewer from '@/components/FindTheHotspotsViewer.vue';
 import FindTheWordsEditor from '@/components/FindTheWordsEditor.vue';
 import FindTheWordsViewer from '@/components/FindTheWordsViewer.vue';
 import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
@@ -100,11 +100,11 @@ export const dragTheWordsTaskSchema = z.object({
 });
 export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 
-export const findTheHotspotTaskSchema = z.object({
-  task_type: z.literal('FindTheHotspot'),
+export const findTheHotspotsTaskSchema = z.object({
+  task_type: z.literal('FindTheHotspots'),
   image: imageElementSchema,
 });
-export type FindTheHotspotTask = z.infer<typeof findTheHotspotTaskSchema>;
+export type FindTheHotspotsTask = z.infer<typeof findTheHotspotsTaskSchema>;
 
 export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
@@ -239,7 +239,7 @@ export type SequencingTask = z.infer<typeof sequencingTaskSchema>;
 export const taskDefinitionSchema = z.discriminatedUnion('task_type', [
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
-  findTheHotspotTaskSchema,
+  findTheHotspotsTaskSchema,
   findTheWordsTaskSchema,
   interactiveVideoTaskSchema,
   markTheWordsTaskSchema,
@@ -261,7 +261,7 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
   [
     dragTheWordsTaskSchema,
     fillInTheBlanksTaskSchema,
-    findTheHotspotTaskSchema,
+    findTheHotspotsTaskSchema,
     findTheWordsTaskSchema,
     markTheWordsTaskSchema,
     memoryTaskSchema,
@@ -277,7 +277,7 @@ export const taskTypeSchema = z.union([
   dragTheWordsTaskSchema.shape.task_type,
   interactiveVideoTaskSchema.shape.task_type,
   fillInTheBlanksTaskSchema.shape.task_type,
-  findTheHotspotTaskSchema.shape.task_type,
+  findTheHotspotsTaskSchema.shape.task_type,
   findTheWordsTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
@@ -348,9 +348,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         },
         feedback: defaultFeedback(),
       };
-    case 'FindTheHotspot':
+    case 'FindTheHotspots':
       return {
-        task_type: 'FindTheHotspot',
+        task_type: 'FindTheHotspots',
         image: {
           type: 'image',
           uuid: v4(),
@@ -524,8 +524,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
       return InteractiveVideoViewer;
     case 'FillInTheBlanks':
       return FillInTheBlanksViewer;
-    case 'FindTheHotspot':
-      return FindTheHotspotViewer;
+    case 'FindTheHotspots':
+      return FindTheHotspotsViewer;
     case 'FindTheWords':
       return FindTheWordsViewer;
     case 'MarkTheWords':
@@ -551,8 +551,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
       return InteractiveVideoEditor;
     case 'FillInTheBlanks':
       return FillInTheBlanksEditor;
-    case 'FindTheHotspot':
-      return FindTheHotspotEditor;
+    case 'FindTheHotspots':
+      return FindTheHotspotsEditor;
     case 'FindTheWords':
       return FindTheWordsEditor;
     case 'MarkTheWords':
@@ -578,8 +578,8 @@ export function printTaskType(type: TaskDefinition['task_type']): string {
       return $gettext('Interactive Video');
     case 'FillInTheBlanks':
       return $gettext('Fill In The Blanks');
-    case 'FindTheHotspot':
-      return $gettext('Find The Hotspot');
+    case 'FindTheHotspots':
+      return $gettext('Find The Hotspots');
     case 'FindTheWords':
       return $gettext('Find The Words');
     case 'MarkTheWords':
