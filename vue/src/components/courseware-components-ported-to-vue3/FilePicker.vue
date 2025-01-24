@@ -167,8 +167,17 @@ export default defineComponent({
   },
   async mounted() {
     console.log('mounted');
-    if (this.value !== '') {
-      await this.loadFileRef({ id: this.value });
+    if (this.value) {
+      try {
+        await this.loadFileRef({ id: this.value });
+      } catch (error: unknown) {
+        console.error(
+          'loadfileRef threw an error. File picker will not be ' +
+            'initialized to show the selected file.',
+          error
+        );
+        return;
+      }
       const fileRef = this.fileRefById({ id: this.value });
 
       if (fileRef) {
