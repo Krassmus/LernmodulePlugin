@@ -1,22 +1,21 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: uol 5.1\n"
-"PO-Revision-Date: 2024-06-07 13:32+0000\n"
+"PO-Revision-Date: 2025-01-24 12:04+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/rasmusfuhse-"
-"lernmoduleplugin/js/en/>\n"
+"Language-Team: English <https://weblate.uni-vechta.de/projects/"
+"rasmusfuhse-lernmoduleplugin/js/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3.1\n"
+"X-Generator: Weblate 5.7.2\n"
 
 #: src/components/MemoryViewer.vue:38 src/components/MemoryViewer.vue:39
 #: src/components/MemoryViewer.vue:54 src/components/MemoryViewer.vue:58
-#, fuzzy
 msgid "%{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
-msgstr "Pairs revealed: %{ amountOfPairsSolved } of %{ totalAmountOfPairs }"
+msgstr "%{ amountOfPairsSolved } of %{ totalAmountOfPairs }"
 
 #: src/components/interactiveVideo/AddInteractions.vue:315
 msgid "%{ interaction } löschen"
@@ -36,7 +35,7 @@ msgstr "Insert %{ interactionType }"
 #: src/components/MemoryViewer.vue:23 src/components/MemoryViewer.vue:24
 #: src/components/MemoryViewer.vue:34 src/components/MemoryViewer.vue:35
 msgid "%{ time } Sekunden"
-msgstr ""
+msgstr "%{ time } Seconds"
 
 #: src/components/interactiveVideo/InteractiveVideoEditor.vue:3
 msgid "1. Video auswählen"
