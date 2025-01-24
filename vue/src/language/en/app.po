@@ -12,7 +12,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.3.1\n"
 
-#: src/components/interactiveVideo/AddInteractions.vue:249
+#: src/components/MemoryViewer.vue:38 src/components/MemoryViewer.vue:39
+#: src/components/MemoryViewer.vue:54 src/components/MemoryViewer.vue:58
+#, fuzzy
+msgid "%{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
+msgstr "Pairs revealed: %{ amountOfPairsSolved } of %{ totalAmountOfPairs }"
+
+#: src/components/interactiveVideo/AddInteractions.vue:315
 msgid "%{ interaction } löschen"
 msgstr "Delete %{ interaction }"
 
@@ -27,6 +33,11 @@ msgstr "Delete %{ interaction }"
 msgid "%{ interactionType } einfügen"
 msgstr "Insert %{ interactionType }"
 
+#: src/components/MemoryViewer.vue:23 src/components/MemoryViewer.vue:24
+#: src/components/MemoryViewer.vue:34 src/components/MemoryViewer.vue:35
+msgid "%{ time } Sekunden"
+msgstr ""
+
 #: src/components/interactiveVideo/InteractiveVideoEditor.vue:3
 msgid "1. Video auswählen"
 msgstr "1. Select video"
@@ -35,11 +46,18 @@ msgstr "1. Select video"
 msgid "2. Interaktionen hinzufügen"
 msgstr "2. Add interactions"
 
-#: src/components/CoursewareBlock.vue:10 src/components/CoursewareBlock.vue:15
-#: src/components/CoursewareBlock.vue:18 src/components/CoursewareBlock.vue:9
+#: src/components/FeedbackEditor.vue:18 src/components/FeedbackEditor.vue:19
+#: src/components/FeedbackEditor.vue:24
+#, fuzzy
+msgid "Ab Prozent"
+msgstr "Percentage"
+
+#: src/components/CoursewareBlock.vue:15 src/components/CoursewareBlock.vue:16
+#: src/components/CoursewareBlock.vue:21 src/components/CoursewareBlock.vue:24
 msgid "Abbrechen"
 msgstr "Cancel"
 
+#: src/components/AudioElement.vue:26
 #: src/components/interactiveVideo/AddInteractions.vue:52
 msgid "Abspielen"
 msgstr "Play"
@@ -52,27 +70,10 @@ msgstr "Play"
 msgid "Aktuelle Position setzen"
 msgstr "Set to current position"
 
-#: src/components/DragTheWordsViewer.vue:501
-#: src/components/FillInTheBlanksViewer.vue:436
+#: src/components/DragTheWordsViewer.vue:568
+#: src/components/FillInTheBlanksViewer.vue:499
 msgid "Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen"
 msgstr "All of the blanks must be filled in order to show the solutions"
-
-#: src/components/FillInTheBlanksEditor.vue:68
-#: src/components/FillInTheBlanksEditor.vue:69
-#: src/components/FillInTheBlanksEditor.vue:80
-#: src/components/FillInTheBlanksEditor.vue:99
-msgid "Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen."
-msgstr "All of the blanks must be filled in order to show the solutions."
-
-#: src/components/EditedImagePair.vue:10 src/components/EditedImagePair.vue:13
-#: src/components/EditedImagePair.vue:17 src/components/EditedImagePair.vue:18
-#: src/components/EditedImagePair.vue:29 src/components/EditedImagePair.vue:9
-#: src/components/EditedMemoryCard.vue:10 src/components/EditedMemoryCard.vue:9
-#: src/components/ImageSequencingEditorImage.vue:10
-#: src/components/ImageSequencingEditorImage.vue:15
-#: src/components/ImageSequencingEditorImage.vue:9
-msgid "Alternativer Text"
-msgstr "Alternative text"
 
 #: src/components/interactiveVideo/SelectVideo.vue:114
 #: src/components/interactiveVideo/SelectVideo.vue:119
@@ -81,35 +82,42 @@ msgstr "Alternative text"
 msgid "Anfangen um"
 msgstr "Start at"
 
-#: src/components/DragTheWordsEditor.vue:35
-#: src/components/DragTheWordsEditor.vue:36
+#: src/components/AudioElement.vue:37
+msgid "Anhalten"
+msgstr ""
+
+#: src/components/QuestionEditor.vue:24 src/components/QuestionEditor.vue:25
+#, fuzzy
+msgid "Antwort löschen"
+msgstr "Delete card"
+
+#: src/components/DragTheWordsEditor.vue:32
+#: src/components/DragTheWordsEditor.vue:33
 #: src/components/DragTheWordsEditor.vue:47
-#: src/components/DragTheWordsEditor.vue:51
 msgid "Antworten alphabetisch sortieren"
 msgstr "Sort answers alphabetically"
 
-#: src/components/PairingEditor.vue:26 src/components/PairingEditor.vue:27
-#: src/components/PairingEditor.vue:31 src/components/PairingEditor.vue:34
-#: src/components/PairingEditor.vue:36 src/components/PairingEditor.vue:53
-#: src/components/PairingEditor.vue:54 src/components/PairingEditor.vue:61
-#: src/components/PairingEditor.vue:64 src/components/PairingEditor.vue:67
-#: src/components/PairingEditor.vue:69
-msgid "Audio"
-msgstr "Audio"
+#: src/components/QuestionEditor.vue:59 src/components/QuestionEditor.vue:60
+#: src/components/QuestionEditor.vue:90
+#, fuzzy
+msgid "Antworten in zufälliger Reihenfolge anzeigen"
+msgstr "Show answers in a random order"
 
-#: src/components/LernmoduleEditor.vue:30
-#: src/components/LernmoduleEditor.vue:40
+#: src/components/LernmoduleEditor.vue:33
+#: src/components/LernmoduleEditor.vue:34
+#: src/components/LernmoduleEditor.vue:41
 msgid "Aufgabenbeschreibung"
 msgstr "Task description"
 
-#: src/components/LernmoduleEditor.vue:36
-#: src/components/LernmoduleEditor.vue:52
+#: src/components/LernmoduleEditor.vue:40
+#: src/components/LernmoduleEditor.vue:41
+#: src/components/LernmoduleEditor.vue:54
 msgid "Aufgabentyp auswählen:"
 msgstr "Select task type:"
 
-#: src/components/MemoryViewer.vue:6 src/components/MemoryViewer.vue:7
-msgid "Aufgedeckte Paare: %{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
-msgstr "Pairs revealed: %{ amountOfPairsSolved } of %{ totalAmountOfPairs }"
+#: src/components/MemoryViewer.vue:53
+msgid "Aufgedeckte Paare:"
+msgstr "Pairs revealed:"
 
 #: src/components/interactiveVideo/SelectVideo.vue:109
 #: src/components/interactiveVideo/SelectVideo.vue:114
@@ -118,85 +126,94 @@ msgstr "Pairs revealed: %{ amountOfPairsSolved } of %{ totalAmountOfPairs }"
 msgid "Automatisch abspielen"
 msgstr "Auto-play"
 
-#: src/components/DragTheWordsEditor.vue:23
-#: src/components/DragTheWordsEditor.vue:24
-#: src/components/DragTheWordsEditor.vue:35
-#: src/components/FillInTheBlanksEditor.vue:33
-#: src/components/FillInTheBlanksEditor.vue:34
-#: src/components/FillInTheBlanksEditor.vue:45
-msgid "automatisch nach Eingabe"
-msgstr "automatically after entry"
-
 #: src/components/interactiveVideo/VideoPlayer.vue:44
 msgid "Bearbeiten"
 msgstr "Edit"
 
-#: src/components/LernmoduleEditor.vue:148
+#: src/components/LernmoduleEditor.vue:171
 msgid "Beim Speichern ist ein Fehler aufgetreten."
 msgstr "An error occurred while saving."
 
-#: src/components/DragTheWordsEditor.vue:104
-#: src/components/DragTheWordsEditor.vue:108
-#: src/components/DragTheWordsEditor.vue:73
-#: src/components/DragTheWordsEditor.vue:74
-#: src/components/FillInTheBlanksEditor.vue:138
-#: src/components/FillInTheBlanksEditor.vue:142
-#: src/components/FillInTheBlanksEditor.vue:94
-#: src/components/FillInTheBlanksEditor.vue:95
-#: src/components/MarkTheWordsEditor.vue:24
-#: src/components/MarkTheWordsEditor.vue:25
-#: src/components/MarkTheWordsEditor.vue:36
-#: src/components/MarkTheWordsEditor.vue:40
+#: src/components/FeedbackEditor.vue:17
 msgid "Benutzerdefiniertes Feedback für beliebige Punktebereiche:"
 msgstr "User-defined feedback for arbitrary point ranges:"
 
-#: src/components/EditedMemoryCard.vue:5 src/components/EditedMemoryCard.vue:6
-#: src/components/ImageSequencingEditorImage.vue:3
-#: src/components/ImageSequencingEditorImage.vue:4
-#: src/components/PairingEditor.vue:20 src/components/PairingEditor.vue:21
-#: src/components/PairingEditor.vue:25 src/components/PairingEditor.vue:28
-#: src/components/PairingEditor.vue:30 src/components/PairingEditor.vue:47
-#: src/components/PairingEditor.vue:48 src/components/PairingEditor.vue:55
-#: src/components/PairingEditor.vue:58 src/components/PairingEditor.vue:61
-#: src/components/PairingEditor.vue:63
+#: src/components/DragTheWordsEditor.vue:54
+#: src/components/DragTheWordsEditor.vue:55
+#: src/components/DragTheWordsEditor.vue:79
+#: src/components/FillInTheBlanksEditor.vue:53
+#: src/components/FillInTheBlanksEditor.vue:54
+#: src/components/FillInTheBlanksEditor.vue:75
+#: src/components/MarkTheWordsEditor.vue:32
+#: src/components/MarkTheWordsEditor.vue:33
+#: src/components/MarkTheWordsEditor.vue:47 src/components/MemoryEditor.vue:63
+#: src/components/MemoryEditor.vue:64 src/components/MemoryEditor.vue:96
+#: src/components/PairingEditor.vue:42 src/components/PairingEditor.vue:43
+#: src/components/PairingEditor.vue:70 src/components/QuestionEditor.vue:108
+#: src/components/QuestionEditor.vue:74 src/components/QuestionEditor.vue:75
+#: src/components/SequencingEditor.vue:54
+#: src/components/SequencingEditor.vue:55
+#: src/components/SequencingEditor.vue:76
+msgid "Beschriftungen"
+msgstr ""
+
+#: src/components/PairingEditorCard.vue:8
+#: src/components/PairingEditorCard.vue:9
+#: src/components/SequencingEditor.vue:211
+#: src/components/SequencingEditorCard.vue:4
+#: src/components/SequencingEditorCard.vue:5
 msgid "Bild"
 msgstr "Image"
 
-#: src/components/ImageSequencingEditor.vue:13
-#: src/components/ImageSequencingEditor.vue:14
-#: src/components/ImageSequencingEditor.vue:24
-msgid "Bild hinzufügen"
-msgstr "Add image"
+#: src/components/MemoryEditorCard.vue:11
+#: src/components/MemoryEditorCard.vue:12
+#: src/components/MemoryEditorCard.vue:15
+#: src/components/MemoryEditorCard.vue:29
+#: src/components/MemoryEditorCard.vue:30
+#: src/components/MemoryEditorCard.vue:43
+#: src/components/MemoryEditorCard.vue:50
+#: src/components/PairingEditorCard.vue:28
+#: src/components/SequencingEditorCard.vue:11
+#: src/components/SequencingEditorCard.vue:12
+#: src/components/SequencingEditorCard.vue:15
+#, fuzzy
+msgid "Bild löschen"
+msgstr "Delete image"
 
-#: src/components/EditedMemoryCardImage.vue:3
-#: src/components/EditedMemoryCardImage.vue:4
+#: src/components/MemoryEditor.vue:54 src/components/MemoryEditor.vue:55
+#: src/components/MemoryEditor.vue:75 src/components/MemoryEditor.vue:76
+#: src/components/MemoryEditor.vue:79 src/components/MemoryEditor.vue:83
 msgid "Bild Löschen"
 msgstr "Delete image"
 
-#: src/components/ImageSequencingEditorImage.vue:5
-#: src/components/ImageSequencingEditorImage.vue:6
-msgid "Das Bild"
-msgstr "The image"
+#: src/components/MemoryEditorCard.vue:14
+#: src/components/MemoryEditorCard.vue:15
+#: src/components/MemoryEditorCard.vue:22
+#: src/components/MemoryEditorCard.vue:32
+#: src/components/MemoryEditorCard.vue:33
+#: src/components/MemoryEditorCard.vue:46
+#: src/components/MemoryEditorCard.vue:57
+#: src/components/PairingEditorCard.vue:28
+#: src/components/PairingEditorCard.vue:29
+#: src/components/PairingEditorCard.vue:37
+#: src/components/SequencingEditorCard.vue:15
+#: src/components/SequencingEditorCard.vue:16
+#: src/components/SequencingEditorCard.vue:23
+#, fuzzy
+msgid "Bildbeschreibung"
+msgstr "Task description"
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:192
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:206
+#: src/components/interactiveVideo/SelectedInteractionProperties.vue:194
+#: src/components/interactiveVideo/SelectedInteractionProperties.vue:208
 msgid "Das eingegebene Wert muss größer als 0 sein."
 msgstr "The value entered must be greater than 0."
 
-#: src/components/FileUpload.vue:53
+#: src/components/FileUpload.vue:73
+#, fuzzy
 msgid ""
-"Das Verzeichnis \"Wysiwyg Uploads\" ist nicht vorhanden. Es können keine "
-"Dateien hochgeladen werden."
+"Das Stammverzeichnis des Benutzers konnte nicht gefunden werden. Es können "
+"keine Dateien hochgeladen werden."
 msgstr "The folder 'Wysiwyg Uploads' was not found. No files can be uploaded."
-
-#: src/components/EditedImagePair.vue:13 src/components/EditedImagePair.vue:14
-#: src/components/EditedImagePair.vue:22
-msgid "Das Zielbild"
-msgstr "The target image"
-
-#: src/components/EditedImagePair.vue:5 src/components/EditedImagePair.vue:6
-msgid "Das zu ziehende Bild"
-msgstr "The image that should be dragged"
 
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:5
 #: src/components/courseware-components-ported-to-vue3/FilePicker.vue:6
@@ -212,8 +229,8 @@ msgstr "File is being uploaded"
 msgid "Dateibereich dieser Veranstaltung"
 msgstr "This course's file area"
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:195
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:209
+#: src/components/interactiveVideo/SelectedInteractionProperties.vue:197
+#: src/components/interactiveVideo/SelectedInteractionProperties.vue:211
 msgid "Der Startpunkt muss vor dem Endpunkt sein."
 msgstr "The start point must be before the end point."
 
@@ -223,22 +240,35 @@ msgid ""
 msgstr ""
 "The start position must be entered using the syntax HH;MM;SS or HH;MM;SS;SS."
 
-#: src/components/DragTheWordsEditor.vue:3
+#: src/functions.ts:8
+msgid ""
+"Diese Aufgabe konnte nicht geladen werden. Beim Einlesen von task_json ist "
+"ein Fehler aufgetreten. Fehler: "
+msgstr ""
+
 #: src/components/DragTheWordsEditor.vue:4
+#: src/components/DragTheWordsEditor.vue:5
 #: src/components/LernmoduleEditor.vue:42
-#: src/components/LernmoduleEditor.vue:58
-#: src/components/LernmoduleEditor.vue:62 src/models/TaskDefinition.ts:607
+#: src/components/LernmoduleEditor.vue:43
+#: src/components/LernmoduleEditor.vue:56
+#: src/components/LernmoduleEditor.vue:60
+msgid "Drag the Words"
+msgstr "Drag the Words"
+
+#: src/models/TaskDefinition.ts:576
 msgid "Drag The Words"
 msgstr "Drag The Words"
 
-#: src/components/PairingEditor.vue:10 src/components/PairingEditor.vue:11
-#: src/components/PairingEditor.vue:18
-msgid "Eigenschaften"
-msgstr "Properties"
+#: src/components/FeedbackElement.vue:10 src/components/FeedbackElement.vue:11
+#: src/components/FeedbackElement.vue:15 src/components/FeedbackElement.vue:22
+msgid ""
+"Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung "
+"anzeigt"
+msgstr ""
 
 #: src/components/interactiveVideo/AddInteractions.vue:14
 #: src/components/interactiveVideo/AddInteractions.vue:18
-#: src/components/interactiveVideo/AddInteractions.vue:217
+#: src/components/interactiveVideo/AddInteractions.vue:283
 #: src/components/interactiveVideo/AddInteractions.vue:7
 #: src/components/interactiveVideo/AddInteractions.vue:8
 #: src/components/interactiveVideo/interactions/OverlayInteraction.vue:4
@@ -247,12 +277,12 @@ msgstr "Properties"
 msgid "Einblendung"
 msgstr "Overlay"
 
-#: src/components/DragTheWordsEditor.vue:14
-#: src/components/DragTheWordsEditor.vue:15
-#: src/components/DragTheWordsEditor.vue:26
-#: src/components/FillInTheBlanksEditor.vue:14
-#: src/components/FillInTheBlanksEditor.vue:15
-#: src/components/FillInTheBlanksEditor.vue:26
+#: src/components/DragTheWordsEditor.vue:23
+#: src/components/DragTheWordsEditor.vue:24
+#: src/components/DragTheWordsEditor.vue:38
+#: src/components/FillInTheBlanksEditor.vue:17
+#: src/components/FillInTheBlanksEditor.vue:18
+#: src/components/FillInTheBlanksEditor.vue:29
 #: src/components/FindTheWordsEditor.vue:11
 #: src/components/FindTheWordsEditor.vue:12
 #: src/components/FindTheWordsEditor.vue:17
@@ -262,8 +292,16 @@ msgstr "Overlay"
 #: src/components/interactiveVideo/SelectVideo.vue:110
 #: src/components/interactiveVideo/SelectVideo.vue:29
 #: src/components/interactiveVideo/SelectVideo.vue:79
-#: src/components/QuestionEditor.vue:41 src/components/QuestionEditor.vue:43
-#: src/components/QuestionEditor.vue:76
+#: src/components/MarkTheWordsEditor.vue:18
+#: src/components/MarkTheWordsEditor.vue:19
+#: src/components/MarkTheWordsEditor.vue:30 src/components/MemoryEditor.vue:37
+#: src/components/MemoryEditor.vue:38 src/components/MemoryEditor.vue:58
+#: src/components/PairingEditor.vue:28 src/components/PairingEditor.vue:29
+#: src/components/PairingEditor.vue:53 src/components/QuestionEditor.vue:50
+#: src/components/QuestionEditor.vue:51 src/components/QuestionEditor.vue:81
+#: src/components/SequencingEditor.vue:35
+#: src/components/SequencingEditor.vue:36
+#: src/components/SequencingEditor.vue:54
 msgid "Einstellungen"
 msgstr "Settings"
 
@@ -273,117 +311,127 @@ msgstr "Settings"
 msgid "Ende"
 msgstr "End"
 
-#: src/components/DragTheWordsEditor.vue:238
-#: src/components/FillInTheBlanksEditor.vue:227
-#: src/components/MarkTheWordsEditor.vue:134
+#: src/components/FeedbackEditor.vue:107
 msgid "Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt."
 msgstr "Remove the feedback range starting at %{ percentage }%."
 
-#: src/components/DragTheWordsEditor.vue:66
-#: src/components/DragTheWordsEditor.vue:67
-#: src/components/DragTheWordsEditor.vue:97
-#: src/components/FillInTheBlanksEditor.vue:131
-#: src/components/FillInTheBlanksEditor.vue:87
-#: src/components/FillInTheBlanksEditor.vue:88
-#: src/components/MarkTheWordsEditor.vue:17
-#: src/components/MarkTheWordsEditor.vue:18
-#: src/components/MarkTheWordsEditor.vue:29
+#: src/components/FeedbackEditor.vue:6 src/components/FeedbackEditor.vue:7
 msgid "Ergebnismitteilung (mögliche Variablen :correct und :total):"
 msgstr "Result message (possible variables :correct and :total):"
 
-#: src/components/DragTheWordsEditor.vue:63
-#: src/components/DragTheWordsEditor.vue:64
-#: src/components/DragTheWordsEditor.vue:94
-#: src/components/FillInTheBlanksEditor.vue:128
-#: src/components/FillInTheBlanksEditor.vue:84
-#: src/components/FillInTheBlanksEditor.vue:85
-#: src/components/MarkTheWordsEditor.vue:14
-#: src/components/MarkTheWordsEditor.vue:15
-#: src/components/MarkTheWordsEditor.vue:26
+#: src/components/MemoryEditor.vue:112 src/components/MemoryEditor.vue:75
+#: src/components/MemoryEditor.vue:76
+#, fuzzy
+msgid "Ergebnismitteilung:"
+msgstr "Notification"
+
+#: src/components/ErrorMessage.vue:2 src/components/ErrorMessage.vue:3
+#, fuzzy
+msgid "Es ist ein Fehler aufgetreten!"
+msgstr "An error occurred while saving."
+
+#: src/components/FeedbackEditor.vue:2 src/components/FeedbackEditor.vue:3
+#: src/components/MemoryEditor.vue:109 src/components/MemoryEditor.vue:72
+#: src/components/MemoryEditor.vue:73
 msgid "Feedback"
 msgstr "Feedback"
 
-#: src/components/QuestionEditor.vue:25 src/components/QuestionEditor.vue:27
-#: src/components/QuestionEditor.vue:32 src/components/QuestionEditor.vue:48
-#: src/components/QuestionEditor.vue:52
-msgid "Feedback wenn ausgewählt"
+#: src/components/QuestionEditor.vue:33 src/components/QuestionEditor.vue:34
+#: src/components/QuestionEditor.vue:39 src/components/QuestionEditor.vue:52
+#: src/components/QuestionEditor.vue:56
+#, fuzzy
+msgid "Feedback, wenn ausgewählt:"
 msgstr "Feedback when selected"
 
-#: src/components/QuestionEditor.vue:30 src/components/QuestionEditor.vue:32
-#: src/components/QuestionEditor.vue:37 src/components/QuestionEditor.vue:53
-#: src/components/QuestionEditor.vue:61
-msgid "Feedback wenn nicht ausgewählt"
+#: src/components/QuestionEditor.vue:38 src/components/QuestionEditor.vue:39
+#: src/components/QuestionEditor.vue:44 src/components/QuestionEditor.vue:57
+#: src/components/QuestionEditor.vue:65
+#, fuzzy
+msgid "Feedback, wenn nicht ausgewählt:"
 msgstr "Feedback when not selected"
 
-#: src/components/FillInTheBlanksEditor.vue:3
 #: src/components/FillInTheBlanksEditor.vue:4
-#: src/components/LernmoduleEditor.vue:39
-#: src/components/LernmoduleEditor.vue:55
-#: src/components/LernmoduleEditor.vue:59 src/models/TaskDefinition.ts:609
+#: src/components/FillInTheBlanksEditor.vue:5
+#: src/components/LernmoduleEditor.vue:44
+#: src/components/LernmoduleEditor.vue:45
+#: src/components/LernmoduleEditor.vue:58
+#: src/components/LernmoduleEditor.vue:62
+msgid "Fill in the Blanks"
+msgstr "Fill in the Blanks"
+
+#: src/models/TaskDefinition.ts:580
 msgid "Fill In The Blanks"
 msgstr "Fill In The Blanks"
 
-#: src/components/LernmoduleEditor.vue:46
-#: src/components/LernmoduleEditor.vue:62
-#: src/components/LernmoduleEditor.vue:66 src/models/TaskDefinition.ts:611
-msgid "Find The Hotspot"
+#: src/models/TaskDefinition.ts:582
+#, fuzzy
+msgid "Find The Hotspots"
 msgstr "Find The Hotspot"
 
 #: src/components/FindTheWordsEditor.vue:3
 #: src/components/FindTheWordsEditor.vue:4
-#: src/components/LernmoduleEditor.vue:49
-#: src/components/LernmoduleEditor.vue:65
-#: src/components/LernmoduleEditor.vue:69 src/models/TaskDefinition.ts:613
+#, fuzzy
+msgid "Find the Words"
+msgstr "Find The Words"
+
+#: src/models/TaskDefinition.ts:584
 msgid "Find The Words"
 msgstr "Find The Words"
 
-#: src/components/DragTheWordsEditor.vue:180
-msgid ""
-"Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem "
-"korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und "
-"klicken Sie den \"Lücke hinzufügen\"–Button. Außerdem können Sie einen "
-"Tooltip mit einem Doppelpunkt (:) hinzufügen."
+#: src/models/TaskDefinition.ts:231
+msgid "Fortsetzen"
 msgstr ""
-"Add gaps by placing an asterisk (*) before and after the correct word(s), or "
-"highlight a word and click the \"Add Gap\" button. You can also add a "
-"tooltip with a colon (:)."
 
-#: src/components/FillInTheBlanksEditor.vue:216
-msgid ""
-"Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem "
-"korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und "
-"klicken Sie den \"Lücke hinzufügen\"–Button. Sie können alternative "
-"Antworten mit einem Schrägstrich (/) hinzufügen. Außerdem können Sie einen "
-"Tooltip mit einem Doppelpunkt (:) hinzufügen."
+#: src/components/SequencingEditor.vue:44
+#: src/components/SequencingEditor.vue:45
+#: src/components/SequencingEditor.vue:63
+msgid "Fortsetzen des aktuellen Spielstands erlauben"
 msgstr ""
-"Add gaps by placing an asterisk (*) before and after the correct word(s), or "
-"highlight a word and click the \"Add Gap\" button. You can add alternative "
-"answers with a slash (/). Also, you can add a tooltip with a colon (:)."
 
-#: src/components/LernmoduleEditor.vue:143
+#: src/components/DragTheWordsEditor.vue:179
+msgid ""
+"Geben Sie falsche Antworten als Distraktoren ein. Verwenden Sie das gleiche "
+"Sternchen (*)-Schema wie im Text."
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:166
 msgid "Gespeichert"
 msgstr "Saved"
 
-#: src/components/FillInTheBlanksEditor.vue:18
-#: src/components/FillInTheBlanksEditor.vue:19
-#: src/components/FillInTheBlanksEditor.vue:30
+#: src/components/FillInTheBlanksEditor.vue:21
+#: src/components/FillInTheBlanksEditor.vue:22
+#: src/components/FillInTheBlanksEditor.vue:33
 msgid "Groß- und Kleinschreibung beachten"
 msgstr "Case sensitive"
 
-#: src/components/LernmoduleEditor.vue:24
-#: src/components/LernmoduleEditor.vue:34
+#: src/components/LernmoduleEditor.vue:27
+#: src/components/LernmoduleEditor.vue:28
+#: src/components/LernmoduleEditor.vue:35
 msgid "Grunddaten"
 msgstr "Basic data"
 
-#: src/components/QuestionEditor.vue:20 src/components/QuestionEditor.vue:22
-#: src/components/QuestionEditor.vue:27 src/components/QuestionEditor.vue:43
-msgid "Hinweis"
-msgstr "Hint"
-
-#: src/components/QuestionEditor.vue:18 src/components/QuestionEditor.vue:20
-#: src/components/QuestionEditor.vue:25 src/components/QuestionEditor.vue:41
+#: src/components/QuestionEditor.vue:25 src/components/QuestionEditor.vue:26
+#: src/components/QuestionEditor.vue:31 src/components/QuestionEditor.vue:44
 msgid "Hinweis und Feedback"
 msgstr "Hint and feedback"
+
+#: src/components/DragTheWordsEditor.vue:101
+#: src/components/DragTheWordsEditor.vue:111
+#: src/components/DragTheWordsEditor.vue:76
+#: src/components/DragTheWordsEditor.vue:77
+#: src/components/FillInTheBlanksEditor.vue:107
+#: src/components/FillInTheBlanksEditor.vue:75
+#: src/components/FillInTheBlanksEditor.vue:76
+#: src/components/FillInTheBlanksEditor.vue:97
+#, fuzzy
+msgid "Hinweis, wenn nicht alle Lücken ausgefüllt sind:"
+msgstr "Notification if not all gaps are filled in:"
+
+#: src/components/QuestionEditor.vue:28 src/components/QuestionEditor.vue:29
+#: src/components/QuestionEditor.vue:34 src/components/QuestionEditor.vue:47
+#, fuzzy
+msgid "Hinweis:"
+msgstr "Hint"
 
 #: src/components/interactiveVideo/SelectVideo.vue:59
 #: src/components/interactiveVideo/SelectVideo.vue:79
@@ -392,13 +440,13 @@ msgstr "Hint and feedback"
 msgid "Hochgeladenes Video: "
 msgstr "Uploaded video: "
 
-#: src/components/LernmoduleEditor.vue:52
-#: src/components/LernmoduleEditor.vue:68
-#: src/components/LernmoduleEditor.vue:72 src/models/TaskDefinition.ts:617
-msgid "Image Sequencing"
-msgstr "Image Sequencing"
+#: src/components/PairingEditorCard.vue:35
+#: src/components/PairingEditorCard.vue:36
+#: src/components/PairingEditorCard.vue:49
+msgid "Inhalt"
+msgstr ""
 
-#: src/models/TaskDefinition.ts:619
+#: src/models/TaskDefinition.ts:578
 msgid "Interactive Video"
 msgstr "Interactive Video"
 
@@ -407,52 +455,59 @@ msgstr "Interactive Video"
 msgid "Interaktion"
 msgstr "Interaction"
 
-#: src/components/EditedMemoryCard.vue:3 src/components/EditedMemoryCard.vue:4
-#: src/components/MemoryEditor.vue:6 src/components/MemoryEditor.vue:8
-#: src/components/MemoryEditor.vue:9
+#: src/components/DragTheWordsEditor.vue:16
+#: src/components/DragTheWordsEditor.vue:17
+#: src/components/DragTheWordsEditor.vue:22
+#: src/components/DragTheWordsEditor.vue:28
+msgid "Irreführende Antworten"
+msgstr ""
+
+#: src/components/MemoryEditorCard.vue:2 src/components/MemoryEditorCard.vue:3
+#: src/components/SequencingEditorCard.vue:2
+#: src/components/SequencingEditorCard.vue:3
 msgid "Karte"
 msgstr "Card"
 
-#: src/components/PairingEditor.vue:12 src/components/PairingEditor.vue:13
-#: src/components/PairingEditor.vue:20
-msgid "Karte A"
+#: src/components/PairingEditor.vue:30
+#, fuzzy
+msgid "Karte 1"
 msgstr "Card A"
 
-#: src/components/PairingEditor.vue:39 src/components/PairingEditor.vue:40
-#: src/components/PairingEditor.vue:47 src/components/PairingEditor.vue:53
-msgid "Karte B"
-msgstr "Card B"
+#: src/components/PairingEditor.vue:36
+#, fuzzy
+msgid "Karte 2"
+msgstr "Card A"
 
-#: src/components/MemoryEditor.vue:16 src/components/MemoryEditor.vue:17
-#: src/components/MemoryEditor.vue:26
+#: src/components/MemoryEditor.vue:19 src/components/MemoryEditor.vue:21
+#: src/components/MemoryEditor.vue:22 src/components/MemoryEditor.vue:32
+#: src/components/SequencingEditor.vue:19
+#: src/components/SequencingEditor.vue:21
+#: src/components/SequencingEditor.vue:22
+#: src/components/SequencingEditor.vue:32
 msgid "Karte hinzufügen"
 msgstr "Add card"
 
-#: src/components/MemoryEditor.vue:22
+#: src/components/SequencingEditor.vue:25
 msgid "Karte löschen"
 msgstr "Delete card"
 
-#: src/components/FileUpload.vue:128
+#: src/components/MemoryEditor.vue:46 src/components/MemoryEditor.vue:47
+#: src/components/MemoryEditor.vue:67
+msgid "Karten in einem Quadrat positionieren"
+msgstr ""
+
+#: src/components/FileUpload.vue:186
 msgid "Kein Ordner ist ausgewählt. Die Datei kann nicht hochgeladen werden."
 msgstr "No folder is selected. The file can't be uploaded."
 
-#: src/components/ImageSequencingEditor.vue:19
-#: src/components/ImageSequencingEditor.vue:20
-#: src/components/ImageSequencingEditor.vue:30
-#: src/components/ImageSequencingEditor.vue:35
-#: src/components/MemoryEditor.vue:22 src/components/MemoryEditor.vue:23
-#: src/components/MemoryEditor.vue:32 src/components/MemoryEditor.vue:37
-msgid "Keine Karte ist zum Bearbeiten ausgewählt."
+#: src/components/MemoryEditor.vue:31 src/components/MemoryEditor.vue:32
+#: src/components/MemoryEditor.vue:52 src/components/SequencingEditor.vue:29
+#: src/components/SequencingEditor.vue:30
+#: src/components/SequencingEditor.vue:44
+#: src/components/SequencingEditor.vue:48
+#, fuzzy
+msgid "Keine Karte ausgewählt"
 msgstr "No card is selected for editing."
-
-#: src/components/DragTheWordsEditor.vue:17
-#: src/components/DragTheWordsEditor.vue:18
-#: src/components/DragTheWordsEditor.vue:29
-#: src/components/FillInTheBlanksEditor.vue:27
-#: src/components/FillInTheBlanksEditor.vue:28
-#: src/components/FillInTheBlanksEditor.vue:39
-msgid "Korrigiert wird"
-msgstr "The correct answers will be shown"
 
 #: src/components/interactiveVideo/SelectVideo.vue:4
 #: src/components/interactiveVideo/SelectVideo.vue:5
@@ -461,108 +516,123 @@ msgstr "Upload a video or paste in a link to a Youtube video."
 
 #: src/components/interactiveVideo/VideoPlayer.vue:50
 #: src/components/interactiveVideo/VideoTimeline.vue:76
-#: src/components/QuestionEditor.vue:36
 msgid "Löschen"
 msgstr "Delete"
 
-#: src/components/DragTheWordsEditor.vue:54
-#: src/components/DragTheWordsEditor.vue:55
-#: src/components/DragTheWordsEditor.vue:66
-#: src/components/DragTheWordsEditor.vue:75
-#: src/components/FillInTheBlanksEditor.vue:59
-#: src/components/FillInTheBlanksEditor.vue:60
-#: src/components/FillInTheBlanksEditor.vue:71
-#: src/components/FillInTheBlanksEditor.vue:80
-#: src/components/QuestionEditor.vue:104 src/components/QuestionEditor.vue:110
-#: src/components/QuestionEditor.vue:69 src/components/QuestionEditor.vue:71
-msgid "Lösungen können angezeigt werden"
+#: src/components/DragTheWordsEditor.vue:42
+#: src/components/DragTheWordsEditor.vue:43
+#: src/components/DragTheWordsEditor.vue:57
+#: src/components/FillInTheBlanksEditor.vue:41
+#: src/components/FillInTheBlanksEditor.vue:42
+#: src/components/FillInTheBlanksEditor.vue:53
+#: src/components/MarkTheWordsEditor.vue:27
+#: src/components/MarkTheWordsEditor.vue:28
+#: src/components/MarkTheWordsEditor.vue:39 src/components/PairingEditor.vue:37
+#: src/components/PairingEditor.vue:38 src/components/PairingEditor.vue:62
+#: src/components/QuestionEditor.vue:100 src/components/QuestionEditor.vue:69
+#: src/components/QuestionEditor.vue:70 src/components/SequencingEditor.vue:49
+#: src/components/SequencingEditor.vue:50
+#: src/components/SequencingEditor.vue:68
+#, fuzzy
+msgid "Lösungen anzeigen erlauben"
 msgstr "Solutions can be viewed"
 
-#: src/components/DragTheWordsEditor.vue:6
-#: src/components/DragTheWordsEditor.vue:7
-#: src/components/FillInTheBlanksEditor.vue:6
-#: src/components/FillInTheBlanksEditor.vue:7
+#: src/components/DragTheWordsEditor.vue:48
+#: src/components/DragTheWordsEditor.vue:49
+#: src/components/DragTheWordsEditor.vue:63
+#: src/components/DragTheWordsEditor.vue:67
+#: src/components/FillInTheBlanksEditor.vue:47
+#: src/components/FillInTheBlanksEditor.vue:48
+#: src/components/FillInTheBlanksEditor.vue:59
+#: src/components/FillInTheBlanksEditor.vue:63
+#, fuzzy
+msgid "Lösungen nur anzeigen, wenn alle Lücken ausgefüllt sind"
+msgstr "Notification if not all gaps are filled in:"
+
+#: src/components/DragTheWordsEditor.vue:8
+#: src/components/DragTheWordsEditor.vue:9
+#: src/components/FillInTheBlanksEditor.vue:8
+#: src/components/FillInTheBlanksEditor.vue:9
 msgid "Lücke hinzufügen"
 msgstr "Add gap"
 
-#: src/components/DragTheWordsEditor.vue:20
-#: src/components/DragTheWordsEditor.vue:21
-#: src/components/DragTheWordsEditor.vue:32
-#: src/components/FillInTheBlanksEditor.vue:30
+#: src/components/DragTheWordsEditor.vue:27
+#: src/components/DragTheWordsEditor.vue:28
+#: src/components/DragTheWordsEditor.vue:42
 #: src/components/FillInTheBlanksEditor.vue:31
-#: src/components/FillInTheBlanksEditor.vue:42
-msgid "manuell per Button"
-msgstr "manually via button"
+#: src/components/FillInTheBlanksEditor.vue:32
+#: src/components/FillInTheBlanksEditor.vue:43
+msgid "Lücken automatisch prüfen"
+msgstr ""
 
-#: src/components/LernmoduleEditor.vue:43
-#: src/components/LernmoduleEditor.vue:59
-#: src/components/LernmoduleEditor.vue:63
-#: src/components/MarkTheWordsEditor.vue:3
-#: src/components/MarkTheWordsEditor.vue:4 src/models/TaskDefinition.ts:621
+#: src/components/LernmoduleEditor.vue:46
+#: src/components/LernmoduleEditor.vue:47
+#: src/components/LernmoduleEditor.vue:60
+#: src/components/LernmoduleEditor.vue:64
+#: src/components/MarkTheWordsEditor.vue:4
+#: src/components/MarkTheWordsEditor.vue:5
+msgid "Mark the Words"
+msgstr "Mark the Words"
+
+#: src/models/TaskDefinition.ts:586
 msgid "Mark The Words"
 msgstr "Mark The Words"
 
-#: src/components/MarkTheWordsEditor.vue:162
+#: src/components/MarkTheWordsEditor.vue:167
+#, fuzzy
 msgid ""
 "Markieren Sie ein Wort als Lösung, indem Sie ein Sternchen (*) vor und "
 "hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den "
-"\"Richtiges Wort markieren\"–Button."
+"„Richtiges Wort markieren“–Button."
 msgstr ""
 "Mark a word as a solution by putting an asterisk (*) in front of and behind "
 "the word, or select a word and click the \"Mark correct word\" button."
 
-#: src/components/QuestionEditor.vue:50 src/components/QuestionEditor.vue:52
-#: src/components/QuestionEditor.vue:85 src/components/QuestionEditor.vue:86
-msgid "Mehrere Antworten können ausgewählt werden"
-msgstr "Multiple answers can be selected"
-
-#: src/components/DragTheWordsEditor.vue:40
-#: src/components/DragTheWordsEditor.vue:41
+#: src/components/DragTheWordsEditor.vue:37
+#: src/components/DragTheWordsEditor.vue:38
 #: src/components/DragTheWordsEditor.vue:52
-#: src/components/DragTheWordsEditor.vue:56
-#: src/components/FillInTheBlanksEditor.vue:45
-#: src/components/FillInTheBlanksEditor.vue:46
-#: src/components/FillInTheBlanksEditor.vue:57
-#: src/components/FillInTheBlanksEditor.vue:61
-#: src/components/QuestionEditor.vue:60 src/components/QuestionEditor.vue:62
-#: src/components/QuestionEditor.vue:95 src/components/QuestionEditor.vue:96
+#: src/components/FillInTheBlanksEditor.vue:36
+#: src/components/FillInTheBlanksEditor.vue:37
+#: src/components/FillInTheBlanksEditor.vue:48
+#: src/components/MarkTheWordsEditor.vue:22
+#: src/components/MarkTheWordsEditor.vue:23
+#: src/components/MarkTheWordsEditor.vue:34 src/components/MemoryEditor.vue:41
+#: src/components/MemoryEditor.vue:42 src/components/MemoryEditor.vue:62
+#: src/components/PairingEditor.vue:32 src/components/PairingEditor.vue:33
+#: src/components/PairingEditor.vue:57 src/components/QuestionEditor.vue:64
+#: src/components/QuestionEditor.vue:65 src/components/QuestionEditor.vue:95
+#: src/components/SequencingEditor.vue:39
+#: src/components/SequencingEditor.vue:40
+#: src/components/SequencingEditor.vue:58
 msgid "Mehrere Versuche erlauben"
 msgstr "Allow multiple attempts"
 
+#: src/components/QuestionEditor.vue:54 src/components/QuestionEditor.vue:55
+#: src/components/QuestionEditor.vue:85
+#, fuzzy
+msgid "Mehrfachauswahl erlauben"
+msgstr "Allow multiple attempts"
+
+#: src/components/LernmoduleEditor.vue:47
 #: src/components/LernmoduleEditor.vue:48
-#: src/components/LernmoduleEditor.vue:64
-#: src/components/LernmoduleEditor.vue:68 src/models/TaskDefinition.ts:623
+#: src/components/LernmoduleEditor.vue:61
+#: src/components/LernmoduleEditor.vue:65 src/components/MemoryEditor.vue:4
+#: src/components/MemoryEditor.vue:5 src/models/TaskDefinition.ts:588
 msgid "Memory"
 msgstr "Memory"
 
-#: src/components/DragTheWordsEditor.vue:118
-#: src/components/DragTheWordsEditor.vue:122
-#: src/components/DragTheWordsEditor.vue:127
-#: src/components/DragTheWordsEditor.vue:87
-#: src/components/DragTheWordsEditor.vue:88
-#: src/components/FillInTheBlanksEditor.vue:108
-#: src/components/FillInTheBlanksEditor.vue:109
-#: src/components/FillInTheBlanksEditor.vue:152
-#: src/components/FillInTheBlanksEditor.vue:156
-#: src/components/FillInTheBlanksEditor.vue:161
-#: src/components/MarkTheWordsEditor.vue:38
-#: src/components/MarkTheWordsEditor.vue:39
-#: src/components/MarkTheWordsEditor.vue:50
-#: src/components/MarkTheWordsEditor.vue:54
-#: src/components/MarkTheWordsEditor.vue:59
+#: src/components/FeedbackEditor.vue:27 src/components/FeedbackEditor.vue:28
+#: src/components/FeedbackEditor.vue:33 src/components/FeedbackEditor.vue:39
 msgid "Mitteilung"
 msgstr "Notification"
 
-#: src/components/FillInTheBlanksEditor.vue:111
-#: src/components/FillInTheBlanksEditor.vue:78
-#: src/components/FillInTheBlanksEditor.vue:79
-#: src/components/FillInTheBlanksEditor.vue:90
-msgid "Mitteilung, wenn nicht alle Lücken ausgefüllt sind:"
-msgstr "Notification if not all gaps are filled in:"
-
-#: src/components/LernmoduleEditor.vue:141
+#: src/components/LernmoduleEditor.vue:164
 msgid "Modifiziert"
 msgstr "Modified"
+
+#: src/components/SequencingViewer.vue:198
+msgid "Moved %1 to position %2."
+msgstr ""
 
 #: src/components/interactiveVideo/SelectVideo.vue:101
 #: src/components/interactiveVideo/SelectVideo.vue:127
@@ -572,23 +642,13 @@ msgstr "Modified"
 msgid "Navigation deaktivieren"
 msgstr "Disable navigation"
 
-#: src/components/QuestionEditor.vue:152 src/components/QuestionEditor.vue:36
-#: src/components/QuestionEditor.vue:38 src/components/QuestionEditor.vue:71
+#: src/components/QuestionEditor.vue:178 src/components/QuestionEditor.vue:45
+#: src/components/QuestionEditor.vue:46 src/components/QuestionEditor.vue:76
 msgid "Neue Antwort"
 msgstr "New answer"
 
-#: src/components/DragTheWordsEditor.vue:100
-#: src/components/DragTheWordsEditor.vue:130
-#: src/components/DragTheWordsEditor.vue:147
-#: src/components/DragTheWordsEditor.vue:99
-#: src/components/FillInTheBlanksEditor.vue:120
-#: src/components/FillInTheBlanksEditor.vue:121
-#: src/components/FillInTheBlanksEditor.vue:164
-#: src/components/FillInTheBlanksEditor.vue:181
-#: src/components/MarkTheWordsEditor.vue:50
-#: src/components/MarkTheWordsEditor.vue:51
-#: src/components/MarkTheWordsEditor.vue:62
-#: src/components/MarkTheWordsEditor.vue:79
+#: src/components/FeedbackEditor.vue:43 src/components/FeedbackEditor.vue:44
+#: src/components/FeedbackEditor.vue:73
 msgid "Neuer Bereich"
 msgstr "New range"
 
@@ -610,15 +670,28 @@ msgstr "Not deactivated"
 msgid "Ordner-Filter"
 msgstr "Folder filter"
 
-#: src/components/EditedImagePair.vue:3 src/components/EditedImagePair.vue:4
+#: src/components/MemoryEditor.vue:260 src/components/PairingEditor.vue:15
+#: src/components/PairingEditor.vue:16 src/components/PairingEditor.vue:27
 msgid "Paar"
 msgstr "Pair"
 
-#: src/components/LernmoduleEditor.vue:50
-#: src/components/LernmoduleEditor.vue:66
-#: src/components/LernmoduleEditor.vue:70 src/models/TaskDefinition.ts:615
+#: src/components/PairingEditor.vue:45
+#, fuzzy
+msgid "Paar löschen"
+msgstr "Delete card"
+
+#: src/components/LernmoduleEditor.vue:48
+#: src/components/LernmoduleEditor.vue:49
+#: src/components/LernmoduleEditor.vue:62
+#: src/components/LernmoduleEditor.vue:66 src/components/PairingEditor.vue:4
+#: src/components/PairingEditor.vue:5 src/models/TaskDefinition.ts:590
 msgid "Pairing"
 msgstr "Pairing"
+
+#: src/components/AudioElement.vue:32
+#, fuzzy
+msgid "Pause"
+msgstr "Pause"
 
 #: src/components/interactiveVideo/AddInteractions.vue:58
 msgid "Pausieren"
@@ -628,38 +701,34 @@ msgstr "Pause"
 msgid "Persönlicher Dateibereich"
 msgstr "Personal file area"
 
-#: src/components/DragTheWordsEditor.vue:109
-#: src/components/DragTheWordsEditor.vue:113
-#: src/components/DragTheWordsEditor.vue:78
-#: src/components/DragTheWordsEditor.vue:79
-#: src/components/FillInTheBlanksEditor.vue:100
-#: src/components/FillInTheBlanksEditor.vue:143
-#: src/components/FillInTheBlanksEditor.vue:147
-#: src/components/FillInTheBlanksEditor.vue:99
-#: src/components/MarkTheWordsEditor.vue:29
-#: src/components/MarkTheWordsEditor.vue:30
-#: src/components/MarkTheWordsEditor.vue:41
-#: src/components/MarkTheWordsEditor.vue:45
-msgid "Prozent"
-msgstr "Percentage"
-
-#: src/components/LernmoduleEditor.vue:41
-#: src/components/LernmoduleEditor.vue:57
-#: src/components/LernmoduleEditor.vue:61 src/components/QuestionEditor.vue:3
-#: src/components/QuestionEditor.vue:5 src/models/TaskDefinition.ts:625
+#: src/components/LernmoduleEditor.vue:49
+#: src/components/LernmoduleEditor.vue:50
+#: src/components/LernmoduleEditor.vue:63
+#: src/components/LernmoduleEditor.vue:67 src/components/QuestionEditor.vue:4
+#: src/components/QuestionEditor.vue:5 src/models/TaskDefinition.ts:592
 msgid "Question"
 msgstr "Question"
 
-#: src/components/FillInTheBlanksEditor.vue:23
-#: src/components/FillInTheBlanksEditor.vue:24
-#: src/components/FillInTheBlanksEditor.vue:35
-msgid "Rechtschreib- oder Tippfehler ignorieren"
+#: src/components/FillInTheBlanksEditor.vue:26
+#: src/components/FillInTheBlanksEditor.vue:27
+#: src/components/FillInTheBlanksEditor.vue:38
+#, fuzzy
+msgid "Rechtschreib- und Tippfehler ignorieren"
 msgstr "Ignore spelling mistakes and typos"
 
-#: src/components/MarkTheWordsEditor.vue:6
-#: src/components/MarkTheWordsEditor.vue:7
+#: src/components/MarkTheWordsEditor.vue:8
+#: src/components/MarkTheWordsEditor.vue:9
 msgid "Richtiges Wort markieren"
 msgstr "Mark correct word"
+
+#: src/components/MemoryEditor.vue:49 src/components/MemoryEditor.vue:50
+#: src/components/MemoryEditor.vue:70
+msgid "Rückseite"
+msgstr ""
+
+#: src/components/MemoryViewerCard.vue:21
+msgid "Rückseite einer Memory Karte."
+msgstr ""
 
 #: src/components/interactiveVideo/VideoPlayer.vue:102
 #: src/components/interactiveVideo/VideoPlayer.vue:105
@@ -668,12 +737,22 @@ msgstr "Mark correct word"
 msgid "Schließen"
 msgstr "Close"
 
-#: src/components/CoursewareBlock.vue:12 src/components/CoursewareBlock.vue:15
-#: src/components/CoursewareBlock.vue:6 src/components/CoursewareBlock.vue:7
-#: src/components/LernmoduleEditor.vue:10 src/components/LernmoduleEditor.vue:3
-#: src/components/LernmoduleEditor.vue:6 src/components/LernmoduleEditor.vue:63
-#: src/components/LernmoduleEditor.vue:83
-#: src/components/LernmoduleEditor.vue:86
+#: src/components/LernmoduleEditor.vue:50
+#: src/components/LernmoduleEditor.vue:51
+#: src/components/LernmoduleEditor.vue:64
+#: src/components/LernmoduleEditor.vue:68 src/components/SequencingEditor.vue:4
+#: src/components/SequencingEditor.vue:5 src/models/TaskDefinition.ts:594
+#, fuzzy
+msgid "Sequencing"
+msgstr "Image Sequencing"
+
+#: src/components/CoursewareBlock.vue:12 src/components/CoursewareBlock.vue:13
+#: src/components/CoursewareBlock.vue:18 src/components/CoursewareBlock.vue:21
+#: src/components/LernmoduleEditor.vue:11
+#: src/components/LernmoduleEditor.vue:59 src/components/LernmoduleEditor.vue:6
+#: src/components/LernmoduleEditor.vue:60 src/components/LernmoduleEditor.vue:7
+#: src/components/LernmoduleEditor.vue:77
+#: src/components/LernmoduleEditor.vue:80
 msgid "Speichern"
 msgstr "Save"
 
@@ -687,53 +766,94 @@ msgstr "Start"
 msgid "Stud.IP-Video"
 msgstr "Stud.IP Video"
 
-#: src/components/PairingEditor.vue:23 src/components/PairingEditor.vue:24
-#: src/components/PairingEditor.vue:28 src/components/PairingEditor.vue:31
-#: src/components/PairingEditor.vue:33 src/components/PairingEditor.vue:50
-#: src/components/PairingEditor.vue:51 src/components/PairingEditor.vue:58
-#: src/components/PairingEditor.vue:61 src/components/PairingEditor.vue:64
-#: src/components/PairingEditor.vue:66
+#: src/components/PairingEditorCard.vue:11
+#: src/components/PairingEditorCard.vue:12
 msgid "Text"
 msgstr "Text"
 
-#: src/components/DragTheWordsEditor.vue:29
-#: src/components/DragTheWordsEditor.vue:30
-#: src/components/DragTheWordsEditor.vue:41
-#: src/components/DragTheWordsEditor.vue:42
-#: src/components/DragTheWordsEditor.vue:43
-#: src/components/DragTheWordsEditor.vue:54
-#: src/components/DragTheWordsEditor.vue:57
-#: src/components/DragTheWordsEditor.vue:58
-#: src/components/DragTheWordsEditor.vue:69
-#: src/components/DragTheWordsEditor.vue:82
-#: src/components/FillInTheBlanksEditor.vue:39
-#: src/components/FillInTheBlanksEditor.vue:40
-#: src/components/FillInTheBlanksEditor.vue:47
-#: src/components/FillInTheBlanksEditor.vue:48
-#: src/components/FillInTheBlanksEditor.vue:51
-#: src/components/FillInTheBlanksEditor.vue:59
-#: src/components/FillInTheBlanksEditor.vue:62
-#: src/components/FillInTheBlanksEditor.vue:63
-#: src/components/FillInTheBlanksEditor.vue:74
-#: src/components/FillInTheBlanksEditor.vue:87
-#: src/components/QuestionEditor.vue:106 src/components/QuestionEditor.vue:112
-#: src/components/QuestionEditor.vue:43 src/components/QuestionEditor.vue:45
-#: src/components/QuestionEditor.vue:62 src/components/QuestionEditor.vue:64
-#: src/components/QuestionEditor.vue:71 src/components/QuestionEditor.vue:73
-#: src/components/QuestionEditor.vue:78 src/components/QuestionEditor.vue:97
-#: src/components/QuestionEditor.vue:98
-msgid "Text im Button:"
+#: src/components/SequencingEditor.vue:67
+#: src/components/SequencingEditor.vue:68
+#: src/components/SequencingEditor.vue:89
+#: src/components/SequencingEditor.vue:93
+#, fuzzy
+msgid "Text für Fortsetzen-Button:"
 msgstr "Text in the button:"
 
-#: src/components/LernmoduleEditor.vue:26
-#: src/components/LernmoduleEditor.vue:36
+#: src/components/DragTheWordsEditor.vue:100
+#: src/components/DragTheWordsEditor.vue:67
+#: src/components/DragTheWordsEditor.vue:68
+#: src/components/DragTheWordsEditor.vue:92
+#: src/components/FillInTheBlanksEditor.vue:66
+#: src/components/FillInTheBlanksEditor.vue:67
+#: src/components/FillInTheBlanksEditor.vue:88
+#: src/components/FillInTheBlanksEditor.vue:96
+#: src/components/MarkTheWordsEditor.vue:45
+#: src/components/MarkTheWordsEditor.vue:46
+#: src/components/MarkTheWordsEditor.vue:60
+#: src/components/MarkTheWordsEditor.vue:64 src/components/PairingEditor.vue:55
+#: src/components/PairingEditor.vue:56 src/components/PairingEditor.vue:83
+#: src/components/PairingEditor.vue:87 src/components/QuestionEditor.vue:121
+#: src/components/QuestionEditor.vue:125 src/components/QuestionEditor.vue:87
+#: src/components/QuestionEditor.vue:88 src/components/SequencingEditor.vue:102
+#: src/components/SequencingEditor.vue:72
+#: src/components/SequencingEditor.vue:73
+#: src/components/SequencingEditor.vue:94
+#, fuzzy
+msgid "Text für Lösungen-Button:"
+msgstr "Text in the button:"
+
+#: src/components/DragTheWordsEditor.vue:57
+#: src/components/DragTheWordsEditor.vue:58
+#: src/components/DragTheWordsEditor.vue:82
+#: src/components/FillInTheBlanksEditor.vue:56
+#: src/components/FillInTheBlanksEditor.vue:57
+#: src/components/FillInTheBlanksEditor.vue:78
+#: src/components/MarkTheWordsEditor.vue:35
+#: src/components/MarkTheWordsEditor.vue:36
+#: src/components/MarkTheWordsEditor.vue:50 src/components/PairingEditor.vue:45
+#: src/components/PairingEditor.vue:46 src/components/PairingEditor.vue:73
+#: src/components/QuestionEditor.vue:111 src/components/QuestionEditor.vue:77
+#: src/components/QuestionEditor.vue:78 src/components/SequencingEditor.vue:57
+#: src/components/SequencingEditor.vue:58
+#: src/components/SequencingEditor.vue:79
+msgid "Text für Überprüfen-Button:"
+msgstr ""
+
+#: src/components/DragTheWordsEditor.vue:62
+#: src/components/DragTheWordsEditor.vue:63
+#: src/components/DragTheWordsEditor.vue:87
+#: src/components/DragTheWordsEditor.vue:91
+#: src/components/FillInTheBlanksEditor.vue:61
+#: src/components/FillInTheBlanksEditor.vue:62
+#: src/components/FillInTheBlanksEditor.vue:83
+#: src/components/FillInTheBlanksEditor.vue:87
+#: src/components/MarkTheWordsEditor.vue:40
+#: src/components/MarkTheWordsEditor.vue:41
+#: src/components/MarkTheWordsEditor.vue:55 src/components/MemoryEditor.vue:66
+#: src/components/MemoryEditor.vue:67 src/components/MemoryEditor.vue:99
+#: src/components/PairingEditor.vue:50 src/components/PairingEditor.vue:51
+#: src/components/PairingEditor.vue:78 src/components/QuestionEditor.vue:116
+#: src/components/QuestionEditor.vue:82 src/components/QuestionEditor.vue:83
+#: src/components/SequencingEditor.vue:62
+#: src/components/SequencingEditor.vue:63
+#: src/components/SequencingEditor.vue:84
+msgid "Text für Wiederholen-Button:"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:29
+#: src/components/LernmoduleEditor.vue:30
+#: src/components/LernmoduleEditor.vue:37
 msgid "Titel"
 msgstr "Title"
 
-#: src/components/PairingEditor.vue:14 src/components/PairingEditor.vue:15
-#: src/components/PairingEditor.vue:22 src/components/PairingEditor.vue:41
-#: src/components/PairingEditor.vue:42 src/components/PairingEditor.vue:49
-#: src/components/PairingEditor.vue:55
+#: src/components/FeedbackEditor.vue:33 src/components/FeedbackEditor.vue:34
+#: src/components/FeedbackEditor.vue:39 src/components/FeedbackEditor.vue:45
+#: src/components/FeedbackEditor.vue:53 src/components/FeedbackEditor.vue:60
+msgid "Trash can icon in a button used to delete a feedback interval"
+msgstr ""
+
+#: src/components/PairingEditorCard.vue:5
+#: src/components/PairingEditorCard.vue:6
 msgid "Typ"
 msgstr "Type"
 
@@ -747,9 +867,28 @@ msgstr "Type"
 msgid "Übernehmen"
 msgstr "Apply"
 
-#: src/components/MemoryViewer.vue:2 src/components/MemoryViewer.vue:3
-msgid "Umgedrehte Karten: "
+#: src/components/DragTheWordsEditor.vue:173
+#: src/components/FillInTheBlanksEditor.vue:166
+#, fuzzy
+msgid ""
+"Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das "
+"korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button "
+"„Lücke hinzufügen“. Sie können auch einen Tooltip hinzufügen, indem Sie "
+"einen Doppelpunkt (:) vor den Tooltip-Text schreiben."
+msgstr ""
+"Add gaps by placing an asterisk (*) before and after the correct word(s), or "
+"highlight a word and click the \"Add Gap\" button. You can also add a "
+"tooltip with a colon (:)."
+
+#: src/components/MemoryViewer.vue:45
+#, fuzzy
+msgid "Umgedrehte Karten:"
 msgstr "Cards turned over: "
+
+#: src/components/PairingEditorCard.vue:126
+#: src/components/SequencingEditorCard.vue:148
+msgid "Ungültiges MultimediaElementType: "
+msgstr ""
 
 #: src/components/interactiveVideo/AddInteractions.vue:40
 msgid "Vergrößern"
@@ -783,11 +922,20 @@ msgstr "Use existing video"
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:84
 #: src/components/interactiveVideo/SelectedInteractionProperties.vue:88
 #: src/components/interactiveVideo/VideoPlayer.vue:37
-#: src/components/LernmoduleEditor.vue:67
-#: src/components/LernmoduleEditor.vue:87
-#: src/components/LernmoduleEditor.vue:94
+#: src/components/LernmoduleEditor.vue:73
+#: src/components/LernmoduleEditor.vue:74
+#: src/components/LernmoduleEditor.vue:91
+#: src/components/LernmoduleEditor.vue:98
 msgid "Vorschau"
 msgstr "Preview"
+
+#: src/components/LernmoduleEditor.vue:62
+#: src/components/LernmoduleEditor.vue:63
+#: src/components/LernmoduleEditor.vue:80
+#: src/components/LernmoduleEditor.vue:83
+#: src/components/LernmoduleEditor.vue:87
+msgid "Vorschau zurücksetzen"
+msgstr ""
 
 #: src/components/interactiveVideo/SelectVideo.vue:107
 #: src/components/interactiveVideo/SelectVideo.vue:133
@@ -805,7 +953,7 @@ msgstr "Forwards navigation disabled"
 msgid "Vorspulen und Rückspulen deaktiviert"
 msgstr "Forwards and backwards navigation disabled"
 
-#: src/components/LernmoduleEditor.vue:146
+#: src/components/LernmoduleEditor.vue:169
 msgid "Wird gespeichert..."
 msgstr "Saving..."
 
@@ -832,10 +980,9 @@ msgstr "Youtube video"
 msgid "Youtube-Video: "
 msgstr "Youtube video: "
 
-#: src/components/QuestionEditor.vue:55 src/components/QuestionEditor.vue:57
-#: src/components/QuestionEditor.vue:90 src/components/QuestionEditor.vue:91
-msgid "Zeige Antworten in zufälliger Reihenfolge"
-msgstr "Show answers in a random order"
+#: src/components/MemoryViewer.vue:31
+msgid "Zeit:"
+msgstr ""
 
 #: src/components/interactiveVideo/VideoPlayer.vue:20
 #: src/components/interactiveVideo/VideoPlayer.vue:5
@@ -846,19 +993,85 @@ msgstr "Show answers in a random order"
 msgid "Zu %{ interaction } springen"
 msgstr "Jump to %{ interaction }"
 
-#: src/components/LernmoduleEditor.vue:14
+#: src/components/MemoryEditorCard.vue:21
+#: src/components/MemoryEditorCard.vue:22
+#: src/components/MemoryEditorCard.vue:35
+#, fuzzy
+msgid "Zweites Bild"
+msgstr "The image"
+
+#: src/components/MemoryEditorCard.vue:40
+#: src/components/MemoryEditorCard.vue:41
+#: src/components/MemoryEditorCard.vue:54
+#: src/components/MemoryEditorCard.vue:71
+#, fuzzy
+msgid "Zweites Bild hinzufügen"
+msgstr "Add image"
+
 #: src/components/LernmoduleEditor.vue:17
-#: src/components/LernmoduleEditor.vue:24
+#: src/components/LernmoduleEditor.vue:18
+#: src/components/LernmoduleEditor.vue:25
 msgctxt "Im Sinne von undo/redo"
 msgid "Rückgängig"
 msgstr "Undo"
 
-#: src/components/LernmoduleEditor.vue:17
 #: src/components/LernmoduleEditor.vue:20
-#: src/components/LernmoduleEditor.vue:27
+#: src/components/LernmoduleEditor.vue:21
+#: src/components/LernmoduleEditor.vue:28
 msgctxt "Im Sinne von undo/redo"
 msgid "Wiederherstellen"
 msgstr "Redo"
+
+#: src/components/MemoryEditor.vue:25
+#, fuzzy
+msgctxt "Karte im Memory Spiel"
+msgid "Karte löschen"
+msgstr "Delete card"
+
+#~ msgid "Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen."
+#~ msgstr "All of the blanks must be filled in order to show the solutions."
+
+#~ msgid "Alternativer Text"
+#~ msgstr "Alternative text"
+
+#~ msgid "Audio"
+#~ msgstr "Audio"
+
+#~ msgid "automatisch nach Eingabe"
+#~ msgstr "automatically after entry"
+
+#~ msgid "Das Zielbild"
+#~ msgstr "The target image"
+
+#~ msgid "Das zu ziehende Bild"
+#~ msgstr "The image that should be dragged"
+
+#~ msgid "Eigenschaften"
+#~ msgstr "Properties"
+
+#~ msgid ""
+#~ "Fügen Sie Lücken hinzu, indem Sie ein Sternchen (*) vor und hinter dem "
+#~ "korrekten Wort bzw. den Wörtern setzen oder markieren Sie ein Wort und "
+#~ "klicken Sie den \"Lücke hinzufügen\"–Button. Sie können alternative "
+#~ "Antworten mit einem Schrägstrich (/) hinzufügen. Außerdem können Sie "
+#~ "einen Tooltip mit einem Doppelpunkt (:) hinzufügen."
+#~ msgstr ""
+#~ "Add gaps by placing an asterisk (*) before and after the correct word(s), "
+#~ "or highlight a word and click the \"Add Gap\" button. You can add "
+#~ "alternative answers with a slash (/). Also, you can add a tooltip with a "
+#~ "colon (:)."
+
+#~ msgid "Karte B"
+#~ msgstr "Card B"
+
+#~ msgid "Korrigiert wird"
+#~ msgstr "The correct answers will be shown"
+
+#~ msgid "manuell per Button"
+#~ msgstr "manually via button"
+
+#~ msgid "Mehrere Antworten können ausgewählt werden"
+#~ msgstr "Multiple answers can be selected"
 
 #~ msgid "Dieser String sollte übersetzt werden."
 #~ msgstr "This string should be translated."
@@ -866,20 +1079,8 @@ msgstr "Redo"
 #~ msgid "Image Pair"
 #~ msgstr "Image Pair"
 
-#~ msgid "Drag the Words"
-#~ msgstr "Drag the Words"
-
-#~ msgid "Aufgedeckte Paare:"
-#~ msgstr "Pairs revealed:"
-
-#~ msgid "Fill in the Blanks"
-#~ msgstr "Fill in the Blanks"
-
 #~ msgid "Find the Hotspot"
 #~ msgstr "Find the Hotspot"
-
-#~ msgid "Mark the Words"
-#~ msgstr "Mark the Words"
 
 #~ msgid "Overlay"
 #~ msgstr "Overlay"
