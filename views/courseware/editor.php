@@ -42,7 +42,7 @@ that the iframe should be resized to by the iFrameSizer library -->
 </div>
 
 <script>
-  window.STUDIP.LernmoduleVueJS = {};
+  STUDIP.LernmoduleVueJS = <?= json_encode($javascript_global_variables) ?>;
 </script>
 
 <!-- iFrameResizer -- This script facilitates resizing the iframe to fit its contents automatically -->
