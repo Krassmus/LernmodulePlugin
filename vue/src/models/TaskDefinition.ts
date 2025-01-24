@@ -604,6 +604,7 @@ export function showViewerAboveEditor(
 ): boolean {
   switch (type) {
     case 'InteractiveVideo':
+      return false;
     default:
       return true;
   }
