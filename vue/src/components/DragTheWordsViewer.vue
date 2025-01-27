@@ -19,6 +19,7 @@
               <span
                 v-if="userInputs[element.uuid]"
                 class="blank filled"
+                :title="getAnswerById(userInputs[element.uuid])?.text"
                 :class="classForFilledBlank(element)"
                 :draggable="editable"
                 @dragstart="
@@ -649,9 +650,7 @@ span.item:empty:before {
   min-width: 9em;
   max-width: 9em;
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 
   background: #ddd;
   box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
