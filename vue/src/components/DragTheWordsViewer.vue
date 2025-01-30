@@ -19,6 +19,7 @@
               <span
                 v-if="userInputs[element.uuid]"
                 class="blank filled"
+                :title="getAnswerById(userInputs[element.uuid])?.text"
                 :class="classForFilledBlank(element)"
                 :draggable="editable"
                 @dragstart="
@@ -598,8 +599,9 @@ export default defineComponent({
 
   border: 1px solid #a9c3d0;
   border-radius: 0.25em;
+  padding: 0 0.25em 0 0.25em;
 
-  line-height: 1.5em;
+  line-height: 1.25em;
 }
 
 .filled {
@@ -648,9 +650,7 @@ span.item:empty:before {
   min-width: 9em;
   max-width: 9em;
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: break-word;
 
   background: #ddd;
   box-shadow: 0 0 0.3em rgba(0, 0, 0, 0.2);
@@ -658,8 +658,9 @@ span.item:empty:before {
 
   border: 1px solid #c6c6c6;
   border-radius: 0.25em;
+  padding: 0 0.25em 0 0.25em;
 
-  line-height: 1.5em;
+  line-height: 1.25em;
 
   cursor: grabbing;
 }

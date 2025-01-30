@@ -41,27 +41,28 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 
   border: 2px solid #dbe2e8;
   border-radius: 0.5em;
   background: white;
 
-  gap: 0.25em;
   padding: 0.25em;
   margin: 0;
 
   overflow: hidden;
+
+  cursor: pointer;
 }
 
 .pairing-editor-pair.selected {
-  border: 2px solid #0a78d1;
-  box-shadow: 0 0 4px #0a78d1;
+  border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
 }
 
 .pairing-editor-pair:not(.disabled):not(.selected):hover {
-  cursor: grab;
-  border: 2px solid #0a78d1;
-  box-shadow: 0 0 8px #0a78d1 inset;
+  border: 2px solid #7ba4d3;
+  box-shadow: 0 0 10px 0 #406ef3;
 }
 
 .pair-element {

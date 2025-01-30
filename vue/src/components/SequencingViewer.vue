@@ -299,11 +299,7 @@ export default defineComponent({
     },
 
     showRetryButton(): boolean {
-      return (
-        this.task.retryAllowed &&
-        this.isShowingResults &&
-        !this.allAnswersAreCorrect
-      );
+      return this.task.retryAllowed && this.isShowingResults;
     },
 
     showResumeButton(): boolean {

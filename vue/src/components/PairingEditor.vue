@@ -291,8 +291,10 @@ export default defineComponent({
   flex-grow: 1;
   /* Adapted from https://stackoverflow.com/a/46099319/7359454 */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9em, auto));
-  grid-auto-rows: max-content;
+  /* 8em fixed width image + 2 x 0.25em padding + 2 x 0.125em border */
+  grid-template-columns: repeat(auto-fill, 8.75em);
+  /* 2 x 8em fixed height images + 0.25em gap + 2 x 0.25em padding + 2 x 0.125em border */
+  grid-auto-rows: 17em;
   justify-content: space-around;
   row-gap: 1em;
   column-gap: 0.5em;
@@ -305,12 +307,7 @@ export default defineComponent({
 }
 
 .add-pair-button {
-  box-sizing: border-box;
-  width: 100%;
   aspect-ratio: 1;
-
-  margin: 0;
-  padding: 0;
 
   border: solid 2px rgba(0, 0, 0, 0);
   border-radius: 0.25em;
@@ -318,6 +315,12 @@ export default defineComponent({
   background-size: 40%;
   background-repeat: no-repeat;
   background-position: center;
+
+  cursor: pointer;
+}
+
+.add-pair-button:hover {
+  filter: brightness(0.9);
 }
 
 .remove-pair-button {
