@@ -139,12 +139,11 @@
 // Allow us to mutate the prop 'taskDefinition' as much as we want
 // TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
 /* eslint-disable vue/no-mutating-props */
-import { defineComponent, inject } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import { $gettext } from '@/language/gettext';
-import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import {
   TaskEditorState,
@@ -159,9 +158,13 @@ export default defineComponent({
     };
   },
   components: { StudipWysiwyg, FeedbackEditor },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<FillInTheBlanksTask>,
+      required: true,
+    },
+  },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as FillInTheBlanksTask,
-
     instructions(): string {
       return $gettext(
         'Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button „Lücke hinzufügen“. Sie können auch einen Tooltip hinzufügen, indem Sie einen Doppelpunkt (:) vor den Tooltip-Text schreiben.'
