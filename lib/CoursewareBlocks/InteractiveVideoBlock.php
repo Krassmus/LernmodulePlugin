@@ -68,7 +68,8 @@ class InteractiveVideoBlock extends BlockType
      */
     public function getPayload()
     {
-        $decoded = $this->decodePayloadString($this->block['payload']);
+        $payload = $this->block['payload'] ?? '';
+        $decoded = $this->decodePayloadString($payload);
         return $decoded;
     }
 
@@ -76,7 +77,7 @@ class InteractiveVideoBlock extends BlockType
     {
         $payload = $this->getPayload();
 
-        if ('' != $payload['file_id']) {
+        if (!empty($payload['file_id'])) {
             $payload['file_id'] = $this->copyFileById($payload['file_id'], $rangeId);
         }
 
@@ -98,11 +99,11 @@ class InteractiveVideoBlock extends BlockType
         //  in different places depending on the task type, e.g. for Flash Cards,
         //  you will find it in task_json->cards->[0...n]->image_url.
         $payload = $this->getPayload();
-        if (!$payload['file_id'] && !$payload['folder_id']) {
+        if (empty($payload['file_id']) && empty($payload['folder_id'])) {
             return [];
         }
 
-        if ($payload['file_id']) {
+        if (!empty($payload['file_id'])) {
             $files = [];
 
             if ($fileRef = \FileRef::find($payload['file_id'])) {
