@@ -143,7 +143,7 @@
 // Allow us to mutate the prop 'taskDefinition' as much as we want.
 // TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
 /* eslint-disable vue/no-mutating-props */
-import { defineComponent, inject } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import { $gettext } from '@/language/gettext';
@@ -163,9 +163,13 @@ export default defineComponent({
     };
   },
   components: { StudipWysiwyg, FeedbackEditor },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<DragTheWordsTask>,
+      required: true,
+    },
+  },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as DragTheWordsTask,
-
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
 
