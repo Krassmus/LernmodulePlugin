@@ -47,8 +47,12 @@ export default defineComponent({
   components: { LazyImage },
   setup() {
     return {
-      editor: inject<FindTheHotspotsEditorState>(
-        findTheHotspotsEditorStateSymbol
+      editor: inject<FindTheHotspotsEditorState | undefined>(
+        findTheHotspotsEditorStateSymbol,
+        // Supply a default value to suppress the vue warning about missing
+        // injection in the viewer:
+        // [Vue warn]: injection "Symbol(Find The Hotspots Editor state)" not found.
+        undefined
       ),
     };
   },
