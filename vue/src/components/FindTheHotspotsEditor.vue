@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
-import { fileIdToUrl } from '@/models/TaskDefinition';
+import { defineComponent, inject, PropType } from 'vue';
+import { fileIdToUrl, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
@@ -43,6 +43,12 @@ export default defineComponent({
     return {
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
+  },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<FindTheHotspotsTask>,
+      required: true,
+    },
   },
   data() {
     return {
@@ -126,8 +132,6 @@ export default defineComponent({
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as FindTheHotspotsTask,
-
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },
