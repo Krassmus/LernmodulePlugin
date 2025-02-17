@@ -22,6 +22,11 @@
         @click="onClickBackground"
         class="image hotspots-image"
       />
+      <pre
+        v-if="debug"
+        :style="{ position: 'absolute', top: 0, left: '100%' }"
+        >{{ { selectedHotspot } }}</pre
+      >
     </div>
   </div>
 </template>
@@ -55,6 +60,16 @@ export default defineComponent({
     image: {
       type: Object as PropType<ImageElement>,
       required: true,
+    },
+  },
+  computed: {
+    debug(): boolean {
+      return window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
+    },
+    selectedHotspot(): Hotspot | undefined {
+      return this.hotspots.find(
+        (h) => h.uuid === this.editor?.selectedHotspotId.value
+      );
     },
   },
   methods: {
