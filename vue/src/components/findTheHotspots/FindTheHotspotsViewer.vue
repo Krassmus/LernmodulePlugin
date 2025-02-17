@@ -23,9 +23,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.image {
-  border: 1px solid red;
-  user-select: none;
-}
-</style>
+<style scoped></style>
