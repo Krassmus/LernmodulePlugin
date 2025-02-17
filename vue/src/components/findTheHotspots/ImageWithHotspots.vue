@@ -108,21 +108,29 @@ export default defineComponent({
       handler: function (hotspot: Hotspot | undefined) {
         this.popperInstance?.destroy();
         if (hotspot) {
-          const hotspotElement = document.getElementById(
-            `hotspot-${this.uid}-${hotspot.uuid}`
-          ) as HTMLElement;
-          const tooltipElement = this.$refs
-            .selectedHotspotTooltip as HTMLElement;
-          this.popperInstance = createPopper(hotspotElement, tooltipElement, {
-            placement: 'top',
-            modifiers: [
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, 8],
+          // Run on next tick, because we need to wait for the hotspotElement
+          // to be rendered by Vue, in case it isn't yet visible at the moment this
+          // watcher is triggered.
+          // For example, if the user deletes the currently selected hotspot
+          // and then clicks undo, the hotspotElement will not be visible until
+          // the next reactivity "tick" has elapsed.
+          this.$nextTick(() => {
+            const hotspotElement = document.getElementById(
+              `hotspot-${this.uid}-${hotspot.uuid}`
+            ) as HTMLElement;
+            const tooltipElement = this.$refs
+              .selectedHotspotTooltip as HTMLElement;
+            this.popperInstance = createPopper(hotspotElement, tooltipElement, {
+              placement: 'top',
+              modifiers: [
+                {
+                  name: 'offset',
+                  options: {
+                    offset: [0, 8],
+                  },
                 },
-              },
-            ],
+              ],
+            });
           });
         }
       },
