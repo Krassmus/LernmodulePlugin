@@ -52,12 +52,8 @@ export default defineComponent({
   },
   data() {
     return {
-      hotspots: [] as Hotspot[],
       selectedHotspot: null as Hotspot | null,
     };
-  },
-  mounted() {
-    this.hotspots = this.taskDefinition.hotspots;
   },
   methods: {
     fileIdToUrl,
@@ -79,8 +75,10 @@ export default defineComponent({
         width: 180,
         height: 180,
       };
-      this.hotspots.push(newHotspot);
-      this.updateHotspotsInTaskDefinition();
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.hotspots.push(newHotspot);
+      });
+      this.taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
     },
     addCircularHotspot(): void {
       const newHotspot: Hotspot = {
@@ -90,12 +88,16 @@ export default defineComponent({
         y: 50,
         diameter: 180,
       };
-      this.hotspots.push(newHotspot);
-      this.updateHotspotsInTaskDefinition();
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.hotspots.push(newHotspot);
+      });
+      this.taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
     },
     removeAllHotspots(): void {
-      this.hotspots = [];
-      this.updateHotspotsInTaskDefinition();
+      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+        draft.hotspots = [];
+      });
+      this.taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
     },
     getHotspotStyle(hotspot: Hotspot): Partial<CSSStyleDeclaration> {
       if (hotspot.type === 'rectangle') {
@@ -120,15 +122,6 @@ export default defineComponent({
     },
     deselectHotspot(): void {
       this.selectedHotspot = null;
-    },
-    updateHotspotsInTaskDefinition(): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.hotspots = this.hotspots;
-      });
-      this.taskEditor!.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
     },
   },
   computed: {
