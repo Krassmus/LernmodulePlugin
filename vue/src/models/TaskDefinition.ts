@@ -23,6 +23,7 @@ import QuestionViewer from '@/components/QuestionViewer.vue';
 import SequencingViewer from '@/components/SequencingViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
 import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
+import { imageElementSchema } from '@/models/common';
 
 /**
  * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
@@ -48,15 +49,7 @@ export const feedbackSchema = z.object({
   message: z.string(),
 });
 export type Feedback = z.infer<typeof feedbackSchema>;
-
-export const imageElementSchema = z.object({
-  uuid: z.string(),
-  type: z.literal('image'),
-  file_id: z.string(),
-  altText: z.string(),
-});
-export type ImageElement = z.infer<typeof imageElementSchema>;
-
+// TODO Pull these things out into common.ts as well next to ImageElement/imageElementSchema.
 const audioElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('audio'),

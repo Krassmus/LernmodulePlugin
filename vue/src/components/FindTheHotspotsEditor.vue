@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
-import { fileIdToUrl, FillInTheBlanksTask } from '@/models/TaskDefinition';
+import { fileIdToUrl } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';

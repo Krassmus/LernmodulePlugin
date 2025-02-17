@@ -28,10 +28,11 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { ViewerMemoryCard } from '@/components/MemoryViewer.vue';
-import { fileIdToUrl, ImageElement } from '@/models/TaskDefinition';
+import { fileIdToUrl } from '@/models/TaskDefinition';
 import LazyImage from '@/components/LazyImage.vue';
 import { $gettext } from '@/language/gettext';
 import MultimediaElement from '@/components/MultimediaElement.vue';
+import { ImageElement } from '@/models/common';
 
 export default defineComponent({
   name: 'MemoryViewerCard',

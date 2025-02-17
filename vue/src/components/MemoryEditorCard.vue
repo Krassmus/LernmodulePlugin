@@ -80,12 +80,7 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
-import {
-  fileIdToUrl,
-  ImageElement,
-  MemoryCard,
-  MemoryTask,
-} from '@/models/TaskDefinition';
+import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { $gettext } from '@/language/gettext';
@@ -97,6 +92,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { ImageElement } from '@/models/common';
 
 export default defineComponent({
   name: 'MemoryEditorCard',

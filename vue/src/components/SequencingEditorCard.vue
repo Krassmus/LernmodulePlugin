@@ -39,7 +39,6 @@ import { defineComponent, inject, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
 import {
   fileIdToUrl,
-  ImageElement,
   LernmoduleMultimediaElement,
   MultimediaElementType,
   SequencingTask,
@@ -54,6 +53,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { ImageElement } from '@/models/common';
 
 export default defineComponent({
   name: 'SequencingEditorCard',

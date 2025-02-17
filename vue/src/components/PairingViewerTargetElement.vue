@@ -40,8 +40,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, ImageElement } from '@/models/TaskDefinition';
+import { fileIdToUrl } from '@/models/TaskDefinition';
 import MultimediaElement from '@/components/MultimediaElement.vue';
+import { ImageElement } from '@/models/common';
 
 export default defineComponent({
   name: 'TargetImage',
