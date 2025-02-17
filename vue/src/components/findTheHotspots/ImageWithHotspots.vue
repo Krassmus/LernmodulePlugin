@@ -4,10 +4,21 @@ import LazyImage from '@/components/LazyImage.vue';
 import { Hotspot } from '@/models/FindTheHotspotsTask';
 import { fileIdToUrl } from '@/models/TaskDefinition';
 import { ImageElement } from '@/models/common';
+import {
+  FindTheHotspotsEditorState,
+  findTheHotspotsEditorStateSymbol,
+} from '@/components/findTheHotspots/findTheHotspotsEditorState';
 
 export default defineComponent({
   name: 'ImageWithHotspots',
   components: { LazyImage },
+  setup() {
+    return {
+      editor: inject<FindTheHotspotsEditorState>(
+        findTheHotspotsEditorStateSymbol
+      ),
+    };
+  },
   props: {
     hotspots: {
       type: Object as PropType<Hotspot[]>,
@@ -20,6 +31,9 @@ export default defineComponent({
   },
   methods: {
     fileIdToUrl,
+    onClickHotspot(hotspot: Hotspot) {
+      console.log('onClickHotspot', hotspot);
+    },
     getHotspotStyle(hotspot: Hotspot): Partial<CSSStyleDeclaration> {
       if (hotspot.type === 'rectangle') {
         return {
@@ -45,11 +59,16 @@ export default defineComponent({
 <template>
   <div class="image-and-hotspots-container-wrapper">
     <div class="image-and-hotspots-container">
+      <!--  In the editor, hotspots are visible. In the viewer, they should be
+      invisible. We can tell whether we are in the editor or the viewer based
+      on whether the value of the injected field 'editor' is defined. -->
       <div
         v-for="hotspot in hotspots"
         :key="hotspot.uuid"
         class="hotspot"
+        :class="{ 'invisible-hotspot': !editor }"
         :style="getHotspotStyle(hotspot)"
+        @click="onClickHotspot(hotspot)"
       />
       <LazyImage
         :src="fileIdToUrl(image.file_id)"
@@ -61,7 +80,7 @@ export default defineComponent({
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .image-and-hotspots-container-wrapper {
   display: flex;
   align-items: center;
@@ -83,6 +102,12 @@ export default defineComponent({
   position: absolute;
   border: 2px dashed rgba(0, 0, 0, 0.7);
   background-color: rgba(255, 255, 255, 0.5);
+
+  // This class isn't called 'invisible' or 'hidden', because there are Stud.IP
+  // CSS classes with those names that set display: none;
+  &.invisible-hotspot {
+    opacity: 0;
+  }
 }
 
 .hotspot.selected {

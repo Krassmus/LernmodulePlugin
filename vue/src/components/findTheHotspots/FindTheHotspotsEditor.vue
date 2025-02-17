@@ -29,6 +29,7 @@ import {
 } from '@/components/taskEditorState';
 import { FindTheHotspotsTask, Hotspot } from '@/models/FindTheHotspotsTask';
 import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
+import { findTheHotspotsEditorStateSymbol } from '@/components/findTheHotspots/findTheHotspotsEditorState';
 
 export default defineComponent({
   name: 'FindTheHotspotsEditor',
@@ -36,6 +37,11 @@ export default defineComponent({
   setup() {
     return {
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
+  provide() {
+    return {
+      [findTheHotspotsEditorStateSymbol as symbol]: {},
     };
   },
   props: {
