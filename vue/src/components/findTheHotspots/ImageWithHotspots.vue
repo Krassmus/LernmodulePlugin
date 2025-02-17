@@ -1,5 +1,5 @@
 <template>
-  <div class="image-and-hotspots-container-wrapper">
+  <div class="image-and-hotspots-container-wrapper" :class="{ debug: !!debug }">
     <div class="image-and-hotspots-container">
       <!--  In the editor, hotspots are visible. In the viewer, they should be
       invisible. We can tell whether we are in the editor or the viewer based
@@ -111,6 +111,9 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  &.debug {
+    justify-content: flex-start;
+  }
 }
 
 .image-and-hotspots-container {
