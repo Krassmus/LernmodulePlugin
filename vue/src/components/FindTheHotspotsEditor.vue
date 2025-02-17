@@ -1,24 +1,31 @@
 <template>
-  <div class="button-bar">
-    <button @click="addRectangularHotspot">Add Rectangular Hotspot</button>
-    <button @click="addCircularHotspot">Add Circular Hotspot</button>
-    <button @click="removeAllHotspots">Remove All Hotspots</button>
+  <div class="find-the-hotspots-editor">
+    <div class="button-bar">
+      <button @click="addRectangularHotspot">Add Rectangular Hotspot</button>
+      <button @click="addCircularHotspot">Add Circular Hotspot</button>
+      <button @click="removeAllHotspots">Remove All Hotspots</button>
+    </div>
+    <div class="image-and-hotspots-container-wrapper">
+      <div
+        v-if="taskDefinition.image.file_id"
+        class="image-and-hotspots-container"
+      >
+        <div
+          v-for="hotspot in taskDefinition.hotspots"
+          :key="hotspot.uuid"
+          class="hotspot"
+          :style="getHotspotStyle(hotspot)"
+        />
+        <LazyImage
+          :src="fileIdToUrl(taskDefinition.image.file_id)"
+          :alt="taskDefinition.image.altText"
+          @click="deselectHotspot"
+          class="image hotspots-image"
+        />
+      </div>
+      <FileUpload v-else @fileUploaded="onImageUploaded" />
+    </div>
   </div>
-  <div v-if="taskDefinition.image.file_id" class="image-and-hotspots-container">
-    <div
-      v-for="hotspot in taskDefinition.hotspots"
-      :key="hotspot.uuid"
-      class="hotspot"
-      :style="getHotspotStyle(hotspot)"
-    />
-    <LazyImage
-      :src="fileIdToUrl(taskDefinition.image.file_id)"
-      :alt="taskDefinition.image.altText"
-      @click="deselectHotspot"
-      class="image"
-    />
-  </div>
-  <FileUpload v-else @fileUploaded="onImageUploaded" />
 </template>
 
 <script lang="ts">
@@ -72,8 +79,8 @@ export default defineComponent({
         type: 'rectangle',
         x: 50,
         y: 50,
-        width: 180,
-        height: 180,
+        width: 0.2,
+        height: 0.2,
       };
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.hotspots.push(newHotspot);
@@ -86,7 +93,7 @@ export default defineComponent({
         type: 'circle',
         x: 50,
         y: 50,
-        diameter: 180,
+        diameter: 0.2,
       };
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.hotspots.push(newHotspot);
@@ -104,15 +111,15 @@ export default defineComponent({
         return {
           left: `${hotspot.x}%`,
           top: `${hotspot.y}%`,
-          width: `${hotspot.width}px`,
-          height: `${hotspot.height}px`,
+          width: `${hotspot.width * 100}%`,
+          height: `${hotspot.height * 100}%`,
         };
       } else {
         return {
           left: `${hotspot.x}%`,
           top: `${hotspot.y}%`,
-          width: `${hotspot.diameter}px`,
-          height: `${hotspot.diameter}px`,
+          width: `${hotspot.diameter * 100}%`,
+          aspectRatio: '1',
           borderRadius: '50%',
         };
       }
@@ -138,13 +145,21 @@ export default defineComponent({
   margin-bottom: 0.5em;
 }
 
-.image-and-hotspots-container {
-  position: relative;
+.image-and-hotspots-container-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.image {
-  border: 1px solid steelblue;
+.image-and-hotspots-container {
+  position: relative;
+  height: max-content;
+}
+
+.hotspots-image {
   user-select: none;
+  max-height: 400px;
+  width: 100%;
 }
 
 .hotspot {

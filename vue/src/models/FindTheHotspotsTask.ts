@@ -6,8 +6,8 @@ const rectangleHotspotSchema = z.object({
   type: z.literal('rectangle'),
   x: z.number(),
   y: z.number(),
-  width: z.number(),
-  height: z.number(),
+  width: z.number(), // Fraction 0..1 of image width
+  height: z.number(), // Fraction 0..1 of image width
 });
 export type RectangleHotspot = z.infer<typeof rectangleHotspotSchema>;
 
@@ -16,7 +16,7 @@ const circleHotspotSchema = z.object({
   type: z.literal('circle'),
   x: z.number(),
   y: z.number(),
-  diameter: z.number(),
+  diameter: z.number(), // Fraction 0..1 of image width
 });
 export type CircleHotspot = z.infer<typeof circleHotspotSchema>;
 
