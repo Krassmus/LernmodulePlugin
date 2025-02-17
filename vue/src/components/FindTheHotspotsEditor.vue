@@ -23,12 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
-import {
-  fileIdToUrl,
-  Hotspot,
-  HotspotType,
-  FindTheHotspotsTask,
-} from '@/models/TaskDefinition';
+import { fileIdToUrl } from '@/models/TaskDefinition';
 import { taskEditorStore } from '@/store';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
@@ -39,6 +34,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { FindTheHotspotsTask, Hotspot } from '@/models/FindTheHotspotsTask';
 
 export default defineComponent({
   name: 'FindTheHotspotsEditor',

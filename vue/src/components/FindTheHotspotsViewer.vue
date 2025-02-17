@@ -11,8 +11,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { fileIdToUrl, FindTheHotspotsTask } from '@/models/TaskDefinition';
+import { fileIdToUrl } from '@/models/TaskDefinition';
 import LazyImage from '@/components/LazyImage.vue';
+import { FindTheHotspotsTask } from '@/models/FindTheHotspotsTask';
 
 export default defineComponent({
   name: 'FindTheHotspotsViewer',

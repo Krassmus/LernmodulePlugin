@@ -22,6 +22,7 @@ import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
 import SequencingViewer from '@/components/SequencingViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
+import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
 
 /**
  * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
@@ -48,7 +49,7 @@ export const feedbackSchema = z.object({
 });
 export type Feedback = z.infer<typeof feedbackSchema>;
 
-const imageElementSchema = z.object({
+export const imageElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('image'),
   file_id: z.string(),
@@ -99,39 +100,6 @@ export const dragTheWordsTaskSchema = z.object({
   feedback: z.array(feedbackSchema),
 });
 export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
-
-const rectangleHotspotSchema = z.object({
-  uuid: z.string(),
-  type: z.literal('rectangle'),
-  x: z.number(),
-  y: z.number(),
-  width: z.number(),
-  height: z.number(),
-});
-export type RectangleHotspot = z.infer<typeof rectangleHotspotSchema>;
-
-const circleHotspotSchema = z.object({
-  uuid: z.string(),
-  type: z.literal('circle'),
-  x: z.number(),
-  y: z.number(),
-  diameter: z.number(),
-});
-export type CircleHotspot = z.infer<typeof circleHotspotSchema>;
-
-export const hotspotSchema = z.union([
-  rectangleHotspotSchema,
-  circleHotspotSchema,
-]);
-export type Hotspot = z.infer<typeof hotspotSchema>;
-export type HotspotType = Hotspot['type'];
-
-export const findTheHotspotsTaskSchema = z.object({
-  task_type: z.literal('FindTheHotspots'),
-  image: imageElementSchema,
-  hotspots: z.array(hotspotSchema),
-});
-export type FindTheHotspotsTask = z.infer<typeof findTheHotspotsTaskSchema>;
 
 export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
