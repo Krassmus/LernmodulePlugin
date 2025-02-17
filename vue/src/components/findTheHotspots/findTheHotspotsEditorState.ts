@@ -13,8 +13,8 @@ export const findTheHotspotsEditorStateSymbol = Symbol(
 export interface FindTheHotspotsEditorState {
   // Some of this stuff was copied over from interactiveVideoEditorState.
   // We will adapt it together to work for Find The Hotspots.
-  // selectedInteractionId: Ref<string | undefined>;
-  // selectInteraction(id: string): void;
+  selectedHotspotId: Ref<string | undefined>;
+  selectHotspot(id: string | undefined): void;
   // editInteraction(id: string): void;
   // dragInteraction(
   //     interactionId: string,

@@ -30,8 +30,6 @@ import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vu
 
 const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
 
-provide(findTheHotspotsEditorStateSymbol, {});
-
 const props = defineProps({
   taskDefinition: {
     type: Object as PropType<FindTheHotspotsTask>,
@@ -40,6 +38,11 @@ const props = defineProps({
 });
 
 const selectedHotspotId = ref<string | undefined>(undefined);
+
+provide(findTheHotspotsEditorStateSymbol, {
+  selectedHotspotId,
+  selectHotspot,
+});
 
 function onImageUploaded(file: FileRef): void {
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
@@ -87,12 +90,8 @@ function removeAllHotspots(): void {
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
 }
 
-function selectHotspot(hotspot: Hotspot): void {
-  selectedHotspotId.value = hotspot.uuid;
-}
-
-function deselectHotspot(): void {
-  selectedHotspotId.value = undefined;
+function selectHotspot(id: string): void {
+  selectedHotspotId.value = id;
 }
 </script>
 

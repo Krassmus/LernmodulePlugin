@@ -8,14 +8,18 @@
         v-for="hotspot in hotspots"
         :key="hotspot.uuid"
         class="hotspot"
-        :class="{ 'invisible-hotspot': !editor }"
+        :class="{
+          'invisible-hotspot': !editor,
+          selected: editor?.selectedHotspotId.value === hotspot.uuid,
+        }"
         :style="getHotspotStyle(hotspot)"
         @click="onClickHotspot(hotspot)"
+        @pointerdown="onPointerdownHotspot(hotspot)"
       />
       <LazyImage
         :src="fileIdToUrl(image.file_id)"
         :alt="image.altText"
-        @click="deselectHotspot"
+        @click="onClickBackground"
         class="image hotspots-image"
       />
     </div>
@@ -55,8 +59,15 @@ export default defineComponent({
   },
   methods: {
     fileIdToUrl,
+    onClickBackground() {
+      this.editor?.selectHotspot(undefined);
+    },
     onClickHotspot(hotspot: Hotspot) {
       console.log('onClickHotspot', hotspot);
+      this.editor?.selectHotspot(hotspot.uuid);
+    },
+    onPointerdownHotspot(hotspot: Hotspot) {
+      this.editor?.selectHotspot(hotspot.uuid);
     },
     getHotspotStyle(hotspot: Hotspot): Partial<CSSStyleDeclaration> {
       if (hotspot.type === 'rectangle') {
