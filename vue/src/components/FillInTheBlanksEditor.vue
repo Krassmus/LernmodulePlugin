@@ -1,6 +1,3 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div class="stud5p-task">
     <form class="default">
@@ -20,7 +17,8 @@
         </div>
 
         <studip-wysiwyg
-          v-model="taskDefinition.template"
+          v-model="localTaskDefinition.template"
+          @update:modelValue="updateTaskDefinition"
           ref="wysiwyg"
           force-soft-breaks
           remove-wrapping-p-tag
@@ -32,40 +30,59 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          <input v-model="taskDefinition.caseSensitive" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.caseSensitive"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Groß- und Kleinschreibung beachten') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.acceptTypos" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.acceptTypos"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Rechtschreib- und Tippfehler ignorieren') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.autoCorrect" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.autoCorrect"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Lücken automatisch prüfen') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.retryAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrere Versuche erlauben') }}
         </label>
 
         <label>
           <input
-            v-model="taskDefinition.showSolutionsAllowed"
-            @change="updateAllBlanksRequirement"
+            v-model="localTaskDefinition.showSolutionsAllowed"
+            @change="updateShowSolutionsAllowed"
             type="checkbox"
           />
           {{ $gettext('Lösungen anzeigen erlauben') }}
         </label>
 
         <label
-          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+          :class="{
+            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+          }"
         >
           <input
-            v-model="taskDefinition.allBlanksMustBeFilledForSolutions"
-            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="localTaskDefinition.allBlanksMustBeFilledForSolutions"
+            @change="updateTaskDefinition"
+            :disabled="!localTaskDefinition.showSolutionsAllowed"
             type="checkbox"
           />
           {{
@@ -77,31 +94,38 @@
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Beschriftungen') }}</legend>
 
-        <label :class="{ 'setting-disabled': taskDefinition.autoCorrect }">
+        <label :class="{ 'setting-disabled': localTaskDefinition.autoCorrect }">
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
-            v-model="taskDefinition.strings.checkButton"
-            :disabled="taskDefinition.autoCorrect"
-            type="text"
-          />
-        </label>
-
-        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-          {{ $gettext('Text für Wiederholen-Button:') }}
-          <input
-            v-model="taskDefinition.strings.retryButton"
-            :disabled="!taskDefinition.retryAllowed"
+            v-model="localTaskDefinition.strings.checkButton"
+            @change="updateTaskDefinition"
+            :disabled="localTaskDefinition.autoCorrect"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+          :class="{ 'setting-disabled': !localTaskDefinition.retryAllowed }"
+        >
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="localTaskDefinition.strings.retryButton"
+            @change="updateTaskDefinition"
+            :disabled="!localTaskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{
+            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+          }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="taskDefinition.strings.solutionsButton"
-            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="localTaskDefinition.strings.solutionsButton"
+            @change="updateTaskDefinition"
+            :disabled="!localTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
@@ -109,16 +133,17 @@
         <label
           :class="{
             'setting-disabled':
-              !taskDefinition.showSolutionsAllowed ||
-              !taskDefinition.allBlanksMustBeFilledForSolutions,
+              !localTaskDefinition.showSolutionsAllowed ||
+              !localTaskDefinition.allBlanksMustBeFilledForSolutions,
           }"
         >
           {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
           <input
-            v-model="taskDefinition.strings.fillInAllBlanksMessage"
+            v-model="localTaskDefinition.strings.fillInAllBlanksMessage"
+            @change="updateTaskDefinition"
             :disabled="
-              !taskDefinition.showSolutionsAllowed ||
-              !taskDefinition.allBlanksMustBeFilledForSolutions
+              !localTaskDefinition.showSolutionsAllowed ||
+              !localTaskDefinition.allBlanksMustBeFilledForSolutions
             "
             type="text"
           />
@@ -126,8 +151,8 @@
       </fieldset>
 
       <feedback-editor
-        :feedback="taskDefinition.feedback"
-        :result-message="taskDefinition.strings.resultMessage"
+        :feedback="localTaskDefinition.feedback"
+        :result-message="localTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -136,9 +161,6 @@
 </template>
 
 <script lang="ts">
-// Allow us to mutate the prop 'taskDefinition' as much as we want
-// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
-/* eslint-disable vue/no-mutating-props */
 import { defineComponent, inject, PropType } from 'vue';
 import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
@@ -163,6 +185,11 @@ export default defineComponent({
       type: Object as PropType<FillInTheBlanksTask>,
       required: true,
     },
+  },
+  data() {
+    return {
+      localTaskDefinition: { ...this.taskDefinition },
+    };
   },
   computed: {
     instructions(): string {
@@ -197,16 +224,24 @@ export default defineComponent({
       });
     },
 
-    updateAllBlanksRequirement() {
-      if (!this.taskDefinition.showSolutionsAllowed) {
-        this.taskDefinition.allBlanksMustBeFilledForSolutions = false;
+    updateTaskDefinition() {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: this.localTaskDefinition,
+        undoBatch: {},
+      });
+    },
+
+    updateShowSolutionsAllowed() {
+      if (!this.localTaskDefinition.showSolutionsAllowed) {
+        this.localTaskDefinition.allBlanksMustBeFilledForSolutions = false;
       }
+      this.updateTaskDefinition();
     },
 
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.localTaskDefinition,
           (taskDraft: FillInTheBlanksTask) => {
             taskDraft.feedback = updatedFeedback;
           }
@@ -218,7 +253,7 @@ export default defineComponent({
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.localTaskDefinition,
           (taskDraft: FillInTheBlanksTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
