@@ -96,8 +96,8 @@ export default defineComponent({
         return {
           left: `${hotspot.x * 100}%`,
           top: `${hotspot.y * 100}%`,
-          width: `${hotspot.diameter * 100}%`,
-          aspectRatio: '1',
+          width: `${hotspot.width * 100}%`,
+          height: `${hotspot.height * 100}%`,
           borderRadius: '50%',
         };
       }

@@ -11,18 +11,19 @@ const rectangleHotspotSchema = z.object({
 });
 export type RectangleHotspot = z.infer<typeof rectangleHotspotSchema>;
 
-const circleHotspotSchema = z.object({
+const ellipseHotspotSchema = z.object({
   uuid: z.string(),
-  type: z.literal('circle'),
+  type: z.literal('ellipse'),
   x: z.number(), // Fraction 0..1 of image width
   y: z.number(), // Fraction 0..1 of image height
-  diameter: z.number(), // Fraction 0..1 of image width
+  width: z.number(), // Fraction 0..1 of image width
+  height: z.number(), // Fraction 0..1 of image height
 });
-export type CircleHotspot = z.infer<typeof circleHotspotSchema>;
+export type EllipseHotspot = z.infer<typeof ellipseHotspotSchema>;
 
 export const hotspotSchema = z.union([
   rectangleHotspotSchema,
-  circleHotspotSchema,
+  ellipseHotspotSchema,
 ]);
 export type Hotspot = z.infer<typeof hotspotSchema>;
 export type HotspotType = Hotspot['type'];

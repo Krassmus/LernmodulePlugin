@@ -2,7 +2,7 @@
   <div class="find-the-hotspots-editor">
     <div class="button-bar">
       <button @click="addRectangularHotspot">Add Rectangular Hotspot</button>
-      <button @click="addCircularHotspot">Add Circular Hotspot</button>
+      <button @click="addEllipseHotspot">Add Ellipse Hotspot</button>
       <button @click="removeAllHotspots">Remove All Hotspots</button>
     </div>
     <ImageWithHotspots
@@ -69,13 +69,14 @@ function addRectangularHotspot(): void {
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
 }
 
-function addCircularHotspot(): void {
+function addEllipseHotspot(): void {
   const newHotspot: Hotspot = {
     uuid: v4(),
-    type: 'circle',
+    type: 'ellipse',
     x: 0.4,
     y: 0.4,
-    diameter: 0.2,
+    width: 0.2,
+    height: 0.2,
   };
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
     draft.hotspots.push(newHotspot);
