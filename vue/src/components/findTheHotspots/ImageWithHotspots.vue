@@ -1,3 +1,27 @@
+<template>
+  <div class="image-and-hotspots-container-wrapper">
+    <div class="image-and-hotspots-container">
+      <!--  In the editor, hotspots are visible. In the viewer, they should be
+      invisible. We can tell whether we are in the editor or the viewer based
+      on whether the value of the injected field 'editor' is defined. -->
+      <div
+        v-for="hotspot in hotspots"
+        :key="hotspot.uuid"
+        class="hotspot"
+        :class="{ 'invisible-hotspot': !editor }"
+        :style="getHotspotStyle(hotspot)"
+        @click="onClickHotspot(hotspot)"
+      />
+      <LazyImage
+        :src="fileIdToUrl(image.file_id)"
+        :alt="image.altText"
+        @click="deselectHotspot"
+        class="image hotspots-image"
+      />
+    </div>
+  </div>
+</template>
+
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
 import LazyImage from '@/components/LazyImage.vue';
@@ -55,30 +79,6 @@ export default defineComponent({
   },
 });
 </script>
-
-<template>
-  <div class="image-and-hotspots-container-wrapper">
-    <div class="image-and-hotspots-container">
-      <!--  In the editor, hotspots are visible. In the viewer, they should be
-      invisible. We can tell whether we are in the editor or the viewer based
-      on whether the value of the injected field 'editor' is defined. -->
-      <div
-        v-for="hotspot in hotspots"
-        :key="hotspot.uuid"
-        class="hotspot"
-        :class="{ 'invisible-hotspot': !editor }"
-        :style="getHotspotStyle(hotspot)"
-        @click="onClickHotspot(hotspot)"
-      />
-      <LazyImage
-        :src="fileIdToUrl(image.file_id)"
-        :alt="image.altText"
-        @click="deselectHotspot"
-        class="image hotspots-image"
-      />
-    </div>
-  </div>
-</template>
 
 <style scoped lang="scss">
 .image-and-hotspots-container-wrapper {
