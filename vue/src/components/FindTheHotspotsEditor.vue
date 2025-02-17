@@ -65,7 +65,7 @@ export default defineComponent({
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         draft.image.file_id = file.id;
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
