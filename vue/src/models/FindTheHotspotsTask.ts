@@ -4,18 +4,18 @@ import { imageElementSchema } from '@/models/common';
 const rectangleHotspotSchema = z.object({
   uuid: z.string(),
   type: z.literal('rectangle'),
-  x: z.number(),
-  y: z.number(),
+  x: z.number(), // Fraction 0..1 of image width
+  y: z.number(), // Fraction 0..1 of image height
   width: z.number(), // Fraction 0..1 of image width
-  height: z.number(), // Fraction 0..1 of image width
+  height: z.number(), // Fraction 0..1 of image height
 });
 export type RectangleHotspot = z.infer<typeof rectangleHotspotSchema>;
 
 const circleHotspotSchema = z.object({
   uuid: z.string(),
   type: z.literal('circle'),
-  x: z.number(),
-  y: z.number(),
+  x: z.number(), // Fraction 0..1 of image width
+  y: z.number(), // Fraction 0..1 of image height
   diameter: z.number(), // Fraction 0..1 of image width
 });
 export type CircleHotspot = z.infer<typeof circleHotspotSchema>;

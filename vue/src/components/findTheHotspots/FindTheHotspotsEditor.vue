@@ -58,8 +58,8 @@ function addRectangularHotspot(): void {
   const newHotspot: Hotspot = {
     uuid: v4(),
     type: 'rectangle',
-    x: 50,
-    y: 50,
+    x: 0.4,
+    y: 0.4,
     width: 0.2,
     height: 0.2,
   };
@@ -73,8 +73,8 @@ function addCircularHotspot(): void {
   const newHotspot: Hotspot = {
     uuid: v4(),
     type: 'circle',
-    x: 50,
-    y: 50,
+    x: 0.4,
+    y: 0.4,
     diameter: 0.2,
   };
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
