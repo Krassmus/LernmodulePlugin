@@ -13,6 +13,7 @@
           'invisible-hotspot': !editor,
           selected: editor?.selectedHotspotId.value === hotspot.uuid,
         }"
+        :id="`hotspot-${uid}-${hotspot.uuid}`"
         :style="getHotspotStyle(hotspot)"
         @click="onClickHotspot(hotspot)"
         @pointerdown="onPointerdownHotspot(hotspot)"
@@ -29,6 +30,17 @@
         >{{ { selectedHotspot } }}</pre
       >
     </div>
+    <div
+      ref="selectedHotspotTooltip"
+      v-if="editor"
+      class="selected-hotspot-tooltip"
+      :class="{
+        hidden: !selectedHotspot,
+      }"
+    >
+      <button type="button" class="small-button visibility-visible"></button>
+      <div class="arrow" data-popper-arrow></div>
+    </div>
   </div>
 </template>
 
@@ -42,6 +54,8 @@ import {
   FindTheHotspotsEditorState,
   findTheHotspotsEditorStateSymbol,
 } from '@/components/findTheHotspots/findTheHotspotsEditorState';
+import { createPopper, Instance } from '@popperjs/core';
+import { v4 } from 'uuid';
 
 export default defineComponent({
   name: 'ImageWithHotspots',
@@ -67,14 +81,51 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      popperInstance: undefined as Instance | undefined,
+    };
+  },
   computed: {
     debug(): boolean {
       return window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
+    },
+    // A unique ID for this instance of ImageWithHotspots, so that we can refer
+    // to elements inside of it by ID when there are multiple instances
+    // (e.g. viewer and editor) on the same page.
+    uid(): string {
+      return v4();
     },
     selectedHotspot(): Hotspot | undefined {
       return this.hotspots.find(
         (h) => h.uuid === this.editor?.selectedHotspotId.value
       );
+    },
+  },
+  watch: {
+    selectedHotspot: {
+      immediate: true,
+      handler: function (hotspot: Hotspot | undefined) {
+        this.popperInstance?.destroy();
+        if (hotspot) {
+          const hotspotElement = document.getElementById(
+            `hotspot-${this.uid}-${hotspot.uuid}`
+          ) as HTMLElement;
+          const tooltipElement = this.$refs
+            .selectedHotspotTooltip as HTMLElement;
+          this.popperInstance = createPopper(hotspotElement, tooltipElement, {
+            placement: 'top',
+            modifiers: [
+              {
+                name: 'offset',
+                options: {
+                  offset: [0, 8],
+                },
+              },
+            ],
+          });
+        }
+      },
     },
   },
   methods: {
@@ -160,5 +211,53 @@ button.hotspot {
 
 .hotspot.selected {
   border: 2px dashed #0099ff;
+}
+
+.selected-hotspot-tooltip {
+  &.hidden {
+    display: none;
+  }
+  z-index: 2;
+  position: absolute;
+  display: flex;
+  gap: 0.5em;
+  background: white;
+  color: black;
+  border-radius: 12px;
+  border: 2px solid black;
+  padding: 8px;
+  > .arrow,
+  > .arrow::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+  }
+
+  > .arrow {
+    visibility: hidden;
+  }
+
+  > .arrow::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+  }
+
+  &[data-popper-placement^='top'] > .arrow {
+    bottom: -4px;
+  }
+
+  &[data-popper-placement^='bottom'] > .arrow {
+    top: -4px;
+  }
+
+  &[data-popper-placement^='left'] > .arrow {
+    right: -4px;
+  }
+
+  &[data-popper-placement^='right'] > .arrow {
+    left: -4px;
+  }
 }
 </style>
