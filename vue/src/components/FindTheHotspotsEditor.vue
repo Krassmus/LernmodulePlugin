@@ -97,7 +97,7 @@ export default defineComponent({
       this.hotspots = [];
       this.updateHotspotsInTaskDefinition();
     },
-    getHotspotStyle(hotspot: Hotspot) {
+    getHotspotStyle(hotspot: Hotspot): Partial<CSSStyleDeclaration> {
       if (hotspot.type === 'rectangle') {
         return {
           left: `${hotspot.x}%`,
