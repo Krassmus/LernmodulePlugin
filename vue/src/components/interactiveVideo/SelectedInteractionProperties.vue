@@ -84,17 +84,25 @@
           :taskDefinition="selectedInteraction.taskDefinition"
         />
       </KeepAlive>
-      <h3>
-        {{ $gettext('Vorschau') }}
-      </h3>
-      <KeepAlive>
-        <component
-          class="lmb-task-preview"
-          :key="`${selectedInteraction.id}-viewer`"
-          :is="viewerForTaskType(selectedInteraction.taskDefinition.task_type)"
-          :task="selectedInteraction.taskDefinition"
-        />
-      </KeepAlive>
+      <template
+        v-if="
+          showViewerAboveEditor(selectedInteraction.taskDefinition.task_type)
+        "
+      >
+        <h3>
+          {{ $gettext('Vorschau') }}
+        </h3>
+        <KeepAlive>
+          <component
+            class="lmb-task-preview"
+            :key="`${selectedInteraction.id}-viewer`"
+            :is="
+              viewerForTaskType(selectedInteraction.taskDefinition.task_type)
+            "
+            :task="selectedInteraction.taskDefinition"
+          />
+        </KeepAlive>
+      </template>
     </template>
   </div>
 </template>
@@ -104,7 +112,11 @@ import {
   Interaction,
   printInteractionType,
 } from '@/models/InteractiveVideoTask';
-import { editorForTaskType, viewerForTaskType } from '@/models/TaskDefinition';
+import {
+  editorForTaskType,
+  showViewerAboveEditor,
+  viewerForTaskType,
+} from '@/models/TaskDefinition';
 import { $gettext } from '../../language/gettext';
 import {
   InteractiveVideoEditorState,
@@ -138,6 +150,7 @@ export default defineComponent({
     };
   },
   methods: {
+    showViewerAboveEditor,
     viewerForTaskType,
     $gettext,
     printInteractionType,
