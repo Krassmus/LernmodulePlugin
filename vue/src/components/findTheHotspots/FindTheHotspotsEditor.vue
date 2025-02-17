@@ -5,7 +5,6 @@
       <button @click="addCircularHotspot">Add Circular Hotspot</button>
       <button @click="removeAllHotspots">Remove All Hotspots</button>
     </div>
-
     <ImageWithHotspots
       v-if="taskDefinition.image.file_id"
       :hotspots="taskDefinition.hotspots"
@@ -15,10 +14,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, inject, PropType } from 'vue';
-import { fileIdToUrl } from '@/models/TaskDefinition';
-import { taskEditorStore } from '@/store';
+<script setup lang="ts">
+import { inject, PropType, provide, ref, defineProps } from 'vue';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
 import { v4 } from 'uuid';
@@ -28,89 +25,75 @@ import {
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
 import { FindTheHotspotsTask, Hotspot } from '@/models/FindTheHotspotsTask';
-import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
 import { findTheHotspotsEditorStateSymbol } from '@/components/findTheHotspots/findTheHotspotsEditorState';
+import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
 
-export default defineComponent({
-  name: 'FindTheHotspotsEditor',
-  components: { ImageWithHotspots, FileUpload },
-  setup() {
-    return {
-      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
-    };
-  },
-  provide() {
-    return {
-      [findTheHotspotsEditorStateSymbol as symbol]: {},
-    };
-  },
-  props: {
-    taskDefinition: {
-      type: Object as PropType<FindTheHotspotsTask>,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      selectedHotspot: null as Hotspot | null,
-    };
-  },
-  methods: {
-    fileIdToUrl,
-    onImageUploaded(file: FileRef): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.image.file_id = file.id;
-      });
-      this.taskEditor!.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
-    },
-    addRectangularHotspot(): void {
-      const newHotspot: Hotspot = {
-        uuid: v4(),
-        type: 'rectangle',
-        x: 50,
-        y: 50,
-        width: 0.2,
-        height: 0.2,
-      };
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.hotspots.push(newHotspot);
-      });
-      this.taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
-    },
-    addCircularHotspot(): void {
-      const newHotspot: Hotspot = {
-        uuid: v4(),
-        type: 'circle',
-        x: 50,
-        y: 50,
-        diameter: 0.2,
-      };
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.hotspots.push(newHotspot);
-      });
-      this.taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
-    },
-    removeAllHotspots(): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.hotspots = [];
-      });
-      this.taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
-    },
-    selectHotspot(hotspot: Hotspot): void {
-      this.selectedHotspot = hotspot;
-    },
-    deselectHotspot(): void {
-      this.selectedHotspot = null;
-    },
-  },
-  computed: {
-    currentUndoRedoState: () =>
-      taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
+const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
+
+provide(findTheHotspotsEditorStateSymbol, {});
+
+const props = defineProps({
+  taskDefinition: {
+    type: Object as PropType<FindTheHotspotsTask>,
+    required: true,
   },
 });
+
+const selectedHotspotId = ref<string | undefined>(undefined);
+
+function onImageUploaded(file: FileRef): void {
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    draft.image.file_id = file.id;
+  });
+  taskEditor!.performEdit({
+    newTaskDefinition: newTaskDefinition,
+    undoBatch: {},
+  });
+}
+
+function addRectangularHotspot(): void {
+  const newHotspot: Hotspot = {
+    uuid: v4(),
+    type: 'rectangle',
+    x: 50,
+    y: 50,
+    width: 0.2,
+    height: 0.2,
+  };
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    draft.hotspots.push(newHotspot);
+  });
+  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+}
+
+function addCircularHotspot(): void {
+  const newHotspot: Hotspot = {
+    uuid: v4(),
+    type: 'circle',
+    x: 50,
+    y: 50,
+    diameter: 0.2,
+  };
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    draft.hotspots.push(newHotspot);
+  });
+  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+}
+
+function removeAllHotspots(): void {
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    draft.hotspots = [];
+  });
+  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+}
+
+function selectHotspot(hotspot: Hotspot): void {
+  selectedHotspotId.value = hotspot.uuid;
+}
+
+function deselectHotspot(): void {
+  selectedHotspotId.value = undefined;
+}
 </script>
 
 <style scoped>
