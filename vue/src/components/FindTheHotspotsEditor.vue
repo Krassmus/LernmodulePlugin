@@ -5,11 +5,11 @@
       <button @click="addCircularHotspot">Add Circular Hotspot</button>
       <button @click="removeAllHotspots">Remove All Hotspots</button>
     </div>
-    <div class="image-and-hotspots-container-wrapper">
-      <div
-        v-if="taskDefinition.image.file_id"
-        class="image-and-hotspots-container"
-      >
+    <div
+      v-if="taskDefinition.image.file_id"
+      class="image-and-hotspots-container-wrapper"
+    >
+      <div class="image-and-hotspots-container">
         <div
           v-for="hotspot in taskDefinition.hotspots"
           :key="hotspot.uuid"
@@ -23,8 +23,8 @@
           class="image hotspots-image"
         />
       </div>
-      <FileUpload v-else @fileUploaded="onImageUploaded" />
     </div>
+    <FileUpload v-else @fileUploaded="onImageUploaded" />
   </div>
 </template>
 
