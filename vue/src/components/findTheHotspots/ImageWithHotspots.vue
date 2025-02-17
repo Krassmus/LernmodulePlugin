@@ -4,9 +4,10 @@
       <!--  In the editor, hotspots are visible. In the viewer, they should be
       invisible. We can tell whether we are in the editor or the viewer based
       on whether the value of the injected field 'editor' is defined. -->
-      <div
+      <button
         v-for="hotspot in hotspots"
         :key="hotspot.uuid"
+        type="button"
         class="hotspot"
         :class="{
           'invisible-hotspot': !editor,
@@ -131,7 +132,16 @@ export default defineComponent({
   width: 100%;
 }
 
-.hotspot {
+button.hotspot {
+  /* CSS Reset for button styles */
+  padding: 0;
+  //border: none;
+  font: inherit;
+  color: inherit;
+  //background-color: transparent;
+  cursor: pointer;
+  box-sizing: border-box;
+
   position: absolute;
   border: 2px dashed rgba(0, 0, 0, 0.7);
   background-color: rgba(255, 255, 255, 0.5);
@@ -140,6 +150,11 @@ export default defineComponent({
   // CSS classes with those names that set display: none;
   &.invisible-hotspot {
     opacity: 0;
+    // Ensure that keyboard-only users are able to see the hotspot, if any,
+    // that they have focused with the keyboard.  (Accessibility standards)
+    &:focus {
+      opacity: unset;
+    }
   }
 }
 
