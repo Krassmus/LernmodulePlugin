@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
 import {
   fileIdToUrl,
@@ -50,10 +50,19 @@ import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 import MultimediaElement from '@/components/MultimediaElement.vue';
 import { v4 } from 'uuid';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'SequencingEditorCard',
   components: { MultimediaElement, FileUpload },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   props: {
     card: {
       type: Object as PropType<LernmoduleMultimediaElement>,
@@ -78,7 +87,7 @@ export default defineComponent({
           (draft.cards[this.cardIndex] as ImageElement).file_id = file.id;
         }
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition,
         undoBatch: {},
       });
@@ -90,7 +99,7 @@ export default defineComponent({
           (draft.cards[this.cardIndex] as ImageElement).altText = value;
         }
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition,
         undoBatch: { type: 'EditedImageAltText' },
       });
@@ -102,7 +111,7 @@ export default defineComponent({
         }
       });
 
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
@@ -114,7 +123,7 @@ export default defineComponent({
         draft.cards[this.cardIndex].type = selectedType;
       });
 
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });

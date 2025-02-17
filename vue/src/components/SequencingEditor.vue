@@ -177,7 +177,7 @@ export default defineComponent({
         });
       });
 
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
@@ -191,7 +191,7 @@ export default defineComponent({
         draft.cards.splice(index, 1);
       });
 
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });

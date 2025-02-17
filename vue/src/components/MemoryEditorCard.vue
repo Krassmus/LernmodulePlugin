@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import {
   fileIdToUrl,
   ImageElement,
@@ -93,10 +93,19 @@ import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 import { v4 } from 'uuid';
 import MultimediaElement from '@/components/MultimediaElement.vue';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
 
 export default defineComponent({
   name: 'MemoryEditorCard',
   components: { MultimediaElement, FileUpload },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   props: {
     card: {
       type: Object as PropType<MemoryCard>,
@@ -121,7 +130,7 @@ export default defineComponent({
               file.id;
           }
         });
-        taskEditorStore.performEdit({
+        this.taskEditor!.performEdit({
           newTaskDefinition: newTaskDefinition,
           undoBatch: {},
         });
@@ -134,7 +143,7 @@ export default defineComponent({
               file.id;
           }
         });
-        taskEditorStore.performEdit({
+        this.taskEditor!.performEdit({
           newTaskDefinition: newTaskDefinition,
           undoBatch: {},
         });
@@ -150,7 +159,7 @@ export default defineComponent({
               altText;
           }
         });
-        taskEditorStore.performEdit({
+        this.taskEditor!.performEdit({
           newTaskDefinition,
           undoBatch: { type: 'EditedFirstAltText' },
         });
@@ -164,7 +173,7 @@ export default defineComponent({
               altText;
           }
         });
-        taskEditorStore.performEdit({
+        this.taskEditor!.performEdit({
           newTaskDefinition,
           undoBatch: { type: 'EditedSecondAltText' },
         });
@@ -179,7 +188,7 @@ export default defineComponent({
           altText: '',
         };
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition,
         undoBatch: { type: 'AddedSecondImage' },
       });
@@ -194,7 +203,7 @@ export default defineComponent({
           }
         });
 
-        taskEditorStore.performEdit({
+        this.taskEditor!.performEdit({
           newTaskDefinition: newTaskDefinition,
           undoBatch: {},
         });
@@ -207,7 +216,7 @@ export default defineComponent({
           }
         });
 
-        taskEditorStore.performEdit({
+        this.taskEditor!.performEdit({
           newTaskDefinition: newTaskDefinition,
           undoBatch: {},
         });
