@@ -61,6 +61,12 @@
         <option value="FillInTheBlanks">
           {{ $gettext('Fill in the Blanks') }}
         </option>
+        <option
+          v-if="LernmoduleVueJS.LERNMODULE_PREVIEW"
+          value="FindTheHotspots"
+        >
+          {{ $gettext('Find the Hotspots') }}
+        </option>
         <option value="MarkTheWords">{{ $gettext('Mark the Words') }}</option>
         <option value="Memory">{{ $gettext('Memory') }}</option>
         <option value="Pairing">{{ $gettext('Pairing') }}</option>

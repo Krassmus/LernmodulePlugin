@@ -95,6 +95,7 @@ export default defineComponent({
 
 <style scoped>
 .lazy-image {
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
   padding: 0;
