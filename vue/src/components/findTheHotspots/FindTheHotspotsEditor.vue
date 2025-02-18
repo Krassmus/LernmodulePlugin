@@ -42,6 +42,7 @@ const selectedHotspotId = ref<string | undefined>(undefined);
 provide(findTheHotspotsEditorStateSymbol, {
   selectedHotspotId,
   selectHotspot,
+  deleteSelectedHotspot,
 });
 
 function onImageUploaded(file: FileRef): void {
@@ -87,6 +88,27 @@ function addEllipseHotspot(): void {
 function removeAllHotspots(): void {
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
     draft.hotspots = [];
+  });
+  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+}
+
+function deleteSelectedHotspot(): void {
+  if (!selectedHotspotId.value) {
+    console.error(
+      'Called deleteSelectedHotspot, but selectedHotspotId is undefined'
+    );
+    return;
+  }
+  deleteHotspot(selectedHotspotId.value);
+}
+
+function deleteHotspot(id: string): void {
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    const index = draft.hotspots.findIndex((hotspot) => hotspot.uuid === id);
+    if (index === -1) {
+      throw new Error('No hotspot with id ' + id + ' found.');
+    }
+    draft.hotspots.splice(index, 1);
   });
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
 }

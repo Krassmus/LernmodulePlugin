@@ -15,6 +15,7 @@ export interface FindTheHotspotsEditorState {
   // We will adapt it together to work for Find The Hotspots.
   selectedHotspotId: Ref<string | undefined>;
   selectHotspot(id: string | undefined): void;
+  deleteSelectedHotspot(): void;
   // editInteraction(id: string): void;
   // dragInteraction(
   //     interactionId: string,
@@ -28,6 +29,5 @@ export interface FindTheHotspotsEditorState {
   //     width: number,
   //     height: number
   // ): void;
-  // deleteInteraction(interactionId: string): void;
   // dragInteractionTimeline(id: string, startTime: number): void;
 }

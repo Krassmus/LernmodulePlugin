@@ -38,7 +38,11 @@
         hidden: !selectedHotspot,
       }"
     >
-      <button type="button" class="small-button visibility-visible"></button>
+      <button
+        type="button"
+        class="small-button trash"
+        @click="editor!.deleteSelectedHotspot()"
+      ></button>
       <div class="arrow" data-popper-arrow></div>
     </div>
   </div>
