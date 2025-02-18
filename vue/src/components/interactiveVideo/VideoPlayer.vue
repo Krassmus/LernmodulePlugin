@@ -422,11 +422,7 @@ export default defineComponent({
         const rootRect = (
           this.$refs.root as HTMLElement
         ).getBoundingClientRect();
-        const interactionEl = document.getElementById(
-          `interaction-${this.uid}-${interaction.id}`
-        ) as HTMLElement;
 
-        // TODO implement resizing
         const {
           interactionStartPos: [xInitial, yInitial],
           interactionStartSize: [widthInitial, heightInitial],
