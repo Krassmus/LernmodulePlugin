@@ -308,12 +308,10 @@ export default defineComponent({
         let newHeight = heightInitial;
 
         // Convert pointer movement in pixels to fractions of root rect width/height
-        const xPointer = event.clientX / rootRect.width;
         const dxPointerPixels =
           event.clientX - this.dragState.pointerStartPos[0];
         const dxPointer = dxPointerPixels / rootRect.width;
 
-        const yPointer = event.clientY / rootRect.height;
         const dyPointerPixels =
           event.clientY - this.dragState.pointerStartPos[1];
         const dyPointer = dyPointerPixels / rootRect.height;
@@ -351,12 +349,6 @@ export default defineComponent({
           handle === 'top' ||
           handle === 'top-right'
         ) {
-          // I wish I could explain to you why this formula has to be different
-          // than the one used for horizontal resizing, but I figured out by
-          // trial and error that I needed to use dyPointer in my calculations
-          // and that yPointer was not reliable.
-          // I suspect that something about the surrounding HTML causes the event
-          // absolute coordinates on the Y axis to not be exactly correct. -Ann
           if (dyPointer > heightInitial) {
             newY = yInitial + heightInitial;
             newHeight = dyPointer - heightInitial;
@@ -369,7 +361,6 @@ export default defineComponent({
           handle === 'bottom' ||
           handle === 'bottom-right'
         ) {
-          // Ditto for this formula here. -Ann
           if (-dyPointer > heightInitial) {
             newY = yInitial + heightInitial + dyPointer;
             newHeight = -dyPointer - heightInitial;
