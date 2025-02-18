@@ -517,7 +517,7 @@ export default defineComponent({
         const isOffscreenX =
           filteredX > 0.95 || filteredX + filteredWidth < 0.05;
         const isOffscreenY =
-          filteredY > 0.95 || filteredY + filteredHeight < 0.05;
+          filteredY > 0.9 || filteredY + filteredHeight < 0.05;
         if (isOffscreenX) {
           filteredX = interaction.x;
           filteredWidth = interaction.width;
@@ -579,7 +579,7 @@ export default defineComponent({
         const yFraction = this.dragState.interactionStartPos[1] + dyFraction;
         const interactionHeight = interactionEl.clientHeight / rootRect.height;
         const minY = 0.05 - interactionHeight;
-        const maxY = 0.95;
+        const maxY = 0.9;
         const clampedYFraction = Math.min(maxY, Math.max(minY, yFraction));
 
         const id = this.dragState.interactionId;
