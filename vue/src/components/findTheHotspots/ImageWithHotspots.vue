@@ -31,21 +31,21 @@
         :style="{ position: 'absolute', top: 0, left: '100%' }"
         >{{ { selectedHotspot, dragState } }}</pre
       >
-    </div>
-    <div
-      ref="selectedHotspotTooltip"
-      v-if="editor"
-      class="selected-hotspot-tooltip"
-      :class="{
-        hidden: !selectedHotspot,
-      }"
-    >
-      <button
-        type="button"
-        class="small-button trash"
-        @click="editor!.deleteSelectedHotspot()"
-      ></button>
-      <div class="arrow" data-popper-arrow></div>
+      <div
+        ref="selectedHotspotTooltip"
+        v-if="editor"
+        class="selected-hotspot-tooltip"
+        :class="{
+          hidden: !selectedHotspot,
+        }"
+      >
+        <button
+          type="button"
+          class="small-button trash"
+          @click="editor!.deleteSelectedHotspot()"
+        ></button>
+        <div class="arrow" data-popper-arrow></div>
+      </div>
     </div>
   </div>
 </template>
@@ -253,7 +253,8 @@ export default defineComponent({
 
 .image-and-hotspots-container {
   position: relative;
-  height: max-content;
+  overflow: hidden;
+  max-height: 400px;
 }
 
 .hotspots-image {
@@ -296,7 +297,6 @@ button.hotspot {
   &.hidden {
     display: none;
   }
-  z-index: 2;
   position: absolute;
   display: flex;
   gap: 0.5em;
