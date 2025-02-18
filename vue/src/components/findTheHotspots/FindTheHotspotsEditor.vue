@@ -43,6 +43,7 @@ provide(findTheHotspotsEditorStateSymbol, {
   selectedHotspotId,
   selectHotspot,
   deleteSelectedHotspot,
+  dragHotspot,
 });
 
 function onImageUploaded(file: FileRef): void {
@@ -115,6 +116,22 @@ function deleteHotspot(id: string): void {
 
 function selectHotspot(id: string): void {
   selectedHotspotId.value = id;
+}
+
+function dragHotspot(
+  hotspotId: string,
+  xFraction: number,
+  yFraction: number
+): void {
+  const hotspot = props.taskDefinition.hotspots.find(
+    (h) => h.uuid === hotspotId
+  );
+  if (!hotspot) {
+    throw new Error(`Hotspot with id ${hotspotId} not found`);
+  }
+  // TODO make undoable ?
+  hotspot.x = xFraction;
+  hotspot.y = yFraction;
 }
 </script>
 

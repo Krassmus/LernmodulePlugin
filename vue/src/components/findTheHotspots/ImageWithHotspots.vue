@@ -1,6 +1,6 @@
 <template>
   <div class="image-and-hotspots-container-wrapper" :class="{ debug: debug }">
-    <div class="image-and-hotspots-container">
+    <div class="image-and-hotspots-container" ref="root">
       <!--  In the editor, hotspots are visible. In the viewer, they should be
       invisible. We can tell whether we are in the editor or the viewer based
       on whether the value of the injected field 'editor' is defined. -->
@@ -16,7 +16,9 @@
         :id="`hotspot-${uid}-${hotspot.uuid}`"
         :style="getHotspotStyle(hotspot)"
         @click="onClickHotspot(hotspot)"
-        @pointerdown="onPointerdownHotspot(hotspot)"
+        @pointerdown="onPointerdownHotspot($event, hotspot)"
+        @pointermove="onPointermoveHotspot($event, hotspot)"
+        @pointerup="onPointerupHotspot($event, hotspot)"
       />
       <LazyImage
         :src="fileIdToUrl(image.file_id)"
@@ -27,7 +29,7 @@
       <pre
         v-if="debug"
         :style="{ position: 'absolute', top: 0, left: '100%' }"
-        >{{ { selectedHotspot } }}</pre
+        >{{ { selectedHotspot, dragState } }}</pre
       >
     </div>
     <div
@@ -61,6 +63,23 @@ import {
 import { createPopper, Instance } from '@popperjs/core';
 import { v4 } from 'uuid';
 
+type DragState =
+  | {
+      type: 'dragHotspot';
+      hotspotId: string;
+      pointerStartPos: [number, number]; // clientX, clientY
+      hotspotStartPos: [number, number]; // fraction x, fraction y
+    }
+  | {
+      type: 'resizeHotspot';
+      hotspotId: string;
+      pointerStartPos: [number, number]; // clientX, clientY
+      hotspotStartPos: [number, number]; // fraction x, fraction y
+      hotspotStartSize: [number, number]; // fraction x, fraction y
+      handle: string;
+    }
+  | undefined;
+
 export default defineComponent({
   name: 'ImageWithHotspots',
   components: { LazyImage },
@@ -88,6 +107,7 @@ export default defineComponent({
   data() {
     return {
       popperInstance: undefined as Instance | undefined,
+      dragState: undefined as DragState,
     };
   },
   computed: {
@@ -149,8 +169,55 @@ export default defineComponent({
       console.log('onClickHotspot', hotspot);
       this.editor?.selectHotspot(hotspot.uuid);
     },
-    onPointerdownHotspot(hotspot: Hotspot) {
-      this.editor?.selectHotspot(hotspot.uuid);
+    onPointerdownHotspot(event: PointerEvent, hotspot: Hotspot) {
+      console.log('onPointerDownHotspot');
+      if (!this.editor) {
+        return;
+      }
+      this.editor.selectHotspot(hotspot.uuid);
+      this.dragState = {
+        type: 'dragHotspot',
+        hotspotId: hotspot.uuid,
+        pointerStartPos: [event.clientX, event.clientY],
+        hotspotStartPos: [hotspot.x, hotspot.y],
+      };
+      (event.target as HTMLElement).setPointerCapture(event.pointerId);
+    },
+    onPointerupHotspot(event: PointerEvent, hotspot: Hotspot) {
+      console.log('onPointerUpHotspot');
+      this.dragState = undefined;
+      (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+    },
+    onPointermoveHotspot(event: PointerEvent, hotspot: Hotspot) {
+      if (
+        this.dragState?.type === 'dragHotspot' &&
+        this.dragState.hotspotId === hotspot.uuid
+      ) {
+        const rootRect = (
+          this.$refs.root as HTMLElement
+        ).getBoundingClientRect();
+        const hotspotEl = event.currentTarget as HTMLElement;
+
+        const clientDx = event.clientX - this.dragState.pointerStartPos[0];
+        const dxFraction = clientDx / rootRect.width;
+        const xFraction = this.dragState.hotspotStartPos[0] + dxFraction;
+        const hotspotWidth = hotspotEl.clientWidth / rootRect.width;
+        const minX = 0.05 - hotspotWidth;
+        const maxX = 0.95;
+        const clampedXFraction = Math.min(maxX, Math.max(minX, xFraction));
+
+        const clientDy = event.clientY - this.dragState.pointerStartPos[1];
+        const dyFraction = clientDy / rootRect.height;
+        const yFraction = this.dragState.hotspotStartPos[1] + dyFraction;
+        const hotspotHeight = hotspotEl.clientHeight / rootRect.height;
+        const minY = 0.05 - hotspotHeight;
+        const maxY = 0.9;
+        const clampedYFraction = Math.min(maxY, Math.max(minY, yFraction));
+
+        const id = this.dragState.hotspotId;
+        this.editor?.dragHotspot(id, clampedXFraction, clampedYFraction);
+        this.popperInstance?.update();
+      }
     },
     getHotspotStyle(hotspot: Hotspot): Partial<CSSStyleDeclaration> {
       if (hotspot.type === 'rectangle') {
