@@ -478,6 +478,12 @@ export default defineComponent({
           handle === 'top' ||
           handle === 'top-right'
         ) {
+          // I wish I could explain to you why this formula has to be different
+          // than the one used for horizontal resizing, but I figured out by
+          // trial and error that I needed to use dyPointer in my calculations
+          // and that yPointer was not reliable.
+          // I suspect that something about the surrounding HTML causes the event
+          // absolute coordinates on the Y axis to not be exactly correct. -Ann
           if (dyPointer > heightInitial) {
             newY = yInitial + heightInitial;
             newHeight = dyPointer - heightInitial;
@@ -490,6 +496,7 @@ export default defineComponent({
           handle === 'bottom' ||
           handle === 'bottom-right'
         ) {
+          // Ditto for this formula here. -Ann
           if (-dyPointer > heightInitial) {
             newY = yInitial + heightInitial + dyPointer;
             newHeight = -dyPointer - heightInitial;
