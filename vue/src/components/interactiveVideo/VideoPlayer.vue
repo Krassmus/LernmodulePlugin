@@ -478,9 +478,9 @@ export default defineComponent({
           handle === 'top' ||
           handle === 'top-right'
         ) {
-          if (yPointer > yInitial + heightInitial) {
+          if (dyPointer > heightInitial) {
             newY = yInitial + heightInitial;
-            newHeight = yPointer - newY;
+            newHeight = dyPointer - heightInitial;
           } else {
             newY = yInitial + dyPointer;
             newHeight = heightInitial - dyPointer;
