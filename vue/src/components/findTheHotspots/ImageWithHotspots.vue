@@ -384,11 +384,14 @@ export default defineComponent({
           filteredWidth = hotspot.width,
           filteredX = hotspot.x,
           filteredY = hotspot.y;
-        if (newHeight > 0.05) {
+        const newHeightPixels = newHeight * rootRect.height;
+        const newWidthPixels = newWidth * rootRect.width;
+        const minPixelDimension = 20;
+        if (newHeightPixels > minPixelDimension) {
           filteredHeight = newHeight;
           filteredY = newY;
         }
-        if (newWidth > 0.05) {
+        if (newWidthPixels > minPixelDimension) {
           filteredWidth = newWidth;
           filteredX = newX;
         }
