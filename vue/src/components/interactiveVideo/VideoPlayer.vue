@@ -248,6 +248,13 @@ export default defineComponent({
       }
     },
     initializePlayer(videoInfo: VideoInfo) {
+      if (!this.$refs.videoJsContainer) {
+        console.warn(
+          'initializePlayer called but $refs.videoJsContainer is undefined. ' +
+            'Returning early without doing anything.'
+        );
+        return;
+      }
       // If player has already been created, it must be destroyed before we
       // create a new one.
       this.progressBarObserver?.disconnect();
