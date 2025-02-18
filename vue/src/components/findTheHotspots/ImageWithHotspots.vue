@@ -1,5 +1,5 @@
 <template>
-  <div class="image-and-hotspots-container-wrapper" :class="{ debug: !!debug }">
+  <div class="image-and-hotspots-container-wrapper" :class="{ debug: debug }">
     <div class="image-and-hotspots-container">
       <!--  In the editor, hotspots are visible. In the viewer, they should be
       invisible. We can tell whether we are in the editor or the viewer based
