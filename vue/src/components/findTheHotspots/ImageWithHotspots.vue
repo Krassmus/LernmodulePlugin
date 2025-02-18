@@ -27,12 +27,12 @@
             class="resize-handle"
             :class="handle"
             @pointerdown.stop="
-              onPointerDownResizeHandle($event, handle, hotspot)
+              onPointerdownResizeHandle($event, handle, hotspot)
             "
             @pointermove.stop="
-              onPointerMoveResizeHandle($event, handle, hotspot)
+              onPointermoveResizeHandle($event, handle, hotspot)
             "
-            @pointerup.stop="onPointerUpResizeHandle($event, handle, hotspot)"
+            @pointerup.stop="onPointerupResizeHandle($event, handle, hotspot)"
           />
         </template>
       </button>
@@ -259,7 +259,7 @@ export default defineComponent({
         this.popperInstance?.update();
       }
     },
-    onPointerDownResizeHandle(
+    onPointerdownResizeHandle(
       event: PointerEvent,
       handle: ResizeHandle,
       hotspot: Hotspot
@@ -280,7 +280,7 @@ export default defineComponent({
       };
       (event.target as HTMLElement).setPointerCapture(event.pointerId);
     },
-    onPointerUpResizeHandle(
+    onPointerupResizeHandle(
       event: PointerEvent,
       handle: ResizeHandle,
       hotspot: Hotspot
@@ -289,7 +289,7 @@ export default defineComponent({
       this.dragState = undefined;
       (event.target as HTMLElement).releasePointerCapture(event.pointerId);
     },
-    onPointerMoveResizeHandle(
+    onPointermoveResizeHandle(
       event: PointerEvent,
       handle: ResizeHandle,
       hotspot: OverlayInteractionType
