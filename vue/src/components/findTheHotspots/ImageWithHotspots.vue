@@ -19,18 +19,29 @@
         @pointerdown="onPointerdownHotspot($event, hotspot)"
         @pointermove="onPointermoveHotspot($event, hotspot)"
         @pointerup="onPointerupHotspot($event, hotspot)"
-      />
+      >
+        <template v-if="editor">
+          <div
+            v-for="handle in resizeHandles"
+            :key="handle"
+            class="resize-handle"
+            :class="handle"
+            @pointerdown.stop="
+              onPointerDownResizeHandle($event, handle, hotspot)
+            "
+            @pointermove.stop="
+              onPointerMoveResizeHandle($event, handle, hotspot)
+            "
+            @pointerup.stop="onPointerUpResizeHandle($event, handle, hotspot)"
+          />
+        </template>
+      </button>
       <LazyImage
         :src="fileIdToUrl(image.file_id)"
         :alt="image.altText"
         @click="onClickBackground"
         class="image hotspots-image"
       />
-      <pre
-        v-if="debug"
-        :style="{ position: 'absolute', top: 0, left: '100%' }"
-        >{{ { selectedHotspot, dragState } }}</pre
-      >
       <div
         ref="selectedHotspotTooltip"
         v-if="editor"
@@ -47,6 +58,11 @@
         <div class="arrow" data-popper-arrow></div>
       </div>
     </div>
+    <pre
+      v-if="debug"
+      :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
+      >{{ { selectedHotspot, dragState } }}</pre
+    >
   </div>
 </template>
 
@@ -62,6 +78,10 @@ import {
 } from '@/components/findTheHotspots/findTheHotspotsEditorState';
 import { createPopper, Instance } from '@popperjs/core';
 import { v4 } from 'uuid';
+import {
+  OverlayInteraction as OverlayInteractionType,
+  ResizeHandle,
+} from '@/models/InteractiveVideoTask';
 
 type DragState =
   | {
@@ -126,6 +146,18 @@ export default defineComponent({
       return this.hotspots.find(
         (h) => h.uuid === this.editor?.selectedHotspotId.value
       );
+    },
+    resizeHandles() {
+      return [
+        'left',
+        'top-left',
+        'top',
+        'top-right',
+        'right',
+        'bottom-right',
+        'bottom',
+        'bottom-left',
+      ] as const;
     },
   },
   watch: {
@@ -227,6 +259,41 @@ export default defineComponent({
         this.popperInstance?.update();
       }
     },
+    onPointerDownResizeHandle(
+      event: PointerEvent,
+      handle: ResizeHandle,
+      hotspot: Hotspot
+    ) {
+      console.log('onPointerDownResizeHandle');
+      if (!this.editor) {
+        return;
+      }
+      this.editor.selectHotspot(hotspot.uuid);
+      this.dragState = {
+        type: 'resizeHotspot',
+        dragId: v4(),
+        hotspotId: hotspot.uuid,
+        pointerStartPos: [event.clientX, event.clientY],
+        hotspotStartPos: [hotspot.x, hotspot.y],
+        hotspotStartSize: [hotspot.width, hotspot.height],
+        handle,
+      };
+      (event.target as HTMLElement).setPointerCapture(event.pointerId);
+    },
+    onPointerUpResizeHandle(
+      event: PointerEvent,
+      handle: ResizeHandle,
+      hotspot: Hotspot
+    ) {
+      console.log('onPointerUpResizeHandle');
+      this.dragState = undefined;
+      (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+    },
+    onPointerMoveResizeHandle(
+      event: PointerEvent,
+      handle: ResizeHandle,
+      hotspot: OverlayInteractionType
+    ) {},
     getHotspotStyle(hotspot: Hotspot): Partial<CSSStyleDeclaration> {
       if (hotspot.type === 'rectangle') {
         return {
@@ -255,6 +322,7 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   &.debug {
+    align-items: flex-start;
     justify-content: flex-start;
   }
 }
@@ -295,10 +363,80 @@ button.hotspot {
       opacity: unset;
     }
   }
-}
 
-.hotspot.selected {
-  border: 2px dashed #0099ff;
+  &.selected {
+    border: 2px dashed #0099ff;
+  }
+
+  .resize-handle {
+    $size: 8px;
+    position: absolute;
+    background: cornflowerblue;
+
+    &.top {
+      cursor: ns-resize;
+      top: 0;
+      left: $size;
+      right: $size;
+      height: $size;
+    }
+
+    &.top-right {
+      cursor: nesw-resize;
+      top: 0;
+      right: 0;
+      height: $size;
+      width: $size;
+    }
+
+    &.right {
+      cursor: ew-resize;
+      top: $size;
+      bottom: $size;
+      right: 0;
+      width: $size;
+    }
+
+    &.bottom-right {
+      cursor: nwse-resize;
+      bottom: 0;
+      right: 0;
+      width: $size;
+      height: $size;
+    }
+
+    &.bottom {
+      cursor: ns-resize;
+      bottom: 0;
+      left: $size;
+      right: $size;
+      height: $size;
+    }
+
+    &.bottom-left {
+      cursor: nesw-resize;
+      bottom: 0;
+      left: 0;
+      width: $size;
+      height: $size;
+    }
+
+    &.left {
+      cursor: ew-resize;
+      top: $size;
+      bottom: $size;
+      left: 0;
+      width: $size;
+    }
+
+    &.top-left {
+      cursor: nwse-resize;
+      top: 0;
+      left: 0;
+      height: $size;
+      width: $size;
+    }
+  }
 }
 
 .selected-hotspot-tooltip {
