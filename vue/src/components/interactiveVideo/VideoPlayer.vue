@@ -490,9 +490,9 @@ export default defineComponent({
           handle === 'bottom' ||
           handle === 'bottom-right'
         ) {
-          if (yPointer < yInitial) {
-            newY = yPointer;
-            newHeight = yInitial - yPointer;
+          if (-dyPointer > heightInitial) {
+            newY = yInitial + heightInitial + dyPointer;
+            newHeight = -dyPointer - heightInitial;
           } else {
             newY = yInitial;
             newHeight = heightInitial + dyPointer;
