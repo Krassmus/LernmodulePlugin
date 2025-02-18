@@ -66,12 +66,14 @@ import { v4 } from 'uuid';
 type DragState =
   | {
       type: 'dragHotspot';
+      dragId: string;
       hotspotId: string;
       pointerStartPos: [number, number]; // clientX, clientY
       hotspotStartPos: [number, number]; // fraction x, fraction y
     }
   | {
       type: 'resizeHotspot';
+      dragId: string;
       hotspotId: string;
       pointerStartPos: [number, number]; // clientX, clientY
       hotspotStartPos: [number, number]; // fraction x, fraction y
@@ -178,6 +180,7 @@ export default defineComponent({
       this.dragState = {
         type: 'dragHotspot',
         hotspotId: hotspot.uuid,
+        dragId: v4(),
         pointerStartPos: [event.clientX, event.clientY],
         hotspotStartPos: [hotspot.x, hotspot.y],
       };
@@ -215,7 +218,12 @@ export default defineComponent({
         const clampedYFraction = Math.min(maxY, Math.max(minY, yFraction));
 
         const id = this.dragState.hotspotId;
-        this.editor?.dragHotspot(id, clampedXFraction, clampedYFraction);
+        this.editor?.dragHotspot(
+          this.dragState.dragId,
+          id,
+          clampedXFraction,
+          clampedYFraction
+        );
         this.popperInstance?.update();
       }
     },

@@ -119,19 +119,20 @@ function selectHotspot(id: string): void {
 }
 
 function dragHotspot(
+  dragId: string,
   hotspotId: string,
   xFraction: number,
   yFraction: number
 ): void {
-  const hotspot = props.taskDefinition.hotspots.find(
-    (h) => h.uuid === hotspotId
-  );
-  if (!hotspot) {
-    throw new Error(`Hotspot with id ${hotspotId} not found`);
-  }
-  // TODO make undoable ?
-  hotspot.x = xFraction;
-  hotspot.y = yFraction;
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    const hotspot = draft.hotspots.find((h) => h.uuid === hotspotId);
+    if (!hotspot) {
+      throw new Error(`Hotspot with id ${hotspotId} not found`);
+    }
+    hotspot.x = xFraction;
+    hotspot.y = yFraction;
+  });
+  taskEditor!.performEdit({ newTaskDefinition, undoBatch: { dragId } });
 }
 </script>
 

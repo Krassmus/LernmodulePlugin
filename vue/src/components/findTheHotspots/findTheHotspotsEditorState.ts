@@ -17,9 +17,10 @@ export interface FindTheHotspotsEditorState {
   selectHotspot(id: string | undefined): void;
   deleteSelectedHotspot(): void;
   dragHotspot(
+    dragId: string,
     hotspotId: string,
-    clampedXFraction: number,
-    clampedYFraction: number
+    xFraction: number,
+    yFraction: number
   ): void;
   // editInteraction(id: string): void;
   // resizeOverlay(
