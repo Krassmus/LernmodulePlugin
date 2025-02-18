@@ -243,7 +243,7 @@ export default defineComponent({
         const yFraction = this.dragState.hotspotStartPos[1] + dyFraction;
         const hotspotHeight = hotspotEl.clientHeight / rootRect.height;
         const minY = 0.05 - hotspotHeight;
-        const maxY = 0.9;
+        const maxY = 0.95;
         const clampedYFraction = Math.min(maxY, Math.max(minY, yFraction));
 
         const id = this.dragState.hotspotId;
@@ -397,7 +397,7 @@ export default defineComponent({
         const isOffscreenX =
           filteredX > 0.95 || filteredX + filteredWidth < 0.05;
         const isOffscreenY =
-          filteredY > 0.9 || filteredY + filteredHeight < 0.05;
+          filteredY > 0.95 || filteredY + filteredHeight < 0.05;
         if (isOffscreenX) {
           filteredX = hotspot.x;
           filteredWidth = hotspot.width;
