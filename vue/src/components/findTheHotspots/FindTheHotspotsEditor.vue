@@ -44,6 +44,7 @@ provide(findTheHotspotsEditorStateSymbol, {
   selectHotspot,
   deleteSelectedHotspot,
   dragHotspot,
+  resizeHotspot,
 });
 
 function onImageUploaded(file: FileRef): void {
@@ -131,6 +132,27 @@ function dragHotspot(
     }
     hotspot.x = xFraction;
     hotspot.y = yFraction;
+  });
+  taskEditor!.performEdit({ newTaskDefinition, undoBatch: { dragId } });
+}
+
+function resizeHotspot(
+  dragId: string,
+  hotspotId: string,
+  xFraction: number,
+  yFraction: number,
+  width: number,
+  height: number
+): void {
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    const hotspot = draft.hotspots.find((h) => h.uuid === hotspotId);
+    if (!hotspot) {
+      throw new Error(`Hotspot with id ${hotspotId} not found`);
+    }
+    hotspot.x = xFraction;
+    hotspot.y = yFraction;
+    hotspot.width = width;
+    hotspot.height = height;
   });
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: { dragId } });
 }

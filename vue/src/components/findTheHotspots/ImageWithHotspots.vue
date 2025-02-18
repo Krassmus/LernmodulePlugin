@@ -78,10 +78,7 @@ import {
 } from '@/components/findTheHotspots/findTheHotspotsEditorState';
 import { createPopper, Instance } from '@popperjs/core';
 import { v4 } from 'uuid';
-import {
-  OverlayInteraction as OverlayInteractionType,
-  ResizeHandle,
-} from '@/models/InteractiveVideoTask';
+import { ResizeHandle } from '@/models/InteractiveVideoTask';
 
 type DragState =
   | {
@@ -292,8 +289,135 @@ export default defineComponent({
     onPointermoveResizeHandle(
       event: PointerEvent,
       handle: ResizeHandle,
-      hotspot: OverlayInteractionType
-    ) {},
+      hotspot: Hotspot
+    ) {
+      if (
+        this.dragState?.type === 'resizeHotspot' &&
+        this.dragState.hotspotId === hotspot.uuid
+      ) {
+        const rootRect = (
+          this.$refs.root as HTMLElement
+        ).getBoundingClientRect();
+        const {
+          hotspotStartPos: [xInitial, yInitial],
+          hotspotStartSize: [widthInitial, heightInitial],
+        } = this.dragState;
+        let newX = xInitial;
+        let newWidth = widthInitial;
+        let newY = yInitial;
+        let newHeight = heightInitial;
+
+        // Convert pointer movement in pixels to fractions of root rect width/height
+        const xPointer = event.clientX / rootRect.width;
+        const dxPointerPixels =
+          event.clientX - this.dragState.pointerStartPos[0];
+        const dxPointer = dxPointerPixels / rootRect.width;
+
+        const yPointer = event.clientY / rootRect.height;
+        const dyPointerPixels =
+          event.clientY - this.dragState.pointerStartPos[1];
+        const dyPointer = dyPointerPixels / rootRect.height;
+
+        // Horizontal resizing
+        if (
+          handle === 'left' ||
+          handle === 'top-left' ||
+          handle === 'bottom-left'
+        ) {
+          if (dxPointer > widthInitial) {
+            newX = xInitial + widthInitial;
+            newWidth = dxPointer - widthInitial;
+          } else {
+            newX = xInitial + dxPointer;
+            newWidth = widthInitial - dxPointer;
+          }
+        } else if (
+          handle === 'right' ||
+          handle === 'top-right' ||
+          handle === 'bottom-right'
+        ) {
+          if (-dxPointer > widthInitial) {
+            newX = xInitial + widthInitial + dxPointer;
+            newWidth = -dxPointer - widthInitial;
+          } else {
+            newX = xInitial;
+            newWidth = widthInitial + dxPointer;
+          }
+        }
+
+        // Vertical resizing
+        if (
+          handle === 'top-left' ||
+          handle === 'top' ||
+          handle === 'top-right'
+        ) {
+          // I wish I could explain to you why this formula has to be different
+          // than the one used for horizontal resizing, but I figured out by
+          // trial and error that I needed to use dyPointer in my calculations
+          // and that yPointer was not reliable.
+          // I suspect that something about the surrounding HTML causes the event
+          // absolute coordinates on the Y axis to not be exactly correct. -Ann
+          if (dyPointer > heightInitial) {
+            newY = yInitial + heightInitial;
+            newHeight = dyPointer - heightInitial;
+          } else {
+            newY = yInitial + dyPointer;
+            newHeight = heightInitial - dyPointer;
+          }
+        } else if (
+          handle === 'bottom-left' ||
+          handle === 'bottom' ||
+          handle === 'bottom-right'
+        ) {
+          // Ditto for this formula here. -Ann
+          if (-dyPointer > heightInitial) {
+            newY = yInitial + heightInitial + dyPointer;
+            newHeight = -dyPointer - heightInitial;
+          } else {
+            newY = yInitial;
+            newHeight = heightInitial + dyPointer;
+          }
+        }
+
+        // Prevent shrinking the hotspot below a minimum size
+        let filteredHeight = hotspot.height,
+          filteredWidth = hotspot.width,
+          filteredX = hotspot.x,
+          filteredY = hotspot.y;
+        if (newHeight > 0.05) {
+          filteredHeight = newHeight;
+          filteredY = newY;
+        }
+        if (newWidth > 0.05) {
+          filteredWidth = newWidth;
+          filteredX = newX;
+        }
+
+        // Prevent moving the hotspot completely off screen
+        const isOffscreenX =
+          filteredX > 0.95 || filteredX + filteredWidth < 0.05;
+        const isOffscreenY =
+          filteredY > 0.9 || filteredY + filteredHeight < 0.05;
+        if (isOffscreenX) {
+          filteredX = hotspot.x;
+          filteredWidth = hotspot.width;
+        }
+        if (isOffscreenY) {
+          filteredY = hotspot.y;
+          filteredHeight = hotspot.height;
+        }
+
+        this.editor!.resizeHotspot(
+          this.dragState.dragId,
+          hotspot.uuid,
+          filteredX,
+          filteredY,
+          filteredWidth,
+          filteredHeight
+        );
+        this.popperInstance?.update();
+      }
+    },
     getHotspotStyle(hotspot: Hotspot): Partial<CSSStyleDeclaration> {
       if (hotspot.type === 'rectangle') {
         return {

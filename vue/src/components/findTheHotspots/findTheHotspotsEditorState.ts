@@ -22,13 +22,14 @@ export interface FindTheHotspotsEditorState {
     xFraction: number,
     yFraction: number
   ): void;
+  resizeHotspot(
+    dragId: string,
+    hotspotId: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): void;
   // editInteraction(id: string): void;
-  // resizeOverlay(
-  //     id: string,
-  //     x: number,
-  //     y: number,
-  //     width: number,
-  //     height: number
-  // ): void;
   // dragInteractionTimeline(id: string, startTime: number): void;
 }
