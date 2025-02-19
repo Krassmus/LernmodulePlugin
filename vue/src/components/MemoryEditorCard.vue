@@ -24,7 +24,7 @@
         <input
           type="text"
           :value="card.first.altText"
-          @input="onInputAltText"
+          @input="onInputAltText($event, false)"
           class="settings-item"
         />
       </label>
@@ -79,142 +79,68 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, PropType } from 'vue';
-import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
-import { taskEditorStore } from '@/store';
-import produce from 'immer';
+import { defineComponent, PropType } from 'vue';
+import { MemoryCard } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 import { v4 } from 'uuid';
 import MultimediaElement from '@/components/MultimediaElement.vue';
-import {
-  TaskEditorState,
-  taskEditorStateSymbol,
-} from '@/components/taskEditorState';
-import { ImageElement } from '@/models/common';
 
 export default defineComponent({
   name: 'MemoryEditorCard',
   components: { MultimediaElement, FileUpload },
-  setup() {
-    return {
-      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
-    };
-  },
   props: {
     card: {
       type: Object as PropType<MemoryCard>,
       required: true,
     },
-    cardIndex: {
-      type: Number as PropType<number>,
-      required: true,
-    },
-  },
-  computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as MemoryTask,
   },
   methods: {
-    fileIdToUrl,
     $gettext,
     onUploadImage(file: FileRef, second: boolean): void {
-      if (!second) {
-        const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-          if (draft.cards[this.cardIndex].first.type === 'image') {
-            (draft.cards[this.cardIndex].first as ImageElement).file_id =
-              file.id;
-          }
-        });
-        this.taskEditor!.performEdit({
-          newTaskDefinition: newTaskDefinition,
-          undoBatch: {},
-        });
-      } else {
-        const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-          const card = draft.cards?.[this.cardIndex];
-          const secondCard = card?.second;
-          if (secondCard && secondCard.type === 'image') {
-            (draft.cards[this.cardIndex].second as ImageElement).file_id =
-              file.id;
-          }
-        });
-        this.taskEditor!.performEdit({
-          newTaskDefinition: newTaskDefinition,
-          undoBatch: {},
-        });
-      }
+      this.$emit('update:card', {
+        ...this.card,
+        [second ? 'second' : 'first']: {
+          ...this.card[second ? 'second' : 'first'],
+          file_id: file.id,
+        },
+      });
     },
-    // This is how you write the @input event handler if you want undo-redo and reactivity to work
     onInputAltText(event: InputEvent, second: boolean): void {
       const altText = (event.target as HTMLInputElement).value;
-      if (!second) {
-        const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-          if (draft.cards[this.cardIndex].first.type === 'image') {
-            (draft.cards[this.cardIndex].first as ImageElement).altText =
-              altText;
-          }
-        });
-        this.taskEditor!.performEdit({
-          newTaskDefinition,
-          undoBatch: { type: 'EditedFirstAltText' },
-        });
-      } else {
-        const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-          const card = draft.cards?.[this.cardIndex];
-          const secondCard = card?.second;
-
-          if (secondCard && secondCard.type === 'image') {
-            (draft.cards[this.cardIndex].second as ImageElement).altText =
-              altText;
-          }
-        });
-        this.taskEditor!.performEdit({
-          newTaskDefinition,
-          undoBatch: { type: 'EditedSecondAltText' },
-        });
-      }
+      this.$emit('update:card', {
+        ...this.card,
+        [second ? 'second' : 'first']: {
+          ...this.card[second ? 'second' : 'first'],
+          altText,
+        },
+      });
     },
     addSecondImage(): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-        draft.cards[this.cardIndex].second = {
+      this.$emit('update:card', {
+        ...this.card,
+        second: {
           uuid: v4(),
           type: 'image',
           file_id: '',
           altText: '',
-        };
-      });
-      this.taskEditor!.performEdit({
-        newTaskDefinition,
-        undoBatch: { type: 'AddedSecondImage' },
+        },
       });
     },
     onClickDeleteImage(secondCard: boolean): void {
       if (!secondCard) {
-        // delete the first card
-        const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-          const card = draft.cards[this.cardIndex].first;
-          if (card.type === 'image') {
-            (draft.cards[this.cardIndex].first as ImageElement).file_id = '';
-          }
-        });
-
-        this.taskEditor!.performEdit({
-          newTaskDefinition: newTaskDefinition,
-          undoBatch: {},
+        this.$emit('update:card', {
+          ...this.card,
+          first: {
+            ...this.card.first,
+            file_id: '',
+          },
         });
       } else {
-        // delete the second card
-        const newTaskDefinition = produce(this.taskDefinition, (draft) => {
-          const card = draft.cards[this.cardIndex];
-          if (card && card.second) {
-            delete card.second;
-          }
-        });
-
-        this.taskEditor!.performEdit({
-          newTaskDefinition: newTaskDefinition,
-          undoBatch: {},
+        this.$emit('update:card', {
+          ...this.card,
+          second: undefined,
         });
       }
     },

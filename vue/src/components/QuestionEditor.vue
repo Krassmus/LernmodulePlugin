@@ -1,6 +1,3 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div class="stud5p-task">
     <form class="default">
@@ -9,7 +6,8 @@
 
         <label>
           <studip-wysiwyg
-            v-model="taskDefinition.question"
+            v-model="localTaskDefinition.question"
+            @update:modelValue="updateTaskDefinition"
             force-soft-breaks
             remove-wrapping-p-tag
             disable-autoformat
@@ -17,7 +15,7 @@
         </label>
 
         <fieldset
-          v-for="(answer, i) in taskDefinition.answers"
+          v-for="(answer, i) in localTaskDefinition.answers"
           :key="answer.uuid"
           class="answer collapsable collapsed"
         >
@@ -36,11 +34,16 @@
 
           <div class="answer-row">
             <input
-              v-model="taskDefinition.answers[i].correct"
+              v-model="localTaskDefinition.answers[i].correct"
+              @change="updateTaskDefinition"
               type="checkbox"
             />
 
-            <input v-model="taskDefinition.answers[i].text" type="text" />
+            <input
+              v-model="localTaskDefinition.answers[i].text"
+              @change="updateTaskDefinition"
+              type="text"
+            />
           </div>
 
           <fieldset class="collapsable collapsed feedback">
@@ -49,7 +52,8 @@
             <label>
               <span>{{ $gettext('Hinweis:') }}</span>
               <input
-                v-model="taskDefinition.answers[i].strings.hint"
+                v-model="localTaskDefinition.answers[i].strings.hint"
+                @change="updateTaskDefinition"
                 type="text"
                 class="textbox"
               />
@@ -58,7 +62,10 @@
             <label>
               <span>{{ $gettext('Feedback, wenn ausgewählt:') }}</span>
               <input
-                v-model="taskDefinition.answers[i].strings.feedbackSelected"
+                v-model="
+                  localTaskDefinition.answers[i].strings.feedbackSelected
+                "
+                @change="updateTaskDefinition"
                 type="text"
                 class="textbox"
               />
@@ -67,7 +74,10 @@
             <label>
               <span>{{ $gettext('Feedback, wenn nicht ausgewählt:') }}</span>
               <input
-                v-model="taskDefinition.answers[i].strings.feedbackNotSelected"
+                v-model="
+                  localTaskDefinition.answers[i].strings.feedbackNotSelected
+                "
+                @change="updateTaskDefinition"
                 type="text"
                 class="textbox"
               />
@@ -84,23 +94,36 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          <input v-model="taskDefinition.canAnswerMultiple" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.canAnswerMultiple"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrfachauswahl erlauben') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.randomOrder" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.randomOrder"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Antworten in zufälliger Reihenfolge anzeigen') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.retryAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrere Versuche erlauben') }}
         </label>
 
         <label>
           <input
-            v-model="taskDefinition.showSolutionsAllowed"
+            v-model="localTaskDefinition.showSolutionsAllowed"
+            @change="updateTaskDefinition"
             type="checkbox"
           />
           {{ $gettext('Lösungen anzeigen erlauben') }}
@@ -112,33 +135,43 @@
 
         <label>
           {{ $gettext('Text für Überprüfen-Button:') }}
-          <input v-model="taskDefinition.strings.checkButton" type="text" />
-        </label>
-
-        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-          {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="taskDefinition.strings.retryButton"
-            :disabled="!taskDefinition.retryAllowed"
+            v-model="localTaskDefinition.strings.checkButton"
+            @change="updateTaskDefinition"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+          :class="{ 'setting-disabled': !localTaskDefinition.retryAllowed }"
+        >
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="localTaskDefinition.strings.retryButton"
+            @change="updateTaskDefinition"
+            :disabled="!localTaskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{
+            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+          }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="taskDefinition.strings.solutionsButton"
-            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="localTaskDefinition.strings.solutionsButton"
+            @change="updateTaskDefinition"
+            :disabled="!localTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
       </fieldset>
 
       <feedback-editor
-        :feedback="taskDefinition.feedback"
-        :result-message="taskDefinition.strings.resultMessage"
+        :feedback="localTaskDefinition.feedback"
+        :result-message="localTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -147,9 +180,6 @@
 </template>
 
 <script lang="ts">
-// Allow us to mutate the prop 'taskDefinition' as much as we want
-// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
-/* eslint-disable vue/no-mutating-props */
 import { defineComponent, inject, PropType } from 'vue';
 import {
   Feedback,
@@ -181,11 +211,24 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      localTaskDefinition: { ...this.taskDefinition },
+    };
+  },
   methods: {
     $gettext,
 
+    updateTaskDefinition() {
+      console.log('update task definition');
+      this.taskEditor!.performEdit({
+        newTaskDefinition: this.localTaskDefinition,
+        undoBatch: {},
+      });
+    },
+
     addAnswer(): void {
-      this.taskDefinition.answers.push({
+      this.localTaskDefinition.answers.push({
         uuid: v4(),
         text: this.$gettext('Neue Antwort'),
         correct: true,
@@ -195,12 +238,15 @@ export default defineComponent({
           feedbackNotSelected: '',
         },
       });
+
+      this.updateTaskDefinition();
     },
 
     removeAnswer(answerToRemove: QuestionAnswer): void {
-      this.taskDefinition.answers = this.taskDefinition.answers.filter(
-        (answer) => answer !== answerToRemove
-      );
+      this.localTaskDefinition.answers =
+        this.localTaskDefinition.answers.filter(
+          (answer) => answer !== answerToRemove
+        );
     },
 
     urlForIcon(iconName: string) {
@@ -212,7 +258,7 @@ export default defineComponent({
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.localTaskDefinition,
           (taskDraft: QuestionTask) => {
             taskDraft.feedback = updatedFeedback;
           }
@@ -224,7 +270,7 @@ export default defineComponent({
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.localTaskDefinition,
           (taskDraft: QuestionTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }

@@ -6,7 +6,7 @@
 
         <div class="cards-list">
           <div
-            v-for="(card, index) in taskDefinition.cards"
+            v-for="(card, index) in localTaskDefinition.cards"
             :key="card.uuid"
             :class="{
               'cards-list-item': true,
@@ -38,12 +38,12 @@
         </div>
 
         <div
-          v-if="taskDefinition.cards[selectedCardIndex]"
+          v-if="localTaskDefinition.cards[selectedCardIndex]"
           class="edited-memory-card"
         >
           <MemoryEditorCard
-            :card="taskDefinition.cards[selectedCardIndex]"
-            :card-index="selectedCardIndex"
+            :card="localTaskDefinition.cards[selectedCardIndex]"
+            @update:card="updateCard"
           />
         </div>
 
@@ -58,24 +58,35 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.retryAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrere Versuche erlauben') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.squareLayout" type="checkbox" />
+          <input
+            v-model="localTaskDefinition.squareLayout"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Karten in einem Quadrat positionieren') }}
         </label>
 
         <label
           >{{ $gettext('Rückseite') }}
           <span
-            v-if="taskDefinition.flipside && taskDefinition.flipside.file_id"
+            v-if="
+              localTaskDefinition.flipside &&
+              localTaskDefinition.flipside.file_id
+            "
             class="flipside-image-and-button-container"
           >
             <LazyImage
-              :src="fileIdToUrl(taskDefinition.flipside.file_id)"
-              :alt="taskDefinition.flipside.altText"
+              :src="fileIdToUrl(localTaskDefinition.flipside.file_id)"
+              :alt="localTaskDefinition.flipside.altText"
               class="flipside-image"
             />
 
@@ -95,11 +106,14 @@
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Beschriftungen') }}</legend>
 
-        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+        <label
+          :class="{ 'setting-disabled': !localTaskDefinition.retryAllowed }"
+        >
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="taskDefinition.strings.retryButton"
-            :disabled="!taskDefinition.retryAllowed"
+            v-model="localTaskDefinition.strings.retryButton"
+            @change="updateTaskDefinition"
+            :disabled="!localTaskDefinition.retryAllowed"
             type="text"
           />
         </label>
@@ -110,7 +124,11 @@
 
         <label>
           {{ $gettext('Ergebnismitteilung:') }}
-          <input v-model="taskDefinition.strings.resultMessage" type="text" />
+          <input
+            v-model="localTaskDefinition.strings.resultMessage"
+            @change="updateTaskDefinition"
+            type="text"
+          />
         </label>
       </fieldset>
     </form>
@@ -219,8 +237,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
-import { taskEditorStore } from '@/store';
+import { defineComponent, inject, PropType } from 'vue';
 import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { $gettext, $pgettext } from '@/language/gettext';
 import produce from 'immer';
@@ -236,15 +253,22 @@ import {
 
 export default defineComponent({
   name: 'MemoryEditor',
-  components: { LazyImage, MemoryEditorCard, FileUpload },
   setup() {
     return {
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
   },
+  components: { LazyImage, MemoryEditorCard, FileUpload },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<MemoryTask>,
+      required: true,
+    },
+  },
   data() {
     return {
       selectedCardIndex: -1,
+      localTaskDefinition: { ...this.taskDefinition },
     };
   },
   beforeMount(): void {
@@ -256,6 +280,12 @@ export default defineComponent({
     fileIdToUrl,
     $gettext,
     $pgettext,
+    updateTaskDefinition() {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: this.localTaskDefinition,
+        undoBatch: {},
+      });
+    },
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
@@ -283,7 +313,7 @@ export default defineComponent({
       return text;
     },
     addCard() {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.localTaskDefinition = produce(this.localTaskDefinition, (draft) => {
         draft.cards.push({
           uuid: v4(),
           first: {
@@ -295,27 +325,32 @@ export default defineComponent({
         });
       });
       this.taskEditor!.performEdit({
-        newTaskDefinition: newTaskDefinition,
+        newTaskDefinition: this.localTaskDefinition,
         undoBatch: {},
       });
       // Select the newly inserted card
-      this.selectedCardIndex = this.taskDefinition.cards.length - 1;
+      this.selectedCardIndex = this.localTaskDefinition.cards.length - 1;
     },
     deleteCard(index: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.localTaskDefinition = produce(this.localTaskDefinition, (draft) => {
         draft.cards.splice(index, 1);
       });
-      this.taskEditor!.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
+
+      this.updateTaskDefinition();
+
       // Adjust the selection index so the selected card doesn't unexpectedly change
       if (index <= this.selectedCardIndex) {
         this.selectedCardIndex = this.selectedCardIndex - 1;
       }
     },
+    updateCard(updatedCard: MemoryCard) {
+      this.localTaskDefinition = produce(this.localTaskDefinition, (draft) => {
+        draft.cards[this.selectedCardIndex] = updatedCard;
+      });
+      this.updateTaskDefinition();
+    },
     onFlipsideImageUploaded(file: FileRef): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.localTaskDefinition, (draft) => {
         draft.flipside = {
           uuid: v4(),
           type: 'image',
@@ -329,7 +364,7 @@ export default defineComponent({
       });
     },
     deleteFlipsideImage(): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.localTaskDefinition, (draft) => {
         draft.flipside = undefined;
       });
       this.taskEditor!.performEdit({
@@ -337,9 +372,6 @@ export default defineComponent({
         undoBatch: {},
       });
     },
-  },
-  computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as MemoryTask,
   },
 });
 </script>
