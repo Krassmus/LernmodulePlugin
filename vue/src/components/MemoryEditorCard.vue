@@ -13,7 +13,7 @@
 
       <button
         type="button"
-        @click="onClickDeleteImage(false)"
+        @click="onClickDeleteImage('first')"
         class="button trash settings-item"
       >
         {{ $gettext('Bild löschen') }}
@@ -24,12 +24,12 @@
         <input
           type="text"
           :value="card.first.altText"
-          @input="onInputAltText($event, false)"
+          @input="onInputAltText($event, 'first')"
           class="settings-item"
         />
       </label>
     </div>
-    <FileUpload v-else @file-uploaded="onUploadImage($event, false)" />
+    <FileUpload v-else @file-uploaded="onUploadImage($event, 'first')" />
 
     <template v-if="card.second">
       <label>{{ $gettext('Zweites Bild') }}</label>
@@ -48,7 +48,7 @@
 
         <button
           type="button"
-          @click="onClickDeleteImage(true)"
+          @click="onClickDeleteImage('second')"
           class="button trash settings-item"
         >
           {{ $gettext('Bild löschen') }}
@@ -59,12 +59,12 @@
           <input
             type="text"
             :value="card.second.altText"
-            @input="onInputAltText($event, true)"
+            @input="onInputAltText($event, 'second')"
             class="settings-item"
           />
         </label>
       </div>
-      <FileUpload v-else @file-uploaded="onUploadImage($event, true)" />
+      <FileUpload v-else @file-uploaded="onUploadImage($event, 'second')" />
     </template>
 
     <button
@@ -98,23 +98,21 @@ export default defineComponent({
   },
   methods: {
     $gettext,
-    // Why not directly pass the string 'first' or 'second' as an argument
-    // to this function? It would save you the unwieldy ternary operator usages.
-    onUploadImage(file: FileRef, second: boolean): void {
+    onUploadImage(file: FileRef, element: 'first' | 'second'): void {
       this.$emit('update:card', {
         ...this.card,
-        [second ? 'second' : 'first']: {
-          ...this.card[second ? 'second' : 'first'],
+        [element]: {
+          ...this.card[element],
           file_id: file.id,
         },
       });
     },
-    onInputAltText(event: InputEvent, second: boolean): void {
+    onInputAltText(event: InputEvent, element: 'first' | 'second'): void {
       const altText = (event.target as HTMLInputElement).value;
       this.$emit('update:card', {
         ...this.card,
-        [second ? 'second' : 'first']: {
-          ...this.card[second ? 'second' : 'first'],
+        [element]: {
+          ...this.card[element],
           altText,
         },
       });
@@ -130,8 +128,8 @@ export default defineComponent({
         },
       });
     },
-    onClickDeleteImage(secondCard: boolean): void {
-      if (!secondCard) {
+    onClickDeleteImage(element: 'first' | 'second'): void {
+      if (element === 'first') {
         this.$emit('update:card', {
           ...this.card,
           first: {
