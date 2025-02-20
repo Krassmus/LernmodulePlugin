@@ -41,7 +41,7 @@
 
             <input
               v-model="localTaskDefinition.answers[i].text"
-              @change="updateTaskDefinition"
+              @input="updateTaskDefinition(`taskDefinition.answers[${i}].text`)"
               type="text"
             />
           </div>
@@ -262,12 +262,12 @@ export default defineComponent({
       // 'undoBatch'?
     },
 
-    updateTaskDefinition() {
+    updateTaskDefinition(undoBatch?: unknown) {
       // Synchronize state localTaskDefinition -> taskDefinition.
       console.log('update task definition');
       this.taskEditor!.performEdit({
         newTaskDefinition: cloneDeep(this.localTaskDefinition),
-        undoBatch: {},
+        undoBatch: undoBatch ?? {},
       });
     },
 
