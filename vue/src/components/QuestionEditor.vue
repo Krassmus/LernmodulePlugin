@@ -215,16 +215,22 @@ export default defineComponent({
   data() {
     return {
       localTaskDefinition: cloneDeep(this.taskDefinition),
-      // Die Synchronisierung in diese Richtung findet hier jetzt nur einmal statt.
-      // Deswegen funktionieren undo/redo nicht.
-      // Du musst ein Watcher erstellen, der localTaskDefinition aktuell behält,
-      // wenn immer this.taskDefinition verändert wird.
     };
+  },
+  watch: {
+    // Synchronize state taskDefinition -> localTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (taskDefinition): void {
+        this.localTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
   },
   methods: {
     $gettext,
 
     updateTaskDefinition() {
+      // Synchronize state localTaskDefinition -> taskDefinition.
       console.log('update task definition');
       this.taskEditor!.performEdit({
         newTaskDefinition: cloneDeep(this.localTaskDefinition),
