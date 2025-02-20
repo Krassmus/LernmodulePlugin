@@ -6,8 +6,8 @@
 
         <label>
           <studip-wysiwyg
-            v-model="localTaskDefinition.question"
-            @update:modelValue="updateTaskDefinition"
+            :modelValue="taskDefinition.question"
+            @update:modelValue="onEditQuestion"
             force-soft-breaks
             remove-wrapping-p-tag
             disable-autoformat
@@ -228,6 +228,27 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+    onEditQuestion(data: string): void {
+      // Copy new data from wysiwyg editor into task definition
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: QuestionTask) => {
+            draft.question = data;
+          }
+        ),
+        // Note this is not a perfect 'undoBatch' because normally you expect
+        // a sequence of edits in the text to produce a sequence of undo/redo
+        // steps... E.g. you type in one place, click to navigate to a different
+        // place in the text, then start typing there... You would expect
+        // this to produce two distinct steps in the undo/redo stack.
+        // But if the 'undoBatch' is simply 'taskDefinition.question', the
+        // undo/redo states will all be merged together into one step.
+        // TODO can we access CKEditor internal state to produce a more apt
+        // 'undoBatch'?
+        undoBatch: 'taskDefinition.question',
+      });
+    },
 
     updateTaskDefinition() {
       // Synchronize state localTaskDefinition -> taskDefinition.
