@@ -94,11 +94,23 @@ export default defineComponent({
       required: false,
     },
   },
-  emits: ['update:feedback', 'update:result-message'],
+  emits: {
+    ['update:feedback'](feedbacks: Feedback[]): boolean {
+      return true;
+    },
+    ['update:result-message'](message: string): boolean {
+      // This function is a 'validator'.
+      // See https://vuejs.org/guide/components/events.html#events-validation
+      // We don't need to perform validation here, but we have to define SOME
+      // kind of function in order to use this syntax that lets us provide
+      // types for our events.
+      return true;
+    },
+  },
   data() {
     return {
       feedbackList: cloneDeep(this.feedback), // Local copy of the feedback to edit
-      localResultMessage: this.resultMessage, // Local copy of the result message
+      localResultMessage: this.resultMessage || '', // Local copy of the result message
     };
   },
   watch: {
@@ -112,7 +124,7 @@ export default defineComponent({
     resultMessage: {
       immediate: true,
       handler: function (): void {
-        this.localResultMessage = this.resultMessage;
+        this.localResultMessage = this.resultMessage || '';
       },
     },
   },
