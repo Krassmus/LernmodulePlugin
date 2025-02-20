@@ -99,50 +99,50 @@ export default defineComponent({
   methods: {
     $gettext,
     onUploadImage(file: FileRef, element: 'first' | 'second'): void {
-      // Why not use 'produce' here? I find it more readable, personally.
-      this.$emit('update:card', {
-        ...this.card,
-        [element]: {
-          ...this.card[element],
-          file_id: file.id,
-        },
-      });
+      this.$emit(
+        'update:card',
+        produce(this.card, (draft) => {
+          draft[element].file_id = file.id;
+        })
+      );
     },
     onInputAltText(event: InputEvent, element: 'first' | 'second'): void {
       const altText = (event.target as HTMLInputElement).value;
-      this.$emit('update:card', {
-        ...this.card,
-        [element]: {
-          ...this.card[element],
-          altText,
-        },
-      });
+      this.$emit(
+        'update:card',
+        produce(this.card, (draft) => {
+          draft[element].altText = altText;
+        })
+      );
     },
     addSecondImage(): void {
-      this.$emit('update:card', {
-        ...this.card,
-        second: {
-          uuid: v4(),
-          type: 'image',
-          file_id: '',
-          altText: '',
-        },
-      });
+      this.$emit(
+        'update:card',
+        produce(this.card, (draft) => {
+          draft.second = {
+            uuid: v4(),
+            type: 'image',
+            file_id: '',
+            altText: '',
+          };
+        })
+      );
     },
     onClickDeleteImage(element: 'first' | 'second'): void {
       if (element === 'first') {
-        this.$emit('update:card', {
-          ...this.card,
-          first: {
-            ...this.card.first,
-            file_id: '',
-          },
-        });
+        this.$emit(
+          'update:card',
+          produce(this.card, (draft) => {
+            draft.first.file_id = '';
+          })
+        );
       } else {
-        this.$emit('update:card', {
-          ...this.card,
-          second: undefined,
-        });
+        this.$emit(
+          'update:card',
+          produce(this.card, (draft) => {
+            draft.second = undefined;
+          })
+        );
       }
     },
   },
