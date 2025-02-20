@@ -279,18 +279,23 @@ export default defineComponent({
     },
 
     addAnswer(): void {
-      this.localTaskDefinition.answers.push({
-        uuid: v4(),
-        text: this.$gettext('Neue Antwort'),
-        correct: true,
-        strings: {
-          hint: '',
-          feedbackSelected: '',
-          feedbackNotSelected: '',
-        },
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: QuestionTask) => {
+            draft.answers.push({
+              uuid: v4(),
+              text: this.$gettext('Neue Antwort'),
+              correct: true,
+              strings: {
+                hint: '',
+                feedbackSelected: '',
+                feedbackNotSelected: '',
+              },
+            });
+          }
+        ),
       });
-
-      this.updateTaskDefinition();
     },
 
     removeAnswer(answerToRemoveIndex: number): void {
