@@ -97,7 +97,7 @@ export default defineComponent({
   emits: ['update:feedback', 'update:result-message'],
   data() {
     return {
-      feedbackList: [...this.feedback], // Local copy of the feedback to edit
+      feedbackList: cloneDeep(this.feedback), // Local copy of the feedback to edit
       localResultMessage: this.resultMessage, // Local copy of the result message
     };
   },
