@@ -221,7 +221,7 @@ export default defineComponent({
     // Synchronize state taskDefinition -> localTaskDefinition.
     taskDefinition: {
       immediate: true,
-      handler: function (taskDefinition): void {
+      handler: function (): void {
         this.localTaskDefinition = cloneDeep(this.taskDefinition);
       },
     },
@@ -249,17 +249,17 @@ export default defineComponent({
             draft.question = data;
           }
         ),
-        // Note this is not a perfect 'undoBatch' because normally you expect
-        // a sequence of edits in the text to produce a sequence of undo/redo
-        // steps... E.g. you type in one place, click to navigate to a different
-        // place in the text, then start typing there... You would expect
-        // this to produce two distinct steps in the undo/redo stack.
-        // But if the 'undoBatch' is simply 'taskDefinition.question', the
-        // undo/redo states will all be merged together into one step.
-        // TODO can we access CKEditor internal state to produce a more apt
-        // 'undoBatch'?
         undoBatch: 'taskDefinition.question',
       });
+      // Note this is not a perfect 'undoBatch' because normally you expect
+      // a sequence of edits in the text to produce a sequence of undo/redo
+      // steps... E.g. you type in one place, click to navigate to a different
+      // place in the text, then start typing there... You would expect
+      // this to produce two distinct steps in the undo/redo stack.
+      // But if the 'undoBatch' is simply 'taskDefinition.question', the
+      // undo/redo states will all be merged together into one step.
+      // TODO can we access CKEditor internal state to produce a more apt
+      // 'undoBatch'?
     },
 
     updateTaskDefinition() {
