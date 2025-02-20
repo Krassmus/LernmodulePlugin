@@ -214,6 +214,13 @@ export default defineComponent({
   },
   data() {
     return {
+      // We use this as a helping means to allow us to use v-model for the
+      // inputs for the many different options that are used in this task.
+      // There are a lot of different strings to be typed in, checkboxes
+      // to be checked and so on.  This saves us the effort of writing 11 more
+      // event handlers analogous to onInputAnswerCorrect.
+      // Instead, we just write a catchall function 'updateTaskDefinition'
+      // which we can call to copy localTaskDefinition into taskDefinition.
       localTaskDefinition: cloneDeep(this.taskDefinition),
     };
   },
