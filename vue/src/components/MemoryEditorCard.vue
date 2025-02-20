@@ -99,6 +99,7 @@ export default defineComponent({
   methods: {
     $gettext,
     onUploadImage(file: FileRef, element: 'first' | 'second'): void {
+      // Why not use 'produce' here? I find it more readable, personally.
       this.$emit('update:card', {
         ...this.card,
         [element]: {
