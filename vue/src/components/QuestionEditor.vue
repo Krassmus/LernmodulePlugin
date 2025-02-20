@@ -196,6 +196,7 @@ import {
 } from '@/components/taskEditorState';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import { v4 } from 'uuid';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'QuestionEditor',
@@ -213,6 +214,11 @@ export default defineComponent({
   },
   data() {
     return {
+      // Das ist kein Deep-Clone, sondern ein Shallow-Clone.
+      // Das heißt, alle Felder von localTaskDefinition enthalten jetzt Referenzen
+      // auf dieselben Objekten/Arrays, auf die die Felder in taskDefinition
+      // zeigen.// So wirst du zu schwer nachvollziehbaren Fehlern kommen.
+      // Besser ist, mit 'produce' oder _.cloneDeep zu arbeiten.
       localTaskDefinition: { ...this.taskDefinition },
     };
   },
@@ -222,7 +228,7 @@ export default defineComponent({
     updateTaskDefinition() {
       console.log('update task definition');
       this.taskEditor!.performEdit({
-        newTaskDefinition: this.localTaskDefinition,
+        newTaskDefinition: cloneDeep(this.localTaskDefinition),
         undoBatch: {},
       });
     },
