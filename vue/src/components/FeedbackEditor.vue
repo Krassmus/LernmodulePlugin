@@ -79,6 +79,7 @@
 import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
 import { Feedback } from '@/models/TaskDefinition';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'FeedbackEditor',
@@ -99,6 +100,21 @@ export default defineComponent({
       feedbackList: [...this.feedback], // Local copy of the feedback to edit
       localResultMessage: this.resultMessage, // Local copy of the result message
     };
+  },
+  watch: {
+    // Synchronize state props -> local copies.
+    feedback: {
+      immediate: true,
+      handler: function (): void {
+        this.feedbackList = cloneDeep(this.feedback);
+      },
+    },
+    resultMessage: {
+      immediate: true,
+      handler: function (): void {
+        this.localResultMessage = this.resultMessage;
+      },
+    },
   },
   methods: {
     $gettext,
