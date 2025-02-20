@@ -24,7 +24,7 @@
             <button
               :title="$gettext('Antwort löschen')"
               :aria-label="$gettext('Antwort löschen')"
-              @click="removeAnswer(answer)"
+              @click="removeAnswer(i)"
               type="button"
               class="button-with-icon"
             >
@@ -293,11 +293,16 @@ export default defineComponent({
       this.updateTaskDefinition();
     },
 
-    removeAnswer(answerToRemove: QuestionAnswer): void {
-      this.localTaskDefinition.answers =
-        this.localTaskDefinition.answers.filter(
-          (answer) => answer !== answerToRemove
-        );
+    removeAnswer(answerToRemoveIndex: number): void {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: QuestionTask) => {
+            draft.answers.splice(answerToRemoveIndex, 1);
+          }
+        ),
+        undoBatch: {},
+      });
     },
 
     urlForIcon(iconName: string) {
