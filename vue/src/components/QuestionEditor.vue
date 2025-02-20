@@ -15,7 +15,7 @@
         </label>
 
         <fieldset
-          v-for="(answer, i) in localTaskDefinition.answers"
+          v-for="(answer, i) in modelTaskDefinition.answers"
           :key="answer.uuid"
           class="answer collapsable collapsed"
         >
@@ -40,7 +40,7 @@
             />
 
             <input
-              v-model="localTaskDefinition.answers[i].text"
+              v-model="modelTaskDefinition.answers[i].text"
               @input="updateTaskDefinition(`taskDefinition.answers[${i}].text`)"
               type="text"
             />
@@ -52,7 +52,7 @@
             <label>
               <span>{{ $gettext('Hinweis:') }}</span>
               <input
-                v-model="localTaskDefinition.answers[i].strings.hint"
+                v-model="modelTaskDefinition.answers[i].strings.hint"
                 @change="updateTaskDefinition"
                 type="text"
                 class="textbox"
@@ -63,7 +63,7 @@
               <span>{{ $gettext('Feedback, wenn ausgewählt:') }}</span>
               <input
                 v-model="
-                  localTaskDefinition.answers[i].strings.feedbackSelected
+                  modelTaskDefinition.answers[i].strings.feedbackSelected
                 "
                 @change="updateTaskDefinition"
                 type="text"
@@ -75,7 +75,7 @@
               <span>{{ $gettext('Feedback, wenn nicht ausgewählt:') }}</span>
               <input
                 v-model="
-                  localTaskDefinition.answers[i].strings.feedbackNotSelected
+                  modelTaskDefinition.answers[i].strings.feedbackNotSelected
                 "
                 @change="updateTaskDefinition"
                 type="text"
@@ -95,7 +95,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.canAnswerMultiple"
+            v-model="modelTaskDefinition.canAnswerMultiple"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -104,7 +104,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.randomOrder"
+            v-model="modelTaskDefinition.randomOrder"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -113,7 +113,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.retryAllowed"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -122,7 +122,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.showSolutionsAllowed"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -136,42 +136,42 @@
         <label>
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.checkButton"
+            v-model="modelTaskDefinition.strings.checkButton"
             @change="updateTaskDefinition"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !localTaskDefinition.retryAllowed }"
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
         >
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.retryButton"
+            v-model="modelTaskDefinition.strings.retryButton"
             @change="updateTaskDefinition"
-            :disabled="!localTaskDefinition.retryAllowed"
+            :disabled="!modelTaskDefinition.retryAllowed"
             type="text"
           />
         </label>
 
         <label
           :class="{
-            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
           }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.solutionsButton"
+            v-model="modelTaskDefinition.strings.solutionsButton"
             @change="updateTaskDefinition"
-            :disabled="!localTaskDefinition.showSolutionsAllowed"
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
       </fieldset>
 
       <feedback-editor
-        :feedback="localTaskDefinition.feedback"
-        :result-message="localTaskDefinition.strings.resultMessage"
+        :feedback="modelTaskDefinition.feedback"
+        :result-message="modelTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -220,21 +220,27 @@ export default defineComponent({
       // to be checked and so on.  This saves us the effort of writing 11 more
       // event handlers analogous to onInputAnswerCorrect.
       // Instead, we just write a catchall function 'updateTaskDefinition'
-      // which we can call to copy localTaskDefinition into taskDefinition.
-      localTaskDefinition: cloneDeep(this.taskDefinition),
+      // which we can call to copy modelTaskDefinition into taskDefinition.
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
     };
   },
   watch: {
-    // Synchronize state taskDefinition -> localTaskDefinition.
+    // Synchronize state taskDefinition -> modelTaskDefinition.
     taskDefinition: {
       immediate: true,
       handler: function (): void {
-        this.localTaskDefinition = cloneDeep(this.taskDefinition);
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
       },
     },
   },
   methods: {
     $gettext,
+    // An example of how you would write an event handler to replace v-model
+    // and completely avoid using modelTaskDefinition.
+    // I think it is OK for just one or two inputs, but if you have 10+ of them,
+    // then that would be a lot of boilerplate, and I prefer the solution
+    // using 'modelTaskDefinition', 'updateTaskDefinition' and the watcher
+    // to sync data in the other direction.
     onInputAnswerCorrect(ev: InputEvent, answerIndex: number): void {
       const value = (ev.target as HTMLInputElement).checked;
       this.taskEditor!.performEdit({
@@ -270,10 +276,10 @@ export default defineComponent({
     },
 
     updateTaskDefinition(undoBatch?: unknown) {
-      // Synchronize state localTaskDefinition -> taskDefinition.
+      // Synchronize state modelTaskDefinition -> taskDefinition.
       console.log('update task definition');
       this.taskEditor!.performEdit({
-        newTaskDefinition: cloneDeep(this.localTaskDefinition),
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
         undoBatch: undoBatch ?? {},
       });
     },
