@@ -319,7 +319,7 @@ export default defineComponent({
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.taskDefinition,
           (taskDraft: QuestionTask) => {
             taskDraft.feedback = updatedFeedback;
           }
@@ -331,7 +331,7 @@ export default defineComponent({
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.taskDefinition,
           (taskDraft: QuestionTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
