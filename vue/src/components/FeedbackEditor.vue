@@ -143,7 +143,7 @@ export default defineComponent({
     },
 
     emitUpdatedFeedback() {
-      this.$emit('update:feedback', [...this.feedbackList]);
+      this.$emit('update:feedback', cloneDeep(this.feedbackList));
     },
 
     emitUpdatedResultMessage() {
