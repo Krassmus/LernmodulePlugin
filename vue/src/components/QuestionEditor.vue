@@ -316,7 +316,7 @@ export default defineComponent({
       );
     },
 
-    updateFeedback(updatedFeedback: Feedback[]) {
+    updateFeedback(updatedFeedback: Feedback[], undoBatch: unknown) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
           this.taskDefinition,
@@ -324,7 +324,7 @@ export default defineComponent({
             taskDraft.feedback = updatedFeedback;
           }
         ),
-        undoBatch: {},
+        undoBatch: undoBatch,
       });
     },
 

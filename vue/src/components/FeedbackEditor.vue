@@ -29,7 +29,7 @@
             min="0"
             max="100"
             v-model="feedbackList[i].percentage"
-            @input="emitUpdatedFeedback"
+            @input="emitUpdatedFeedback(`feedbackList[${i}].percentage`)"
           />
         </template>
       </div>
@@ -46,7 +46,7 @@
           <input
             type="text"
             v-model="feedbackList[i].message"
-            @input="emitUpdatedFeedback"
+            @input="emitUpdatedFeedback(`feedbackList[${i}].message`)"
           />
           <button
             type="button"
@@ -95,7 +95,7 @@ export default defineComponent({
     },
   },
   emits: {
-    ['update:feedback'](feedbacks: Feedback[]): boolean {
+    ['update:feedback'](feedbacks: Feedback[], undoBatch?: unknown): boolean {
       return true;
     },
     ['update:result-message'](message: string): boolean {
@@ -154,8 +154,8 @@ export default defineComponent({
       this.emitUpdatedFeedback();
     },
 
-    emitUpdatedFeedback() {
-      this.$emit('update:feedback', cloneDeep(this.feedbackList));
+    emitUpdatedFeedback(undoBatch: unknown = {}) {
+      this.$emit('update:feedback', cloneDeep(this.feedbackList), undoBatch);
     },
 
     emitUpdatedResultMessage() {
