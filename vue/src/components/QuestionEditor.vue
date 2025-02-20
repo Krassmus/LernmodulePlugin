@@ -214,12 +214,11 @@ export default defineComponent({
   },
   data() {
     return {
-      // Das ist kein Deep-Clone, sondern ein Shallow-Clone.
-      // Das heißt, alle Felder von localTaskDefinition enthalten jetzt Referenzen
-      // auf dieselben Objekten/Arrays, auf die die Felder in taskDefinition
-      // zeigen.// So wirst du zu schwer nachvollziehbaren Fehlern kommen.
-      // Besser ist, mit 'produce' oder _.cloneDeep zu arbeiten.
-      localTaskDefinition: { ...this.taskDefinition },
+      localTaskDefinition: cloneDeep(this.taskDefinition),
+      // Die Synchronisierung in diese Richtung findet hier jetzt nur einmal statt.
+      // Deswegen funktionieren undo/redo nicht.
+      // Du musst ein Watcher erstellen, der localTaskDefinition aktuell behält,
+      // wenn immer this.taskDefinition verändert wird.
     };
   },
   methods: {
