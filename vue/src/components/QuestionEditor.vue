@@ -34,8 +34,8 @@
 
           <div class="answer-row">
             <input
-              v-model="localTaskDefinition.answers[i].correct"
-              @change="updateTaskDefinition"
+              :checked="taskDefinition.answers[i].correct"
+              @input="onInputAnswerCorrect($event, i)"
               type="checkbox"
             />
 
@@ -228,6 +228,18 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+    onInputAnswerCorrect(ev: InputEvent, answerIndex: number): void {
+      const value = (ev.target as HTMLInputElement).checked;
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: QuestionTask) => {
+            draft.answers[answerIndex].correct = value;
+          }
+        ),
+        undoBatch: {},
+      });
+    },
     onEditQuestion(data: string): void {
       // Copy new data from wysiwyg editor into task definition
       this.taskEditor!.performEdit({
