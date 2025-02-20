@@ -336,7 +336,7 @@ export default defineComponent({
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'strings.resultMessage',
       });
     },
   },
