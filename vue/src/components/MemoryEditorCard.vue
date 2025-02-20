@@ -98,6 +98,8 @@ export default defineComponent({
   },
   methods: {
     $gettext,
+    // Why not directly pass the string 'first' or 'second' as an argument
+    // to this function? It would save you the unwieldy ternary operator usages.
     onUploadImage(file: FileRef, second: boolean): void {
       this.$emit('update:card', {
         ...this.card,
