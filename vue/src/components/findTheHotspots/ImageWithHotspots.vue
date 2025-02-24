@@ -47,27 +47,27 @@
         @click="onClickBackground"
         class="image hotspots-image"
       />
-      <div
-        ref="selectedHotspotTooltip"
-        v-if="editor"
-        class="selected-hotspot-tooltip"
-        :class="{
-          hidden: !selectedHotspot,
-        }"
-      >
-        <button
-          type="button"
-          class="small-button trash"
-          @click="editor!.deleteSelectedHotspot()"
-        ></button>
-        <div class="arrow" data-popper-arrow></div>
-      </div>
     </div>
     <pre
       v-if="debug"
       :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
       >{{ { selectedHotspot, dragState } }}</pre
     >
+    <div
+      ref="selectedHotspotTooltip"
+      v-if="editor"
+      class="selected-hotspot-tooltip"
+      :class="{
+        hidden: !selectedHotspot,
+      }"
+    >
+      <button
+        type="button"
+        class="small-button trash"
+        @click="editor!.deleteSelectedHotspot()"
+      ></button>
+      <div class="arrow" data-popper-arrow></div>
+    </div>
   </div>
 </template>
 
