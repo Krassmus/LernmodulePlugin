@@ -1,5 +1,10 @@
 <template>
-  <div class="image-and-hotspots-container-wrapper" :class="{ debug: debug }">
+  <div
+    class="image-and-hotspots-container-wrapper"
+    :class="{
+      debug: debug,
+    }"
+  >
     <div class="image-and-hotspots-container" ref="root">
       <!--  In the editor, hotspots are visible. In the viewer, they should be
       invisible. We can tell whether we are in the editor or the viewer based
@@ -131,7 +136,7 @@ export default defineComponent({
   },
   computed: {
     debug(): boolean {
-      return window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
+      return window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG && false;
     },
     // A unique ID for this instance of ImageWithHotspots, so that we can refer
     // to elements inside of it by ID when there are multiple instances
@@ -483,13 +488,13 @@ button.hotspot {
   }
 
   &.selected {
-    border: 2px dashed #0099ff;
+    border: 2px dashed #0a78d1;
   }
 
   .resize-handle {
     $size: 8px;
     position: absolute;
-    background: cornflowerblue;
+    background: transparent;
 
     &.top {
       cursor: ns-resize;
@@ -567,7 +572,7 @@ button.hotspot {
   background: white;
   color: black;
   border-radius: 12px;
-  border: 2px solid black;
+  border: #0a78d1 2px solid;
   padding: 8px;
   > .arrow,
   > .arrow::before {
