@@ -23,6 +23,17 @@ export default defineComponent({
     src: { type: String, required: true },
     alt: { type: String, default: '' },
   },
+  watch: {
+    src: function () {
+      // Here we load the image unconditionally when 'src' changes.
+      // You could try to use the observer to ensure that it is only loaded
+      // when the image intersects the viewport.
+      // But because this watcher will only run in the editor, I consider it
+      // unlikely that there will be issues loading the image unconditionally
+      // in the watcher.
+      this.enqueueImageLoad();
+    },
+  },
   data() {
     return {
       isLoaded: false, // Tracks if the image has been successfully loaded
