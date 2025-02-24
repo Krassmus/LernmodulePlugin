@@ -15,6 +15,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         require_once __DIR__ . '/lib/CoursewareBlocks/MarkTheWordsBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/MemoryBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/PairingBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/FindTheHotspotsBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/SequencingBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/InteractiveVideoBlock.php';
         // TODO Consider using cache-busting hashes so the latest version of
@@ -53,6 +54,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $this->addBlockIconCSS('question', 'question');
         $this->addBlockIconCSS('fill-in-the-blanks', 'file-office');
         $this->addBlockIconCSS('memory', 'content2');
+        $this->addBlockIconCSS('find-the-hotspots', 'content2');
         $this->addStylesheet('assets/courseware-block/icons-variables.scss');
     }
 
@@ -92,6 +94,9 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\PairingBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\SequencingBlock::class;
+        if (Config::get()->LERNMODULE_PREVIEW) {
+            $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheHotspotsBlock::class;
+        }
 
         return $otherBlockTypes;
     }
