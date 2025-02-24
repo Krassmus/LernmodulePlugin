@@ -4,6 +4,7 @@
       <button @click="addRectangularHotspot">Add Rectangular Hotspot</button>
       <button @click="addEllipseHotspot">Add Ellipse Hotspot</button>
       <button @click="removeAllHotspots">Remove All Hotspots</button>
+      <button @click="deleteImage">Delete image</button>
     </div>
     <ImageWithHotspots
       ref="imageWithHotspotsRef"
@@ -117,6 +118,18 @@ function addEllipseHotspot(): void {
 function removeAllHotspots(): void {
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
     draft.hotspots = [];
+  });
+  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+}
+
+function deleteImage(): void {
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    draft.image = {
+      type: 'image',
+      uuid: v4(),
+      file_id: '',
+      altText: '',
+    };
   });
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
 }
