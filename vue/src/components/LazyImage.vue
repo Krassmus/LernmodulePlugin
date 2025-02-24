@@ -61,7 +61,7 @@ export default defineComponent({
   },
   computed: {
     useLazyLoading(): boolean {
-      return true;
+      return window.STUDIP.LernmoduleVueJS.LERNMODULE_LAZYLOADING;
     },
   },
   mounted() {
