@@ -462,6 +462,8 @@ export default defineComponent({
   width: 100%;
 }
 
+$hotspotBorderWidth: 2px;
+
 button.hotspot {
   /* CSS Reset for button styles */
   padding: 0;
@@ -473,7 +475,7 @@ button.hotspot {
   box-sizing: border-box;
 
   position: absolute;
-  border: 2px dashed rgba(0, 0, 0, 0.7);
+  border: $hotspotBorderWidth dashed rgba(0, 0, 0, 0.7);
   background-color: rgba(255, 255, 255, 0.5);
 
   // This class isn't called 'invisible' or 'hidden', because there are Stud.IP
@@ -488,74 +490,75 @@ button.hotspot {
   }
 
   &.selected {
-    border: 2px dashed #0a78d1;
+    border-color: #0a78d1;
   }
 
   .resize-handle {
     $size: 8px;
+    $cornerOffset: calc($size - $hotspotBorderWidth);
     position: absolute;
     background: transparent;
 
     &.top {
       cursor: ns-resize;
-      top: 0;
-      left: $size;
-      right: $size;
+      top: -$hotspotBorderWidth;
+      left: $cornerOffset;
+      right: $cornerOffset;
       height: $size;
     }
 
     &.top-right {
       cursor: nesw-resize;
-      top: 0;
-      right: 0;
+      top: -$hotspotBorderWidth;
+      right: -$hotspotBorderWidth;
       height: $size;
       width: $size;
     }
 
     &.right {
       cursor: ew-resize;
-      top: $size;
-      bottom: $size;
-      right: 0;
+      top: $cornerOffset;
+      bottom: $cornerOffset;
+      right: -$hotspotBorderWidth;
       width: $size;
     }
 
     &.bottom-right {
       cursor: nwse-resize;
-      bottom: 0;
-      right: 0;
+      bottom: -$hotspotBorderWidth;
+      right: -$hotspotBorderWidth;
       width: $size;
       height: $size;
     }
 
     &.bottom {
       cursor: ns-resize;
-      bottom: 0;
-      left: $size;
-      right: $size;
+      bottom: -$hotspotBorderWidth;
+      left: $cornerOffset;
+      right: $cornerOffset;
       height: $size;
     }
 
     &.bottom-left {
       cursor: nesw-resize;
-      bottom: 0;
-      left: 0;
+      bottom: -$hotspotBorderWidth;
+      left: -$hotspotBorderWidth;
       width: $size;
       height: $size;
     }
 
     &.left {
       cursor: ew-resize;
-      top: $size;
-      bottom: $size;
-      left: 0;
+      top: $cornerOffset;
+      bottom: $cornerOffset;
+      left: -$hotspotBorderWidth;
       width: $size;
     }
 
     &.top-left {
       cursor: nwse-resize;
-      top: 0;
-      left: 0;
+      top: -$hotspotBorderWidth;
+      left: -$hotspotBorderWidth;
       height: $size;
       width: $size;
     }
