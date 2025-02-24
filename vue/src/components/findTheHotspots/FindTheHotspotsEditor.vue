@@ -69,8 +69,9 @@ function addRectangularHotspot(): void {
     return;
   }
   const el = component.$el as HTMLElement;
-  const imageWidthPixels = el.clientWidth;
-  const imageHeightPixels = el.clientHeight;
+  const imgEl = el.getElementsByClassName('hotspots-image')[0];
+  const imageWidthPixels = imgEl.clientWidth;
+  const imageHeightPixels = imgEl.clientHeight;
   let hotspotWidthPercent: number, hotspotHeightPercent: number;
   const size = 0.3;
   const smallestDim = imageWidthPixels > imageHeightPixels ? 'height' : 'width';
