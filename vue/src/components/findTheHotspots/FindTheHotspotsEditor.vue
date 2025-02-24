@@ -6,6 +6,7 @@
       <button @click="removeAllHotspots">Remove All Hotspots</button>
     </div>
     <ImageWithHotspots
+      ref="imageWithHotspotsRef"
       v-if="taskDefinition.image.file_id"
       :hotspots="taskDefinition.hotspots"
       :image="taskDefinition.image"
@@ -57,14 +58,38 @@ function onImageUploaded(file: FileRef): void {
   });
 }
 
+const imageWithHotspotsRef = ref<
+  InstanceType<typeof ImageWithHotspots> | undefined
+>();
 function addRectangularHotspot(): void {
+  const component = imageWithHotspotsRef.value;
+  if (!component) {
+    console.warn('Not inserting anything.');
+    return;
+  }
+  const el = component.$el as HTMLElement;
+  const imageWidthPixels = el.clientWidth;
+  const imageHeightPixels = el.clientHeight;
+  let hotspotWidthPercent: number, hotspotHeightPercent: number;
+  const size = 0.3;
+  const smallestDim = imageWidthPixels > imageHeightPixels ? 'height' : 'width';
+  if (smallestDim === 'height') {
+    hotspotHeightPercent = size;
+    const hotspotHeightPixels = hotspotHeightPercent * imageHeightPixels;
+    hotspotWidthPercent = hotspotHeightPixels / imageWidthPixels;
+  } else {
+    hotspotWidthPercent = size;
+    const hotspotWidthPixels = hotspotWidthPercent * imageWidthPixels;
+    hotspotHeightPercent = hotspotWidthPixels / imageHeightPixels;
+  }
+
   const newHotspot: Hotspot = {
     uuid: v4(),
     type: 'rectangle',
     x: 0.4,
     y: 0.4,
-    width: 0.2,
-    height: 0.2,
+    width: hotspotWidthPercent,
+    height: hotspotHeightPercent,
   };
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
     draft.hotspots.push(newHotspot);
