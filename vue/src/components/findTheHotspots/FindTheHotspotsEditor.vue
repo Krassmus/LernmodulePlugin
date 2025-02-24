@@ -95,6 +95,7 @@ function addRectangularHotspot(): void {
     draft.hotspots.push(newHotspot);
   });
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+  selectHotspot(newHotspot.uuid);
 }
 
 function addEllipseHotspot(): void {
@@ -110,6 +111,7 @@ function addEllipseHotspot(): void {
     draft.hotspots.push(newHotspot);
   });
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+  selectHotspot(newHotspot.uuid);
 }
 
 function removeAllHotspots(): void {
