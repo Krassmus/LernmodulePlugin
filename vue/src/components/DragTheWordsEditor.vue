@@ -199,6 +199,15 @@ export default defineComponent({
       modelTaskDefinition: cloneDeep(this.taskDefinition),
     };
   },
+  watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
+  },
   computed: {
     currentUndoRedoState: () =>
       taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
