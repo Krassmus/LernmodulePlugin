@@ -110,13 +110,17 @@ export default defineComponent({
     },
     onInputAltText(event: InputEvent, element: 'first' | 'second'): void {
       const altText = (event.target as HTMLInputElement).value;
-      this.$emit('update:card', {
-        ...this.card,
-        [element]: {
-          ...this.card[element],
-          altText,
+      this.$emit(
+        'update:card',
+        {
+          ...this.card,
+          [element]: {
+            ...this.card[element],
+            altText,
+          },
         },
-      });
+        this.card[element]?.uuid + '.altText'
+      );
     },
     addSecondImage(): void {
       this.$emit('update:card', {
