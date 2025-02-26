@@ -17,8 +17,8 @@
         </div>
 
         <studip-wysiwyg
-          v-model="localTaskDefinition.template"
-          @update:modelValue="updateTaskDefinition"
+          :modelValue="localTaskDefinition.template"
+          @update:modelValue="onEditTemplate"
           ref="wysiwyg"
           force-soft-breaks
           remove-wrapping-p-tag
@@ -98,7 +98,7 @@
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
             v-model="localTaskDefinition.strings.checkButton"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
             :disabled="localTaskDefinition.autoCorrect"
             type="text"
           />
@@ -110,7 +110,7 @@
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
             v-model="localTaskDefinition.strings.retryButton"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
             :disabled="!localTaskDefinition.retryAllowed"
             type="text"
           />
@@ -124,7 +124,9 @@
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
             v-model="localTaskDefinition.strings.solutionsButton"
-            @change="updateTaskDefinition"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
             :disabled="!localTaskDefinition.showSolutionsAllowed"
             type="text"
           />
@@ -140,7 +142,11 @@
           {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
           <input
             v-model="localTaskDefinition.strings.fillInAllBlanksMessage"
-            @change="updateTaskDefinition"
+            @input="
+              updateTaskDefinition(
+                'taskDefinition.strings.fillInAllBlanksMessage'
+              )
+            "
             :disabled="
               !localTaskDefinition.showSolutionsAllowed ||
               !localTaskDefinition.allBlanksMustBeFilledForSolutions
@@ -171,6 +177,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'FillInTheBlanksEditor',
@@ -188,8 +195,17 @@ export default defineComponent({
   },
   data() {
     return {
-      localTaskDefinition: { ...this.taskDefinition },
+      localTaskDefinition: cloneDeep(this.taskDefinition),
     };
+  },
+  watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.localTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
   },
   computed: {
     instructions(): string {
@@ -224,10 +240,25 @@ export default defineComponent({
       });
     },
 
-    updateTaskDefinition() {
+    onEditTemplate(data: string): void {
+      // Copy new data from wysiwyg editor into task definition
       this.taskEditor!.performEdit({
-        newTaskDefinition: this.localTaskDefinition,
-        undoBatch: {},
+        newTaskDefinition: produce(
+          this.localTaskDefinition,
+          (draft: FillInTheBlanksTask) => {
+            draft.template = data;
+          }
+        ),
+        undoBatch: 'taskDefinition.template',
+      });
+    },
+
+    updateTaskDefinition(undoBatch?: unknown) {
+      // Synchronize state modelTaskDefinition -> taskDefinition.
+      console.log('update task definition');
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.localTaskDefinition),
+        undoBatch: undoBatch ?? {},
       });
     },
 
@@ -246,7 +277,7 @@ export default defineComponent({
             taskDraft.feedback = updatedFeedback;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.feedback',
       });
     },
 
@@ -258,7 +289,7 @@ export default defineComponent({
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.strings.resultMessage',
       });
     },
 
