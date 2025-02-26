@@ -8,8 +8,8 @@
           <input
             type="text"
             v-model="userInputs[element.uuid]"
-            :readonly="!this.editable"
-            :disabled="!this.editable"
+            :readonly="!editable"
+            :disabled="!editable"
             :class="[
               'blank',
               { autocorrect: task.autoCorrect },
@@ -54,7 +54,7 @@
       <div class="button-panel">
         <button
           v-if="showCheckButton"
-          v-text="this.task.strings.checkButton"
+          v-text="task.strings.checkButton"
           @click="onClickCheck(false)"
           type="button"
           class="stud5p-button"
@@ -64,7 +64,7 @@
         <template v-if="showExtraButtons">
           <button
             v-if="showSolutionButton"
-            v-text="this.task.strings.solutionsButton"
+            v-text="task.strings.solutionsButton"
             @click="onClickShowSolution"
             type="button"
             class="stud5p-button"
@@ -72,7 +72,7 @@
 
           <button
             v-if="showRetryButton"
-            v-text="this.task.strings.retryButton"
+            v-text="task.strings.retryButton"
             @click="onClickTryAgain"
             type="button"
             class="stud5p-button"
