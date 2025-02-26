@@ -178,6 +178,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'DragTheWordsEditor',
@@ -195,7 +196,7 @@ export default defineComponent({
   },
   data() {
     return {
-      modelTaskDefinition: { ...this.taskDefinition },
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
     };
   },
   computed: {
