@@ -18,8 +18,8 @@
         </div>
 
         <studip-wysiwyg
-          v-model="localTaskDefinition.template"
-          @update:modelValue="updateTaskDefinition"
+          :modelValue="modelTaskDefinition.template"
+          @update:modelValue="onEditTemplate"
           ref="wysiwyg"
           force-soft-breaks
           remove-wrapping-p-tag
@@ -32,7 +32,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.retryAllowed"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -41,7 +41,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.showSolutionsAllowed"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -55,42 +55,44 @@
         <label>
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.checkButton"
-            @change="updateTaskDefinition"
+            v-model="modelTaskDefinition.strings.checkButton"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !localTaskDefinition.retryAllowed }"
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
         >
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.retryButton"
-            @change="updateTaskDefinition"
-            :disabled="!localTaskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.strings.retryButton"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            :disabled="!modelTaskDefinition.retryAllowed"
             type="text"
           />
         </label>
 
         <label
           :class="{
-            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
           }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.solutionsButton"
-            @change="updateTaskDefinition"
-            :disabled="!localTaskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.strings.solutionsButton"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
       </fieldset>
 
       <feedback-editor
-        :feedback="localTaskDefinition.feedback"
-        :result-message="localTaskDefinition.strings.resultMessage"
+        :feedback="modelTaskDefinition.feedback"
+        :result-message="modelTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -109,6 +111,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'MarkTheWordsEditor',
@@ -126,8 +129,17 @@ export default defineComponent({
   },
   data() {
     return {
-      localTaskDefinition: { ...this.taskDefinition },
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
     };
+  },
+  watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
   },
   methods: {
     $gettext,
@@ -161,34 +173,48 @@ export default defineComponent({
       );
     },
 
-    updateTaskDefinition() {
+    onEditTemplate(data: string): void {
+      // Copy new data from wysiwyg editor into task definition
       this.taskEditor!.performEdit({
-        newTaskDefinition: this.localTaskDefinition,
-        undoBatch: {},
+        newTaskDefinition: produce(
+          this.modelTaskDefinition,
+          (draft: MarkTheWordsTask) => {
+            draft.template = data;
+          }
+        ),
+        undoBatch: 'taskDefinition.template',
+      });
+    },
+
+    updateTaskDefinition(undoBatch?: unknown) {
+      // Synchronize state modelTaskDefinition -> taskDefinition.
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
       });
     },
 
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: MarkTheWordsTask) => {
             taskDraft.feedback = updatedFeedback;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.feedback',
       });
     },
 
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: MarkTheWordsTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.strings.resultMessage',
       });
     },
   },
