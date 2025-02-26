@@ -17,7 +17,7 @@
         </div>
 
         <studip-wysiwyg
-          v-model="localTaskDefinition.template"
+          v-model="modelTaskDefinition.template"
           @update:modelValue="updateTaskDefinition"
           ref="wysiwyg"
           force-soft-breaks
@@ -33,7 +33,7 @@
           />
           <input
             type="text"
-            v-model="localTaskDefinition.distractors"
+            v-model="modelTaskDefinition.distractors"
             @change="updateTaskDefinition"
           />
         </label>
@@ -44,7 +44,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.instantFeedback"
+            v-model="modelTaskDefinition.instantFeedback"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -53,7 +53,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.alphabeticOrder"
+            v-model="modelTaskDefinition.alphabeticOrder"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -62,7 +62,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.retryAllowed"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -71,7 +71,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.showSolutionsAllowed"
             @change="updateShowSolutionsAllowed"
             type="checkbox"
           />
@@ -80,13 +80,13 @@
 
         <label
           :class="{
-            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
           }"
         >
           <input
-            v-model="localTaskDefinition.allBlanksMustBeFilledForSolutions"
+            v-model="modelTaskDefinition.allBlanksMustBeFilledForSolutions"
             @change="updateShowSolutionsAllowed"
-            :disabled="!localTaskDefinition.showSolutionsAllowed"
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="checkbox"
           />
           {{
@@ -99,39 +99,39 @@
         <legend>{{ $gettext('Beschriftungen') }}</legend>
 
         <label
-          :class="{ 'setting-disabled': localTaskDefinition.instantFeedback }"
+          :class="{ 'setting-disabled': modelTaskDefinition.instantFeedback }"
         >
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.checkButton"
+            v-model="modelTaskDefinition.strings.checkButton"
             @change="updateTaskDefinition"
-            :disabled="localTaskDefinition.instantFeedback"
+            :disabled="modelTaskDefinition.instantFeedback"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !localTaskDefinition.retryAllowed }"
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
         >
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.retryButton"
+            v-model="modelTaskDefinition.strings.retryButton"
             @change="updateTaskDefinition"
-            :disabled="!localTaskDefinition.retryAllowed"
+            :disabled="!modelTaskDefinition.retryAllowed"
             type="text"
           />
         </label>
 
         <label
           :class="{
-            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
           }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.solutionsButton"
+            v-model="modelTaskDefinition.strings.solutionsButton"
             @change="updateTaskDefinition"
-            :disabled="!localTaskDefinition.showSolutionsAllowed"
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
@@ -139,17 +139,17 @@
         <label
           :class="{
             'setting-disabled':
-              !localTaskDefinition.showSolutionsAllowed ||
-              !localTaskDefinition.allBlanksMustBeFilledForSolutions,
+              !modelTaskDefinition.showSolutionsAllowed ||
+              !modelTaskDefinition.allBlanksMustBeFilledForSolutions,
           }"
         >
           {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
           <input
-            v-model="localTaskDefinition.strings.fillInAllBlanksMessage"
+            v-model="modelTaskDefinition.strings.fillInAllBlanksMessage"
             @change="updateTaskDefinition"
             :disabled="
-              !localTaskDefinition.showSolutionsAllowed ||
-              !localTaskDefinition.allBlanksMustBeFilledForSolutions
+              !modelTaskDefinition.showSolutionsAllowed ||
+              !modelTaskDefinition.allBlanksMustBeFilledForSolutions
             "
             type="text"
           />
@@ -157,8 +157,8 @@
       </fieldset>
 
       <feedback-editor
-        :feedback="localTaskDefinition.feedback"
-        :result-message="localTaskDefinition.strings.resultMessage"
+        :feedback="modelTaskDefinition.feedback"
+        :result-message="modelTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -195,7 +195,7 @@ export default defineComponent({
   },
   data() {
     return {
-      localTaskDefinition: { ...this.taskDefinition },
+      modelTaskDefinition: { ...this.taskDefinition },
     };
   },
   computed: {
@@ -242,14 +242,14 @@ export default defineComponent({
 
     updateTaskDefinition() {
       this.taskEditor!.performEdit({
-        newTaskDefinition: this.localTaskDefinition,
+        newTaskDefinition: this.modelTaskDefinition,
         undoBatch: {},
       });
     },
 
     updateShowSolutionsAllowed() {
-      if (!this.localTaskDefinition.showSolutionsAllowed) {
-        this.localTaskDefinition.allBlanksMustBeFilledForSolutions = false;
+      if (!this.modelTaskDefinition.showSolutionsAllowed) {
+        this.modelTaskDefinition.allBlanksMustBeFilledForSolutions = false;
       }
       this.updateTaskDefinition();
     },
@@ -257,7 +257,7 @@ export default defineComponent({
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: DragTheWordsTask) => {
             taskDraft.feedback = updatedFeedback;
           }
@@ -269,7 +269,7 @@ export default defineComponent({
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: DragTheWordsTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
