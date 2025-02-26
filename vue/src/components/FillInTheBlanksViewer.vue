@@ -26,7 +26,11 @@
           </label>
 
           <span
-            v-if="showSolutions && !submittedAnswerIsCorrect(element)"
+            v-if="
+              showSolutions &&
+              !showFillInAllTheBlanksMessage &&
+              !submittedAnswerIsCorrect(element)
+            "
             class="stud5p-solution"
           >
             {{ element.solutions[0] }}
