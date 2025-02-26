@@ -34,7 +34,7 @@
           <input
             type="text"
             v-model="modelTaskDefinition.distractors"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition"
           />
         </label>
       </fieldset>
@@ -104,7 +104,7 @@
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.checkButton"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition"
             :disabled="modelTaskDefinition.instantFeedback"
             type="text"
           />
@@ -116,7 +116,7 @@
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.retryButton"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition"
             :disabled="!modelTaskDefinition.retryAllowed"
             type="text"
           />
@@ -130,7 +130,7 @@
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.solutionsButton"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition"
             :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
@@ -146,7 +146,7 @@
           {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
           <input
             v-model="modelTaskDefinition.strings.fillInAllBlanksMessage"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition"
             :disabled="
               !modelTaskDefinition.showSolutionsAllowed ||
               !modelTaskDefinition.allBlanksMustBeFilledForSolutions
