@@ -209,9 +209,6 @@ export default defineComponent({
     },
   },
   computed: {
-    currentUndoRedoState: () =>
-      taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
-
     instructions(): string {
       return $gettext(
         'Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button „Lücke hinzufügen“. Sie können auch einen Tooltip hinzufügen, indem Sie einen Doppelpunkt (:) vor den Tooltip-Text schreiben.'
