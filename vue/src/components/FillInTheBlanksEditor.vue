@@ -17,7 +17,7 @@
         </div>
 
         <studip-wysiwyg
-          :modelValue="localTaskDefinition.template"
+          :modelValue="modelTaskDefinition.template"
           @update:modelValue="onEditTemplate"
           ref="wysiwyg"
           force-soft-breaks
@@ -31,7 +31,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.caseSensitive"
+            v-model="modelTaskDefinition.caseSensitive"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -40,7 +40,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.acceptTypos"
+            v-model="modelTaskDefinition.acceptTypos"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -49,7 +49,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.autoCorrect"
+            v-model="modelTaskDefinition.autoCorrect"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -58,7 +58,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.retryAllowed"
             @change="updateTaskDefinition"
             type="checkbox"
           />
@@ -67,7 +67,7 @@
 
         <label>
           <input
-            v-model="localTaskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.showSolutionsAllowed"
             @change="updateShowSolutionsAllowed"
             type="checkbox"
           />
@@ -76,13 +76,13 @@
 
         <label
           :class="{
-            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
           }"
         >
           <input
-            v-model="localTaskDefinition.allBlanksMustBeFilledForSolutions"
+            v-model="modelTaskDefinition.allBlanksMustBeFilledForSolutions"
             @change="updateTaskDefinition"
-            :disabled="!localTaskDefinition.showSolutionsAllowed"
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="checkbox"
           />
           {{
@@ -94,40 +94,40 @@
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Beschriftungen') }}</legend>
 
-        <label :class="{ 'setting-disabled': localTaskDefinition.autoCorrect }">
+        <label :class="{ 'setting-disabled': modelTaskDefinition.autoCorrect }">
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.checkButton"
+            v-model="modelTaskDefinition.strings.checkButton"
             @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
-            :disabled="localTaskDefinition.autoCorrect"
+            :disabled="modelTaskDefinition.autoCorrect"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !localTaskDefinition.retryAllowed }"
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
         >
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.retryButton"
+            v-model="modelTaskDefinition.strings.retryButton"
             @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
-            :disabled="!localTaskDefinition.retryAllowed"
+            :disabled="!modelTaskDefinition.retryAllowed"
             type="text"
           />
         </label>
 
         <label
           :class="{
-            'setting-disabled': !localTaskDefinition.showSolutionsAllowed,
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
           }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="localTaskDefinition.strings.solutionsButton"
+            v-model="modelTaskDefinition.strings.solutionsButton"
             @input="
               updateTaskDefinition('taskDefinition.strings.solutionsButton')
             "
-            :disabled="!localTaskDefinition.showSolutionsAllowed"
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
@@ -135,21 +135,21 @@
         <label
           :class="{
             'setting-disabled':
-              !localTaskDefinition.showSolutionsAllowed ||
-              !localTaskDefinition.allBlanksMustBeFilledForSolutions,
+              !modelTaskDefinition.showSolutionsAllowed ||
+              !modelTaskDefinition.allBlanksMustBeFilledForSolutions,
           }"
         >
           {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
           <input
-            v-model="localTaskDefinition.strings.fillInAllBlanksMessage"
+            v-model="modelTaskDefinition.strings.fillInAllBlanksMessage"
             @input="
               updateTaskDefinition(
                 'taskDefinition.strings.fillInAllBlanksMessage'
               )
             "
             :disabled="
-              !localTaskDefinition.showSolutionsAllowed ||
-              !localTaskDefinition.allBlanksMustBeFilledForSolutions
+              !modelTaskDefinition.showSolutionsAllowed ||
+              !modelTaskDefinition.allBlanksMustBeFilledForSolutions
             "
             type="text"
           />
@@ -157,8 +157,8 @@
       </fieldset>
 
       <feedback-editor
-        :feedback="localTaskDefinition.feedback"
-        :result-message="localTaskDefinition.strings.resultMessage"
+        :feedback="modelTaskDefinition.feedback"
+        :result-message="modelTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -195,7 +195,7 @@ export default defineComponent({
   },
   data() {
     return {
-      localTaskDefinition: cloneDeep(this.taskDefinition),
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
     };
   },
   watch: {
@@ -203,7 +203,7 @@ export default defineComponent({
     taskDefinition: {
       immediate: true,
       handler: function (): void {
-        this.localTaskDefinition = cloneDeep(this.taskDefinition);
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
       },
     },
   },
@@ -244,7 +244,7 @@ export default defineComponent({
       // Copy new data from wysiwyg editor into task definition
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.modelTaskDefinition,
           (draft: FillInTheBlanksTask) => {
             draft.template = data;
           }
@@ -257,14 +257,14 @@ export default defineComponent({
       // Synchronize state modelTaskDefinition -> taskDefinition.
       console.log('update task definition');
       this.taskEditor!.performEdit({
-        newTaskDefinition: cloneDeep(this.localTaskDefinition),
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
         undoBatch: undoBatch ?? {},
       });
     },
 
     updateShowSolutionsAllowed() {
-      if (!this.localTaskDefinition.showSolutionsAllowed) {
-        this.localTaskDefinition.allBlanksMustBeFilledForSolutions = false;
+      if (!this.modelTaskDefinition.showSolutionsAllowed) {
+        this.modelTaskDefinition.allBlanksMustBeFilledForSolutions = false;
       }
       this.updateTaskDefinition();
     },
@@ -272,7 +272,7 @@ export default defineComponent({
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: FillInTheBlanksTask) => {
             taskDraft.feedback = updatedFeedback;
           }
@@ -284,7 +284,7 @@ export default defineComponent({
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.localTaskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: FillInTheBlanksTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
