@@ -17,8 +17,8 @@
         </div>
 
         <studip-wysiwyg
-          v-model="modelTaskDefinition.template"
-          @update:modelValue="updateTaskDefinition"
+          :modelValue="modelTaskDefinition.template"
+          @update:modelValue="onEditTemplate"
           ref="wysiwyg"
           force-soft-breaks
           remove-wrapping-p-tag
@@ -32,9 +32,9 @@
             :data-tooltip="distratorInstructions"
           />
           <input
-            type="text"
             v-model="modelTaskDefinition.distractors"
-            @input="updateTaskDefinition"
+            @input="updateTaskDefinition('taskDefinition.distractors')"
+            type="text"
           />
         </label>
       </fieldset>
@@ -104,7 +104,7 @@
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.checkButton"
-            @input="updateTaskDefinition"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
             :disabled="modelTaskDefinition.instantFeedback"
             type="text"
           />
@@ -116,7 +116,7 @@
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.retryButton"
-            @input="updateTaskDefinition"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
             :disabled="!modelTaskDefinition.retryAllowed"
             type="text"
           />
@@ -130,7 +130,9 @@
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.solutionsButton"
-            @input="updateTaskDefinition"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
             :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
@@ -146,7 +148,11 @@
           {{ $gettext('Hinweis, wenn nicht alle Lücken ausgefüllt sind:') }}
           <input
             v-model="modelTaskDefinition.strings.fillInAllBlanksMessage"
-            @input="updateTaskDefinition"
+            @input="
+              updateTaskDefinition(
+                'taskDefinition.strings.fillInAllBlanksMessage'
+              )
+            "
             :disabled="
               !modelTaskDefinition.showSolutionsAllowed ||
               !modelTaskDefinition.allBlanksMustBeFilledForSolutions
@@ -247,10 +253,24 @@ export default defineComponent({
       });
     },
 
-    updateTaskDefinition() {
+    onEditTemplate(data: string): void {
+      // Copy new data from wysiwyg editor into task definition
       this.taskEditor!.performEdit({
-        newTaskDefinition: this.modelTaskDefinition,
-        undoBatch: {},
+        newTaskDefinition: produce(
+          this.modelTaskDefinition,
+          (task: DragTheWordsTask) => {
+            task.template = data;
+          }
+        ),
+        undoBatch: 'taskDefinition.template',
+      });
+    },
+
+    updateTaskDefinition(undoBatch?: unknown) {
+      // Synchronize state modelTaskDefinition -> taskDefinition.
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
       });
     },
 
@@ -269,7 +289,7 @@ export default defineComponent({
             taskDraft.feedback = updatedFeedback;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.feedback',
       });
     },
 
@@ -281,7 +301,7 @@ export default defineComponent({
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.strings.resultMessage',
       });
     },
 
