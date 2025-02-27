@@ -53,9 +53,12 @@
               <span>{{ $gettext('Hinweis:') }}</span>
               <input
                 v-model="modelTaskDefinition.answers[i].strings.hint"
-                @change="updateTaskDefinition"
+                @input="
+                  updateTaskDefinition(
+                    `taskDefinition.answers[${i}].strings.hint`
+                  )
+                "
                 type="text"
-                class="textbox"
               />
             </label>
 
@@ -65,9 +68,12 @@
                 v-model="
                   modelTaskDefinition.answers[i].strings.feedbackSelected
                 "
-                @change="updateTaskDefinition"
+                @input="
+                  updateTaskDefinition(
+                    `taskDefinition.answers[${i}].strings.feedbackSelected`
+                  )
+                "
                 type="text"
-                class="textbox"
               />
             </label>
 
@@ -77,9 +83,12 @@
                 v-model="
                   modelTaskDefinition.answers[i].strings.feedbackNotSelected
                 "
-                @change="updateTaskDefinition"
+                @input="
+                  updateTaskDefinition(
+                    `taskDefinition.answers[${i}].strings.feedbackNotSelected`
+                  )
+                "
                 type="text"
-                class="textbox"
               />
             </label>
           </fieldset>
@@ -137,7 +146,7 @@
           {{ $gettext('Text für Überprüfen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.checkButton"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
             type="text"
           />
         </label>
@@ -148,7 +157,7 @@
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.retryButton"
-            @change="updateTaskDefinition"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
             :disabled="!modelTaskDefinition.retryAllowed"
             type="text"
           />
@@ -162,7 +171,9 @@
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.solutionsButton"
-            @change="updateTaskDefinition"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
             :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
@@ -336,7 +347,7 @@ export default defineComponent({
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: 'strings.resultMessage',
+        undoBatch: 'taskDefinition.strings.resultMessage',
       });
     },
   },
