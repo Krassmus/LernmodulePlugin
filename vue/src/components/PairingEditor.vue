@@ -6,12 +6,12 @@
 
         <div class="pairs-overview">
           <PairingEditorPair
-            v-for="(pair, index) in taskDefinition.pairs"
+            v-for="(pair, index) in modelTaskDefinition.pairs"
             :key="pair.uuid"
             :class="{
               selected: index === selectedPairIndex,
             }"
-            :pair="taskDefinition.pairs[index]"
+            :pair="modelTaskDefinition.pairs[index]"
             @click="onClickPair(index)"
           />
 
@@ -53,13 +53,18 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.retryAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrere Versuche erlauben') }}
         </label>
 
         <label>
           <input
-            v-model="taskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.showSolutionsAllowed"
+            @change="updateTaskDefinition"
             type="checkbox"
           />
           {{ $gettext('Lösungen anzeigen erlauben') }}
@@ -71,33 +76,45 @@
 
         <label>
           {{ $gettext('Text für Überprüfen-Button:') }}
-          <input v-model="taskDefinition.strings.checkButton" type="text" />
-        </label>
-
-        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-          {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="taskDefinition.strings.retryButton"
-            :disabled="!taskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.strings.checkButton"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
+        >
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.retryButton"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            :disabled="!modelTaskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
+          }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="taskDefinition.strings.solutionsButton"
-            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.strings.solutionsButton"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
       </fieldset>
 
       <FeedbackEditor
-        :feedback="taskDefinition.feedback"
-        :result-message="taskDefinition.strings.resultMessage"
+        :feedback="modelTaskDefinition.feedback"
+        :result-message="modelTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -106,7 +123,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import {
   Feedback,
   fileIdToUrl,
@@ -124,24 +141,40 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
-import { taskEditorStore } from '@/store';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'PairingEditor',
-  components: {
-    PairingEditorPair,
-    PairingEditorCard,
-    FeedbackEditor,
-  },
   setup() {
     return {
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
   },
+  components: {
+    PairingEditorPair,
+    PairingEditorCard,
+    FeedbackEditor,
+  },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<PairingTask>,
+      required: true,
+    },
+  },
   data() {
     return {
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
       selectedPairIndex: -1,
     };
+  },
+  watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
   },
   beforeMount(): void {
     if (this.taskDefinition.pairs.length > 0) {
@@ -159,12 +192,20 @@ export default defineComponent({
       );
     },
 
+    updateTaskDefinition(undoBatch?: unknown) {
+      // Synchronize state modelTaskDefinition -> taskDefinition.
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
+      });
+    },
+
     onClickPair(index: number) {
       this.selectedPairIndex = index;
     },
 
     onClickAddPair() {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.pairs.push({
           uuid: v4(),
           draggableElement: {
@@ -182,27 +223,21 @@ export default defineComponent({
         });
       });
 
-      this.taskEditor!.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
+      this.updateTaskDefinition();
 
       // Select the newly inserted card
-      this.selectedPairIndex = newTaskDefinition.pairs.length - 1;
+      this.selectedPairIndex = this.modelTaskDefinition.pairs.length - 1;
     },
 
     onClickDeletePair(index: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.pairs.splice(index, 1);
       });
 
-      this.taskEditor!.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
+      this.updateTaskDefinition();
 
       // Adjust the selection index so the selected card doesn't unexpectedly change
-      if (this.taskDefinition.pairs.length === 0) {
+      if (this.modelTaskDefinition.pairs.length === 0) {
         this.selectedPairIndex = -1;
       } else if (index <= this.selectedPairIndex) {
         this.selectedPairIndex = Math.max(0, this.selectedPairIndex - 1);
@@ -213,63 +248,55 @@ export default defineComponent({
       updatedElement: LernmoduleMultimediaElement;
       undoBatch?: unknown;
     }): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.pairs[this.selectedPairIndex].draggableElement =
           payload.updatedElement;
       });
 
-      this.taskEditor!.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: payload.undoBatch ?? {},
-      });
+      this.updateTaskDefinition(payload.undoBatch);
     },
 
     onChangeTargetElement(payload: {
       updatedElement: LernmoduleMultimediaElement;
       undoBatch?: unknown;
     }): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.pairs[this.selectedPairIndex].targetElement =
           payload.updatedElement;
       });
 
-      this.taskEditor!.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: payload.undoBatch ?? {},
-      });
+      this.updateTaskDefinition(payload.undoBatch);
     },
 
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: PairingTask) => {
             taskDraft.feedback = updatedFeedback;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.feedback',
       });
     },
 
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: PairingTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.strings.resultMessage',
       });
     },
   },
   computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as PairingTask,
-
     debug: () => window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG,
 
     selectedPair(): Pair | undefined {
-      return this.taskDefinition.pairs[this.selectedPairIndex];
+      return this.modelTaskDefinition.pairs[this.selectedPairIndex];
     },
 
     addPairButtonBackgroundImage() {
