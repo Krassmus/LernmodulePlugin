@@ -8,6 +8,7 @@ const rectangleHotspotSchema = z.object({
   y: z.number(), // Fraction 0..1 of image height
   width: z.number(), // Fraction 0..1 of image width
   height: z.number(), // Fraction 0..1 of image height
+  correct: z.boolean().default(true),
 });
 export type RectangleHotspot = z.infer<typeof rectangleHotspotSchema>;
 
@@ -18,6 +19,7 @@ const ellipseHotspotSchema = z.object({
   y: z.number(), // Fraction 0..1 of image height
   width: z.number(), // Fraction 0..1 of image width
   height: z.number(), // Fraction 0..1 of image height
+  correct: z.boolean().default(true),
 });
 export type EllipseHotspot = z.infer<typeof ellipseHotspotSchema>;
 

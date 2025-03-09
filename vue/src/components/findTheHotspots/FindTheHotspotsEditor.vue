@@ -45,6 +45,7 @@ provide(findTheHotspotsEditorStateSymbol, {
   selectedHotspotId,
   selectHotspot,
   deleteSelectedHotspot,
+  changeHotspotCorrectness,
   dragHotspot,
   resizeHotspot,
 });
@@ -92,6 +93,7 @@ function addRectangularHotspot(): void {
     y: 0.4,
     width: hotspotWidthPercent,
     height: hotspotHeightPercent,
+    correct: true,
   };
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
     draft.hotspots.push(newHotspot);
@@ -108,6 +110,7 @@ function addEllipseHotspot(): void {
     y: 0.4,
     width: 0.2,
     height: 0.2,
+    correct: true,
   };
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
     draft.hotspots.push(newHotspot);
@@ -153,6 +156,26 @@ function deleteHotspot(id: string): void {
     }
     draft.hotspots.splice(index, 1);
   });
+  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+}
+
+function changeHotspotCorrectness(): void {
+  if (!selectedHotspotId.value) {
+    console.error(
+      'Called deleteSelectedHotspot, but selectedHotspotId is undefined'
+    );
+    return;
+  }
+
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    const hotspot = draft.hotspots.find(
+      (hotspot) => hotspot.uuid === selectedHotspotId.value
+    );
+    if (hotspot) {
+      hotspot.correct = !hotspot.correct;
+    }
+  });
+
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
 }
 

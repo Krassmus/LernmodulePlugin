@@ -65,7 +65,12 @@
         type="button"
         class="small-button trash"
         @click="editor!.deleteSelectedHotspot()"
-      ></button>
+      />
+      <button
+        type="button"
+        class="small-button progress"
+        @click="editor!.changeHotspotCorrectness()"
+      />
       <div class="arrow" data-popper-arrow></div>
     </div>
   </div>
