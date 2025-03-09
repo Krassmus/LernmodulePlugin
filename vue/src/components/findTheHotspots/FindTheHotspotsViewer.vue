@@ -1,5 +1,4 @@
 <template>
-  <span>Find The Hotspots - Viewer</span><br />
   <ImageWithHotspots :hotspots="task.hotspots" :image="task.image" />
 </template>
 
@@ -14,7 +13,6 @@ export default defineComponent({
   props: {
     task: { type: Object as PropType<FindTheHotspotsTask>, required: true },
   },
-  emits: ['updateAttempt'],
   data() {
     return {};
   },
