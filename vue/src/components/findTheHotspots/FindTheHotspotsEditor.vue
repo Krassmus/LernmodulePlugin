@@ -89,8 +89,8 @@ function addRectangularHotspot(): void {
   const newHotspot: Hotspot = {
     uuid: v4(),
     type: 'rectangle',
-    x: 0.4,
-    y: 0.4,
+    x: 0.5 - hotspotWidthPercent / 2,
+    y: 0.5 - hotspotHeightPercent / 2,
     width: hotspotWidthPercent,
     height: hotspotHeightPercent,
     correct: true,
