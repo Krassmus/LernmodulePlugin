@@ -103,13 +103,35 @@ function addRectangularHotspot(): void {
 }
 
 function addEllipseHotspot(): void {
+  const component = imageWithHotspotsRef.value;
+  if (!component) {
+    console.warn('Not inserting anything.');
+    return;
+  }
+  const el = component.$el as HTMLElement;
+  const imgEl = el.getElementsByClassName('hotspots-image')[0];
+  const imageWidthPixels = imgEl.clientWidth;
+  const imageHeightPixels = imgEl.clientHeight;
+  let hotspotWidthPercent: number, hotspotHeightPercent: number;
+  const size = 0.3;
+  const smallestDim = imageWidthPixels > imageHeightPixels ? 'height' : 'width';
+  if (smallestDim === 'height') {
+    hotspotHeightPercent = size;
+    const hotspotHeightPixels = hotspotHeightPercent * imageHeightPixels;
+    hotspotWidthPercent = hotspotHeightPixels / imageWidthPixels;
+  } else {
+    hotspotWidthPercent = size;
+    const hotspotWidthPixels = hotspotWidthPercent * imageWidthPixels;
+    hotspotHeightPercent = hotspotWidthPixels / imageHeightPixels;
+  }
+
   const newHotspot: Hotspot = {
     uuid: v4(),
     type: 'ellipse',
-    x: 0.4,
-    y: 0.4,
-    width: 0.2,
-    height: 0.2,
+    x: 0.5 - hotspotWidthPercent / 2,
+    y: 0.5 - hotspotHeightPercent / 2,
+    width: hotspotWidthPercent,
+    height: hotspotHeightPercent,
     correct: true,
   };
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
