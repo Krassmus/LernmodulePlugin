@@ -79,7 +79,7 @@
       />
       <button
         type="button"
-        class="small-button progress"
+        class="small-button edit"
         @click="editor!.changeHotspotCorrectness()"
       />
       <div class="arrow" data-popper-arrow></div>
