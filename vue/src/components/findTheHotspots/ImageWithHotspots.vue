@@ -565,10 +565,12 @@ button.hotspot {
   // This class isn't called 'invisible' or 'hidden', because there are Stud.IP
   // CSS classes with those names that set display: none;
   &.invisible-hotspot {
+    cursor: unset;
     opacity: 0;
     // Ensure that keyboard-only users are able to see the hotspot, if any,
     // that they have focused with the keyboard.  (Accessibility standards)
     &:focus {
+      // TODO: This shows the hotspot in viewer when clicking - maybe this can be improved
       opacity: unset;
     }
   }
