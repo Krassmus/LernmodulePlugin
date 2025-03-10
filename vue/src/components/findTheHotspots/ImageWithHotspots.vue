@@ -20,7 +20,7 @@
         }"
         :id="`hotspot-${uid}-${hotspot.uuid}`"
         :style="getHotspotStyle(hotspot)"
-        @click="onClickHotspot(hotspot)"
+        @click="onClickHotspot($event, hotspot)"
         @pointerdown="onPointerdownHotspot($event, hotspot)"
         @pointermove="onPointermoveHotspot($event, hotspot)"
         @pointerup="onPointerupHotspot($event, hotspot)"
@@ -41,6 +41,17 @@
           />
         </template>
       </button>
+      <span
+        v-if="clickResult !== 'none'"
+        class="click-indicator"
+        :class="{
+          correct: clickResult === 'correct',
+          incorrect: clickResult === 'incorrect',
+        }"
+        :style="getClickIndicatorStyle"
+      >
+        {{ clickResult === 'correct' ? '✔' : '✖' }}
+      </span>
       <LazyImage
         :src="fileIdToUrl(image.file_id)"
         :alt="image.altText"
@@ -137,6 +148,9 @@ export default defineComponent({
     return {
       popperInstance: undefined as Instance | undefined,
       dragState: undefined as DragState,
+      clickResult: 'none' as 'none' | 'incorrect' | 'correct',
+      clickX: 0 as number,
+      clickY: 0 as number,
     };
   },
   computed: {
@@ -153,6 +167,13 @@ export default defineComponent({
       return this.hotspots.find(
         (h) => h.uuid === this.editor?.selectedHotspotId.value
       );
+    },
+    getClickIndicatorStyle(): Partial<CSSStyleDeclaration> {
+      console.log('call getClickIndicatorStyle');
+      return {
+        left: `${this.clickX - 16}px`,
+        top: `${this.clickY - 16}px`,
+      };
     },
     resizeHandles() {
       return [
@@ -203,12 +224,41 @@ export default defineComponent({
   },
   methods: {
     fileIdToUrl,
-    onClickBackground() {
-      this.editor?.selectHotspot(undefined);
+    onClickBackground(event: PointerEvent) {
+      if (this.editor) {
+        this.editor?.selectHotspot(undefined);
+      } else {
+        this.clickResult = 'incorrect';
+
+        // Get the click coordinates relative to the background image
+        const rootRect = (
+          this.$refs.root as HTMLElement
+        ).getBoundingClientRect();
+
+        this.clickX = event.clientX - rootRect.left;
+        this.clickY = event.clientY - rootRect.top;
+      }
     },
-    onClickHotspot(hotspot: Hotspot) {
+    onClickHotspot(event: PointerEvent, hotspot: Hotspot) {
       console.log('onClickHotspot', hotspot);
-      this.editor?.selectHotspot(hotspot.uuid);
+
+      if (this.editor) {
+        this.editor?.selectHotspot(hotspot.uuid);
+      } else {
+        // Get the click coordinates relative to the background image
+        const rootRect = (
+          this.$refs.root as HTMLElement
+        ).getBoundingClientRect();
+
+        this.clickX = event.clientX - rootRect.left;
+        this.clickY = event.clientY - rootRect.top;
+
+        if (hotspot.correct) {
+          this.clickResult = 'correct';
+        } else {
+          this.clickResult = 'incorrect';
+        }
+      }
     },
     onPointerdownHotspot(event: PointerEvent, hotspot: Hotspot) {
       console.log('onPointerDownHotspot');
@@ -465,6 +515,30 @@ export default defineComponent({
   user-select: none;
   max-height: 400px;
   width: 100%;
+}
+
+.click-indicator {
+  position: absolute;
+  cursor: default;
+
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 16px;
+  border-radius: 50%;
+  text-align: center;
+
+  box-shadow: 0 0 0.25em 0 rgba(0, 0, 0, 0.5);
+
+  &.correct {
+    color: #39692e;
+    background: #d1e2ce;
+  }
+
+  &.incorrect {
+    color: #c33f62;
+    background: #e6ced1;
+  }
 }
 
 $hotspotBorderWidth: 2px;
