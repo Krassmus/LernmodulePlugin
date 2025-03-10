@@ -60,9 +60,14 @@
       />
     </div>
     <pre
-      v-if="debug"
+      v-if="debug && editor"
       :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
       >{{ { selectedHotspot, dragState } }}</pre
+    >
+    <pre
+      v-if="debug && !editor"
+      :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
+      >{{ { selectedHotspot, dragState, clickResult, clickX, clickY } }}</pre
     >
     <div
       ref="selectedHotspotTooltip"
