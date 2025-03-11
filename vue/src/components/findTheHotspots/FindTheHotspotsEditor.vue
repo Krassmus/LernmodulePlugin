@@ -286,7 +286,10 @@ function resizeHotspot(
 .button-bar {
   display: flex;
   gap: 0.5em;
+  padding: 0.25em;
   margin-bottom: 0.5em;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
 }
 
 .hotspot-button {
@@ -304,6 +307,10 @@ function resizeHotspot(
 
   &:hover {
     border: 1px solid #999;
+  }
+
+  &:nth-child(2) {
+    margin-right: auto;
   }
 }
 </style>
