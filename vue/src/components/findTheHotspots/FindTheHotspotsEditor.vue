@@ -1,6 +1,6 @@
 <template>
   <div class="find-the-hotspots-editor">
-    <div class="button-bar">
+    <div v-if="taskDefinition.image.type === 'image'" class="button-bar">
       <button @click="addRectangularHotspot" class="hotspot-button">
         <svg
           width="20"
@@ -44,7 +44,7 @@
     </div>
     <ImageWithHotspots
       ref="imageWithHotspotsRef"
-      v-if="taskDefinition.image.file_id"
+      v-if="taskDefinition.image.type === 'image'"
       :hotspots="taskDefinition.hotspots"
       :image="taskDefinition.image"
     />
@@ -88,7 +88,12 @@ provide(findTheHotspotsEditorStateSymbol, {
 
 function onImageUploaded(file: FileRef): void {
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
-    draft.image.file_id = file.id;
+    draft.image = {
+      uuid: v4(),
+      type: 'image',
+      file_id: file.id,
+      altText: '',
+    };
   });
   taskEditor!.performEdit({
     newTaskDefinition: newTaskDefinition,
@@ -187,10 +192,7 @@ function removeAllHotspots(): void {
 function deleteImage(): void {
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {
     draft.image = {
-      type: 'image',
-      uuid: v4(),
-      file_id: '',
-      altText: '',
+      type: 'none',
     };
   });
   taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
