@@ -45,6 +45,7 @@
         v-if="clickResult !== 'none'"
         class="click-indicator"
         :class="{
+          pulse: pulseAnimation,
           correct: clickResult === 'correct',
           incorrect: clickResult === 'incorrect',
         }"
@@ -156,6 +157,7 @@ export default defineComponent({
       clickResult: 'none' as 'none' | 'incorrect' | 'correct',
       clickX: 0 as number,
       clickY: 0 as number,
+      pulseAnimation: false as boolean,
     };
   },
   computed: {
@@ -224,6 +226,22 @@ export default defineComponent({
             });
           });
         }
+      },
+    },
+    clickX: {
+      handler() {
+        this.pulseAnimation = true;
+        setTimeout(() => {
+          this.pulseAnimation = false;
+        }, 500);
+      },
+    },
+    clickY: {
+      handler() {
+        this.pulseAnimation = true;
+        setTimeout(() => {
+          this.pulseAnimation = false;
+        }, 500);
       },
     },
   },
@@ -532,6 +550,7 @@ export default defineComponent({
   font-size: 16px;
   border-radius: 50%;
   text-align: center;
+  pointer-events: none;
 
   box-shadow: 0 0 0.25em 0 rgba(0, 0, 0, 0.5);
 
@@ -544,6 +563,24 @@ export default defineComponent({
     color: #c33f62;
     background: #e6ced1;
   }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse 0.25s ease-in-out 0s 1; /* Apply the pulse animation */
 }
 
 $hotspotBorderWidth: 2px;
