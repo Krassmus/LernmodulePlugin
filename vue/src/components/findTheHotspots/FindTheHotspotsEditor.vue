@@ -1,10 +1,46 @@
 <template>
   <div class="find-the-hotspots-editor">
     <div class="button-bar">
-      <button @click="addRectangularHotspot">Add Rectangular Hotspot</button>
-      <button @click="addEllipseHotspot">Add Ellipse Hotspot</button>
-      <button @click="removeAllHotspots">Remove All Hotspots</button>
-      <button @click="deleteImage">Delete image</button>
+      <button @click="addRectangularHotspot" class="hotspot-button">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 32 32"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="1"
+            y="1"
+            width="30"
+            height="30"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2px"
+            rx="2"
+          />
+        </svg>
+      </button>
+      <button @click="addEllipseHotspot" class="hotspot-button">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 32 32"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="16"
+            cy="16"
+            r="15"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2px"
+          />
+        </svg>
+      </button>
+      <button @click="removeAllHotspots" class="hotspot-button">
+        Remove All Hotspots
+      </button>
+      <button @click="deleteImage" class="hotspot-button">Delete image</button>
     </div>
     <ImageWithHotspots
       ref="imageWithHotspotsRef"
@@ -249,5 +285,23 @@ function resizeHotspot(
   display: flex;
   gap: 0.5em;
   margin-bottom: 0.5em;
+}
+
+.hotspot-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+
+  cursor: pointer;
+
+  background: linear-gradient(to bottom, #fff 0, #f2f2f2 100%);
+  border: 1px solid #ccc;
+  border-radius: 0.25em;
+  padding: 0.75em;
+
+  &:hover {
+    border: 1px solid #999;
+  }
 }
 </style>
