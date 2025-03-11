@@ -16,6 +16,8 @@
         class="hotspot"
         :class="{
           'invisible-hotspot': !editor,
+          correct: hotspot.correct,
+          incorrect: !hotspot.correct,
           selected: editor?.selectedHotspotId.value === hotspot.uuid,
         }"
         :id="`hotspot-${uid}-${hotspot.uuid}`"
@@ -602,13 +604,36 @@ button.hotspot {
   // This class isn't called 'invisible' or 'hidden', because there are Stud.IP
   // CSS classes with those names that set display: none;
   &.invisible-hotspot {
-    cursor: unset;
     opacity: 0;
+    cursor: unset;
+    border: unset;
+    background: unset;
     // Ensure that keyboard-only users are able to see the hotspot, if any,
     // that they have focused with the keyboard.  (Accessibility standards)
     &:focus {
-      // TODO: This shows the hotspot in viewer when clicking - maybe this can be improved
       opacity: unset;
+    }
+
+    &.correct {
+      color: #255c41;
+      background-image: radial-gradient(
+        circle at center,
+        rgba(157, 216, 187, 0.3) 0,
+        transparent 80%
+      );
+      background-size: 100% 100%;
+      background-position: center;
+    }
+
+    &.incorrect {
+      color: #b71c1c;
+      background-image: radial-gradient(
+        circle at center,
+        rgba(247, 208, 208, 0.3) 0,
+        transparent 80%
+      );
+      background-size: 100% 100%;
+      background-position: center;
     }
   }
 
