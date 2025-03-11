@@ -23,7 +23,7 @@ import QuestionViewer from '@/components/QuestionViewer.vue';
 import SequencingViewer from '@/components/SequencingViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
 import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
-import { imageElementSchema } from '@/models/common';
+import { imageFileSchema } from '@/models/common';
 
 /**
  * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
@@ -65,7 +65,7 @@ const textElementSchema = z.object({
 });
 
 export const multimediaElementSchema = z.union([
-  imageElementSchema,
+  imageFileSchema,
   audioElementSchema,
   textElementSchema,
 ]);
@@ -146,7 +146,7 @@ export const memoryTaskSchema = z.object({
   task_type: z.literal('Memory'),
   cards: z.array(memoryCardSchema),
   squareLayout: z.boolean(),
-  flipside: imageElementSchema.optional(),
+  flipside: imageFileSchema.optional(),
   retryAllowed: z.boolean(),
   strings: z.object({
     retryButton: z.string(),

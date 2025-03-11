@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { imageElementSchema } from '@/models/common';
+import { imageFileSchema } from '@/models/common';
 
 const rectangleHotspotSchema = z.object({
   uuid: z.string(),
@@ -32,7 +32,7 @@ export type HotspotType = Hotspot['type'];
 
 export const findTheHotspotsTaskSchema = z.object({
   task_type: z.literal('FindTheHotspots'),
-  image: imageElementSchema,
+  image: imageFileSchema,
   hotspots: z.array(hotspotSchema),
 });
 export type FindTheHotspotsTask = z.infer<typeof findTheHotspotsTaskSchema>;

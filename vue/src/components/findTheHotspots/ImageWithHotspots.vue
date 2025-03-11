@@ -100,7 +100,7 @@ import { defineComponent, inject, PropType } from 'vue';
 import LazyImage from '@/components/LazyImage.vue';
 import { Hotspot } from '@/models/FindTheHotspotsTask';
 import { fileIdToUrl } from '@/models/TaskDefinition';
-import { ImageElement } from '@/models/common';
+import { ImageFileElement } from '@/models/common';
 import {
   FindTheHotspotsEditorState,
   findTheHotspotsEditorStateSymbol,
@@ -148,7 +148,7 @@ export default defineComponent({
       required: true,
     },
     image: {
-      type: Object as PropType<ImageElement>,
+      type: Object as PropType<ImageFileElement>,
       required: true,
     },
   },

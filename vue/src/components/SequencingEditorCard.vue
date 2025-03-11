@@ -53,7 +53,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
-import { ImageElement } from '@/models/common';
+import { ImageFileElement } from '@/models/common';
 
 export default defineComponent({
   name: 'SequencingEditorCard',
@@ -84,7 +84,7 @@ export default defineComponent({
     onUploadImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         if (draft.cards[this.cardIndex].type === 'image') {
-          (draft.cards[this.cardIndex] as ImageElement).file_id = file.id;
+          (draft.cards[this.cardIndex] as ImageFileElement).file_id = file.id;
         }
       });
       this.taskEditor!.performEdit({
@@ -96,7 +96,7 @@ export default defineComponent({
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         if (draft.cards[this.cardIndex].type === 'image') {
-          (draft.cards[this.cardIndex] as ImageElement).altText = value;
+          (draft.cards[this.cardIndex] as ImageFileElement).altText = value;
         }
       });
       this.taskEditor!.performEdit({
@@ -107,7 +107,7 @@ export default defineComponent({
     onClickDeleteImage(): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         if (draft.cards[this.cardIndex].type === 'image') {
-          (draft.cards[this.cardIndex] as ImageElement).file_id = '';
+          (draft.cards[this.cardIndex] as ImageFileElement).file_id = '';
         }
       });
 
