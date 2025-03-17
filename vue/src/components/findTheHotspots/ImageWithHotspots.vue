@@ -59,7 +59,7 @@
         :src="fileIdToUrl(image.file_id)"
         :alt="image.altText"
         @click="onClickBackground"
-        class="image hotspots-image"
+        class="hotspots-image"
       />
     </div>
     <pre
@@ -524,6 +524,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+
   &.debug {
     align-items: flex-start;
     justify-content: flex-start;
@@ -531,6 +532,7 @@ export default defineComponent({
 }
 
 .image-and-hotspots-container {
+  display: flex;
   position: relative;
   overflow: hidden;
   max-height: 400px;
