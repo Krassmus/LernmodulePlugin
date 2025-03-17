@@ -283,12 +283,15 @@ function resizeHotspot(
 </script>
 
 <style scoped>
+.find-the-hotspots-editor {
+  border: 1px solid #ccc;
+}
+
 .button-bar {
   display: flex;
   gap: 0.5em;
   padding: 0.25em;
-  margin-bottom: 0.5em;
-  border: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   background: #f5f5f5;
 }
 
