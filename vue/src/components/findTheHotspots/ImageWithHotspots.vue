@@ -16,8 +16,6 @@
         class="hotspot"
         :class="{
           'invisible-hotspot': !editor,
-          correct: hotspot.correct,
-          incorrect: !hotspot.correct,
           selected: editor?.selectedHotspotId.value === hotspot.uuid,
         }"
         :id="`hotspot-${uid}-${hotspot.uuid}`"
@@ -189,7 +187,6 @@ export default defineComponent({
       );
     },
     getClickIndicatorStyle(): Partial<CSSStyleDeclaration> {
-      console.log('call getClickIndicatorStyle');
       return {
         left: `${this.clickX - 16}px`,
         top: `${this.clickY - 16}px`,
@@ -263,7 +260,7 @@ export default defineComponent({
     onClickBackground(event: PointerEvent) {
       if (this.editor) {
         this.editor?.selectHotspot(undefined);
-      } else if (this.viewer) {
+      } else if (this.viewer && this.viewer.isEditable()) {
         this.clickResult = 'incorrect';
         this.viewer?.clickBackground();
 
@@ -281,7 +278,7 @@ export default defineComponent({
 
       if (this.editor) {
         this.editor?.selectHotspot(hotspot.uuid);
-      } else if (this.viewer) {
+      } else if (this.viewer && this.viewer.isEditable()) {
         this.viewer?.clickHotspot(hotspot.uuid);
 
         // Get the click coordinates relative to the background image

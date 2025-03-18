@@ -13,4 +13,5 @@ export const findTheHotspotsViewerStateSymbol = Symbol(
 export interface FindTheHotspotsViewerState {
   clickHotspot(id: string | undefined): void;
   clickBackground(): void;
+  isEditable(): boolean;
 }
