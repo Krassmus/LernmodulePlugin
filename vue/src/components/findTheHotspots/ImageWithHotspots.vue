@@ -68,7 +68,7 @@
       >{{ { selectedHotspot, dragState } }}</pre
     >
     <pre
-      v-if="debug && !editor"
+      v-if="debug && viewer"
       :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
       >{{ { selectedHotspot, dragState, clickResult, clickX, clickY } }}</pre
     >
@@ -105,6 +105,10 @@ import {
   FindTheHotspotsEditorState,
   findTheHotspotsEditorStateSymbol,
 } from '@/components/findTheHotspots/findTheHotspotsEditorState';
+import {
+  FindTheHotspotsViewerState,
+  findTheHotspotsViewerStateSymbol,
+} from '@/components/findTheHotspots/findTheHotspotsViewerState';
 import { createPopper, Instance } from '@popperjs/core';
 import { v4 } from 'uuid';
 import { ResizeHandle } from '@/models/InteractiveVideoTask';
@@ -138,6 +142,13 @@ export default defineComponent({
         // Supply a default value to suppress the vue warning about missing
         // injection in the viewer:
         // [Vue warn]: injection "Symbol(Find The Hotspots Editor state)" not found.
+        undefined
+      ),
+      viewer: inject<FindTheHotspotsViewerState | undefined>(
+        findTheHotspotsViewerStateSymbol,
+        // Supply a default value to suppress the vue warning about missing
+        // injection in the viewer:
+        // [Vue warn]: injection "Symbol(Find The Hotspots Viewer state)" not found.
         undefined
       ),
     };
@@ -252,8 +263,9 @@ export default defineComponent({
     onClickBackground(event: PointerEvent) {
       if (this.editor) {
         this.editor?.selectHotspot(undefined);
-      } else {
+      } else if (this.viewer) {
         this.clickResult = 'incorrect';
+        this.viewer?.clickBackground();
 
         // Get the click coordinates relative to the background image
         const rootRect = (
@@ -269,7 +281,9 @@ export default defineComponent({
 
       if (this.editor) {
         this.editor?.selectHotspot(hotspot.uuid);
-      } else {
+      } else if (this.viewer) {
+        this.viewer?.clickHotspot(hotspot.uuid);
+
         // Get the click coordinates relative to the background image
         const rootRect = (
           this.$refs.root as HTMLElement
