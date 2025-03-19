@@ -102,7 +102,8 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
-import { Feedback, MarkTheWordsTask } from '@/models/TaskDefinition';
+import { MarkTheWordsTask } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import { $gettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';

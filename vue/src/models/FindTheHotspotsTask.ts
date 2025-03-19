@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { imageSchema } from '@/models/common';
+import { imageSchema, feedbackSchema } from '@/models/common';
 
 const rectangleHotspotSchema = z.object({
   uuid: z.string(),

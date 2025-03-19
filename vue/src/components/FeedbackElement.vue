@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { defineComponent, nextTick, PropType } from 'vue';
-import { Feedback } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import { round } from 'lodash';
 
 export default defineComponent({

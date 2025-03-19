@@ -89,7 +89,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
+import { FillInTheBlanksTask } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from 'lodash';
 import { $gettext } from '@/language/gettext';

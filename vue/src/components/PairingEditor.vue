@@ -125,12 +125,12 @@
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
 import {
-  Feedback,
   fileIdToUrl,
   LernmoduleMultimediaElement,
   Pair,
   PairingTask,
 } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
 import { v4 } from 'uuid';

@@ -168,7 +168,8 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
-import { Feedback, FillInTheBlanksTask } from '@/models/TaskDefinition';
+import { FillInTheBlanksTask } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import { $gettext } from '@/language/gettext';

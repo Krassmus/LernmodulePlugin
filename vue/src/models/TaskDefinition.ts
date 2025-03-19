@@ -23,7 +23,7 @@ import QuestionViewer from '@/components/QuestionViewer.vue';
 import SequencingViewer from '@/components/SequencingViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
 import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
-import { imageFileSchema } from '@/models/common';
+import { imageFileSchema, feedbackSchema, Feedback } from '@/models/common';
 
 /**
  * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
@@ -44,11 +44,6 @@ export function fileDetailsUrl(fileId: string): string {
   return window.STUDIP.URLHelper.getURL(`dispatch.php/file/details/${fileId}`);
 }
 
-export const feedbackSchema = z.object({
-  percentage: z.number(),
-  message: z.string(),
-});
-export type Feedback = z.infer<typeof feedbackSchema>;
 // TODO Pull these things out into common.ts as well next to ImageElement/imageElementSchema.
 const audioElementSchema = z.object({
   uuid: z.string(),
@@ -346,6 +341,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           altText: '',
         },
         hotspots: [],
+        strings: {
+          retryButton: 'Erneut versuchen',
+          resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
+        },
+        feedback: defaultFeedback(),
       };
     case 'FindTheWords':
       return {

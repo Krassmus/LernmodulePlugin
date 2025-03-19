@@ -192,7 +192,8 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
-import { Feedback, QuestionTask } from '@/models/TaskDefinition';
+import { QuestionTask } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';

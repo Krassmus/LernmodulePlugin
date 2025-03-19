@@ -14,3 +14,9 @@ export type ImageFileElement = z.infer<typeof imageFileSchema>;
 
 export const imageSchema = z.union([noImageSchema, imageFileSchema]);
 export type ImageElement = z.infer<typeof imageSchema>;
+
+export const feedbackSchema = z.object({
+  percentage: z.number(),
+  message: z.string(),
+});
+export type Feedback = z.infer<typeof feedbackSchema>;

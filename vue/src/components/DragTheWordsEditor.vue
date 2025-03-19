@@ -174,8 +174,8 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
-import { DragTheWordsTask, Feedback } from '@/models/TaskDefinition';
-import { taskEditorStore } from '@/store';
+import { DragTheWordsTask } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import { $gettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import produce from 'immer';
