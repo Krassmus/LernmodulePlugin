@@ -1,13 +1,25 @@
 <template>
-  <ImageWithHotspots :hotspots="task.hotspots" :image="task.image" />
-  <div class="feedback-and-button-container">
-    <FeedbackElement
-      v-if="showResults"
-      :achievedPoints="points"
-      :maxPoints="maxPoints"
-      :feedback="task.feedback"
-      :resultMessage="resultMessage"
-    />
+  <div class="stud5p-task">
+    <ImageWithHotspots :hotspots="task.hotspots" :image="task.image" />
+    <div class="feedback-and-button-container">
+      <FeedbackElement
+        v-if="showResults"
+        :achievedPoints="points"
+        :maxPoints="maxPoints"
+        :feedback="task.feedback"
+        :resultMessage="resultMessage"
+      />
+
+      <div class="button-panel">
+        <button
+          v-if="showRetryButton"
+          v-text="task.strings.retryButton"
+          @click="onClickRetry"
+          type="button"
+          class="stud5p-button"
+        />
+      </div>
+    </div>
   </div>
   <pre :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }">{{
     { points, clicks, maxPoints, clickedHotspots, editable }
@@ -57,6 +69,10 @@ const resultMessage = computed(() => {
   return result;
 });
 
+const showRetryButton = computed(() => {
+  return !isEditable();
+});
+
 function isEditable() {
   return points.value < maxPoints.value && clicks.value < maxPoints.value;
 }
@@ -93,6 +109,12 @@ function clickBackground() {
   if (!editable.value) return;
   console.log('Viewer: Clicked background');
   clicks.value++;
+}
+
+function onClickRetry() {
+  points.value = 0;
+  clicks.value = 0;
+  clickedHotspots.value = [];
 }
 </script>
 
