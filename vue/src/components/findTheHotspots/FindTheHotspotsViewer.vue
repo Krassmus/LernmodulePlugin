@@ -96,13 +96,4 @@ function clickBackground() {
 }
 </script>
 
-<style scoped>
-.feedback-and-button-container {
-  padding-top: 1em;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1em;
-}
-</style>
+<style scoped></style>
