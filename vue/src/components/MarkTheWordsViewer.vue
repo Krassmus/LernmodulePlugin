@@ -8,8 +8,8 @@
           role="button"
           :aria-pressed="isMarked(element)"
           @click="onClickWord(element)"
-          @keydown="(event) => onWordKeydown(event, element)"
-          @keyup="(event) => onWordKeyup(event, element)"
+          @keydown="(event: KeyboardEvent) => onWordKeydown(event, element)"
+          @keyup="(event: KeyboardEvent) => onWordKeyup(event, element)"
           :class="['no-break', classForWord(element)]"
           v-html="element.text"
         ></span>
@@ -20,8 +20,8 @@
           role="button"
           :aria-pressed="isMarked(element)"
           @click="onClickWord(element)"
-          @keydown="(event) => onWordKeydown(event, element)"
-          @keyup="(event) => onWordKeyup(event, element)"
+          @keydown="(event: KeyboardEvent) => onWordKeydown(event, element)"
+          @keyup="(event: KeyboardEvent) => onWordKeyup(event, element)"
           :class="['no-break', classForWord(element)]"
           v-html="element.text"
         ></span>
@@ -44,14 +44,14 @@
         v-if="showResults"
         :achieved-points="score"
         :max-points="maxScore"
-        :feedback="this.task.feedback"
+        :feedback="task.feedback"
         :result-message="resultMessage"
       />
 
       <div class="button-panel">
         <button
           v-if="showCheckButton"
-          v-text="this.task.strings.checkButton"
+          v-text="task.strings.checkButton"
           @click="onClickCheck"
           type="button"
           class="stud5p-button"
@@ -67,7 +67,7 @@
 
         <button
           v-if="showRetryButton"
-          v-text="this.task.strings.retryButton"
+          v-text="task.strings.retryButton"
           @click="onClickRetry"
           type="button"
           class="stud5p-button"
@@ -79,7 +79,7 @@
       Marked words:
       <pre>{{ markedWords }}</pre>
       template:
-      <pre>{{ this.task.template }}</pre>
+      <pre>{{ task.template }}</pre>
       Split template:
       <pre>{{ splitTemplate }}</pre>
       Parsed template:
