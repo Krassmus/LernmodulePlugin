@@ -8,8 +8,8 @@
           role="button"
           :aria-pressed="isMarked(element)"
           @click="onClickWord(element)"
-          @keydown="(event: KeyboardEvent) => onWordKeydown(event, element)"
-          @keyup="(event: KeyboardEvent) => onWordKeyup(event, element)"
+          @keydown="onWordKeydown($event, element)"
+          @keyup="onWordKeyup($event, element)"
           :class="['no-break', classForWord(element)]"
           v-html="element.text"
         ></span>
@@ -20,8 +20,8 @@
           role="button"
           :aria-pressed="isMarked(element)"
           @click="onClickWord(element)"
-          @keydown="(event: KeyboardEvent) => onWordKeydown(event, element)"
-          @keyup="(event: KeyboardEvent) => onWordKeyup(event, element)"
+          @keydown="onWordKeydown($event, element)"
+          @keyup="onWordKeyup($event, element)"
           :class="['no-break', classForWord(element)]"
           v-html="element.text"
         ></span>
