@@ -34,5 +34,10 @@ export const findTheHotspotsTaskSchema = z.object({
   task_type: z.literal('FindTheHotspots'),
   image: imageSchema,
   hotspots: z.array(hotspotSchema),
+  strings: z.object({
+    retryButton: z.string(),
+    resultMessage: z.string(),
+  }),
+  feedback: z.array(feedbackSchema),
 });
 export type FindTheHotspotsTask = z.infer<typeof findTheHotspotsTaskSchema>;

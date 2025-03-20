@@ -37,13 +37,25 @@ provide(findTheHotspotsViewerStateSymbol, {
 const points = ref<number>(0);
 const clicks = ref<number>(0);
 const clickedHotspots = ref<string[]>([]);
+
 const showResults = computed(() => points.value > 0);
+
 const maxPoints = computed(
   () => props.task.hotspots.filter((hotspot) => hotspot.correct).length
 );
+
 const editable = computed(
   () => points.value < maxPoints.value && clicks.value < maxPoints.value
 );
+
+const resultMessage = computed(() => {
+  let result = props.task.strings.resultMessage.replace(
+    ':correct',
+    points.value.toString()
+  );
+  result = result.replace(':total', maxPoints.value.toString());
+  return result;
+});
 
 function isEditable() {
   return points.value < maxPoints.value && clicks.value < maxPoints.value;

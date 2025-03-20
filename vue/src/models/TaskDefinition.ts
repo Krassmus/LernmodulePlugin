@@ -343,7 +343,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         hotspots: [],
         strings: {
           retryButton: 'Erneut versuchen',
-          resultMessage: ':correct von :total Lücken richtig ausgefüllt.',
+          resultMessage: ':correct von :total Hotspots gefunden.',
         },
         feedback: defaultFeedback(),
       };
