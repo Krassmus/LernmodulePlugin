@@ -98,8 +98,7 @@ const maxPoints = computed(
 );
 
 const editable = computed(
-  () =>
-    (points.value < maxPoints.value && clicks.value < maxPoints.value) || true
+  () => points.value < maxPoints.value && clicks.value < maxPoints.value
 );
 
 const resultMessage = computed(() => {
@@ -167,6 +166,7 @@ function onClickRetry() {
   points.value = 0;
   clicks.value = 0;
   clickedHotspots.value = [];
+  clickHistory.value = [];
 }
 </script>
 
