@@ -1,6 +1,24 @@
 <template>
   <div class="stud5p-task">
-    <ImageWithHotspots :hotspots="task.hotspots" :image="task.image" />
+    <div style="position: relative">
+      <ImageWithHotspots :hotspots="task.hotspots" :image="task.image" />
+      <span
+        v-for="(click, index) in clickHistory"
+        :key="index"
+        class="click-indicator"
+        :class="{
+          pulse: index === clickHistory.length - 1,
+          correct: click.correct,
+          incorrect: !click.correct,
+        }"
+        :style="{
+          left: `${click.x - 16}px`,
+          top: `${click.y - 16}px`,
+        }"
+      >
+        {{ click.correct ? '✔' : '✖' }}
+      </span>
+    </div>
     <div class="feedback-and-button-container">
       <FeedbackElement
         v-if="showResults"
@@ -22,12 +40,26 @@
     </div>
   </div>
   <pre :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }">{{
-    { points, clicks, maxPoints, clickedHotspots, editable }
+    {
+      points,
+      clicks,
+      maxPoints,
+      clickedHotspots,
+      editable,
+      clickHistory,
+    }
   }}</pre>
 </template>
 
 <script setup lang="ts">
-import { defineProps, PropType, computed, provide, ref } from 'vue';
+import {
+  defineProps,
+  PropType,
+  computed,
+  provide,
+  ref,
+  defineEmits,
+} from 'vue';
 import { FindTheHotspotsTask } from '@/models/FindTheHotspotsTask';
 import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
 import FeedbackElement from '@/components/FeedbackElement.vue';
@@ -43,8 +75,17 @@ const props = defineProps({
 provide(findTheHotspotsViewerStateSymbol, {
   clickHotspot,
   clickBackground,
-  isEditable,
 });
+
+defineEmits(['updateAttempt']);
+
+interface Click {
+  correct: boolean;
+  x: number;
+  y: number;
+}
+
+const clickHistory = ref<Click[]>([]);
 
 const points = ref<number>(0);
 const clicks = ref<number>(0);
@@ -57,7 +98,8 @@ const maxPoints = computed(
 );
 
 const editable = computed(
-  () => points.value < maxPoints.value && clicks.value < maxPoints.value
+  () =>
+    (points.value < maxPoints.value && clicks.value < maxPoints.value) || true
 );
 
 const resultMessage = computed(() => {
@@ -70,14 +112,10 @@ const resultMessage = computed(() => {
 });
 
 const showRetryButton = computed(() => {
-  return !isEditable();
+  return !editable.value;
 });
 
-function isEditable() {
-  return points.value < maxPoints.value && clicks.value < maxPoints.value;
-}
-
-function clickHotspot(id: string | undefined) {
+function clickHotspot(id: string | undefined, x: number, y: number) {
   if (!editable.value) return;
 
   console.log('Viewer: Clicked hotspot with id', id);
@@ -103,12 +141,26 @@ function clickHotspot(id: string | undefined) {
   if (hotspot.correct) {
     points.value++;
   }
+
+  const click = {
+    correct: hotspot.correct,
+    x: x,
+    y: y,
+  };
+  clickHistory.value.push(click);
 }
 
-function clickBackground() {
+function clickBackground(x: number, y: number) {
   if (!editable.value) return;
   console.log('Viewer: Clicked background');
   clicks.value++;
+
+  const click = {
+    correct: false,
+    x: x,
+    y: y,
+  };
+  clickHistory.value.push(click);
 }
 
 function onClickRetry() {
@@ -118,4 +170,47 @@ function onClickRetry() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.click-indicator {
+  position: absolute;
+  cursor: default;
+
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 16px;
+  border-radius: 50%;
+  text-align: center;
+  pointer-events: none;
+
+  box-shadow: 0 0 0.25em 0 rgba(0, 0, 0, 0.5);
+
+  &.correct {
+    color: #39692e;
+    background: #d1e2ce;
+  }
+
+  &.incorrect {
+    color: #c33f62;
+    background: #e6ced1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse 0.25s ease-in-out 0s 1;
+}
+</style>

@@ -11,7 +11,6 @@ export const findTheHotspotsViewerStateSymbol = Symbol(
 ) as InjectionKey<FindTheHotspotsViewerState>;
 
 export interface FindTheHotspotsViewerState {
-  clickHotspot(id: string | undefined): void;
-  clickBackground(): void;
-  isEditable(): boolean;
+  clickHotspot(id: string | undefined, x: number, y: number): void;
+  clickBackground(x: number, y: number): void;
 }

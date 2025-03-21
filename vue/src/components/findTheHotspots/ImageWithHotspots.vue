@@ -41,18 +41,6 @@
           />
         </template>
       </button>
-      <span
-        v-if="clickResult !== 'none'"
-        class="click-indicator"
-        :class="{
-          pulse: pulseAnimation,
-          correct: clickResult === 'correct',
-          incorrect: clickResult === 'incorrect',
-        }"
-        :style="getClickIndicatorStyle"
-      >
-        {{ clickResult === 'correct' ? '✔' : '✖' }}
-      </span>
       <LazyImage
         :src="fileIdToUrl(image.file_id)"
         :alt="image.altText"
@@ -165,10 +153,6 @@ export default defineComponent({
     return {
       popperInstance: undefined as Instance | undefined,
       dragState: undefined as DragState,
-      clickResult: 'none' as 'none' | 'incorrect' | 'correct',
-      clickX: 0 as number,
-      clickY: 0 as number,
-      pulseAnimation: false as boolean,
     };
   },
   computed: {
@@ -185,12 +169,6 @@ export default defineComponent({
       return this.hotspots.find(
         (h) => h.uuid === this.editor?.selectedHotspotId.value
       );
-    },
-    getClickIndicatorStyle(): Partial<CSSStyleDeclaration> {
-      return {
-        left: `${this.clickX - 16}px`,
-        top: `${this.clickY - 16}px`,
-      };
     },
     resizeHandles() {
       return [
@@ -238,39 +216,22 @@ export default defineComponent({
         }
       },
     },
-    clickX: {
-      handler() {
-        this.pulseAnimation = true;
-        setTimeout(() => {
-          this.pulseAnimation = false;
-        }, 500);
-      },
-    },
-    clickY: {
-      handler() {
-        this.pulseAnimation = true;
-        setTimeout(() => {
-          this.pulseAnimation = false;
-        }, 500);
-      },
-    },
   },
   methods: {
     fileIdToUrl,
     onClickBackground(event: PointerEvent) {
       if (this.editor) {
         this.editor?.selectHotspot(undefined);
-      } else if (this.viewer && this.viewer.isEditable()) {
-        this.clickResult = 'incorrect';
-        this.viewer?.clickBackground();
-
+      } else if (this.viewer) {
         // Get the click coordinates relative to the background image
         const rootRect = (
           this.$refs.root as HTMLElement
         ).getBoundingClientRect();
 
-        this.clickX = event.clientX - rootRect.left;
-        this.clickY = event.clientY - rootRect.top;
+        let clickX = event.clientX - rootRect.left;
+        let clickY = event.clientY - rootRect.top;
+
+        this.viewer.clickBackground(clickX, clickY);
       }
     },
     onClickHotspot(event: PointerEvent, hotspot: Hotspot) {
@@ -278,22 +239,16 @@ export default defineComponent({
 
       if (this.editor) {
         this.editor?.selectHotspot(hotspot.uuid);
-      } else if (this.viewer && this.viewer.isEditable()) {
-        this.viewer?.clickHotspot(hotspot.uuid);
-
+      } else if (this.viewer) {
         // Get the click coordinates relative to the background image
         const rootRect = (
           this.$refs.root as HTMLElement
         ).getBoundingClientRect();
 
-        this.clickX = event.clientX - rootRect.left;
-        this.clickY = event.clientY - rootRect.top;
+        let clickX = event.clientX - rootRect.left;
+        let clickY = event.clientY - rootRect.top;
 
-        if (hotspot.correct) {
-          this.clickResult = 'correct';
-        } else {
-          this.clickResult = 'incorrect';
-        }
+        this.viewer.clickHotspot(hotspot.uuid, clickX, clickY);
       }
     },
     onPointerdownHotspot(event: PointerEvent, hotspot: Hotspot) {
@@ -553,49 +508,6 @@ export default defineComponent({
   user-select: none;
   max-height: 400px;
   width: 100%;
-}
-
-.click-indicator {
-  position: absolute;
-  cursor: default;
-
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-  font-size: 16px;
-  border-radius: 50%;
-  text-align: center;
-  pointer-events: none;
-
-  box-shadow: 0 0 0.25em 0 rgba(0, 0, 0, 0.5);
-
-  &.correct {
-    color: #39692e;
-    background: #d1e2ce;
-  }
-
-  &.incorrect {
-    color: #c33f62;
-    background: #e6ced1;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.pulse {
-  animation: pulse 0.25s ease-in-out 0s 1; /* Apply the pulse animation */
 }
 
 $hotspotBorderWidth: 2px;
