@@ -56,7 +56,7 @@
     <pre
       v-if="debug && viewer"
       :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
-      >{{ { selectedHotspot, dragState, clickResult, clickX, clickY } }}</pre
+      >{{ { selectedHotspot, dragState } }}</pre
     >
     <div
       ref="selectedHotspotTooltip"
@@ -75,6 +75,11 @@
         type="button"
         class="small-button edit"
         @click="editor!.changeHotspotCorrectness()"
+      />
+      <input
+        :value="(selectedHotspot as Hotspot)?.feedback"
+        @input="editor!.setHotspotFeedback($event.target.value)"
+        type="text"
       />
       <div class="arrow" data-popper-arrow></div>
     </div>

@@ -20,13 +20,14 @@
       </span>
     </div>
     <div class="feedback-and-button-container">
-      <FeedbackElement
-        v-if="showResults"
-        :achievedPoints="points"
-        :maxPoints="maxPoints"
-        :feedback="task.feedback"
-        :resultMessage="resultMessage"
-      />
+      <div class="feedback-container">
+        <FeedbackElement
+          v-if="showResults"
+          :achievedPoints="points"
+          :maxPoints="maxPoints"
+        />
+        <div class="feedback-text">{{ feedback }}</div>
+      </div>
 
       <div class="button-panel">
         <button
@@ -47,6 +48,7 @@
       clickedHotspots,
       editable,
       clickHistory,
+      feedback,
     }
   }}</pre>
 </template>
@@ -107,7 +109,16 @@ const resultMessage = computed(() => {
     points.value.toString()
   );
   result = result.replace(':total', maxPoints.value.toString());
+
   return result;
+});
+
+const feedback = computed(() => {
+  // Returns the feedback of the most recently cicked hotspot
+  const lastClickedHotspot = clickedHotspots.value.at(-1);
+  return props.task?.hotspots.find(
+    (hotspot) => hotspot.uuid === lastClickedHotspot
+  )?.feedback;
 });
 
 const showRetryButton = computed(() => {
@@ -212,5 +223,18 @@ function onClickRetry() {
 
 .pulse {
   animation: pulse 0.25s ease-in-out 0s 1;
+}
+
+.feedback-text {
+  font-size: 1.25em;
+  font-weight: bold;
+  color: #1a73d9;
+}
+
+.feedback-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
 }
 </style>

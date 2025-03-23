@@ -1,4 +1,5 @@
 import { InjectionKey, Ref } from 'vue';
+import { Hotspot } from '@/models/FindTheHotspotsTask';
 
 /**
  * In the Find The Hotspots Editor, we use provide/inject to pass data to many
@@ -17,6 +18,7 @@ export interface FindTheHotspotsEditorState {
   selectHotspot(id: string | undefined): void;
   deleteSelectedHotspot(): void;
   changeHotspotCorrectness(): void;
+  setHotspotFeedback(feedback: string): void;
   dragHotspot(
     dragId: string,
     hotspotId: string,
