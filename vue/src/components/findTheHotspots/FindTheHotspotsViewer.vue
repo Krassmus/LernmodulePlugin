@@ -42,13 +42,10 @@
   </div>
   <pre :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }">{{
     {
-      points,
       clicks,
-      maxPoints,
+      points,
       clickedHotspots,
-      editable,
       clickHistory,
-      feedback,
     }
   }}</pre>
 </template>
@@ -235,6 +232,6 @@ function onClickRetry() {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1em;
+  gap: 0.75em;
 }
 </style>
