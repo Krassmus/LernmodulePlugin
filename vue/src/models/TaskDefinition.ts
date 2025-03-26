@@ -341,9 +341,14 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           altText: '',
         },
         hotspots: [],
+        allowedClicks: 0,
+        hotspotsToFind: 0,
         strings: {
           retryButton: 'Erneut versuchen',
           resultMessage: ':correct von :total Hotspots gefunden.',
+          feedbackWhenClickingBackground: 'Hier ist kein Hotspot.',
+          feedbackWhenClickingHotspotAgain:
+            'Du hast diesen Hotspot bereits gefunden.',
         },
         feedback: defaultFeedback(),
       };

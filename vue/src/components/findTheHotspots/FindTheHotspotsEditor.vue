@@ -1,54 +1,99 @@
 <template>
-  <div class="find-the-hotspots-editor">
-    <div v-if="taskDefinition.image.type === 'image'" class="button-bar">
-      <button @click="addRectangularHotspot" class="hotspot-button">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 32 32"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <rect
-            x="1"
-            y="1"
-            width="30"
-            height="30"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2px"
-            rx="2"
+  <div class="stud5p-task">
+    <form class="default">
+      <fieldset>
+        <legend>{{ $gettext('Find the Hotspots') }}</legend>
+
+        <div class="find-the-hotspots-editor">
+          <div v-if="taskDefinition.image.type === 'image'" class="button-bar">
+            <button @click="addRectangularHotspot" class="hotspot-button">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 32 32"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  x="1"
+                  y="1"
+                  width="30"
+                  height="30"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2px"
+                  rx="2"
+                />
+              </svg>
+            </button>
+            <button @click="addEllipseHotspot" class="hotspot-button">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 32 32"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="15"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2px"
+                />
+              </svg>
+            </button>
+            <button @click="removeAllHotspots" class="hotspot-button">
+              Remove All Hotspots
+            </button>
+            <button @click="deleteImage" class="hotspot-button">
+              Delete image
+            </button>
+          </div>
+          <ImageWithHotspots
+            ref="imageWithHotspotsRef"
+            v-if="taskDefinition.image.type === 'image'"
+            :hotspots="taskDefinition.hotspots"
+            :image="taskDefinition.image"
           />
-        </svg>
-      </button>
-      <button @click="addEllipseHotspot" class="hotspot-button">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 32 32"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="16"
-            cy="16"
-            r="15"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2px"
+          <FileUpload v-else @fileUploaded="onImageUploaded" />
+        </div>
+      </fieldset>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Einstellungen') }}</legend>
+
+        <label>
+          {{ $gettext('Feedback wenn in den leeren Bereich geklickt wurde:') }}
+          <input
+            v-model="modelTaskDefinition.strings.feedbackWhenClickingBackground"
+            @input="
+              updateTaskDefinition(
+                'taskDefinition.strings.feedbackWhenClickingBackground'
+              )
+            "
+            type="text"
           />
-        </svg>
-      </button>
-      <button @click="removeAllHotspots" class="hotspot-button">
-        Remove All Hotspots
-      </button>
-      <button @click="deleteImage" class="hotspot-button">Delete image</button>
-    </div>
-    <ImageWithHotspots
-      ref="imageWithHotspotsRef"
-      v-if="taskDefinition.image.type === 'image'"
-      :hotspots="taskDefinition.hotspots"
-      :image="taskDefinition.image"
-    />
-    <FileUpload v-else @fileUploaded="onImageUploaded" />
+        </label>
+
+        <label>
+          {{
+            $gettext(
+              'Feedback wenn auf einen bereits gefundenen Hotspot geklickt wurde:'
+            )
+          }}
+          <input
+            v-model="
+              modelTaskDefinition.strings.feedbackWhenClickingHotspotAgain
+            "
+            @input="
+              updateTaskDefinition(
+                'taskDefinition.strings.feedbackWhenClickingHotspotAgain'
+              )
+            "
+            type="text"
+          />
+        </label>
+      </fieldset>
+    </form>
   </div>
 </template>
 
@@ -65,6 +110,7 @@ import {
 import { FindTheHotspotsTask, Hotspot } from '@/models/FindTheHotspotsTask';
 import { findTheHotspotsEditorStateSymbol } from '@/components/findTheHotspots/findTheHotspotsEditorState';
 import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
+import { cloneDeep } from 'lodash';
 
 const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
 
@@ -74,6 +120,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const modelTaskDefinition = cloneDeep(props.taskDefinition);
 
 const selectedHotspotId = ref<string | undefined>(undefined);
 
@@ -86,6 +134,15 @@ provide(findTheHotspotsEditorStateSymbol, {
   dragHotspot,
   resizeHotspot,
 });
+
+function updateTaskDefinition(undoBatch?: unknown) {
+  // Synchronize state modelTaskDefinition -> taskDefinition.
+  console.log('update task definition');
+  taskEditor!.performEdit({
+    newTaskDefinition: cloneDeep(modelTaskDefinition),
+    undoBatch: undoBatch ?? {},
+  });
+}
 
 function onImageUploaded(file: FileRef): void {
   const newTaskDefinition = produce(props.taskDefinition, (draft) => {

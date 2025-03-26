@@ -4,7 +4,7 @@
       <ImageWithHotspots :hotspots="task.hotspots" :image="task.image" />
       <span
         v-for="(click, index) in clickHistory"
-        :key="index"
+        :key="`${click.x}-${click.y}`"
         class="click-indicator"
         :class="{
           pulse: index === clickHistory.length - 1,
@@ -79,9 +79,11 @@ provide(findTheHotspotsViewerStateSymbol, {
 defineEmits(['updateAttempt']);
 
 interface Click {
-  correct: boolean;
   x: number;
   y: number;
+  hotspot: string;
+  correct: boolean;
+  feedback: string;
 }
 
 const clickHistory = ref<Click[]>([]);
@@ -90,11 +92,15 @@ const points = ref<number>(0);
 const clicks = ref<number>(0);
 const clickedHotspots = ref<string[]>([]);
 
-const showResults = computed(() => points.value > 0);
+const showResults = computed(() => clicks.value > 0);
 
-const maxPoints = computed(
-  () => props.task.hotspots.filter((hotspot) => hotspot.correct).length
-);
+const maxPoints = computed(() => {
+  if (props.task?.hotspotsToFind > 0) {
+    return props.task?.hotspotsToFind;
+  } else {
+    return props.task.hotspots.filter((hotspot) => hotspot.correct).length;
+  }
+});
 
 const editable = computed(
   () => points.value < maxPoints.value && clicks.value < maxPoints.value
@@ -111,11 +117,8 @@ const resultMessage = computed(() => {
 });
 
 const feedback = computed(() => {
-  // Returns the feedback of the most recently cicked hotspot
-  const lastClickedHotspot = clickedHotspots.value.at(-1);
-  return props.task?.hotspots.find(
-    (hotspot) => hotspot.uuid === lastClickedHotspot
-  )?.feedback;
+  // Returns the most recent click feedback
+  return clickHistory.value.at(-1)?.feedback;
 });
 
 const showRetryButton = computed(() => {
@@ -137,24 +140,33 @@ function clickHotspot(id: string | undefined, x: number, y: number) {
     return;
   }
 
-  if (clickedHotspots.value.includes(id)) {
-    console.log('Already clicked this hotspot.');
-    return;
+  if (clickedHotspots.value.includes(id) && hotspot.correct) {
+    const index = clickHistory.value.findIndex((click) => click.hotspot === id);
+    if (index !== -1) {
+      const click = clickHistory.value[index];
+      click.x = x;
+      click.y = y;
+      click.feedback = props.task.strings.feedbackWhenClickingHotspotAgain;
+      clickHistory.value.splice(index, 1);
+      clickHistory.value.push(click);
+    }
+  } else {
+    clickedHotspots.value?.push(id);
+    clicks.value++;
+
+    if (hotspot.correct) {
+      points.value++;
+    }
+
+    const click = {
+      x: x,
+      y: y,
+      hotspot: id,
+      correct: hotspot.correct,
+      feedback: hotspot.feedback,
+    };
+    clickHistory.value.push(click);
   }
-
-  clickedHotspots.value?.push(id);
-  clicks.value++;
-
-  if (hotspot.correct) {
-    points.value++;
-  }
-
-  const click = {
-    correct: hotspot.correct,
-    x: x,
-    y: y,
-  };
-  clickHistory.value.push(click);
 }
 
 function clickBackground(x: number, y: number) {
@@ -163,9 +175,11 @@ function clickBackground(x: number, y: number) {
   clicks.value++;
 
   const click = {
-    correct: false,
     x: x,
     y: y,
+    hotspot: '',
+    correct: false,
+    feedback: props.task?.strings.feedbackWhenClickingBackground,
   };
   clickHistory.value.push(click);
 }

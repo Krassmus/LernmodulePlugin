@@ -36,9 +36,15 @@ export const findTheHotspotsTaskSchema = z.object({
   task_type: z.literal('FindTheHotspots'),
   image: imageSchema,
   hotspots: z.array(hotspotSchema),
+  allowedClicks: z.number().default(0),
+  hotspotsToFind: z.number().default(0),
   strings: z.object({
     retryButton: z.string(),
     resultMessage: z.string(),
+    feedbackWhenClickingBackground: z.string().default(''),
+    feedbackWhenClickingHotspotAgain: z
+      .string()
+      .default('Du hast diesen Hotspot bereits gefunden.'),
   }),
   feedback: z.array(feedbackSchema),
 });
