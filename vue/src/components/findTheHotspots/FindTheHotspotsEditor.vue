@@ -74,7 +74,22 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          {{ $gettext('Feedback wenn in den leeren Bereich geklickt wurde:') }}
+          {{
+            $gettext(
+              'Ergebnismitteilung (mögliche Variablen :correct und :total):'
+            )
+          }}
+          <input
+            v-model="modelTaskDefinition.strings.resultMessage"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.resultMessage')
+            "
+            type="text"
+          />
+        </label>
+
+        <label>
+          {{ $gettext('Feedback, wenn in den leeren Bereich geklickt wurde:') }}
           <input
             v-model="modelTaskDefinition.strings.feedbackWhenClickingBackground"
             @input="
@@ -89,7 +104,7 @@
         <label>
           {{
             $gettext(
-              'Feedback wenn auf einen bereits gefundenen Hotspot geklickt wurde:'
+              'Feedback, wenn auf einen bereits gefundenen Hotspot geklickt wurde:'
             )
           }}
           <input
@@ -104,13 +119,35 @@
             type="text"
           />
         </label>
+
+        <label>
+          {{ $gettext('Anzahl zu findender Hotspots:') }}
+          <input
+            v-model="modelTaskDefinition.hotspotsToFind"
+            @input="updateTaskDefinition('taskDefinition.hotspotsToFind')"
+            type="number"
+          />
+        </label>
+
+        <label>
+          <input v-model="limitAnswers" type="checkbox" />
+          {{ $gettext('Anzahl erlaubter Klicks limitieren') }}
+          <input
+            v-model="allowedClicks"
+            :disabled="!limitAnswers"
+            :class="{ 'setting-disabled': !limitAnswers }"
+            @input="updateAllowedClicksInTaskDefinition"
+            type="number"
+            :min="modelTaskDefinition.hotspotsToFind"
+          />
+        </label>
       </fieldset>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { inject, PropType, provide, ref, defineProps } from 'vue';
+import { inject, PropType, provide, ref, defineProps, watch } from 'vue';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
 import { v4 } from 'uuid';
@@ -134,7 +171,21 @@ const props = defineProps({
   },
 });
 
-const modelTaskDefinition = cloneDeep(props.taskDefinition);
+const modelTaskDefinition = cloneDeep(
+  props.taskDefinition
+) as FindTheHotspotsTask;
+
+const limitAnswers = ref<boolean>(false);
+const allowedClicks = ref<number | null>(null);
+
+watch(limitAnswers, (newValue) => {
+  if (newValue) {
+    allowedClicks.value = modelTaskDefinition.hotspotsToFind;
+  } else {
+    allowedClicks.value = null;
+  }
+  updateAllowedClicksInTaskDefinition();
+});
 
 const selectedHotspotId = ref<string | undefined>(undefined);
 
@@ -154,6 +205,16 @@ function updateTaskDefinition(undoBatch?: unknown) {
   taskEditor!.performEdit({
     newTaskDefinition: cloneDeep(modelTaskDefinition),
     undoBatch: undoBatch ?? {},
+  });
+}
+
+function updateAllowedClicksInTaskDefinition() {
+  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+    draft.allowedClicks = allowedClicks.value ? allowedClicks.value : 0;
+  });
+  taskEditor!.performEdit({
+    newTaskDefinition,
+    undoBatch: 'taskDefinition.allowedClicks',
   });
 }
 

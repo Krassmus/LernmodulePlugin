@@ -25,6 +25,7 @@
           v-if="showResults"
           :achievedPoints="points"
           :maxPoints="maxPoints"
+          :result-message="resultMessage"
         />
         <div class="feedback-text">{{ feedback }}</div>
       </div>
@@ -102,8 +103,10 @@ const maxPoints = computed(() => {
   }
 });
 
-const editable = computed(
-  () => points.value < maxPoints.value && clicks.value < maxPoints.value
+const editable = computed(() =>
+  props.task.allowedClicks > 0
+    ? points.value < maxPoints.value && clicks.value < props.task?.allowedClicks
+    : points.value < maxPoints.value
 );
 
 const resultMessage = computed(() => {
