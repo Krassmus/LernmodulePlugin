@@ -70,16 +70,19 @@
         type="button"
         class="small-button trash"
         @click="editor!.deleteSelectedHotspot()"
+        :title="$gettext('Diesen Hotspot löschen')"
       />
       <button
         type="button"
         class="small-button edit"
         @click="editor!.changeHotspotCorrectness()"
+        :title="$gettext('Die Korrektheit dieses Hotspots ändern')"
       />
       <input
         :value="(selectedHotspot as Hotspot)?.feedback"
         @input="editor!.setHotspotFeedback($event.target.value)"
         type="text"
+        :title="$gettext('Feedback bei Klick auf diesen Hotspot')"
       />
       <div class="arrow" data-popper-arrow></div>
     </div>
@@ -103,6 +106,7 @@ import {
 import { createPopper, Instance } from '@popperjs/core';
 import { v4 } from 'uuid';
 import { ResizeHandle } from '@/models/InteractiveVideoTask';
+import { $gettext } from '@/language/gettext';
 
 type DragState =
   | {
@@ -223,6 +227,7 @@ export default defineComponent({
     },
   },
   methods: {
+    $gettext,
     fileIdToUrl,
     onClickBackground(event: PointerEvent) {
       if (this.editor) {
