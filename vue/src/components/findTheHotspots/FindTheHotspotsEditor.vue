@@ -258,15 +258,9 @@ const imageWithHotspotsRef = ref<
   InstanceType<typeof ImageWithHotspots> | undefined
 >();
 function addRectangularHotspot(): void {
-  const component = imageWithHotspotsRef.value;
-  if (!component) {
-    console.warn('Not inserting anything.');
-    return;
-  }
-  const el = component.$el as HTMLElement;
-  const imgEl = el.getElementsByClassName('hotspots-image')[0];
-  const imageWidthPixels = imgEl.clientWidth;
-  const imageHeightPixels = imgEl.clientHeight;
+  const imgEl = document.querySelector('.hotspots-image');
+  const imageWidthPixels = imgEl ? imgEl.clientWidth : 10;
+  const imageHeightPixels = imgEl ? imgEl.clientHeight : 10;
   let hotspotWidthPercent: number, hotspotHeightPercent: number;
   const size = 0.3;
   const smallestDim = imageWidthPixels > imageHeightPixels ? 'height' : 'width';
@@ -300,15 +294,9 @@ function addRectangularHotspot(): void {
 }
 
 function addEllipseHotspot(): void {
-  const component = imageWithHotspotsRef.value;
-  if (!component) {
-    console.warn('Not inserting anything.');
-    return;
-  }
-  const el = component.$el as HTMLElement;
-  const imgEl = el.getElementsByClassName('hotspots-image')[0];
-  const imageWidthPixels = imgEl.clientWidth;
-  const imageHeightPixels = imgEl.clientHeight;
+  const imgEl = document.querySelector('.hotspots-image');
+  const imageWidthPixels = imgEl ? imgEl.clientWidth : 10;
+  const imageHeightPixels = imgEl ? imgEl.clientHeight : 10;
   let hotspotWidthPercent: number, hotspotHeightPercent: number;
   const size = 0.3;
   const smallestDim = imageWidthPixels > imageHeightPixels ? 'height' : 'width';
