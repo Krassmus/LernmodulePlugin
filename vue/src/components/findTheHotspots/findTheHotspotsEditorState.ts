@@ -17,7 +17,7 @@ export interface FindTheHotspotsEditorState {
   selectedHotspotId: Ref<string | undefined>;
   selectHotspot(id: string | undefined): void;
   deleteSelectedHotspot(): void;
-  changeHotspotCorrectness(): void;
+  changeHotspotCorrectness(correct: boolean): void;
   setHotspotFeedback(feedback: string): void;
   dragHotspot(
     dragId: string,

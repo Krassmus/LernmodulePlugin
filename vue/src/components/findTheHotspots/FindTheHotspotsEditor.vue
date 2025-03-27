@@ -381,7 +381,7 @@ function deleteHotspot(id: string): void {
   updateTaskDefinition();
 }
 
-function changeHotspotCorrectness(): void {
+function changeHotspotCorrectness(correct: boolean): void {
   if (!selectedHotspotId.value) {
     console.error(
       'Called deleteSelectedHotspot, but selectedHotspotId is undefined'
@@ -394,7 +394,7 @@ function changeHotspotCorrectness(): void {
       (hotspot) => hotspot.uuid === selectedHotspotId.value
     );
     if (hotspot) {
-      hotspot.correct = !hotspot.correct;
+      hotspot.correct = correct;
     }
   });
 

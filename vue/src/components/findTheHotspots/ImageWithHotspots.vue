@@ -66,27 +66,36 @@
         hidden: !selectedHotspot,
       }"
     >
-      <button
-        type="button"
-        class="small-button trash"
-        @click="editor!.deleteSelectedHotspot()"
-        :title="$gettext('Diesen Hotspot löschen')"
-      />
-      <button
-        type="button"
-        class="small-button edit"
-        @click="editor!.changeHotspotCorrectness()"
-        :title="$gettext('Die Korrektheit dieses Hotspots ändern')"
-      />
-      <input
-        :value="(selectedHotspot as Hotspot)?.feedback"
-        @input="editor!.setHotspotFeedback($event.target.value)"
-        type="text"
-        :title="$gettext('Feedback bei Klick auf diesen Hotspot')"
-      />
+      <div style="display: flex; margin-bottom: 0; align-items: flex-start">
+        <label style="display: flex; margin-bottom: 0; align-items: center">
+          {{ $gettext('Korrekt: ') }}
+          <input
+            :checked="selectedHotspot?.correct"
+            type="checkbox"
+            @change="editor!.changeHotspotCorrectness($event.target.checked)"
+          />
+        </label>
+        <button
+          type="button"
+          class="small-button trash"
+          style="margin-left: auto"
+          @click="editor!.deleteSelectedHotspot()"
+          :title="$gettext('Diesen Hotspot löschen')"
+        />
+      </div>
+      <label>
+        {{ $gettext('Feedback:') }}
+        <input
+          :value="(selectedHotspot as Hotspot)?.feedback"
+          @input="editor!.setHotspotFeedback($event.target.value)"
+          type="text"
+          :title="$gettext('Feedback bei Klick auf diesen Hotspot')"
+        />
+      </label>
       <div class="arrow" data-popper-arrow></div>
     </div>
   </div>
+  <pre>{{ selectedHotspot }}</pre>
 </template>
 
 <script lang="ts">
@@ -654,6 +663,7 @@ button.hotspot {
   }
   position: absolute;
   display: flex;
+  flex-direction: column;
   gap: 0.5em;
   background: white;
   color: black;
