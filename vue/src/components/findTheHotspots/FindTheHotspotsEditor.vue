@@ -6,7 +6,11 @@
 
         <div class="find-the-hotspots-editor">
           <div v-if="taskDefinition.image.type === 'image'" class="button-bar">
-            <button @click="addRectangularHotspot" class="hotspot-button">
+            <button
+              @click="addRectangularHotspot"
+              type="button"
+              class="hotspot-button"
+            >
               <svg
                 width="20"
                 height="20"
@@ -25,7 +29,11 @@
                 />
               </svg>
             </button>
-            <button @click="addEllipseHotspot" class="hotspot-button">
+            <button
+              @click="addEllipseHotspot"
+              type="button"
+              class="hotspot-button"
+            >
               <svg
                 width="20"
                 height="20"
@@ -42,11 +50,15 @@
                 />
               </svg>
             </button>
-            <button @click="removeAllHotspots" class="hotspot-button">
-              Remove All Hotspots
+            <button
+              @click="removeAllHotspots"
+              type="button"
+              class="hotspot-button"
+            >
+              {{ $gettext('Alle Hotspots entfernen') }}
             </button>
-            <button @click="deleteImage" class="hotspot-button">
-              Delete image
+            <button @click="deleteImage" type="button" class="hotspot-button">
+              {{ $gettext('Bild löschen') }}
             </button>
           </div>
           <ImageWithHotspots
@@ -111,6 +123,7 @@ import { FindTheHotspotsTask, Hotspot } from '@/models/FindTheHotspotsTask';
 import { findTheHotspotsEditorStateSymbol } from '@/components/findTheHotspots/findTheHotspotsEditorState';
 import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
 import { cloneDeep } from 'lodash';
+import { $gettext } from '@/language/gettext';
 
 const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
 
