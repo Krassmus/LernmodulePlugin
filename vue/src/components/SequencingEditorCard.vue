@@ -35,11 +35,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
 import {
   fileIdToUrl,
-  ImageElement,
   LernmoduleMultimediaElement,
   MultimediaElementType,
   SequencingTask,
@@ -50,10 +49,20 @@ import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 import MultimediaElement from '@/components/MultimediaElement.vue';
 import { v4 } from 'uuid';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
+import { ImageFileElement } from '@/models/common';
 
 export default defineComponent({
   name: 'SequencingEditorCard',
   components: { MultimediaElement, FileUpload },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   props: {
     card: {
       type: Object as PropType<LernmoduleMultimediaElement>,
@@ -75,10 +84,10 @@ export default defineComponent({
     onUploadImage(file: FileRef): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         if (draft.cards[this.cardIndex].type === 'image') {
-          (draft.cards[this.cardIndex] as ImageElement).file_id = file.id;
+          (draft.cards[this.cardIndex] as ImageFileElement).file_id = file.id;
         }
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition,
         undoBatch: {},
       });
@@ -87,10 +96,10 @@ export default defineComponent({
       const value = (ev.target as HTMLInputElement).value;
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         if (draft.cards[this.cardIndex].type === 'image') {
-          (draft.cards[this.cardIndex] as ImageElement).altText = value;
+          (draft.cards[this.cardIndex] as ImageFileElement).altText = value;
         }
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition,
         undoBatch: { type: 'EditedImageAltText' },
       });
@@ -98,11 +107,11 @@ export default defineComponent({
     onClickDeleteImage(): void {
       const newTaskDefinition = produce(this.taskDefinition, (draft) => {
         if (draft.cards[this.cardIndex].type === 'image') {
-          (draft.cards[this.cardIndex] as ImageElement).file_id = '';
+          (draft.cards[this.cardIndex] as ImageFileElement).file_id = '';
         }
       });
 
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
@@ -114,7 +123,7 @@ export default defineComponent({
         draft.cards[this.cardIndex].type = selectedType;
       });
 
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });

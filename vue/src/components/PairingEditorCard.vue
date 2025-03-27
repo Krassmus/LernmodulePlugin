@@ -61,7 +61,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import {
-  ImageElement,
   LernmoduleMultimediaElement,
   MultimediaElementType,
 } from '@/models/TaskDefinition';
@@ -70,6 +69,7 @@ import MultimediaElement from '@/components/MultimediaElement.vue';
 import FileUpload from '@/components/FileUpload.vue';
 import { v4 } from 'uuid';
 import { FileRef } from '@/routes/jsonApi';
+import { ImageFileElement } from '@/models/common';
 
 export default defineComponent({
   name: 'PairingEditorCard',
@@ -137,7 +137,7 @@ export default defineComponent({
     onClickRemoveImage() {
       this.$emit('elementChanged', {
         updatedElement: {
-          ...(this.multimediaElement as ImageElement),
+          ...(this.multimediaElement as ImageFileElement),
           file_id: '',
         },
       });

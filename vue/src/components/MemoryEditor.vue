@@ -6,7 +6,7 @@
 
         <div class="cards-list">
           <div
-            v-for="(card, index) in taskDefinition.cards"
+            v-for="(card, index) in modelTaskDefinition.cards"
             :key="card.uuid"
             :class="{
               'cards-list-item': true,
@@ -38,12 +38,12 @@
         </div>
 
         <div
-          v-if="taskDefinition.cards[selectedCardIndex]"
+          v-if="modelTaskDefinition.cards[selectedCardIndex]"
           class="edited-memory-card"
         >
           <MemoryEditorCard
-            :card="taskDefinition.cards[selectedCardIndex]"
-            :card-index="selectedCardIndex"
+            :card="modelTaskDefinition.cards[selectedCardIndex]"
+            @update:card="updateCard"
           />
         </div>
 
@@ -58,24 +58,35 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.retryAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrere Versuche erlauben') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.squareLayout" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.squareLayout"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Karten in einem Quadrat positionieren') }}
         </label>
 
         <label
           >{{ $gettext('Rückseite') }}
           <span
-            v-if="taskDefinition.flipside && taskDefinition.flipside.file_id"
+            v-if="
+              modelTaskDefinition.flipside &&
+              modelTaskDefinition.flipside.file_id
+            "
             class="flipside-image-and-button-container"
           >
             <LazyImage
-              :src="fileIdToUrl(taskDefinition.flipside.file_id)"
-              :alt="taskDefinition.flipside.altText"
+              :src="fileIdToUrl(modelTaskDefinition.flipside.file_id)"
+              :alt="modelTaskDefinition.flipside.altText"
               class="flipside-image"
             />
 
@@ -95,11 +106,14 @@
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Beschriftungen') }}</legend>
 
-        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
+        <label
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
+        >
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="taskDefinition.strings.retryButton"
-            :disabled="!taskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.strings.retryButton"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            :disabled="!modelTaskDefinition.retryAllowed"
             type="text"
           />
         </label>
@@ -110,7 +124,13 @@
 
         <label>
           {{ $gettext('Ergebnismitteilung:') }}
-          <input v-model="taskDefinition.strings.resultMessage" type="text" />
+          <input
+            v-model="modelTaskDefinition.strings.resultMessage"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.resultMessage')
+            "
+            type="text"
+          />
         </label>
       </fieldset>
     </form>
@@ -219,8 +239,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { taskEditorStore } from '@/store';
+import { defineComponent, inject, PropType } from 'vue';
 import { fileIdToUrl, MemoryCard, MemoryTask } from '@/models/TaskDefinition';
 import { $gettext, $pgettext } from '@/language/gettext';
 import produce from 'immer';
@@ -229,14 +248,40 @@ import FileUpload from '@/components/FileUpload.vue';
 import { FileRef } from '@/routes/jsonApi';
 import MemoryEditorCard from '@/components/MemoryEditorCard.vue';
 import LazyImage from '@/components/LazyImage.vue';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'MemoryEditor',
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   components: { LazyImage, MemoryEditorCard, FileUpload },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<MemoryTask>,
+      required: true,
+    },
+  },
   data() {
     return {
       selectedCardIndex: -1,
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
     };
+  },
+  watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
   },
   beforeMount(): void {
     if (this.taskDefinition.cards.length > 0) {
@@ -247,6 +292,13 @@ export default defineComponent({
     fileIdToUrl,
     $gettext,
     $pgettext,
+    updateTaskDefinition(undoBatch?: unknown) {
+      // Synchronize state modelTaskDefinition -> taskDefinition.
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
+      });
+    },
     urlForIcon(iconName: string) {
       return (
         window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
@@ -274,7 +326,7 @@ export default defineComponent({
       return text;
     },
     addCard() {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.cards.push({
           uuid: v4(),
           first: {
@@ -285,28 +337,33 @@ export default defineComponent({
           },
         });
       });
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
+      this.taskEditor!.performEdit({
+        newTaskDefinition: this.modelTaskDefinition,
         undoBatch: {},
       });
       // Select the newly inserted card
-      this.selectedCardIndex = this.taskDefinition.cards.length - 1;
+      this.selectedCardIndex = this.modelTaskDefinition.cards.length - 1;
     },
     deleteCard(index: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.cards.splice(index, 1);
       });
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
+
+      this.updateTaskDefinition();
+
       // Adjust the selection index so the selected card doesn't unexpectedly change
       if (index <= this.selectedCardIndex) {
         this.selectedCardIndex = this.selectedCardIndex - 1;
       }
     },
+    updateCard(updatedCard: MemoryCard, undoBatch?: unknown) {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
+        draft.cards[this.selectedCardIndex] = updatedCard;
+      });
+      this.updateTaskDefinition(undoBatch);
+    },
     onFlipsideImageUploaded(file: FileRef): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.flipside = {
           uuid: v4(),
           type: 'image',
@@ -314,23 +371,20 @@ export default defineComponent({
           altText: '',
         };
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
     deleteFlipsideImage(): void {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      const newTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.flipside = undefined;
       });
-      taskEditorStore.performEdit({
+      this.taskEditor!.performEdit({
         newTaskDefinition: newTaskDefinition,
         undoBatch: {},
       });
     },
-  },
-  computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as MemoryTask,
   },
 });
 </script>

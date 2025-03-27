@@ -1,6 +1,3 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div class="stud5p-task">
     <form class="default">
@@ -9,7 +6,8 @@
 
         <label>
           <studip-wysiwyg
-            v-model="taskDefinition.question"
+            :modelValue="taskDefinition.question"
+            @update:modelValue="onEditQuestion"
             force-soft-breaks
             remove-wrapping-p-tag
             disable-autoformat
@@ -17,7 +15,7 @@
         </label>
 
         <fieldset
-          v-for="(answer, i) in taskDefinition.answers"
+          v-for="(answer, i) in modelTaskDefinition.answers"
           :key="answer.uuid"
           class="answer collapsable collapsed"
         >
@@ -26,7 +24,7 @@
             <button
               :title="$gettext('Antwort löschen')"
               :aria-label="$gettext('Antwort löschen')"
-              @click="removeAnswer(answer)"
+              @click="removeAnswer(i)"
               type="button"
               class="button-with-icon"
             >
@@ -36,11 +34,16 @@
 
           <div class="answer-row">
             <input
-              v-model="taskDefinition.answers[i].correct"
+              :checked="taskDefinition.answers[i].correct"
+              @input="onInputAnswerCorrect($event, i)"
               type="checkbox"
             />
 
-            <input v-model="taskDefinition.answers[i].text" type="text" />
+            <input
+              v-model="modelTaskDefinition.answers[i].text"
+              @input="updateTaskDefinition(`taskDefinition.answers[${i}].text`)"
+              type="text"
+            />
           </div>
 
           <fieldset class="collapsable collapsed feedback">
@@ -49,27 +52,43 @@
             <label>
               <span>{{ $gettext('Hinweis:') }}</span>
               <input
-                v-model="taskDefinition.answers[i].strings.hint"
+                v-model="modelTaskDefinition.answers[i].strings.hint"
+                @input="
+                  updateTaskDefinition(
+                    `taskDefinition.answers[${i}].strings.hint`
+                  )
+                "
                 type="text"
-                class="textbox"
               />
             </label>
 
             <label>
               <span>{{ $gettext('Feedback, wenn ausgewählt:') }}</span>
               <input
-                v-model="taskDefinition.answers[i].strings.feedbackSelected"
+                v-model="
+                  modelTaskDefinition.answers[i].strings.feedbackSelected
+                "
+                @input="
+                  updateTaskDefinition(
+                    `taskDefinition.answers[${i}].strings.feedbackSelected`
+                  )
+                "
                 type="text"
-                class="textbox"
               />
             </label>
 
             <label>
               <span>{{ $gettext('Feedback, wenn nicht ausgewählt:') }}</span>
               <input
-                v-model="taskDefinition.answers[i].strings.feedbackNotSelected"
+                v-model="
+                  modelTaskDefinition.answers[i].strings.feedbackNotSelected
+                "
+                @input="
+                  updateTaskDefinition(
+                    `taskDefinition.answers[${i}].strings.feedbackNotSelected`
+                  )
+                "
                 type="text"
-                class="textbox"
               />
             </label>
           </fieldset>
@@ -84,23 +103,36 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          <input v-model="taskDefinition.canAnswerMultiple" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.canAnswerMultiple"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrfachauswahl erlauben') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.randomOrder" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.randomOrder"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Antworten in zufälliger Reihenfolge anzeigen') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.retryAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrere Versuche erlauben') }}
         </label>
 
         <label>
           <input
-            v-model="taskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.showSolutionsAllowed"
+            @change="updateTaskDefinition"
             type="checkbox"
           />
           {{ $gettext('Lösungen anzeigen erlauben') }}
@@ -112,33 +144,45 @@
 
         <label>
           {{ $gettext('Text für Überprüfen-Button:') }}
-          <input v-model="taskDefinition.strings.checkButton" type="text" />
-        </label>
-
-        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-          {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="taskDefinition.strings.retryButton"
-            :disabled="!taskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.strings.checkButton"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
+        >
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.retryButton"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            :disabled="!modelTaskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
+          }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="taskDefinition.strings.solutionsButton"
-            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.strings.solutionsButton"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
       </fieldset>
 
       <feedback-editor
-        :feedback="taskDefinition.feedback"
-        :result-message="taskDefinition.strings.resultMessage"
+        :feedback="modelTaskDefinition.feedback"
+        :result-message="modelTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -147,16 +191,9 @@
 </template>
 
 <script lang="ts">
-// Allow us to mutate the prop 'taskDefinition' as much as we want
-// TODO refrain from mutating taskDefinition directly -- it breaks undo/redo
-/* eslint-disable vue/no-mutating-props */
 import { defineComponent, inject, PropType } from 'vue';
-import {
-  Feedback,
-  QuestionAnswer,
-  QuestionTask,
-} from '@/models/TaskDefinition';
-import { taskEditorStore } from '@/store';
+import { QuestionTask } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import { $gettext } from '@/language/gettext';
 import produce from 'immer';
@@ -166,6 +203,7 @@ import {
 } from '@/components/taskEditorState';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
 import { v4 } from 'uuid';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'QuestionEditor',
@@ -181,26 +219,107 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      // We use this as a helping means to allow us to use v-model for the
+      // inputs for the many different options that are used in this task.
+      // There are a lot of different strings to be typed in, checkboxes
+      // to be checked and so on. This saves us the effort of writing 11 more
+      // event handlers analogous to onInputAnswerCorrect.
+      // Instead, we just write a catchall function 'updateTaskDefinition'
+      // which we can call to copy modelTaskDefinition into taskDefinition.
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
+    };
+  },
+  watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
+  },
   methods: {
     $gettext,
+    // An example of how you would write an event handler to replace v-model
+    // and completely avoid using modelTaskDefinition.
+    // I think it is OK for just one or two inputs, but if you have 10+ of them,
+    // then that would be a lot of boilerplate, and I prefer the solution
+    // using 'modelTaskDefinition', 'updateTaskDefinition' and the watcher
+    // to sync data in the other direction.
+    onInputAnswerCorrect(ev: InputEvent, answerIndex: number): void {
+      const value = (ev.target as HTMLInputElement).checked;
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: QuestionTask) => {
+            draft.answers[answerIndex].correct = value;
+          }
+        ),
+        undoBatch: {},
+      });
+    },
+    onEditQuestion(data: string): void {
+      // Copy new data from wysiwyg editor into task definition
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: QuestionTask) => {
+            draft.question = data;
+          }
+        ),
+        undoBatch: 'taskDefinition.question',
+      });
+      // Note this is not a perfect 'undoBatch' because normally you expect
+      // a sequence of edits in the text to produce a sequence of undo/redo
+      // steps... E.g. you type in one place, click to navigate to a different
+      // place in the text, then start typing there... You would expect
+      // this to produce two distinct steps in the undo/redo stack.
+      // But if the 'undoBatch' is simply 'taskDefinition.question', the
+      // undo/redo states will all be merged together into one step.
+      // TODO can we access CKEditor internal state to produce a more apt
+      // 'undoBatch'?
+    },
 
-    addAnswer(): void {
-      this.taskDefinition.answers.push({
-        uuid: v4(),
-        text: this.$gettext('Neue Antwort'),
-        correct: true,
-        strings: {
-          hint: '',
-          feedbackSelected: '',
-          feedbackNotSelected: '',
-        },
+    updateTaskDefinition(undoBatch?: unknown) {
+      // Synchronize state modelTaskDefinition -> taskDefinition.
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
       });
     },
 
-    removeAnswer(answerToRemove: QuestionAnswer): void {
-      this.taskDefinition.answers = this.taskDefinition.answers.filter(
-        (answer) => answer !== answerToRemove
-      );
+    addAnswer(): void {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: QuestionTask) => {
+            draft.answers.push({
+              uuid: v4(),
+              text: this.$gettext('Neue Antwort'),
+              correct: true,
+              strings: {
+                hint: '',
+                feedbackSelected: '',
+                feedbackNotSelected: '',
+              },
+            });
+          }
+        ),
+      });
+    },
+
+    removeAnswer(answerToRemoveIndex: number): void {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: QuestionTask) => {
+            draft.answers.splice(answerToRemoveIndex, 1);
+          }
+        ),
+        undoBatch: {},
+      });
     },
 
     urlForIcon(iconName: string) {
@@ -209,7 +328,7 @@ export default defineComponent({
       );
     },
 
-    updateFeedback(updatedFeedback: Feedback[]) {
+    updateFeedback(updatedFeedback: Feedback[], undoBatch: unknown) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
           this.taskDefinition,
@@ -217,7 +336,7 @@ export default defineComponent({
             taskDraft.feedback = updatedFeedback;
           }
         ),
-        undoBatch: {},
+        undoBatch: undoBatch,
       });
     },
 
@@ -229,13 +348,9 @@ export default defineComponent({
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.strings.resultMessage',
       });
     },
-  },
-  computed: {
-    currentUndoRedoState: () =>
-      taskEditorStore.undoRedoStack[taskEditorStore.undoRedoIndex],
   },
 });
 </script>

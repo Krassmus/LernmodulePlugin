@@ -13,6 +13,19 @@
               :disabled="isSubmitted"
             />
             {{ answer.text }}
+            <!--   Data-tooltip is a reference used by Stud.IP's javascript code based on jQuery.
+            See resources/assets/javascripts/bootstrap/tooltip.js.
+            This code has the limitation in 5.4 that it only reads the
+            content stored in this attribute a single time.  This is ultimately
+            due to the way it is accessed:
+            Line 13: let data = $(this).data();
+            This StackOverflow answer explains that the data attribute is only
+            read once and cached afterwards: https://stackoverflow.com/a/28176641
+            That is why the tooltip has not updated reactively in the viewer.
+            You will have to work around it somehow.
+            I found that deleting the whole 'hint' causes the hint icon to
+            disappear. Then, adding a new hint with different text inside
+            causes it to reappear with the updated text. -->
             <span
               v-if="answer.strings.hint && !isSubmitted"
               class="tooltip tooltip-icon answer-tooltip"

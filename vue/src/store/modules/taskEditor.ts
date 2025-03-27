@@ -217,16 +217,20 @@ export class TaskEditorModule extends VuexModule {
    * Modify the currently edited task definition, creating a new undo/redo state
    * if appropriate.  Edits are batched together based on the parameter 'undoBatch'.
    * @param payload.taskDefinition The new state of the task being edited
-   * @param payload.undoBatch Any value.
-   * If undoBatch is an empty object, a new undo/redo state will always be created.
-   * Otherwise, a new undo/redo state will be created if undoBatch is different
+   * @param payload.undoBatch (Optional) Any value.
+   * If undoBatch is not provided or an empty object is provided, a new
+   * undo/redo state will always be created.
+   * Otherwise, a new undo/redo state will be created iff undoBatch is different
    * from the undoBatch of the previously performed action.
    */
   @Mutation
   performEdit(payload: {
     newTaskDefinition: TaskDefinition;
-    undoBatch: unknown;
+    undoBatch?: unknown;
   }) {
+    if (!payload.undoBatch) {
+      payload.undoBatch = {};
+    }
     const currentUndoRedoState = this.undoRedoStack[this.undoRedoIndex];
     if (
       isEqual(currentUndoRedoState.taskDefinition, payload.newTaskDefinition)

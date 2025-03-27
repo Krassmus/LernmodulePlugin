@@ -29,7 +29,7 @@
             min="0"
             max="100"
             v-model="feedbackList[i].percentage"
-            @input="emitUpdatedFeedback"
+            @input="emitUpdatedFeedback(`feedbackList[${i}].percentage`)"
           />
         </template>
       </div>
@@ -46,7 +46,7 @@
           <input
             type="text"
             v-model="feedbackList[i].message"
-            @input="emitUpdatedFeedback"
+            @input="emitUpdatedFeedback(`feedbackList[${i}].message`)"
           />
           <button
             type="button"
@@ -78,7 +78,8 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { $gettext } from '@/language/gettext';
-import { Feedback } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'FeedbackEditor',
@@ -93,12 +94,39 @@ export default defineComponent({
       required: false,
     },
   },
-  emits: ['update:feedback', 'update:result-message'],
+  emits: {
+    ['update:feedback'](feedbacks: Feedback[], undoBatch?: unknown): boolean {
+      return true;
+    },
+    ['update:result-message'](message: string): boolean {
+      // This function is a 'validator'.
+      // See https://vuejs.org/guide/components/events.html#events-validation
+      // We don't need to perform validation here, but we have to define SOME
+      // kind of function in order to use this syntax that lets us provide
+      // types for our events.
+      return true;
+    },
+  },
   data() {
     return {
-      feedbackList: [...this.feedback], // Local copy of the feedback to edit
-      localResultMessage: this.resultMessage, // Local copy of the result message
+      feedbackList: cloneDeep(this.feedback), // Local copy of the feedback to edit
+      localResultMessage: this.resultMessage || '', // Local copy of the result message
     };
+  },
+  watch: {
+    // Synchronize state props -> local copies.
+    feedback: {
+      immediate: true,
+      handler: function (): void {
+        this.feedbackList = cloneDeep(this.feedback);
+      },
+    },
+    resultMessage: {
+      immediate: true,
+      handler: function (): void {
+        this.localResultMessage = this.resultMessage || '';
+      },
+    },
   },
   methods: {
     $gettext,
@@ -126,8 +154,8 @@ export default defineComponent({
       this.emitUpdatedFeedback();
     },
 
-    emitUpdatedFeedback() {
-      this.$emit('update:feedback', [...this.feedbackList]);
+    emitUpdatedFeedback(undoBatch: unknown = {}) {
+      this.$emit('update:feedback', cloneDeep(this.feedbackList), undoBatch);
     },
 
     emitUpdatedResultMessage() {

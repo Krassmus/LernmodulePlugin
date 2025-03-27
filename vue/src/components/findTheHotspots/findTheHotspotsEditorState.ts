@@ -1,0 +1,38 @@
+import { InjectionKey, Ref } from 'vue';
+import { Hotspot } from '@/models/FindTheHotspotsTask';
+
+/**
+ * In the Find The Hotspots Editor, we use provide/inject to pass data to many
+ * different components at once without prop drilling.
+ * There is a little bit of ceremony required to have the passed data be statically typed.
+ * https://vuejs.org/guide/typescript/composition-api.html#typing-provide-inject
+ */
+export const findTheHotspotsEditorStateSymbol = Symbol(
+  'Find The Hotspots Editor state'
+) as InjectionKey<FindTheHotspotsEditorState>;
+
+export interface FindTheHotspotsEditorState {
+  // Some of this stuff was copied over from interactiveVideoEditorState.
+  // We will adapt it together to work for Find The Hotspots.
+  selectedHotspotId: Ref<string | undefined>;
+  selectHotspot(id: string | undefined): void;
+  deleteSelectedHotspot(): void;
+  changeHotspotCorrectness(correct: boolean): void;
+  setHotspotFeedback(feedback: string): void;
+  dragHotspot(
+    dragId: string,
+    hotspotId: string,
+    xFraction: number,
+    yFraction: number
+  ): void;
+  resizeHotspot(
+    dragId: string,
+    hotspotId: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): void;
+  // editInteraction(id: string): void;
+  // dragInteractionTimeline(id: string, startTime: number): void;
+}

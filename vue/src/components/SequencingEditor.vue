@@ -6,11 +6,11 @@
 
         <div class="cards-list">
           <div
-            v-for="(card, index) in taskDefinition.cards"
+            v-for="(card, index) in modelTaskDefinition.cards"
             :key="card.uuid"
             :class="{
               'cards-list-item': true,
-              'selected-card': index === this.selectedCardIndex,
+              'selected-card': index === selectedCardIndex,
             }"
             @click="selectCard(index)"
           >
@@ -38,9 +38,9 @@
         </div>
 
         <SequencingEditorCard
-          v-if="this.taskDefinition.cards[this.selectedCardIndex]"
-          :card="this.taskDefinition.cards[this.selectedCardIndex]"
-          :card-index="this.selectedCardIndex"
+          v-if="modelTaskDefinition.cards[selectedCardIndex]"
+          :card="modelTaskDefinition.cards[selectedCardIndex]"
+          :card-index="selectedCardIndex"
         />
 
         <fieldset v-else class="no-card-selected-placeholder">
@@ -54,18 +54,27 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.retryAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrere Versuche erlauben') }}
         </label>
 
         <label>
-          <input v-model="taskDefinition.resumeAllowed" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.resumeAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Fortsetzen des aktuellen Spielstands erlauben') }}
         </label>
 
         <label>
           <input
-            v-model="taskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.showSolutionsAllowed"
+            @change="updateTaskDefinition"
             type="checkbox"
           />
           {{ $gettext('Lösungen anzeigen erlauben') }}
@@ -77,42 +86,57 @@
 
         <label>
           {{ $gettext('Text für Überprüfen-Button:') }}
-          <input v-model="taskDefinition.strings.checkButton" type="text" />
-        </label>
-
-        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-          {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="taskDefinition.strings.retryButton"
-            :disabled="!taskDefinition.retryAllowed"
-            type="text"
-          />
-        </label>
-
-        <label :class="{ 'setting-disabled': !taskDefinition.resumeAllowed }">
-          {{ $gettext('Text für Fortsetzen-Button:') }}
-          <input
-            v-model="taskDefinition.strings.resumeButton"
-            :disabled="!taskDefinition.resumeAllowed"
+            v-model="modelTaskDefinition.strings.checkButton"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
+        >
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.retryButton"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            :disabled="!modelTaskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{ 'setting-disabled': !modelTaskDefinition.resumeAllowed }"
+        >
+          {{ $gettext('Text für Fortsetzen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.resumeButton"
+            @input="updateTaskDefinition('taskDefinition.strings.resumeButton')"
+            :disabled="!modelTaskDefinition.resumeAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
+          }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="taskDefinition.strings.solutionsButton"
-            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.strings.solutionsButton"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
       </fieldset>
 
       <FeedbackEditor
-        :feedback="taskDefinition.feedback"
-        :result-message="taskDefinition.strings.resultMessage"
+        :feedback="modelTaskDefinition.feedback"
+        :result-message="modelTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -121,14 +145,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import {
-  Feedback,
   LernmoduleMultimediaElement,
   SequencingTask,
 } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import { $gettext } from '@/language/gettext';
-import { taskEditorStore } from '@/store';
 import produce from 'immer';
 import { v4 } from 'uuid';
 import SequencingEditorCard from '@/components/SequencingEditorCard.vue';
@@ -137,6 +160,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'SequencingEditor',
@@ -146,11 +170,29 @@ export default defineComponent({
       taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
     };
   },
+  props: {
+    taskDefinition: {
+      type: Object as PropType<SequencingTask>,
+      required: true,
+    },
+  },
   data() {
-    return { selectedCardIndex: -1 };
+    return {
+      selectedCardIndex: -1,
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
+    };
+  },
+  watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
   },
   beforeMount(): void {
-    if (this.taskDefinition.cards.length > 0) {
+    if (this.modelTaskDefinition.cards.length > 0) {
       this.selectedCardIndex = 0;
     }
   },
@@ -163,12 +205,20 @@ export default defineComponent({
       );
     },
 
+    updateTaskDefinition(undoBatch?: unknown) {
+      // Synchronize state modelTaskDefinition -> taskDefinition.
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
+      });
+    },
+
     selectCard(index: number) {
       this.selectedCardIndex = index;
     },
 
     addCard() {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.cards.push({
           type: 'image',
           uuid: v4(),
@@ -177,24 +227,18 @@ export default defineComponent({
         });
       });
 
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
+      this.updateTaskDefinition();
 
       // Select the newly inserted image
-      this.selectedCardIndex = this.taskDefinition.cards.length - 1;
+      this.selectedCardIndex = this.modelTaskDefinition.cards.length - 1;
     },
 
     deleteCard(index: number) {
-      const newTaskDefinition = produce(this.taskDefinition, (draft) => {
+      this.modelTaskDefinition = produce(this.modelTaskDefinition, (draft) => {
         draft.cards.splice(index, 1);
       });
 
-      taskEditorStore.performEdit({
-        newTaskDefinition: newTaskDefinition,
-        undoBatch: {},
-      });
+      this.updateTaskDefinition();
 
       // Adjust the selection index so the selected card doesn't unexpectedly change
       if (index <= this.selectedCardIndex) {
@@ -216,30 +260,26 @@ export default defineComponent({
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: SequencingTask) => {
             taskDraft.feedback = updatedFeedback;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.feedback',
       });
     },
 
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: SequencingTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.strings.resultMessage',
       });
     },
-  },
-
-  computed: {
-    taskDefinition: () => taskEditorStore.taskDefinition as SequencingTask,
   },
 });
 </script>

@@ -1,6 +1,3 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- TODO refrain from mutating taskDefinition directly -- it breaks undo/redo-->
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div class="stud5p-task">
     <form class="default">
@@ -21,7 +18,8 @@
         </div>
 
         <studip-wysiwyg
-          v-model="taskDefinition.template"
+          :modelValue="modelTaskDefinition.template"
+          @update:modelValue="onEditTemplate"
           ref="wysiwyg"
           force-soft-breaks
           remove-wrapping-p-tag
@@ -33,13 +31,18 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
-          <input v-model="taskDefinition.retryAllowed" type="checkbox" />
+          <input
+            v-model="modelTaskDefinition.retryAllowed"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
           {{ $gettext('Mehrere Versuche erlauben') }}
         </label>
 
         <label>
           <input
-            v-model="taskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.showSolutionsAllowed"
+            @change="updateTaskDefinition"
             type="checkbox"
           />
           {{ $gettext('Lösungen anzeigen erlauben') }}
@@ -51,33 +54,45 @@
 
         <label>
           {{ $gettext('Text für Überprüfen-Button:') }}
-          <input v-model="taskDefinition.strings.checkButton" type="text" />
-        </label>
-
-        <label :class="{ 'setting-disabled': !taskDefinition.retryAllowed }">
-          {{ $gettext('Text für Wiederholen-Button:') }}
           <input
-            v-model="taskDefinition.strings.retryButton"
-            :disabled="!taskDefinition.retryAllowed"
+            v-model="modelTaskDefinition.strings.checkButton"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
             type="text"
           />
         </label>
 
         <label
-          :class="{ 'setting-disabled': !taskDefinition.showSolutionsAllowed }"
+          :class="{ 'setting-disabled': !modelTaskDefinition.retryAllowed }"
+        >
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.retryButton"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            :disabled="!modelTaskDefinition.retryAllowed"
+            type="text"
+          />
+        </label>
+
+        <label
+          :class="{
+            'setting-disabled': !modelTaskDefinition.showSolutionsAllowed,
+          }"
         >
           {{ $gettext('Text für Lösungen-Button:') }}
           <input
-            v-model="taskDefinition.strings.solutionsButton"
-            :disabled="!taskDefinition.showSolutionsAllowed"
+            v-model="modelTaskDefinition.strings.solutionsButton"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
+            :disabled="!modelTaskDefinition.showSolutionsAllowed"
             type="text"
           />
         </label>
       </fieldset>
 
       <feedback-editor
-        :feedback="taskDefinition.feedback"
-        :result-message="taskDefinition.strings.resultMessage"
+        :feedback="modelTaskDefinition.feedback"
+        :result-message="modelTaskDefinition.strings.resultMessage"
         @update:feedback="updateFeedback"
         @update:result-message="updateResultMessage"
       />
@@ -87,7 +102,8 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType } from 'vue';
-import { Feedback, MarkTheWordsTask } from '@/models/TaskDefinition';
+import { MarkTheWordsTask } from '@/models/TaskDefinition';
+import { Feedback } from '@/models/common';
 import { $gettext } from '@/language/gettext';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import FeedbackEditor from '@/components/FeedbackEditor.vue';
@@ -96,9 +112,15 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'MarkTheWordsEditor',
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   components: { FeedbackEditor, StudipWysiwyg },
   props: {
     taskDefinition: {
@@ -106,10 +128,19 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  data() {
     return {
-      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
     };
+  },
+  watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
   },
   methods: {
     $gettext,
@@ -143,27 +174,48 @@ export default defineComponent({
       );
     },
 
+    onEditTemplate(data: string): void {
+      // Copy new data from wysiwyg editor into task definition
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.modelTaskDefinition,
+          (draft: MarkTheWordsTask) => {
+            draft.template = data;
+          }
+        ),
+        undoBatch: 'taskDefinition.template',
+      });
+    },
+
+    updateTaskDefinition(undoBatch?: unknown) {
+      // Synchronize state modelTaskDefinition -> taskDefinition.
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
+      });
+    },
+
     updateFeedback(updatedFeedback: Feedback[]) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: MarkTheWordsTask) => {
             taskDraft.feedback = updatedFeedback;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.feedback',
       });
     },
 
     updateResultMessage(updatedResultMessage: string) {
       this.taskEditor!.performEdit({
         newTaskDefinition: produce(
-          this.taskDefinition,
+          this.modelTaskDefinition,
           (taskDraft: MarkTheWordsTask) => {
             taskDraft.strings.resultMessage = updatedResultMessage;
           }
         ),
-        undoBatch: {},
+        undoBatch: 'taskDefinition.strings.resultMessage',
       });
     },
   },

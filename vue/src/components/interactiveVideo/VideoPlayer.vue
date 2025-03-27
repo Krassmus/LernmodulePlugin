@@ -248,6 +248,13 @@ export default defineComponent({
       }
     },
     initializePlayer(videoInfo: VideoInfo) {
+      if (!this.$refs.videoJsContainer) {
+        console.warn(
+          'initializePlayer called but $refs.videoJsContainer is undefined. ' +
+            'Returning early without doing anything.'
+        );
+        return;
+      }
       // If player has already been created, it must be destroyed before we
       // create a new one.
       this.progressBarObserver?.disconnect();
@@ -422,11 +429,7 @@ export default defineComponent({
         const rootRect = (
           this.$refs.root as HTMLElement
         ).getBoundingClientRect();
-        const interactionEl = document.getElementById(
-          `interaction-${this.uid}-${interaction.id}`
-        ) as HTMLElement;
 
-        // TODO implement resizing
         const {
           interactionStartPos: [xInitial, yInitial],
           interactionStartSize: [widthInitial, heightInitial],
@@ -478,9 +481,15 @@ export default defineComponent({
           handle === 'top' ||
           handle === 'top-right'
         ) {
-          if (yPointer > yInitial + heightInitial) {
+          // I wish I could explain to you why this formula has to be different
+          // than the one used for horizontal resizing, but I figured out by
+          // trial and error that I needed to use dyPointer in my calculations
+          // and that yPointer was not reliable.
+          // I suspect that something about the surrounding HTML causes the event
+          // absolute coordinates on the Y axis to not be exactly correct. -Ann
+          if (dyPointer > heightInitial) {
             newY = yInitial + heightInitial;
-            newHeight = yPointer - newY;
+            newHeight = dyPointer - heightInitial;
           } else {
             newY = yInitial + dyPointer;
             newHeight = heightInitial - dyPointer;
@@ -490,9 +499,10 @@ export default defineComponent({
           handle === 'bottom' ||
           handle === 'bottom-right'
         ) {
-          if (yPointer < yInitial) {
-            newY = yPointer;
-            newHeight = yInitial - yPointer;
+          // Ditto for this formula here. -Ann
+          if (-dyPointer > heightInitial) {
+            newY = yInitial + heightInitial + dyPointer;
+            newHeight = -dyPointer - heightInitial;
           } else {
             newY = yInitial;
             newHeight = heightInitial + dyPointer;
@@ -517,7 +527,7 @@ export default defineComponent({
         const isOffscreenX =
           filteredX > 0.95 || filteredX + filteredWidth < 0.05;
         const isOffscreenY =
-          filteredY > 0.95 || filteredY + filteredHeight < 0.05;
+          filteredY > 0.9 || filteredY + filteredHeight < 0.05;
         if (isOffscreenX) {
           filteredX = interaction.x;
           filteredWidth = interaction.width;
@@ -579,7 +589,7 @@ export default defineComponent({
         const yFraction = this.dragState.interactionStartPos[1] + dyFraction;
         const interactionHeight = interactionEl.clientHeight / rootRect.height;
         const minY = 0.05 - interactionHeight;
-        const maxY = 0.95;
+        const maxY = 0.9;
         const clampedYFraction = Math.min(maxY, Math.max(minY, yFraction));
 
         const id = this.dragState.interactionId;

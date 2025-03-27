@@ -5,8 +5,8 @@ import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
 import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
-import FindTheHotspotsEditor from '@/components/FindTheHotspotsEditor.vue';
-import FindTheHotspotsViewer from '@/components/FindTheHotspotsViewer.vue';
+import FindTheHotspotsEditor from '@/components/findTheHotspots/FindTheHotspotsEditor.vue';
+import FindTheHotspotsViewer from '@/components/findTheHotspots/FindTheHotspotsViewer.vue';
 import FindTheWordsEditor from '@/components/FindTheWordsEditor.vue';
 import FindTheWordsViewer from '@/components/FindTheWordsViewer.vue';
 import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
@@ -22,6 +22,8 @@ import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
 import SequencingViewer from '@/components/SequencingViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
+import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
+import { imageFileSchema, feedbackSchema, Feedback } from '@/models/common';
 
 /**
  * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
@@ -42,20 +44,7 @@ export function fileDetailsUrl(fileId: string): string {
   return window.STUDIP.URLHelper.getURL(`dispatch.php/file/details/${fileId}`);
 }
 
-export const feedbackSchema = z.object({
-  percentage: z.number(),
-  message: z.string(),
-});
-export type Feedback = z.infer<typeof feedbackSchema>;
-
-const imageElementSchema = z.object({
-  uuid: z.string(),
-  type: z.literal('image'),
-  file_id: z.string(),
-  altText: z.string(),
-});
-export type ImageElement = z.infer<typeof imageElementSchema>;
-
+// TODO Pull these things out into common.ts as well next to ImageElement/imageElementSchema.
 const audioElementSchema = z.object({
   uuid: z.string(),
   type: z.literal('audio'),
@@ -71,7 +60,7 @@ const textElementSchema = z.object({
 });
 
 export const multimediaElementSchema = z.union([
-  imageElementSchema,
+  imageFileSchema,
   audioElementSchema,
   textElementSchema,
 ]);
@@ -99,12 +88,6 @@ export const dragTheWordsTaskSchema = z.object({
   feedback: z.array(feedbackSchema),
 });
 export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
-
-export const findTheHotspotsTaskSchema = z.object({
-  task_type: z.literal('FindTheHotspots'),
-  image: imageElementSchema,
-});
-export type FindTheHotspotsTask = z.infer<typeof findTheHotspotsTaskSchema>;
 
 export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
@@ -158,7 +141,7 @@ export const memoryTaskSchema = z.object({
   task_type: z.literal('Memory'),
   cards: z.array(memoryCardSchema),
   squareLayout: z.boolean(),
-  flipside: imageElementSchema.optional(),
+  flipside: imageFileSchema.optional(),
   retryAllowed: z.boolean(),
   strings: z.object({
     retryButton: z.string(),
@@ -357,6 +340,17 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           file_id: '',
           altText: '',
         },
+        hotspots: [],
+        allowedClicks: 0,
+        hotspotsToFind: 0,
+        strings: {
+          retryButton: 'Erneut versuchen',
+          resultMessage: ':correct von :total Hotspots gefunden.',
+          feedbackWhenClickingBackground: 'Hier ist kein Hotspot.',
+          feedbackWhenClickingHotspotAgain:
+            'Du hast diesen Hotspot bereits gefunden.',
+        },
+        feedback: defaultFeedback(),
       };
     case 'FindTheWords':
       return {

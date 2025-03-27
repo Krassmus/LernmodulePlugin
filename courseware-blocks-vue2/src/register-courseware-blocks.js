@@ -12,6 +12,7 @@ const taskTypes = [
   'Pairing',
   'Sequencing',
   'LmbInteractiveVideo',
+  'FindTheHotspots',
 ];
 
 const debug = window.STUDIP.LernmoduleCoursewareBlocksPlugin.debug;
