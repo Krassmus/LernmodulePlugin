@@ -1,16 +1,11 @@
 <template>
   <div class="feedback-container" v-disable-drag>
     <div class="meter-container">
-      <div
-        class="meter-background"
-        :class="{
-          'meter-background-with-star': achievedMaxPoints,
-        }"
-      >
+      <div class="meter-background">
         <div class="meter-bar" ref="meterBar" />
         <img
           v-if="starVisible"
-          class="star-symbol star-show"
+          class="star-symbol"
           src="../assets/star.png"
           width="38"
           height="38"
@@ -144,6 +139,7 @@ export default defineComponent({
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
+  gap: 1.5em;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 2em;
   padding: 6px 12px 6px 12px;
@@ -159,11 +155,6 @@ export default defineComponent({
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   position: relative;
-}
-
-.meter-background-with-star {
-  transition: margin-right 1s ease; /* Smooth fade-in */
-  margin-right: 18px;
 }
 
 .meter-bar {
@@ -200,7 +191,6 @@ export default defineComponent({
   font-size: 1em;
   font-weight: bold;
   color: #000;
-  margin-left: 8px;
 }
 
 .feedback-text {
