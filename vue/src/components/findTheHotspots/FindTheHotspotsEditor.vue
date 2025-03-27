@@ -126,6 +126,8 @@
             v-model="modelTaskDefinition.hotspotsToFind"
             @input="updateTaskDefinition('taskDefinition.hotspotsToFind')"
             type="number"
+            :min="1"
+            :max="numberOfCorrectHotspots"
           />
         </label>
 
@@ -147,7 +149,15 @@
 </template>
 
 <script setup lang="ts">
-import { inject, PropType, provide, ref, defineProps, watch } from 'vue';
+import {
+  inject,
+  PropType,
+  provide,
+  ref,
+  defineProps,
+  watch,
+  computed,
+} from 'vue';
 import FileUpload from '@/components/FileUpload.vue';
 import produce from 'immer';
 import { v4 } from 'uuid';
@@ -171,16 +181,24 @@ const props = defineProps({
   },
 });
 
-const modelTaskDefinition = cloneDeep(
-  props.taskDefinition
-) as FindTheHotspotsTask;
+const modelTaskDefinition = ref<FindTheHotspotsTask>(
+  cloneDeep(props.taskDefinition)
+);
+
+watch(
+  () => props.taskDefinition,
+  (newTaskDefinition) => {
+    modelTaskDefinition.value = cloneDeep(newTaskDefinition);
+  },
+  { deep: true }
+);
 
 const limitAnswers = ref<boolean>(false);
 const allowedClicks = ref<number | null>(null);
 
 watch(limitAnswers, (newValue) => {
   if (newValue) {
-    allowedClicks.value = modelTaskDefinition.hotspotsToFind;
+    allowedClicks.value = modelTaskDefinition.value.hotspotsToFind;
   } else {
     allowedClicks.value = null;
   }
@@ -188,6 +206,12 @@ watch(limitAnswers, (newValue) => {
 });
 
 const selectedHotspotId = ref<string | undefined>(undefined);
+
+const numberOfCorrectHotspots = computed(
+  () =>
+    modelTaskDefinition.value.hotspots.filter((hotspot) => hotspot.correct)
+      .length
+);
 
 provide(findTheHotspotsEditorStateSymbol, {
   selectedHotspotId,
@@ -203,23 +227,20 @@ function updateTaskDefinition(undoBatch?: unknown) {
   // Synchronize state modelTaskDefinition -> taskDefinition.
   console.log('update task definition');
   taskEditor!.performEdit({
-    newTaskDefinition: cloneDeep(modelTaskDefinition),
+    newTaskDefinition: cloneDeep(modelTaskDefinition.value),
     undoBatch: undoBatch ?? {},
   });
 }
 
 function updateAllowedClicksInTaskDefinition() {
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.allowedClicks = allowedClicks.value ? allowedClicks.value : 0;
   });
-  taskEditor!.performEdit({
-    newTaskDefinition,
-    undoBatch: 'taskDefinition.allowedClicks',
-  });
+  updateTaskDefinition('taskDefinition.allowedClicks');
 }
 
 function onImageUploaded(file: FileRef): void {
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.image = {
       uuid: v4(),
       type: 'image',
@@ -227,10 +248,8 @@ function onImageUploaded(file: FileRef): void {
       altText: '',
     };
   });
-  taskEditor!.performEdit({
-    newTaskDefinition: newTaskDefinition,
-    undoBatch: {},
-  });
+
+  updateTaskDefinition();
 }
 
 const imageWithHotspotsRef = ref<
@@ -269,10 +288,12 @@ function addRectangularHotspot(): void {
     correct: true,
     feedback: '',
   };
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.hotspots.push(newHotspot);
   });
-  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+
+  updateTaskDefinition();
+
   selectHotspot(newHotspot.uuid);
 }
 
@@ -309,27 +330,31 @@ function addEllipseHotspot(): void {
     correct: true,
     feedback: '',
   };
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.hotspots.push(newHotspot);
   });
-  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+
+  updateTaskDefinition();
+
   selectHotspot(newHotspot.uuid);
 }
 
 function removeAllHotspots(): void {
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.hotspots = [];
   });
-  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+
+  updateTaskDefinition();
 }
 
 function deleteImage(): void {
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.image = {
       type: 'none',
     };
   });
-  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+
+  updateTaskDefinition();
 }
 
 function deleteSelectedHotspot(): void {
@@ -343,14 +368,15 @@ function deleteSelectedHotspot(): void {
 }
 
 function deleteHotspot(id: string): void {
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     const index = draft.hotspots.findIndex((hotspot) => hotspot.uuid === id);
     if (index === -1) {
       throw new Error('No hotspot with id ' + id + ' found.');
     }
     draft.hotspots.splice(index, 1);
   });
-  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+
+  updateTaskDefinition();
 }
 
 function changeHotspotCorrectness(): void {
@@ -361,7 +387,7 @@ function changeHotspotCorrectness(): void {
     return;
   }
 
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     const hotspot = draft.hotspots.find(
       (hotspot) => hotspot.uuid === selectedHotspotId.value
     );
@@ -370,7 +396,7 @@ function changeHotspotCorrectness(): void {
     }
   });
 
-  taskEditor!.performEdit({ newTaskDefinition, undoBatch: {} });
+  updateTaskDefinition();
 }
 
 function setHotspotFeedback(feedback: string): void {
@@ -383,7 +409,7 @@ function setHotspotFeedback(feedback: string): void {
     return;
   }
 
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     const hotspot = draft.hotspots.find(
       (hotspot) => hotspot.uuid === selectedHotspotId.value
     );
@@ -392,10 +418,7 @@ function setHotspotFeedback(feedback: string): void {
     }
   });
 
-  taskEditor!.performEdit({
-    newTaskDefinition,
-    undoBatch: 'task.hotspots.feedback' + selectedHotspotId.value,
-  });
+  updateTaskDefinition('task.hotspots.feedback' + selectedHotspotId.value);
 }
 
 function selectHotspot(id: string): void {
@@ -408,7 +431,7 @@ function dragHotspot(
   xFraction: number,
   yFraction: number
 ): void {
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     const hotspot = draft.hotspots.find((h) => h.uuid === hotspotId);
     if (!hotspot) {
       throw new Error(`Hotspot with id ${hotspotId} not found`);
@@ -416,7 +439,8 @@ function dragHotspot(
     hotspot.x = xFraction;
     hotspot.y = yFraction;
   });
-  taskEditor!.performEdit({ newTaskDefinition, undoBatch: { dragId } });
+
+  updateTaskDefinition(dragId);
 }
 
 function resizeHotspot(
@@ -427,7 +451,7 @@ function resizeHotspot(
   width: number,
   height: number
 ): void {
-  const newTaskDefinition = produce(props.taskDefinition, (draft) => {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     const hotspot = draft.hotspots.find((h) => h.uuid === hotspotId);
     if (!hotspot) {
       throw new Error(`Hotspot with id ${hotspotId} not found`);
@@ -437,7 +461,8 @@ function resizeHotspot(
     hotspot.width = width;
     hotspot.height = height;
   });
-  taskEditor!.performEdit({ newTaskDefinition, undoBatch: { dragId } });
+
+  updateTaskDefinition(dragId);
 }
 </script>
 
