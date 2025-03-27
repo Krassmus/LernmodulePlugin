@@ -41,14 +41,6 @@
       </div>
     </div>
   </div>
-  <pre :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }">{{
-    {
-      clicks,
-      points,
-      clickedHotspots,
-      clickHistory,
-    }
-  }}</pre>
 </template>
 
 <script setup lang="ts">

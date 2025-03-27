@@ -10,7 +10,7 @@
               @click="addRectangularHotspot"
               type="button"
               class="hotspot-button"
-              :title="$gettext('Füge rechteckigen Hotspot hinzu')"
+              :title="$gettext('Rechteckigen Hotspot hinzufügen')"
             >
               <svg
                 width="20"
@@ -34,7 +34,7 @@
               @click="addEllipseHotspot"
               type="button"
               class="hotspot-button"
-              :title="$gettext('Füge runden Hotspot hinzu')"
+              :title="$gettext('Runden Hotspot hinzufügen')"
             >
               <svg
                 width="20"
