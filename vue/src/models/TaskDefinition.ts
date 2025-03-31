@@ -335,10 +335,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'FindTheHotspots',
         image: {
-          type: 'image',
-          uuid: v4(),
-          file_id: '',
-          altText: '',
+          type: 'none',
         },
         hotspots: [],
         allowedClicks: 0,

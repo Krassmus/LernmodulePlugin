@@ -4,8 +4,11 @@
       <fieldset>
         <legend>{{ $gettext('Find the Hotspots') }}</legend>
 
-        <div class="find-the-hotspots-editor">
-          <div v-if="taskDefinition.image.type === 'image'" class="button-bar">
+        <div
+          v-if="taskDefinition.image.type === 'image'"
+          class="find-the-hotspots-editor"
+        >
+          <div class="button-bar">
             <button
               @click="addRectangularHotspot"
               type="button"
@@ -65,12 +68,15 @@
           </div>
           <ImageWithHotspots
             ref="imageWithHotspotsRef"
-            v-if="taskDefinition.image.type === 'image'"
             :hotspots="taskDefinition.hotspots"
             :image="taskDefinition.image"
           />
-          <FileUpload v-else @fileUploaded="onImageUploaded" />
         </div>
+
+        <label v-else>
+          {{ $gettext('Neues Bild hochladen') }}
+          <FileUpload @file-uploaded="onImageUploaded" :accept="'image/*'" />
+        </label>
       </fieldset>
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Einstellungen') }}</legend>
