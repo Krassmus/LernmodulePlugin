@@ -225,7 +225,7 @@ export default defineComponent({
                 {
                   name: 'offset',
                   options: {
-                    offset: [0, 8],
+                    offset: [0, 14],
                   },
                 },
               ],
@@ -585,74 +585,61 @@ button.hotspot {
     border-color: #0a78d1;
   }
 
-  .resize-handle {
-    $size: 8px;
-    $cornerOffset: calc($size - $hotspotBorderWidth);
+  &.selected .resize-handle {
+    $size: 12px;
     position: absolute;
-    background: transparent;
+    background: white;
+    border: 1px solid #0a78d1;
+    width: $size;
+    height: $size;
+    box-sizing: border-box;
+
+    &.top-left {
+      cursor: nwse-resize;
+      top: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
+      left: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
+    }
 
     &.top {
       cursor: ns-resize;
-      top: -$hotspotBorderWidth;
-      left: $cornerOffset;
-      right: $cornerOffset;
-      height: $size;
+      top: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
+      left: calc(50% - $size / 2);
     }
 
     &.top-right {
       cursor: nesw-resize;
-      top: -$hotspotBorderWidth;
-      right: -$hotspotBorderWidth;
-      height: $size;
-      width: $size;
+      top: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
+      right: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
     }
 
     &.right {
       cursor: ew-resize;
-      top: $cornerOffset;
-      bottom: $cornerOffset;
-      right: -$hotspotBorderWidth;
-      width: $size;
+      top: calc(50% - $size / 2);
+      right: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
     }
 
     &.bottom-right {
       cursor: nwse-resize;
-      bottom: -$hotspotBorderWidth;
-      right: -$hotspotBorderWidth;
-      width: $size;
-      height: $size;
+      bottom: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
+      right: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
     }
 
     &.bottom {
       cursor: ns-resize;
-      bottom: -$hotspotBorderWidth;
-      left: $cornerOffset;
-      right: $cornerOffset;
-      height: $size;
+      bottom: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
+      left: calc(50% - $size / 2);
     }
 
     &.bottom-left {
       cursor: nesw-resize;
-      bottom: -$hotspotBorderWidth;
-      left: -$hotspotBorderWidth;
-      width: $size;
-      height: $size;
+      bottom: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
+      left: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
     }
 
     &.left {
       cursor: ew-resize;
-      top: $cornerOffset;
-      bottom: $cornerOffset;
-      left: -$hotspotBorderWidth;
-      width: $size;
-    }
-
-    &.top-left {
-      cursor: nwse-resize;
-      top: -$hotspotBorderWidth;
-      left: -$hotspotBorderWidth;
-      height: $size;
-      width: $size;
+      top: calc(50% - $size / 2);
+      left: calc(0% - $size / 2 - $hotspotBorderWidth / 2);
     }
   }
 }
@@ -685,7 +672,7 @@ button.hotspot {
   > .arrow::before {
     visibility: visible;
     content: '';
-    transform: rotate(45deg);
+    transform: translateX(-$hotspotBorderWidth) rotate(45deg);
   }
 
   &[data-popper-placement^='top'] > .arrow {
