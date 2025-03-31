@@ -68,12 +68,12 @@
     >
       <div style="display: flex; margin-bottom: 0; align-items: flex-start">
         <label style="display: flex; margin-bottom: 0; align-items: center">
-          {{ $gettext('Korrekt: ') }}
           <input
             :checked="selectedHotspot?.correct"
             type="checkbox"
             @change="editor!.changeHotspotCorrectness($event.target.checked)"
           />
+          {{ $gettext('Korrekt') }}
         </label>
         <button
           type="button"
@@ -689,11 +689,11 @@ button.hotspot {
   }
 
   &[data-popper-placement^='top'] > .arrow {
-    bottom: -4px;
+    bottom: -5px;
   }
 
   &[data-popper-placement^='bottom'] > .arrow {
-    top: -4px;
+    top: -7px;
   }
 
   &[data-popper-placement^='left'] > .arrow {
@@ -702,6 +702,16 @@ button.hotspot {
 
   &[data-popper-placement^='right'] > .arrow {
     left: -4px;
+  }
+
+  &[data-popper-placement^='top'] > .arrow:before {
+    border-bottom: #0a78d1 2px solid;
+    border-right: #0a78d1 2px solid;
+  }
+
+  &[data-popper-placement^='bottom'] > .arrow:before {
+    border-top: #0a78d1 2px solid;
+    border-left: #0a78d1 2px solid;
   }
 }
 </style>
