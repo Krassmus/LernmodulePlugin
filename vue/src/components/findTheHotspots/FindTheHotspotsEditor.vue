@@ -82,6 +82,36 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
+          {{ $gettext('Anzahl zu findender Hotspots:') }}
+          <input
+            v-model="modelTaskDefinition.hotspotsToFind"
+            @input="updateTaskDefinition('taskDefinition.hotspotsToFind')"
+            type="number"
+            :min="1"
+            :max="numberOfCorrectHotspots"
+          />
+        </label>
+
+        <label>
+          <input v-model="limitAnswers" type="checkbox" />
+          {{ $gettext('Anzahl erlaubter Klicks limitieren') }}
+          <input
+            v-model="allowedClicks"
+            :disabled="!limitAnswers"
+            :class="{ 'setting-disabled': !limitAnswers }"
+            @input="updateAllowedClicksInTaskDefinition"
+            type="number"
+            :min="modelTaskDefinition.hotspotsToFind"
+          />
+        </label>
+      </fieldset>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Beschriftungen') }}</legend>
+      </fieldset>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Feedback') }}</legend>
+
+        <label>
           {{
             $gettext(
               'Ergebnismitteilung (mögliche Variablen :correct und :total):'
@@ -125,30 +155,6 @@
               )
             "
             type="text"
-          />
-        </label>
-
-        <label>
-          {{ $gettext('Anzahl zu findender Hotspots:') }}
-          <input
-            v-model="modelTaskDefinition.hotspotsToFind"
-            @input="updateTaskDefinition('taskDefinition.hotspotsToFind')"
-            type="number"
-            :min="1"
-            :max="numberOfCorrectHotspots"
-          />
-        </label>
-
-        <label>
-          <input v-model="limitAnswers" type="checkbox" />
-          {{ $gettext('Anzahl erlaubter Klicks limitieren') }}
-          <input
-            v-model="allowedClicks"
-            :disabled="!limitAnswers"
-            :class="{ 'setting-disabled': !limitAnswers }"
-            @input="updateAllowedClicksInTaskDefinition"
-            type="number"
-            :min="modelTaskDefinition.hotspotsToFind"
           />
         </label>
       </fieldset>
