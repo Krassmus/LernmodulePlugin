@@ -107,6 +107,15 @@
       </fieldset>
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+        <label>
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.retryButton"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            type="text"
+          />
+        </label>
       </fieldset>
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Feedback') }}</legend>
