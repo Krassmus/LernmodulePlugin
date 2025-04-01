@@ -189,37 +189,16 @@ const props = defineProps({
   },
 });
 
+// State
 const modelTaskDefinition = ref<FindTheHotspotsTask>(
   cloneDeep(props.taskDefinition)
 );
-
-watch(
-  () => props.taskDefinition,
-  (newTaskDefinition) => {
-    modelTaskDefinition.value = cloneDeep(newTaskDefinition);
-  },
-  { deep: true }
-);
-
+const selectedHotspotId = ref<string | undefined>(undefined);
 const limitAnswers = ref<boolean>(false);
 const allowedClicks = ref<number | null>(null);
-
-watch(limitAnswers, (newValue) => {
-  if (newValue) {
-    allowedClicks.value = modelTaskDefinition.value.hotspotsToFind;
-  } else {
-    allowedClicks.value = null;
-  }
-  updateAllowedClicksInTaskDefinition();
-});
-
-const selectedHotspotId = ref<string | undefined>(undefined);
-
-const numberOfCorrectHotspots = computed(
-  () =>
-    modelTaskDefinition.value.hotspots.filter((hotspot) => hotspot.correct)
-      .length
-);
+const imageWithHotspotsRef = ref<
+  InstanceType<typeof ImageWithHotspots> | undefined
+>();
 
 provide(findTheHotspotsEditorStateSymbol, {
   selectedHotspotId,
@@ -231,7 +210,31 @@ provide(findTheHotspotsEditorStateSymbol, {
   resizeHotspot,
 });
 
-function updateTaskDefinition(undoBatch?: unknown) {
+watch(
+  () => props.taskDefinition,
+  (newTaskDefinition) => {
+    modelTaskDefinition.value = cloneDeep(newTaskDefinition);
+  },
+  { deep: true }
+);
+
+watch(limitAnswers, (newValue) => {
+  if (newValue) {
+    allowedClicks.value = modelTaskDefinition.value.hotspotsToFind;
+  } else {
+    allowedClicks.value = null;
+  }
+  updateAllowedClicksInTaskDefinition();
+});
+
+// Computed properties
+const numberOfCorrectHotspots = computed(
+  () =>
+    modelTaskDefinition.value.hotspots.filter((hotspot) => hotspot.correct)
+      .length
+);
+
+function updateTaskDefinition(undoBatch?: unknown): void {
   // Synchronize state modelTaskDefinition -> taskDefinition.
   console.log('update task definition');
   taskEditor!.performEdit({
@@ -240,7 +243,7 @@ function updateTaskDefinition(undoBatch?: unknown) {
   });
 }
 
-function updateAllowedClicksInTaskDefinition() {
+function updateAllowedClicksInTaskDefinition(): void {
   modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.allowedClicks = allowedClicks.value ? allowedClicks.value : 0;
   });
@@ -260,9 +263,6 @@ function onImageUploaded(file: FileRef): void {
   updateTaskDefinition();
 }
 
-const imageWithHotspotsRef = ref<
-  InstanceType<typeof ImageWithHotspots> | undefined
->();
 function addRectangularHotspot(): void {
   const imgEl = document.querySelector('.hotspots-image');
   const imageWidthPixels = imgEl ? imgEl.clientWidth : 10;
