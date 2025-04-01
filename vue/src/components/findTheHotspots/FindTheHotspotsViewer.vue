@@ -51,6 +51,7 @@ import {
   provide,
   ref,
   defineEmits,
+  watch,
 } from 'vue';
 import { FindTheHotspotsTask } from '@/models/FindTheHotspotsTask';
 import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
@@ -68,6 +69,14 @@ provide(findTheHotspotsViewerStateSymbol, {
   clickHotspot,
   clickBackground,
 });
+
+watch(
+  () => props.task,
+  () => {
+    resetViewerState();
+  },
+  { deep: true }
+);
 
 defineEmits(['updateAttempt']);
 
@@ -122,6 +131,13 @@ const showRetryButton = computed(() => {
 });
 
 // Functions
+function resetViewerState(): void {
+  points.value = 0;
+  clicks.value = 0;
+  clickedHotspots.value = [];
+  clickHistory.value = [];
+}
+
 function clickHotspot(id: string | undefined, x: number, y: number): void {
   if (!editable.value) return;
 
@@ -182,10 +198,7 @@ function clickBackground(x: number, y: number): void {
 }
 
 function onClickRetry(): void {
-  points.value = 0;
-  clicks.value = 0;
-  clickedHotspots.value = [];
-  clickHistory.value = [];
+  resetViewerState();
 }
 </script>
 
