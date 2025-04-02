@@ -95,7 +95,6 @@
       <div class="arrow" data-popper-arrow></div>
     </div>
   </div>
-  <pre>{{ selectedHotspot }}</pre>
 </template>
 
 <script lang="ts">
