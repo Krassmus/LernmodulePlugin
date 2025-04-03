@@ -308,10 +308,8 @@ watch(
 watch(numberOfCorrectHotspots, (newValue) => {
   // Reset settings if numberOfCorrectHotspots changes
   limitHotspotsToFind.value = false;
-  updateHotspotsToFindInTaskDefinition();
-
   limitClicks.value = false;
-  updateAllowedClicksInTaskDefinition();
+  updateHotspotsToFindInTaskDefinition();
 });
 
 function updateTaskDefinition(undoBatch?: unknown): void {
@@ -343,9 +341,7 @@ function updateAllowedClicksInTaskDefinition(): void {
       modelTaskDefinition.value = produce(
         modelTaskDefinition.value,
         (draft) => {
-          draft.allowedClicks = allowedClicks.value
-            ? allowedClicks.value
-            : numberOfCorrectHotspots.value;
+          draft.allowedClicks = allowedClicks.value as number;
         }
       );
     } else {
@@ -359,15 +355,13 @@ function updateAllowedClicksInTaskDefinition(): void {
       modelTaskDefinition.value = produce(
         modelTaskDefinition.value,
         (draft) => {
-          draft.allowedClicks = allowedClicks.value
-            ? allowedClicks.value
-            : numberOfHotspotsToFind.value;
+          draft.allowedClicks = allowedClicks.value as number;
         }
       );
     }
   }
 
-  updateTaskDefinition('taskDefinition.allowedClicks');
+  updateTaskDefinition();
 }
 
 function updateHotspotsToFindInTaskDefinition(): void {
@@ -383,7 +377,7 @@ function updateHotspotsToFindInTaskDefinition(): void {
       hotspotsToFind.value &&
       hotspotsToFind.value <= numberOfCorrectHotspots.value
     ) {
-      // We already have a valid value, set it in the taskDefinition
+      // We already have a valid value, let's set it in the taskDefinition
       modelTaskDefinition.value = produce(
         modelTaskDefinition.value,
         (draft) => {
@@ -393,7 +387,7 @@ function updateHotspotsToFindInTaskDefinition(): void {
         }
       );
     } else {
-      // The value in hotspotsToFind is not valid, make it valid
+      // The value in hotspotsToFind is not valid, let's make it valid
       hotspotsToFind.value = Math.max(numberOfCorrectHotspots.value, 1);
       modelTaskDefinition.value = produce(
         modelTaskDefinition.value,
@@ -406,7 +400,7 @@ function updateHotspotsToFindInTaskDefinition(): void {
     }
   }
 
-  updateTaskDefinition('taskDefinition.hotspotsToFind');
+  updateTaskDefinition();
 
   // If we changed the number of hotspotsToFind we also need to update
   // the allowed clicks limit to make sure the task is still valid
