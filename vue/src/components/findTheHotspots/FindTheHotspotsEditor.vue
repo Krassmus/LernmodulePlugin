@@ -4,8 +4,11 @@
       <fieldset>
         <legend>{{ $gettext('Find the Hotspots') }}</legend>
 
-        <div class="find-the-hotspots-editor">
-          <div v-if="taskDefinition.image.type === 'image'" class="button-bar">
+        <div
+          v-if="taskDefinition.image.type === 'image'"
+          class="find-the-hotspots-editor"
+        >
+          <div class="button-bar">
             <button
               @click="addRectangularHotspot"
               type="button"
@@ -65,15 +68,94 @@
           </div>
           <ImageWithHotspots
             ref="imageWithHotspotsRef"
-            v-if="taskDefinition.image.type === 'image'"
             :hotspots="taskDefinition.hotspots"
             :image="taskDefinition.image"
           />
-          <FileUpload v-else @fileUploaded="onImageUploaded" />
         </div>
+
+        <label v-else>
+          {{ $gettext('Neues Bild hochladen') }}
+          <FileUpload @file-uploaded="onImageUploaded" :accept="'image/*'" />
+        </label>
       </fieldset>
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Einstellungen') }}</legend>
+        <template v-if="numberOfCorrectHotspots">
+          <label style="margin-bottom: 0"> </label>
+          <label style="margin-bottom: 0">
+            <span style="display: flex; align-items: center; gap: 0.25em">
+              <input
+                v-model="limitHotspotsToFind"
+                @change="updateHotspotsToFindInTaskDefinition"
+                type="checkbox"
+              />
+              {{ $gettext('Anzahl zu findender Hotspots begrenzen auf:') }}
+              <input
+                v-model="hotspotsToFind"
+                style="
+                  margin-bottom: 0.25em;
+                  width: 4em;
+                  padding: 0 0.25em 0 0.25em;
+                "
+                :disabled="!limitHotspotsToFind"
+                :class="{ 'setting-disabled': !limitHotspotsToFind }"
+                @change="updateHotspotsToFindInTaskDefinition"
+                type="number"
+                :min="1"
+                :max="numberOfCorrectHotspots"
+              />
+            </span>
+          </label>
+
+          <label>
+            <span style="display: flex; align-items: center; gap: 0.25em">
+              <input
+                v-model="limitClicks"
+                @change="updateAllowedClicksInTaskDefinition"
+                type="checkbox"
+              />
+              {{ $gettext('Anzahl erlaubter Klicks begrenzen auf: ') }}
+              <input
+                v-model="allowedClicks"
+                style="
+                  margin-bottom: 0.25em;
+                  width: 4em;
+                  padding: 0 0.25em 0 0.25em;
+                "
+                :disabled="!limitClicks"
+                :class="{ 'setting-disabled': !limitClicks }"
+                @change="updateAllowedClicksInTaskDefinition"
+                type="number"
+                :min="
+                  Math.max(
+                    modelTaskDefinition.hotspotsToFind
+                      ? modelTaskDefinition.hotspotsToFind
+                      : numberOfCorrectHotspots,
+                    1
+                  )
+                "
+              />
+            </span>
+          </label>
+        </template>
+        <label v-else>{{
+          $gettext('Fügen Sie mindestens einen korrekten Hotspot hinzu.')
+        }}</label>
+      </fieldset>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+        <label>
+          {{ $gettext('Text für Wiederholen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.retryButton"
+            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            type="text"
+          />
+        </label>
+      </fieldset>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Feedback') }}</legend>
 
         <label>
           {{
@@ -121,33 +203,24 @@
             type="text"
           />
         </label>
-
-        <label>
-          {{ $gettext('Anzahl zu findender Hotspots:') }}
-          <input
-            v-model="modelTaskDefinition.hotspotsToFind"
-            @input="updateTaskDefinition('taskDefinition.hotspotsToFind')"
-            type="number"
-            :min="1"
-            :max="numberOfCorrectHotspots"
-          />
-        </label>
-
-        <label>
-          <input v-model="limitAnswers" type="checkbox" />
-          {{ $gettext('Anzahl erlaubter Klicks limitieren') }}
-          <input
-            v-model="allowedClicks"
-            :disabled="!limitAnswers"
-            :class="{ 'setting-disabled': !limitAnswers }"
-            @input="updateAllowedClicksInTaskDefinition"
-            type="number"
-            :min="modelTaskDefinition.hotspotsToFind"
-          />
-        </label>
       </fieldset>
     </form>
   </div>
+  <pre
+    v-if="debug && true"
+    :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
+    >{{
+      {
+        numberOfCorrectHotspots,
+        limitHotspotsToFind,
+        hotspotsToFind,
+        limitClicks,
+        allowedClicks,
+        numberOfClicksAllowed,
+        numberOfHotspotsToFind,
+      }
+    }}</pre
+  >
 </template>
 
 <script setup lang="ts">
@@ -183,37 +256,20 @@ const props = defineProps({
   },
 });
 
+const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
+
+// State
 const modelTaskDefinition = ref<FindTheHotspotsTask>(
   cloneDeep(props.taskDefinition)
 );
-
-watch(
-  () => props.taskDefinition,
-  (newTaskDefinition) => {
-    modelTaskDefinition.value = cloneDeep(newTaskDefinition);
-  },
-  { deep: true }
-);
-
-const limitAnswers = ref<boolean>(false);
-const allowedClicks = ref<number | null>(null);
-
-watch(limitAnswers, (newValue) => {
-  if (newValue) {
-    allowedClicks.value = modelTaskDefinition.value.hotspotsToFind;
-  } else {
-    allowedClicks.value = null;
-  }
-  updateAllowedClicksInTaskDefinition();
-});
-
 const selectedHotspotId = ref<string | undefined>(undefined);
-
-const numberOfCorrectHotspots = computed(
-  () =>
-    modelTaskDefinition.value.hotspots.filter((hotspot) => hotspot.correct)
-      .length
-);
+const limitHotspotsToFind = ref<boolean>(false);
+const hotspotsToFind = ref<number | null>(null);
+const limitClicks = ref<boolean>(false);
+const allowedClicks = ref<number | null>(null);
+const imageWithHotspotsRef = ref<
+  InstanceType<typeof ImageWithHotspots> | undefined
+>();
 
 provide(findTheHotspotsEditorStateSymbol, {
   selectedHotspotId,
@@ -225,7 +281,38 @@ provide(findTheHotspotsEditorStateSymbol, {
   resizeHotspot,
 });
 
-function updateTaskDefinition(undoBatch?: unknown) {
+// Computed properties
+const numberOfCorrectHotspots = computed(
+  () =>
+    modelTaskDefinition.value.hotspots.filter((hotspot) => hotspot.correct)
+      .length
+);
+
+const numberOfHotspotsToFind = computed(
+  () => modelTaskDefinition.value.hotspotsToFind
+);
+
+const numberOfClicksAllowed = computed(
+  () => modelTaskDefinition.value.allowedClicks
+);
+
+// Watchers
+watch(
+  () => props.taskDefinition,
+  (newTaskDefinition, oldTaskDefinition) => {
+    modelTaskDefinition.value = cloneDeep(newTaskDefinition);
+  },
+  { deep: true }
+);
+
+watch(numberOfCorrectHotspots, (newValue) => {
+  // Reset settings if numberOfCorrectHotspots changes
+  limitHotspotsToFind.value = false;
+  limitClicks.value = false;
+  updateHotspotsToFindInTaskDefinition();
+});
+
+function updateTaskDefinition(undoBatch?: unknown): void {
   // Synchronize state modelTaskDefinition -> taskDefinition.
   console.log('update task definition');
   taskEditor!.performEdit({
@@ -234,11 +321,90 @@ function updateTaskDefinition(undoBatch?: unknown) {
   });
 }
 
-function updateAllowedClicksInTaskDefinition() {
-  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
-    draft.allowedClicks = allowedClicks.value ? allowedClicks.value : 0;
-  });
-  updateTaskDefinition('taskDefinition.allowedClicks');
+function updateAllowedClicksInTaskDefinition(): void {
+  if (!limitClicks.value) {
+    // If the setting is not checked we set the allowedClicks value to 0 which means unlimited clicks
+    allowedClicks.value = null;
+    modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+      draft.allowedClicks = 0;
+    });
+  } else {
+    // If the setting is checked we need to make sure we set a valid value for the limit
+    if (
+      allowedClicks.value &&
+      allowedClicks.value >=
+        (numberOfHotspotsToFind.value
+          ? numberOfHotspotsToFind.value
+          : numberOfCorrectHotspots.value)
+    ) {
+      // We already have a valid value, set it in the taskDefinition
+      modelTaskDefinition.value = produce(
+        modelTaskDefinition.value,
+        (draft) => {
+          draft.allowedClicks = allowedClicks.value as number;
+        }
+      );
+    } else {
+      // The value in allowedClicks is not valid, make it valid
+      allowedClicks.value = Math.max(
+        numberOfHotspotsToFind.value
+          ? numberOfHotspotsToFind.value
+          : numberOfCorrectHotspots.value,
+        1
+      );
+      modelTaskDefinition.value = produce(
+        modelTaskDefinition.value,
+        (draft) => {
+          draft.allowedClicks = allowedClicks.value as number;
+        }
+      );
+    }
+  }
+
+  updateTaskDefinition();
+}
+
+function updateHotspotsToFindInTaskDefinition(): void {
+  if (!limitHotspotsToFind.value) {
+    // If the setting is not checked we set the hotspotsToFind value to 0 which means all
+    hotspotsToFind.value = null;
+    modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+      draft.hotspotsToFind = 0;
+    });
+  } else {
+    // If the setting is checked we need to make sure we set a valid value for the limit
+    if (
+      hotspotsToFind.value &&
+      hotspotsToFind.value <= numberOfCorrectHotspots.value
+    ) {
+      // We already have a valid value, let's set it in the taskDefinition
+      modelTaskDefinition.value = produce(
+        modelTaskDefinition.value,
+        (draft) => {
+          draft.hotspotsToFind = hotspotsToFind.value
+            ? hotspotsToFind.value
+            : numberOfCorrectHotspots.value;
+        }
+      );
+    } else {
+      // The value in hotspotsToFind is not valid, let's make it valid
+      hotspotsToFind.value = Math.max(numberOfCorrectHotspots.value, 1);
+      modelTaskDefinition.value = produce(
+        modelTaskDefinition.value,
+        (draft) => {
+          draft.hotspotsToFind = hotspotsToFind.value
+            ? hotspotsToFind.value
+            : numberOfCorrectHotspots.value;
+        }
+      );
+    }
+  }
+
+  updateTaskDefinition();
+
+  // If we changed the number of hotspotsToFind we also need to update
+  // the allowed clicks limit to make sure the task is still valid
+  updateAllowedClicksInTaskDefinition();
 }
 
 function onImageUploaded(file: FileRef): void {
@@ -254,9 +420,6 @@ function onImageUploaded(file: FileRef): void {
   updateTaskDefinition();
 }
 
-const imageWithHotspotsRef = ref<
-  InstanceType<typeof ImageWithHotspots> | undefined
->();
 function addRectangularHotspot(): void {
   const imgEl = document.querySelector('.hotspots-image');
   const imageWidthPixels = imgEl ? imgEl.clientWidth : 10;

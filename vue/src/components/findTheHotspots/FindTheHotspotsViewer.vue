@@ -51,6 +51,7 @@ import {
   provide,
   ref,
   defineEmits,
+  watch,
 } from 'vue';
 import { FindTheHotspotsTask } from '@/models/FindTheHotspotsTask';
 import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
@@ -69,6 +70,14 @@ provide(findTheHotspotsViewerStateSymbol, {
   clickBackground,
 });
 
+watch(
+  () => props.task,
+  () => {
+    resetViewerState();
+  },
+  { deep: true }
+);
+
 defineEmits(['updateAttempt']);
 
 interface Click {
@@ -79,12 +88,13 @@ interface Click {
   feedback: string;
 }
 
+// State
 const clickHistory = ref<Click[]>([]);
-
 const points = ref<number>(0);
 const clicks = ref<number>(0);
 const clickedHotspots = ref<string[]>([]);
 
+// Computed properties
 const showResults = computed(() => clicks.value > 0);
 
 const maxPoints = computed(() => {
@@ -120,7 +130,15 @@ const showRetryButton = computed(() => {
   return !editable.value;
 });
 
-function clickHotspot(id: string | undefined, x: number, y: number) {
+// Functions
+function resetViewerState(): void {
+  points.value = 0;
+  clicks.value = 0;
+  clickedHotspots.value = [];
+  clickHistory.value = [];
+}
+
+function clickHotspot(id: string | undefined, x: number, y: number): void {
   if (!editable.value) return;
 
   console.log('Viewer: Clicked hotspot with id', id);
@@ -164,7 +182,7 @@ function clickHotspot(id: string | undefined, x: number, y: number) {
   }
 }
 
-function clickBackground(x: number, y: number) {
+function clickBackground(x: number, y: number): void {
   if (!editable.value) return;
   console.log('Viewer: Clicked background');
   clicks.value++;
@@ -179,11 +197,8 @@ function clickBackground(x: number, y: number) {
   clickHistory.value.push(click);
 }
 
-function onClickRetry() {
-  points.value = 0;
-  clicks.value = 0;
-  clickedHotspots.value = [];
-  clickHistory.value = [];
+function onClickRetry(): void {
+  resetViewerState();
 }
 </script>
 
