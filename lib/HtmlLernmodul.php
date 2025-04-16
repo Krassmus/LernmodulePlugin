@@ -50,7 +50,7 @@ class HtmlLernmodul extends Lernmodul implements CustomLernmodul
         );
         Sidebar::Get()->addWidget($actions);
 
-        $myorigin = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+        $myorigin = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
         $myorigin .= '://'.$_SERVER['SERVER_NAME'];
 
         if ($GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
