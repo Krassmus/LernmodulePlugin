@@ -81,8 +81,7 @@
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Einstellungen') }}</legend>
         <template v-if="numberOfCorrectHotspots">
-          <label style="margin-bottom: 0"> </label>
-          <label style="margin-bottom: 0">
+          <label style="margin-bottom: 0; width: fit-content">
             <span style="display: flex; align-items: center; gap: 0.25em">
               <input
                 v-model="limitHotspotsToFind"
@@ -107,7 +106,7 @@
             </span>
           </label>
 
-          <label>
+          <label style="width: fit-content">
             <span style="display: flex; align-items: center; gap: 0.25em">
               <input
                 v-model="limitClicks"
