@@ -500,10 +500,12 @@ function removeAllHotspots(): void {
 }
 
 function deleteImage(): void {
+  // Delete the image and also remove all hotspots
   modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.image = {
       type: 'none',
     };
+    draft.hotspots = [];
   });
 
   updateTaskDefinition();
