@@ -33,8 +33,20 @@
 .button.file-office {
   @include button-with-icon(file-office, clickable, info_alt);
 }
-.button.video2 {
-  @include button-with-icon(video2, clickable, info_alt);
+.button.edit {
+  @include button-with-icon(edit, clickable, info_alt);
+}
+.button.file-video {
+  @include button-with-icon(file-video, clickable, info_alt);
+}
+.button.guestbook {
+  @include button-with-icon(guestbook, clickable, info_alt);
+}
+.button.picture {
+  @include button-with-icon(picture, clickable, info_alt);
+}
+.button.copy {
+  @include button-with-icon(copy, clickable, info_alt);
 }
 .button.block-imagemap2 {
   @include button-with-icon(block-imagemap2, clickable, info_alt);
@@ -44,6 +56,9 @@
 }
 .button.question {
   @include button-with-icon(question, clickable, info_alt);
+}
+.button.question-circle {
+  @include button-with-icon(question-circle, clickable, info_alt);
 }
 .button.item {
   @include button-with-icon(item, clickable, info_alt);
