@@ -97,9 +97,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\PairingBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\SequencingBlock::class;
-        if (Config::get()->LERNMODULE_PREVIEW) {
-            $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheHotspotsBlock::class;
-        }
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheHotspotsBlock::class;
 
         return $otherBlockTypes;
     }
