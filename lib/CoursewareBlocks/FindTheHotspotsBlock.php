@@ -27,7 +27,7 @@ class FindTheHotspotsBlock extends BlockType
     {
         return dgettext(
             'lernmoduleplugin',
-            'Eine Lernaufgabe,.' // TODO
+            'Eine Lernaufgabe, bei der durch Klicken auf ein Bild bestimmte Bereiche, sogenannte Hotspots, gefunden werden sollen.'
         );
     }
 

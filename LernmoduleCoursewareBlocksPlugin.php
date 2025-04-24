@@ -49,12 +49,15 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         \PageLayout::addBodyElements($script);
 
         // Add CSS to set the correct icons for the blocks in the block adder
-        $this->addBlockIconCSS('mark-the-words', 'tan3');
-        $this->addBlockIconCSS('drag-the-words', 'tan3');
-        $this->addBlockIconCSS('question', 'question');
+        $this->addBlockIconCSS('drag-the-words', 'edit');
         $this->addBlockIconCSS('fill-in-the-blanks', 'file-office');
-        $this->addBlockIconCSS('memory', 'content2');
-        $this->addBlockIconCSS('find-the-hotspots', 'content2');
+        $this->addBlockIconCSS('find-the-hotspots', 'block-imagemap2');
+        $this->addBlockIconCSS('mark-the-words', 'guestbook');
+        $this->addBlockIconCSS('memory', 'tan3');
+        $this->addBlockIconCSS('lmb-interactive-video', 'file-video');
+        $this->addBlockIconCSS('pairing', 'copy');
+        $this->addBlockIconCSS('sequencing', 'picture');
+        $this->addBlockIconCSS('question', 'question');
         $this->addStylesheet('assets/courseware-block/icons-variables.scss');
     }
 
