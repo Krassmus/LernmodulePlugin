@@ -20,7 +20,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.21.1",
     "prettier": "^2.8.3",
-    "vue": "^2.6.14",
+    "vue": "^3.5.12",
     "vue-custom-range-slider": "^0.2.3",
     "vue-template-compiler": "^2.6.14"
   },
@@ -33,6 +33,6 @@
   "dependencies": {
     "axios": "^0.21.4",
     "iframe-resizer": "4.3.5",
-    "vuex": "^3.6.2"
+    "vuex": "^4.1.0"
   }
 }
