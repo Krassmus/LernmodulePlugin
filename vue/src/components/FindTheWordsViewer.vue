@@ -68,9 +68,10 @@ function drawMatrix() {
   const canvas = document.getElementById('c') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d');
   if (ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = 'bold 24px serif';
-    ctx.textAlign = 'center'; // set text alignment to center
-    ctx.textBaseline = 'middle'; // set text baseline to middle
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     for (let x = 0; x < 10; x++) {
       for (let y = 0; y < 10; y++) {
         ctx.strokeRect(x * 64, y * 64, 64, 64);
