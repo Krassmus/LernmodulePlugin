@@ -10,7 +10,11 @@
       <span v-for="letter in alphabet" :key="letter">{{ letter }}</span>
     </div>
 
-    <canvas id="c" />
+    <canvas
+      id="c"
+      width="640"
+      height="640"
+    />
   </div>
 </template>
 
@@ -61,14 +65,13 @@ function drawMatrix() {
   const canvas = document.getElementById('c') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d');
   if (ctx) {
-    canvas.width = 720;
-    canvas.height = 800;
-
-    ctx.font = 'bold 48px serif';
-
-    for (let i = 0; i < 10; i++) {
-      for (let j = 0; j < 10; j++) {
-        ctx.fillText(randomLetter(), j * 72, 40 + i * 72);
+    ctx.font = 'bold 24px serif';
+    ctx.textAlign = 'center'; // set text alignment to center
+    ctx.textBaseline = 'middle'; // set text baseline to middle
+    for (let x = 0; x < 10; x++) {
+      for (let y = 0; y < 10; y++) {
+        ctx.strokeRect(x * 64, y * 64, 64, 64);
+        ctx.fillText(randomLetter(), x * 64 + 32, y * 64 + 32);
       }
     }
   }
