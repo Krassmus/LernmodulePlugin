@@ -14,6 +14,9 @@
       id="c"
       width="640"
       height="640"
+      @pointerdown.stop="onPointerdownCanvas($event)"
+      @pointermove.stop="onPointermoveCanvas($event)"
+      @pointerup.stop="onPointerupCanvas($event)"
     />
   </div>
 </template>
@@ -75,6 +78,34 @@ function drawMatrix() {
       }
     }
   }
+}
+
+function onPointerdownCanvas(event: PointerEvent) {
+  console.log('Pointer Down');
+  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const cellX = Math.floor(x / 64);
+  const cellY = Math.floor(y / 64);
+  console.log([cellX, cellY]);
+}
+
+function onPointermoveCanvas(event: PointerEvent) {
+  console.log('Pointer Move');
+  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const cellX = Math.floor(x / 64);
+  const cellY = Math.floor(y / 64);
+  console.log([cellX, cellY]);
+}
+
+function onPointerupCanvas(event: PointerEvent) {
+  console.log('Pointer Up');
+  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d');
 }
 
 // Call the function to draw the matrix
