@@ -8,6 +8,11 @@
           @input="onInputWords($event.target.value)"
           type="text"
         />
+        <input
+          v-model="modelTaskDefinition.alphabet"
+          @input="onInputAlphabet($event.target.value)"
+          type="text"
+        />
       </fieldset>
 
       <fieldset class="collapsable collapsed">
@@ -45,10 +50,20 @@ const modelTaskDefinition = ref<FindTheWordsTask>(
 );
 
 function onInputWords(words: string): void {
-  console.log('add word', words);
-
   modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.words = words;
+  });
+
+  // Synchronize state modelTaskDefinition -> taskDefinition.
+  console.log('update task definition');
+  taskEditor!.performEdit({
+    newTaskDefinition: cloneDeep(modelTaskDefinition.value),
+  });
+}
+
+function onInputAlphabet(alphabet: string): void {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+    draft.alphabet = alphabet;
   });
 
   // Synchronize state modelTaskDefinition -> taskDefinition.

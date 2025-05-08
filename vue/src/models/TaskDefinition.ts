@@ -92,6 +92,7 @@ export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
   words: z.string(),
+  alphabet: z.string(),
 });
 export type FindTheWordsTask = z.infer<typeof findTheWordsTaskSchema>;
 
@@ -353,6 +354,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'FindTheWords',
         words: 'apple, banana, orange',
+        alphabet: '',
       };
     case 'MarkTheWords':
       return {

@@ -1,6 +1,7 @@
 <template>
   <div class="stud5p-task">
     <div v-for="word in words" :key="word">{{ word }}</div>
+    <span v-for="letter in alphabet" :key="letter">{{ letter }}</span>
   </div>
 </template>
 
@@ -19,6 +20,13 @@ const props = defineProps({
 const words = computed(() => {
   if (props.task?.words) {
     return props.task.words.split(',');
+  }
+  return [];
+});
+
+const alphabet = computed(() => {
+  if (props.task?.alphabet) {
+    return props.task.alphabet.split('').filter((char) => char.match(/\p{L}/u));
   }
   return [];
 });
