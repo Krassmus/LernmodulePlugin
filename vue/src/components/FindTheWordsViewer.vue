@@ -19,11 +19,22 @@
       @pointerup.stop="onPointerupCanvas($event)"
     />
   </div>
+
+  <pre>{{ dragState }}</pre>
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, onMounted, PropType, watch } from 'vue';
+import { computed, defineProps, onMounted, PropType, ref, watch } from 'vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
+import { v4 } from 'uuid';
+
+type DragState =
+  | {
+      type: 'drag';
+      dragId: string;
+      pointerStartPos: [number, number]; // clientX, clientY
+    }
+  | undefined;
 
 const props = defineProps({
   task: {
@@ -39,6 +50,9 @@ watch(
   },
   { deep: true }
 );
+
+// State
+const dragState = ref<DragState>();
 
 // Computed properties
 const words = computed(() => {
@@ -90,23 +104,35 @@ function onPointerdownCanvas(event: PointerEvent) {
   const cellX = Math.floor(x / 64);
   const cellY = Math.floor(y / 64);
   console.log([cellX, cellY]);
+
+  dragState.value = {
+    type: 'drag',
+    dragId: v4(),
+    pointerStartPos: [event.clientX, event.clientY],
+  };
 }
 
 function onPointermoveCanvas(event: PointerEvent) {
-  console.log('Pointer Move');
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
-  const rect = canvas.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  const cellX = Math.floor(x / 64);
-  const cellY = Math.floor(y / 64);
-  console.log([cellX, cellY]);
+  if (dragState.value) {
+    console.log('Pointer Move');
+    const canvas = document.getElementById('c') as HTMLCanvasElement;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const cellX = Math.floor(x / 64);
+    const cellY = Math.floor(y / 64);
+    console.log([cellX, cellY]);
+  }
 }
 
 function onPointerupCanvas(event: PointerEvent) {
   console.log('Pointer Up');
   const canvas = document.getElementById('c') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d');
+
+  if (dragState.value) {
+    dragState.value = undefined;
+  }
 }
 
 // Call the function to draw the matrix
