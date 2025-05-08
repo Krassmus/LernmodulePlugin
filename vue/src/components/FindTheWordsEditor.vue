@@ -1,56 +1,62 @@
 <template>
-  <form class="default">
-    <fieldset>
-      <legend>{{ $gettext('Find the Words') }}</legend>
-      <div class="h5pEditorTopPanel">
-        <input type="text" style="width: 100%" @submit="addWord" />
-        <button
-          v-text="$gettext('Wort hinzufügen')"
-          @click="addWord"
-          class="button"
-          type="button"
+  <div class="stud5p-task">
+    <form class="default" @submit.prevent>
+      <fieldset>
+        <legend>{{ $gettext('Find the Words') }}</legend>
+        <input
+          v-model="modelTaskDefinition.words"
+          @input="onInputWords($event.target.value)"
+          type="text"
         />
-      </div>
-    </fieldset>
+      </fieldset>
 
-    <fieldset class="collapsable collapsed">
-      <legend>{{ $gettext('Einstellungen') }}</legend>
-    </fieldset>
-  </form>
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Einstellungen') }}</legend>
+      </fieldset>
+    </form>
+  </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script setup lang="ts">
+import { defineProps, inject, PropType, ref } from 'vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
+import { cloneDeep } from 'lodash';
+import produce from 'immer';
 
-export default defineComponent({
-  name: 'FindTheWordsEditor',
-  props: {
-    taskDefinition: {
-      type: Object as PropType<FindTheWordsTask>,
-      required: true,
-    },
-  },
-  computed: {},
-  methods: {
-    $gettext,
+const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
 
-    addWord() {},
-
-    urlForIcon(iconName: string) {
-      return (
-        window.STUDIP.ASSETS_URL + 'images/icons/blue/' + iconName + '.svg'
-      );
-    },
+const props = defineProps({
+  taskDefinition: {
+    type: Object as PropType<FindTheWordsTask>,
+    required: true,
   },
 });
+
+const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
+
+// State
+const modelTaskDefinition = ref<FindTheWordsTask>(
+  cloneDeep(props.taskDefinition)
+);
+
+function onInputWords(words: string): void {
+  console.log('add word', words);
+
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+    draft.words = words;
+  });
+
+  // Synchronize state modelTaskDefinition -> taskDefinition.
+  console.log('update task definition');
+  taskEditor!.performEdit({
+    newTaskDefinition: cloneDeep(modelTaskDefinition.value),
+  });
+}
 </script>
 
-<style scoped>
-.h5pEditorTopPanel {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-</style>
+<style scoped></style>
