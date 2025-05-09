@@ -64,7 +64,10 @@ const words = computed(() => {
 
 const alphabet = computed(() => {
   if (props.task?.alphabet) {
-    return props.task.alphabet.split('').filter((char) => char.match(/\p{L}/u));
+    return props.task.alphabet
+      .toUpperCase()
+      .split('')
+      .filter((char) => char.match(/\p{L}/u));
   }
   return [];
 });
