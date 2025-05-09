@@ -1,26 +1,27 @@
 <template>
-  <div class="stud5p-task">
-    <div>
-      <p style="margin: 0">Words:</p>
-      <span v-for="word in words" :key="word">{{ word }}</span>
-    </div>
+  <div style="display: flex">
+    <div class="stud5p-task">
+      <div>
+        <p style="margin: 0">Words:</p>
+        <span v-for="word in words" :key="word">{{ word }}</span>
+      </div>
 
-    <div>
-      <p style="margin: 0">Alphabet:</p>
-      <span v-for="letter in alphabet" :key="letter">{{ letter }}</span>
-    </div>
+      <div>
+        <p style="margin: 0">Alphabet:</p>
+        <span v-for="letter in alphabet" :key="letter">{{ letter }}</span>
+      </div>
 
-    <canvas
-      id="c"
-      width="640"
-      height="640"
-      @pointerdown.stop="onPointerdownCanvas($event)"
-      @pointermove.stop="onPointermoveCanvas($event)"
-      @pointerup.stop="onPointerupCanvas($event)"
-    />
+      <canvas
+        id="c"
+        width="640"
+        height="640"
+        @pointerdown.stop="onPointerdownCanvas($event)"
+        @pointermove.stop="onPointermoveCanvas($event)"
+        @pointerup.stop="onPointerupCanvas($event)"
+      />
+    </div>
+    <pre>{{ dragState }}</pre>
   </div>
-
-  <pre>{{ dragState }}</pre>
 </template>
 
 <script setup lang="ts">
@@ -32,7 +33,10 @@ type DragState =
   | {
       type: 'drag';
       dragId: string;
-      pointerStartPos: [number, number]; // clientX, clientY
+      pointerStartPos: [number, number];
+      startCell: [number, number];
+      pointerCurrentPos: [number, number];
+      currentCell: [number, number];
     }
   | undefined;
 
@@ -80,6 +84,9 @@ function randomLetter() {
   return '';
 }
 
+const cellSize = 32;
+const gridSize = 16;
+
 // Function to draw the matrix of letters
 function drawMatrix() {
   const canvas = document.getElementById('c') as HTMLCanvasElement;
@@ -89,10 +96,14 @@ function drawMatrix() {
     ctx.font = 'bold 24px serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    for (let x = 0; x < 10; x++) {
-      for (let y = 0; y < 10; y++) {
-        ctx.strokeRect(x * 64, y * 64, 64, 64);
-        ctx.fillText(randomLetter(), x * 64 + 32, y * 64 + 32);
+    for (let x = 0; x < gridSize; x++) {
+      for (let y = 0; y < gridSize; y++) {
+        ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        ctx.fillText(
+          randomLetter(),
+          x * cellSize + cellSize / 2,
+          y * cellSize + cellSize / 2
+        );
       }
     }
   }
@@ -104,15 +115,19 @@ function onPointerdownCanvas(event: PointerEvent) {
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
-  const cellX = Math.floor(x / 64);
-  const cellY = Math.floor(y / 64);
-  console.log([cellX, cellY]);
+  const cellX = Math.floor(x / cellSize);
+  const cellY = Math.floor(y / cellSize);
 
   dragState.value = {
     type: 'drag',
     dragId: v4(),
-    pointerStartPos: [event.clientX, event.clientY],
+    pointerStartPos: [x, y],
+    startCell: [cellX, cellY],
+    pointerCurrentPos: [x, y],
+    currentCell: [cellX, cellY],
   };
+
+  fillCell(cellX, cellY);
 }
 
 function onPointermoveCanvas(event: PointerEvent) {
@@ -122,19 +137,58 @@ function onPointermoveCanvas(event: PointerEvent) {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const cellX = Math.floor(x / 64);
-    const cellY = Math.floor(y / 64);
-    console.log([cellX, cellY]);
+    const cellX = Math.floor(x / cellSize);
+    const cellY = Math.floor(y / cellSize);
+
+    dragState.value = {
+      type: 'drag',
+      dragId: v4(),
+      pointerStartPos: dragState.value.pointerStartPos,
+      startCell: dragState.value.startCell,
+      pointerCurrentPos: [x, y],
+      currentCell: [cellX, cellY],
+    };
+
+    fillCell(cellX, cellY);
   }
 }
 
 function onPointerupCanvas(event: PointerEvent) {
   console.log('Pointer Up');
   const canvas = document.getElementById('c') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d');
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const cellX = Math.floor(x / cellSize);
+  const cellY = Math.floor(y / cellSize);
 
   if (dragState.value) {
+    dragState.value = {
+      type: 'drag',
+      dragId: v4(),
+      pointerStartPos: dragState.value.pointerStartPos,
+      startCell: dragState.value.startCell,
+      pointerCurrentPos: [x, y],
+      currentCell: [cellX, cellY],
+    };
+
+    fillCell(cellX, cellY);
+
     dragState.value = undefined;
+  }
+}
+
+function fillCell(xCell: number, yCell: number) {
+  if (xCell < 0 || xCell > gridSize - 1 || yCell < 0 || yCell > gridSize - 1) {
+    return;
+  }
+
+  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d');
+
+  if (ctx) {
+    ctx.fillStyle = 'rgba(140, 180, 255, 0.34)';
+    ctx.fillRect(xCell * cellSize, yCell * cellSize, cellSize, cellSize);
   }
 }
 
