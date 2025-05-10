@@ -20,7 +20,7 @@
         @pointerup.stop="onPointerupCanvas($event)"
       />
     </div>
-    <pre>{{ dragState }}</pre>
+    <pre>{{ { dragState } }}</pre>
   </div>
 </template>
 
@@ -50,12 +50,14 @@ const props = defineProps({
 watch(
   () => props.task,
   () => {
+    updateMatrix();
     drawMatrix();
   },
   { deep: true }
 );
 
 // State
+let matrix: string[][] = [];
 const dragState = ref<DragState>();
 
 // Computed properties
@@ -87,6 +89,16 @@ function randomLetter() {
 const cellSize = 32;
 const gridSize = 16;
 
+function updateMatrix() {
+  matrix = [];
+  for (let x = 0; x < gridSize; x++) {
+    matrix[x] = [];
+    for (let y = 0; y < gridSize; y++) {
+      matrix[x][y] = randomLetter();
+    }
+  }
+}
+
 // Function to draw the matrix of letters
 function drawMatrix() {
   const canvas = document.getElementById('c') as HTMLCanvasElement;
@@ -100,7 +112,7 @@ function drawMatrix() {
       for (let y = 0; y < gridSize; y++) {
         ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
         ctx.fillText(
-          randomLetter(),
+          matrix[x][y],
           x * cellSize + cellSize / 2,
           y * cellSize + cellSize / 2
         );
@@ -194,6 +206,7 @@ function fillCell(xCell: number, yCell: number) {
 
 // Call the function to draw the matrix
 onMounted(() => {
+  updateMatrix();
   drawMatrix();
 });
 </script>
