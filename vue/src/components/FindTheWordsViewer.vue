@@ -63,7 +63,10 @@ const dragState = ref<DragState>();
 // Computed properties
 const words = computed(() => {
   if (props.task?.words) {
-    return props.task.words.split(',');
+    return props.task.words
+      .split(',')
+      .filter((word) => word.trim())
+      .map((word) => word.trim());
   }
   return [];
 });
