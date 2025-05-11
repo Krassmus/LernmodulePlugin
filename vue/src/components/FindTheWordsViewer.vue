@@ -29,6 +29,8 @@ import { computed, defineProps, onMounted, PropType, ref, watch } from 'vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 
+const WordSearch = require('@blex41/word-search');
+
 type DragState =
   | {
       type: 'drag';
@@ -93,11 +95,39 @@ const cellSize = 42;
 const gridSize = 14;
 
 function updateMatrix() {
+  const options = {
+    cols: gridSize,
+    rows: gridSize,
+    disabledDirections: [],
+    dictionary: words.value,
+    maxWords: words.value.length,
+    backwardsProbability: 0.3,
+    upperCase: true,
+    diacritics: true,
+  };
+
+  // Create a new puzzle
+  const ws = new WordSearch(options);
+
+  if (ws.words.length !== words.value.length) {
+    console.log('Es konnten nicht alle Wörter untergebracht werden.');
+  }
+
+  const allCoordinates: { x: number; y: number }[] = [];
+
+  ws.words.forEach((word: any) => {
+    allCoordinates.push(...word.path);
+  });
+
   matrix = [];
   for (let x = 0; x < gridSize; x++) {
     matrix[x] = [];
     for (let y = 0; y < gridSize; y++) {
-      matrix[x][y] = randomLetter();
+      if (allCoordinates.some((coord) => coord.x === x && coord.y === y)) {
+        matrix[x][y] = ws.grid[y][x];
+      } else {
+        matrix[x][y] = randomLetter();
+      }
     }
   }
 }
