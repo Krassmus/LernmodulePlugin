@@ -89,8 +89,8 @@ function randomLetter() {
   return '';
 }
 
-const cellSize = 32;
-const gridSize = 16;
+const cellSize = 42;
+const gridSize = 14;
 
 function updateMatrix() {
   matrix = [];
