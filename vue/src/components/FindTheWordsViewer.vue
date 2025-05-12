@@ -78,7 +78,7 @@ const alphabet = computed(() => {
     return props.task.alphabet
       .toUpperCase()
       .split('')
-      .filter((char) => char.match(/\p{L}/u));
+      .filter((char) => char.match(/[0-9\p{L}]/u));
   }
   return [];
 });
