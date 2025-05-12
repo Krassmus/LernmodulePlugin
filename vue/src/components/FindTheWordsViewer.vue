@@ -60,6 +60,7 @@ watch(
 
 // State
 let matrix: string[][] = [];
+let selectedCells: boolean[][] = [];
 const dragState = ref<DragState>();
 
 // Computed properties
@@ -95,6 +96,13 @@ const cellSize = 48;
 const gridSize = 12;
 
 function updateMatrix() {
+  for (let x = 0; x < gridSize; x++) {
+    selectedCells[x] = [];
+    for (let y = 0; y < gridSize; y++) {
+      selectedCells[x][y] = false;
+    }
+  }
+
   const options = {
     cols: gridSize,
     rows: gridSize,
@@ -143,7 +151,12 @@ function drawMatrix() {
     ctx.textBaseline = 'middle';
     for (let x = 0; x < gridSize; x++) {
       for (let y = 0; y < gridSize; y++) {
+        if (selectedCells[x][y]) {
+          fillCell(x, y);
+        }
+        ctx.strokeStyle = 'gainsboro';
         ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        ctx.fillStyle = '#404040';
         ctx.fillText(
           matrix[x][y],
           x * cellSize + cellSize / 2,
@@ -172,7 +185,8 @@ function onPointerdownCanvas(event: PointerEvent) {
     currentCell: [cellX, cellY],
   };
 
-  fillCell(cellX, cellY);
+  selectedCells[cellX][cellY] = true;
+  drawMatrix();
 }
 
 function onPointermoveCanvas(event: PointerEvent) {
@@ -194,7 +208,8 @@ function onPointermoveCanvas(event: PointerEvent) {
       currentCell: [cellX, cellY],
     };
 
-    fillCell(cellX, cellY);
+    selectedCells[cellX][cellY] = true;
+    drawMatrix();
   }
 }
 
@@ -217,9 +232,9 @@ function onPointerupCanvas(event: PointerEvent) {
       currentCell: [cellX, cellY],
     };
 
-    fillCell(cellX, cellY);
-
+    selectedCells[cellX][cellY] = true;
     dragState.value = undefined;
+    drawMatrix();
   }
 }
 
