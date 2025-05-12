@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, PropType, ref } from 'vue';
+import { defineProps, inject, PropType, ref, watch } from 'vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import {
@@ -65,6 +65,14 @@ const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 // State
 const modelTaskDefinition = ref<FindTheWordsTask>(
   cloneDeep(props.taskDefinition)
+);
+
+watch(
+  () => props.taskDefinition,
+  (newTaskDefinition, oldTaskDefinition) => {
+    modelTaskDefinition.value = cloneDeep(newTaskDefinition);
+  },
+  { deep: true }
 );
 
 function onInputWords(words: string): void {
