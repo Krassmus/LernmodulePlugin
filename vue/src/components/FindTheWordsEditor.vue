@@ -72,10 +72,14 @@ function onInputAlphabet(alphabet: string): void {
     draft.alphabet = alphabet;
   });
 
+  updateTaskDefinition();
+}
+function updateTaskDefinition(undoBatch?: unknown): void {
   // Synchronize state modelTaskDefinition -> taskDefinition.
   console.log('update task definition');
   taskEditor!.performEdit({
     newTaskDefinition: cloneDeep(modelTaskDefinition.value),
+    undoBatch: undoBatch ?? {},
   });
 }
 </script>
