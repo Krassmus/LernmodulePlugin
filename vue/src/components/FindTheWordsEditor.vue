@@ -3,16 +3,22 @@
     <form class="default" @submit.prevent>
       <fieldset>
         <legend>{{ $gettext('Find the Words') }}</legend>
-        <input
-          v-model="modelTaskDefinition.words"
-          @input="onInputWords($event.target.value)"
-          type="text"
-        />
-        <input
-          v-model="modelTaskDefinition.alphabet"
-          @input="onInputAlphabet($event.target.value)"
-          type="text"
-        />
+        <label>
+          {{ $gettext('Zu findende Wörter:') }}
+          <input
+            v-model="modelTaskDefinition.words"
+            @input="onInputWords($event.target.value)"
+            type="text"
+          />
+        </label>
+        <label>
+          {{ $gettext('Zeichen, mit denen die Tafel aufgefüllt wird:') }}
+          <input
+            v-model="modelTaskDefinition.alphabet"
+            @input="onInputAlphabet($event.target.value)"
+            type="text"
+          />
+        </label>
       </fieldset>
 
       <fieldset class="collapsable collapsed">

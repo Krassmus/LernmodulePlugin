@@ -1,24 +1,23 @@
 <template>
   <div style="display: flex">
     <div class="stud5p-task">
-      <div>
-        <p style="margin: 0">Words:</p>
-        <span v-for="word in words" :key="word">{{ word }}</span>
-      </div>
+      <div style="display: flex; flex-direction: row; gap: 1em">
+        <canvas
+          id="c"
+          width="576"
+          height="576"
+          @pointerdown.stop="onPointerdownCanvas($event)"
+          @pointermove.stop="onPointermoveCanvas($event)"
+          @pointerup.stop="onPointerupCanvas($event)"
+        />
 
-      <div>
-        <p style="margin: 0">Alphabet:</p>
-        <span v-for="letter in alphabet" :key="letter">{{ letter }}</span>
+        <div style="display: flex; flex-direction: column">
+          <p style="margin: 0; font-weight: bold">
+            {{ $gettext('Wörter') }}
+          </p>
+          <span v-for="word in words" :key="word">{{ word }}</span>
+        </div>
       </div>
-
-      <canvas
-        id="c"
-        width="640"
-        height="640"
-        @pointerdown.stop="onPointerdownCanvas($event)"
-        @pointermove.stop="onPointermoveCanvas($event)"
-        @pointerup.stop="onPointerupCanvas($event)"
-      />
     </div>
     <pre>{{ { dragState } }}</pre>
   </div>
@@ -28,6 +27,7 @@
 import { computed, defineProps, onMounted, PropType, ref, watch } from 'vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
+import { $gettext } from '@/language/gettext';
 
 const WordSearch = require('@blex41/word-search');
 
@@ -91,8 +91,8 @@ function randomLetter() {
   return '';
 }
 
-const cellSize = 42;
-const gridSize = 14;
+const cellSize = 48;
+const gridSize = 12;
 
 function updateMatrix() {
   const options = {
@@ -138,7 +138,7 @@ function drawMatrix() {
   const ctx = canvas.getContext('2d');
   if (ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = 'bold 24px serif';
+    ctx.font = 'bold 26px calibri';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     for (let x = 0; x < gridSize; x++) {
