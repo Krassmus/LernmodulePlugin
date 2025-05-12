@@ -92,7 +92,7 @@ function onInputAlphabet(alphabet: string): void {
     draft.alphabet = alphabet;
   });
 
-  updateTaskDefinition();
+  updateTaskDefinition('alphabet');
 }
 
 function resetAlphabet(): void {
