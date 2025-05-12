@@ -168,7 +168,6 @@ function drawMatrix() {
 }
 
 function onPointerdownCanvas(event: PointerEvent) {
-  console.log('Pointer Down');
   const canvas = document.getElementById('c') as HTMLCanvasElement;
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
@@ -191,7 +190,6 @@ function onPointerdownCanvas(event: PointerEvent) {
 
 function onPointermoveCanvas(event: PointerEvent) {
   if (dragState.value) {
-    console.log('Pointer Move');
     const canvas = document.getElementById('c') as HTMLCanvasElement;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -214,7 +212,6 @@ function onPointermoveCanvas(event: PointerEvent) {
 }
 
 function onPointerupCanvas(event: PointerEvent) {
-  console.log('Pointer Up');
   const canvas = document.getElementById('c') as HTMLCanvasElement;
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
