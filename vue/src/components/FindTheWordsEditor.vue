@@ -13,11 +13,23 @@
         </label>
         <label>
           {{ $gettext('Zeichen, mit denen die Tafel aufgefüllt wird:') }}
-          <input
-            v-model="modelTaskDefinition.alphabet"
-            @input="onInputAlphabet($event.target.value)"
-            type="text"
-          />
+          <span
+            style="
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              gap: 1em;
+            "
+          >
+            <input
+              v-model="modelTaskDefinition.alphabet"
+              @input="onInputAlphabet($event.target.value)"
+              type="text"
+            />
+            <button type="button" @click="resetAlphabet">
+              {{ $gettext('Zurücksetzen auf A - Z') }}
+            </button>
+          </span>
         </label>
       </fieldset>
 
@@ -74,6 +86,15 @@ function onInputAlphabet(alphabet: string): void {
 
   updateTaskDefinition();
 }
+
+function resetAlphabet(): void {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+    draft.alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  });
+
+  updateTaskDefinition();
+}
+
 function updateTaskDefinition(undoBatch?: unknown): void {
   // Synchronize state modelTaskDefinition -> taskDefinition.
   console.log('update task definition');
