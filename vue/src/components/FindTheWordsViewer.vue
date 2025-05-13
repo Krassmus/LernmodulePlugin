@@ -60,15 +60,20 @@ watch(
   () => props.task,
   () => {
     initializeGrid();
-    drawMatrix();
+    drawGrid();
   },
   { deep: true }
 );
 
 // State
-let matrix: string[][] = [];
+let grid: string[][] = [];
 let selectedCells: boolean[][] = [];
 const dragState = ref<DragState>();
+
+onMounted(() => {
+  initializeGrid();
+  drawGrid();
+});
 
 // Computed properties
 const words = computed(() => {
@@ -139,21 +144,20 @@ function initializeGrid() {
     allCoordinates.push(...word.path);
   });
 
-  matrix = [];
+  grid = [];
   for (let x = 0; x < gridSize; x++) {
-    matrix[x] = [];
+    grid[x] = [];
     for (let y = 0; y < gridSize; y++) {
       if (allCoordinates.some((coord) => coord.x === x && coord.y === y)) {
-        matrix[x][y] = ws.grid[y][x];
+        grid[x][y] = ws.grid[y][x];
       } else {
-        matrix[x][y] = randomLetter();
+        grid[x][y] = randomLetter();
       }
     }
   }
 }
 
-// Function to draw the matrix of letters
-function drawMatrix() {
+function drawGrid() {
   const canvas = document.getElementById('c') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d');
   if (ctx) {
@@ -170,7 +174,7 @@ function drawMatrix() {
         ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
         ctx.fillStyle = '#404040';
         ctx.fillText(
-          matrix[x][y],
+          grid[x][y],
           x * cellSize + cellSize / 2,
           y * cellSize + cellSize / 2
         );
@@ -196,7 +200,7 @@ function onPointerdownCanvas(event: PointerEvent) {
 
   resetSelectedCells();
   selectedCells[cellX][cellY] = true;
-  drawMatrix();
+  drawGrid();
 }
 
 function onPointermoveCanvas(event: PointerEvent) {
@@ -329,7 +333,7 @@ function onPointermoveCanvas(event: PointerEvent) {
       direction: direction,
     };
 
-    drawMatrix();
+    drawGrid();
   }
 }
 
@@ -342,7 +346,7 @@ function onPointerupCanvas(event: PointerEvent) {
   const cellY = Math.min(Math.floor(y / cellSize), gridSize - 1);
 
   dragState.value = undefined;
-  drawMatrix();
+  drawGrid();
 }
 
 function fillCell(xCell: number, yCell: number) {
@@ -401,12 +405,6 @@ function getDirection(
     return undefined;
   }
 }
-
-// Call the function to draw the matrix
-onMounted(() => {
-  initializeGrid();
-  drawMatrix();
-});
 </script>
 
 <style scoped></style>
