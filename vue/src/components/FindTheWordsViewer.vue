@@ -33,12 +33,19 @@ const WordSearch = require('@blex41/word-search');
 
 type DragState =
   | {
-      type: 'drag';
       dragId: string;
-      pointerStartPos: [number, number];
       startCell: [number, number];
-      pointerCurrentPos: [number, number];
       currentCell: [number, number];
+      direction:
+        | 'left'
+        | 'right'
+        | 'up'
+        | 'down'
+        | 'up-left'
+        | 'up-right'
+        | 'down-left'
+        | 'down-right'
+        | undefined;
     }
   | undefined;
 
@@ -52,7 +59,7 @@ const props = defineProps({
 watch(
   () => props.task,
   () => {
-    updateMatrix();
+    initializeGrid();
     drawMatrix();
   },
   { deep: true }
@@ -92,16 +99,21 @@ function randomLetter() {
   return '';
 }
 
-const cellSize = 48;
-const gridSize = 12;
-
-function updateMatrix() {
+function resetSelectedCells() {
+  selectedCells = [];
   for (let x = 0; x < gridSize; x++) {
     selectedCells[x] = [];
     for (let y = 0; y < gridSize; y++) {
       selectedCells[x][y] = false;
     }
   }
+}
+
+const cellSize = 48;
+const gridSize = 12;
+
+function initializeGrid() {
+  resetSelectedCells();
 
   const options = {
     cols: gridSize,
@@ -176,14 +188,13 @@ function onPointerdownCanvas(event: PointerEvent) {
   const cellY = Math.floor(y / cellSize);
 
   dragState.value = {
-    type: 'drag',
     dragId: v4(),
-    pointerStartPos: [x, y],
     startCell: [cellX, cellY],
-    pointerCurrentPos: [x, y],
     currentCell: [cellX, cellY],
+    direction: undefined,
   };
 
+  resetSelectedCells();
   selectedCells[cellX][cellY] = true;
   drawMatrix();
 }
@@ -194,19 +205,130 @@ function onPointermoveCanvas(event: PointerEvent) {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const cellX = Math.floor(x / cellSize);
-    const cellY = Math.floor(y / cellSize);
+    const cellX = Math.max(0, Math.min(Math.floor(x / cellSize), gridSize - 1));
+    const cellY = Math.max(0, Math.min(Math.floor(y / cellSize), gridSize - 1));
+
+    const direction = getDirection(
+      dragState.value.startCell[0],
+      dragState.value.startCell[1],
+      cellX,
+      cellY
+    );
+
+    resetSelectedCells();
+
+    selectedCells[dragState.value.startCell[0]][dragState.value.startCell[1]] =
+      true;
+
+    if (direction === 'left') {
+      for (
+        let xCoordinate = Math.max(dragState.value.startCell[0], cellX);
+        xCoordinate >= Math.min(dragState.value.startCell[0], cellX);
+        xCoordinate--
+      ) {
+        if (xCoordinate >= 0 && xCoordinate < gridSize) {
+          selectedCells[xCoordinate][dragState.value.startCell[1]] = true;
+        }
+      }
+    } else if (direction === 'right') {
+      for (
+        let xCoordinate = Math.min(dragState.value.startCell[0], cellX);
+        xCoordinate <= Math.max(dragState.value.startCell[0], cellX);
+        xCoordinate++
+      ) {
+        if (xCoordinate >= 0 && xCoordinate < gridSize) {
+          selectedCells[xCoordinate][dragState.value.startCell[1]] = true;
+        }
+      }
+    } else if (direction === 'up') {
+      for (
+        let yCoordinate = Math.max(dragState.value.startCell[1], cellY);
+        yCoordinate >= Math.min(dragState.value.startCell[1], cellY);
+        yCoordinate--
+      ) {
+        if (yCoordinate >= 0 && yCoordinate < gridSize) {
+          selectedCells[dragState.value.startCell[0]][yCoordinate] = true;
+        }
+      }
+    } else if (direction === 'down') {
+      for (
+        let yCoordinate = Math.min(dragState.value.startCell[1], cellY);
+        yCoordinate <= Math.max(dragState.value.startCell[1], cellY);
+        yCoordinate++
+      ) {
+        if (yCoordinate >= 0 && yCoordinate < gridSize) {
+          selectedCells[dragState.value.startCell[0]][yCoordinate] = true;
+        }
+      }
+    } else if (direction === 'up-right') {
+      for (
+        let yCoordinate = Math.max(dragState.value.startCell[1], cellY);
+        yCoordinate >= Math.min(dragState.value.startCell[1], cellY);
+        yCoordinate--
+      ) {
+        if (yCoordinate >= 0 && yCoordinate < gridSize) {
+          const xCoordinate =
+            dragState.value.startCell[0] -
+            (yCoordinate - dragState.value.startCell[1]);
+          if (xCoordinate >= 0 && xCoordinate < gridSize) {
+            selectedCells[xCoordinate][yCoordinate] = true;
+          }
+        }
+      }
+    } else if (direction === 'up-left') {
+      for (
+        let yCoordinate = Math.max(dragState.value.startCell[1], cellY);
+        yCoordinate >= Math.min(dragState.value.startCell[1], cellY);
+        yCoordinate--
+      ) {
+        if (yCoordinate >= 0 && yCoordinate < gridSize) {
+          const xCoordinate =
+            dragState.value.startCell[0] +
+            (yCoordinate - dragState.value.startCell[1]);
+          if (xCoordinate >= 0 && xCoordinate < gridSize) {
+            selectedCells[xCoordinate][yCoordinate] = true;
+          }
+        }
+      }
+    } else if (direction === 'down-left') {
+      for (
+        let yCoordinate = Math.min(dragState.value.startCell[1], cellY);
+        yCoordinate <= Math.max(dragState.value.startCell[1], cellY);
+        yCoordinate++
+      ) {
+        if (yCoordinate >= 0 && yCoordinate < gridSize) {
+          const xCoordinate =
+            dragState.value.startCell[0] -
+            (yCoordinate - dragState.value.startCell[1]);
+          if (xCoordinate >= 0 && xCoordinate < gridSize) {
+            selectedCells[xCoordinate][yCoordinate] = true;
+          }
+        }
+      }
+    } else if (direction === 'down-right') {
+      for (
+        let yCoordinate = Math.min(dragState.value.startCell[1], cellY);
+        yCoordinate <= Math.max(dragState.value.startCell[1], cellY);
+        yCoordinate++
+      ) {
+        if (yCoordinate >= 0 && yCoordinate < gridSize) {
+          const xCoordinate =
+            dragState.value.startCell[0] +
+            (yCoordinate - dragState.value.startCell[1]);
+          if (xCoordinate >= 0 && xCoordinate < gridSize) {
+            selectedCells[xCoordinate][yCoordinate] = true;
+          }
+        }
+      }
+    }
 
     dragState.value = {
-      type: 'drag',
-      dragId: v4(),
-      pointerStartPos: dragState.value.pointerStartPos,
+      dragId: dragState.value.dragId,
       startCell: dragState.value.startCell,
-      pointerCurrentPos: [x, y],
       currentCell: [cellX, cellY],
+      direction: direction,
     };
 
-    selectedCells[cellX][cellY] = true;
     drawMatrix();
   }
 }
@@ -216,23 +338,11 @@ function onPointerupCanvas(event: PointerEvent) {
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
-  const cellX = Math.floor(x / cellSize);
-  const cellY = Math.floor(y / cellSize);
+  const cellX = Math.min(Math.floor(x / cellSize), gridSize - 1);
+  const cellY = Math.min(Math.floor(y / cellSize), gridSize - 1);
 
-  if (dragState.value) {
-    dragState.value = {
-      type: 'drag',
-      dragId: v4(),
-      pointerStartPos: dragState.value.pointerStartPos,
-      startCell: dragState.value.startCell,
-      pointerCurrentPos: [x, y],
-      currentCell: [cellX, cellY],
-    };
-
-    selectedCells[cellX][cellY] = true;
-    dragState.value = undefined;
-    drawMatrix();
-  }
+  dragState.value = undefined;
+  drawMatrix();
 }
 
 function fillCell(xCell: number, yCell: number) {
@@ -249,9 +359,52 @@ function fillCell(xCell: number, yCell: number) {
   }
 }
 
+function getDirection(
+  startX: number,
+  startY: number,
+  x: number,
+  y: number
+):
+  | 'left'
+  | 'right'
+  | 'up'
+  | 'down'
+  | 'up-left'
+  | 'up-right'
+  | 'down-left'
+  | 'down-right'
+  | undefined {
+  const dx = x - startX;
+  const dy = y - startY;
+
+  if (dx === 0) {
+    if (dy > 0) {
+      return 'down';
+    } else if (dy < 0) {
+      return 'up';
+    }
+  } else if (dy === 0) {
+    if (dx > 0) {
+      return 'right';
+    } else if (dx < 0) {
+      return 'left';
+    }
+  } else if (dx >= 1 && dy >= 1) {
+    return 'down-right';
+  } else if (dx <= -1 && dy >= 1) {
+    return 'down-left';
+  } else if (dx >= 1 && dy <= -1) {
+    return 'up-right';
+  } else if (dx <= -1 && dy <= -1) {
+    return 'up-left';
+  } else {
+    return undefined;
+  }
+}
+
 // Call the function to draw the matrix
 onMounted(() => {
-  updateMatrix();
+  initializeGrid();
   drawMatrix();
 });
 </script>
