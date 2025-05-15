@@ -15,11 +15,15 @@
           <p style="margin: 0; font-weight: bold">
             {{ $gettext('Wörter') }}
           </p>
-          <span v-for="word in words" :key="word">{{ word }}</span>
+          <template v-for="word in words" :key="word">
+            <s v-if="foundWords.includes(word)"> {{ word }}</s>
+            <span v-else>{{ word }}</span>
+          </template>
         </div>
       </div>
+      <span>{{ score }} of {{ maxScore }} points</span>
     </div>
-    <pre>{{ { dragState } }}</pre>
+    <pre>{{ { dragState, foundWords } }}</pre>
   </div>
 </template>
 
@@ -73,6 +77,7 @@ watch(
 let grid: string[][] = [];
 let selectedCells: boolean[][] = [];
 let correctCells: boolean[][] = [];
+const foundWords = ref<string[]>([]);
 const dragState = ref<DragState>();
 
 // Constants
@@ -106,6 +111,14 @@ const alphabet = computed(() => {
   return [];
 });
 
+const score = computed(() => {
+  return foundWords.value.length;
+});
+
+const maxScore = computed(() => {
+  return words.value.length;
+});
+
 function randomLetter() {
   if (alphabet.value.length > 0) {
     const randomIndex = Math.floor(Math.random() * alphabet.value.length);
@@ -137,6 +150,7 @@ function resetCorrectCells() {
 function initializeGrid() {
   resetSelectedCells();
   resetCorrectCells();
+  foundWords.value = [];
 
   const options = {
     cols: gridSize,
@@ -352,14 +366,25 @@ function onPointerupCanvas(event: PointerEvent) {
 
   const selectedWord = getSelectedWord();
   const reversedSelectedWord = selectedWord.split('').reverse().join('');
-  console.log(selectedWord, reversedSelectedWord);
+  console.log('Selected:', selectedWord, reversedSelectedWord);
 
-  if (
+  const isWordFound =
     words.value.includes(selectedWord) ||
-    words.value.includes(reversedSelectedWord)
-  ) {
-    console.log('Word found!');
+    words.value.includes(reversedSelectedWord);
+
+  const isNewWord =
+    !foundWords.value.includes(selectedWord) &&
+    !foundWords.value.includes(reversedSelectedWord);
+
+  if (isWordFound && isNewWord) {
     markSelectedWordCorrect();
+    if (words.value.includes(selectedWord)) {
+      console.log('Found:', selectedWord);
+      foundWords.value.push(selectedWord);
+    } else {
+      console.log('Found:', reversedSelectedWord);
+      foundWords.value.push(reversedSelectedWord);
+    }
   }
 
   dragState.value = undefined;
@@ -434,6 +459,8 @@ function getSelectedWord(): string {
           break;
         }
       }
+    } else {
+      selectedWord = grid[startCell[0]][startCell[1]];
     }
   }
 
