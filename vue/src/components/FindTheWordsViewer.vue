@@ -31,24 +31,27 @@ import { $gettext } from '@/language/gettext';
 
 const WordSearch = require('@blex41/word-search');
 
+type Direction =
+  | 'left'
+  | 'right'
+  | 'up'
+  | 'down'
+  | 'up-left'
+  | 'up-right'
+  | 'down-left'
+  | 'down-right'
+  | undefined;
+
 type DragState =
   | {
       dragId: string;
       startCell: [number, number];
       currentCell: [number, number];
-      direction:
-        | 'left'
-        | 'right'
-        | 'up'
-        | 'down'
-        | 'up-left'
-        | 'up-right'
-        | 'down-left'
-        | 'down-right'
-        | undefined;
+      direction: Direction;
     }
   | undefined;
 
+// Props
 const props = defineProps({
   task: {
     type: Object as PropType<FindTheWordsTask>,
@@ -56,6 +59,7 @@ const props = defineProps({
   },
 });
 
+// Watchers
 watch(
   () => props.task,
   () => {
@@ -71,6 +75,11 @@ let selectedCells: boolean[][] = [];
 let correctCells: boolean[][] = [];
 const dragState = ref<DragState>();
 
+// Constants
+const cellSize = 48;
+const gridSize = 12;
+
+// Lifecycle Hooks
 onMounted(() => {
   initializeGrid();
   drawGrid();
@@ -124,9 +133,6 @@ function resetCorrectCells() {
     }
   }
 }
-
-const cellSize = 48;
-const gridSize = 12;
 
 function initializeGrid() {
   resetSelectedCells();
@@ -461,16 +467,7 @@ function getDirection(
   startY: number,
   x: number,
   y: number
-):
-  | 'left'
-  | 'right'
-  | 'up'
-  | 'down'
-  | 'up-left'
-  | 'up-right'
-  | 'down-left'
-  | 'down-right'
-  | undefined {
+): Direction {
   const dx = x - startX;
   const dy = y - startY;
 
