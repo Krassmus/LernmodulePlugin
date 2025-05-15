@@ -382,6 +382,10 @@ function onPointerupCanvas(event: PointerEvent) {
   drawGrid();
 }
 
+function coordinatesAreValid(x: number, y: number): boolean {
+  return !(x < 0 || x >= gridSize || y < 0 || y >= gridSize);
+}
+
 function getSelectedWord(): string {
   let selectedWord = '';
 
@@ -410,25 +414,33 @@ function getSelectedWord(): string {
       for (let i = 0; i <= startCell[1] - endCell[1]; i++) {
         const x = startCell[0] - i;
         const y = startCell[1] - i;
-        selectedWord += grid[x][y];
+        if (coordinatesAreValid(x, y)) {
+          selectedWord += grid[x][y];
+        }
       }
     } else if (direction === 'up-right') {
       for (let i = 0; i <= startCell[1] - endCell[1]; i++) {
         const x = startCell[0] + i;
         const y = startCell[1] - i;
-        selectedWord += grid[x][y];
+        if (coordinatesAreValid(x, y)) {
+          selectedWord += grid[x][y];
+        }
       }
     } else if (direction === 'down-left') {
-      for (let i = 0; i <= Math.abs(startCell[1] - endCell[1]); i++) {
+      for (let i = 0; i <= startCell[1] - endCell[1]; i++) {
         const x = startCell[0] - i;
         const y = startCell[1] + i;
-        selectedWord += grid[x][y];
+        if (coordinatesAreValid(x, y)) {
+          selectedWord += grid[x][y];
+        }
       }
     } else if (direction === 'down-right') {
-      for (let i = 0; i <= Math.abs(startCell[1] - endCell[1]); i++) {
+      for (let i = 0; i <= endCell[1] - startCell[1]; i++) {
         const x = startCell[0] + i;
         const y = startCell[1] + i;
-        selectedWord += grid[x][y];
+        if (coordinatesAreValid(x, y)) {
+          selectedWord += grid[x][y];
+        }
       }
     }
   }
