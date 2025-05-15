@@ -68,6 +68,7 @@ watch(
 // State
 let grid: string[][] = [];
 let selectedCells: boolean[][] = [];
+let correctCells: boolean[][] = [];
 const dragState = ref<DragState>();
 
 onMounted(() => {
@@ -81,7 +82,7 @@ const words = computed(() => {
     return props.task.words
       .split(',')
       .filter((word) => word.trim())
-      .map((word) => word.trim());
+      .map((word) => word.trim().toUpperCase());
   }
   return [];
 });
@@ -114,11 +115,22 @@ function resetSelectedCells() {
   }
 }
 
+function resetCorrectCells() {
+  correctCells = [];
+  for (let x = 0; x < gridSize; x++) {
+    correctCells[x] = [];
+    for (let y = 0; y < gridSize; y++) {
+      correctCells[x][y] = false;
+    }
+  }
+}
+
 const cellSize = 48;
 const gridSize = 12;
 
 function initializeGrid() {
   resetSelectedCells();
+  resetCorrectCells();
 
   const options = {
     cols: gridSize,
@@ -167,8 +179,11 @@ function drawGrid() {
     ctx.textBaseline = 'middle';
     for (let x = 0; x < gridSize; x++) {
       for (let y = 0; y < gridSize; y++) {
+        if (correctCells[x][y]) {
+          fillCell(x, y, 'rgb(165,202,158)');
+        }
         if (selectedCells[x][y]) {
-          fillCell(x, y);
+          fillCell(x, y, 'rgba(140, 180, 255, 0.34)');
         }
         ctx.strokeStyle = 'gainsboro';
         ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
@@ -345,11 +360,77 @@ function onPointerupCanvas(event: PointerEvent) {
   const cellX = Math.min(Math.floor(x / cellSize), gridSize - 1);
   const cellY = Math.min(Math.floor(y / cellSize), gridSize - 1);
 
+  const selectedWord = getSelectedWord();
+  const reversedSelectedWord = selectedWord.split('').reverse().join('');
+  console.log(selectedWord, reversedSelectedWord);
+
+  if (
+    words.value.includes(selectedWord) ||
+    words.value.includes(reversedSelectedWord)
+  ) {
+    console.log('Word found!');
+    markSelectedWordCorrect();
+  }
+
   dragState.value = undefined;
   drawGrid();
 }
 
-function fillCell(xCell: number, yCell: number) {
+function getSelectedWord(): string {
+  let selectedWord = '';
+
+  const startCell = dragState.value?.startCell;
+  const endCell = dragState.value?.currentCell;
+  const direction = dragState.value?.direction;
+
+  if (startCell && endCell) {
+    if (direction === 'left') {
+      for (let x = startCell[0]; x >= endCell[0]; x--) {
+        selectedWord += grid[x][startCell[1]];
+      }
+    } else if (direction === 'right') {
+      for (let x = startCell[0]; x <= endCell[0]; x++) {
+        selectedWord += grid[x][startCell[1]];
+      }
+    } else if (direction === 'up') {
+      for (let y = startCell[1]; y >= endCell[1]; y--) {
+        selectedWord += grid[startCell[0]][y];
+      }
+    } else if (direction === 'down') {
+      for (let y = startCell[1]; y <= endCell[1]; y++) {
+        selectedWord += grid[startCell[0]][y];
+      }
+    } else if (direction === 'up-left') {
+      for (let i = 0; i <= startCell[1] - endCell[1]; i++) {
+        const x = startCell[0] - i;
+        const y = startCell[1] - i;
+        selectedWord += grid[x][y];
+      }
+    } else if (direction === 'up-right') {
+      for (let i = 0; i <= startCell[1] - endCell[1]; i++) {
+        const x = startCell[0] + i;
+        const y = startCell[1] - i;
+        selectedWord += grid[x][y];
+      }
+    } else if (direction === 'down-left') {
+      for (let i = 0; i <= Math.abs(startCell[1] - endCell[1]); i++) {
+        const x = startCell[0] - i;
+        const y = startCell[1] + i;
+        selectedWord += grid[x][y];
+      }
+    } else if (direction === 'down-right') {
+      for (let i = 0; i <= Math.abs(startCell[1] - endCell[1]); i++) {
+        const x = startCell[0] + i;
+        const y = startCell[1] + i;
+        selectedWord += grid[x][y];
+      }
+    }
+  }
+
+  return selectedWord;
+}
+
+function fillCell(xCell: number, yCell: number, fillStyle: string) {
   if (xCell < 0 || xCell > gridSize - 1 || yCell < 0 || yCell > gridSize - 1) {
     return;
   }
@@ -358,9 +439,21 @@ function fillCell(xCell: number, yCell: number) {
   const ctx = canvas.getContext('2d');
 
   if (ctx) {
-    ctx.fillStyle = 'rgba(140, 180, 255, 0.34)';
+    ctx.fillStyle = fillStyle;
     ctx.fillRect(xCell * cellSize, yCell * cellSize, cellSize, cellSize);
   }
+}
+
+function markSelectedWordCorrect() {
+  for (let x = 0; x < gridSize; x++) {
+    for (let y = 0; y < gridSize; y++) {
+      if (!correctCells[x][y]) {
+        correctCells[x][y] = selectedCells[x][y];
+      }
+    }
+  }
+
+  resetSelectedCells();
 }
 
 function getDirection(
