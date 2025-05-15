@@ -427,7 +427,7 @@ function getSelectedWord(): string {
         }
       }
     } else if (direction === 'down-left') {
-      for (let i = 0; i <= startCell[1] - endCell[1]; i++) {
+      for (let i = 0; i <= endCell[1] - startCell[1]; i++) {
         const x = startCell[0] - i;
         const y = startCell[1] + i;
         if (coordinatesAreValid(x, y)) {
