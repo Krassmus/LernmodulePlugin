@@ -247,102 +247,86 @@ function onPointermoveCanvas(event: PointerEvent) {
 
     if (direction === 'left') {
       for (
-        let xCoordinate = Math.max(dragState.value.startCell[0], cellX);
-        xCoordinate >= Math.min(dragState.value.startCell[0], cellX);
+        let xCoordinate = dragState.value.startCell[0];
+        xCoordinate >= cellX;
         xCoordinate--
       ) {
-        if (xCoordinate >= 0 && xCoordinate < gridSize) {
-          selectedCells[xCoordinate][dragState.value.startCell[1]] = true;
-        }
+        selectedCells[xCoordinate][dragState.value.startCell[1]] = true;
       }
     } else if (direction === 'right') {
       for (
-        let xCoordinate = Math.min(dragState.value.startCell[0], cellX);
-        xCoordinate <= Math.max(dragState.value.startCell[0], cellX);
+        let xCoordinate = dragState.value.startCell[0];
+        xCoordinate <= cellX;
         xCoordinate++
       ) {
-        if (xCoordinate >= 0 && xCoordinate < gridSize) {
-          selectedCells[xCoordinate][dragState.value.startCell[1]] = true;
-        }
+        selectedCells[xCoordinate][dragState.value.startCell[1]] = true;
       }
     } else if (direction === 'up') {
       for (
-        let yCoordinate = Math.max(dragState.value.startCell[1], cellY);
-        yCoordinate >= Math.min(dragState.value.startCell[1], cellY);
+        let yCoordinate = dragState.value.startCell[1];
+        yCoordinate >= cellY;
         yCoordinate--
       ) {
-        if (yCoordinate >= 0 && yCoordinate < gridSize) {
-          selectedCells[dragState.value.startCell[0]][yCoordinate] = true;
-        }
+        selectedCells[dragState.value.startCell[0]][yCoordinate] = true;
       }
     } else if (direction === 'down') {
       for (
-        let yCoordinate = Math.min(dragState.value.startCell[1], cellY);
-        yCoordinate <= Math.max(dragState.value.startCell[1], cellY);
+        let yCoordinate = dragState.value.startCell[1];
+        yCoordinate <= cellY;
         yCoordinate++
       ) {
-        if (yCoordinate >= 0 && yCoordinate < gridSize) {
-          selectedCells[dragState.value.startCell[0]][yCoordinate] = true;
-        }
+        selectedCells[dragState.value.startCell[0]][yCoordinate] = true;
       }
     } else if (direction === 'up-right') {
       for (
-        let yCoordinate = Math.max(dragState.value.startCell[1], cellY);
-        yCoordinate >= Math.min(dragState.value.startCell[1], cellY);
+        let yCoordinate = dragState.value.startCell[1];
+        yCoordinate >= cellY;
         yCoordinate--
       ) {
-        if (yCoordinate >= 0 && yCoordinate < gridSize) {
-          const xCoordinate =
-            dragState.value.startCell[0] -
-            (yCoordinate - dragState.value.startCell[1]);
-          if (xCoordinate >= 0 && xCoordinate < gridSize) {
-            selectedCells[xCoordinate][yCoordinate] = true;
-          }
+        const xCoordinate =
+          dragState.value.startCell[0] -
+          (yCoordinate - dragState.value.startCell[1]);
+        if (coordinatesAreValid(xCoordinate, yCoordinate)) {
+          selectedCells[xCoordinate][yCoordinate] = true;
         }
       }
     } else if (direction === 'up-left') {
       for (
-        let yCoordinate = Math.max(dragState.value.startCell[1], cellY);
-        yCoordinate >= Math.min(dragState.value.startCell[1], cellY);
+        let yCoordinate = dragState.value.startCell[1];
+        yCoordinate >= cellY;
         yCoordinate--
       ) {
-        if (yCoordinate >= 0 && yCoordinate < gridSize) {
-          const xCoordinate =
-            dragState.value.startCell[0] +
-            (yCoordinate - dragState.value.startCell[1]);
-          if (xCoordinate >= 0 && xCoordinate < gridSize) {
-            selectedCells[xCoordinate][yCoordinate] = true;
-          }
+        const xCoordinate =
+          dragState.value.startCell[0] +
+          (yCoordinate - dragState.value.startCell[1]);
+        if (coordinatesAreValid(xCoordinate, yCoordinate)) {
+          selectedCells[xCoordinate][yCoordinate] = true;
         }
       }
     } else if (direction === 'down-left') {
       for (
-        let yCoordinate = Math.min(dragState.value.startCell[1], cellY);
-        yCoordinate <= Math.max(dragState.value.startCell[1], cellY);
+        let yCoordinate = dragState.value.startCell[1];
+        yCoordinate <= cellY;
         yCoordinate++
       ) {
-        if (yCoordinate >= 0 && yCoordinate < gridSize) {
-          const xCoordinate =
-            dragState.value.startCell[0] -
-            (yCoordinate - dragState.value.startCell[1]);
-          if (xCoordinate >= 0 && xCoordinate < gridSize) {
-            selectedCells[xCoordinate][yCoordinate] = true;
-          }
+        const xCoordinate =
+          dragState.value.startCell[0] -
+          (yCoordinate - dragState.value.startCell[1]);
+        if (coordinatesAreValid(xCoordinate, yCoordinate)) {
+          selectedCells[xCoordinate][yCoordinate] = true;
         }
       }
     } else if (direction === 'down-right') {
       for (
-        let yCoordinate = Math.min(dragState.value.startCell[1], cellY);
-        yCoordinate <= Math.max(dragState.value.startCell[1], cellY);
+        let yCoordinate = dragState.value.startCell[1];
+        yCoordinate <= cellY;
         yCoordinate++
       ) {
-        if (yCoordinate >= 0 && yCoordinate < gridSize) {
-          const xCoordinate =
-            dragState.value.startCell[0] +
-            (yCoordinate - dragState.value.startCell[1]);
-          if (xCoordinate >= 0 && xCoordinate < gridSize) {
-            selectedCells[xCoordinate][yCoordinate] = true;
-          }
+        const xCoordinate =
+          dragState.value.startCell[0] +
+          (yCoordinate - dragState.value.startCell[1]);
+        if (coordinatesAreValid(xCoordinate, yCoordinate)) {
+          selectedCells[xCoordinate][yCoordinate] = true;
         }
       }
     }
@@ -416,6 +400,8 @@ function getSelectedWord(): string {
         const y = startCell[1] - i;
         if (coordinatesAreValid(x, y)) {
           selectedWord += grid[x][y];
+        } else {
+          break;
         }
       }
     } else if (direction === 'up-right') {
@@ -424,6 +410,8 @@ function getSelectedWord(): string {
         const y = startCell[1] - i;
         if (coordinatesAreValid(x, y)) {
           selectedWord += grid[x][y];
+        } else {
+          break;
         }
       }
     } else if (direction === 'down-left') {
@@ -432,6 +420,8 @@ function getSelectedWord(): string {
         const y = startCell[1] + i;
         if (coordinatesAreValid(x, y)) {
           selectedWord += grid[x][y];
+        } else {
+          break;
         }
       }
     } else if (direction === 'down-right') {
@@ -440,6 +430,8 @@ function getSelectedWord(): string {
         const y = startCell[1] + i;
         if (coordinatesAreValid(x, y)) {
           selectedWord += grid[x][y];
+        } else {
+          break;
         }
       }
     }
