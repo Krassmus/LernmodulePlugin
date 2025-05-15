@@ -29,6 +29,9 @@
             <button type="button" @click="resetAlphabet">
               {{ $gettext('Zurücksetzen auf A - Z') }}
             </button>
+            <button type="button" @click="resetAlphabetToUsedLetters">
+              {{ $gettext('Buchstaben der Lösungswörter') }}
+            </button>
           </span>
         </label>
       </fieldset>
@@ -98,6 +101,16 @@ function onInputAlphabet(alphabet: string): void {
 function resetAlphabet(): void {
   modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  });
+
+  updateTaskDefinition();
+}
+
+function resetAlphabetToUsedLetters(): void {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+    draft.alphabet = Array.from(
+      new Set(draft.words.replace(/[\s,]/g, '').split(''))
+    ).join('');
   });
 
   updateTaskDefinition();
