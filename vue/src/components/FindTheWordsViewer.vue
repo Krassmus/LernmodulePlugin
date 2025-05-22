@@ -372,12 +372,13 @@ function onPointerupCanvas(event: PointerEvent) {
     words.value.includes(selectedWord) ||
     words.value.includes(reversedSelectedWord);
 
+  if (isWordFound) markSelectedWordCorrect();
+
   const isNewWord =
     !foundWords.value.includes(selectedWord) &&
     !foundWords.value.includes(reversedSelectedWord);
 
   if (isWordFound && isNewWord) {
-    markSelectedWordCorrect();
     if (words.value.includes(selectedWord)) {
       console.log('Found:', selectedWord);
       foundWords.value.push(selectedWord);
