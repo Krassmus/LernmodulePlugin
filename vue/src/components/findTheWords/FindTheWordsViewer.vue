@@ -20,7 +20,26 @@
           </template>
         </div>
       </div>
-      <span>{{ score }} of {{ maxScore }} points</span>
+      <div class="feedback-and-button-container">
+        <div class="feedback-container">
+          <FeedbackElement
+            v-if="showResults"
+            :achievedPoints="score"
+            :maxPoints="maxScore"
+            :result-message="resultMessage"
+          />
+        </div>
+
+        <div class="button-panel">
+          <button
+            v-if="showRetryButton"
+            v-text="task.strings.retryButton"
+            @click="onClickRetry"
+            type="button"
+            class="stud5p-button"
+          />
+        </div>
+      </div>
     </div>
     <pre>{{ { dragState, foundWords } }}</pre>
   </div>
@@ -36,6 +55,7 @@ import {
   ref,
   watch,
 } from 'vue';
+import FeedbackElement from '@/components/FeedbackElement.vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 import { $gettext } from '@/language/gettext';
@@ -130,6 +150,29 @@ const score = computed(() => {
 const maxScore = computed(() => {
   return words.value.length;
 });
+
+const showResults = computed(() => {
+  return score.value > 0;
+});
+
+const showRetryButton = computed(() => {
+  return score.value === maxScore.value;
+});
+
+const resultMessage = computed(() => {
+  let result = props.task.strings.resultMessage.replace(
+    ':correct',
+    score.value.toString()
+  );
+  result = result.replace(':total', maxScore.value.toString());
+
+  return result;
+});
+
+function onClickRetry(): void {
+  initializeGrid();
+  drawGrid();
+}
 
 function randomLetter() {
   if (alphabet.value.length > 0) {
