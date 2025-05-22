@@ -8,7 +8,6 @@
           height="576"
           @pointerdown.stop="onPointerdownCanvas($event)"
           @pointermove.stop="onPointermoveCanvas($event)"
-          @pointerup.stop="onPointerupCanvas($event)"
         />
 
         <div style="display: flex; flex-direction: column">
@@ -28,7 +27,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, onMounted, PropType, ref, watch } from 'vue';
+import {
+  computed,
+  defineProps,
+  onBeforeUnmount,
+  onMounted,
+  PropType,
+  ref,
+  watch,
+} from 'vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 import { $gettext } from '@/language/gettext';
@@ -88,6 +95,11 @@ const gridSize = 12;
 onMounted(() => {
   initializeGrid();
   drawGrid();
+  document.addEventListener('pointerdown', onPointerdownOutsideCanvas);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', onPointerdownOutsideCanvas);
 });
 
 // Computed properties
@@ -219,22 +231,56 @@ function drawGrid() {
 }
 
 function onPointerdownCanvas(event: PointerEvent) {
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
-  const rect = canvas.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  const cellX = Math.floor(x / cellSize);
-  const cellY = Math.floor(y / cellSize);
+  if (!dragState.value) {
+    // Start selection
+    const canvas = document.getElementById('c') as HTMLCanvasElement;
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const cellX = Math.floor(x / cellSize);
+    const cellY = Math.floor(y / cellSize);
 
-  dragState.value = {
-    dragId: v4(),
-    startCell: [cellX, cellY],
-    currentCell: [cellX, cellY],
-    direction: undefined,
-  };
+    dragState.value = {
+      dragId: v4(),
+      startCell: [cellX, cellY],
+      currentCell: [cellX, cellY],
+      direction: undefined,
+    };
 
-  resetSelectedCells();
-  selectedCells[cellX][cellY] = true;
+    resetSelectedCells();
+    selectedCells[cellX][cellY] = true;
+    drawGrid();
+  } else {
+    endSelection();
+  }
+}
+
+function endSelection() {
+  const selectedWord = getSelectedWord();
+  const reversedSelectedWord = selectedWord.split('').reverse().join('');
+  console.log('Selected:', selectedWord, reversedSelectedWord);
+
+  const isWordFound =
+    words.value.includes(selectedWord) ||
+    words.value.includes(reversedSelectedWord);
+
+  if (isWordFound) markSelectedWordCorrect();
+
+  const isNewWord =
+    !foundWords.value.includes(selectedWord) &&
+    !foundWords.value.includes(reversedSelectedWord);
+
+  if (isWordFound && isNewWord) {
+    if (words.value.includes(selectedWord)) {
+      console.log('Found:', selectedWord);
+      foundWords.value.push(selectedWord);
+    } else {
+      console.log('Found:', reversedSelectedWord);
+      foundWords.value.push(reversedSelectedWord);
+    }
+  }
+
+  dragState.value = undefined;
   drawGrid();
 }
 
@@ -356,40 +402,10 @@ function onPointermoveCanvas(event: PointerEvent) {
   }
 }
 
-function onPointerupCanvas(event: PointerEvent) {
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
-  const rect = canvas.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  const cellX = Math.min(Math.floor(x / cellSize), gridSize - 1);
-  const cellY = Math.min(Math.floor(y / cellSize), gridSize - 1);
-
-  const selectedWord = getSelectedWord();
-  const reversedSelectedWord = selectedWord.split('').reverse().join('');
-  console.log('Selected:', selectedWord, reversedSelectedWord);
-
-  const isWordFound =
-    words.value.includes(selectedWord) ||
-    words.value.includes(reversedSelectedWord);
-
-  if (isWordFound) markSelectedWordCorrect();
-
-  const isNewWord =
-    !foundWords.value.includes(selectedWord) &&
-    !foundWords.value.includes(reversedSelectedWord);
-
-  if (isWordFound && isNewWord) {
-    if (words.value.includes(selectedWord)) {
-      console.log('Found:', selectedWord);
-      foundWords.value.push(selectedWord);
-    } else {
-      console.log('Found:', reversedSelectedWord);
-      foundWords.value.push(reversedSelectedWord);
-    }
+function onPointerdownOutsideCanvas(event: PointerEvent) {
+  if (dragState.value) {
+    endSelection();
   }
-
-  dragState.value = undefined;
-  drawGrid();
 }
 
 function coordinatesAreValid(x: number, y: number): boolean {
