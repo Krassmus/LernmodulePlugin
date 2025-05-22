@@ -93,6 +93,11 @@ export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
   words: z.string(),
   alphabet: z.string(),
+  strings: z.object({
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    resultMessage: z.string(),
+  }),
 });
 export type FindTheWordsTask = z.infer<typeof findTheWordsTaskSchema>;
 
@@ -355,6 +360,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'FindTheWords',
         words: 'apple, banana, orange',
         alphabet: '',
+        strings: {
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter gefunden.',
+        },
       };
     case 'MarkTheWords':
       return {
