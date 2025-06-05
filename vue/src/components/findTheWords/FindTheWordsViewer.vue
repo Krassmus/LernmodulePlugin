@@ -8,6 +8,7 @@
           height="576"
           @pointerdown.stop="onPointerdownCanvas($event)"
           @pointermove.stop="onPointermoveCanvas($event)"
+          @pointerup.stop="onPointerupCanvas($event)"
         />
 
         <div style="display: flex; flex-direction: column">
@@ -32,7 +33,7 @@
 
         <div class="button-panel">
           <button
-            v-if="showRetryButton"
+            v-if="taskCompleted"
             v-text="task.strings.retryButton"
             @click="onClickRetry"
             type="button"
@@ -116,10 +117,12 @@ onMounted(() => {
   initializeGrid();
   drawGrid();
   document.addEventListener('pointerdown', onPointerdownOutsideCanvas);
+  document.addEventListener('pointerup', onPointerupOutsideCanvas);
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', onPointerdownOutsideCanvas);
+  document.removeEventListener('pointerup', onPointerupOutsideCanvas);
 });
 
 // Computed properties
@@ -155,7 +158,7 @@ const showResults = computed(() => {
   return score.value > 0;
 });
 
-const showRetryButton = computed(() => {
+const taskCompleted = computed(() => {
   return score.value === maxScore.value;
 });
 
@@ -274,14 +277,11 @@ function drawGrid() {
 }
 
 function onPointerdownCanvas(event: PointerEvent) {
+  if (taskCompleted.value) return;
+
   if (!dragState.value) {
     // Start selection
-    const canvas = document.getElementById('c') as HTMLCanvasElement;
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const cellX = Math.floor(x / cellSize);
-    const cellY = Math.floor(y / cellSize);
+    const { cellX, cellY } = getCellUnderCursor(event);
 
     dragState.value = {
       dragId: v4(),
@@ -294,47 +294,25 @@ function onPointerdownCanvas(event: PointerEvent) {
     selectedCells[cellX][cellY] = true;
     drawGrid();
   } else {
+    // We are already selecting with the two-clicks selection method and this
+    // is the second click, so we end the selection
     endSelection();
   }
 }
 
-function endSelection() {
-  const selectedWord = getSelectedWord();
-  const reversedSelectedWord = selectedWord.split('').reverse().join('');
-  console.log('Selected:', selectedWord, reversedSelectedWord);
-
-  const isWordFound =
-    words.value.includes(selectedWord) ||
-    words.value.includes(reversedSelectedWord);
-
-  if (isWordFound) markSelectedWordCorrect();
-
-  const isNewWord =
-    !foundWords.value.includes(selectedWord) &&
-    !foundWords.value.includes(reversedSelectedWord);
-
-  if (isWordFound && isNewWord) {
-    if (words.value.includes(selectedWord)) {
-      console.log('Found:', selectedWord);
-      foundWords.value.push(selectedWord);
-    } else {
-      console.log('Found:', reversedSelectedWord);
-      foundWords.value.push(reversedSelectedWord);
-    }
-  }
-
-  dragState.value = undefined;
-  drawGrid();
+function getCellUnderCursor(event: PointerEvent) {
+  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const cellX = Math.max(0, Math.min(Math.floor(x / cellSize), gridSize - 1));
+  const cellY = Math.max(0, Math.min(Math.floor(y / cellSize), gridSize - 1));
+  return { cellX, cellY };
 }
 
 function onPointermoveCanvas(event: PointerEvent) {
   if (dragState.value) {
-    const canvas = document.getElementById('c') as HTMLCanvasElement;
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const cellX = Math.max(0, Math.min(Math.floor(x / cellSize), gridSize - 1));
-    const cellY = Math.max(0, Math.min(Math.floor(y / cellSize), gridSize - 1));
+    const { cellX, cellY } = getCellUnderCursor(event);
 
     const direction = getDirection(
       dragState.value.startCell[0],
@@ -445,10 +423,59 @@ function onPointermoveCanvas(event: PointerEvent) {
   }
 }
 
+function onPointerupCanvas(event: PointerEvent) {
+  if (dragState.value) {
+    const { cellX, cellY } = getCellUnderCursor(event);
+
+    if (
+      dragState.value.startCell[0] != cellX ||
+      dragState.value.startCell[1] != cellY
+    ) {
+      // Moved the cursor to another cell before releasing, so we use click-and-hold selection and end the selection
+      endSelection();
+    }
+  }
+}
+
 function onPointerdownOutsideCanvas(event: PointerEvent) {
   if (dragState.value) {
     endSelection();
   }
+}
+
+function onPointerupOutsideCanvas(event: PointerEvent) {
+  if (dragState.value) {
+    endSelection();
+  }
+}
+
+function endSelection() {
+  const selectedWord = getSelectedWord();
+  const reversedSelectedWord = selectedWord.split('').reverse().join('');
+  console.log('Selected:', selectedWord, reversedSelectedWord);
+
+  const isWordFound =
+    words.value.includes(selectedWord) ||
+    words.value.includes(reversedSelectedWord);
+
+  if (isWordFound) markSelectedWordCorrect();
+
+  const isNewWord =
+    !foundWords.value.includes(selectedWord) &&
+    !foundWords.value.includes(reversedSelectedWord);
+
+  if (isWordFound && isNewWord) {
+    if (words.value.includes(selectedWord)) {
+      console.log('Found:', selectedWord);
+      foundWords.value.push(selectedWord);
+    } else {
+      console.log('Found:', reversedSelectedWord);
+      foundWords.value.push(reversedSelectedWord);
+    }
+  }
+
+  dragState.value = undefined;
+  drawGrid();
 }
 
 function coordinatesAreValid(x: number, y: number): boolean {
