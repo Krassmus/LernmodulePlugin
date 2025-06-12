@@ -93,6 +93,18 @@ export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
   words: z.string(),
   alphabet: z.string(),
+  directions: z
+    .object({
+      n: z.boolean(),
+      ne: z.boolean(),
+      e: z.boolean(),
+      se: z.boolean(),
+      s: z.boolean(),
+      sw: z.boolean(),
+      w: z.boolean(),
+      nw: z.boolean(),
+    })
+    .optional(),
   strings: z.object({
     retryButton: z.string(),
     solutionsButton: z.string(),
@@ -360,6 +372,16 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'FindTheWords',
         words: 'apple, banana, orange',
         alphabet: '',
+        directions: {
+          n: true,
+          ne: true,
+          e: true,
+          se: true,
+          s: true,
+          sw: true,
+          w: true,
+          nw: true,
+        },
         strings: {
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',

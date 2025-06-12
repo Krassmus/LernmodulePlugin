@@ -40,6 +40,82 @@
         <legend>{{ $gettext('Einstellungen') }}</legend>
 
         <label>
+          <input
+            v-model="modelTaskDefinition.directions.n"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Vertikal nach oben') }}
+        </label>
+
+        <label>
+          <input
+            v-model="modelTaskDefinition.directions.s"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Vertikal nach unten') }}
+        </label>
+
+        <label>
+          <input
+            v-model="modelTaskDefinition.directions.e"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Horizontal nach rechts') }}
+        </label>
+
+        <label>
+          <input
+            v-model="modelTaskDefinition.directions.w"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Horizontal nach links') }}
+        </label>
+
+        <label>
+          <input
+            v-model="modelTaskDefinition.directions.ne"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Diagonal nach oben rechts') }}
+        </label>
+
+        <label>
+          <input
+            v-model="modelTaskDefinition.directions.se"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Diagonal nach unten rechts') }}
+        </label>
+
+        <label>
+          <input
+            v-model="modelTaskDefinition.directions.nw"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Diagonal nach oben links') }}
+        </label>
+
+        <label>
+          <input
+            v-model="modelTaskDefinition.directions.sw"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Diagonal nach unten links') }}
+        </label>
+      </fieldset>
+
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Beschriftungen') }}</legend>
+
+        <label>
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.retryButton"
@@ -47,6 +123,10 @@
             type="text"
           />
         </label>
+      </fieldset>
+
+      <fieldset class="collapsable collapsed">
+        <legend>{{ $gettext('Feedback') }}</legend>
       </fieldset>
     </form>
   </div>

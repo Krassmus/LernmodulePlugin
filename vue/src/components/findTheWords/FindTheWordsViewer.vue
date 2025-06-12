@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <pre>{{ { dragState, foundWords } }}</pre>
+    <pre>{{ { dragState, foundWords, directions } }}</pre>
   </div>
 </template>
 
@@ -136,6 +136,21 @@ const words = computed(() => {
   return [];
 });
 
+const disabledDirections = computed(() => {
+  let result = [];
+  if (props.task?.directions) {
+    if (!props.task.directions.n) result.push('N');
+    if (!props.task.directions.ne) result.push('NE');
+    if (!props.task.directions.e) result.push('E');
+    if (!props.task.directions.se) result.push('SE');
+    if (!props.task.directions.s) result.push('S');
+    if (!props.task.directions.sw) result.push('SW');
+    if (!props.task.directions.w) result.push('W');
+    if (!props.task.directions.nw) result.push('NW');
+  }
+  return result;
+});
+
 const alphabet = computed(() => {
   if (props.task?.alphabet) {
     return props.task.alphabet
@@ -213,7 +228,7 @@ function initializeGrid() {
   const options = {
     cols: gridSize,
     rows: gridSize,
-    disabledDirections: [],
+    disabledDirections: disabledDirections.value,
     dictionary: words.value,
     maxWords: words.value.length,
     backwardsProbability: 0.3,
