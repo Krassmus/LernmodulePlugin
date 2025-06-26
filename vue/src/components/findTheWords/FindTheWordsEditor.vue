@@ -26,10 +26,20 @@
               @input="onInputAlphabet($event.target.value)"
               type="text"
             />
-            <button type="button" @click="resetAlphabet">
+            <button
+              type="button"
+              class="button"
+              style="white-space: normal"
+              @click="resetAlphabet"
+            >
               {{ $gettext('Zurücksetzen auf A - Z') }}
             </button>
-            <button type="button" @click="resetAlphabetToUsedLetters">
+            <button
+              type="button"
+              class="button"
+              style="white-space: normal"
+              @click="resetAlphabetToUsedLetters"
+            >
               {{ $gettext('Buchstaben der Lösungswörter') }}
             </button>
           </span>

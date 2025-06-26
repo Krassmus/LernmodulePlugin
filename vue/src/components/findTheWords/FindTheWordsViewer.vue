@@ -42,7 +42,6 @@
         </div>
       </div>
     </div>
-    <pre>{{ { dragState, foundWords, directions } }}</pre>
   </div>
 </template>
 
