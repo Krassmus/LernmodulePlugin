@@ -1,27 +1,27 @@
 import { v4 } from 'uuid';
 import { z } from 'zod';
 import { $gettext } from '@/language/gettext';
-import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
-import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
+import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
+import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FindTheHotspotsEditor from '@/components/findTheHotspots/FindTheHotspotsEditor.vue';
 import FindTheHotspotsViewer from '@/components/findTheHotspots/FindTheHotspotsViewer.vue';
-import FindTheWordsEditor from '@/components/FindTheWordsEditor.vue';
-import FindTheWordsViewer from '@/components/FindTheWordsViewer.vue';
+import FindTheWordsEditor from '@/components/findTheWords/FindTheWordsEditor.vue';
+import FindTheWordsViewer from '@/components/findTheWords/FindTheWordsViewer.vue';
 import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
 import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
-import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
-import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
+import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
 import MemoryViewer from '@/components/MemoryViewer.vue';
-import PairingViewer from '@/components/PairingViewer.vue';
 import PairingEditor from '@/components/PairingEditor.vue';
+import PairingViewer from '@/components/PairingViewer.vue';
 import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
-import SequencingViewer from '@/components/SequencingViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
+import SequencingViewer from '@/components/SequencingViewer.vue';
+import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
 import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
 import { imageFileSchema, feedbackSchema, Feedback } from '@/models/common';
 
@@ -91,7 +91,25 @@ export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 
 export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
-  words: z.array(z.string()),
+  words: z.string(),
+  alphabet: z.string(),
+  directions: z
+    .object({
+      n: z.boolean(),
+      ne: z.boolean(),
+      e: z.boolean(),
+      se: z.boolean(),
+      s: z.boolean(),
+      sw: z.boolean(),
+      w: z.boolean(),
+      nw: z.boolean(),
+    })
+    .optional(),
+  strings: z.object({
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    resultMessage: z.string(),
+  }),
 });
 export type FindTheWordsTask = z.infer<typeof findTheWordsTaskSchema>;
 
@@ -258,10 +276,10 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
 // all possible 'task_type' values
 export const taskTypeSchema = z.union([
   dragTheWordsTaskSchema.shape.task_type,
-  interactiveVideoTaskSchema.shape.task_type,
   fillInTheBlanksTaskSchema.shape.task_type,
   findTheHotspotsTaskSchema.shape.task_type,
   findTheWordsTaskSchema.shape.task_type,
+  interactiveVideoTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
   pairingTaskSchema.shape.task_type,
@@ -352,7 +370,23 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FindTheWords':
       return {
         task_type: 'FindTheWords',
-        words: ['apple', 'banana', 'orange'],
+        words: 'apple, banana, orange',
+        alphabet: '',
+        directions: {
+          n: true,
+          ne: true,
+          e: true,
+          se: true,
+          s: true,
+          sw: true,
+          w: true,
+          nw: true,
+        },
+        strings: {
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter gefunden.',
+        },
       };
     case 'MarkTheWords':
       return {

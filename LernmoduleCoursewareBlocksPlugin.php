@@ -9,15 +9,16 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
     {
         parent::__construct();
 
-        require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
-        require_once __DIR__ . '/lib/CoursewareBlocks/QuestionBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/DragTheWordsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/FindTheHotspotsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/FindTheWordsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/InteractiveVideoBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/MarkTheWordsBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/MemoryBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/PairingBlock.php';
-        require_once __DIR__ . '/lib/CoursewareBlocks/FindTheHotspotsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/QuestionBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/SequencingBlock.php';
-        require_once __DIR__ . '/lib/CoursewareBlocks/InteractiveVideoBlock.php';
         // TODO Consider using cache-busting hashes so the latest version of
         //   the JS/CSS will always be loaded.  Currently, the webpack build
         //   does not do this.
@@ -52,12 +53,13 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $this->addBlockIconCSS('drag-the-words', 'edit');
         $this->addBlockIconCSS('fill-in-the-blanks', 'file-office');
         $this->addBlockIconCSS('find-the-hotspots', 'block-imagemap2');
+        $this->addBlockIconCSS('find-the-words', 'tan3');
+        $this->addBlockIconCSS('lmb-interactive-video', 'file-video');
         $this->addBlockIconCSS('mark-the-words', 'guestbook');
         $this->addBlockIconCSS('memory', 'tan3');
-        $this->addBlockIconCSS('lmb-interactive-video', 'file-video');
         $this->addBlockIconCSS('pairing', 'copy');
-        $this->addBlockIconCSS('sequencing', 'picture');
         $this->addBlockIconCSS('question', 'question');
+        $this->addBlockIconCSS('sequencing', 'picture');
         $this->addStylesheet('assets/courseware-block/icons-variables.scss');
     }
 
@@ -89,15 +91,16 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
      */
     public function registerBlockTypes(array $otherBlockTypes): array
     {
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FillInTheBlanksBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FillInTheBlanksBlock::class;
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheHotspotsBlock::class;
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheWordsBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\PairingBlock::class;
+        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
         $otherBlockTypes[] = \CoursewareLernmoduleBlocks\SequencingBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheHotspotsBlock::class;
 
         return $otherBlockTypes;
     }

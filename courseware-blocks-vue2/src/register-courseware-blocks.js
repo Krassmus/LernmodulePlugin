@@ -4,15 +4,16 @@ import LernmoduleCoursewareBlockBase from '@/components/LernmoduleCoursewareBloc
 // to this array so that a corresponding vue 2 component will be registered in
 // the Courseware.
 const taskTypes = [
-  'FillInTheBlanks',
-  'Question',
   'DragTheWords',
+  'FillInTheBlanks',
+  'FindTheHotspots',
+  'FindTheWords',
+  'LmbInteractiveVideo',
   'MarkTheWords',
   'Memory',
   'Pairing',
+  'Question',
   'Sequencing',
-  'LmbInteractiveVideo',
-  'FindTheHotspots',
 ];
 
 const debug = window.STUDIP.LernmoduleCoursewareBlocksPlugin.debug;
