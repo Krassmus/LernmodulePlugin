@@ -26,7 +26,12 @@
       <span>⏲</span>
       <span class="time-info" v-text="$gettext('Zeit:')" />
       <span
-        v-text="$gettext('%{ time } Sekunden', { time: timer.toString() })"
+        v-text="
+          $gettext('%{ minutes }:%{ seconds }', {
+            minutes: Math.floor(timer / 60),
+            seconds: (timer % 60).toString().padStart(2, '0'),
+          })
+        "
       />
     </div>
     <div class="feedback-and-button-container">
