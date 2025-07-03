@@ -109,6 +109,7 @@ export const findTheWordsTaskSchema = z.object({
     retryButton: z.string(),
     solutionsButton: z.string(),
     resultMessage: z.string(),
+    wordListTitle: z.string().default('Wörter'),
   }),
 });
 export type FindTheWordsTask = z.infer<typeof findTheWordsTaskSchema>;
@@ -386,6 +387,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Wörter gefunden.',
+          wordListTitle: 'Wörter',
         },
       };
     case 'MarkTheWords':

@@ -1,45 +1,52 @@
 <template>
-  <div style="display: flex">
-    <div class="stud5p-task">
-      <div style="display: flex; flex-direction: row; gap: 1em">
-        <canvas
-          id="c"
-          width="576"
-          height="576"
-          @pointerdown.stop="onPointerdownCanvas($event)"
-          @pointermove.stop="onPointermoveCanvas($event)"
-          @pointerup.stop="onPointerupCanvas($event)"
-        />
+  <div class="stud5p-task">
+    <div class="canvas-and-word-list-container">
+      <canvas
+        id="c"
+        width="576"
+        height="576"
+        @pointerdown.stop="onPointerdownCanvas($event)"
+        @pointermove.stop="onPointermoveCanvas($event)"
+        @pointerup.stop="onPointerupCanvas($event)"
+      />
 
-        <div style="display: flex; flex-direction: column">
-          <p style="margin: 0; font-weight: bold">
-            {{ $gettext('Wörter') }}
-          </p>
+      <div class="word-list">
+        <h2 class="word-list-title" v-text="task.strings.wordListTitle" />
+        <ul>
           <template v-for="word in words" :key="word">
-            <s v-if="foundWords.includes(word)"> {{ word }}</s>
-            <span v-else>{{ word }}</span>
+            <li v-if="foundWords.includes(word)" class="found-word">
+              {{ word }}
+            </li>
+            <li v-else>{{ word }}</li>
           </template>
-        </div>
+        </ul>
       </div>
-      <div class="feedback-and-button-container">
-        <div class="feedback-container">
-          <FeedbackElement
-            v-if="showResults"
-            :achievedPoints="score"
-            :maxPoints="maxScore"
-            :result-message="resultMessage"
-          />
-        </div>
+    </div>
+    <div class="time-container">
+      <span>⏲</span>
+      <span class="time-info" v-text="$gettext('Zeit:')" />
+      <span
+        v-text="$gettext('%{ time } Sekunden', { time: timer.toString() })"
+      />
+    </div>
+    <div class="feedback-and-button-container">
+      <div class="feedback-container">
+        <FeedbackElement
+          v-if="showResults"
+          :achievedPoints="score"
+          :maxPoints="maxScore"
+          :result-message="resultMessage"
+        />
+      </div>
 
-        <div class="button-panel">
-          <button
-            v-if="taskCompleted"
-            v-text="task.strings.retryButton"
-            @click="onClickRetry"
-            type="button"
-            class="stud5p-button"
-          />
-        </div>
+      <div class="button-panel">
+        <button
+          v-if="taskCompleted"
+          v-text="task.strings.retryButton"
+          @click="onClickRetry"
+          type="button"
+          class="stud5p-button"
+        />
       </div>
     </div>
   </div>
@@ -90,22 +97,15 @@ const props = defineProps({
   },
 });
 
-// Watchers
-watch(
-  () => props.task,
-  () => {
-    initializeGrid();
-    drawGrid();
-  },
-  { deep: true }
-);
-
 // State
 let grid: string[][] = [];
 let selectedCells: boolean[][] = [];
 let correctCells: boolean[][] = [];
 const foundWords = ref<string[]>([]);
 const dragState = ref<DragState>();
+const timer = ref<number>(0); // Track elapsed time in seconds
+let timerStarted: boolean = false; // Flag to check if timer has started
+let timerInterval: number | null = null; // Store interval ID to control timer
 
 // Constants
 const cellSize = 48;
@@ -186,7 +186,47 @@ const resultMessage = computed(() => {
   return result;
 });
 
+// Watchers
+watch(
+  () => props.task,
+  () => {
+    initializeGrid();
+    drawGrid();
+  },
+  { deep: true }
+);
+
+watch(
+  () => taskCompleted.value,
+  (newValue) => {
+    if (newValue) {
+      stopTimer();
+    }
+  }
+);
+
+function startTimer(): void {
+  timerStarted = true;
+
+  // Start a timer that increments every second
+  timerInterval = setInterval(() => {
+    timer.value++;
+  }, 1000) as unknown as number;
+}
+
+function stopTimer(): void {
+  // Stop the timer and clear the interval
+  if (timerInterval !== null) {
+    clearInterval(timerInterval);
+    timerInterval = null; // Reset after clearing
+  }
+
+  timerStarted = false;
+}
+
 function onClickRetry(): void {
+  timer.value = 0;
+  stopTimer();
   initializeGrid();
   drawGrid();
 }
@@ -292,6 +332,11 @@ function drawGrid() {
 
 function onPointerdownCanvas(event: PointerEvent) {
   if (taskCompleted.value) return;
+
+  if (!timerStarted) {
+    console.log('Starting timer');
+    startTimer();
+  }
 
   if (!dragState.value) {
     // Start selection
@@ -629,4 +674,52 @@ function getDirection(
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.canvas-and-word-list-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.word-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  background: #f5f5f5;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+}
+
+.word-list-title {
+  margin: 0;
+  font-weight: bold;
+}
+
+.word-list ul {
+  padding-left: 0.75em;
+  padding-right: 1.5em;
+}
+
+.word-list ul .found-word {
+  color: #255c41;
+  position: relative;
+}
+
+.word-list ul .found-word::after {
+  content: '✔';
+  position: absolute;
+  right: -1.5em;
+}
+
+.time-container {
+  padding-top: 0.5em;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25em;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.time-info {
+  font-weight: bold;
+}
+</style>
