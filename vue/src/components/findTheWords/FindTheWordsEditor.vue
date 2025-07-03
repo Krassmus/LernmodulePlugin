@@ -166,6 +166,20 @@
 
       <fieldset class="collapsable collapsed">
         <legend>{{ $gettext('Feedback') }}</legend>
+        <label>
+          {{
+            $gettext(
+              'Ergebnismitteilung (mögliche Variablen :correct und :total):'
+            )
+          }}
+          <input
+            type="text"
+            v-model="modelTaskDefinition.strings.resultMessage"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.resultMessage')
+            "
+          />
+        </label>
       </fieldset>
     </form>
   </div>
