@@ -126,6 +126,17 @@
         <legend>{{ $gettext('Beschriftungen') }}</legend>
 
         <label>
+          {{ $gettext('Titel der Wortliste:') }}
+          <input
+            v-model="modelTaskDefinition.strings.wordListTitle"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.wordListTitle')
+            "
+            type="text"
+          />
+        </label>
+
+        <label>
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.retryButton"
