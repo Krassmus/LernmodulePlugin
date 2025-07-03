@@ -93,6 +93,7 @@ export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
   words: z.string(),
   alphabet: z.string(),
+  showWordList: z.boolean().default(true),
   directions: z
     .object({
       n: z.boolean(),
@@ -374,6 +375,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         task_type: 'FindTheWords',
         words: 'apple, banana, orange',
         alphabet: '',
+        showWordList: true,
         directions: {
           n: true,
           ne: true,

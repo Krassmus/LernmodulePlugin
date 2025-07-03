@@ -10,7 +10,7 @@
         @pointerup.stop="onPointerupCanvas($event)"
       />
 
-      <div class="word-list">
+      <div class="word-list" v-if="task.showWordList">
         <h2 class="word-list-title" v-text="task.strings.wordListTitle" />
         <ul>
           <template v-for="word in words" :key="word">

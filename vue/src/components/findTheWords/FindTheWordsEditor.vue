@@ -51,6 +51,15 @@
 
         <label>
           <input
+            v-model="modelTaskDefinition.showWordList"
+            @change="updateTaskDefinition"
+            type="checkbox"
+          />
+          {{ $gettext('Wortliste anzeigen') }}
+        </label>
+
+        <label>
+          <input
             v-model="modelTaskDefinition.directions.n"
             @change="updateTaskDefinition"
             type="checkbox"
