@@ -144,6 +144,15 @@
             type="text"
           />
         </label>
+
+        <label>
+          {{ $gettext('Text für Zeitanzeige:') }}
+          <input
+            v-model="modelTaskDefinition.strings.timer"
+            @input="updateTaskDefinition('taskDefinition.strings.timer')"
+            type="text"
+          />
+        </label>
       </fieldset>
 
       <fieldset class="collapsable collapsed">

@@ -24,7 +24,7 @@
     </div>
     <div class="time-container">
       <span>⏲</span>
-      <span class="time-info" v-text="$gettext('Zeit:')" />
+      <span class="time-info" v-text="task.strings.timer" />
       <span
         v-text="
           $gettext('%{ minutes }:%{ seconds }', {
