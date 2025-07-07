@@ -107,6 +107,7 @@ export const findTheWordsTaskSchema = z.object({
     })
     .optional(),
   strings: z.object({
+    checkButton: z.string().default(''),
     retryButton: z.string(),
     solutionsButton: z.string(),
     resultMessage: z.string(),
@@ -387,6 +388,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           nw: true,
         },
         strings: {
+          checkButton: 'Überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Wörter gefunden.',

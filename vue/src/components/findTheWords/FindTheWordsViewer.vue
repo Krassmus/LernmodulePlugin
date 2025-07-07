@@ -37,7 +37,7 @@
     <div class="feedback-and-button-container">
       <div class="feedback-container">
         <FeedbackElement
-          v-if="showResults"
+          v-if="taskCompleted"
           :achievedPoints="score"
           :maxPoints="maxScore"
           :result-message="resultMessage"
@@ -45,6 +45,14 @@
       </div>
 
       <div class="button-panel">
+        <button
+          v-if="showCheckButton"
+          v-text="task.strings.checkButton"
+          @click="onClickCheck"
+          type="button"
+          class="stud5p-button"
+        />
+
         <button
           v-if="taskCompleted"
           v-text="task.strings.retryButton"
@@ -108,6 +116,7 @@ let selectedCells: boolean[][] = [];
 let correctCells: boolean[][] = [];
 const foundWords = ref<string[]>([]);
 const dragState = ref<DragState>();
+const taskSubmitted = ref<boolean>(false);
 const timer = ref<number>(0); // Track elapsed time in seconds
 let timerStarted: boolean = false; // Flag to check if timer has started
 let timerInterval: number | null = null; // Store interval ID to control timer
@@ -173,12 +182,8 @@ const maxScore = computed(() => {
   return words.value.length;
 });
 
-const showResults = computed(() => {
-  return score.value > 0;
-});
-
 const taskCompleted = computed(() => {
-  return score.value === maxScore.value;
+  return score.value === maxScore.value || taskSubmitted.value;
 });
 
 const resultMessage = computed(() => {
@@ -189,6 +194,10 @@ const resultMessage = computed(() => {
   result = result.replace(':total', maxScore.value.toString());
 
   return result;
+});
+
+const showCheckButton = computed(() => {
+  return !taskCompleted.value;
 });
 
 // Watchers
@@ -229,11 +238,21 @@ function stopTimer(): void {
   timerStarted = false;
 }
 
+function onClickCheck(): void {
+  taskSubmitted.value = true;
+  stopTimer();
+}
+
 function onClickRetry(): void {
+  taskSubmitted.value = false;
   timer.value = 0;
   stopTimer();
   initializeGrid();
   drawGrid();
+}
+
+function onClickSolutions(): void {
+  console.log('Show solutions');
 }
 
 function randomLetter() {

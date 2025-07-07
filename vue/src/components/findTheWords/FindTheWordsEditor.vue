@@ -140,6 +140,15 @@
         </label>
 
         <label>
+          {{ $gettext('Text für Überprüfen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.checkButton"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
+            type="text"
+          />
+        </label>
+
+        <label>
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.retryButton"
