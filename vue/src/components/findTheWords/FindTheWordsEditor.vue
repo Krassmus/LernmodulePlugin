@@ -13,36 +13,27 @@
         </label>
         <label>
           {{ $gettext('Zeichen, mit denen die Tafel aufgefüllt wird:') }}
-          <span
-            style="
-              display: flex;
-              flex-direction: row;
-              align-items: center;
-              gap: 1em;
-            "
+          <input
+            v-model="modelTaskDefinition.alphabet"
+            @input="onInputAlphabet($event.target.value)"
+            type="text"
+          />
+          <button
+            type="button"
+            class="button"
+            style="white-space: normal"
+            @click="resetAlphabet"
           >
-            <input
-              v-model="modelTaskDefinition.alphabet"
-              @input="onInputAlphabet($event.target.value)"
-              type="text"
-            />
-            <button
-              type="button"
-              class="button"
-              style="white-space: normal"
-              @click="resetAlphabet"
-            >
-              {{ $gettext('Zurücksetzen auf A - Z') }}
-            </button>
-            <button
-              type="button"
-              class="button"
-              style="white-space: normal"
-              @click="resetAlphabetToUsedLetters"
-            >
-              {{ $gettext('Buchstaben der Lösungswörter') }}
-            </button>
-          </span>
+            {{ $gettext('Zurücksetzen auf A - Z') }}
+          </button>
+          <button
+            type="button"
+            class="button"
+            style="white-space: normal"
+            @click="resetAlphabetToUsedLetters"
+          >
+            {{ $gettext('Buchstaben der Lösungswörter') }}
+          </button>
         </label>
       </fieldset>
 
@@ -58,77 +49,80 @@
           {{ $gettext('Wortliste anzeigen') }}
         </label>
 
-        <label>
-          <input
-            v-model="modelTaskDefinition.directions.n"
-            @change="updateTaskDefinition"
-            type="checkbox"
-          />
-          {{ $gettext('Vertikal nach oben') }}
-        </label>
+        <fieldset>
+          <legend>{{ $gettext('Wortrichtungen') }}</legend>
+          <label>
+            <input
+              v-model="modelTaskDefinition.directions.e"
+              @change="updateTaskDefinition"
+              type="checkbox"
+            />
+            {{ $gettext('Horizontal nach rechts') }}
+          </label>
 
-        <label>
-          <input
-            v-model="modelTaskDefinition.directions.s"
-            @change="updateTaskDefinition"
-            type="checkbox"
-          />
-          {{ $gettext('Vertikal nach unten') }}
-        </label>
+          <label>
+            <input
+              v-model="modelTaskDefinition.directions.w"
+              @change="updateTaskDefinition"
+              type="checkbox"
+            />
+            {{ $gettext('Horizontal nach links') }}
+          </label>
 
-        <label>
-          <input
-            v-model="modelTaskDefinition.directions.e"
-            @change="updateTaskDefinition"
-            type="checkbox"
-          />
-          {{ $gettext('Horizontal nach rechts') }}
-        </label>
+          <label>
+            <input
+              v-model="modelTaskDefinition.directions.s"
+              @change="updateTaskDefinition"
+              type="checkbox"
+            />
+            {{ $gettext('Vertikal nach unten') }}
+          </label>
 
-        <label>
-          <input
-            v-model="modelTaskDefinition.directions.w"
-            @change="updateTaskDefinition"
-            type="checkbox"
-          />
-          {{ $gettext('Horizontal nach links') }}
-        </label>
+          <label>
+            <input
+              v-model="modelTaskDefinition.directions.n"
+              @change="updateTaskDefinition"
+              type="checkbox"
+            />
+            {{ $gettext('Vertikal nach oben') }}
+          </label>
 
-        <label>
-          <input
-            v-model="modelTaskDefinition.directions.ne"
-            @change="updateTaskDefinition"
-            type="checkbox"
-          />
-          {{ $gettext('Diagonal nach oben rechts') }}
-        </label>
+          <label>
+            <input
+              v-model="modelTaskDefinition.directions.ne"
+              @change="updateTaskDefinition"
+              type="checkbox"
+            />
+            {{ $gettext('Diagonal nach oben rechts') }}
+          </label>
 
-        <label>
-          <input
-            v-model="modelTaskDefinition.directions.se"
-            @change="updateTaskDefinition"
-            type="checkbox"
-          />
-          {{ $gettext('Diagonal nach unten rechts') }}
-        </label>
+          <label>
+            <input
+              v-model="modelTaskDefinition.directions.se"
+              @change="updateTaskDefinition"
+              type="checkbox"
+            />
+            {{ $gettext('Diagonal nach unten rechts') }}
+          </label>
 
-        <label>
-          <input
-            v-model="modelTaskDefinition.directions.nw"
-            @change="updateTaskDefinition"
-            type="checkbox"
-          />
-          {{ $gettext('Diagonal nach oben links') }}
-        </label>
+          <label>
+            <input
+              v-model="modelTaskDefinition.directions.nw"
+              @change="updateTaskDefinition"
+              type="checkbox"
+            />
+            {{ $gettext('Diagonal nach oben links') }}
+          </label>
 
-        <label>
-          <input
-            v-model="modelTaskDefinition.directions.sw"
-            @change="updateTaskDefinition"
-            type="checkbox"
-          />
-          {{ $gettext('Diagonal nach unten links') }}
-        </label>
+          <label>
+            <input
+              v-model="modelTaskDefinition.directions.sw"
+              @change="updateTaskDefinition"
+              type="checkbox"
+            />
+            {{ $gettext('Diagonal nach unten links') }}
+          </label>
+        </fieldset>
       </fieldset>
 
       <fieldset class="collapsable collapsed">
