@@ -60,6 +60,14 @@
           type="button"
           class="stud5p-button"
         />
+
+        <button
+          v-if="taskSubmitted"
+          v-text="task.strings.solutionsButton"
+          @click="onClickShowSolutions"
+          type="button"
+          class="stud5p-button"
+        />
       </div>
     </div>
   </div>
@@ -114,9 +122,11 @@ const props = defineProps({
 let grid: string[][] = [];
 let selectedCells: boolean[][] = [];
 let correctCells: boolean[][] = [];
+let solutionCoordinates: { x: number; y: number }[] = [];
 const foundWords = ref<string[]>([]);
 const dragState = ref<DragState>();
 const taskSubmitted = ref<boolean>(false);
+const showSolutions = ref<boolean>(false);
 const timer = ref<number>(0); // Track elapsed time in seconds
 let timerStarted: boolean = false; // Flag to check if timer has started
 let timerInterval: number | null = null; // Store interval ID to control timer
@@ -245,14 +255,17 @@ function onClickCheck(): void {
 
 function onClickRetry(): void {
   taskSubmitted.value = false;
+  showSolutions.value = false;
   timer.value = 0;
+  solutionCoordinates = [];
   stopTimer();
   initializeGrid();
   drawGrid();
 }
 
-function onClickSolutions(): void {
-  console.log('Show solutions');
+function onClickShowSolutions(): void {
+  showSolutions.value = true;
+  drawGrid();
 }
 
 function randomLetter() {
@@ -287,6 +300,7 @@ function initializeGrid() {
   resetSelectedCells();
   resetCorrectCells();
   foundWords.value = [];
+  solutionCoordinates = [];
 
   const options = {
     cols: gridSize,
@@ -306,17 +320,15 @@ function initializeGrid() {
     console.log('Es konnten nicht alle Wörter untergebracht werden.');
   }
 
-  const allCoordinates: { x: number; y: number }[] = [];
-
   ws.words.forEach((word: any) => {
-    allCoordinates.push(...word.path);
+    solutionCoordinates.push(...word.path);
   });
 
   grid = [];
   for (let x = 0; x < gridSize; x++) {
     grid[x] = [];
     for (let y = 0; y < gridSize; y++) {
-      if (allCoordinates.some((coord) => coord.x === x && coord.y === y)) {
+      if (solutionCoordinates.some((coord) => coord.x === x && coord.y === y)) {
         grid[x][y] = ws.grid[y][x];
       } else {
         grid[x][y] = randomLetter();
@@ -340,6 +352,13 @@ function drawGrid() {
         }
         if (selectedCells[x][y]) {
           fillCell(x, y, 'rgba(140, 180, 255, 0.34)');
+        }
+        if (
+          showSolutions.value &&
+          solutionCoordinates.some((coord) => coord.x === x && coord.y === y) &&
+          !correctCells[x][y]
+        ) {
+          fillCell(x, y, 'rgba(165,202,158,0.15)');
         }
         ctx.strokeStyle = 'gainsboro';
         ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
