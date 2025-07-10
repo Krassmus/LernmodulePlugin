@@ -4,8 +4,8 @@
       <div class="canvas-and-word-list-container">
         <canvas
           id="c"
-          width="576"
-          height="576"
+          :width="canvasSize"
+          :height="canvasSize"
           @pointerdown.stop="onPointerdownCanvas($event)"
           @pointermove.stop="onPointermoveCanvas($event)"
           @pointerup.stop="onPointerupCanvas($event)"
@@ -142,7 +142,6 @@ let timerInterval: number | null = null; // Store interval ID to control timer
 
 // Constants
 const cellSize = 48;
-const gridSize = 12;
 
 // Lifecycle Hooks
 onMounted(() => {
@@ -158,6 +157,17 @@ onBeforeUnmount(() => {
 });
 
 // Computed properties
+const gridSize = computed(() => {
+  let longestWordLength = Math.max(...words.value.map((word) => word.length));
+  let numberOfWords = words.value.length;
+
+  return Math.min(Math.max(longestWordLength, numberOfWords, 5), 18);
+});
+
+const canvasSize = computed(() => {
+  return gridSize.value * cellSize;
+});
+
 const words = computed(() => {
   if (props.task?.words) {
     return props.task.words
@@ -287,9 +297,9 @@ function randomLetter() {
 
 function resetSelectedCells() {
   selectedCells = [];
-  for (let x = 0; x < gridSize; x++) {
+  for (let x = 0; x < gridSize.value; x++) {
     selectedCells[x] = [];
-    for (let y = 0; y < gridSize; y++) {
+    for (let y = 0; y < gridSize.value; y++) {
       selectedCells[x][y] = false;
     }
   }
@@ -297,9 +307,9 @@ function resetSelectedCells() {
 
 function resetCorrectCells() {
   correctCells = [];
-  for (let x = 0; x < gridSize; x++) {
+  for (let x = 0; x < gridSize.value; x++) {
     correctCells[x] = [];
-    for (let y = 0; y < gridSize; y++) {
+    for (let y = 0; y < gridSize.value; y++) {
       correctCells[x][y] = false;
     }
   }
@@ -312,8 +322,8 @@ function initializeGrid() {
   solutionCoordinates = [];
 
   const options = {
-    cols: gridSize,
-    rows: gridSize,
+    cols: gridSize.value,
+    rows: gridSize.value,
     disabledDirections: disabledDirections.value,
     dictionary: words.value,
     maxWords: words.value.length,
@@ -339,9 +349,9 @@ function initializeGrid() {
   });
 
   grid = [];
-  for (let x = 0; x < gridSize; x++) {
+  for (let x = 0; x < gridSize.value; x++) {
     grid[x] = [];
-    for (let y = 0; y < gridSize; y++) {
+    for (let y = 0; y < gridSize.value; y++) {
       if (solutionCoordinates.some((coord) => coord.x === x && coord.y === y)) {
         grid[x][y] = ws.grid[y][x];
       } else {
@@ -363,8 +373,8 @@ function drawGrid() {
     ctx.font = 'bold 26px calibri';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    for (let x = 0; x < gridSize; x++) {
-      for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize.value; x++) {
+      for (let y = 0; y < gridSize.value; y++) {
         if (correctCells[x][y]) {
           fillCell(x, y, 'rgb(165,202,158)');
         }
@@ -425,8 +435,14 @@ function getCellUnderCursor(event: PointerEvent) {
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
-  const cellX = Math.max(0, Math.min(Math.floor(x / cellSize), gridSize - 1));
-  const cellY = Math.max(0, Math.min(Math.floor(y / cellSize), gridSize - 1));
+  const cellX = Math.max(
+    0,
+    Math.min(Math.floor(x / cellSize), gridSize.value - 1)
+  );
+  const cellY = Math.max(
+    0,
+    Math.min(Math.floor(y / cellSize), gridSize.value - 1)
+  );
   return { cellX, cellY };
 }
 
@@ -599,7 +615,7 @@ function endSelection() {
 }
 
 function coordinatesAreValid(x: number, y: number): boolean {
-  return !(x < 0 || x >= gridSize || y < 0 || y >= gridSize);
+  return !(x < 0 || x >= gridSize.value || y < 0 || y >= gridSize.value);
 }
 
 function getSelectedWord(): string {
@@ -675,7 +691,12 @@ function getSelectedWord(): string {
 }
 
 function fillCell(xCell: number, yCell: number, fillStyle: string) {
-  if (xCell < 0 || xCell > gridSize - 1 || yCell < 0 || yCell > gridSize - 1) {
+  if (
+    xCell < 0 ||
+    xCell > gridSize.value - 1 ||
+    yCell < 0 ||
+    yCell > gridSize.value - 1
+  ) {
     return;
   }
 
@@ -689,8 +710,8 @@ function fillCell(xCell: number, yCell: number, fillStyle: string) {
 }
 
 function markSelectedWordCorrect() {
-  for (let x = 0; x < gridSize; x++) {
-    for (let y = 0; y < gridSize; y++) {
+  for (let x = 0; x < gridSize.value; x++) {
+    for (let y = 0; y < gridSize.value; y++) {
       if (!correctCells[x][y]) {
         correctCells[x][y] = selectedCells[x][y];
       }
