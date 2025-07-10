@@ -63,7 +63,7 @@
           />
 
           <button
-            v-if="taskSubmitted"
+            v-if="taskSubmitted && !showSolutions"
             v-text="task.strings.solutionsButton"
             @click="onClickShowSolutions"
             type="button"
