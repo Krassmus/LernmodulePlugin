@@ -1,74 +1,83 @@
 <template>
   <div class="stud5p-task">
-    <div class="canvas-and-word-list-container">
-      <canvas
-        id="c"
-        width="576"
-        height="576"
-        @pointerdown.stop="onPointerdownCanvas($event)"
-        @pointermove.stop="onPointermoveCanvas($event)"
-        @pointerup.stop="onPointerupCanvas($event)"
-      />
+    <template v-if="words.length > 0">
+      <div class="canvas-and-word-list-container">
+        <canvas
+          id="c"
+          width="576"
+          height="576"
+          @pointerdown.stop="onPointerdownCanvas($event)"
+          @pointermove.stop="onPointermoveCanvas($event)"
+          @pointerup.stop="onPointerupCanvas($event)"
+        />
 
-      <div class="word-list" v-if="task.showWordList">
-        <h2 class="word-list-title" v-text="task.strings.wordListTitle" />
-        <ul>
-          <template v-for="word in words" :key="word">
-            <li v-if="foundWords.includes(word)" class="found-word">
-              {{ word }}
-            </li>
-            <li v-else>{{ word }}</li>
-          </template>
-        </ul>
+        <div class="word-list" v-if="task.showWordList">
+          <h2 class="word-list-title" v-text="task.strings.wordListTitle" />
+          <ul>
+            <template v-for="word in words" :key="word">
+              <li v-if="foundWords.includes(word)" class="found-word">
+                {{ word }}
+              </li>
+              <li v-else>{{ word }}</li>
+            </template>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div class="time-container">
-      <span>⏲</span>
-      <span class="time-info" v-text="task.strings.timer" />
-      <span
-        v-text="
-          $gettext('%{ minutes }:%{ seconds }', {
-            minutes: Math.floor(timer / 60),
-            seconds: (timer % 60).toString().padStart(2, '0'),
-          })
-        "
-      />
-    </div>
-    <div class="feedback-and-button-container">
-      <div class="feedback-container">
-        <FeedbackElement
-          v-if="taskCompleted"
-          :achievedPoints="score"
-          :maxPoints="maxScore"
-          :result-message="resultMessage"
+      <div class="time-container">
+        <span>⏲</span>
+        <span class="time-info" v-text="task.strings.timer" />
+        <span
+          v-text="
+            $gettext('%{ minutes }:%{ seconds }', {
+              minutes: Math.floor(timer / 60),
+              seconds: (timer % 60).toString().padStart(2, '0'),
+            })
+          "
         />
       </div>
+      <div class="feedback-and-button-container">
+        <div class="feedback-container">
+          <FeedbackElement
+            v-if="taskCompleted"
+            :achievedPoints="score"
+            :maxPoints="maxScore"
+            :result-message="resultMessage"
+          />
+        </div>
 
-      <div class="button-panel">
-        <button
-          v-if="showCheckButton"
-          v-text="task.strings.checkButton"
-          @click="onClickCheck"
-          type="button"
-          class="stud5p-button"
-        />
+        <div class="button-panel">
+          <button
+            v-if="showCheckButton"
+            v-text="task.strings.checkButton"
+            @click="onClickCheck"
+            type="button"
+            class="stud5p-button"
+          />
 
-        <button
-          v-if="taskCompleted"
-          v-text="task.strings.retryButton"
-          @click="onClickRetry"
-          type="button"
-          class="stud5p-button"
-        />
+          <button
+            v-if="taskCompleted"
+            v-text="task.strings.retryButton"
+            @click="onClickRetry"
+            type="button"
+            class="stud5p-button"
+          />
 
-        <button
-          v-if="taskSubmitted"
-          v-text="task.strings.solutionsButton"
-          @click="onClickShowSolutions"
-          type="button"
-          class="stud5p-button"
-        />
+          <button
+            v-if="taskSubmitted"
+            v-text="task.strings.solutionsButton"
+            @click="onClickShowSolutions"
+            type="button"
+            class="stud5p-button"
+          />
+        </div>
       </div>
+    </template>
+    <div v-else>
+      {{
+        $gettext(
+          'Fügen Sie Wörter hinzu um ein Find the Words Rätsel zu erstellen.'
+        )
+      }}
     </div>
   </div>
 </template>
@@ -314,10 +323,15 @@ function initializeGrid() {
   };
 
   // Create a new puzzle
-  const ws = new WordSearch(options);
-
-  if (ws.words.length !== words.value.length) {
-    console.log('Es konnten nicht alle Wörter untergebracht werden.');
+  let ws = new WordSearch(options);
+  let count = 1;
+  while (ws.words.length !== words.value.length && count <= 10) {
+    console.log(
+      'Es konnten nicht alle Wörter untergebracht werden. Versuche es bis zu 10 mal erneut:',
+      count + '. Versuch'
+    );
+    ws = new WordSearch(options);
+    count++;
   }
 
   ws.words.forEach((word: any) => {
@@ -339,6 +353,10 @@ function initializeGrid() {
 
 function drawGrid() {
   const canvas = document.getElementById('c') as HTMLCanvasElement;
+  if (!canvas) {
+    console.error('No Canvas');
+    return;
+  }
   const ctx = canvas.getContext('2d');
   if (ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -721,6 +739,7 @@ function getDirection(
 .canvas-and-word-list-container {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
 }
 
 .word-list {
@@ -730,6 +749,7 @@ function getDirection(
   background: #f5f5f5;
   padding: 0.5em;
   border: 1px solid #ccc;
+  align-self: stretch;
 }
 
 .word-list-title {
