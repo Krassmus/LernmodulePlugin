@@ -254,7 +254,7 @@ function resetAlphabet(): void {
 function resetAlphabetToUsedLetters(): void {
   modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.alphabet = Array.from(
-      new Set(draft.words.replace(/[\s,]/g, '').split(''))
+      new Set(draft.words.toLowerCase().replace(/[\s,]/g, '').split(''))
     ).join('');
   });
 
