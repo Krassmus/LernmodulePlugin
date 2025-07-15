@@ -12,6 +12,16 @@
           />
         </label>
         <label>
+          {{ $gettext('Feldgröße:') }}
+          <input
+            v-model="modelTaskDefinition.size"
+            @input="onInputSize($event.target.value)"
+            min="6"
+            max="24"
+            type="number"
+          />
+        </label>
+        <label>
           {{ $gettext('Zeichen, mit denen die Tafel aufgefüllt wird:') }}
           <input
             v-model="modelTaskDefinition.alphabet"
@@ -189,7 +199,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, PropType, ref, watch } from 'vue';
+import { computed, defineProps, inject, PropType, ref, watch } from 'vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import {
@@ -215,6 +225,16 @@ const modelTaskDefinition = ref<FindTheWordsTask>(
   cloneDeep(props.taskDefinition)
 );
 
+const words = computed(() => {
+  if (props.taskDefinition?.words) {
+    return props.taskDefinition.words
+      .split(',')
+      .filter((word) => word.trim())
+      .map((word) => word.trim().toUpperCase());
+  }
+  return [];
+});
+
 watch(
   () => props.taskDefinition,
   (newTaskDefinition, oldTaskDefinition) => {
@@ -233,6 +253,32 @@ function onInputWords(words: string): void {
   taskEditor!.performEdit({
     newTaskDefinition: cloneDeep(modelTaskDefinition.value),
   });
+}
+
+function onInputSize(size: number): void {
+  let longestWord = 0;
+
+  for (const word of words.value) {
+    console.log(word, word.length);
+    if (word.length > longestWord) {
+      longestWord = word.length;
+    }
+  }
+
+  console.log(longestWord);
+
+  let num = Number(size);
+  if (num > 24) {
+    num = 24;
+  }
+  if (num < longestWord) {
+    num = longestWord;
+  }
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+    draft.size = num;
+  });
+
+  updateTaskDefinition('size');
 }
 
 function onInputAlphabet(alphabet: string): void {

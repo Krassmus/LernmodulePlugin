@@ -140,9 +140,6 @@ const timer = ref<number>(0); // Track elapsed time in seconds
 let timerStarted: boolean = false; // Flag to check if timer has started
 let timerInterval: number | null = null; // Store interval ID to control timer
 
-// Constants
-const cellSize = 48;
-
 // Lifecycle Hooks
 onMounted(() => {
   initializeGrid();
@@ -158,14 +155,15 @@ onBeforeUnmount(() => {
 
 // Computed properties
 const gridSize = computed(() => {
-  let longestWordLength = Math.max(...words.value.map((word) => word.length));
-  let numberOfWords = words.value.length;
+  return props.task?.size;
+});
 
-  return Math.min(Math.max(longestWordLength, numberOfWords, 5), 18);
+const cellSize = computed(() => {
+  return canvasSize.value / gridSize.value;
 });
 
 const canvasSize = computed(() => {
-  return gridSize.value * cellSize;
+  return 720;
 });
 
 const words = computed(() => {
@@ -389,12 +387,17 @@ function drawGrid() {
           fillCell(x, y, 'rgba(165,202,158,0.15)');
         }
         ctx.strokeStyle = 'gainsboro';
-        ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        ctx.strokeRect(
+          x * cellSize.value,
+          y * cellSize.value,
+          cellSize.value,
+          cellSize.value
+        );
         ctx.fillStyle = '#404040';
         ctx.fillText(
           grid[x][y],
-          x * cellSize + cellSize / 2,
-          y * cellSize + cellSize / 2
+          x * cellSize.value + cellSize.value / 2,
+          y * cellSize.value + cellSize.value / 2
         );
       }
     }
@@ -437,11 +440,11 @@ function getCellUnderCursor(event: PointerEvent) {
   const y = event.clientY - rect.top;
   const cellX = Math.max(
     0,
-    Math.min(Math.floor(x / cellSize), gridSize.value - 1)
+    Math.min(Math.floor(x / cellSize.value), gridSize.value - 1)
   );
   const cellY = Math.max(
     0,
-    Math.min(Math.floor(y / cellSize), gridSize.value - 1)
+    Math.min(Math.floor(y / cellSize.value), gridSize.value - 1)
   );
   return { cellX, cellY };
 }
@@ -705,7 +708,12 @@ function fillCell(xCell: number, yCell: number, fillStyle: string) {
 
   if (ctx) {
     ctx.fillStyle = fillStyle;
-    ctx.fillRect(xCell * cellSize, yCell * cellSize, cellSize, cellSize);
+    ctx.fillRect(
+      xCell * cellSize.value,
+      yCell * cellSize.value,
+      cellSize.value,
+      cellSize.value
+    );
   }
 }
 
