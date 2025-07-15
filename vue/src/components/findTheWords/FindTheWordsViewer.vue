@@ -384,7 +384,7 @@ function drawGrid() {
           solutionCoordinates.some((coord) => coord.x === x && coord.y === y) &&
           !correctCells[x][y]
         ) {
-          fillCell(x, y, 'rgba(165,202,158,0.15)');
+          fillCell(x, y, 'rgb(158,202,202)');
         }
         ctx.strokeStyle = 'gainsboro';
         ctx.strokeRect(
