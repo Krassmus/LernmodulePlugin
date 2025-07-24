@@ -15,10 +15,13 @@
           <h2 class="word-list-title" v-text="task.strings.wordListTitle" />
           <ul>
             <template v-for="word in words" :key="word">
-              <li v-if="foundWords.includes(word)" class="found-word">
+              <li
+                :title="word"
+                class="word"
+                :class="{ 'found-word': foundWords.includes(word) }"
+              >
                 {{ word }}
               </li>
-              <li v-else>{{ word }}</li>
             </template>
           </ul>
         </div>
