@@ -92,7 +92,9 @@ export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
   words: z.string(),
+  size: z.number().optional().default(12),
   alphabet: z.string(),
+  showWordList: z.boolean().default(true),
   directions: z
     .object({
       n: z.boolean(),
@@ -106,9 +108,12 @@ export const findTheWordsTaskSchema = z.object({
     })
     .optional(),
   strings: z.object({
+    checkButton: z.string().default(''),
     retryButton: z.string(),
     solutionsButton: z.string(),
     resultMessage: z.string(),
+    wordListTitle: z.string().default('Wörter'),
+    timer: z.string(),
   }),
 });
 export type FindTheWordsTask = z.infer<typeof findTheWordsTaskSchema>;
@@ -370,8 +375,10 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FindTheWords':
       return {
         task_type: 'FindTheWords',
-        words: 'apple, banana, orange',
-        alphabet: '',
+        words: 'Apfel, Banane, Orange',
+        size: 12,
+        alphabet: 'abcdefghijklmnopqrstuvwxyz',
+        showWordList: true,
         directions: {
           n: true,
           ne: true,
@@ -383,9 +390,12 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           nw: true,
         },
         strings: {
+          checkButton: 'Überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
           resultMessage: ':correct von :total Wörter gefunden.',
+          wordListTitle: 'Wörter',
+          timer: 'Zeit:',
         },
       };
     case 'MarkTheWords':

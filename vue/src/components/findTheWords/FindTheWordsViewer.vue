@@ -1,30 +1,46 @@
 <template>
-  <div style="display: flex">
-    <div class="stud5p-task">
-      <div style="display: flex; flex-direction: row; gap: 1em">
+  <div class="stud5p-task">
+    <template v-if="words.length > 0">
+      <div class="canvas-and-word-list-container">
         <canvas
           id="c"
-          width="576"
-          height="576"
+          :width="canvasSize"
+          :height="canvasSize"
           @pointerdown.stop="onPointerdownCanvas($event)"
           @pointermove.stop="onPointermoveCanvas($event)"
           @pointerup.stop="onPointerupCanvas($event)"
         />
 
-        <div style="display: flex; flex-direction: column">
-          <p style="margin: 0; font-weight: bold">
-            {{ $gettext('Wörter') }}
-          </p>
-          <template v-for="word in words" :key="word">
-            <s v-if="foundWords.includes(word)"> {{ word }}</s>
-            <span v-else>{{ word }}</span>
-          </template>
+        <div class="word-list" v-if="task.showWordList">
+          <h2 class="word-list-title" v-text="task.strings.wordListTitle" />
+          <ul>
+            <template v-for="word in words" :key="word">
+              <li
+                :title="word"
+                class="word"
+                :class="{ 'found-word': foundWords.includes(word) }"
+              >
+                {{ word }}
+              </li>
+            </template>
+          </ul>
         </div>
+      </div>
+      <div class="time-container">
+        <span>⏲</span>
+        <span class="time-info" v-text="task.strings.timer" />
+        <span
+          v-text="
+            Math.floor(timer / 60) +
+            ':' +
+            (timer % 60).toString().padStart(2, '0')
+          "
+        />
       </div>
       <div class="feedback-and-button-container">
         <div class="feedback-container">
           <FeedbackElement
-            v-if="showResults"
+            v-if="taskCompleted"
             :achievedPoints="score"
             :maxPoints="maxScore"
             :result-message="resultMessage"
@@ -33,14 +49,37 @@
 
         <div class="button-panel">
           <button
+            v-if="showCheckButton"
+            v-text="task.strings.checkButton"
+            @click="onClickCheck"
+            type="button"
+            class="stud5p-button"
+          />
+
+          <button
             v-if="taskCompleted"
             v-text="task.strings.retryButton"
             @click="onClickRetry"
             type="button"
             class="stud5p-button"
           />
+
+          <button
+            v-if="taskSubmitted && !showSolutions"
+            v-text="task.strings.solutionsButton"
+            @click="onClickShowSolutions"
+            type="button"
+            class="stud5p-button"
+          />
         </div>
       </div>
+    </template>
+    <div v-else>
+      {{
+        $gettext(
+          'Fügen Sie Wörter hinzu um ein Find the Words Rätsel zu erstellen.'
+        )
+      }}
     </div>
   </div>
 </template>
@@ -90,26 +129,18 @@ const props = defineProps({
   },
 });
 
-// Watchers
-watch(
-  () => props.task,
-  () => {
-    initializeGrid();
-    drawGrid();
-  },
-  { deep: true }
-);
-
 // State
 let grid: string[][] = [];
 let selectedCells: boolean[][] = [];
 let correctCells: boolean[][] = [];
+let solutionCoordinates: { x: number; y: number }[] = [];
 const foundWords = ref<string[]>([]);
 const dragState = ref<DragState>();
-
-// Constants
-const cellSize = 48;
-const gridSize = 12;
+const taskSubmitted = ref<boolean>(false);
+const showSolutions = ref<boolean>(false);
+const timer = ref<number>(0); // Track elapsed time in seconds
+let timerStarted: boolean = false; // Flag to check if timer has started
+let timerInterval: number | null = null; // Store interval ID to control timer
 
 // Lifecycle Hooks
 onMounted(() => {
@@ -125,6 +156,18 @@ onBeforeUnmount(() => {
 });
 
 // Computed properties
+const gridSize = computed(() => {
+  return props.task?.size;
+});
+
+const cellSize = computed(() => {
+  return 42;
+});
+
+const canvasSize = computed(() => {
+  return gridSize.value * cellSize.value;
+});
+
 const words = computed(() => {
   if (props.task?.words) {
     return props.task.words
@@ -168,12 +211,8 @@ const maxScore = computed(() => {
   return words.value.length;
 });
 
-const showResults = computed(() => {
-  return score.value > 0;
-});
-
 const taskCompleted = computed(() => {
-  return score.value === maxScore.value;
+  return score.value === maxScore.value || taskSubmitted.value;
 });
 
 const resultMessage = computed(() => {
@@ -186,8 +225,65 @@ const resultMessage = computed(() => {
   return result;
 });
 
+const showCheckButton = computed(() => {
+  return !taskCompleted.value;
+});
+
+// Watchers
+watch(
+  () => props.task,
+  () => {
+    initializeGrid();
+    drawGrid();
+  },
+  { deep: true }
+);
+
+watch(
+  () => taskCompleted.value,
+  (newValue) => {
+    if (newValue) {
+      stopTimer();
+    }
+  }
+);
+
+function startTimer(): void {
+  timerStarted = true;
+
+  // Start a timer that increments every second
+  timerInterval = setInterval(() => {
+    timer.value++;
+  }, 1000) as unknown as number;
+}
+
+function stopTimer(): void {
+  // Stop the timer and clear the interval
+  if (timerInterval !== null) {
+    clearInterval(timerInterval);
+    timerInterval = null; // Reset after clearing
+  }
+
+  timerStarted = false;
+}
+
+function onClickCheck(): void {
+  taskSubmitted.value = true;
+  stopTimer();
+}
+
 function onClickRetry(): void {
+  taskSubmitted.value = false;
+  showSolutions.value = false;
+  timer.value = 0;
+  solutionCoordinates = [];
+  stopTimer();
   initializeGrid();
+  drawGrid();
+}
+
+function onClickShowSolutions(): void {
+  showSolutions.value = true;
   drawGrid();
 }
 
@@ -201,9 +297,9 @@ function randomLetter() {
 
 function resetSelectedCells() {
   selectedCells = [];
-  for (let x = 0; x < gridSize; x++) {
+  for (let x = 0; x < gridSize.value; x++) {
     selectedCells[x] = [];
-    for (let y = 0; y < gridSize; y++) {
+    for (let y = 0; y < gridSize.value; y++) {
       selectedCells[x][y] = false;
     }
   }
@@ -211,9 +307,9 @@ function resetSelectedCells() {
 
 function resetCorrectCells() {
   correctCells = [];
-  for (let x = 0; x < gridSize; x++) {
+  for (let x = 0; x < gridSize.value; x++) {
     correctCells[x] = [];
-    for (let y = 0; y < gridSize; y++) {
+    for (let y = 0; y < gridSize.value; y++) {
       correctCells[x][y] = false;
     }
   }
@@ -223,10 +319,11 @@ function initializeGrid() {
   resetSelectedCells();
   resetCorrectCells();
   foundWords.value = [];
+  solutionCoordinates = [];
 
   const options = {
-    cols: gridSize,
-    rows: gridSize,
+    cols: gridSize.value,
+    rows: gridSize.value,
     disabledDirections: disabledDirections.value,
     dictionary: words.value,
     maxWords: words.value.length,
@@ -236,23 +333,26 @@ function initializeGrid() {
   };
 
   // Create a new puzzle
-  const ws = new WordSearch(options);
-
-  if (ws.words.length !== words.value.length) {
-    console.log('Es konnten nicht alle Wörter untergebracht werden.');
+  let ws = new WordSearch(options);
+  let count = 1;
+  while (ws.words.length !== words.value.length && count <= 10) {
+    console.log(
+      'Es konnten nicht alle Wörter untergebracht werden. Versuche es bis zu 10 mal erneut:',
+      count + '. Versuch'
+    );
+    ws = new WordSearch(options);
+    count++;
   }
 
-  const allCoordinates: { x: number; y: number }[] = [];
-
   ws.words.forEach((word: any) => {
-    allCoordinates.push(...word.path);
+    solutionCoordinates.push(...word.path);
   });
 
   grid = [];
-  for (let x = 0; x < gridSize; x++) {
+  for (let x = 0; x < gridSize.value; x++) {
     grid[x] = [];
-    for (let y = 0; y < gridSize; y++) {
-      if (allCoordinates.some((coord) => coord.x === x && coord.y === y)) {
+    for (let y = 0; y < gridSize.value; y++) {
+      if (solutionCoordinates.some((coord) => coord.x === x && coord.y === y)) {
         grid[x][y] = ws.grid[y][x];
       } else {
         grid[x][y] = randomLetter();
@@ -263,27 +363,43 @@ function initializeGrid() {
 
 function drawGrid() {
   const canvas = document.getElementById('c') as HTMLCanvasElement;
+  if (!canvas) {
+    console.error('No Canvas');
+    return;
+  }
   const ctx = canvas.getContext('2d');
   if (ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = 'bold 26px calibri';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    for (let x = 0; x < gridSize; x++) {
-      for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize.value; x++) {
+      for (let y = 0; y < gridSize.value; y++) {
         if (correctCells[x][y]) {
-          fillCell(x, y, 'rgb(165,202,158)');
+          fillCell(x, y, '#d4f6e6');
         }
-        if (selectedCells[x][y]) {
+        if (!showSolutions.value && selectedCells[x][y]) {
+          fillCell(x, y, 'rgba(140, 180, 255, 0.34)');
+        }
+        if (
+          showSolutions.value &&
+          solutionCoordinates.some((coord) => coord.x === x && coord.y === y) &&
+          !correctCells[x][y]
+        ) {
           fillCell(x, y, 'rgba(140, 180, 255, 0.34)');
         }
         ctx.strokeStyle = 'gainsboro';
-        ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        ctx.strokeRect(
+          x * cellSize.value,
+          y * cellSize.value,
+          cellSize.value,
+          cellSize.value
+        );
         ctx.fillStyle = '#404040';
         ctx.fillText(
           grid[x][y],
-          x * cellSize + cellSize / 2,
-          y * cellSize + cellSize / 2
+          x * cellSize.value + cellSize.value / 2,
+          y * cellSize.value + cellSize.value / 2
         );
       }
     }
@@ -292,6 +408,11 @@ function drawGrid() {
 
 function onPointerdownCanvas(event: PointerEvent) {
   if (taskCompleted.value) return;
+
+  if (!timerStarted) {
+    console.log('Starting timer');
+    startTimer();
+  }
 
   if (!dragState.value) {
     // Start selection
@@ -319,8 +440,14 @@ function getCellUnderCursor(event: PointerEvent) {
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
-  const cellX = Math.max(0, Math.min(Math.floor(x / cellSize), gridSize - 1));
-  const cellY = Math.max(0, Math.min(Math.floor(y / cellSize), gridSize - 1));
+  const cellX = Math.max(
+    0,
+    Math.min(Math.floor(x / cellSize.value), gridSize.value - 1)
+  );
+  const cellY = Math.max(
+    0,
+    Math.min(Math.floor(y / cellSize.value), gridSize.value - 1)
+  );
   return { cellX, cellY };
 }
 
@@ -493,7 +620,7 @@ function endSelection() {
 }
 
 function coordinatesAreValid(x: number, y: number): boolean {
-  return !(x < 0 || x >= gridSize || y < 0 || y >= gridSize);
+  return !(x < 0 || x >= gridSize.value || y < 0 || y >= gridSize.value);
 }
 
 function getSelectedWord(): string {
@@ -569,7 +696,12 @@ function getSelectedWord(): string {
 }
 
 function fillCell(xCell: number, yCell: number, fillStyle: string) {
-  if (xCell < 0 || xCell > gridSize - 1 || yCell < 0 || yCell > gridSize - 1) {
+  if (
+    xCell < 0 ||
+    xCell > gridSize.value - 1 ||
+    yCell < 0 ||
+    yCell > gridSize.value - 1
+  ) {
     return;
   }
 
@@ -578,13 +710,18 @@ function fillCell(xCell: number, yCell: number, fillStyle: string) {
 
   if (ctx) {
     ctx.fillStyle = fillStyle;
-    ctx.fillRect(xCell * cellSize, yCell * cellSize, cellSize, cellSize);
+    ctx.fillRect(
+      xCell * cellSize.value,
+      yCell * cellSize.value,
+      cellSize.value,
+      cellSize.value
+    );
   }
 }
 
 function markSelectedWordCorrect() {
-  for (let x = 0; x < gridSize; x++) {
-    for (let y = 0; y < gridSize; y++) {
+  for (let x = 0; x < gridSize.value; x++) {
+    for (let y = 0; y < gridSize.value; y++) {
       if (!correctCells[x][y]) {
         correctCells[x][y] = selectedCells[x][y];
       }
@@ -629,4 +766,59 @@ function getDirection(
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.canvas-and-word-list-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.word-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  background: #f5f5f5;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  align-self: stretch;
+  max-width: 12em;
+}
+
+.word-list-title {
+  margin: 0;
+  font-weight: bold;
+}
+
+.word-list ul {
+  padding-left: 0.75em;
+  padding-right: 1.5em;
+}
+
+.word-list ul .found-word {
+  color: #255c41;
+  position: relative;
+}
+
+.word-list ul .found-word::after {
+  content: '✔';
+  position: absolute;
+  right: -1.5em;
+}
+
+.word {
+  overflow-wrap: break-word;
+}
+
+.time-container {
+  padding-top: 0.5em;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25em;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.time-info {
+  font-weight: bold;
+}
+</style>
