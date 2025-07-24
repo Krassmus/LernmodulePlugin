@@ -6,20 +6,23 @@
         <label>
           {{ $gettext('Zu findende Wörter:') }}
           <input
-            v-model="modelTaskDefinition.words"
+            v-model="userInput"
             @input="onInputWords($event.target.value)"
             type="text"
           />
+          <p v-text="wordsInputMessage" />
         </label>
         <label>
           {{ $gettext('Feldgröße:') }}
           <input
             v-model="modelTaskDefinition.size"
-            @input="onInputSize($event.target.value)"
+            @change="onInputSize($event.target.value)"
+            @blur="clearMessages()"
             min="6"
-            max="24"
+            max="20"
             type="number"
           />
+          <p v-text="numbersInputMessage" />
         </label>
         <label>
           {{ $gettext('Zeichen, mit denen die Tafel aufgefüllt wird:') }}
@@ -224,6 +227,10 @@ const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 const modelTaskDefinition = ref<FindTheWordsTask>(
   cloneDeep(props.taskDefinition)
 );
+const wordsInputMessage = ref<string>('');
+const userInput = ref<string>(modelTaskDefinition.value.words);
+const lastValidInput = ref<string>(modelTaskDefinition.value.words);
+const numbersInputMessage = ref<string>('');
 
 const words = computed(() => {
   if (props.taskDefinition?.words) {
@@ -243,10 +250,54 @@ watch(
   { deep: true }
 );
 
+function clearMessages(): void {
+  wordsInputMessage.value = '';
+  numbersInputMessage.value = '';
+}
+
 function onInputWords(words: string): void {
+  let wordArray = words
+    .split(',')
+    .filter((word) => word.trim())
+    .map((word) => word.trim().toUpperCase());
+
+  let longestWord = 0;
+  for (const word of wordArray) {
+    if (word.length > longestWord) {
+      longestWord = word.length;
+    }
+  }
+
+  const tooLongWord = longestWord > 20;
+  const tooManyWords = wordArray.length > 20;
+
+  if (tooLongWord) {
+    wordsInputMessage.value = $gettext(
+      'Wörter dürfen nicht länger als 20 Zeichen sein.'
+    );
+    userInput.value = lastValidInput.value;
+    return;
+  } else if (tooManyWords) {
+    wordsInputMessage.value = $gettext(
+      'Es dürfen maximal 20 Wörter eingegeben werden.'
+    );
+    userInput.value = lastValidInput.value;
+    return;
+  } else {
+    wordsInputMessage.value = '';
+    lastValidInput.value = words;
+  }
+
   modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.words = words;
   });
+
+  if (longestWord > modelTaskDefinition.value.size) {
+    numbersInputMessage.value = '';
+    modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+      draft.size = longestWord;
+    });
+  }
 
   // Synchronize state modelTaskDefinition -> taskDefinition.
   console.log('update task definition');
@@ -265,15 +316,21 @@ function onInputSize(size: number): void {
     }
   }
 
-  console.log(longestWord);
-
   let num = Number(size);
-  if (num > 24) {
-    num = 24;
+  if (num > 20) {
+    console.log(num);
+    num = 20;
   }
   if (num < longestWord) {
     num = longestWord;
+    numbersInputMessage.value = $gettext(
+      'Minimum %{ characters } da ein Wort mit %{ characters } Zeichen existiert',
+      { characters: num.toString() }
+    );
+  } else {
+    numbersInputMessage.value = '';
   }
+
   modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.size = num;
   });
