@@ -378,7 +378,7 @@ function drawGrid() {
         if (correctCells[x][y]) {
           fillCell(x, y, 'rgb(165,202,158)');
         }
-        if (selectedCells[x][y]) {
+        if (!showSolutions.value && selectedCells[x][y]) {
           fillCell(x, y, 'rgba(140, 180, 255, 0.34)');
         }
         if (
