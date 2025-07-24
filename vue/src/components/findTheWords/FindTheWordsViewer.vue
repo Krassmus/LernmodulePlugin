@@ -782,6 +782,7 @@ function getDirection(
   padding: 0.5em;
   border: 1px solid #ccc;
   align-self: stretch;
+  max-width: 12em;
 }
 
 .word-list-title {
@@ -803,6 +804,10 @@ function getDirection(
   content: '✔';
   position: absolute;
   right: -1.5em;
+}
+
+.word {
+  overflow-wrap: break-word;
 }
 
 .time-container {
