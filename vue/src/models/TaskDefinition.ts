@@ -375,9 +375,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FindTheWords':
       return {
         task_type: 'FindTheWords',
-        words: 'apple, banana, orange',
+        words: 'Apfel, Banane, Orange',
         size: 12,
-        alphabet: '',
+        alphabet: 'abcdefghijklmnopqrstuvwxyz',
         showWordList: true,
         directions: {
           n: true,
