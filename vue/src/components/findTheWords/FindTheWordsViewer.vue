@@ -161,11 +161,11 @@ const gridSize = computed(() => {
 });
 
 const cellSize = computed(() => {
-  return canvasSize.value / gridSize.value;
+  return 42;
 });
 
 const canvasSize = computed(() => {
-  return 720;
+  return gridSize.value * cellSize.value;
 });
 
 const words = computed(() => {
