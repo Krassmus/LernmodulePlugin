@@ -31,10 +31,9 @@
         <span class="time-info" v-text="task.strings.timer" />
         <span
           v-text="
-            $gettext('%{ minutes }:%{ seconds }', {
-              minutes: Math.floor(timer / 60),
-              seconds: (timer % 60).toString().padStart(2, '0'),
-            })
+            Math.floor(timer / 60) +
+            ':' +
+            (timer % 60).toString().padStart(2, '0')
           "
         />
       </div>
