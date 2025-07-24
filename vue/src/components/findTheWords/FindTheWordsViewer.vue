@@ -376,7 +376,7 @@ function drawGrid() {
     for (let x = 0; x < gridSize.value; x++) {
       for (let y = 0; y < gridSize.value; y++) {
         if (correctCells[x][y]) {
-          fillCell(x, y, 'rgb(165,202,158)');
+          fillCell(x, y, '#d4f6e6');
         }
         if (!showSolutions.value && selectedCells[x][y]) {
           fillCell(x, y, 'rgba(140, 180, 255, 0.34)');
@@ -386,7 +386,7 @@ function drawGrid() {
           solutionCoordinates.some((coord) => coord.x === x && coord.y === y) &&
           !correctCells[x][y]
         ) {
-          fillCell(x, y, 'rgb(158,202,202)');
+          fillCell(x, y, 'rgba(140, 180, 255, 0.34)');
         }
         ctx.strokeStyle = 'gainsboro';
         ctx.strokeRect(
