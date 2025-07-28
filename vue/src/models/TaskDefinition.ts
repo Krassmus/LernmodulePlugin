@@ -380,14 +380,14 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         alphabet: 'abcdefghijklmnopqrstuvwxyz',
         showWordList: true,
         directions: {
-          n: true,
+          n: false,
           ne: true,
           e: true,
           se: true,
           s: true,
-          sw: true,
-          w: true,
-          nw: true,
+          sw: false,
+          w: false,
+          nw: false,
         },
         strings: {
           checkButton: 'Überprüfen',
