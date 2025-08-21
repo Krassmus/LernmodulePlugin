@@ -57,6 +57,7 @@
         @input="onSelectTaskType"
         style="margin-left: 0.5em"
       >
+        <option value="Crossword">{{ $gettext('Crossword') }}</option>
         <option value="DragTheWords">{{ $gettext('Drag the Words') }}</option>
         <option value="FillInTheBlanks">
           {{ $gettext('Fill in the Blanks') }}
