@@ -13,8 +13,7 @@
           v-for="draggableElementId in draggableElements"
           :key="draggableElementId"
           :draggable="
-            !this.isDraggableElementUsed(draggableElementId) &&
-            !this.showResults
+            !isDraggableElementUsed(draggableElementId) && !showResults
           "
           @dragstart="startDragElement($event, draggableElementId)"
           @dragend="endDragElement()"
@@ -22,10 +21,10 @@
           class="draggableElement"
           :class="{
             disabled:
-              this.isDraggableElementUsed(draggableElementId) ||
-              this.showResults ||
-              this.draggedElementId === draggableElementId,
-            selected: this.elementIdInteractedWith === draggableElementId,
+              isDraggableElementUsed(draggableElementId) ||
+              showResults ||
+              draggedElementId === draggableElementId,
+            selected: elementIdInteractedWith === draggableElementId,
           }"
         >
           <MultimediaElement
@@ -37,20 +36,20 @@
 
       <div class="targetElementsColumn">
         <PairingViewerTargetElement
-          v-for="pair in this.task.pairs"
+          v-for="pair in task.pairs"
           :class="{
             outlined:
-              !this.elementsDraggedOntoTargets.hasOwnProperty(
+              !elementsDraggedOntoTargets.hasOwnProperty(
                 pair.targetElement.uuid
               ) &&
-              (this.draggedElementId || this.elementIdInteractedWith),
+              (draggedElementId || elementIdInteractedWith),
           }"
           :draggable-image="
             getElementDraggedOntoTarget(pair.targetElement.uuid)
           "
           :target-image="getElementById(pair.targetElement.uuid)"
-          :isCorrect="this.isAnswerCorrect(pair.targetElement.uuid)"
-          :showResult="this.showResults"
+          :isCorrect="isAnswerCorrect(pair.targetElement.uuid)"
+          :showResult="showResults"
           :key="pair.uuid"
           @drop="onDropOnTargetElement($event, pair.targetElement.uuid)"
           @dragstart="startDragTargetElement($event, pair.targetElement.uuid)"
@@ -74,7 +73,7 @@
       <div class="button-panel">
         <button
           v-if="showCheckButton"
-          v-text="this.task.strings.checkButton"
+          v-text="task.strings.checkButton"
           @click="onClickCheck()"
           type="button"
           class="stud5p-button"
@@ -90,7 +89,7 @@
 
         <button
           v-if="showRetryButton"
-          v-text="this.task.strings.retryButton"
+          v-text="task.strings.retryButton"
           @click="onClickTryAgain()"
           type="button"
           class="stud5p-button"
