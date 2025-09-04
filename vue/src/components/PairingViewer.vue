@@ -22,8 +22,8 @@
           :class="{
             disabled:
               isDraggableElementUsed(draggableElementId) ||
-              showResults ||
               draggedElementId === draggableElementId,
+            immovable: showResults,
             selected: elementIdInteractedWith === draggableElementId,
           }"
         >
@@ -480,7 +480,7 @@ export default defineComponent({
   box-shadow: 0 0 10px 0 #406ef3;
 }
 
-.draggableElement:not(.disabled):not(.selected):hover {
+.draggableElement:not(.disabled):not(.immovable):not(.selected):hover {
   cursor: grab;
   border: 2px solid #7ba4d3;
   box-shadow: 0 0 10px 0 #406ef3;
