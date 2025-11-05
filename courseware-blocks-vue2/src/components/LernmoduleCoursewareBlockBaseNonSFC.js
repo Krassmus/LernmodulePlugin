@@ -81,7 +81,6 @@ export default {
       );
 
       // Send message to initialize the Vue 3 courseware block's store
-      debugger;
       const message = {
         type: 'InitializeCoursewareBlock',
         ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,
