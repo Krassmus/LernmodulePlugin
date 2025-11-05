@@ -34,11 +34,13 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
             $url = $this->getPluginUrl() . $jsRelativePath . '/' . $jsFile;
             PageLayout::addScript($url, ['type' => 'module']);
         }
-        $cssFiles = array_filter(scandir($jsDir), function ($filename) {
+        $cssRelativePath = '/courseware-blocks-vue2/assets';
+        $cssDir = $this->getPluginPath() . $cssRelativePath;
+        $cssFiles = array_filter(scandir($cssDir), function ($filename) {
             return str_ends_with($filename, '.css');
         });
         foreach ($cssFiles as $cssFile) {
-            $url = $this->getPluginUrl() . $jsRelativePath . '/' . $cssFile;
+            $url = $this->getPluginUrl() . $cssRelativePath . '/' . $cssFile;
             PageLayout::addStylesheet($url);
         }
 
