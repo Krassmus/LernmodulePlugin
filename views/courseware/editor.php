@@ -18,6 +18,7 @@
         margin: 0 !important;
         grid-column: 1/3 !important;
         grid-row: 1/3 !important;
+        width: 100% !important;
     }
 </style>
 
