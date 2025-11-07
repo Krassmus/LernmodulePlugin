@@ -41,6 +41,7 @@ function componentNameForTaskType(taskType) {
  * base component, which is merely a proxy to our Vue 3 code.
  */
 function coursewareBlockComponentForTaskType(taskType) {
+  // TODO Make Studip 5.4 und 6.1 compatible see issue #40
   return window.Vue.defineAsyncComponent(async () => ({
     name: componentNameForTaskType(taskType),
     extends: LernmoduleCoursewareBlockBaseNonSFC,
