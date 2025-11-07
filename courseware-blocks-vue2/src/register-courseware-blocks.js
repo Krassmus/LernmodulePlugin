@@ -18,7 +18,9 @@ const taskTypes = [
 
 const debug = window.STUDIP.LernmoduleCoursewareBlocksPlugin.debug;
 if (debug) {
-  console.log('Hello :) Registering Lernmodule Courseware blocks...');
+  console.log(
+    'Hello :) Adding event handler to add Lernmodule blocks in Courseware...'
+  );
 }
 window.STUDIP.eventBus.on('courseware:init-plugin-manager', (pluginManager) => {
   for (const taskType of taskTypes) {
