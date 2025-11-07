@@ -57,7 +57,9 @@
         @input="onSelectTaskType"
         style="margin-left: 0.5em"
       >
-        <option value="Crossword">{{ $gettext('Crossword') }}</option>
+        <option v-if="LernmoduleVueJS.LERNMODULE_PREVIEW" value="Crossword">
+          {{ $gettext('Crossword') }}
+        </option>
         <option value="DragTheWords">{{ $gettext('Drag the Words') }}</option>
         <option value="FillInTheBlanks">
           {{ $gettext('Fill in the Blanks') }}
@@ -67,6 +69,13 @@
         </option>
         <option value="FindTheWords">
           {{ $gettext('Find the Words') }}
+        </option>
+        <!-- TODO Test if this works properly. -->
+        <option
+          value="InteractiveVideo"
+          v-if="LernmoduleVueJS.LERNMODULE_PREVIEW"
+        >
+          Interactive video
         </option>
         <option value="MarkTheWords">{{ $gettext('Mark the Words') }}</option>
         <option value="Memory">{{ $gettext('Memory') }}</option>
