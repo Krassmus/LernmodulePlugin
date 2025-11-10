@@ -1,8 +1,18 @@
 <?php
 
 use Courseware\CoursewarePlugin;
+use lib\CoursewareBlocks\DragTheWordsBlock;
+use lib\CoursewareBlocks\FillInTheBlanksBlock;
+use lib\CoursewareBlocks\FindTheHotspotsBlock;
+use lib\CoursewareBlocks\FindTheWordsBlock;
+use lib\CoursewareBlocks\InteractiveVideoBlock;
+use lib\CoursewareBlocks\MarkTheWordsBlock;
+use lib\CoursewareBlocks\MemoryBlock;
+use lib\CoursewareBlocks\PairingBlock;
+use lib\CoursewareBlocks\QuestionBlock;
+use lib\CoursewareBlocks\SequencingBlock;
 
-class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPlugin,
+class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements SystemPlugin,
                                                                        CoursewarePlugin
 {
     public function __construct()
@@ -51,7 +61,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $template = $factory->open('courseware/set_global_variables');
         $template->set_attribute('plugin', $this);
         $script = $template->render();
-        \PageLayout::addBodyElements($script);
+        PageLayout::addBodyElements($script);
 
         // Add CSS to set the correct icons for the blocks in the block adder
         $this->addBlockIconCSS('drag-the-words', 'edit');
@@ -76,7 +86,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
     function addBlockIconCSS($blockType, $iconName) {
         $baseCssSelector = '.cw-blockadder-item-list .cw-blockadder-item-wrapper .cw-blockadder-item';
         $icon = Icon::create($iconName);
-        \PageLayout::addStyle(
+        PageLayout::addStyle(
             $baseCssSelector . '.cw-blockadder-item-' . $blockType . ' {
             background-image:url(' . $icon->asImagePath() . ')
         }'
@@ -95,16 +105,16 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
      */
     public function registerBlockTypes(array $otherBlockTypes): array
     {
-        $otherBlockTypes[] = \lib\CoursewareBlocks\DragTheWordsBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\FillInTheBlanksBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\FindTheHotspotsBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\FindTheWordsBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\InteractiveVideoBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\MarkTheWordsBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\MemoryBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\PairingBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\QuestionBlock::class;
-        $otherBlockTypes[] = \lib\CoursewareBlocks\SequencingBlock::class;
+        $otherBlockTypes[] = DragTheWordsBlock::class;
+        $otherBlockTypes[] = FillInTheBlanksBlock::class;
+        $otherBlockTypes[] = FindTheHotspotsBlock::class;
+        $otherBlockTypes[] = FindTheWordsBlock::class;
+        $otherBlockTypes[] = InteractiveVideoBlock::class;
+        $otherBlockTypes[] = MarkTheWordsBlock::class;
+        $otherBlockTypes[] = MemoryBlock::class;
+        $otherBlockTypes[] = PairingBlock::class;
+        $otherBlockTypes[] = QuestionBlock::class;
+        $otherBlockTypes[] = SequencingBlock::class;
 
         return $otherBlockTypes;
     }
