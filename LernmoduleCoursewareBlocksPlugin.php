@@ -9,6 +9,8 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
     {
         parent::__construct();
 
+        require_once __DIR__ . '/lib/CoursewareBlocks/JsonSchemaTrait.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/LernmoduleBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/DragTheWordsBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/FindTheHotspotsBlock.php';
@@ -93,16 +95,16 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
      */
     public function registerBlockTypes(array $otherBlockTypes): array
     {
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FillInTheBlanksBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheHotspotsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\PairingBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\SequencingBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\DragTheWordsBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\FillInTheBlanksBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\FindTheHotspotsBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\FindTheWordsBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\InteractiveVideoBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\MarkTheWordsBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\MemoryBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\PairingBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\QuestionBlock::class;
+        $otherBlockTypes[] = \lib\CoursewareBlocks\SequencingBlock::class;
 
         return $otherBlockTypes;
     }
