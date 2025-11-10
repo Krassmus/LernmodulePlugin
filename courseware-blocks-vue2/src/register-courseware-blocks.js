@@ -1,4 +1,4 @@
-import LernmoduleCoursewareBlockBaseNonSFC from '@/components/LernmoduleCoursewareBlockBaseNonSFC';
+import LernmoduleCoursewareBlockBase from '@/components/LernmoduleCoursewareBlockBase';
 
 // When adding a Courseware block for a new task type, you must add its name
 // to this array so that a corresponding vue 2 component will be registered in
@@ -39,7 +39,7 @@ window.STUDIP.eventBus.on(
       const name = componentNameForTaskType(taskType);
       const componentOptions = {
         name,
-        extends: LernmoduleCoursewareBlockBaseNonSFC,
+        extends: LernmoduleCoursewareBlockBase,
       };
       // In Vue 3, components registered over plugins at runtime must be defined
       // using 'defineAsyncComponent', whereas in Vue 2, you may simply provide
