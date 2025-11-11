@@ -63,9 +63,6 @@ export default defineComponent({
   },
   methods: {
     initCKE() {
-      if (!window.STUDIP.wysiwyg_enabled) {
-        return false;
-      }
       const textAreaElement = this.$refs.studip_wysiwyg as HTMLTextAreaElement;
       // Process the jQuery event 'wysiwyg.load' which is triggered asynchronously
       // after the wysiwyg editor is mounted using the 'replace()' method.

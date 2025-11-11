@@ -1,53 +1,3 @@
-<!--
-This component embeds the Vue 3 component 'CoursewareBlock'
-(vue/src/components/CoursewareBlock.vue) using an iframe.
-This enables us to write our Lernmodule Courseware blocks in Vue 3, although
-the Stud.IP core is using Vue 2.
-We resize the iframe automatically to fit its contents, and we pass messages
-back and forth with the iframe window in order to load and save the block,
-hide/show its editing UI, and so on.
--->
-<template>
-  <component
-    class="cw-lernmodule-block cw-block"
-    :is="coursewarePluginComponents.CoursewareDefaultBlock"
-    ref="defaultBlock"
-    :block="block"
-    :canEdit="canEdit"
-    :isTeacher="isTeacher"
-    :preview="true"
-    :defaultGrade="false"
-    @storeEdit="storeBlock"
-    @showEdit="onShowEditChange"
-  >
-    <template #content>
-      <template v-if="false">
-        <p>Lernmodule block content. Block:</p>
-        <pre style="font-size: 8px">{{ block }}</pre>
-      </template>
-      <iframe
-        ref="lernmoduleIframe"
-        class="lernmodule-iframe"
-        :src="iframeUrl"
-        @load="onIframeLoad"
-      />
-    </template>
-  </component>
-</template>
-
-<style>
-.lernmodule-iframe {
-  width: 1px;
-  min-width: 100%;
-  border: none;
-}
-/* Hide CoursewareDefaultBlock's 'edit' section */
-.cw-default-block.cw-lernmodule-block .cw-block-edit {
-  display: none;
-}
-</style>
-
-<script>
 import iframeResize from 'iframe-resizer/js/iframeResizer';
 
 export default {
@@ -131,14 +81,15 @@ export default {
       );
 
       // Send message to initialize the Vue 3 courseware block's store
-      this.$refs.lernmoduleIframe.contentWindow.postMessage({
+      const message = {
         type: 'InitializeCoursewareBlock',
         ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,
         canEdit: this.canEdit,
         isTeacher: this.isTeacher,
         block: JSON.parse(JSON.stringify(this.block)),
-        context: this.$store.getters.context,
-      });
+        context: JSON.parse(JSON.stringify(this.$store.getters.context)),
+      };
+      this.$refs.lernmoduleIframe.contentWindow.postMessage(message);
 
       // Call onShowEditChange one time after load to initialize the 'editing'
       // state in our Vue 3 component
@@ -166,5 +117,31 @@ export default {
         });
     },
   },
+  template: `
+    <component
+      class="cw-lernmodule-block cw-block"
+      :is="coursewarePluginComponents.CoursewareDefaultBlock"
+      ref="defaultBlock"
+      :block="block"
+      :canEdit="canEdit"
+      :isTeacher="isTeacher"
+      :preview="true"
+      :defaultGrade="false"
+      @storeEdit="storeBlock"
+      @showEdit="onShowEditChange"
+    >
+      <template #content>
+        <template v-if="false">
+          <p>Lernmodule block content. Block:</p>
+          <pre style="font-size: 8px">{{ block }}</pre>
+        </template>
+        <iframe
+          ref="lernmoduleIframe"
+          class="lernmodule-iframe"
+          :src="iframeUrl"
+          @load="onIframeLoad"
+        />
+      </template>
+    </component>
+  `,
 };
-</script>

@@ -1,14 +1,26 @@
 <?php
 
 use Courseware\CoursewarePlugin;
+use lib\CoursewareBlocks\DragTheWordsBlock;
+use lib\CoursewareBlocks\FillInTheBlanksBlock;
+use lib\CoursewareBlocks\FindTheHotspotsBlock;
+use lib\CoursewareBlocks\FindTheWordsBlock;
+use lib\CoursewareBlocks\InteractiveVideoBlock;
+use lib\CoursewareBlocks\MarkTheWordsBlock;
+use lib\CoursewareBlocks\MemoryBlock;
+use lib\CoursewareBlocks\PairingBlock;
+use lib\CoursewareBlocks\QuestionBlock;
+use lib\CoursewareBlocks\SequencingBlock;
 
-class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPlugin,
+class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements SystemPlugin,
                                                                        CoursewarePlugin
 {
     public function __construct()
     {
         parent::__construct();
 
+        require_once __DIR__ . '/lib/CoursewareBlocks/JsonSchemaTrait.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/LernmoduleBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/DragTheWordsBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/FindTheHotspotsBlock.php';
@@ -34,11 +46,13 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
             $url = $this->getPluginUrl() . $jsRelativePath . '/' . $jsFile;
             PageLayout::addScript($url, ['type' => 'module']);
         }
-        $cssFiles = array_filter(scandir($jsDir), function ($filename) {
+        $cssRelativePath = '/courseware-blocks-vue2/assets';
+        $cssDir = $this->getPluginPath() . $cssRelativePath;
+        $cssFiles = array_filter(scandir($cssDir), function ($filename) {
             return str_ends_with($filename, '.css');
         });
         foreach ($cssFiles as $cssFile) {
-            $url = $this->getPluginUrl() . $jsRelativePath . '/' . $cssFile;
+            $url = $this->getPluginUrl() . $cssRelativePath . '/' . $cssFile;
             PageLayout::addStylesheet($url);
         }
 
@@ -47,7 +61,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $template = $factory->open('courseware/set_global_variables');
         $template->set_attribute('plugin', $this);
         $script = $template->render();
-        \PageLayout::addBodyElements($script);
+        PageLayout::addBodyElements($script);
 
         // Add CSS to set the correct icons for the blocks in the block adder
         $this->addBlockIconCSS('drag-the-words', 'edit');
@@ -72,7 +86,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
     function addBlockIconCSS($blockType, $iconName) {
         $baseCssSelector = '.cw-blockadder-item-list .cw-blockadder-item-wrapper .cw-blockadder-item';
         $icon = Icon::create($iconName);
-        \PageLayout::addStyle(
+        PageLayout::addStyle(
             $baseCssSelector . '.cw-blockadder-item-' . $blockType . ' {
             background-image:url(' . $icon->asImagePath() . ')
         }'
@@ -91,16 +105,16 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
      */
     public function registerBlockTypes(array $otherBlockTypes): array
     {
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FillInTheBlanksBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheHotspotsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\PairingBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\SequencingBlock::class;
+        $otherBlockTypes[] = DragTheWordsBlock::class;
+        $otherBlockTypes[] = FillInTheBlanksBlock::class;
+        $otherBlockTypes[] = FindTheHotspotsBlock::class;
+        $otherBlockTypes[] = FindTheWordsBlock::class;
+        $otherBlockTypes[] = InteractiveVideoBlock::class;
+        $otherBlockTypes[] = MarkTheWordsBlock::class;
+        $otherBlockTypes[] = MemoryBlock::class;
+        $otherBlockTypes[] = PairingBlock::class;
+        $otherBlockTypes[] = QuestionBlock::class;
+        $otherBlockTypes[] = SequencingBlock::class;
 
         return $otherBlockTypes;
     }

@@ -9,6 +9,11 @@
     "gettext:extract": "vue-gettext-extract",
     "gettext:compile": "vue-gettext-compile"
   },
+  "overrides": {
+    "@elan-ev/reststate-vuex": {
+      "vuex": "$vuex"
+    }
+  },
   "dependencies": {
     "@elan-ev/reststate-vuex": "^1.0.6",
     "@popperjs/core": "^2.11.8",
