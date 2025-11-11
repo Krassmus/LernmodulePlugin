@@ -1,4 +1,4 @@
-import LernmoduleCoursewareBlockBase from '@/components/LernmoduleCoursewareBlockBase.vue';
+import LernmoduleCoursewareBlockBase from '@/components/LernmoduleCoursewareBlockBase';
 
 // When adding a Courseware block for a new task type, you must add its name
 // to this array so that a corresponding vue 2 component will be registered in
@@ -18,25 +18,55 @@ const taskTypes = [
 
 const debug = window.STUDIP.LernmoduleCoursewareBlocksPlugin.debug;
 if (debug) {
-  console.log('Hello :) Registering Lernmodule Courseware blocks...');
+  console.log(
+    'Hello :) Adding event handler to add Lernmodule blocks in Courseware...'
+  );
 }
-window.STUDIP.eventBus.on('courseware:init-plugin-manager', (pluginManager) => {
-  for (const taskType of taskTypes) {
-    const blockComponent = coursewareBlockComponentForTaskType(taskType);
-    pluginManager.addBlock(blockComponent.name, blockComponent);
-    if (debug) {
-      console.info('Registered CW block component: ', blockComponent.name);
+window.STUDIP.eventBus.on(
+  'courseware:init-plugin-manager',
+  /**
+   * All of the Lernmodule Courseware Block Vue components inherit from the same
+   * base component, which merely opens an iframe in which the actual component
+   * corresponding to the task type is displayed.
+   * This complex design was created because the development of the lernmodule
+   * courseware blocks began on Stud.IP 5.1, which used Vue 2.
+   * As the Vue.js Lernmodule were developed using Vue 3, they were embedded over
+   * iframes into Courseware. This design is maintained to this day (2025.11.10).
+   */
+  async (pluginManager) => {
+    const isVue3 = await checkIsVue3();
+    for (const taskType of taskTypes) {
+      const name = componentNameForTaskType(taskType);
+      const componentOptions = {
+        name,
+        extends: LernmoduleCoursewareBlockBase,
+      };
+      // In Vue 3, components registered over plugins at runtime must be defined
+      // using 'defineAsyncComponent', whereas in Vue 2, you may simply provide
+      // the bare 'options' object.
+      const blockComponent = isVue3
+        ? window.Vue.defineAsyncComponent(async () => componentOptions)
+        : componentOptions;
+
+      pluginManager.addBlock(name, blockComponent);
+      if (debug) {
+        console.info('Registered CW block component: ', name);
+      }
     }
   }
-});
+);
 
-/**
- * All of the Vue 2 Lernmodule Courseware block components inherit from the same
- * base component, which is merely a proxy to our Vue 3 code.
- */
-function coursewareBlockComponentForTaskType(taskType) {
-  return {
-    name: `Courseware${taskType}Block`,
-    extends: LernmoduleCoursewareBlockBase,
-  };
+function componentNameForTaskType(taskType) {
+  return `Courseware${taskType}Block`;
+}
+
+async function checkIsVue3() {
+  // Hacky method to figure out the version of Vue in Stud.IP.
+  const isVue3 = await window.STUDIP.Vue.load().then(
+    (v) => v.createApp().version
+  );
+  if (debug) {
+    console.log(isVue3 ? 'Detected vue 3' : 'Detected vue 2');
+  }
+  return isVue3;
 }

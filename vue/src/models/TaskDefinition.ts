@@ -1,6 +1,8 @@
 import { v4 } from 'uuid';
 import { z } from 'zod';
 import { $gettext } from '@/language/gettext';
+import CrosswordEditor from '@/components/crossword/CrosswordEditor.vue';
+import CrosswordViewer from '@/components/crossword/CrosswordViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
 import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
@@ -68,6 +70,18 @@ export type LernmoduleMultimediaElement = z.infer<
   typeof multimediaElementSchema
 >;
 export type MultimediaElementType = LernmoduleMultimediaElement['type'];
+
+export const crosswordTaskSchema = z.object({
+  task_type: z.literal('Crossword'),
+  words: z.string(),
+  strings: z.object({
+    checkButton: z.string().default(''),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    resultMessage: z.string(),
+  }),
+});
+export type CrosswordTask = z.infer<typeof crosswordTaskSchema>;
 
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
@@ -243,6 +257,7 @@ export const sequencingTaskSchema = z.object({
 export type SequencingTask = z.infer<typeof sequencingTaskSchema>;
 
 export const taskDefinitionSchema = z.discriminatedUnion('task_type', [
+  crosswordTaskSchema,
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotsTaskSchema,
@@ -265,6 +280,7 @@ export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
   'task_type',
   [
+    crosswordTaskSchema,
     dragTheWordsTaskSchema,
     fillInTheBlanksTaskSchema,
     findTheHotspotsTaskSchema,
@@ -280,6 +296,7 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
 export const taskTypeSchema = z.union([
+  crosswordTaskSchema.shape.task_type,
   dragTheWordsTaskSchema.shape.task_type,
   fillInTheBlanksTaskSchema.shape.task_type,
   findTheHotspotsTaskSchema.shape.task_type,
@@ -303,6 +320,17 @@ function defaultFeedback(): Feedback[] {
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
   switch (type) {
+    case 'Crossword':
+      return {
+        task_type: 'Crossword',
+        words: 'Apfel, Banane, Orange',
+        strings: {
+          checkButton: 'Überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter gefunden.',
+        },
+      };
     case 'DragTheWords':
       return {
         task_type: 'DragTheWords',
@@ -380,14 +408,14 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         alphabet: 'abcdefghijklmnopqrstuvwxyz',
         showWordList: true,
         directions: {
-          n: true,
+          n: false,
           ne: true,
           e: true,
           se: true,
           s: true,
-          sw: true,
-          w: true,
-          nw: true,
+          sw: false,
+          w: false,
+          nw: false,
         },
         strings: {
           checkButton: 'Überprüfen',
@@ -553,6 +581,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
 
 export function viewerForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
+    case 'Crossword':
+      return CrosswordViewer;
     case 'DragTheWords':
       return DragTheWordsViewer;
     case 'InteractiveVideo':
@@ -580,6 +610,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
 
 export function editorForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
+    case 'Crossword':
+      return CrosswordEditor;
     case 'DragTheWords':
       return DragTheWordsEditor;
     case 'InteractiveVideo':
@@ -607,6 +639,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
 
 export function printTaskType(type: TaskDefinition['task_type']): string {
   switch (type) {
+    case 'Crossword':
+      return $gettext('Crossword');
     case 'DragTheWords':
       return $gettext('Drag The Words');
     case 'InteractiveVideo':

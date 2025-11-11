@@ -1569,24 +1569,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ "051b":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_31d93740_prod_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("c077");
-/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_31d93740_prod_lang_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LernmoduleCoursewareBlockBase_vue_vue_type_style_index_0_id_31d93740_prod_lang_css__WEBPACK_IMPORTED_MODULE_0__);
-/* unused harmony reexport * */
-
-
-/***/ }),
-
-/***/ "c077":
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-
 /***/ "fae3":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1610,54 +1592,13 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"0499dc76-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=31d93740
-var render = function render() {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c(_vm.coursewarePluginComponents.CoursewareDefaultBlock, {
-    ref: "defaultBlock",
-    tag: "component",
-    staticClass: "cw-lernmodule-block cw-block",
-    attrs: {
-      "block": _vm.block,
-      "canEdit": _vm.canEdit,
-      "isTeacher": _vm.isTeacher,
-      "preview": true,
-      "defaultGrade": false
-    },
-    on: {
-      "storeEdit": _vm.storeBlock,
-      "showEdit": _vm.onShowEditChange
-    },
-    scopedSlots: _vm._u([{
-      key: "content",
-      fn: function () {
-        return [false ? undefined : _vm._e(), _c('iframe', {
-          ref: "lernmoduleIframe",
-          staticClass: "lernmodule-iframe",
-          attrs: {
-            "src": _vm.iframeUrl
-          },
-          on: {
-            "load": _vm.onIframeLoad
-          }
-        })];
-      },
-      proxy: true
-    }])
-  });
-};
-var staticRenderFns = [];
-
-// CONCATENATED MODULE: ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=template&id=31d93740
-
 // EXTERNAL MODULE: ./node_modules/iframe-resizer/js/iframeResizer.js
 var iframeResizer = __webpack_require__("0363");
 var iframeResizer_default = /*#__PURE__*/__webpack_require__.n(iframeResizer);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js
+// CONCATENATED MODULE: ./src/components/LernmoduleCoursewareBlockBase.js
 
-/* harmony default export */ var LernmoduleCoursewareBlockBasevue_type_script_lang_js = ({
+/* harmony default export */ var LernmoduleCoursewareBlockBase = ({
   name: 'LernmoduleCoursewareBlockBase',
   inject: ['coursewarePluginComponents'],
   props: {
@@ -1728,14 +1669,15 @@ var iframeResizer_default = /*#__PURE__*/__webpack_require__.n(iframeResizer);
       }, this.$refs.lernmoduleIframe);
 
       // Send message to initialize the Vue 3 courseware block's store
-      this.$refs.lernmoduleIframe.contentWindow.postMessage({
+      const message = {
         type: 'InitializeCoursewareBlock',
         ...window.STUDIP.CoursewareLernmoduleBlocksPlugin,
         canEdit: this.canEdit,
         isTeacher: this.isTeacher,
         block: JSON.parse(JSON.stringify(this.block)),
-        context: this.$store.getters.context
-      });
+        context: JSON.parse(JSON.stringify(this.$store.getters.context))
+      };
+      this.$refs.lernmoduleIframe.contentWindow.postMessage(message);
 
       // Call onShowEditChange one time after load to initialize the 'editing'
       // state in our Vue 3 component
@@ -1759,132 +1701,35 @@ var iframeResizer_default = /*#__PURE__*/__webpack_require__.n(iframeResizer);
         this.$refs.defaultBlock.displayFeature(false);
       });
     }
-  }
+  },
+  template: `
+    <component
+      class="cw-lernmodule-block cw-block"
+      :is="coursewarePluginComponents.CoursewareDefaultBlock"
+      ref="defaultBlock"
+      :block="block"
+      :canEdit="canEdit"
+      :isTeacher="isTeacher"
+      :preview="true"
+      :defaultGrade="false"
+      @storeEdit="storeBlock"
+      @showEdit="onShowEditChange"
+    >
+      <template #content>
+        <template v-if="false">
+          <p>Lernmodule block content. Block:</p>
+          <pre style="font-size: 8px">{{ block }}</pre>
+        </template>
+        <iframe
+          ref="lernmoduleIframe"
+          class="lernmodule-iframe"
+          :src="iframeUrl"
+          @load="onIframeLoad"
+        />
+      </template>
+    </component>
+  `
 });
-// CONCATENATED MODULE: ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=script&lang=js
- /* harmony default export */ var components_LernmoduleCoursewareBlockBasevue_type_script_lang_js = (LernmoduleCoursewareBlockBasevue_type_script_lang_js); 
-// EXTERNAL MODULE: ./src/components/LernmoduleCoursewareBlockBase.vue?vue&type=style&index=0&id=31d93740&prod&lang=css
-var LernmoduleCoursewareBlockBasevue_type_style_index_0_id_31d93740_prod_lang_css = __webpack_require__("051b");
-
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent(
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */,
-  shadowMode /* vue-cli only */
-) {
-  // Vue.extend constructor export interop
-  var options =
-    typeof scriptExports === 'function' ? scriptExports.options : scriptExports
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) {
-    // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () {
-          injectStyles.call(
-            this,
-            (options.functional ? this.parent : this).$root.$options.shadowRoot
-          )
-        }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functional component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection(h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing ? [].concat(existing, hook) : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
-// CONCATENATED MODULE: ./src/components/LernmoduleCoursewareBlockBase.vue
-
-
-
-
-
-
-/* normalize component */
-
-var component = normalizeComponent(
-  components_LernmoduleCoursewareBlockBasevue_type_script_lang_js,
-  render,
-  staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var LernmoduleCoursewareBlockBase = (component.exports);
 // CONCATENATED MODULE: ./src/register-courseware-blocks.js
 
 
@@ -1894,27 +1739,46 @@ var component = normalizeComponent(
 const taskTypes = ['DragTheWords', 'FillInTheBlanks', 'FindTheHotspots', 'FindTheWords', 'LmbInteractiveVideo', 'MarkTheWords', 'Memory', 'Pairing', 'Question', 'Sequencing'];
 const debug = window.STUDIP.LernmoduleCoursewareBlocksPlugin.debug;
 if (debug) {
-  console.log('Hello :) Registering Lernmodule Courseware blocks...');
+  console.log('Hello :) Adding event handler to add Lernmodule blocks in Courseware...');
 }
-window.STUDIP.eventBus.on('courseware:init-plugin-manager', pluginManager => {
+window.STUDIP.eventBus.on('courseware:init-plugin-manager',
+/**
+ * All of the Lernmodule Courseware Block Vue components inherit from the same
+ * base component, which merely opens an iframe in which the actual component
+ * corresponding to the task type is displayed.
+ * This complex design was created because the development of the lernmodule
+ * courseware blocks began on Stud.IP 5.1, which used Vue 2.
+ * As the Vue.js Lernmodule were developed using Vue 3, they were embedded over
+ * iframes into Courseware. This design is maintained to this day (2025.11.10).
+ */
+async pluginManager => {
+  const isVue3 = await checkIsVue3();
   for (const taskType of taskTypes) {
-    const blockComponent = coursewareBlockComponentForTaskType(taskType);
-    pluginManager.addBlock(blockComponent.name, blockComponent);
+    const name = componentNameForTaskType(taskType);
+    const componentOptions = {
+      name,
+      extends: LernmoduleCoursewareBlockBase
+    };
+    // In Vue 3, components registered over plugins at runtime must be defined
+    // using 'defineAsyncComponent', whereas in Vue 2, you may simply provide
+    // the bare 'options' object.
+    const blockComponent = isVue3 ? window.Vue.defineAsyncComponent(async () => componentOptions) : componentOptions;
+    pluginManager.addBlock(name, blockComponent);
     if (debug) {
-      console.info('Registered CW block component: ', blockComponent.name);
+      console.info('Registered CW block component: ', name);
     }
   }
 });
-
-/**
- * All of the Vue 2 Lernmodule Courseware block components inherit from the same
- * base component, which is merely a proxy to our Vue 3 code.
- */
-function coursewareBlockComponentForTaskType(taskType) {
-  return {
-    name: `Courseware${taskType}Block`,
-    extends: LernmoduleCoursewareBlockBase
-  };
+function componentNameForTaskType(taskType) {
+  return `Courseware${taskType}Block`;
+}
+async function checkIsVue3() {
+  // Hacky method to figure out the version of Vue in Stud.IP.
+  const isVue3 = await window.STUDIP.Vue.load().then(v => v.createApp().version);
+  if (debug) {
+    console.log(isVue3 ? 'Detected vue 3' : 'Detected vue 2');
+  }
+  return isVue3;
 }
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib-no-default.js
 
