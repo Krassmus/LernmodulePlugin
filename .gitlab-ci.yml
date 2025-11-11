@@ -9,7 +9,7 @@ default:
   # Für jeden Job kann ein beliebiges Docker Image aus Docker Hub verwendet werden.
   # Hier habe ich mein eigenes Docker Image genommen.
   # Der Quellcode für das Docker Image ist in https://gitlab.uni-oldenburg.de/topa8267/rocky-linux-stud.ip-docker-image zu finden.
-  image: annyanich/rockylinux-studip:0.9
+  image: annyanich/rockylinux-studip:0.10
 
 stages:          # List of stages for jobs, and their order of execution
   - build
