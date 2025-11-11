@@ -25,13 +25,13 @@ if (debug) {
 window.STUDIP.eventBus.on(
   'courseware:init-plugin-manager',
   /**
-   * The development of the lernmodule courseware blocks began on Stud.IP 5.x,
-   * which used Vue 2. As the Vue.js Lernmodule were developed using Vue 3,
-   * they were embedded over iframes into Courseware. This design is maintained
-   * to this day (2025.11.10).
    * All of the Lernmodule Courseware Block Vue components inherit from the same
    * base component, which merely opens an iframe in which the actual component
    * corresponding to the task type is displayed.
+   * This complex design was created because the development of the lernmodule
+   * courseware blocks began on Stud.IP 5.1, which used Vue 2.
+   * As the Vue.js Lernmodule were developed using Vue 3, they were embedded over
+   * iframes into Courseware. This design is maintained to this day (2025.11.10).
    */
   async (pluginManager) => {
     const isVue3 = await checkIsVue3();
