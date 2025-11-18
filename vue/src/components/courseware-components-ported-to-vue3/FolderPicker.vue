@@ -6,10 +6,7 @@ the Stud.IP core 5.4, rewritten in Typescript / Vue 3, removing its dependency
     <option v-if="unchoose" value="">
       <translate>kein Ordner ausgewählt</translate>
     </option>
-    <optgroup
-      v-if="this.context.type === 'courses'"
-      :label="textOptGroupCourse"
-    >
+    <optgroup v-if="context.type === 'courses'" :label="textOptGroupCourse">
       <option
         v-for="folder in loadedCourseFolders"
         :key="folder.id"
@@ -209,9 +206,17 @@ export default defineComponent({
   async mounted() {
     this.currentValue = this.value;
     if (this.context.type !== 'users') {
-      await this.getCourseFolders();
+      try {
+        await this.getCourseFolders();
+      } catch (error) {
+        console.error('Error loading course folders: ', error);
+      }
     }
-    await this.getUserFolders();
+    try {
+      await this.getUserFolders();
+    } catch (error) {
+      console.error('Error loading user folders: ', error);
+    }
     this.confirmSelectedFolder();
   },
   watch: {
