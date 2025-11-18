@@ -160,10 +160,15 @@ const selectedInteractionProperties = ref<
 >(undefined);
 
 const taskTypes: Array<TaskDefinition['task_type']> = [
-  'FillInTheBlanks',
   'DragTheWords',
+  'FillInTheBlanks',
+  'FindTheHotspots',
+  'FindTheWords',
   'MarkTheWords',
+  'Memory',
+  'Pairing',
   'Question',
+  'Sequencing',
 ];
 
 provide(interactiveVideoEditorStateSymbol, {
