@@ -84,13 +84,15 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements SystemPlu
      * the Courseware block picker.
      */
     function addBlockIconCSS($blockType, $iconName) {
-        $baseCssSelector = '.cw-blockadder-item-list .cw-blockadder-item-wrapper .cw-blockadder-item';
-        $icon = Icon::create($iconName);
-        PageLayout::addStyle(
-            $baseCssSelector . '.cw-blockadder-item-' . $blockType . ' {
+        if (StudipVersion::olderThan('6.0')) {
+            $baseCssSelector = '.cw-blockadder-item-list .cw-blockadder-item-wrapper .cw-blockadder-item';
+            $icon = Icon::create($iconName);
+            PageLayout::addStyle(
+                $baseCssSelector . '.cw-blockadder-item-' . $blockType . ' {
             background-image:url(' . $icon->asImagePath() . ')
         }'
-        );
+            );
+        }
     }
 
     /**
