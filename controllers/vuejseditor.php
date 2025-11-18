@@ -48,6 +48,12 @@ class VuejseditorController extends PluginController
         } else {
             PageLayout::setTitle(_("Lernmodul bearbeiten"));
         }
+
+        // See #44 https://gitlab.uni-oldenburg.de/it-dienste/stud.ip/plugins/lernmodule/-/issues/44
+        // (Prior to 6.0, the courseware css was part of studip-base.css, which is always present.)
+        if (\StudipVersion::newerThan('6.0')) {
+            PageLayout::addStylesheet("courseware.css");
+        }
     }
 
     public function save_action()
