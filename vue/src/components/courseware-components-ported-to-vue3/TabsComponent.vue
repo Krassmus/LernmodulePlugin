@@ -1,7 +1,7 @@
 <!-- Adapted from https://zerotomastery.io/blog/tab-component-design-with-vue/ -->
 <template>
-  <div class="cw-tabs">
-    <div role="tablist" class="cw-tabs-nav">
+  <div class="tabs cw-tabs">
+    <div role="tablist" class="tab-buttons cw-tabs-nav">
       <button
         v-for="tab in tabs"
         :key="tab.title"
