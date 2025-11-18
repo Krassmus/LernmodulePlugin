@@ -77,3 +77,8 @@ when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
 .no-select {
   user-select: none;
 }
+
+button.add-blank {
+    margin-right: 0.5em;
+    margin-top: 0;
+}

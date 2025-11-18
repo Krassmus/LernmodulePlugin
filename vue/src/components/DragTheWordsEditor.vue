@@ -5,12 +5,7 @@
         <legend>{{ $gettext('Drag the Words') }}</legend>
 
         <div class="h5pEditorTopPanel">
-          <button
-            @click="addBlank"
-            class="button"
-            type="button"
-            style="margin-right: 0.1em"
-          >
+          <button @click="addBlank" class="button add-blank" type="button">
             {{ $gettext('Lücke hinzufügen') }}
           </button>
           <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
