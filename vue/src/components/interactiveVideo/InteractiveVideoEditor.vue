@@ -45,7 +45,7 @@ export default defineComponent({
       <AddInteractions :task-definition="taskDefinition" />
     </TabComponent>
   </TabsComponent>
-  <div style="display: none">
+  <div v-if="false">
     Task definition:
     <pre>{{ taskDefinition }}</pre>
   </div>
