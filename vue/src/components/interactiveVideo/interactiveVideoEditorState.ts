@@ -29,7 +29,8 @@ export interface InteractiveVideoEditorState {
     x: number,
     y: number,
     width: number,
-    height: number
+    height: number,
+    dragState: DragState
   ): void;
   deleteInteraction(interactionId: string): void;
 

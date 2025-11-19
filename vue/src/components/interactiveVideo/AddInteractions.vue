@@ -389,22 +389,28 @@ function resizeOverlay(
   x: number,
   y: number,
   width: number,
-  height: number
+  height: number,
+  dragState: DragState
 ) {
-  const interaction = props.taskDefinition?.interactions.find(
-    (i) => i.id === id
-  );
-  if (!interaction) {
-    throw new Error(`Interaction with id ${id} not found`);
-  }
-  if (interaction.type !== 'overlay') {
-    throw new Error(strings.notAnOverlayError);
-  }
-  // TODO make undoable ?
-  interaction.x = x;
-  interaction.y = y;
-  interaction.width = width;
-  interaction.height = height;
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        const interaction = draft.interactions.find((i) => i.id === id);
+        if (!interaction) {
+          throw new Error(`Interaction with id ${id} not found`);
+        }
+        if (interaction.type !== 'overlay') {
+          throw new Error(strings.notAnOverlayError);
+        }
+        interaction.x = x;
+        interaction.y = y;
+        interaction.width = width;
+        interaction.height = height;
+      }
+    ),
+    undoBatch: dragState,
+  });
 }
 function dragInteractionTimeline(
   id: string,

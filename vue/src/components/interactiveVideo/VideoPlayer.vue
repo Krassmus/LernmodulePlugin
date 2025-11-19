@@ -526,7 +526,8 @@ export default defineComponent({
           filteredX,
           filteredY,
           filteredWidth,
-          filteredHeight
+          filteredHeight,
+          this.dragState
         );
         popperInstance?.update();
       }
