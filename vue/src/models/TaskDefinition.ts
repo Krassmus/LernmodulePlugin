@@ -281,6 +281,9 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
     sequencingTaskSchema,
   ]
 );
+export type TaskDefinitionMinusInteractiveVideo = z.infer<
+  typeof taskDefinitionSchemaMinusInteractiveVideo
+>;
 
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values

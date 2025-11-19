@@ -117,6 +117,7 @@ import {
 import type {
   Interaction,
   InteractiveVideoTask,
+  LmbTaskInteraction,
   OverlayInteraction,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
@@ -128,6 +129,7 @@ import {
   newTask,
   printTaskType,
   TaskDefinition,
+  TaskDefinitionMinusInteractiveVideo,
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 import { interactiveVideoEditorStateSymbol } from '@/components/interactiveVideo/interactiveVideoEditorState';
@@ -139,6 +141,7 @@ import {
 } from '@/components/taskEditorState';
 import produce from 'immer';
 import { isEqual } from 'lodash';
+import strings from '@/components/interactiveVideo/strings';
 
 const props = defineProps({
   taskDefinition: {
@@ -195,7 +198,7 @@ provide(taskEditorStateSymbol, {
 const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
 
 function performEditForEditedLmbInteraction(payload: {
-  newTaskDefinition: TaskDefinition;
+  newTaskDefinition: TaskDefinitionMinusInteractiveVideo;
   undoBatch: unknown;
 }): void {
   // Apply the new task definition for the edited interaction.
@@ -300,9 +303,12 @@ function insertOverlay() {
 }
 
 function insertLmbTaskInteraction(type: TaskDefinition['task_type']) {
+  if (type === 'InteractiveVideo') {
+    throw new Error(strings.forbiddenToNestInteractiveVideos);
+  }
   console.log('insertLmbTaskInteraction', type);
-  const task = newTask(type);
-  const interaction: Interaction = {
+  const task = newTask(type) as TaskDefinitionMinusInteractiveVideo;
+  const interaction: LmbTaskInteraction = {
     type: 'lmbTask',
     id: v4(),
     taskDefinition: task,
@@ -327,6 +333,9 @@ function deleteInteraction(id: string) {
   const interaction = props.taskDefinition.interactions.find(
     (i) => i.id === id
   );
+  if (!interaction) {
+    throw new Error(strings.interactionNotFoundError);
+  }
   const prompt = $gettext('%{ interaction } löschen', {
     interaction: printInteractionType(interaction),
   });
@@ -363,6 +372,9 @@ function resizeOverlay(
   );
   if (!interaction) {
     throw new Error(`Interaction with id ${id} not found`);
+  }
+  if (interaction.type !== 'overlay') {
+    throw new Error(strings.notAnOverlayError);
   }
   // TODO make undoable ?
   interaction.x = x;
