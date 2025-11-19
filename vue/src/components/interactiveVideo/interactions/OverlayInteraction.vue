@@ -35,8 +35,9 @@ export default defineComponent({
   },
   setup() {
     return {
-      editor: inject<InteractiveVideoEditorState>(
-        interactiveVideoEditorStateSymbol
+      editor: inject<InteractiveVideoEditorState | undefined>(
+        interactiveVideoEditorStateSymbol,
+        undefined
       ),
     };
   },
