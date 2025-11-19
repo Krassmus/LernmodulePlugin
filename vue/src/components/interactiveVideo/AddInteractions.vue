@@ -288,9 +288,14 @@ function insertOverlay() {
     content_wysiwyg: $gettext('Einblendung'),
     pauseWhenVisible: true,
   };
-  // TODO make undoable ?
-  // eslint-disable-next-line vue/no-mutating-props
-  props.taskDefinition.interactions.push(interaction);
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        draft.interactions.push(interaction);
+      }
+    ),
+  });
   selectedInteractionId.value = interaction.id;
 }
 
@@ -307,9 +312,14 @@ function insertLmbTaskInteraction(type: TaskDefinition['task_type']) {
     y: 0.5,
     pauseWhenVisible: true,
   };
-  // TODO make undoable ?
-  // eslint-disable-next-line vue/no-mutating-props
-  props.taskDefinition.interactions.push(interaction);
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        draft.interactions.push(interaction);
+      }
+    ),
+  });
   selectedInteractionId.value = interaction.id;
 }
 function deleteInteraction(id: string) {
