@@ -123,7 +123,11 @@ import type {
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
 import SelectedInteractionProperties from '@/components/interactiveVideo/SelectedInteractionProperties.vue';
-import { DragState, VideoMetadata } from '@/components/interactiveVideo/events';
+import {
+  DragState,
+  TimelineDragState,
+  VideoMetadata,
+} from '@/components/interactiveVideo/events';
 import {
   iconForTaskType,
   newTask,
@@ -402,16 +406,25 @@ function resizeOverlay(
   interaction.width = width;
   interaction.height = height;
 }
-function dragInteractionTimeline(id: string, startTime: number) {
-  const interaction = props.taskDefinition?.interactions.find(
-    (i) => i.id === id
-  );
-  if (!interaction) {
-    throw new Error(`Interaction with id ${id} not found`);
-  }
-  // TODO make undoable ?
-  const duration = interaction.endTime - interaction.startTime;
-  interaction.endTime = startTime + duration;
-  interaction.startTime = startTime;
+function dragInteractionTimeline(
+  id: string,
+  startTime: number,
+  dragState: TimelineDragState
+) {
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        const interaction = draft.interactions.find((i) => i.id === id);
+        if (!interaction) {
+          throw new Error(`Interaction with id ${id} not found`);
+        }
+        const duration = interaction.endTime - interaction.startTime;
+        interaction.endTime = startTime + duration;
+        interaction.startTime = startTime;
+      }
+    ),
+    undoBatch: dragState,
+  });
 }
 </script>

@@ -18,3 +18,25 @@ export type DragState =
       handle: string;
     }
   | undefined;
+
+export type TimelineDragState =
+  | { type: 'timeMarker' }
+  | { type: 'panTimeline' }
+  | {
+      type: 'interaction';
+      id: string;
+      mouseStartPos: [number, number]; // clientX, clientY
+      interactionStartTime: number; // Seconds
+      interactionDuration: number; // Seconds
+    }
+  | {
+      type: 'interactionStart';
+      id: string;
+      time: number; // Seconds
+    }
+  | {
+      type: 'interactionEnd';
+      id: string;
+      time: number; // Seconds
+    }
+  | undefined;

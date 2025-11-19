@@ -6,7 +6,10 @@ import {
   PropType,
   StyleValue,
 } from 'vue';
-import { VideoMetadata } from '@/components/interactiveVideo/events';
+import {
+  TimelineDragState,
+  VideoMetadata,
+} from '@/components/interactiveVideo/events';
 import { throttle } from 'lodash';
 import {
   iconForInteraction,
@@ -23,27 +26,6 @@ import getEmValueFromElement from '@/components/interactiveVideo/getEmValueFromE
 import { select } from 'd3-selection';
 import { D3DragEvent, drag } from 'd3-drag';
 
-type DragState =
-  | { type: 'timeMarker' }
-  | { type: 'panTimeline' }
-  | {
-      type: 'interaction';
-      id: string;
-      mouseStartPos: [number, number]; // clientX, clientY
-      interactionStartTime: number; // Seconds
-      interactionDuration: number; // Seconds
-    }
-  | {
-      type: 'interactionStart';
-      id: string;
-      time: number; // Seconds
-    }
-  | {
-      type: 'interactionEnd';
-      id: string;
-      time: number; // Seconds
-    }
-  | undefined;
 export default defineComponent({
   name: 'VideoTimeline',
   setup() {
@@ -73,7 +55,7 @@ export default defineComponent({
   },
   data() {
     return {
-      dragState: undefined as DragState,
+      dragState: undefined as TimelineDragState,
       zoomTransform: { t: 0, k: 1 },
       viewportWidthEm: 1,
     };
@@ -328,7 +310,11 @@ export default defineComponent({
           this.videoMetadata.length - this.dragState.interactionDuration;
         const secondsClamped = Math.max(0, Math.min(maxTime, seconds));
         const id = this.dragState.id;
-        this.editor?.dragInteractionTimeline(id, secondsClamped);
+        this.editor!.dragInteractionTimeline(
+          id,
+          secondsClamped,
+          this.dragState
+        );
       }
     },
     onPointerUpInteraction(event: PointerEvent, interaction: Interaction) {

@@ -1,5 +1,8 @@
 import { InjectionKey, Ref } from 'vue';
-import { DragState } from '@/components/interactiveVideo/events';
+import {
+  DragState,
+  TimelineDragState,
+} from '@/components/interactiveVideo/events';
 
 /**
  * In the Interactive Video Editor, we use provide/inject to pass data to many
@@ -30,5 +33,9 @@ export interface InteractiveVideoEditorState {
   ): void;
   deleteInteraction(interactionId: string): void;
 
-  dragInteractionTimeline(id: string, startTime: number): void;
+  dragInteractionTimeline(
+    id: string,
+    startTime: number,
+    dragState: TimelineDragState
+  ): void;
 }
