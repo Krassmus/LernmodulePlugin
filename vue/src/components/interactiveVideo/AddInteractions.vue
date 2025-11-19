@@ -345,9 +345,17 @@ function deleteInteraction(id: string) {
     return;
   }
   const index = props.taskDefinition.interactions.findIndex((i) => i.id === id);
-  // TODO make undoable... Don't want to delete a whole task permanently with no undo
-  // eslint-disable-next-line vue/no-mutating-props
-  props.taskDefinition.interactions.splice(index, 1);
+  if (index === -1) {
+    throw new Error(strings.interactionNotFoundError);
+  }
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        draft.interactions.splice(index, 1);
+      }
+    ),
+  });
 }
 function dragInteraction(id: string, xFraction: number, yFraction: number) {
   const interaction = props.taskDefinition?.interactions.find(
