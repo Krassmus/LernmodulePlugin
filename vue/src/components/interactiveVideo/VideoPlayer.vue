@@ -42,8 +42,9 @@ export default defineComponent({
   components: { OverlayInteraction, LmbTaskInteraction },
   setup() {
     return {
-      editor: inject<InteractiveVideoEditorState>(
-        interactiveVideoEditorStateSymbol
+      editor: inject<InteractiveVideoEditorState | undefined>(
+        interactiveVideoEditorStateSymbol,
+        undefined
       ),
     };
   },
