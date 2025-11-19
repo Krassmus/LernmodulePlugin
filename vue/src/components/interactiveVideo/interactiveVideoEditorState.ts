@@ -39,4 +39,10 @@ export interface InteractiveVideoEditorState {
     startTime: number,
     dragState: TimelineDragState
   ): void;
+  resizeInteractionTimeline(
+    id: string,
+    type: 'start' | 'end',
+    time: number,
+    dragState: TimelineDragState
+  ): void;
 }

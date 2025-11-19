@@ -186,6 +186,7 @@ provide(interactiveVideoEditorStateSymbol, {
   resizeOverlay,
   deleteInteraction,
   dragInteractionTimeline,
+  resizeInteractionTimeline,
 });
 
 /**
@@ -428,6 +429,31 @@ function dragInteractionTimeline(
         const duration = interaction.endTime - interaction.startTime;
         interaction.endTime = startTime + duration;
         interaction.startTime = startTime;
+      }
+    ),
+    undoBatch: dragState,
+  });
+}
+
+function resizeInteractionTimeline(
+  id: string,
+  type: 'start' | 'end',
+  time: number,
+  dragState: TimelineDragState
+) {
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        const interaction = draft.interactions.find((i) => i.id === id);
+        if (!interaction) {
+          throw new Error(`Interaction with id ${id} not found`);
+        }
+        if (type === 'start') {
+          interaction.startTime = time;
+        } else {
+          interaction.endTime = time;
+        }
       }
     ),
     undoBatch: dragState,

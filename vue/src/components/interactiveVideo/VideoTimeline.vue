@@ -349,8 +349,12 @@ export default defineComponent({
           0,
           Math.min(interaction.endTime - 1, this.dragState.time)
         );
-        // TODO make undoable
-        interaction.startTime = timeClamped;
+        this.editor!.resizeInteractionTimeline(
+          interaction.id,
+          'start',
+          timeClamped,
+          this.dragState
+        );
       }
     },
     onPointerMoveInteractionEnd(ev: PointerEvent, interaction: Interaction) {
@@ -364,8 +368,12 @@ export default defineComponent({
           interaction.startTime + 1,
           Math.min(this.videoMetadata.length, this.dragState.time)
         );
-        // TODO make undoable
-        interaction.endTime = secondsClamped;
+        this.editor!.resizeInteractionTimeline(
+          interaction.id,
+          'end',
+          secondsClamped,
+          this.dragState
+        );
       }
     },
     onPointerUpInteractionStart(ev: PointerEvent, interaction: Interaction) {
