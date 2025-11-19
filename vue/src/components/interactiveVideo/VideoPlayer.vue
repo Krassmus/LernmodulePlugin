@@ -28,23 +28,7 @@ import OverlayInteraction from '@/components/interactiveVideo/interactions/Overl
 import { OverlayInteraction as OverlayInteractionType } from '@/models/InteractiveVideoTask';
 import { mapActions, mapGetters } from 'vuex';
 import { fileRefsSchema } from '@/routes/jsonApi';
-
-type DragState =
-  | {
-      type: 'dragInteraction';
-      interactionId: string;
-      mouseStartPos: [number, number]; // clientX, clientY
-      interactionStartPos: [number, number]; // fraction x, fraction y
-    }
-  | {
-      type: 'resizeInteraction';
-      interactionId: string;
-      mouseStartPos: [number, number]; // clientX, clientY
-      interactionStartPos: [number, number]; // fraction x, fraction y
-      interactionStartSize: [number, number]; // fraction x, fraction y
-      handle: string;
-    }
-  | undefined;
+import { DragState } from '@/components/interactiveVideo/events';
 
 type LoadedStudipFileVideo = StudipFileVideo & {
   download_url: string;
@@ -593,7 +577,12 @@ export default defineComponent({
         const clampedYFraction = Math.min(maxY, Math.max(minY, yFraction));
 
         const id = this.dragState.interactionId;
-        this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
+        this.editor?.dragInteraction(
+          id,
+          clampedXFraction,
+          clampedYFraction,
+          this.dragState
+        );
         popperInstance?.update();
       }
     },

@@ -1,4 +1,5 @@
 import { InjectionKey, Ref } from 'vue';
+import { DragState } from '@/components/interactiveVideo/events';
 
 /**
  * In the Interactive Video Editor, we use provide/inject to pass data to many
@@ -17,7 +18,8 @@ export interface InteractiveVideoEditorState {
   dragInteraction(
     interactionId: string,
     clampedXFraction: number,
-    clampedYFraction: number
+    clampedYFraction: number,
+    dragState: DragState
   ): void;
   resizeOverlay(
     id: string,

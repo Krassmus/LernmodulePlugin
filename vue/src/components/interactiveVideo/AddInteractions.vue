@@ -123,7 +123,7 @@ import type {
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
 import SelectedInteractionProperties from '@/components/interactiveVideo/SelectedInteractionProperties.vue';
-import { VideoMetadata } from '@/components/interactiveVideo/events';
+import { DragState, VideoMetadata } from '@/components/interactiveVideo/events';
 import {
   iconForTaskType,
   newTask,
@@ -357,16 +357,28 @@ function deleteInteraction(id: string) {
     ),
   });
 }
-function dragInteraction(id: string, xFraction: number, yFraction: number) {
-  const interaction = props.taskDefinition?.interactions.find(
-    (i) => i.id === id
-  );
-  if (!interaction) {
-    throw new Error(`Interaction with id ${id} not found`);
-  }
-  // TODO make undoable ?
-  interaction.x = xFraction;
-  interaction.y = yFraction;
+function dragInteraction(
+  id: string,
+  xFraction: number,
+  yFraction: number,
+  // Used in order to batch actions for undo/redo.  Each time you click, drag,
+  // and let go, that should result in a new state in the undo/redo history.
+  dragState: DragState
+) {
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        const interaction = draft.interactions.find((i) => i.id === id);
+        if (!interaction) {
+          throw new Error(`Interaction with id ${id} not found`);
+        }
+        interaction.x = xFraction;
+        interaction.y = yFraction;
+      }
+    ),
+    undoBatch: dragState,
+  });
 }
 function resizeOverlay(
   id: string,
