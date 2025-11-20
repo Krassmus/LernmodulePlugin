@@ -1,7 +1,5 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- eslint-disable vue/no-mutating-props -->
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask, Video } from '@/models/InteractiveVideoTask';
@@ -13,6 +11,11 @@ import FilePicker, {
 import { FileRef, fileRefsSchema } from '@/routes/jsonApi';
 import { fileDetailsUrl, fileIdToUrl } from '@/models/TaskDefinition';
 import { mapActions, mapGetters } from 'vuex';
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
+import produce from 'immer';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -43,6 +46,11 @@ export default defineComponent({
       type: Object as PropType<InteractiveVideoTask>,
       required: true,
     },
+  },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
   },
   data() {
     return {
@@ -101,39 +109,74 @@ export default defineComponent({
       this.currentTime = time;
     },
     onClickUseCurrentTime() {
-      this.taskDefinition.startAt = this.currentTime;
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: InteractiveVideoTask) => {
+            draft.startAt = this.currentTime;
+          }
+        ),
+      });
     },
     updateCurrentFile(file: FilePickerFile) {
       this.selectedFile = file;
       this.selectedFileId = file.id;
     },
     onSaveYoutubeVideo() {
-      this.taskDefinition.video = {
-        type: 'youtube',
-        url: this.youtubeUrlInput,
-      };
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: InteractiveVideoTask) => {
+            draft.video = {
+              type: 'youtube',
+              url: this.youtubeUrlInput,
+            };
+          }
+        ),
+      });
     },
     onSaveUploadedFile() {
-      if (!this.selectedFile) {
-        return;
-      }
-      this.taskDefinition.video = {
-        v: 2,
-        type: 'studipFileReference',
-        file_id: this.selectedFile.id,
-      };
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: InteractiveVideoTask) => {
+            if (!this.selectedFile) {
+              throw new Error('No selected file');
+            }
+            draft.video = {
+              v: 2,
+              type: 'studipFileReference',
+              file_id: this.selectedFile.id,
+            };
+          }
+        ),
+      });
     },
     deleteVideo() {
-      this.taskDefinition.video = {
-        type: 'none',
-      };
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: InteractiveVideoTask) => {
+            draft.video = {
+              type: 'none',
+            };
+          }
+        ),
+      });
     },
     onUploadStudipVideo(file: FileRef) {
-      this.taskDefinition.video = {
-        v: 2,
-        type: 'studipFileReference',
-        file_id: file.id,
-      };
+      this.taskEditor!.performEdit({
+        newTaskDefinition: produce(
+          this.taskDefinition,
+          (draft: InteractiveVideoTask) => {
+            draft.video = {
+              v: 2,
+              type: 'studipFileReference',
+              file_id: file.id,
+            };
+          }
+        ),
+      });
       this.selectedFile = {
         id: file.id,
         name: file.attributes.name,
@@ -262,7 +305,7 @@ export default defineComponent({
     <fieldset>
       <legend>{{ $gettext('Einstellungen') }}</legend>
       <label>
-        <!-- eslint-disable vue/no-mutating-props -->
+        <!-- eslint-disable vue/no-mutating-props  -->
         <input type="checkbox" v-model="taskDefinition.autoplay" />
         {{ $gettext('Automatisch abspielen') }}
       </label>
