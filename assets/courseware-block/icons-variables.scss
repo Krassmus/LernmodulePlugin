@@ -11,21 +11,32 @@
   }
 }
 
+@mixin background-icon-backwards-compatible($icon, $role) {
+    @if(global-variable-exists(icon-size-button)) {
+        // Stud.IP 6.0 and above
+        @include background-icon($icon, $role, $icon-size-button);
+    }
+    @else {
+        // Previous versions of Stud.IP
+        @include background-icon($icon, $role);
+    }
+}
+
 @mixin button-with-icon($icon, $role, $roleOnHover) {
   @extend .button-with-empty-icon;
   &::before {
-    @include background-icon($icon, $role);
+      @include background-icon-backwards-compatible($icon, $role);
   }
 
   &:hover::before {
-    @include background-icon($icon, $roleOnHover);
+    @include background-icon-backwards-compatible($icon, $roleOnHover);
   }
 
   &.disabled,
   &[disabled],
   &.no-hover-effect {
     &:hover::before {
-      @include background-icon($icon, $role);
+      @include background-icon-backwards-compatible($icon, $role);
     }
   }
 }
@@ -65,6 +76,12 @@
 }
 .button.play {
   @include button-with-icon(play, clickable, info_alt);
+    // Ham-fisted way to detect stud.ip version 6.0 or above
+    @if(global-variable-exists(icon-size-button)) {
+        // Stud.IP 6.0 and above put a hard-coded padding
+        // on .button.play that we must override....
+        padding: 7px 14px !important;
+    }
 }
 .button.pause {
   @include button-with-icon(pause, clickable, info_alt);

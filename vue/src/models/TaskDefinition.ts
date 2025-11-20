@@ -684,21 +684,21 @@ export function iconForTaskType(type: TaskDefinition['task_type']): string {
     case 'DragTheWords':
       return 'tan3';
     case 'InteractiveVideo':
-      break;
+      return 'file-video';
     case 'FillInTheBlanks':
       return 'file-office';
     case 'FindTheWords':
-      break;
+      return 'tan3';
     case 'MarkTheWords':
       return 'tan3';
     case 'Memory':
-      break;
+      return 'tan3';
     case 'Pairing':
-      break;
+      return 'copy';
     case 'Question':
       return 'question';
     case 'Sequencing':
-      break;
+      return 'picture';
   }
   return 'question';
 }
