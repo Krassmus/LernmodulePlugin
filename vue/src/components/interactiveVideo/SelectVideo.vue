@@ -15,7 +15,6 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
-import produce from 'immer';
 import { cloneDeep } from 'lodash';
 
 function formatSecondsToHhMmSs(time: number): string {
@@ -133,60 +132,36 @@ export default defineComponent({
       this.selectedFileId = file.id;
     },
     onSaveYoutubeVideo() {
-      this.taskEditor!.performEdit({
-        newTaskDefinition: produce(
-          this.taskDefinition,
-          (draft: InteractiveVideoTask) => {
-            draft.video = {
-              type: 'youtube',
-              url: this.youtubeUrlInput,
-            };
-          }
-        ),
-      });
+      this.modelTaskDefinition.video = {
+        type: 'youtube',
+        url: this.youtubeUrlInput,
+      };
+      this.updateTaskDefinition();
     },
     onSaveUploadedFile() {
-      this.taskEditor!.performEdit({
-        newTaskDefinition: produce(
-          this.taskDefinition,
-          (draft: InteractiveVideoTask) => {
-            if (!this.selectedFile) {
-              throw new Error('No selected file');
-            }
-            draft.video = {
-              v: 2,
-              type: 'studipFileReference',
-              file_id: this.selectedFile.id,
-            };
-          }
-        ),
-      });
+      if (!this.selectedFile) {
+        throw new Error('No selected file');
+      }
+      this.modelTaskDefinition.video = {
+        v: 2,
+        type: 'studipFileReference',
+        file_id: this.selectedFile.id,
+      };
+      this.updateTaskDefinition();
     },
     deleteVideo() {
-      this.taskEditor!.performEdit({
-        newTaskDefinition: produce(
-          this.taskDefinition,
-          (draft: InteractiveVideoTask) => {
-            draft.video = {
-              type: 'none',
-            };
-          }
-        ),
-      });
+      this.modelTaskDefinition.video = {
+        type: 'none',
+      };
+      this.updateTaskDefinition();
     },
     onUploadStudipVideo(file: FileRef) {
-      this.taskEditor!.performEdit({
-        newTaskDefinition: produce(
-          this.taskDefinition,
-          (draft: InteractiveVideoTask) => {
-            draft.video = {
-              v: 2,
-              type: 'studipFileReference',
-              file_id: file.id,
-            };
-          }
-        ),
-      });
+      this.modelTaskDefinition.video = {
+        v: 2,
+        type: 'studipFileReference',
+        file_id: file.id,
+      };
+      this.updateTaskDefinition();
       this.selectedFile = {
         id: file.id,
         name: file.attributes.name,
