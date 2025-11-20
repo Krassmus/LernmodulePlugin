@@ -64,34 +64,41 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements SystemPlu
         PageLayout::addBodyElements($script);
 
         // Add CSS to set the correct icons for the blocks in the block adder
-        $this->addBlockIconCSS('drag-the-words', 'edit');
-        $this->addBlockIconCSS('fill-in-the-blanks', 'file-office');
-        $this->addBlockIconCSS('find-the-hotspots', 'block-imagemap2');
-        $this->addBlockIconCSS('find-the-words', 'tan3');
-        $this->addBlockIconCSS('lmb-interactive-video', 'file-video');
-        $this->addBlockIconCSS('mark-the-words', 'guestbook');
-        $this->addBlockIconCSS('memory', 'tan3');
-        $this->addBlockIconCSS('pairing', 'copy');
-        $this->addBlockIconCSS('question', 'question');
-        $this->addBlockIconCSS('sequencing', 'picture');
+        $this->addBlockIconsCSS();
         $this->addStylesheet('assets/courseware-block/icons-variables.scss');
     }
 
     /**
-     * @param $blockType
-     * @param $iconName
-     * Add a CSS rule to the page to set the icon for the given block type in
-     * the Courseware block picker.
+     * @return void
+     *
+     * Add CSS rules to the page to set the icons for the blocks in the Courseware block picker.
      */
-    function addBlockIconCSS($blockType, $iconName) {
+    function addBlockIconsCSS() {
+        // Sorry. You have to update the icons in two places: Here and in the scss file for 6.0+.
+        // And also once more in taskDefinition.ts::iconForTask(). "My bad" :D
         if (StudipVersion::olderThan('6.0')) {
+            $blockIconsMap = [
+                'drag-the-words' => 'edit',
+                'fill-in-the-blanks' => 'file-office',
+                'find-the-hotspots' => 'block-imagemap2',
+                'find-the-words' => 'block-imagemap2',
+                'lmb-interactive-video' => 'file-video',
+                'mark-the-words' => 'guestbook',
+                'memory' => 'tan3',
+                'pairing' => 'copy',
+                'question' => 'question',
+                'sequencing' => 'picture'];
             $baseCssSelector = '.cw-blockadder-item-list .cw-blockadder-item-wrapper .cw-blockadder-item';
-            $icon = Icon::create($iconName);
-            PageLayout::addStyle(
-                $baseCssSelector . '.cw-blockadder-item-' . $blockType . ' {
-            background-image:url(' . $icon->asImagePath() . ')
-        }'
-            );
+            foreach ($blockIconsMap as $blockType => $iconName) {
+                $icon = Icon::create($iconName);
+                PageLayout::addStyle(
+                    $baseCssSelector . '.cw-blockadder-item-' . $blockType . ' {
+                                background-image:url(' . $icon->asImagePath() . ')
+                            }'
+                );
+            }
+        } else {
+            $this->addStylesheet('assets/courseware-block/block-adder-icons.scss');
         }
     }
 
