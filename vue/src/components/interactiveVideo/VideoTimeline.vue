@@ -272,11 +272,9 @@ export default defineComponent({
       };
     },
     onClickInteraction(interaction: Interaction) {
-      console.log('onClickInteraction');
       this.$emit('clickInteraction', interaction);
     },
     onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
-      console.log('onPointerDownInteraction');
       if (event.button !== 0) {
         // Prevent unintentionally selecting interaction when dragging to
         // scroll around in the timeline
@@ -318,7 +316,6 @@ export default defineComponent({
       }
     },
     onPointerUpInteraction(event: PointerEvent, interaction: Interaction) {
-      console.log('onPointerUpInteraction');
       this.dragState = undefined;
       (event.target as HTMLElement).releasePointerCapture(event.pointerId);
     },
@@ -389,7 +386,6 @@ export default defineComponent({
       this.$emit('timelineSeek', time);
     },
     onDragStartTimeMarker(e: DragEvent) {
-      console.log('dragstart time marker');
       this.dragState = { type: 'timeMarker' };
     },
     onDragOverTimeline(e: DragEvent) {

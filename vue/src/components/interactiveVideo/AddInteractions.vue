@@ -267,7 +267,6 @@ function onTimeUpdate(time: number) {
   currentTime.value = time;
 }
 function onTimelineSeek(time: number) {
-  console.log('onTImelineSeek', time);
   videoPlayer.value!.player!.currentTime(time);
 }
 function onClickZoomIn() {
@@ -311,7 +310,6 @@ function insertLmbTaskInteraction(type: TaskDefinition['task_type']) {
   if (type === 'InteractiveVideo') {
     throw new Error(strings.forbiddenToNestInteractiveVideos);
   }
-  console.log('insertLmbTaskInteraction', type);
   const task = newTask(type) as TaskDefinitionMinusInteractiveVideo;
   const interaction: LmbTaskInteraction = {
     type: 'lmbTask',
