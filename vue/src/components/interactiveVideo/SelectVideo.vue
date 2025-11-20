@@ -17,28 +17,6 @@ import {
 } from '@/components/taskEditorState';
 import { cloneDeep } from 'lodash';
 
-function formatSecondsToHhMmSs(time: number): string {
-  let hours = 0,
-    minutes = 0,
-    seconds = 0;
-  while (time > 3600) {
-    time -= 3600;
-    hours += 1;
-  }
-  while (time > 60) {
-    time -= 60;
-    minutes += 1;
-  }
-  seconds = time;
-  function twoDigits(n: number): string {
-    return n.toLocaleString('de-DE', {
-      minimumIntegerDigits: 2,
-      maximumFractionDigits: 0,
-    });
-  }
-  return `${twoDigits(hours)}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
-}
-
 export default defineComponent({
   name: 'SelectVideo',
   props: {
