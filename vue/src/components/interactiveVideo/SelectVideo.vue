@@ -16,6 +16,7 @@ import {
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
 import produce from 'immer';
+import { cloneDeep } from 'lodash';
 
 function formatSecondsToHhMmSs(time: number): string {
   let hours = 0,
@@ -54,6 +55,7 @@ export default defineComponent({
   },
   data() {
     return {
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
       youtubeUrlInput: '',
       startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
@@ -63,6 +65,13 @@ export default defineComponent({
     };
   },
   watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
     'taskDefinition.video': {
       immediate: true,
       handler: async function (value: Video) {
@@ -105,18 +114,19 @@ export default defineComponent({
     ...mapActions({
       loadFileRef: 'file-refs/loadById',
     }),
+    // Synchronize state modelTaskDefinition -> taskDefinition.
+    updateTaskDefinition(undoBatch?: unknown) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
+      });
+    },
     onTimeUpdate(time: number) {
       this.currentTime = time;
     },
     onClickUseCurrentTime() {
-      this.taskEditor!.performEdit({
-        newTaskDefinition: produce(
-          this.taskDefinition,
-          (draft: InteractiveVideoTask) => {
-            draft.startAt = this.currentTime;
-          }
-        ),
-      });
+      this.modelTaskDefinition.startAt = this.currentTime;
+      this.updateTaskDefinition('inputStartAt');
     },
     updateCurrentFile(file: FilePickerFile) {
       this.selectedFile = file;
@@ -305,8 +315,11 @@ export default defineComponent({
     <fieldset>
       <legend>{{ $gettext('Einstellungen') }}</legend>
       <label>
-        <!-- eslint-disable vue/no-mutating-props  -->
-        <input type="checkbox" v-model="taskDefinition.autoplay" />
+        <input
+          type="checkbox"
+          v-model="modelTaskDefinition.autoplay"
+          @input="updateTaskDefinition"
+        />
         {{ $gettext('Automatisch abspielen') }}
       </label>
       <div class="start-at-setting">
@@ -316,7 +329,8 @@ export default defineComponent({
             <VideoTimeInput
               :class="{ invalid: !!startPositionInputError }"
               :aria-invalid="!!startPositionInputError"
-              v-model="taskDefinition.startAt"
+              v-model="modelTaskDefinition.startAt"
+              @input="updateTaskDefinition('inputStartAt')"
               @update:error="(error) => (startPositionInputError = error)"
             />
           </label>
@@ -331,7 +345,10 @@ export default defineComponent({
       <label v-if="false">
         <!-- hidden until 'disable navigation' feature is ready -->
         {{ $gettext('Navigation deaktivieren') }}
-        <select v-model="taskDefinition.disableNavigation">
+        <select
+          v-model="modelTaskDefinition.disableNavigation"
+          @input="updateTaskDefinition"
+        >
           <option :value="'not disabled'">
             {{ $gettext('Nicht deaktiviert') }}
           </option>
