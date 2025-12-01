@@ -24,6 +24,7 @@ import QuestionViewer from '@/components/QuestionViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
 import SequencingViewer from '@/components/SequencingViewer.vue';
 import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
+import { crosswordTaskSchema } from '@/models/CrosswordTask';
 import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
 import { imageFileSchema, feedbackSchema, Feedback } from '@/models/common';
 
@@ -70,18 +71,6 @@ export type LernmoduleMultimediaElement = z.infer<
   typeof multimediaElementSchema
 >;
 export type MultimediaElementType = LernmoduleMultimediaElement['type'];
-
-export const crosswordTaskSchema = z.object({
-  task_type: z.literal('Crossword'),
-  words: z.string(),
-  strings: z.object({
-    checkButton: z.string().default(''),
-    retryButton: z.string(),
-    solutionsButton: z.string(),
-    resultMessage: z.string(),
-  }),
-});
-export type CrosswordTask = z.infer<typeof crosswordTaskSchema>;
 
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
@@ -323,7 +312,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'Crossword':
       return {
         task_type: 'Crossword',
-        words: 'Apfel, Banane, Orange',
+        words: [
+          { uuid: v4(), hint: 'Leckere orangene Frucht.', solution: 'Orange' },
+          { uuid: v4(), hint: 'Leckere gelbe Frucht.', solution: 'Banane' },
+          { uuid: v4(), hint: 'Leckere rote Frucht.', solution: 'Kirsche' },
+        ],
         strings: {
           checkButton: 'Überprüfen',
           retryButton: 'Erneut versuchen',
