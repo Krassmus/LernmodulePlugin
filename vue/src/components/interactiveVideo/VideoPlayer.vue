@@ -374,7 +374,6 @@ export default defineComponent({
       handle: ResizeHandle;
       interaction: OverlayInteractionType;
     }) {
-      console.log('onPointerDownResizeHandle');
       if (!this.editor) {
         return;
       }
@@ -395,7 +394,6 @@ export default defineComponent({
       handle: ResizeHandle;
       interaction: Interaction;
     }) {
-      console.log('onPointerUpResizeHandle');
       this.dragState = undefined;
       (payload.event.target as HTMLElement).releasePointerCapture(
         payload.event.pointerId
@@ -534,7 +532,6 @@ export default defineComponent({
       }
     },
     onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
-      console.log('onPointerDownInteraction');
       if (!this.editor) {
         return;
       }
@@ -548,7 +545,6 @@ export default defineComponent({
       (event.target as HTMLElement).setPointerCapture(event.pointerId);
     },
     onPointerUpInteraction(event: PointerEvent, interaction: Interaction) {
-      console.log('onPointerUpInteraction');
       this.dragState = undefined;
       (event.target as HTMLElement).releasePointerCapture(event.pointerId);
     },
