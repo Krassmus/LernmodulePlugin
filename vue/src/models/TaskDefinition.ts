@@ -395,6 +395,9 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         autoplay: false,
         startAt: 0,
         disableNavigation: 'not disabled',
+        travisGoSettings: {
+          enabled: false,
+        },
       };
     case 'FillInTheBlanks':
       return {
