@@ -72,10 +72,15 @@
       @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
       @deleteInteraction="deleteInteraction"
     />
+    <!-- :key is needed to prevent a bug where if you first selected one overlay,
+      then clicked on another one to select it, there would be two WYSIWYG editors
+      open in the 'selected interaction properties' dialog, and a new one would be
+      added each time you clicked from one overlay to the other. -->
     <SelectedInteractionProperties
       v-if="selectedInteraction"
       ref="selectedInteractionProperties"
       :selectedInteraction="selectedInteraction"
+      :key="selectedInteraction.id"
     />
   </div>
 </template>
