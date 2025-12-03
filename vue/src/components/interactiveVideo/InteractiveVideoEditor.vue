@@ -1,5 +1,3 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- eslint-disable vue/no-mutating-props -->
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
@@ -8,6 +6,7 @@ import TabsComponent from '@/components/courseware-components-ported-to-vue3/Tab
 import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
 import AddInteractions from '@/components/interactiveVideo/AddInteractions.vue';
 import SelectVideo from '@/components/interactiveVideo/SelectVideo.vue';
+import ConfigureTravisGo from '@/components/interactiveVideo/ConfigureTravisGo.vue';
 
 export default defineComponent({
   name: 'InteractiveVideoEditor',
@@ -25,6 +24,7 @@ export default defineComponent({
   },
   computed: {},
   components: {
+    ConfigureTravisGo,
     SelectVideo,
     AddInteractions,
     TabComponent,
@@ -43,6 +43,12 @@ export default defineComponent({
       icon="content"
     >
       <AddInteractions :task-definition="taskDefinition" />
+    </TabComponent>
+    <TabComponent
+      :title="$gettext('3. Travis Go konfigurieren')"
+      icon="visibility-visible"
+    >
+      <ConfigureTravisGo :settings="taskDefinition.travisGoSettings" />
     </TabComponent>
   </TabsComponent>
   <div v-if="false">
