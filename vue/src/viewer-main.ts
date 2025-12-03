@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import LernmoduleViewer from '@/components/LernmoduleViewer.vue';
 import { gettextPlugin } from '@/language/gettext';
 import { disableDrag } from '@/directives/vDisableDrag';
-import './assets/global.css';
+import './assets/global.scss';
 import { store } from '@/store';
 
 const app = createApp(LernmoduleViewer);
