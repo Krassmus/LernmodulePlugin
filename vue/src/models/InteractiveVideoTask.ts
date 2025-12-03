@@ -146,18 +146,11 @@ const videoSchema = z.union([
 ]);
 export type Video = z.infer<typeof videoSchema>;
 
-export const travisGoDisabledSchema = z.object({
-  enabled: z.literal(false),
-});
-export const travisGoEnabledSchema = z.object({
-  enabled: z.literal(true),
+export const travisGoSettingsSchema = z.object({
+  enabled: z.boolean(),
   projectTitle: z.string(),
   projectDescription: z.string(),
 });
-export const travisGoSettingsSchema = z.discriminatedUnion('enabled', [
-  travisGoDisabledSchema,
-  travisGoEnabledSchema,
-]);
 export type TravisGoSettings = z.infer<typeof travisGoSettingsSchema>;
 
 export const interactiveVideoTaskSchema = z.object({
@@ -176,6 +169,8 @@ export const interactiveVideoTaskSchema = z.object({
   travisGoSettings: travisGoSettingsSchema.optional().default(
     (): TravisGoSettings => ({
       enabled: false,
+      projectTitle: '',
+      projectDescription: '',
     })
   ),
 });
