@@ -34,28 +34,38 @@ function updateSettings(undoBatch: unknown = {}) {
 </script>
 
 <template>
-  <label>
-    <input type="checkbox" v-model="modelSettings.enabled" />
-    {{ $gettext('"Travis Go"-Funktionalität enablen') }}
-  </label>
-  <template v-if="modelSettings.enabled">
+  <form class="default travis-go-settings">
     <label>
-      {{ $gettext('Projekttitel') }}
       <input
-        type="text"
-        v-model="modelSettings.projectTitle"
-        @input="updateSettings('editProjectTitle')"
+        type="checkbox"
+        v-model="modelSettings.enabled"
+        @change="updateSettings"
       />
+      {{ $gettext('"Travis Go"-Funktionalität enablen') }}
     </label>
-    <label>
-      {{ $gettext('Projektbeschreibung') }}
-      <input
-        type="text"
-        v-model="modelSettings.projectDescription"
-        @input="updateSettings('editProjectDescription')"
-      />
-    </label>
-  </template>
+    <template v-if="modelSettings.enabled">
+      <label>
+        {{ $gettext('Projekttitel') }}
+        <input
+          type="text"
+          v-model="modelSettings.projectTitle"
+          @input="updateSettings('editProjectTitle')"
+        />
+      </label>
+      <label>
+        {{ $gettext('Projektbeschreibung') }}
+        <input
+          type="text"
+          v-model="modelSettings.projectDescription"
+          @input="updateSettings('editProjectDescription')"
+        />
+      </label>
+    </template>
+  </form>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.travis-go-settings {
+  padding: 10px;
+}
+</style>
