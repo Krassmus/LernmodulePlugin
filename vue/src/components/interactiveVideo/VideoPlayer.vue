@@ -70,7 +70,8 @@ export default defineComponent({
         xOffsetPixels: 0,
       },
       progressBarObserver: undefined as ResizeObserver | undefined,
-      videoInfo: Promise.resolve({ type: 'none' }) as Promise<VideoInfo>,
+      videoInfoPromise: Promise.resolve({ type: 'none' }) as Promise<VideoInfo>,
+      errorLoadingVideo: undefined as unknown,
     };
   },
   computed: {
@@ -122,9 +123,14 @@ export default defineComponent({
     'task.video': {
       handler(video: Video) {
         console.log('video prop changed', video);
-        this.videoInfo = this.loadVideoInfo(video);
-        this.videoInfo.then((videoInfo) => {
+        this.videoInfoPromise = this.loadVideoInfo(video);
+        this.videoInfoPromise.catch((error: unknown) => {
+          console.error('Error while loading video.', error);
+          this.errorLoadingVideo = error;
+        });
+        this.videoInfoPromise.then((videoInfo) => {
           this.initializePlayer(videoInfo);
+          this.errorLoadingVideo = undefined; // Clear error
         });
       },
       immediate: true,
@@ -633,6 +639,10 @@ export default defineComponent({
 </script>
 
 <template>
+  <p v-if="errorLoadingVideo">
+    {{ $gettext('Das Video konnte nicht geladen werden. Grund: ') }}
+    <span style="white-space: pre">{{ errorLoadingVideo }}</span>
+  </p>
   <div
     class="video-player-root"
     ref="root"
