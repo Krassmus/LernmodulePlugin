@@ -674,13 +674,16 @@ export default defineComponent({
       <button
         type="button"
         class="small-button edit"
-        @click="editInteraction(selectedInteraction)"
+        @click="selectedInteraction && editInteraction(selectedInteraction)"
         :title="$gettext('Bearbeiten')"
       ></button>
       <button
         type="button"
         class="small-button trash"
-        @click="editor?.deleteInteraction(selectedInteractionId)"
+        @click="
+          selectedInteractionId &&
+            editor?.deleteInteraction(selectedInteractionId)
+        "
         :title="$gettext('Löschen')"
       ></button>
       <div class="arrow" data-popper-arrow></div>

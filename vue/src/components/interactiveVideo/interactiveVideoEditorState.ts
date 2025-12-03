@@ -16,7 +16,7 @@ export const interactiveVideoEditorStateSymbol = Symbol(
 
 export interface InteractiveVideoEditorState {
   selectedInteractionId: Ref<string | undefined>;
-  selectInteraction(id: string): void;
+  selectInteraction(id: string | undefined): void;
   editInteraction(id: string): void;
   dragInteraction(
     interactionId: string,

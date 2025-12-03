@@ -254,7 +254,7 @@ const selectedInteraction = computed((): Interaction | undefined =>
   )
 );
 
-function selectInteraction(selectionId: string) {
+function selectInteraction(selectionId: string | undefined) {
   selectedInteractionId.value = selectionId;
 }
 function editInteraction(id: string) {
