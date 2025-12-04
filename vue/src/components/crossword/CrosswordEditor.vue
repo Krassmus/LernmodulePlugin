@@ -11,28 +11,31 @@
           <TabComponent :title="$gettext('Wörter eingeben')" icon="content">
             <div class="words-flex-box">
               <div class="word-list">
-                <div
-                  v-for="word in modelTaskDefinition.words"
-                  :key="word.uuid"
-                  class="word-list-item"
-                >
-                  <input
-                    type="text"
-                    v-model="word.hint"
-                    @input="onInputHint(word.uuid, $event.target.value)"
-                  />
-                  <input
-                    type="text"
-                    v-model="word.solution"
-                    @input="onInputSolution(word.uuid, $event.target.value)"
-                  />
-                  <button
-                    type="button"
-                    class="small-button trash"
-                    @click="deleteWord(word.uuid)"
-                    :title="$gettext('Dieses Wort löschen')"
-                  />
-                </div>
+                <draggable v-model="wordList" item-key="uuid">
+                  <template #item="{ element }">
+                    <div class="word-list-item">
+                      <input
+                        type="text"
+                        v-model="element.hint"
+                        @input="onInputHint(element.uuid, element.hint)"
+                        :placeholder="$gettext('Hinweis')"
+                      />
+                      <input
+                        type="text"
+                        v-model="element.solution"
+                        @input="onInputSolution(element.uuid, element.solution)"
+                        :placeholder="$gettext('Lösung')"
+                      />
+                      <button
+                        type="button"
+                        class="small-button trash"
+                        @click="deleteWord(element.uuid)"
+                        :title="$gettext('Dieses Wort löschen')"
+                      />
+                    </div>
+                  </template>
+                </draggable>
+
                 <button type="button" class="button" @click="addWord">
                   {{ $gettext('Neues Wort hinzufügen') }}
                 </button>
@@ -107,6 +110,7 @@ import TabComponent from '@/components/courseware-components-ported-to-vue3/TabC
 import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
 import produce from 'immer';
 import { v4 } from 'uuid';
+import draggable from 'vuedraggable';
 
 const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
 
@@ -120,6 +124,7 @@ const props = defineProps({
 const components = {
   TabComponent,
   TabsComponent,
+  draggable,
 };
 
 const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
@@ -128,6 +133,15 @@ const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 const modelTaskDefinition = ref<CrosswordTask>(cloneDeep(props.taskDefinition));
 
 // Computed properties
+const wordList = computed({
+  get() {
+    return modelTaskDefinition.value.words;
+  },
+  set(newValue) {
+    modelTaskDefinition.value.words = newValue;
+    updateTaskDefinition();
+  },
+});
 
 // Watchers
 watch(

@@ -15,10 +15,10 @@
     }
   },
   "dependencies": {
+    "@blex41/word-search": "^1.2.0",
     "@elan-ev/reststate-vuex": "^1.0.6",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.7",
-    "@blex41/word-search": "^1.2.0",
     "core-js": "^3.8.3",
     "d3-drag": "^3.0.0",
     "d3-selection": "^3.0.0",
@@ -32,6 +32,7 @@
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue3-gettext": "^2.5.0-alpha.1",
+    "vuedraggable": "^4.1.0",
     "vuex": "^4.0.2",
     "vuex-module-decorators": "^2.0.0",
     "zod": "^3.21.4"
