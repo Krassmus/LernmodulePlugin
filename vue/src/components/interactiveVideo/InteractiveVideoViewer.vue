@@ -71,13 +71,15 @@ function maskForIcon(icon: string, color: string = 'black') {
     margin-top: 10px;
   }
   display: flex;
+  flex-wrap: wrap;
+
   gap: 10px;
   > .travis-go-left-column {
-    flex: 1 1 50%;
+    flex: 1;
     min-width: 400px;
   }
   > .travis-go-right-column {
-    flex: 1 1 50%;
+    flex: 1;
   }
 }
 
