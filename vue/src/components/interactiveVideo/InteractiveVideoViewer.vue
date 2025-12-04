@@ -81,6 +81,15 @@ function maskForIcon(icon: string, color: string = 'black') {
   }
 }
 
+.comments {
+  .comment {
+    margin: 0;
+    padding: 5px;
+    &.comment-odd {
+      background: var(--color--gray-6);
+    }
+  }
+}
 .participants-list {
   @include icon(before, own-license, clickable, var(--icon-size-button));
   &::before {
