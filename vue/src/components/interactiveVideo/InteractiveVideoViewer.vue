@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { defineProps, PropType, ref } from 'vue';
-import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
+import { InteractiveVideoTask, Post } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
+import { formatVideoTimestamp } from '@/components/interactiveVideo/common';
 
 defineProps({
   task: {
@@ -10,6 +11,25 @@ defineProps({
     required: true,
   },
 });
+
+const posts = ref<Post[]>([
+  {
+    id: 'fakeid',
+    type: 'meta',
+    authorId: 'anna',
+    authorName: 'Anna',
+    description: "This is anna's post",
+    start: 0,
+  },
+  {
+    id: 'fakeid',
+    type: 'image',
+    authorId: 'kevin',
+    authorName: 'Kevin',
+    description: "This is Kevin's post",
+    start: 0,
+  },
+]);
 
 const searchInput = ref<string>('');
 function onClickSearch() {}
@@ -55,9 +75,23 @@ function maskForIcon(icon: string, color: string = 'black') {
           {{ task.travisGoSettings.projectDescription }}
         </p>
       </section>
-      <section class="comments">
-        <p class="comment comment-odd">A comment goes here</p>
-        <p class="comment comment-even">Another comment goes here</p>
+      <section class="posts">
+        <div
+          v-for="(post, index) in posts"
+          :key="post.id"
+          class="post"
+          :class="{
+            odd: index % 2 === 0,
+          }"
+        >
+          <h4>
+            [{{ formatVideoTimestamp(post.start) }}
+            <span class="post-type">{{ post.type }}</span> @{{
+              post.authorName
+            }}]
+          </h4>
+          {{ post.description }}
+        </div>
       </section>
     </div>
   </div>
@@ -69,6 +103,9 @@ function maskForIcon(icon: string, color: string = 'black') {
 .travis-go-main {
   h3 {
     margin-top: 10px;
+  }
+  h4 {
+    margin-top: 5px;
   }
   display: flex;
   flex-wrap: wrap;
@@ -83,11 +120,11 @@ function maskForIcon(icon: string, color: string = 'black') {
   }
 }
 
-.comments {
-  .comment {
+.posts {
+  .post {
     margin: 0;
     padding: 5px;
-    &.comment-odd {
+    &.odd {
       background: var(--color--gray-6);
     }
   }

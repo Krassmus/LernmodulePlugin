@@ -205,3 +205,21 @@ export const resizeHandles = [
   'bottom-left',
 ] as const;
 export type ResizeHandle = typeof resizeHandles[number];
+
+export const postTypeSchema = z.union([
+  z.literal('image'),
+  z.literal('audio'),
+  z.literal('meta'),
+  z.literal('text'),
+]);
+export type PostType = z.infer<typeof postTypeSchema>;
+export const postSchema = z.object({
+  id: z.string(),
+  authorName: z.string(),
+  authorId: z.string(),
+  start: z.number(), // seconds
+  end: z.number().optional(), //seconds
+  description: z.string(),
+  type: postTypeSchema,
+});
+export type Post = z.infer<typeof postSchema>;
