@@ -1,27 +1,109 @@
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script setup lang="ts">
+import { defineProps, PropType, ref } from 'vue';
 import { InteractiveVideoTask } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
+import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 
-export default defineComponent({
-  name: 'InteractiveVideoViewer',
-  components: { VideoPlayer },
-  props: {
-    task: {
-      type: Object as PropType<InteractiveVideoTask>,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      counter: 0,
-    };
+defineProps({
+  task: {
+    type: Object as PropType<InteractiveVideoTask>,
+    required: true,
   },
 });
+
+const searchInput = ref<string>('');
+function onClickSearch() {}
+function maskForIcon(icon: string, color: string = 'black') {
+  const url = `${window.STUDIP.ASSETS_URL}images/icons/${color}/${icon}.svg`;
+  return `--mask-value: url("${url}") no-repeat center / contain;`;
+}
 </script>
 
 <template>
-  <VideoPlayer :task="task" />
+  <div v-if="task.travisGoSettings.enabled" class="travis-go-main">
+    <div class="travis-go-left-column">
+      <VideoPlayer :task="task" />
+      <div class="annotation-controls">
+        <button class="button date">{{ $gettext('Start') }}</button>
+        <button class="button date">{{ $gettext('End') }}</button>
+        <select>
+          <option>Meta</option>
+          <option>Image</option>
+          <option>Sound</option>
+          <option>Text</option>
+        </select>
+      </div>
+      <StudipWysiwyg />
+      <button class="button">{{ $gettext('Kommentar posten') }}</button>
+      <div class="participants-list" :style="maskForIcon('own-license')">
+        <a>@Anna</a>
+        <a>@Kevin</a>
+      </div>
+    </div>
+    <div class="travis-go-right-column">
+      <nav class="search-bar">
+        <input type="text" v-model="searchInput" />
+        <button class="button search" @click="onClickSearch" />
+      </nav>
+      <section class="project-title-and-description">
+        <h3>{{ $gettext('Projekttitel') }}</h3>
+        <p>
+          {{ task.travisGoSettings.projectTitle }}
+        </p>
+        <h3>{{ $gettext('Projektbeschreibung') }}</h3>
+        <p>
+          {{ task.travisGoSettings.projectDescription }}
+        </p>
+      </section>
+      <section class="comments">
+        <p class="comment comment-odd">A comment goes here</p>
+        <p class="comment comment-even">Another comment goes here</p>
+      </section>
+    </div>
+  </div>
+  <VideoPlayer v-else :task="task" />
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+@import '@/assets/mixins';
+.travis-go-main {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  > .travis-go-left-column {
+    flex: 1 1 50%;
+    min-width: 400px;
+  }
+  > .travis-go-right-column {
+    flex: 1 1 50%;
+  }
+}
+
+.participants-list {
+  @include icon(before, own-license, clickable, var(--icon-size-button));
+  &::before {
+    mask: var(--mask-value);
+  }
+  background: var(--color--gray-6);
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  align-items: center;
+  a {
+    color: black;
+  }
+}
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  input[type='text'] {
+    flex-grow: 1;
+  }
+  button {
+    min-width: unset;
+    width: 0;
+  }
+}
+</style>
