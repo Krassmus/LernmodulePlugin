@@ -82,31 +82,3 @@ button.add-blank {
     margin-right: 0.5em;
     margin-top: 0;
 }
-
-@mixin icon($position, $icon, $role: clickable, $size: $icon-size-default, $padding: 0, $inline: false, $align: text-top) {
-    $position: $position;
-    $svg: icon-path($icon, $role);
-
-    @if $inline {
-        $size: $icon-size-inline;
-    }
-
-    @if $position == before or $position == after {
-        &::#{$position} {
-            content: '';
-            display: inline-block;
-            height: icon-size($size);
-            width: icon-size($size);
-            background-color: currentColor;
-            mask: url("#{$svg}") no-repeat center / contain;
-            vertical-align: $align;
-
-
-            @if $position == before {
-                margin-right: $padding;
-            } @else {
-                margin-left: $padding;
-            }
-        }
-    }
-}
