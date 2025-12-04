@@ -67,7 +67,9 @@ function maskForIcon(icon: string, color: string = 'black') {
 <style scoped lang="scss">
 @import '@/assets/mixins';
 .travis-go-main {
-  padding: 10px;
+  h3 {
+    margin-top: 10px;
+  }
   display: flex;
   gap: 10px;
   > .travis-go-left-column {
@@ -95,6 +97,7 @@ function maskForIcon(icon: string, color: string = 'black') {
 }
 .search-bar {
   display: flex;
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 10px;
   width: 100%;
@@ -104,6 +107,8 @@ function maskForIcon(icon: string, color: string = 'black') {
   button {
     min-width: unset;
     width: 0;
+    margin: 0;
+    padding: 4px 20px 4px 7px;
   }
 }
 </style>
