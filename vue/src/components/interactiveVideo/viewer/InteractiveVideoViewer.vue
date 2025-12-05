@@ -36,10 +36,6 @@ const posts = ref<TravisGoPostProps[]>([
 
 const searchInput = ref<string>('');
 function onClickSearch() {}
-function maskForIcon(icon: string, color: string = 'black') {
-  const url = `${window.STUDIP.ASSETS_URL}images/icons/${color}/${icon}.svg`;
-  return `--mask-value: url("${url}") no-repeat center / contain;`;
-}
 </script>
 
 <template>
@@ -94,7 +90,6 @@ function maskForIcon(icon: string, color: string = 'black') {
 </template>
 
 <style scoped lang="scss">
-@import '@/assets/mixins';
 .travis-go-main {
   h3 {
     margin-top: 10px;
@@ -118,10 +113,6 @@ function maskForIcon(icon: string, color: string = 'black') {
   }
 }
 .travis-go-participants-list {
-  @include icon(before, own-license, clickable, var(--icon-size-button));
-  &::before {
-    mask: var(--mask-value);
-  }
   background: var(--color--gray-6);
   display: flex;
   gap: 10px;

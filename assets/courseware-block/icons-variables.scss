@@ -1,3 +1,10 @@
+// This file is to be compiled by Stud.IP, providing us the ability to use Stud.IP's
+// built in SCSS utilities to include icons etc.
+// (There is no great way to do that inside your own Vue/Webpack project at the time
+// of writing.)
+// We have also copied / reimplemented some of Stud.IP's SCSS here in order to make it
+// available on previous versions of Stud.IP, e.g. to use @icon on Stud.IP 5.4.
+
 .button-with-empty-icon {
   white-space: nowrap;
 
@@ -117,3 +124,68 @@
     margin: unset; // Remove the margin set by button-with-icon
   }
 }
+
+@function icon-path($icon, $role: clickable) {
+    $icon: unquote($icon);
+    $role: unquote($role);
+
+    $color: 'blue';
+    @if $role == info {
+        $color: 'black';
+    } @else if $role == accept or $role == status-green {
+        $color: 'green';
+    } @else if $role == inactive {
+        $color: 'grey';
+    } @else if $role == new or $role == attention or $role == status-red {
+        $color: 'red';
+    } @else if $role == info_alt or $role == info-alt {
+        $color: 'white';
+    } @else if $role == status-yellow {
+        $color: 'yellow';
+    }
+
+    @return "#{$icon-path}/#{$color}/#{$icon}.svg";
+}
+
+@mixin icon($position, $icon, $role: clickable, $size: var(--icon-size-default), $padding: 0, $inline: false, $align: text-top) {
+    $position: $position;
+    $svg: icon-path($icon, $role);
+
+    @if $inline {
+        $size: var(--icon-size-inline);
+    }
+
+    @if $position == before or $position == after {
+        &::#{$position} {
+            content: '';
+            display: inline-block;
+            height: $size;
+            width: $size;
+            background-color: currentColor;
+            mask: url("#{$svg}") no-repeat center / contain;
+            vertical-align: $align;
+
+
+            @if $position == before {
+                margin-right: $padding;
+            } @else {
+                margin-left: $padding;
+            }
+        }
+    }
+}
+
+$image-path: "../../../../../assets/images" !default;
+$icon-path: "#{$image-path}/icons" !default;
+
+// Icons sizes:
+:root {
+    --icon-size-default: var(--icon-size-default, 20px);
+    --icon-size-inline: var(--icon-size-inline, 16px);
+    --icon-size-button: var(--icon-size-inline, 16px);
+}
+
+.travis-go-participants-list {
+    @include icon(before, own-license, info, var(--icon-size-button));
+}
+
