@@ -20,7 +20,7 @@ module.exports = defineConfig({
         // would like to import). It also stops us from bundling an unnecessary
         // copy of each Stud.IP asset that we reference by url.
         // See https://stackoverflow.com/a/68453585/7359454
-        url: false,
+        url: true,
       },
     },
   },
