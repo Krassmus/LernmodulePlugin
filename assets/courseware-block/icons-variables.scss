@@ -1,9 +1,9 @@
 // This file is to be compiled by Stud.IP, providing us the ability to use Stud.IP's
 // built in SCSS utilities to include icons etc.
-// (There is no great way to do that inside your own Vue/Webpack project at the time
-// of writing.)
+// We haven't found a good way to do that inside of our Vue/Webpack project at the
+// time of writing.
 // We have also copied / reimplemented some of Stud.IP's SCSS here in order to make it
-// available on previous versions of Stud.IP, e.g. to use @icon on Stud.IP 5.4.
+// available on previous versions of Stud.IP that this plugin supports.
 
 .button-with-empty-icon {
   white-space: nowrap;
@@ -101,6 +101,16 @@
 }
 .button.zoom-out {
   @include button-with-icon(zoom-out, clickable, info_alt);
+}
+
+.button.date {
+    @include button-with-icon(date, clickable, info_alt);
+}
+
+// Separate class needed to use the 'search' icon while avoiding the
+// weird CSS rules added to .button.search in Stud.IP 6.x
+.button.h5p-search {
+    @include button-with-icon(search, clickable, info_alt)
 }
 
 .small-button.edit {

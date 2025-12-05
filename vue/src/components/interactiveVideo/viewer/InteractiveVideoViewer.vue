@@ -62,7 +62,7 @@ function onClickSearch() {}
     <div class="travis-go-right-column">
       <nav class="search-bar">
         <input type="text" v-model="searchInput" />
-        <button class="button search" @click="onClickSearch" />
+        <button class="button h5p-search" @click="onClickSearch" />
       </nav>
       <section class="project-title-and-description">
         <h3>{{ $gettext('Projekttitel') }}</h3>
@@ -130,12 +130,13 @@ function onClickSearch() {}
   width: 100%;
   input[type='text'] {
     flex-grow: 1;
+    align-self: stretch;
   }
-  button {
+  button.h5p-search {
     min-width: unset;
     width: 0;
     margin: 0;
-    padding: 4px 20px 4px 7px;
+    padding: 5px 15px;
   }
 }
 </style>
