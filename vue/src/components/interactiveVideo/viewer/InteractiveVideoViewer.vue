@@ -3,7 +3,7 @@ import { defineProps, PropType, ref } from 'vue';
 import { InteractiveVideoTask, Post } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
-import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
+import TravisPost from '@/components/interactiveVideo/viewer/TravisPost.vue';
 
 defineProps({
   task: {
@@ -76,22 +76,14 @@ function maskForIcon(icon: string, color: string = 'black') {
         </p>
       </section>
       <section class="posts">
-        <div
+        <TravisPost
           v-for="(post, index) in posts"
           :key="post.id"
-          class="post"
           :class="{
             odd: index % 2 === 0,
           }"
-        >
-          <h4>
-            [{{ formatVideoTimestamp(post.start) }}
-            <span class="post-type">{{ post.type }}</span> @{{
-              post.authorName
-            }}]
-          </h4>
-          {{ post.description }}
-        </div>
+          :post="post"
+        />
       </section>
     </div>
   </div>
@@ -103,9 +95,6 @@ function maskForIcon(icon: string, color: string = 'black') {
 .travis-go-main {
   h3 {
     margin-top: 10px;
-  }
-  h4 {
-    margin-top: 5px;
   }
   display: flex;
   flex-wrap: wrap;
@@ -121,12 +110,8 @@ function maskForIcon(icon: string, color: string = 'black') {
 }
 
 .posts {
-  .post {
-    margin: 0;
-    padding: 5px;
-    &.odd {
-      background: var(--color--gray-6);
-    }
+  .post.odd {
+    background: var(--color--gray-6);
   }
 }
 .participants-list {
