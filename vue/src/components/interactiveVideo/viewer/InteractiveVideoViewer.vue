@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { defineProps, PropType, ref } from 'vue';
-import { InteractiveVideoTask, Post } from '@/models/InteractiveVideoTask';
+import {
+  InteractiveVideoTask,
+  TravisGoPostProps,
+} from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
-import TravisPost from '@/components/interactiveVideo/viewer/TravisPost.vue';
+import TravisGoPost from '@/components/interactiveVideo/viewer/TravisGoPost.vue';
 
 defineProps({
   task: {
@@ -12,7 +15,7 @@ defineProps({
   },
 });
 
-const posts = ref<Post[]>([
+const posts = ref<TravisGoPostProps[]>([
   {
     id: 'fakeid',
     type: 'meta',
@@ -55,7 +58,7 @@ function maskForIcon(icon: string, color: string = 'black') {
       </div>
       <StudipWysiwyg />
       <button class="button">{{ $gettext('Kommentar posten') }}</button>
-      <div class="participants-list" :style="maskForIcon('own-license')">
+      <div class="travis-go-participants-list">
         <a>@Anna</a>
         <a>@Kevin</a>
       </div>
@@ -75,8 +78,8 @@ function maskForIcon(icon: string, color: string = 'black') {
           {{ task.travisGoSettings.projectDescription }}
         </p>
       </section>
-      <section class="posts">
-        <TravisPost
+      <section class="travis-go-posts">
+        <TravisGoPost
           v-for="(post, index) in posts"
           :key="post.id"
           :class="{
@@ -109,12 +112,12 @@ function maskForIcon(icon: string, color: string = 'black') {
   }
 }
 
-.posts {
-  .post.odd {
+.travis-go-posts {
+  .travis-go-post.odd {
     background: var(--color--gray-6);
   }
 }
-.participants-list {
+.travis-go-participants-list {
   @include icon(before, own-license, clickable, var(--icon-size-button));
   &::before {
     mask: var(--mask-value);

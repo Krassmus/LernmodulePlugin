@@ -1,5 +1,5 @@
 <template>
-  <div class="post">
+  <div class="travis-go-post">
     <h4>
       [{{ formatVideoTimestamp(post.start) }}
       <span class="post-type">{{ post.type }}</span> @{{ post.authorName }}]
@@ -8,7 +8,7 @@
   </div>
 </template>
 <style scoped lang="scss">
-.post {
+.travis-go-post {
   h4 {
     margin-top: 5px;
   }
@@ -19,11 +19,11 @@
 
 <script setup lang="ts">
 import { defineProps, PropType } from 'vue';
-import { Post } from '@/models/InteractiveVideoTask';
+import { TravisGoPostProps } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 defineProps({
   post: {
-    type: Object as PropType<Post>,
+    type: Object as PropType<TravisGoPostProps>,
     required: true,
   },
 });

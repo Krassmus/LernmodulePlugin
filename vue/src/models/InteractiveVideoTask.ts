@@ -206,20 +206,20 @@ export const resizeHandles = [
 ] as const;
 export type ResizeHandle = typeof resizeHandles[number];
 
-export const postTypeSchema = z.union([
+export const travisGoPostTypeSchema = z.union([
   z.literal('image'),
   z.literal('audio'),
   z.literal('meta'),
   z.literal('text'),
 ]);
-export type PostType = z.infer<typeof postTypeSchema>;
-export const postSchema = z.object({
+export type TravisGoPostType = z.infer<typeof travisGoPostTypeSchema>;
+export const travisGoPostSchema = z.object({
   id: z.string(),
   authorName: z.string(),
   authorId: z.string(),
   start: z.number(), // seconds
   end: z.number().optional(), //seconds
   description: z.string(),
-  type: postTypeSchema,
+  type: travisGoPostTypeSchema,
 });
-export type Post = z.infer<typeof postSchema>;
+export type TravisGoPostProps = z.infer<typeof travisGoPostSchema>;
