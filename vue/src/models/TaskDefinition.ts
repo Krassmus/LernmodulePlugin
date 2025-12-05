@@ -12,7 +12,7 @@ import FindTheHotspotsViewer from '@/components/findTheHotspots/FindTheHotspotsV
 import FindTheWordsEditor from '@/components/findTheWords/FindTheWordsEditor.vue';
 import FindTheWordsViewer from '@/components/findTheWords/FindTheWordsViewer.vue';
 import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
-import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
+import InteractiveVideoViewer from '@/components/interactiveVideo/viewer/InteractiveVideoViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
