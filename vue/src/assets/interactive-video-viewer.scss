@@ -1,4 +1,4 @@
-@import 'mixins';
+@use 'mixins';
 .travis-go-main {
     h3 {
         margin-top: 10px;
@@ -23,7 +23,7 @@
 }
 
 .participants-list {
-    @include icon(before, own-license, clickable, var(--icon-size-button));
+    @include mixins.icon(before, own-license, clickable, var(--icon-size-button));
     &::before {
         mask: var(--mask-value);
     }
