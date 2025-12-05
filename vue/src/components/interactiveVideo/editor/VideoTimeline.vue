@@ -9,7 +9,7 @@ import {
 import {
   TimelineDragState,
   VideoMetadata,
-} from '@/components/interactiveVideo/events';
+} from '@/components/interactiveVideo/editor/events';
 import { throttle } from 'lodash';
 import {
   iconForInteraction,
@@ -17,11 +17,11 @@ import {
   InteractiveVideoTask,
   printInteractionType,
 } from '@/models/InteractiveVideoTask';
-import { $gettext } from '../../language/gettext';
+import { $gettext } from '@/language/gettext';
 import {
   InteractiveVideoEditorState,
   interactiveVideoEditorStateSymbol,
-} from '@/components/interactiveVideo/interactiveVideoEditorState';
+} from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
 import getEmValueFromElement from '@/components/interactiveVideo/getEmValueFromElement';
 import { select } from 'd3-selection';
 import { D3DragEvent, drag } from 'd3-drag';

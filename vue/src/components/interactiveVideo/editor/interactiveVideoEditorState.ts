@@ -2,7 +2,7 @@ import { InjectionKey, Ref } from 'vue';
 import {
   DragState,
   TimelineDragState,
-} from '@/components/interactiveVideo/events';
+} from '@/components/interactiveVideo/editor/events';
 
 /**
  * In the Interactive Video Editor, we use provide/inject to pass data to many

@@ -128,13 +128,13 @@ import type {
   OverlayInteraction,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
-import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
-import SelectedInteractionProperties from '@/components/interactiveVideo/SelectedInteractionProperties.vue';
+import VideoTimeline from '@/components/interactiveVideo/editor/VideoTimeline.vue';
+import SelectedInteractionProperties from '@/components/interactiveVideo/editor/SelectedInteractionProperties.vue';
 import {
   DragState,
   TimelineDragState,
   VideoMetadata,
-} from '@/components/interactiveVideo/events';
+} from '@/components/interactiveVideo/editor/events';
 import {
   iconForTaskType,
   newTask,
@@ -143,8 +143,8 @@ import {
   TaskDefinitionMinusInteractiveVideo,
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
-import { interactiveVideoEditorStateSymbol } from '@/components/interactiveVideo/interactiveVideoEditorState';
-import { $gettext } from '../../language/gettext';
+import { interactiveVideoEditorStateSymbol } from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
+import { $gettext } from '@/language/gettext';
 import { printInteractionType } from '@/models/InteractiveVideoTask';
 import {
   TaskEditorState,

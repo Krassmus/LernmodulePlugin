@@ -17,7 +17,7 @@ import {
 import {
   InteractiveVideoEditorState,
   interactiveVideoEditorStateSymbol,
-} from '@/components/interactiveVideo/interactiveVideoEditorState';
+} from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
 import LmbTaskInteraction from '@/components/interactiveVideo/interactions/LmbTaskInteraction.vue';
 import { printTaskType, viewerForTaskType } from '@/models/TaskDefinition';
 import { $gettext } from '../../language/gettext';
@@ -28,7 +28,7 @@ import OverlayInteraction from '@/components/interactiveVideo/interactions/Overl
 import { OverlayInteraction as OverlayInteractionType } from '@/models/InteractiveVideoTask';
 import { mapActions, mapGetters } from 'vuex';
 import { fileRefsSchema } from '@/routes/jsonApi';
-import { DragState } from '@/components/interactiveVideo/events';
+import { DragState } from '@/components/interactiveVideo/editor/events';
 
 type LoadedStudipFileVideo = StudipFileVideo & {
   download_url: string;
