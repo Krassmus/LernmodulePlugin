@@ -178,11 +178,20 @@
 $image-path: "../../../../../assets/images" !default;
 $icon-path: "#{$image-path}/icons" !default;
 
-// Icons sizes:
+// Variables missing in Stud.IP 5.4
 :root {
-    --icon-size-default: var(--icon-size-default, 20px);
-    --icon-size-inline: var(--icon-size-inline, 16px);
-    --icon-size-button: var(--icon-size-inline, 16px);
+    @if( not global-variable-exists(icon-size-default)) {
+        --icon-size-default: 20px;
+    }
+    @if( not global-variable-exists(icon-size-inline)) {
+        --icon-size-inline: 16px;
+    }
+    @if( not global-variable-exists(icon-size-button)) {
+        --icon-size-button: 16px;
+    }
+    @if( not global-variable-exists(color--gray-6)) {
+        --color--gray-6: #ededed;
+    }
 }
 
 .travis-go-participants-list {
