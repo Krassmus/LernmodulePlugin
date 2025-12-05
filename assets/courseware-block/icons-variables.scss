@@ -202,9 +202,25 @@ $icon-path: "#{$image-path}/icons" !default;
     @if( not global-variable-exists(color--gray-6)) {
         --color--gray-6: #ededed;
     }
+
+    --icon-size-inline-h5p: 1em;
 }
 
 .travis-go-participants-list {
     @include icon(before, own-license, info, var(--icon-size-button));
 }
 
+.travis-go-post {
+    &[data-post-type='image'] {
+        @include icon(before, picture, info, var(--icon-size-inline-h5p));
+    }
+    &[data-post-type='meta'] {
+        @include icon(before, exclaim-circle, info, var(--icon-size-inline-h5p));
+    }
+    &[data-post-type='text'] {
+        @include icon(before, text-content, info, var(--icon-size-inline-h5p));
+    }
+    &[data-post-type='audio'] {
+        @include icon(before, audio, info, var(--icon-size-inline-h5p));
+    }
+}
