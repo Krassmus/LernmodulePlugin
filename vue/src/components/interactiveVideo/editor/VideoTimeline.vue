@@ -25,7 +25,7 @@ import {
 import getEmValueFromElement from '@/components/interactiveVideo/getEmValueFromElement';
 import { select } from 'd3-selection';
 import { D3DragEvent, drag } from 'd3-drag';
-import { formatVideoTimestamp } from '@/components/interactiveVideo/common';
+import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 
 export default defineComponent({
   name: 'VideoTimeline',

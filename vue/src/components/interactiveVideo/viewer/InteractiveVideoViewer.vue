@@ -3,7 +3,7 @@ import { defineProps, PropType, ref } from 'vue';
 import { InteractiveVideoTask, Post } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
-import { formatVideoTimestamp } from '@/components/interactiveVideo/common';
+import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 
 defineProps({
   task: {
