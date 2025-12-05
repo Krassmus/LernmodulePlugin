@@ -26,6 +26,7 @@
     }
 }
 
+
 @function icon-path($icon, $role: clickable) {
     $icon: unquote($icon);
     $role: unquote($role);
@@ -48,6 +49,6 @@
     @return "#{$icon-path}/#{$color}/#{$icon}.svg";
 }
 
-// The use of Stud.IP icons and CSS rules is a work in progress
-$image-path: "../../../../../../assets/images" !default;
+// This does not quite work. Unfortunately
+$image-path: "../../../../assets/images" !default;
 $icon-path: "#{$image-path}/icons" !default;

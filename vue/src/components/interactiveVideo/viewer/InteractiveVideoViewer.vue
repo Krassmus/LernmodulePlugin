@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import '@/assets/interactive-video-viewer.scss';
 import { defineProps, PropType, ref } from 'vue';
 import { InteractiveVideoTask, Post } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
@@ -76,7 +75,7 @@ function maskForIcon(icon: string, color: string = 'black') {
           {{ task.travisGoSettings.projectDescription }}
         </p>
       </section>
-      <section class="travis-posts">
+      <section class="posts">
         <TravisPost
           v-for="(post, index) in posts"
           :key="post.id"
@@ -90,3 +89,59 @@ function maskForIcon(icon: string, color: string = 'black') {
   </div>
   <VideoPlayer v-else :task="task" />
 </template>
+
+<style scoped lang="scss">
+@import '@/assets/mixins';
+.travis-go-main {
+  h3 {
+    margin-top: 10px;
+  }
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 10px;
+  > .travis-go-left-column {
+    flex: 1;
+    min-width: 400px;
+  }
+  > .travis-go-right-column {
+    flex: 1;
+  }
+}
+
+.posts {
+  .post.odd {
+    background: var(--color--gray-6);
+  }
+}
+.participants-list {
+  @include icon(before, own-license, clickable, var(--icon-size-button));
+  &::before {
+    mask: var(--mask-value);
+  }
+  background: var(--color--gray-6);
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  align-items: center;
+  a {
+    color: black;
+  }
+}
+.search-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  input[type='text'] {
+    flex-grow: 1;
+  }
+  button {
+    min-width: unset;
+    width: 0;
+    margin: 0;
+    padding: 4px 20px 4px 7px;
+  }
+}
+</style>
