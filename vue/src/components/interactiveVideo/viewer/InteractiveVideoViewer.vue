@@ -92,7 +92,11 @@ function onClickSearch() {}
 <style scoped lang="scss">
 .travis-go-main {
   h3 {
-    margin-top: 10px;
+    margin-top: 0;
+    margin-bottom: 0.45em;
+  }
+  p {
+    margin-bottom: 0.45em;
   }
   display: flex;
   flex-wrap: wrap;

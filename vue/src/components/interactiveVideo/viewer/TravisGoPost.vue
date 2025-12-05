@@ -17,7 +17,8 @@
   grid-template-areas:
     'icon heading'
     '.    description';
-  grid-gap: 5px;
+  grid-column-gap: 5px;
+  grid-row-gap: 0.45em;
   align-items: start;
   &::before {
     grid-area: icon;
@@ -25,9 +26,11 @@
   .travis-go-post-heading {
     grid-area: heading;
     margin-top: 0;
+    margin-bottom: 0;
   }
   .travis-go-post-description {
     grid-area: description;
+    margin-bottom: 0;
   }
   margin: 0;
   padding: 5px;
