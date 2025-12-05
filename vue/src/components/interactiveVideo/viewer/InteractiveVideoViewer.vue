@@ -25,7 +25,7 @@ const posts = ref<TravisGoPostProps[]>([
     start: 0,
   },
   {
-    id: 'fakeid',
+    id: 'fakeid2',
     type: 'image',
     authorId: 'kevin',
     authorName: 'Kevin',
