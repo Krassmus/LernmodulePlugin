@@ -20,6 +20,7 @@ final class TravisGoPosts extends SormCRUDController
     protected function getData(Request $request, array $args, ?SORM $current = null): array
     {
         // TODO: Implement getData() method.
+        return [];
     }
 
     protected function getAuthority(): ?SORMAuthority
