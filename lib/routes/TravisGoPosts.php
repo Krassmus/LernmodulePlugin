@@ -6,7 +6,7 @@ use LernmodulePlugin\models\TravisGoPost;
 use LernmodulePlugin\SORM;
 use LernmodulePlugin\SORMAuthority;
 use LernmodulePlugin\SormCRUDController;
-use lib\authorities\TravisGoPostAuthority;
+use LernmodulePlugin\authorities\TravisGoPostAuthority;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class TravisGoPosts extends SormCRUDController
