@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, PropType, ref } from 'vue';
+import { defineProps, onMounted, PropType, ref } from 'vue';
 import {
   InteractiveVideoTask,
   TravisGoPostProps,
@@ -7,6 +7,7 @@ import {
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import TravisGoPost from '@/components/interactiveVideo/viewer/TravisGoPost.vue';
+import { store } from '@/store';
 
 defineProps({
   task: {
@@ -33,6 +34,17 @@ const posts = ref<TravisGoPostProps[]>([
     start: 0,
   },
 ]);
+
+onMounted(() => {
+  console.log(store);
+  const x = store
+    .dispatch('lernmodule-plugin/travis-go-posts/loadAll')
+    .then((result) => console.log('result of travis-go-posts/loadAll', result))
+    .catch((error) => console.error('error', error));
+  console.log(x);
+  /* eslint-disable-next-line no-debugger */
+  // debugger;
+});
 
 const searchInput = ref<string>('');
 function onClickSearch() {}

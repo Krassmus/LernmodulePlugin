@@ -1,16 +1,20 @@
 <?php
 
+use LernmodulePlugin\JsonApiTrait;
+use JsonApi\Contracts\JsonApiPlugin;
+
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
     $GLOBALS['FILESYSTEM_UTF8'] = true;
 }
 
-class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin {
+require_once __DIR__ . '/bootstrap.inc.php';
+
+class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPlugin, SystemPlugin {
+    use JsonApiTrait;
 
     public function __construct()
     {
         parent::__construct();
-        StudipAutoloader::addAutoloadPath(__DIR__ . '/lib');
-        StudipAutoloader::addAutoloadPath(__DIR__ . '/lib/H5P');
         if (UpdateInformation::isCollecting()) {
             $data = Request::getArray("page_info");
             if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {

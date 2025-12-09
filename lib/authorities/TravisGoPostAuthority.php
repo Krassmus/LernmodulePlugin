@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\authorities;
+namespace LernmodulePlugin\authorities;
 
 use LernmodulePlugin\SORM;
 use LernmodulePlugin\SORMAuthority;

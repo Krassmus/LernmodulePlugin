@@ -48,6 +48,7 @@ export const store = createStore({
         'terms-of-use',
         'user-data-field',
         'studip-properties',
+        'lernmodule-plugin/travis-go-posts',
       ],
       httpClient,
     }),

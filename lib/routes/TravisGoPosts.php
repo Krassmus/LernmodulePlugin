@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\routes;
+namespace LernmodulePlugin\routes;
 
 use LernmodulePlugin\models\TravisGoPost;
 use LernmodulePlugin\SORM;
@@ -20,7 +20,7 @@ final class TravisGoPosts extends SormCRUDController
     protected function getData(Request $request, array $args, ?SORM $current = null): array
     {
         // TODO: Implement getData() method.
-        return [];
+        return [2];
     }
 
     protected function getAuthority(): ?SORMAuthority

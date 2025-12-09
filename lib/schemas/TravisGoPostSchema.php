@@ -1,6 +1,6 @@
 <?php
 
-namespace lib\schemas;
+namespace LernmodulePlugin\schemas;
 
 use LernmodulePlugin\SchemaProvider;
 

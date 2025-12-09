@@ -3,8 +3,8 @@
 namespace LernmodulePlugin;
 
 use LernmodulePlugin\models\TravisGoPost;
-use lib\routes\TravisGoPosts;
-use lib\schemas\TravisGoPostSchema;
+use LernmodulePlugin\routes\TravisGoPosts;
+use LernmodulePlugin\schemas\TravisGoPostSchema;
 use ReflectionClass;
 use ReflectionException;
 use Slim\Routing\RouteCollectorProxy;

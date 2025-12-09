@@ -23,6 +23,7 @@ class TravisGoPost extends SORM {
     public const TYPE_TEXT = 4;
 
     protected static function configure($config = []): void {
-        $config['db_table'] = 'lernmodule_video_annotations';
+        $config['db_table'] = 'lernmodule_travis_go_posts';
+        parent::configure($config);
     }
 }
