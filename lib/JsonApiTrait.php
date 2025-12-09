@@ -2,9 +2,9 @@
 
 namespace LernmodulePlugin;
 
-use LernmodulePlugin\models\VideoAnnotation;
-use lib\routes\VideoAnnotations;
-use lib\schemas\VideoAnnotationSchema;
+use LernmodulePlugin\models\TravisGoPost;
+use lib\routes\TravisGoPosts;
+use lib\schemas\TravisGoPostSchema;
 use ReflectionClass;
 use ReflectionException;
 use Slim\Routing\RouteCollectorProxy;
@@ -16,7 +16,7 @@ trait JsonApiTrait
         $trait = $this;
 
         $group->group('/lernmodule-plugin', function (RouteCollectorProxy $group) use ($trait): void {
-            $trait->addSORMCrudPaths($group, VideoAnnotations::class);
+            $trait->addSORMCrudPaths($group, TravisGoPosts::class);
         });
     }
 
@@ -30,7 +30,7 @@ trait JsonApiTrait
     public function registerSchemas(): array
     {
         return [
-            VideoAnnotation::class => VideoAnnotationSchema::class,
+            TravisGoPost::class => TravisGoPostSchema::class,
         ];
     }
 

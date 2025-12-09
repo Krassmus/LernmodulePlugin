@@ -6,7 +6,7 @@ use LernmodulePlugin\SORM;
 use LernmodulePlugin\SORMAuthority;
 use User;
 
-class VideoAnnotationAuthority implements SORMAuthority
+class TravisGoPostAuthority implements SORMAuthority
 {
 
     public function mayCreate(?User $user, SORM $sorm): bool

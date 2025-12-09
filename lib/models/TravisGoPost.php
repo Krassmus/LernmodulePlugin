@@ -11,7 +11,7 @@ use LernmodulePlugin\SORM;
  * @property string $chdate
  * @property int $annotation_type
  */
-class VideoAnnotation extends SORM {
+class TravisGoPost extends SORM {
 
     public const TYPE_META = 1;
     public const TYPE_IMAGE = 2;
