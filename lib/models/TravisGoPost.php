@@ -5,11 +5,15 @@ use LernmodulePlugin\SORM;
 
 /**
  * @property string $id
- * @property string $description
+ * @property string $video_id
+ * @property string $video_type
  * @property string $mk_user_id
  * @property string $mkdate
  * @property string $chdate
- * @property int $annotation_type
+ * @property float $start_time
+ * @property float $end_time
+ * @property string $description
+ * @property int $post_type
  */
 class TravisGoPost extends SORM {
 
@@ -18,7 +22,7 @@ class TravisGoPost extends SORM {
     public const TYPE_AUDIO = 3;
     public const TYPE_TEXT = 4;
 
-    protected static function configure($config = []) {
+    protected static function configure($config = []): void {
         $config['db_table'] = 'lernmodule_video_annotations';
     }
 }
