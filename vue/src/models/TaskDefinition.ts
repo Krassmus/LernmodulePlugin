@@ -317,6 +317,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           { uuid: v4(), hint: 'Leckere gelbe Frucht.', solution: 'Banane' },
           { uuid: v4(), hint: 'Leckere rote Frucht.', solution: 'Kirsche' },
         ],
+        size: 10,
         strings: {
           checkButton: 'Überprüfen',
           retryButton: 'Erneut versuchen',
