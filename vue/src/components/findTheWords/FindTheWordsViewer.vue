@@ -101,6 +101,7 @@ import { $gettext } from '@/language/gettext';
 
 const WordSearch = require('@blex41/word-search');
 
+// Types
 type Direction =
   | 'left'
   | 'right'
@@ -248,6 +249,7 @@ watch(
   }
 );
 
+// Functions
 function startTimer(): void {
   timerStarted = true;
 
@@ -321,6 +323,7 @@ function initializeGrid() {
   foundWords.value = [];
   solutionCoordinates = [];
 
+  // Create a new puzzle with the WordSearch library
   const options = {
     cols: gridSize.value,
     rows: gridSize.value,
@@ -332,8 +335,9 @@ function initializeGrid() {
     diacritics: true,
   };
 
-  // Create a new puzzle
   let ws = new WordSearch(options);
+
+  // Retry up to 10 times if the library wasn't able to place all words of the task in the grid
   let count = 1;
   while (ws.words.length !== words.value.length && count <= 10) {
     console.log(
@@ -344,10 +348,12 @@ function initializeGrid() {
     count++;
   }
 
+  // Save the coordinates of the placed words
   ws.words.forEach((word: any) => {
     solutionCoordinates.push(...word.path);
   });
 
+  // Fill the grid with the placed words and random letters for unused cells
   grid = [];
   for (let x = 0; x < gridSize.value; x++) {
     grid[x] = [];
