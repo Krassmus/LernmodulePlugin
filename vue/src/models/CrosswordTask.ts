@@ -4,6 +4,9 @@ const wordSchema = z.object({
   uuid: z.string(),
   hint: z.string(),
   solution: z.string(),
+  x: z.number(),
+  y: z.number(),
+  direction: z.string(),
 });
 export type Word = z.infer<typeof wordSchema>;
 

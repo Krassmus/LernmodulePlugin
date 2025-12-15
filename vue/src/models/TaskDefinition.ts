@@ -313,9 +313,30 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
       return {
         task_type: 'Crossword',
         words: [
-          { uuid: v4(), hint: 'Leckere orangene Frucht.', solution: 'Orange' },
-          { uuid: v4(), hint: 'Leckere gelbe Frucht.', solution: 'Banane' },
-          { uuid: v4(), hint: 'Leckere rote Frucht.', solution: 'Kirsche' },
+          {
+            uuid: v4(),
+            hint: 'Leckere orangene Frucht.',
+            solution: 'Orange',
+            x: 0,
+            y: 1,
+            direction: 'right',
+          },
+          {
+            uuid: v4(),
+            hint: 'Leckere gelbe Frucht.',
+            solution: 'Banane',
+            x: 2,
+            y: 0,
+            direction: 'down',
+          },
+          {
+            uuid: v4(),
+            hint: 'Leckere rote Frucht.',
+            solution: 'Kirsche',
+            x: 5,
+            y: 7,
+            direction: 'up',
+          },
         ],
         size: 10,
         strings: {
