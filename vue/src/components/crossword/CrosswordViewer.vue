@@ -1,7 +1,7 @@
 <template>
   <div class="stud5p-task">
     <template v-if="props.task?.words.length > 0">
-      <div class="canvas-and-word-list-container">
+      <div class="canvas-and-hints-list-container">
         <!-- tabindex="0" is needed to make the canvas focusable and the keydown listener to work -->
         <canvas
           id="c"
@@ -11,9 +11,15 @@
           @pointerdown.stop="onPointerDownCanvas($event)"
           @keydown.stop="onKeyDownCanvas($event)"
         />
-        <div class="word-list">
-          <div v-for="word in props.task?.words" :key="word.uuid">
-            {{ word.solution }}
+        <div class="hint-list">
+          <div
+            v-for="word in props.task?.words"
+            :key="word.uuid"
+            @click="onClickHint(word)"
+            class="hint"
+            :class="{ 'selected-hint': selectedWord?.uuid === word.uuid }"
+          >
+            {{ word.hint }}
           </div>
         </div>
       </div>
@@ -273,7 +279,7 @@ function drawGrid() {
 
     // Highlight the selected word
     selectedWord.value?.path.forEach((cell) => {
-      fillCell(cell, 'rgba(140,180,255,0.13)');
+      fillCell(cell, 'rgba(140, 180, 255, 0.13)');
     });
 
     // Highlight the selected cell
@@ -461,6 +467,16 @@ function onKeyDownCanvas(event: KeyboardEvent) {
   }
 }
 
+function onClickHint(word: Word) {
+  if (debug) console.log('Clicked on hint:', word.hint);
+  selectedWord.value = placedWords.value.find(
+    (value) => value.uuid === word.uuid
+  );
+  selectedCell.value = selectedWord.value?.path[0];
+  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  canvas.focus();
+}
+
 function getCellCoordinatesUnderCursor(event: PointerEvent): {
   x: number;
   y: number;
@@ -507,13 +523,13 @@ function fillCell(cell: Cell, fillStyle: string) {
 </script>
 
 <style scoped>
-.canvas-and-word-list-container {
+.canvas-and-hints-list-container {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
 
-.word-list {
+.hint-list {
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -522,5 +538,13 @@ function fillCell(cell: Cell, fillStyle: string) {
   border: 1px solid #ccc;
   align-self: stretch;
   max-width: 12em;
+}
+
+.hint {
+  cursor: default;
+}
+
+.selected-hint {
+  background: rgba(140, 180, 255, 0.13);
 }
 </style>
