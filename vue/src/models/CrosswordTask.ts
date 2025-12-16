@@ -1,12 +1,14 @@
 import { z } from 'zod';
 
+export const Direction = z.enum(['across', 'down']);
+
 const wordSchema = z.object({
   uuid: z.string(),
   hint: z.string(),
   solution: z.string(),
   x: z.number(),
   y: z.number(),
-  direction: z.string(),
+  direction: Direction,
 });
 export type Word = z.infer<typeof wordSchema>;
 
