@@ -370,13 +370,14 @@ function onKeyDownCanvas(event: KeyboardEvent) {
   if (taskCompleted.value) {
     return;
   }
+
   if (selectedCell.value) {
-    // Check if the key is a letter
+    // Check if the key is a letter and place it in the grid
     if (event.key.match(/^[a-zA-Z]$/)) {
       userInputGrid.value[selectedCell.value.x][selectedCell.value.y] =
         event.key.toUpperCase();
 
-      // Jump to the next cell in the selected word
+      // Jump to the next cell in the selected word or the next word if it was the last cell
       if (selectedWord.value) {
         const indexOfCellInWord = selectedWord.value.path.findIndex((cell) => {
           return (
@@ -385,6 +386,14 @@ function onKeyDownCanvas(event: KeyboardEvent) {
         });
         if (indexOfCellInWord < selectedWord.value.path.length - 1) {
           selectedCell.value = selectedWord.value.path[indexOfCellInWord + 1];
+        } else if (indexOfCellInWord === selectedWord.value.path.length - 1) {
+          const currentWordIndex = placedWords.value.findIndex((word) => {
+            return word.uuid == selectedWord.value?.uuid;
+          });
+          if (currentWordIndex < placedWords.value.length - 1) {
+            selectedWord.value = placedWords.value[currentWordIndex + 1];
+            selectedCell.value = selectedWord.value.path[0];
+          }
         }
       }
     } else if (event.key === 'Backspace') {
@@ -425,20 +434,126 @@ function onKeyDownCanvas(event: KeyboardEvent) {
             cell.x === selectedCell.value!.x && cell.y === selectedCell.value!.y
           );
         });
-        if (event.key === 'ArrowUp' && indexOfCellInWord > 0) {
-          selectedCell.value = selectedWord.value.path[indexOfCellInWord - 1];
-        } else if (
-          event.key === 'ArrowDown' &&
-          indexOfCellInWord < selectedWord.value.path.length - 1
-        ) {
-          selectedCell.value = selectedWord.value.path[indexOfCellInWord + 1];
-        } else if (event.key === 'ArrowLeft' && indexOfCellInWord > 0) {
-          selectedCell.value = selectedWord.value.path[indexOfCellInWord - 1];
-        } else if (
-          event.key === 'ArrowRight' &&
-          indexOfCellInWord < selectedWord.value.path.length - 1
-        ) {
-          selectedCell.value = selectedWord.value.path[indexOfCellInWord + 1];
+        if (selectedWord.value.direction === 'across') {
+          if (event.key === 'ArrowLeft') {
+            // select previous cell in across word
+            if (indexOfCellInWord > 0) {
+              selectedCell.value =
+                selectedWord.value.path[indexOfCellInWord - 1];
+            } else if (indexOfCellInWord === 0) {
+              selectedCell.value =
+                selectedWord.value.path[selectedWord.value.path.length - 1];
+            }
+          } else if (event.key === 'ArrowRight') {
+            // select next cell in across word
+            if (indexOfCellInWord < selectedWord.value.path.length - 1) {
+              selectedCell.value =
+                selectedWord.value.path[indexOfCellInWord + 1];
+            } else if (
+              indexOfCellInWord ===
+              selectedWord.value.path.length - 1
+            ) {
+              selectedCell.value = selectedWord.value.path[0];
+            }
+          } else if (event.key === 'ArrowUp') {
+            // if there is an occupied cell above the currently selected cell, select that one and select the corresponding word
+            const wordAbove = placedWords.value.find((word) => {
+              return word.path.some((cell) => {
+                return (
+                  cell.x === selectedCell.value!.x &&
+                  cell.y === selectedCell.value!.y - 1
+                );
+              });
+            });
+            if (wordAbove) {
+              selectedWord.value = wordAbove;
+              selectedCell.value = wordAbove.path.find((cell) => {
+                return (
+                  cell.x === selectedCell.value!.x &&
+                  cell.y === selectedCell.value!.y - 1
+                );
+              });
+            }
+          } else if (event.key === 'ArrowDown') {
+            // if there is an occupied cell below the currently selected cell, select that one and select the corresponding word
+            const wordBelow = placedWords.value.find((word) => {
+              return word.path.some((cell) => {
+                return (
+                  cell.x === selectedCell.value!.x &&
+                  cell.y === selectedCell.value!.y + 1
+                );
+              });
+            });
+            if (wordBelow) {
+              selectedWord.value = wordBelow;
+              selectedCell.value = wordBelow.path.find((cell) => {
+                return (
+                  cell.x === selectedCell.value!.x &&
+                  cell.y === selectedCell.value!.y + 1
+                );
+              });
+            }
+          }
+        } else if (selectedWord.value.direction === 'down') {
+          if (event.key === 'ArrowUp') {
+            // select previous cell in down word
+            if (indexOfCellInWord > 0) {
+              selectedCell.value =
+                selectedWord.value.path[indexOfCellInWord - 1];
+            } else if (indexOfCellInWord === 0) {
+              selectedCell.value =
+                selectedWord.value.path[selectedWord.value.path.length - 1];
+            }
+          } else if (event.key === 'ArrowDown') {
+            // select next cell in down word
+            if (indexOfCellInWord < selectedWord.value.path.length - 1) {
+              selectedCell.value =
+                selectedWord.value.path[indexOfCellInWord + 1];
+            } else if (
+              indexOfCellInWord ===
+              selectedWord.value.path.length - 1
+            ) {
+              selectedCell.value = selectedWord.value.path[0];
+            }
+          } else if (event.key === 'ArrowLeft') {
+            // if there is an occupied cell left of the currently selected cell, select that one and select the corresponding word
+            const wordToTheLeft = placedWords.value.find((word) => {
+              return word.path.some((cell) => {
+                return (
+                  cell.x === selectedCell.value!.x - 1 &&
+                  cell.y === selectedCell.value!.y
+                );
+              });
+            });
+            if (wordToTheLeft) {
+              selectedWord.value = wordToTheLeft;
+              selectedCell.value = wordToTheLeft.path.find((cell) => {
+                return (
+                  cell.x === selectedCell.value!.x - 1 &&
+                  cell.y === selectedCell.value!.y
+                );
+              });
+            }
+          } else if (event.key === 'ArrowRight') {
+            // if there is an occupied cell right of the currently selected cell, select that one and select the corresponding word
+            const wordToTheRight = placedWords.value.find((word) => {
+              return word.path.some((cell) => {
+                return (
+                  cell.x === selectedCell.value!.x + 1 &&
+                  cell.y === selectedCell.value!.y
+                );
+              });
+            });
+            if (wordToTheRight) {
+              selectedWord.value = wordToTheRight;
+              selectedCell.value = wordToTheRight.path.find((cell) => {
+                return (
+                  cell.x === selectedCell.value!.x + 1 &&
+                  cell.y === selectedCell.value!.y
+                );
+              });
+            }
+          }
         }
       }
     } else if (event.key === 'Tab') {
@@ -463,6 +578,17 @@ function onKeyDownCanvas(event: KeyboardEvent) {
       }
 
       selectedCell.value = selectedWord.value?.path[0];
+    }
+  } else {
+    // If we currently don't have any word and cell selected, pressing tab or an arrow key selects the first cell of the first word
+    if (
+      ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(
+        event.key
+      )
+    ) {
+      event.preventDefault(); // don't scroll up or down with arrow keys while canvas is focussed
+      selectedWord.value = placedWords.value[0];
+      selectedCell.value = selectedWord.value.path[0];
     }
   }
 }
