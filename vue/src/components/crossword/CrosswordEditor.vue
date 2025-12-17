@@ -178,6 +178,9 @@ function addWord(): void {
     uuid: v4(),
     hint: '',
     solution: '',
+    direction: 'across',
+    x: 0,
+    y: 0,
   };
   modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
     draft.words.push(newWord);
