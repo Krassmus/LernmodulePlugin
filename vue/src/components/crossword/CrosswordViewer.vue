@@ -10,6 +10,7 @@
           :height="canvasSize"
           @pointerdown.stop="onPointerDownCanvas($event)"
           @keydown.stop="onKeyDownCanvas($event)"
+          class="canvas"
         />
         <div class="hint-list">
           <div
@@ -653,6 +654,10 @@ function fillCell(cell: Cell, fillStyle: string) {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+}
+
+.canvas {
+  outline: none;
 }
 
 .hint-list {
