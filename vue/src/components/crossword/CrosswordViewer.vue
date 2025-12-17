@@ -216,6 +216,8 @@ function onClickShowSolutions(): void {
 
 function initializeGrids() {
   foundWords.value = [];
+  selectedWord.value = undefined;
+  selectedCell.value = undefined;
 
   solutionGrid.value = Array.from({ length: gridSize.value }, () =>
     Array.from({ length: gridSize.value }, () => '')

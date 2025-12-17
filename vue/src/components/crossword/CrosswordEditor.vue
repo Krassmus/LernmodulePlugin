@@ -38,6 +38,17 @@
                         @input="onInputYCoordinate(element.uuid, element.y)"
                         :placeholder="'y'"
                       />
+                      <select
+                        v-model="element.direction"
+                        @change="onChangeDirection(element.uuid, $event)"
+                      >
+                        <option value="across">
+                          {{ $gettext('Waagerecht') }}
+                        </option>
+                        <option value="down">
+                          {{ $gettext('Senkrecht') }}
+                        </option>
+                      </select>
                       <button
                         type="button"
                         class="small-button trash"
@@ -117,7 +128,7 @@ import {
   TaskEditorState,
   taskEditorStateSymbol,
 } from '@/components/taskEditorState';
-import { CrosswordTask, Word } from '@/models/CrosswordTask';
+import { CrosswordTask, Word, Direction } from '@/models/CrosswordTask';
 import { cloneDeep } from 'lodash';
 import { $gettext } from '@/language/gettext';
 import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
@@ -248,6 +259,24 @@ function onInputYCoordinate(uuid: string, y: number): void {
   });
 
   updateTaskDefinition('y-coordinate');
+}
+
+function onChangeDirection(uuid: string, event: Event) {
+  const selectedDirection = (event.target as HTMLSelectElement).value;
+  console.log(selectedDirection);
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+    const index = draft.words.findIndex((word) => word.uuid === uuid);
+    if (index === -1) {
+      throw new Error('No word with id ' + uuid + ' found.');
+    }
+    if (selectedDirection === 'across') {
+      draft.words[index].direction = Direction.Enum.across;
+    } else if (selectedDirection === 'down') {
+      draft.words[index].direction = Direction.Enum.down;
+    }
+  });
+
+  updateTaskDefinition('direction');
 }
 </script>
 
