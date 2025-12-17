@@ -26,6 +26,18 @@
                         @input="onInputSolution(element.uuid, element.solution)"
                         :placeholder="$gettext('Lösung')"
                       />
+                      <input
+                        type="number"
+                        v-model="element.x"
+                        @input="onInputXCoordinate(element.uuid, element.x)"
+                        :placeholder="'x'"
+                      />
+                      <input
+                        type="number"
+                        v-model="element.y"
+                        @input="onInputYCoordinate(element.uuid, element.y)"
+                        :placeholder="'y'"
+                      />
                       <button
                         type="button"
                         class="small-button trash"
@@ -212,6 +224,30 @@ function onInputSolution(uuid: string, solution: string): void {
   });
 
   updateTaskDefinition('solution');
+}
+
+function onInputXCoordinate(uuid: string, x: number): void {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+    const index = draft.words.findIndex((word) => word.uuid === uuid);
+    if (index === -1) {
+      throw new Error('No word with id ' + uuid + ' found.');
+    }
+    draft.words[index].x = x;
+  });
+
+  updateTaskDefinition('x-coordinate');
+}
+
+function onInputYCoordinate(uuid: string, y: number): void {
+  modelTaskDefinition.value = produce(modelTaskDefinition.value, (draft) => {
+    const index = draft.words.findIndex((word) => word.uuid === uuid);
+    if (index === -1) {
+      throw new Error('No word with id ' + uuid + ' found.');
+    }
+    draft.words[index].y = y;
+  });
+
+  updateTaskDefinition('y-coordinate');
 }
 </script>
 
