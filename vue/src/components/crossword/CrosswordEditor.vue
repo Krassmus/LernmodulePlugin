@@ -46,11 +46,22 @@
           <TabComponent :title="$gettext('Vorschau')" icon="visibility-visible">
             <p>debug</p>
           </TabComponent>
+          <TabComponent
+            v-if="debug"
+            :title="'Task Definition (debug)'"
+            icon="visibility-visible"
+          >
+            <pre
+              v-if="debug && true"
+              :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
+              >{{
+                {
+                  taskDefinition,
+                }
+              }}</pre
+            >
+          </TabComponent>
         </TabsComponent>
-      </fieldset>
-
-      <fieldset class="collapsable collapsed">
-        <legend>{{ $gettext('Einstellungen') }}</legend>
       </fieldset>
 
       <fieldset class="collapsable collapsed">
@@ -86,15 +97,6 @@
       </fieldset>
     </form>
   </div>
-  <pre
-    v-if="debug && true"
-    :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
-    >{{
-      {
-        taskDefinition,
-      }
-    }}</pre
-  >
 </template>
 
 <script setup lang="ts">
