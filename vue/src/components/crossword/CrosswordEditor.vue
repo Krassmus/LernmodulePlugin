@@ -5,15 +5,18 @@
         <legend>{{ $gettext('Crossword') }}</legend>
 
         <TabsComponent>
-          <TabComponent :title="$gettext('Einstellungen')" icon="settings">
-            <p>debug</p>
-          </TabComponent>
           <TabComponent :title="$gettext('Wörter eingeben')" icon="content">
-            <div class="words-flex-box">
-              <div class="word-list">
-                <draggable v-model="wordList" item-key="uuid">
+            <div class="word-list-and-word-details-container">
+              <div class="word-list-container">
+                <draggable v-model="wordList" item-key="uuid" class="word-list">
                   <template #item="{ element }">
-                    <div class="word-list-item">
+                    <div
+                      class="word"
+                      @click="onClickWord(element.uuid)"
+                      :class="{
+                        'selected-word': selectedWord?.uuid === element.uuid,
+                      }"
+                    >
                       <input
                         type="text"
                         v-model="element.hint"
@@ -26,29 +29,6 @@
                         @input="onInputSolution(element.uuid, element.solution)"
                         :placeholder="$gettext('Lösung')"
                       />
-                      <input
-                        type="number"
-                        v-model="element.x"
-                        @input="onInputXCoordinate(element.uuid, element.x)"
-                        :placeholder="'x'"
-                      />
-                      <input
-                        type="number"
-                        v-model="element.y"
-                        @input="onInputYCoordinate(element.uuid, element.y)"
-                        :placeholder="'y'"
-                      />
-                      <select
-                        v-model="element.direction"
-                        @change="onChangeDirection(element.uuid, $event)"
-                      >
-                        <option value="across">
-                          {{ $gettext('Waagerecht') }}
-                        </option>
-                        <option value="down">
-                          {{ $gettext('Senkrecht') }}
-                        </option>
-                      </select>
                       <button
                         type="button"
                         class="small-button trash"
@@ -63,11 +43,54 @@
                   {{ $gettext('Neues Wort hinzufügen') }}
                 </button>
               </div>
-              <div class="word-details">2</div>
+              <div class="word-details">
+                <fieldset>
+                  <legend>{{ $gettext('Wort bearbeiten') }}</legend>
+
+                  <template v-if="selectedWord">
+                    <label>
+                      {{ $gettext('Richtung') }}
+                      <select
+                        v-model="selectedWord.direction"
+                        @change="onChangeDirection(selectedWord.uuid, $event)"
+                      >
+                        <option value="across">
+                          {{ $gettext('Waagerecht') }}
+                        </option>
+                        <option value="down">
+                          {{ $gettext('Senkrecht') }}
+                        </option>
+                      </select>
+                    </label>
+                    <label>
+                      {{ $gettext('Spalte') }}
+                      <input
+                        type="number"
+                        v-model="selectedWord.x"
+                        @input="
+                          onInputXCoordinate(selectedWord.uuid, selectedWord.x)
+                        "
+                        :placeholder="'x'"
+                      />
+                    </label>
+                    <label>
+                      {{ $gettext('Reihe') }}
+                      <input
+                        type="number"
+                        v-model="selectedWord.y"
+                        @input="
+                          onInputYCoordinate(selectedWord.uuid, selectedWord.y)
+                        "
+                        :placeholder="'y'"
+                      />
+                    </label>
+                  </template>
+                  <template v-else>
+                    <p>Bitte wählen Sie ein Wort aus um es zu bearbeiten.</p>
+                  </template>
+                </fieldset>
+              </div>
             </div>
-          </TabComponent>
-          <TabComponent :title="$gettext('Vorschau')" icon="visibility-visible">
-            <p>debug</p>
           </TabComponent>
           <TabComponent
             v-if="debug"
@@ -155,6 +178,7 @@ const components = {
 const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 
 // State
+const selectedWord = ref<Word>();
 const modelTaskDefinition = ref<CrosswordTask>(cloneDeep(props.taskDefinition));
 
 // Computed properties
@@ -211,6 +235,12 @@ function addWord(): void {
     draft.words.push(newWord);
   });
   updateTaskDefinition();
+}
+
+function onClickWord(uuid: string): void {
+  selectedWord.value = modelTaskDefinition.value.words.find(
+    (word) => word.uuid === uuid
+  );
 }
 
 function onInputHint(uuid: string, hint: string): void {
@@ -281,21 +311,35 @@ function onChangeDirection(uuid: string, event: Event) {
 </script>
 
 <style scoped>
-.words-flex-box {
+.word-list-and-word-details-container {
   display: flex;
   justify-content: space-between;
+  padding: 0.5em;
+}
+
+.word-list-container {
 }
 
 .word-list {
-  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
 }
 
-.word-list-item {
-  border: 1px solid green;
+.word {
   display: flex;
+  gap: 1em;
+  padding: 1em;
+  align-items: center;
+  cursor: grab;
+  border: 1px solid #ccc;
+}
+
+.selected-word {
+  background: rgba(140, 180, 255, 0.13);
 }
 
 .word-details {
-  border: 1px solid blue;
+  width: 400px;
 }
 </style>
