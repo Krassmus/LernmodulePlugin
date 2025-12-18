@@ -8,7 +8,13 @@
           <TabComponent :title="$gettext('Wörter eingeben')" icon="content">
             <div class="word-list-and-word-details-container">
               <div class="word-list-container">
-                <draggable v-model="wordList" item-key="uuid" class="word-list">
+                <draggable
+                  v-model="wordList"
+                  item-key="uuid"
+                  class="word-list"
+                  :filter="'input,button'"
+                  :preventOnFilter="false"
+                >
                   <template #item="{ element }">
                     <div
                       class="word"
