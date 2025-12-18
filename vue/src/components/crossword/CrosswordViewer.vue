@@ -321,6 +321,31 @@ function drawGrid() {
           );
         }
 
+        // If the task is submitted, color the cells depending on if they're correct or incorrect
+        if (
+          taskSubmitted.value &&
+          !showSolutions.value &&
+          userInputGrid.value[x][y]
+        ) {
+          if (userInputGrid.value[x][y] === solutionGrid.value[x][y]) {
+            ctx.fillStyle = '#9dd8bb';
+            ctx.fillRect(
+              x * cellSize.value,
+              y * cellSize.value,
+              cellSize.value,
+              cellSize.value
+            );
+          } else {
+            ctx.fillStyle = '#f7d0d0';
+            ctx.fillRect(
+              x * cellSize.value,
+              y * cellSize.value,
+              cellSize.value,
+              cellSize.value
+            );
+          }
+        }
+
         // Draw the solutions or the user input
         if (showSolutions.value) {
           ctx.fillStyle = '#404040';
