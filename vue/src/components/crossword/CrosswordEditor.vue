@@ -120,10 +120,30 @@
         <legend>{{ $gettext('Beschriftungen') }}</legend>
 
         <label>
+          {{ $gettext('Text für Überprüfen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.checkButton"
+            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
+            type="text"
+          />
+        </label>
+
+        <label>
           {{ $gettext('Text für Wiederholen-Button:') }}
           <input
             v-model="modelTaskDefinition.strings.retryButton"
             @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
+            type="text"
+          />
+        </label>
+
+        <label>
+          {{ $gettext('Text für Lösungen-Button:') }}
+          <input
+            v-model="modelTaskDefinition.strings.solutionsButton"
+            @input="
+              updateTaskDefinition('taskDefinition.strings.solutionsButton')
+            "
             type="text"
           />
         </label>
