@@ -213,6 +213,8 @@ watch(
 // Functions
 function onClickCheck(): void {
   taskSubmitted.value = true;
+  selectedCell.value = undefined;
+  selectedWord.value = undefined;
 }
 
 function onClickRetry(): void {
@@ -225,6 +227,8 @@ function onClickRetry(): void {
 
 function onClickShowSolutions(): void {
   showSolutions.value = true;
+  selectedCell.value = undefined;
+  selectedWord.value = undefined;
   drawGrid();
 }
 
