@@ -41,7 +41,7 @@
         />
 
         <button
-          v-if="taskCompleted"
+          v-if="taskSubmitted"
           v-text="task.strings.retryButton"
           @click="onClickRetry"
           type="button"
@@ -93,7 +93,6 @@ const selectedCell = ref<Cell>();
 const selectedWord = ref<PlacedWord>();
 const solutionGrid = ref<string[][]>([]);
 const userInputGrid = ref<string[][]>([]);
-const foundWords = ref<string[]>([]);
 const taskSubmitted = ref<boolean>(false);
 const showSolutions = ref<boolean>(false);
 const placedWords = ref<PlacedWord[]>([]);
@@ -140,30 +139,12 @@ const words = computed(() => {
   return [];
 });
 
-const score = computed(() => {
-  return foundWords.value.length;
-});
-
 const maxScore = computed(() => {
   return words.value.length;
 });
 
-const taskCompleted = computed(() => {
-  return score.value === maxScore.value || taskSubmitted.value;
-});
-
-const resultMessage = computed(() => {
-  let result = props.task.strings.resultMessage.replace(
-    ':correct',
-    score.value.toString()
-  );
-  result = result.replace(':total', maxScore.value.toString());
-
-  return result;
-});
-
 const showCheckButton = computed(() => {
-  return !taskCompleted.value;
+  return !taskSubmitted.value;
 });
 
 // Watchers
@@ -233,7 +214,6 @@ function onClickShowSolutions(): void {
 }
 
 function initializeGrids() {
-  foundWords.value = [];
   selectedWord.value = undefined;
   selectedCell.value = undefined;
 
@@ -368,7 +348,7 @@ function drawGrid() {
 }
 
 function onPointerDownCanvas(event: PointerEvent) {
-  if (taskCompleted.value) return;
+  if (taskSubmitted.value) return;
 
   // Find the coordinates of the cell under the cursor
   const cellCoordinates = getCellCoordinatesUnderCursor(event);
@@ -413,7 +393,7 @@ function onPointerDownCanvas(event: PointerEvent) {
 }
 
 function onKeyDownCanvas(event: KeyboardEvent) {
-  if (taskCompleted.value) {
+  if (taskSubmitted.value) {
     return;
   }
 
