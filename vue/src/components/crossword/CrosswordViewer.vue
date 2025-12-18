@@ -108,7 +108,21 @@ onBeforeUnmount(() => {});
 
 // Computed properties
 const gridSize = computed(() => {
-  return props.task?.size;
+  let size = 0;
+
+  words.value.forEach((word) => {
+    if (word.direction === 'across') {
+      if (word.x + word.solution.length > size) {
+        size = word.x + word.solution.length;
+      }
+    } else if (word.direction === 'down') {
+      if (word.y + word.solution.length > size) {
+        size = word.y + word.solution.length;
+      }
+    }
+  });
+
+  return size;
 });
 
 const cellSize = computed(() => {

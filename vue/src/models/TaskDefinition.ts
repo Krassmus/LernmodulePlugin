@@ -338,7 +338,6 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             direction: 'across',
           },
         ],
-        size: 10,
         strings: {
           checkButton: 'Überprüfen',
           retryButton: 'Erneut versuchen',
