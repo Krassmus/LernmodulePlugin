@@ -1,13 +1,13 @@
 <?php
 
+require_once __DIR__ . '/bootstrap.inc.php';
+
 use LernmodulePlugin\JsonApiTrait;
 use JsonApi\Contracts\JsonApiPlugin;
 
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
     $GLOBALS['FILESYSTEM_UTF8'] = true;
 }
-
-require_once __DIR__ . '/bootstrap.inc.php';
 
 class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPlugin, SystemPlugin {
     use JsonApiTrait;
