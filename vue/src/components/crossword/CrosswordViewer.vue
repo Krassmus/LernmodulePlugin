@@ -2,16 +2,19 @@
   <div class="stud5p-task">
     <template v-if="props.task?.words.length > 0">
       <div class="canvas-and-hints-list-container">
-        <!-- tabindex="0" is needed to make the canvas focusable and the keydown listener to work -->
-        <canvas
-          id="c"
-          tabindex="0"
-          :width="canvasSize"
-          :height="canvasSize"
-          @pointerdown.stop="onPointerDownCanvas($event)"
-          @keydown.stop="onKeyDownCanvas($event)"
-          class="canvas"
-        />
+        <div class="canvas-wrapper">
+          <!-- tabindex="0" is needed to make the canvas focusable and the keydown listener to work -->
+          <canvas
+            ref="canvasRef"
+            id="c"
+            tabindex="0"
+            :width="canvasSize"
+            :height="canvasSize"
+            @pointerdown.stop="onPointerDownCanvas($event)"
+            @keydown.stop="onKeyDownCanvas($event)"
+            class="canvas"
+          />
+        </div>
         <div class="hint-list">
           <div
             v-for="word in props.task?.words"
@@ -87,6 +90,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+// Refs
+const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 // State
 const selectedCell = ref<Cell>();
@@ -266,7 +272,7 @@ function createWordPath(word: Word): Path {
 }
 
 function drawGrid() {
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  const canvas = canvasRef.value;
   if (!canvas) {
     console.error('No Canvas');
     return;
@@ -676,24 +682,35 @@ function fillCell(cell: Cell, fillStyle: string) {
 
 <style scoped>
 .canvas-and-hints-list-container {
+  height: 60dvh;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  align-items: stretch; /** makes children match containers height **/
+}
+
+.canvas-wrapper {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
 }
 
 .canvas {
+  border: 1px solid #ddd;
   outline: none;
 }
 
 .hint-list {
+  flex: 0 0 clamp(16rem, 20vw, 28rem);
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 0.75em;
   background: #f5f5f5;
-  padding: 0.5em;
+  padding-left: 0.5em;
   border: 1px solid #ccc;
-  align-self: stretch;
-  max-width: 12em;
+  overflow: scroll;
 }
 
 .hint {
