@@ -15,8 +15,9 @@ export type Word = z.infer<typeof wordSchema>;
 export const crosswordTaskSchema = z.object({
   task_type: z.literal('Crossword'),
   words: z.array(wordSchema),
+  colorEmptyCells: z.boolean(),
   strings: z.object({
-    checkButton: z.string().default(''),
+    checkButton: z.string(),
     retryButton: z.string(),
     solutionsButton: z.string(),
     resultMessage: z.string(),

@@ -301,76 +301,87 @@ function drawGrid() {
     return;
   }
   const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = 'bold ' + fontSize.value + 'px calibri';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+  if (!ctx) {
+    return;
+  }
 
-    // Highlight the selected word
-    selectedWord.value?.path.forEach((cell) => {
-      fillCell(cell, 'rgba(140, 180, 255, 0.13)');
-    });
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Highlight the selected cell
-    if (selectedCell.value) {
-      fillCell(selectedCell.value, 'rgba(140, 180, 255, 0.34)');
-    }
+  // Highlight the selected word
+  selectedWord.value?.path.forEach((cell) => {
+    fillCell(cell, 'rgba(140, 180, 255, 0.13)');
+  });
 
-    for (let x = 0; x < gridSize.value; x++) {
-      for (let y = 0; y < gridSize.value; y++) {
-        // Draw the grid lines around letters of the solution grid
-        if (solutionGrid.value[x][y]) {
-          ctx.strokeStyle = 'gainsboro';
-          ctx.strokeRect(
+  // Highlight the selected cell
+  if (selectedCell.value) {
+    fillCell(selectedCell.value, 'rgba(140, 180, 255, 0.34)');
+  }
+
+  for (let x = 0; x < gridSize.value; x++) {
+    for (let y = 0; y < gridSize.value; y++) {
+      // Draw the grid lines around letters of the solution grid
+      if (solutionGrid.value[x][y]) {
+        ctx.strokeStyle = 'gainsboro';
+        ctx.strokeRect(
+          x * cellSize.value,
+          y * cellSize.value,
+          cellSize.value,
+          cellSize.value
+        );
+      } else if (props.task?.colorEmptyCells) {
+        ctx.fillStyle = '#515151';
+        ctx.fillRect(
+          x * cellSize.value,
+          y * cellSize.value,
+          cellSize.value,
+          cellSize.value
+        );
+      }
+
+      // If the task is submitted, color the cells depending on if they're correct or incorrect
+      if (
+        taskSubmitted.value &&
+        !showSolutions.value &&
+        userInputGrid.value[x][y]
+      ) {
+        if (userInputGrid.value[x][y] === solutionGrid.value[x][y]) {
+          ctx.fillStyle = '#9dd8bb';
+          ctx.fillRect(
+            x * cellSize.value,
+            y * cellSize.value,
+            cellSize.value,
+            cellSize.value
+          );
+        } else {
+          ctx.fillStyle = '#f7d0d0';
+          ctx.fillRect(
             x * cellSize.value,
             y * cellSize.value,
             cellSize.value,
             cellSize.value
           );
         }
+      }
 
-        // If the task is submitted, color the cells depending on if they're correct or incorrect
-        if (
-          taskSubmitted.value &&
-          !showSolutions.value &&
-          userInputGrid.value[x][y]
-        ) {
-          if (userInputGrid.value[x][y] === solutionGrid.value[x][y]) {
-            ctx.fillStyle = '#9dd8bb';
-            ctx.fillRect(
-              x * cellSize.value,
-              y * cellSize.value,
-              cellSize.value,
-              cellSize.value
-            );
-          } else {
-            ctx.fillStyle = '#f7d0d0';
-            ctx.fillRect(
-              x * cellSize.value,
-              y * cellSize.value,
-              cellSize.value,
-              cellSize.value
-            );
-          }
-        }
+      // Draw the solutions or the user input
+      ctx.font = 'bold ' + fontSize.value + 'px calibri';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
 
-        // Draw the solutions or the user input
-        if (showSolutions.value) {
-          ctx.fillStyle = '#404040';
-          ctx.fillText(
-            solutionGrid.value[x][y],
-            x * cellSize.value + cellSize.value / 2,
-            y * cellSize.value + cellSize.value / 2
-          );
-        } else {
-          ctx.fillStyle = '#404040';
-          ctx.fillText(
-            userInputGrid.value[x][y],
-            x * cellSize.value + cellSize.value / 2,
-            y * cellSize.value + cellSize.value / 2
-          );
-        }
+      if (showSolutions.value) {
+        ctx.fillStyle = '#404040';
+        ctx.fillText(
+          solutionGrid.value[x][y],
+          x * cellSize.value + cellSize.value / 2,
+          y * cellSize.value + cellSize.value / 2
+        );
+      } else {
+        ctx.fillStyle = '#404040';
+        ctx.fillText(
+          userInputGrid.value[x][y],
+          x * cellSize.value + cellSize.value / 2,
+          y * cellSize.value + cellSize.value / 2
+        );
       }
     }
   }

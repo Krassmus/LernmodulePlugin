@@ -338,6 +338,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
             direction: 'across',
           },
         ],
+        colorEmptyCells: false,
         strings: {
           checkButton: 'Überprüfen',
           retryButton: 'Erneut versuchen',

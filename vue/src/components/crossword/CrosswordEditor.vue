@@ -5,7 +5,11 @@
         <legend>{{ $gettext('Crossword') }}</legend>
 
         <TabsComponent>
-          <TabComponent :title="$gettext('Wörter eingeben')" icon="content">
+          <TabComponent
+            :title="$gettext('Wörter eingeben')"
+            icon="content"
+            class="tab-component"
+          >
             <div class="word-list-and-word-details-container">
               <div class="word-list-container">
                 <draggable
@@ -111,6 +115,74 @@
             </div>
           </TabComponent>
           <TabComponent
+            :title="$gettext('Einstellungen')"
+            icon="settings"
+            class="tab-component"
+          >
+            <label>
+              {{ $gettext('Leere Felder einfärben:') }}
+              <input
+                v-model="modelTaskDefinition.colorEmptyCells"
+                @change="updateTaskDefinition('taskDefinition.colorEmptyCells')"
+                type="checkbox"
+              />
+            </label>
+          </TabComponent>
+          <TabComponent
+            :title="$gettext('Beschriftungen')"
+            icon=""
+            class="tab-component"
+          >
+            <label>
+              {{ $gettext('Text für Überprüfen-Button:') }}
+              <input
+                v-model="modelTaskDefinition.strings.checkButton"
+                @input="
+                  updateTaskDefinition('taskDefinition.strings.checkButton')
+                "
+                type="text"
+              />
+            </label>
+
+            <label>
+              {{ $gettext('Text für Wiederholen-Button:') }}
+              <input
+                v-model="modelTaskDefinition.strings.retryButton"
+                @input="
+                  updateTaskDefinition('taskDefinition.strings.retryButton')
+                "
+                type="text"
+              />
+            </label>
+
+            <label>
+              {{ $gettext('Text für Lösungen-Button:') }}
+              <input
+                v-model="modelTaskDefinition.strings.solutionsButton"
+                @input="
+                  updateTaskDefinition('taskDefinition.strings.solutionsButton')
+                "
+                type="text"
+              />
+            </label>
+          </TabComponent>
+          <TabComponent :title="$gettext('Feedback')" class="tab-component">
+            <label>
+              {{
+                $gettext(
+                  'Ergebnismitteilung (mögliche Variablen :correct und :total):'
+                )
+              }}
+              <input
+                v-model="modelTaskDefinition.strings.resultMessage"
+                @input="
+                  updateTaskDefinition('taskDefinition.strings.resultMessage')
+                "
+                type="text"
+              />
+            </label>
+          </TabComponent>
+          <TabComponent
             v-if="debug"
             :title="'Task Definition (debug)'"
             icon="visibility-visible"
@@ -126,58 +198,6 @@
             >
           </TabComponent>
         </TabsComponent>
-      </fieldset>
-
-      <fieldset class="collapsable collapsed">
-        <legend>{{ $gettext('Beschriftungen') }}</legend>
-
-        <label>
-          {{ $gettext('Text für Überprüfen-Button:') }}
-          <input
-            v-model="modelTaskDefinition.strings.checkButton"
-            @input="updateTaskDefinition('taskDefinition.strings.checkButton')"
-            type="text"
-          />
-        </label>
-
-        <label>
-          {{ $gettext('Text für Wiederholen-Button:') }}
-          <input
-            v-model="modelTaskDefinition.strings.retryButton"
-            @input="updateTaskDefinition('taskDefinition.strings.retryButton')"
-            type="text"
-          />
-        </label>
-
-        <label>
-          {{ $gettext('Text für Lösungen-Button:') }}
-          <input
-            v-model="modelTaskDefinition.strings.solutionsButton"
-            @input="
-              updateTaskDefinition('taskDefinition.strings.solutionsButton')
-            "
-            type="text"
-          />
-        </label>
-      </fieldset>
-
-      <fieldset class="collapsable collapsed">
-        <legend>{{ $gettext('Feedback') }}</legend>
-
-        <label>
-          {{
-            $gettext(
-              'Ergebnismitteilung (mögliche Variablen :correct und :total):'
-            )
-          }}
-          <input
-            v-model="modelTaskDefinition.strings.resultMessage"
-            @input="
-              updateTaskDefinition('taskDefinition.strings.resultMessage')
-            "
-            type="text"
-          />
-        </label>
       </fieldset>
     </form>
   </div>
@@ -349,10 +369,13 @@ function onChangeDirection(uuid: string, event: Event) {
 </script>
 
 <style scoped>
+.tab-component {
+  padding: 0.5em;
+}
+
 .word-list-and-word-details-container {
   display: flex;
   justify-content: space-between;
-  padding: 0.5em;
 }
 
 .word-list-container {
