@@ -2,14 +2,14 @@
   <div class="stud5p-task">
     <template v-if="props.task?.words.length > 0">
       <div class="canvas-and-hints-list-container">
-        <div class="canvas-wrapper">
+        <div ref="canvasWrapperRef" class="canvas-wrapper">
           <!-- tabindex="0" is needed to make the canvas focusable and the keydown listener to work -->
           <canvas
             ref="canvasRef"
-            id="c"
             tabindex="0"
             :width="canvasSize"
             :height="canvasSize"
+            :style="{ width: canvasSize + 'px', height: canvasSize + 'px' }"
             @pointerdown.stop="onPointerDownCanvas($event)"
             @keydown.stop="onKeyDownCanvas($event)"
             class="canvas"
@@ -92,6 +92,7 @@ const props = defineProps({
 });
 
 // Refs
+const canvasWrapperRef = ref<HTMLElement | null>(null);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 // State
@@ -102,14 +103,19 @@ const userInputGrid = ref<string[][]>([]);
 const taskSubmitted = ref<boolean>(false);
 const showSolutions = ref<boolean>(false);
 const placedWords = ref<PlacedWord[]>([]);
+const canvasSize = ref(0);
 
 // Lifecycle Hooks
+
 onMounted(() => {
   initializeGrids();
+  updateCanvasSize();
   drawGrid();
+  window.addEventListener('resize', updateCanvasSize);
 });
-
-onBeforeUnmount(() => {});
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateCanvasSize);
+});
 
 // Computed properties
 const gridSize = computed(() => {
@@ -127,16 +133,18 @@ const gridSize = computed(() => {
     }
   });
 
+  if (debug) console.log('Grid size is', size, 'x', size);
+
   return size;
 });
 
-const cellSize = computed(() => {
-  return 42;
-});
+const cellSize = computed(() =>
+  gridSize.value > 0 ? Math.floor(canvasSize.value / gridSize.value) : 0
+);
 
-const canvasSize = computed(() => {
-  return gridSize.value * cellSize.value;
-});
+const fontSize = computed(() =>
+  cellSize.value > 0 ? Math.floor(cellSize.value / 2) : 0
+);
 
 const words = computed(() => {
   if (props.task?.words) {
@@ -158,6 +166,13 @@ watch(
   () => props.task,
   () => {
     initializeGrids();
+    if (canvasRef.value) {
+      if (canvasRef.value.getContext('2d')) {
+        canvasRef.value
+          ?.getContext('2d')
+          ?.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height);
+      }
+    }
     drawGrid();
   },
   { deep: true }
@@ -198,6 +213,14 @@ watch(
 );
 
 // Functions
+function updateCanvasSize() {
+  const wrapper = canvasWrapperRef.value;
+  if (!wrapper) return;
+  canvasSize.value = Math.floor(
+    Math.min(wrapper.clientWidth, wrapper.clientHeight)
+  );
+}
+
 function onClickCheck(): void {
   taskSubmitted.value = true;
   selectedCell.value = undefined;
@@ -280,7 +303,7 @@ function drawGrid() {
   const ctx = canvas.getContext('2d');
   if (ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = 'bold 26px calibri';
+    ctx.font = 'bold ' + fontSize.value + 'px calibri';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
@@ -358,6 +381,7 @@ function onPointerDownCanvas(event: PointerEvent) {
 
   // Find the coordinates of the cell under the cursor
   const cellCoordinates = getCellCoordinatesUnderCursor(event);
+  if (!cellCoordinates) return;
 
   // Select it if it's part of the solution grid
   if (solutionGrid.value[cellCoordinates.x][cellCoordinates.y] !== '') {
@@ -631,16 +655,19 @@ function onClickHint(word: Word) {
     (value) => value.uuid === word.uuid
   );
   selectedCell.value = selectedWord.value?.path[0];
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
-  canvas.focus();
+
+  canvasRef.value?.focus();
 }
 
-function getCellCoordinatesUnderCursor(event: PointerEvent): {
-  x: number;
-  y: number;
-} {
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
-  const rect = canvas.getBoundingClientRect();
+function getCellCoordinatesUnderCursor(event: PointerEvent):
+  | {
+      x: number;
+      y: number;
+    }
+  | undefined {
+  if (!canvasRef.value) return;
+
+  const rect = canvasRef.value.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   const cellX = Math.max(
@@ -665,8 +692,8 @@ function fillCell(cell: Cell, fillStyle: string) {
     return;
   }
 
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d');
+  if (!canvasRef.value) return;
+  const ctx = canvasRef.value.getContext('2d');
 
   if (ctx) {
     ctx.fillStyle = fillStyle;
