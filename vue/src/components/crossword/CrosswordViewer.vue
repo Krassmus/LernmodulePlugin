@@ -34,6 +34,14 @@
       }}
     </div>
     <div class="feedback-and-button-container">
+      <div class="feedback-container">
+        <FeedbackElement
+          v-if="taskSubmitted"
+          :achievedPoints="score"
+          :maxPoints="maxScore"
+          :result-message="resultMessage"
+        />
+      </div>
       <div class="button-panel">
         <button
           v-if="showCheckButton"
@@ -75,6 +83,7 @@ import {
 } from 'vue';
 import { CrosswordTask, Word } from '@/models/CrosswordTask';
 import { $gettext } from '@/language/gettext';
+import FeedbackElement from '@/components/FeedbackElement.vue';
 
 const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 
@@ -154,7 +163,40 @@ const words = computed(() => {
 });
 
 const maxScore = computed(() => {
-  return words.value.length;
+  let maxScore = 0;
+  for (let x = 0; x < gridSize.value; x++) {
+    for (let y = 0; y < gridSize.value; y++) {
+      if (solutionGrid.value[x][y]) {
+        maxScore++;
+      }
+    }
+  }
+  return maxScore;
+});
+
+const score = computed(() => {
+  let score = 0;
+  for (let x = 0; x < gridSize.value; x++) {
+    for (let y = 0; y < gridSize.value; y++) {
+      if (
+        solutionGrid.value[x][y] &&
+        userInputGrid.value[x][y] === solutionGrid.value[x][y]
+      ) {
+        score++;
+      }
+    }
+  }
+  return score;
+});
+
+const resultMessage = computed(() => {
+  let result = props.task.strings.resultMessage.replace(
+    ':correct',
+    score.value.toString()
+  );
+  result = result.replace(':total', maxScore.value.toString());
+
+  return result;
 });
 
 const showCheckButton = computed(() => {
@@ -329,7 +371,7 @@ function drawGrid() {
           cellSize.value
         );
       } else if (props.task?.colorEmptyCells) {
-        ctx.fillStyle = '#515151';
+        ctx.fillStyle = 'rgba(129,129,129,0.1)';
         ctx.fillRect(
           x * cellSize.value,
           y * cellSize.value,
@@ -662,6 +704,9 @@ function onKeyDownCanvas(event: KeyboardEvent) {
 
 function onClickHint(word: Word) {
   if (debug) console.log('Clicked on hint:', word.hint);
+
+  if (taskSubmitted.value) return;
+
   selectedWord.value = placedWords.value.find(
     (value) => value.uuid === word.uuid
   );

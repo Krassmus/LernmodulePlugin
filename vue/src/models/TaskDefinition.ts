@@ -315,7 +315,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         words: [
           {
             uuid: v4(),
-            hint: 'Leckere orangene Frucht.',
+            hint: 'Frucht mit gleichnamiger Farbe.',
             solution: 'Orange',
             x: 4,
             y: 1,
@@ -323,7 +323,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           },
           {
             uuid: v4(),
-            hint: 'Leckere gelbe Frucht.',
+            hint: 'Krummes Obst mit gelber Schale.',
             solution: 'Banane',
             x: 6,
             y: 0,
@@ -331,11 +331,27 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           },
           {
             uuid: v4(),
-            hint: 'Leckere rote Frucht.',
+            hint: 'Kleine rote Steinfrucht mit Stiel.',
             solution: 'Kirsche',
             x: 0,
             y: 5,
             direction: 'across',
+          },
+          {
+            uuid: v4(),
+            hint: 'Unsinn / Milchprodukt.',
+            solution: 'Quark',
+            x: 4,
+            y: 3,
+            direction: 'across',
+          },
+          {
+            uuid: v4(),
+            hint: 'Erworben.',
+            solution: 'Gekauft',
+            x: 8,
+            y: 1,
+            direction: 'down',
           },
         ],
         colorEmptyCells: false,
@@ -343,7 +359,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
           checkButton: 'Überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter gefunden.',
+          resultMessage: ':correct von :total Felder richtig ausgefüllt.',
         },
       };
     case 'DragTheWords':
