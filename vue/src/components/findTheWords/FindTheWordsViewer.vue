@@ -3,7 +3,7 @@
     <template v-if="words.length > 0">
       <div class="canvas-and-word-list-container">
         <canvas
-          id="c"
+          ref="canvasRef"
           :width="canvasSize"
           :height="canvasSize"
           @pointerdown.stop="onPointerdownCanvas($event)"
@@ -129,6 +129,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+// Refs
+const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 // State
 let grid: string[][] = [];
@@ -368,7 +371,7 @@ function initializeGrid() {
 }
 
 function drawGrid() {
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
+  const canvas = canvasRef.value;
   if (!canvas) {
     console.error('No Canvas');
     return;
