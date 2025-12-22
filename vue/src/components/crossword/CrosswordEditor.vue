@@ -72,7 +72,10 @@
                       {{ $gettext('Spalte') }}
                       <input
                         type="number"
-                        v-model="selectedWord.x"
+                        v-model.number="selectedWord.x"
+                        min="0"
+                        max="100"
+                        step="1"
                         @input="
                           onInputXCoordinate(selectedWord.uuid, selectedWord.x)
                         "
@@ -83,7 +86,10 @@
                       {{ $gettext('Reihe') }}
                       <input
                         type="number"
-                        v-model="selectedWord.y"
+                        v-model.number="selectedWord.y"
+                        min="0"
+                        max="100"
+                        step="1"
                         @input="
                           onInputYCoordinate(selectedWord.uuid, selectedWord.y)
                         "
@@ -92,7 +98,13 @@
                     </label>
                   </template>
                   <template v-else>
-                    <p>Bitte wählen Sie ein Wort aus um es zu bearbeiten.</p>
+                    <p>
+                      {{
+                        $gettext(
+                          'Bitte wählen Sie ein Wort aus, um es zu bearbeiten.'
+                        )
+                      }}
+                    </p>
                   </template>
                 </fieldset>
               </div>
