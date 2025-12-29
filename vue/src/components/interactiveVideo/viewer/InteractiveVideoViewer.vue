@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { defineProps, onMounted, PropType, ref } from 'vue';
 import {
+  CreatePostRequest,
   InteractiveVideoTask,
   TravisGoPostProps,
+  TravisGoPostType,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import TravisGoPost from '@/components/interactiveVideo/viewer/TravisGoPost.vue';
 import { store } from '@/store';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 
-defineProps({
+const props = defineProps({
   task: {
     type: Object as PropType<InteractiveVideoTask>,
     required: true,
@@ -35,19 +38,50 @@ const posts = ref<TravisGoPostProps[]>([
   },
 ]);
 
-onMounted(() => {
+const loadPostsError = ref<string | undefined>();
+function loadPosts() {
   console.log(store);
   const x = store
     .dispatch('lernmodule-plugin/travis-go-posts/loadAll')
     .then((result) => console.log('result of travis-go-posts/loadAll', result))
-    .catch((error) => console.error('error', error));
+    .catch((error) => {
+      loadPostsError.value = error.toString();
+      console.error('error', error);
+    });
   console.log(x);
   /* eslint-disable-next-line no-debugger */
   // debugger;
-});
+}
+onMounted(() => loadPosts());
 
 const searchInput = ref<string>('');
+const postDescriptionInput = ref<string>('');
+const postTypeInput = ref<TravisGoPostType>('text');
+const createPostError = ref<string | undefined>();
 function onClickSearch() {}
+
+async function createPost(post: CreatePostRequest) {
+  return store.dispatch('lernmodule-plugin/travis-go-posts/create', post);
+}
+function onClickPost() {
+  console.log('onClickPost');
+  if (!props.task) {
+    throw new Error('task not provided');
+  }
+  const res = createPost({
+    description: postDescriptionInput.value,
+    post_type: postTypeInput.value,
+    start_time: 0, // TODO Implement start/end time inputs.
+    video_id: '1', // TODO plumb video id and type into task or editor store or something.
+    video_type: 'cw_blocks', // TODO plumb video type (cw_blocks or lernmodule_module)
+  })
+    .then((result) => console.log('result of create post', result))
+    .catch((error) => {
+      console.error('error', error);
+      createPostError.value = error;
+    });
+  return res;
+}
 </script>
 
 <template>
@@ -57,15 +91,22 @@ function onClickSearch() {}
       <div class="annotation-controls">
         <button class="button date">{{ $gettext('Start') }}</button>
         <button class="button date">{{ $gettext('End') }}</button>
-        <select>
-          <option>Meta</option>
-          <option>Image</option>
-          <option>Sound</option>
-          <option>Text</option>
+        <select v-model="postTypeInput">
+          <option value="meta">Meta</option>
+          <option value="image">Image</option>
+          <option value="audio">Audio</option>
+          <option value="text">Text</option>
         </select>
       </div>
-      <StudipWysiwyg />
-      <button class="button">{{ $gettext('Kommentar posten') }}</button>
+      <StudipWysiwyg insertHtmlComment v-model="postDescriptionInput" />
+      <button @click="onClickPost" class="button">
+        {{ $gettext('Kommentar posten') }}
+      </button>
+      <ErrorMessage
+        style="max-height: unset"
+        :error="createPostError"
+        v-if="createPostError"
+      />
       <div class="travis-go-participants-list">
         <a>@Anna</a>
         <a>@Kevin</a>
@@ -96,6 +137,7 @@ function onClickSearch() {}
           :post="post"
         />
       </section>
+      <ErrorMessage :error="loadPostsError" v-if="loadPostsError" />
     </div>
   </div>
   <VideoPlayer v-else :task="task" />

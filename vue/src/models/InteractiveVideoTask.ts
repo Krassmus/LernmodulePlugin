@@ -223,3 +223,13 @@ export const travisGoPostSchema = z.object({
   type: travisGoPostTypeSchema,
 });
 export type TravisGoPostProps = z.infer<typeof travisGoPostSchema>;
+
+export const createPostRequestSchema = z.object({
+  video_id: z.string(),
+  video_type: z.enum(['lernmodule_module', 'cw_blocks']),
+  start_time: z.number(),
+  end_time: z.number().optional(),
+  description: z.string(),
+  post_type: travisGoPostTypeSchema,
+});
+export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
