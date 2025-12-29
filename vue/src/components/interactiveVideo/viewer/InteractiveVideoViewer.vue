@@ -116,7 +116,7 @@ function onClickSearch() {}
   gap: 10px;
   > .travis-go-left-column {
     flex: 1;
-    min-width: 400px;
+    min-width: calc(min(400px, 100%));
   }
   > .travis-go-right-column {
     flex: 1;
