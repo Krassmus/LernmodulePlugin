@@ -206,12 +206,18 @@ export const resizeHandles = [
 ] as const;
 export type ResizeHandle = typeof resizeHandles[number];
 
-export const travisGoPostTypeSchema = z.union([
-  z.literal('image'),
-  z.literal('audio'),
-  z.literal('meta'),
-  z.literal('text'),
-]);
+const travisGoPostTypeSchema = z.enum(['1', '2', '3', '4']).transform((val) => {
+  switch (val) {
+    case '1':
+      return 'meta';
+    case '2':
+      return 'image';
+    case '3':
+      return 'audio';
+    case '4':
+      return 'text';
+  }
+});
 export type TravisGoPostType = z.infer<typeof travisGoPostTypeSchema>;
 const travisGoPostEditableKeys = {
   video_id: z.string(),
