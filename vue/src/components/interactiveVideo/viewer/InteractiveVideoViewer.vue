@@ -28,7 +28,12 @@ const loadPostsError = ref<string | undefined>();
 function loadPosts() {
   console.log(store);
   const x = store
-    .dispatch('lernmodule-plugin/travis-go-posts/loadAll', {
+    .dispatch('lernmodule-plugin/travis-go-posts/loadWhere', {
+      filter: {
+        // TODO Plumb video_id and video_type
+        video_id: '24',
+        video_type: 'cw_blocks',
+      },
       options: {
         include: 'user',
         'fields[users]': 'formatted-name,username',
