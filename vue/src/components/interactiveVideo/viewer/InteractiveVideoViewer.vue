@@ -34,6 +34,10 @@ function loadPosts() {
   /* eslint-disable-next-line no-debugger */
   // debugger;
 }
+const rawPosts = computed(
+  () => store.getters['lernmodule-plugin/travis-go-posts/all']
+);
+const rawUsers = computed(() => store.getters['users/all']);
 const posts = computed<TravisGoPostProps[]>(() => {
   const raw = store.getters[
     'lernmodule-plugin/travis-go-posts/all'
@@ -92,6 +96,7 @@ function onClickPost() {
 <template>
   <div v-if="task.travisGoSettings.enabled" class="travis-go-main">
     <div class="travis-go-left-column">
+      <pre>{{ { rawUsers, rawPosts } }}</pre>
       <VideoPlayer :task="task" />
       <div class="annotation-controls">
         <button class="button date">{{ $gettext('Start') }}</button>
