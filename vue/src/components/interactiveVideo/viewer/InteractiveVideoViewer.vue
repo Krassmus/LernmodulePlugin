@@ -53,7 +53,7 @@ function loadPosts() {
   // debugger;
 }
 const posts = computed(
-  () => store.getters['lernmodule-plugin/travis-go-posts']
+  () => store.getters['lernmodule-plugin/travis-go-posts/all']
 );
 onMounted(() => loadPosts());
 
