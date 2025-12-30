@@ -23,7 +23,7 @@ class TravisGoPostAuthority implements SORMAuthority
         switch ($sorm->video_type) {
             case 'cw_blocks':
                 $block = Block::find($sorm->video_id);
-                return \JsonApi\Routes\Courseware\Authority::canShowBlock($user, $block);
+                return $block && \JsonApi\Routes\Courseware\Authority::canShowBlock($user, $block);
             case 'lernmodule_module':
                 $modul = \Lernmodul::find($sorm->video_id);
                 throw new NotImplementedException('Permissions for lernmodule-plugin module are not yet implemented.');
