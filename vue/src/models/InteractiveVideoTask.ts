@@ -206,6 +206,8 @@ export const resizeHandles = [
 ] as const;
 export type ResizeHandle = typeof resizeHandles[number];
 
+// TODO Seems like a use case for zod 'codec' feature
+// see https://zod.dev/codecs
 const travisGoPostTypeSchema = z.string().transform((val) => {
   switch (val) {
     case '1':
