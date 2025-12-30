@@ -4,6 +4,7 @@ import {
   CreatePostRequest,
   InteractiveVideoTask,
   TravisGoPostProps,
+  travisGoPostSchema,
   TravisGoPostType,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
@@ -52,9 +53,23 @@ function loadPosts() {
   /* eslint-disable-next-line no-debugger */
   // debugger;
 }
-const posts = computed(
-  () => store.getters['lernmodule-plugin/travis-go-posts/all']
-);
+const posts = computed<TravisGoPostProps[]>(() => {
+  const raw = store.getters[
+    'lernmodule-plugin/travis-go-posts/all'
+  ] as unknown[];
+  const parsedPosts: TravisGoPostProps[] = [];
+  for (let rawVal of raw) {
+    const parsed = travisGoPostSchema.safeParse(rawVal.attributes);
+    if (parsed.success) {
+      parsedPosts.push(parsed.data);
+    } else {
+      parsedPosts.push(rawVal.attributes);
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      loadPostsError.value = parsed.error.toString();
+    }
+  }
+  return parsedPosts;
+});
 onMounted(() => loadPosts());
 
 const searchInput = ref<string>('');

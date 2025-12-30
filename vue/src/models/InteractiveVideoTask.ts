@@ -213,23 +213,23 @@ export const travisGoPostTypeSchema = z.union([
   z.literal('text'),
 ]);
 export type TravisGoPostType = z.infer<typeof travisGoPostTypeSchema>;
+const travisGoPostEditableKeys = {
+  video_id: z.string(),
+  video_type: z.enum(['lernmodule_module', 'cw_blocks']),
+  start_time: z.coerce.number(),
+  end_time: z.coerce.number().optional(),
+  description: z.string(),
+  post_type: travisGoPostTypeSchema,
+};
+
 export const travisGoPostSchema = z.object({
   id: z.string(),
-  authorName: z.string(),
-  authorId: z.string(),
-  start: z.number(), // seconds
-  end: z.number().optional(), //seconds
-  description: z.string(),
-  type: travisGoPostTypeSchema,
+  mk_user_id: z.string(),
+  mkdate: z.string().datetime(),
+  chdate: z.string().datetime(),
+  ...travisGoPostEditableKeys,
 });
 export type TravisGoPostProps = z.infer<typeof travisGoPostSchema>;
 
-export const createPostRequestSchema = z.object({
-  video_id: z.string(),
-  video_type: z.enum(['lernmodule_module', 'cw_blocks']),
-  start_time: z.number(),
-  end_time: z.number().optional(),
-  description: z.string(),
-  post_type: travisGoPostTypeSchema,
-});
+export const createPostRequestSchema = z.object(travisGoPostEditableKeys);
 export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
