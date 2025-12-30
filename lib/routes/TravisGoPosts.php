@@ -13,6 +13,8 @@ use Studip\Markup;
 final class TravisGoPosts extends SormCRUDController
 {
 
+    protected $allowedIncludePaths = ['user'];
+
     protected function getSORMClassName(): string
     {
         return TravisGoPost::class;

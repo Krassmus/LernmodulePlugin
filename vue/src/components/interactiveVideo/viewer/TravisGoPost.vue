@@ -2,9 +2,10 @@
   <div class="travis-go-post" :data-post-type="post.post_type">
     <h4 class="travis-go-post-heading">
       [{{ formatVideoTimestamp(post.start_time) }}
-      <span class="post-type">{{ post.post_type }}</span> @{{
-        post.mk_user_id
-      }}]
+      <span class="post-type">{{ post.post_type }}</span>
+      <span> </span>
+      <a :href="userUrl">@{{ userFormattedName }}</a
+      >]
     </h4>
     <p class="travis-go-post-description" v-html="post.description"></p>
   </div>
@@ -32,19 +33,34 @@
     grid-area: description;
     margin-bottom: 0;
   }
+  .post-type {
+    margin-right: 0.25em;
+  }
   margin: 0;
   padding: 5px;
 }
 </style>
 
 <script setup lang="ts">
-import { defineProps, PropType } from 'vue';
+import { computed, defineProps, PropType } from 'vue';
 import { TravisGoPostProps } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
-defineProps({
+import { store } from '@/store';
+const props = defineProps({
   post: {
     type: Object as PropType<TravisGoPostProps>,
     required: true,
   },
+});
+const user = computed(() =>
+  store.getters['users/byId']({ id: props.post?.mk_user_id })
+);
+const userFormattedName = computed(
+  () => user.value?.attributes?.['formatted-name']
+);
+
+const userUrl = computed(() => {
+  const username = user.value?.attributes?.['username'];
+  return window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username });
 });
 </script>

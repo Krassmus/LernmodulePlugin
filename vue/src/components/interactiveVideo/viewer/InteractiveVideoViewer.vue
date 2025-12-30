@@ -24,7 +24,12 @@ const loadPostsError = ref<string | undefined>();
 function loadPosts() {
   console.log(store);
   const x = store
-    .dispatch('lernmodule-plugin/travis-go-posts/loadAll')
+    .dispatch('lernmodule-plugin/travis-go-posts/loadAll', {
+      options: {
+        include: 'user',
+        'fields[users]': 'formatted-name,username',
+      },
+    })
     .then((result) => console.log('result of travis-go-posts/loadAll', result))
     .catch((error) => {
       loadPostsError.value = error.toString();

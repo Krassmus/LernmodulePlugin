@@ -34,6 +34,10 @@ class TravisGoPost extends SORM {
 
     protected static function configure($config = []): void {
         $config['db_table'] = 'lernmodule_travis_go_posts';
+        $config['belongs_to']['user'] = [
+            'class_name' => User::class,
+            'foreign_key' => 'mk_user_id',
+        ];
         $config['registered_callbacks']['before_store'][] = function (TravisGoPost $post) {
             $user = User::findCurrent();
             if ($post->isNew()) {
