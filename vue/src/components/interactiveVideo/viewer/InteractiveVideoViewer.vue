@@ -20,6 +20,10 @@ const props = defineProps({
   },
 });
 
+function loadCurrentUser() {
+  store.dispatch('users/loadById', { id: window.STUDIP.USER_ID });
+}
+
 const loadPostsError = ref<string | undefined>();
 function loadPosts() {
   console.log(store);
@@ -56,7 +60,10 @@ const posts = computed<TravisGoPostProps[]>(() => {
   }
   return parsedPosts;
 });
-onMounted(() => loadPosts());
+onMounted(() => {
+  loadPosts();
+  loadCurrentUser();
+});
 
 const searchInput = ref<string>('');
 const postDescriptionInput = ref<string>('');
