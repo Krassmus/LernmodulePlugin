@@ -148,7 +148,6 @@ function onClickPost() {
         </p>
       </section>
       <section class="travis-go-posts">
-        <pre>{{ { posts: posts, postsFake } }}</pre>
         <TravisGoPost
           v-for="(post, index) in posts"
           :key="post.id"
@@ -157,6 +156,7 @@ function onClickPost() {
           }"
           :post="post"
         />
+        <pre>{{ { posts: posts, postsFake } }}</pre>
       </section>
       <ErrorMessage :error="loadPostsError" v-if="loadPostsError" />
     </div>
