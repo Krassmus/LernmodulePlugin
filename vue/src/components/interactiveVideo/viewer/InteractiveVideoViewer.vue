@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, onMounted, PropType, ref } from 'vue';
+import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
@@ -19,7 +19,7 @@ const props = defineProps({
   },
 });
 
-const posts = ref<TravisGoPostProps[]>([
+const postsFake = ref<TravisGoPostProps[]>([
   {
     id: 'fakeid',
     type: 'meta',
@@ -52,6 +52,9 @@ function loadPosts() {
   /* eslint-disable-next-line no-debugger */
   // debugger;
 }
+const posts = computed(
+  () => store.getters['lernmodule-plugin/travis-go-posts']
+);
 onMounted(() => loadPosts());
 
 const searchInput = ref<string>('');
@@ -73,7 +76,7 @@ function onClickPost() {
       description: postDescriptionInput.value,
       post_type: postTypeInput.value,
       start_time: 0, // TODO Implement start/end time inputs.
-      video_id: '1', // TODO plumb video id and type into task or editor store or something.
+      video_id: '24', // TODO plumb video id and type into task or editor store or something.
       video_type: 'cw_blocks', // TODO plumb video type (cw_blocks or lernmodule_module)
     },
   })
@@ -130,8 +133,9 @@ function onClickPost() {
         </p>
       </section>
       <section class="travis-go-posts">
+        <pre>{{ { posts: posts, postsFake } }}</pre>
         <TravisGoPost
-          v-for="(post, index) in posts"
+          v-for="(post, index) in postsFake"
           :key="post.id"
           :class="{
             odd: index % 2 === 0,
