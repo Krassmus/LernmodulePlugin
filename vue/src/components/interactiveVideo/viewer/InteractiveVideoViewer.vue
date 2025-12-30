@@ -95,7 +95,10 @@ function onClickPost() {
       video_type: 'cw_blocks', // TODO plumb video type (cw_blocks or lernmodule_module)
     },
   })
-    .then((result) => console.log('result of create post', result))
+    .then((result) => {
+      console.log('result of create post', result);
+      postDescriptionInput.value = '';
+    })
     .catch((error) => {
       console.error('error', error);
       createPostError.value = error;
