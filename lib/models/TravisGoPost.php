@@ -2,6 +2,7 @@
 
 namespace LernmodulePlugin\models;
 use LernmodulePlugin\SORM;
+use User;
 
 /**
  * @property string $id
@@ -33,6 +34,12 @@ class TravisGoPost extends SORM {
 
     protected static function configure($config = []): void {
         $config['db_table'] = 'lernmodule_travis_go_posts';
+        $config['registered_callbacks']['before_store'][] = function (TravisGoPost $post) {
+            $user = User::findCurrent();
+            if ($post->isNew()) {
+                $post->mk_user_id = $user->id;
+            }
+        };
         parent::configure($config);
     }
 }
