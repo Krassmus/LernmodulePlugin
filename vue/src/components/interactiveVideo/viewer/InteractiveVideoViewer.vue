@@ -20,25 +20,6 @@ const props = defineProps({
   },
 });
 
-const postsFake = ref<TravisGoPostProps[]>([
-  {
-    id: 'fakeid',
-    type: 'meta',
-    authorId: 'anna',
-    authorName: 'Anna',
-    description: "This is anna's post",
-    start: 0,
-  },
-  {
-    id: 'fakeid2',
-    type: 'image',
-    authorId: 'kevin',
-    authorName: 'Kevin',
-    description: "This is Kevin's post",
-    start: 0,
-  },
-]);
-
 const loadPostsError = ref<string | undefined>();
 function loadPosts() {
   console.log(store);
@@ -159,7 +140,7 @@ function onClickPost() {
           }"
           :post="post"
         />
-        <pre>{{ { posts: posts, postsFake } }}</pre>
+        <pre>{{ { posts: posts } }}</pre>
       </section>
       <ErrorMessage :error="loadPostsError" v-if="loadPostsError" />
     </div>
