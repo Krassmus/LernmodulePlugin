@@ -206,7 +206,7 @@ export const resizeHandles = [
 ] as const;
 export type ResizeHandle = typeof resizeHandles[number];
 
-const travisGoPostTypeSchema = z.enum(['1', '2', '3', '4']).transform((val) => {
+const travisGoPostTypeSchema = z.string().transform((val) => {
   switch (val) {
     case '1':
       return 'meta';
@@ -216,6 +216,8 @@ const travisGoPostTypeSchema = z.enum(['1', '2', '3', '4']).transform((val) => {
       return 'audio';
     case '4':
       return 'text';
+    default:
+      return 'unknown';
   }
 });
 export type TravisGoPostType = z.infer<typeof travisGoPostTypeSchema>;
@@ -231,8 +233,8 @@ const travisGoPostEditableKeys = {
 export const travisGoPostSchema = z.object({
   id: z.string(),
   mk_user_id: z.string(),
-  mkdate: z.string().datetime(),
-  chdate: z.string().datetime(),
+  mkdate: z.string().datetime({ offset: true }),
+  chdate: z.string().datetime({ offset: true }),
   ...travisGoPostEditableKeys,
 });
 export type TravisGoPostProps = z.infer<typeof travisGoPostSchema>;
