@@ -2,6 +2,9 @@
 
 namespace LernmodulePlugin\authorities;
 
+use Courseware\Block;
+use JsonApi\Errors\NotImplementedException;
+use LernmodulePlugin\models\TravisGoPost;
 use LernmodulePlugin\SORM;
 use LernmodulePlugin\SORMAuthority;
 use User;
@@ -9,10 +12,24 @@ use User;
 class TravisGoPostAuthority implements SORMAuthority
 {
 
-    public function mayCreate(?User $user, SORM $sorm): bool
+    public function mayCreate(?User $user, TravisGoPost|SORM $sorm): bool
     {
-        // TODO: Implement mayCreate() method.
-        return true;
+        // TODO: Problem: This method is called before the getData() method.
+        //   Therefore, the SORM instance is an uninitialized one ('new TravisGoPost').
+        //   Therefore, we cannot check if the user has access to the video that they are
+        //   attempting to post under, as the attributes 'video_id' and 'video_type' will
+        //   not be available in this method.
+        // Check if user has read access to the video that the post is associated with
+        switch ($sorm->video_type) {
+            case 'cw_blocks':
+                $block = Block::find($sorm->video_id);
+                return \JsonApi\Routes\Courseware\Authority::canShowBlock($user, $block);
+            case 'lernmodule_module':
+                $modul = \Lernmodul::find($sorm->video_id);
+                throw new NotImplementedException('Permissions for lernmodule-plugin module are not yet implemented.');
+            default:
+                throw new NotImplementedException("Invalid or unimplemented video type: '{$sorm->video_type}'");
+        };
     }
 
     public function mayAccess(?User $user, SORM $sorm): bool

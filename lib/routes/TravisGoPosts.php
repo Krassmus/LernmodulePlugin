@@ -20,7 +20,16 @@ final class TravisGoPosts extends SormCRUDController
     protected function getData(Request $request, array $args, ?SORM $current = null): array
     {
         // TODO: Implement getData() method.
-        return [];
+        $data = [];
+        foreach (TravisGoPost::EDITABLE_FIELDS as $field => $type) {
+            $data[$field] = match ($type) {
+                'string', 'int', 'float' => $this->getAttribute($field, $current ? $current->$field : ''),
+                'date' => $this->getDateAttribute($field),
+                'bool' => $this->getBoolAttribute($field, $current ? $current->$field : false),
+            };
+        }
+
+        return $data;
     }
 
     protected function getAuthority(): ?SORMAuthority

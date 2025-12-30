@@ -22,6 +22,15 @@ class TravisGoPost extends SORM {
     public const TYPE_AUDIO = 3;
     public const TYPE_TEXT = 4;
 
+    public const EDITABLE_FIELDS = [
+        'start_time' => 'float',
+        'end_time' => 'float',
+        'description' => 'string',
+        'post_type' => 'int',
+        'video_id' => 'string',
+        'video_type' => 'string'
+    ];
+
     protected static function configure($config = []): void {
         $config['db_table'] = 'lernmodule_travis_go_posts';
         parent::configure($config);

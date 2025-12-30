@@ -60,7 +60,7 @@ const postTypeInput = ref<TravisGoPostType>('text');
 const createPostError = ref<string | undefined>();
 function onClickSearch() {}
 
-async function createPost(post: CreatePostRequest) {
+async function createPost(post: { attributes: CreatePostRequest }) {
   return store.dispatch('lernmodule-plugin/travis-go-posts/create', post);
 }
 function onClickPost() {
@@ -69,11 +69,13 @@ function onClickPost() {
     throw new Error('task not provided');
   }
   const res = createPost({
-    description: postDescriptionInput.value,
-    post_type: postTypeInput.value,
-    start_time: 0, // TODO Implement start/end time inputs.
-    video_id: '1', // TODO plumb video id and type into task or editor store or something.
-    video_type: 'cw_blocks', // TODO plumb video type (cw_blocks or lernmodule_module)
+    attributes: {
+      description: postDescriptionInput.value,
+      post_type: postTypeInput.value,
+      start_time: 0, // TODO Implement start/end time inputs.
+      video_id: '1', // TODO plumb video id and type into task or editor store or something.
+      video_type: 'cw_blocks', // TODO plumb video type (cw_blocks or lernmodule_module)
+    },
   })
     .then((result) => console.log('result of create post', result))
     .catch((error) => {
