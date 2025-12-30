@@ -79,6 +79,7 @@ function onClickPost() {
     .then((result) => {
       console.log('result of create post', result);
       postDescriptionInput.value = '';
+      createPostError.value = undefined;
     })
     .catch((error) => {
       console.error('error', error);
