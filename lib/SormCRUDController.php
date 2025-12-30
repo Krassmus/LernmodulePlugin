@@ -65,13 +65,12 @@ abstract class SormCRUDController extends JsonApiController
             }
         }
 
-        $this->validateFilters();
-
         if ($request->getMethod() === 'POST') {
             return $this->create($request, $response, $args);
         }
 
         if ($request->getMethod() === 'GET') {
+            $this->validateFilters();
             return $this->restore($request, $response, $args);
         }
 
