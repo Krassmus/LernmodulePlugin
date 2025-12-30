@@ -1,12 +1,12 @@
 <template>
-  <div class="travis-go-post" :data-post-type="post.type">
+  <div class="travis-go-post" :data-post-type="post.post_type">
     <h4 class="travis-go-post-heading">
-      [{{ formatVideoTimestamp(post.start) }}
-      <span class="post-type">{{ post.type }}</span> @{{ post.authorName }}]
+      [{{ formatVideoTimestamp(post.start_time) }}
+      <span class="post-type">{{ post.post_type }}</span> @{{
+        post.mk_user_id
+      }}]
     </h4>
-    <p class="travis-go-post-description">
-      {{ post.description }}
-    </p>
+    <p class="travis-go-post-description" v-html="post.description"></p>
   </div>
 </template>
 <style scoped lang="scss">

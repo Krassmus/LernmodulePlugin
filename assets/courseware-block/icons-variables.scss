@@ -223,4 +223,7 @@ $icon-path: "#{$image-path}/icons" !default;
     &[data-post-type='audio'] {
         @include icon(before, audio, info, var(--icon-size-inline-h5p));
     }
+    &[data-post-type='unknown'] {
+        @include icon(before, question, info, var(--icon-size-inline-h5p));
+    }
 }

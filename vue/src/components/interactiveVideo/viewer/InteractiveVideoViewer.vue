@@ -150,7 +150,7 @@ function onClickPost() {
       <section class="travis-go-posts">
         <pre>{{ { posts: posts, postsFake } }}</pre>
         <TravisGoPost
-          v-for="(post, index) in postsFake"
+          v-for="(post, index) in posts"
           :key="post.id"
           :class="{
             odd: index % 2 === 0,
