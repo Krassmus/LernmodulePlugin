@@ -12,6 +12,9 @@ import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import TravisGoPost from '@/components/interactiveVideo/viewer/TravisGoPost.vue';
 import { store } from '@/store';
 import ErrorMessage from '@/components/ErrorMessage.vue';
+import { SafeParseReturnType } from 'zod';
+import { v4 } from 'uuid';
+import strings from '@/components/interactiveVideo/strings';
 
 const props = defineProps({
   task: {
@@ -19,6 +22,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 
 function loadCurrentUser() {
   store.dispatch('users/loadById', { id: window.STUDIP.USER_ID });
@@ -48,23 +53,16 @@ function loadPosts() {
   /* eslint-disable-next-line no-debugger */
   // debugger;
 }
-const posts = computed<TravisGoPostProps[]>(() => {
-  const raw = store.getters[
-    'lernmodule-plugin/travis-go-posts/all'
-  ] as unknown[];
-  const parsedPosts: TravisGoPostProps[] = [];
-  for (let rawVal of raw) {
-    const parsed = travisGoPostSchema.safeParse(rawVal.attributes);
-    if (parsed.success) {
-      parsedPosts.push(parsed.data);
-    } else {
-      parsedPosts.push(rawVal.attributes);
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      loadPostsError.value = parsed.error.toString();
-    }
-  }
-  return parsedPosts;
+type ParsedPost = SafeParseReturnType<TravisGoPostProps, TravisGoPostProps>;
+const parsedPosts = computed<ParsedPost[]>(() => {
+  const raw = store.getters['lernmodule-plugin/travis-go-posts/all'] as {
+    attributes: unknown[];
+  }[];
+  return raw.map((rawVal) => travisGoPostSchema.safeParse(rawVal));
 });
+const rawPosts = computed(
+  () => store.getters['lernmodule-plugin/travis-go-posts/all']
+);
 onMounted(() => {
   loadPosts();
   loadCurrentUser();
@@ -150,15 +148,31 @@ function onClickPost() {
         </p>
       </section>
       <section class="travis-go-posts">
-        <TravisGoPost
-          v-for="(post, index) in posts"
-          :key="post.id"
-          :class="{
-            odd: index % 2 === 0,
-          }"
-          :post="post"
-        />
-        <pre>{{ { posts: posts } }}</pre>
+        <template
+          v-for="(post, index) in parsedPosts"
+          :key="post?.data?.id ?? v4()"
+        >
+          <TravisGoPost
+            v-if="post.success"
+            :post="post.data"
+            :class="{
+              odd: index % 2 === 0,
+            }"
+          />
+          <ErrorMessage
+            v-else
+            class="travis-go-post"
+            :class="{
+              odd: index % 2 === 0,
+            }"
+            :error="
+              debug
+                ? `${strings.postCouldNotBeParsedError} Error: ${post.error}`
+                : strings.postCouldNotBeParsedError
+            "
+          />
+        </template>
+        <pre v-if="debug">{{ { rawPosts } }}</pre>
       </section>
       <ErrorMessage :error="loadPostsError" v-if="loadPostsError" />
     </div>

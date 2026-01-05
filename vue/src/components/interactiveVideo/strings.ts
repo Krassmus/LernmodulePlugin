@@ -11,5 +11,8 @@ const strings = {
   interactionNotFoundError: $gettext(
     'Es wurde keine Interaktion mit der angegebenen ID gefunden.'
   ),
+  postCouldNotBeParsedError: $gettext(
+    'Dieser Post konnte nicht geladen werden.'
+  ),
 } as const;
 export default strings;
