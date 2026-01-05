@@ -218,7 +218,7 @@ $icon-path: "#{$image-path}/icons" !default;
         @include icon(before, exclaim-circle, info, var(--icon-size-inline-h5p));
     }
     &[data-post-type='text'] {
-        @include icon(before, text-content, info, var(--icon-size-inline-h5p));
+        @include icon(before, file-text, info, var(--icon-size-inline-h5p));
     }
     &[data-post-type='audio'] {
         @include icon(before, audio, info, var(--icon-size-inline-h5p));
