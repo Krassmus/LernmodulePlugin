@@ -58,7 +58,7 @@ const parsedPosts = computed<ParsedPost[]>(() => {
   const raw = store.getters['lernmodule-plugin/travis-go-posts/all'] as {
     attributes: unknown[];
   }[];
-  return raw.map((rawVal) => travisGoPostSchema.safeParse(rawVal));
+  return raw.map((rawVal) => travisGoPostSchema.safeParse(rawVal.attributes));
 });
 const rawPosts = computed(
   () => store.getters['lernmodule-plugin/travis-go-posts/all']
