@@ -3,6 +3,7 @@ import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
+  printTravisGoPostType,
   TravisGoPostProps,
   travisGoPostSchema,
   TravisGoPostType,
@@ -72,7 +73,7 @@ onMounted(() => {
 
 const searchInput = ref<string>('');
 const postWysiwygInput = ref<string>('');
-const postTypeInput = ref<TravisGoPostType>('text');
+const postTypeInput = ref<TravisGoPostType>(1);
 const createPostError = ref<string | undefined>();
 function onClickSearch() {}
 
@@ -114,10 +115,9 @@ function onClickPost() {
         <button class="button date">{{ $gettext('Start') }}</button>
         <button class="button date">{{ $gettext('End') }}</button>
         <select v-model="postTypeInput">
-          <option value="meta">Meta</option>
-          <option value="image">Image</option>
-          <option value="audio">Audio</option>
-          <option value="text">Text</option>
+          <option v-for="index in 4" :key="index" :value="index.toString()">
+            {{ printTravisGoPostType(index.toString()) }}
+          </option>
         </select>
       </div>
       <StudipWysiwyg insertHtmlComment v-model="postWysiwygInput" />
