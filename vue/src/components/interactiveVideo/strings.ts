@@ -17,5 +17,6 @@ const strings = {
   couldNotLoadPostsError: $gettext(
     'Die Posts unter dem Video konnten nicht geladen werden.'
   ),
+  couldNotSendPostError: $gettext('Ihr Post konnte nicht gepostet werden.'),
 } as const;
 export default strings;

@@ -87,7 +87,7 @@ function onClickPost() {
       contents: postWysiwygInput.value,
       post_type: postTypeInput.value,
       start_time: 0, // TODO Implement start/end time inputs.
-      video_id: '24', // TODO plumb video id and type into task or editor store or something.
+      video_id: '67', // TODO plumb video id and type into task or editor store or something.
       video_type: 'cw_blocks', // TODO plumb video type (cw_blocks or lernmodule_module)
     },
   })
@@ -124,7 +124,15 @@ function onClickPost() {
       </button>
       <ErrorMessage
         style="max-height: unset"
-        :error="createPostError"
+        :error="
+          debug
+            ? `${strings.couldNotSendPostError} Error: ${JSON.stringify(
+                createPostError,
+                null,
+                2
+              )}`
+            : strings.couldNotSendPostError
+        "
         v-if="createPostError"
       />
       <div class="travis-go-participants-list">
