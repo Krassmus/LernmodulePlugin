@@ -36,7 +36,7 @@ function loadPosts() {
     .dispatch('lernmodule-plugin/travis-go-posts/loadWhere', {
       filter: {
         // TODO Plumb video_id and video_type
-        video_id: '24',
+        // video_id: '24',
         video_type: 'cw_blocks',
       },
       options: {
@@ -46,7 +46,7 @@ function loadPosts() {
     })
     .then((result) => console.log('result of travis-go-posts/loadAll', result))
     .catch((error) => {
-      loadPostsError.value = error.toString();
+      loadPostsError.value = error;
       console.error('error', error);
     });
   console.log(x);
@@ -176,7 +176,18 @@ function onClickPost() {
           { rawPosts }
         }}</pre>
       </section>
-      <ErrorMessage :error="loadPostsError" v-if="loadPostsError" />
+      <ErrorMessage
+        v-if="loadPostsError"
+        :error="
+          debug
+            ? `${strings.couldNotLoadPostsError} Error: ${JSON.stringify(
+                loadPostsError,
+                null,
+                2
+              )}`
+            : strings.couldNotLoadPostsError
+        "
+      />
     </div>
   </div>
   <VideoPlayer v-else :task="task" />

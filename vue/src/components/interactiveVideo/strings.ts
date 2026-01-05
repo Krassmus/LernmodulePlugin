@@ -14,5 +14,8 @@ const strings = {
   postCouldNotBeParsedError: $gettext(
     'Dieser Post konnte nicht geladen werden.'
   ),
+  couldNotLoadPostsError: $gettext(
+    'Die Posts unter dem Video konnten nicht geladen werden.'
+  ),
 } as const;
 export default strings;
