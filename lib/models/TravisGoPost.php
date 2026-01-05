@@ -14,20 +14,15 @@ use User;
  * @property float $start_time
  * @property float $end_time
  * @property string $contents
- * @property int $post_type
+ * @property TravisGoPostType $post_type
  */
 class TravisGoPost extends SORM {
-
-    public const TYPE_META = 1;
-    public const TYPE_IMAGE = 2;
-    public const TYPE_AUDIO = 3;
-    public const TYPE_TEXT = 4;
 
     public const EDITABLE_FIELDS = [
         'start_time' => 'float',
         'end_time' => 'float',
         'contents' => 'string',
-        'post_type' => 'int',
+        'post_type' => 'TravisGoPostType',
         'video_id' => 'string',
         'video_type' => 'string'
     ];

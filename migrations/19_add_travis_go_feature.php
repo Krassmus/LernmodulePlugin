@@ -23,7 +23,7 @@ class AddTravisGoFeature extends Migration
             start_time float unsigned not null,
             end_time float unsigned,
             contents text not null,
-            post_type tinyint not null,
+            post_type ENUM('meta', 'image', 'audio', 'text') not null default 'meta',
             primary key (id)
         )";
         $db->exec($query);

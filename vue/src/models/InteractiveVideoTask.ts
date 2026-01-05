@@ -206,22 +206,12 @@ export const resizeHandles = [
 ] as const;
 export type ResizeHandle = typeof resizeHandles[number];
 
-// TODO Seems like a use case for zod 'codec' feature
-// see https://zod.dev/codecs
-const travisGoPostTypeSchema = z.string().transform((val) => {
-  switch (val) {
-    case '1':
-      return 'meta';
-    case '2':
-      return 'image';
-    case '3':
-      return 'audio';
-    case '4':
-      return 'text';
-    default:
-      return 'unknown';
-  }
-});
+const travisGoPostTypeSchema = z.union([
+  z.literal('meta'),
+  z.literal('image'),
+  z.literal('audio'),
+  z.literal('text'),
+]);
 export type TravisGoPostType = z.infer<typeof travisGoPostTypeSchema>;
 const travisGoPostEditableKeys = {
   video_id: z.string(),

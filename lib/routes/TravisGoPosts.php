@@ -4,6 +4,7 @@ namespace LernmodulePlugin\routes;
 
 use JsonApi\Errors\AuthorizationFailedException;
 use LernmodulePlugin\models\TravisGoPost;
+use LernmodulePlugin\models\TravisGoPostType;
 use LernmodulePlugin\SORM;
 use LernmodulePlugin\SORMAuthority;
 use LernmodulePlugin\SormCRUDController;
@@ -28,6 +29,7 @@ final class TravisGoPosts extends SormCRUDController
         foreach (TravisGoPost::EDITABLE_FIELDS as $field => $type) {
             $data[$field] = match ($type) {
                 'string', 'int', 'float' => $this->getAttribute($field, $current ? $current->$field : ''),
+                'TravisGoPostType' => TravisGoPostType::from($this->getAttribute($field, $current ? $current->$field : 'meta'))->value,
                 'date' => $this->getDateAttribute($field),
                 'bool' => $this->getBoolAttribute($field, $current ? $current->$field : false),
             };
