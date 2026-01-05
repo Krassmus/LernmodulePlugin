@@ -7,7 +7,7 @@
       <a :href="userUrl">@{{ userFormattedName }}</a
       >]
     </h4>
-    <p class="travis-go-post-description" v-html="post.description"></p>
+    <p class="travis-go-post-description" v-html="contentsPurified"></p>
   </div>
 </template>
 <style scoped lang="scss">
@@ -46,12 +46,18 @@ import { computed, defineProps, PropType } from 'vue';
 import { TravisGoPostProps } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 import { store } from '@/store';
+import DOMPurify from 'dompurify';
 const props = defineProps({
   post: {
     type: Object as PropType<TravisGoPostProps>,
     required: true,
   },
 });
+const contentsPurified = computed(() =>
+  DOMPurify.sanitize(props.post?.description, {
+    USE_PROFILES: { html: true },
+  })
+);
 const user = computed(() =>
   store.getters['users/byId']({ id: props.post?.mk_user_id })
 );
