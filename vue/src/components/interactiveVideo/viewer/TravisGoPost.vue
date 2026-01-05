@@ -1,11 +1,8 @@
 <template>
-  <div
-    class="travis-go-post"
-    :data-post-type="printTravisGoPostType(post.post_type)"
-  >
+  <div class="travis-go-post" :data-post-type="post.post_type">
     <h4 class="travis-go-post-heading">
       [{{ formatVideoTimestamp(post.start_time) }}
-      <span class="post-type">{{ printTravisGoPostType(post.post_type) }}</span>
+      <span class="post-type">{{ post.post_type }}</span>
       <span> </span>
       <a :href="userUrl">@{{ userFormattedName }}</a
       >]
@@ -46,10 +43,7 @@
 
 <script setup lang="ts">
 import { computed, defineProps, PropType } from 'vue';
-import {
-  printTravisGoPostType,
-  TravisGoPostProps,
-} from '@/models/InteractiveVideoTask';
+import { TravisGoPostProps } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 import { store } from '@/store';
 import DOMPurify from 'dompurify';

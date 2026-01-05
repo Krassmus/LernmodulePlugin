@@ -208,13 +208,8 @@ export type ResizeHandle = typeof resizeHandles[number];
 
 // TODO Seems like a use case for zod 'codec' feature
 // see https://zod.dev/codecs
-const travisGoPostTypeSchema = z.string();
-export type TravisGoPostType = z.infer<typeof travisGoPostTypeSchema>;
-type TravisGoPostTypeString = 'meta' | 'image' | 'audio' | 'text' | 'unknown';
-export function printTravisGoPostType(
-  type: TravisGoPostType
-): TravisGoPostTypeString {
-  switch (type) {
+const travisGoPostTypeSchema = z.string().transform((val) => {
+  switch (val) {
     case '1':
       return 'meta';
     case '2':
@@ -226,7 +221,8 @@ export function printTravisGoPostType(
     default:
       return 'unknown';
   }
-}
+});
+export type TravisGoPostType = z.infer<typeof travisGoPostTypeSchema>;
 const travisGoPostEditableKeys = {
   video_id: z.string(),
   video_type: z.enum(['lernmodule_module', 'cw_blocks']),
