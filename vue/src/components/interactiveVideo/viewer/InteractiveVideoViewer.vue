@@ -55,7 +55,7 @@ function loadPosts() {
 }
 type ParsedPost = SafeParseReturnType<TravisGoPostProps, TravisGoPostProps>;
 const parsedPosts = computed<ParsedPost[]>(() => {
-  const raw = store.getters['lernmodule-plugin/travis-go-posts/all'] as {
+  const raw = rawPosts.value as {
     attributes: unknown[];
   }[];
   return raw.map((rawVal) => travisGoPostSchema.safeParse(rawVal.attributes));
