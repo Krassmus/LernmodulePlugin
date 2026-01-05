@@ -13,7 +13,7 @@ use User;
  * @property string $chdate
  * @property float $start_time
  * @property float $end_time
- * @property string $description
+ * @property string $contents
  * @property int $post_type
  */
 class TravisGoPost extends SORM {
@@ -26,7 +26,7 @@ class TravisGoPost extends SORM {
     public const EDITABLE_FIELDS = [
         'start_time' => 'float',
         'end_time' => 'float',
-        'description' => 'string',
+        'contents' => 'string',
         'post_type' => 'int',
         'video_id' => 'string',
         'video_type' => 'string'

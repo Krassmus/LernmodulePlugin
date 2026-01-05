@@ -71,7 +71,7 @@ onMounted(() => {
 });
 
 const searchInput = ref<string>('');
-const postDescriptionInput = ref<string>('');
+const postWysiwygInput = ref<string>('');
 const postTypeInput = ref<TravisGoPostType>('text');
 const createPostError = ref<string | undefined>();
 function onClickSearch() {}
@@ -86,7 +86,7 @@ function onClickPost() {
   }
   const res = createPost({
     attributes: {
-      description: postDescriptionInput.value,
+      contents: postWysiwygInput.value,
       post_type: postTypeInput.value,
       start_time: 0, // TODO Implement start/end time inputs.
       video_id: '24', // TODO plumb video id and type into task or editor store or something.
@@ -95,7 +95,7 @@ function onClickPost() {
   })
     .then((result) => {
       console.log('result of create post', result);
-      postDescriptionInput.value = '';
+      postWysiwygInput.value = '';
       createPostError.value = undefined;
     })
     .catch((error) => {
@@ -120,7 +120,7 @@ function onClickPost() {
           <option value="text">Text</option>
         </select>
       </div>
-      <StudipWysiwyg insertHtmlComment v-model="postDescriptionInput" />
+      <StudipWysiwyg insertHtmlComment v-model="postWysiwygInput" />
       <button @click="onClickPost" class="button">
         {{ $gettext('Kommentar posten') }}
       </button>

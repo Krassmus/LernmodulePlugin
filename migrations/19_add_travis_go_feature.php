@@ -22,7 +22,7 @@ class AddTravisGoFeature extends Migration
             chdate int(11) unsigned not null,
             start_time float unsigned not null,
             end_time float unsigned,
-            description text not null,
+            contents text not null,
             post_type tinyint not null,
             primary key (id)
         )";

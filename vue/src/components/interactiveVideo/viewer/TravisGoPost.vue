@@ -7,7 +7,7 @@
       <a :href="userUrl">@{{ userFormattedName }}</a
       >]
     </h4>
-    <p class="travis-go-post-description" v-html="contentsPurified"></p>
+    <p class="travis-go-post-contents" v-html="contentsPurified"></p>
   </div>
 </template>
 <style scoped lang="scss">
@@ -17,7 +17,7 @@
   grid-template-rows: min-content 1fr;
   grid-template-areas:
     'icon heading'
-    '.    description';
+    '.    contents';
   grid-column-gap: 5px;
   grid-row-gap: 0.45em;
   align-items: start;
@@ -29,8 +29,8 @@
     margin-top: 0;
     margin-bottom: 0;
   }
-  .travis-go-post-description {
-    grid-area: description;
+  .travis-go-post-contents {
+    grid-area: contents;
     margin-bottom: 0;
   }
   .post-type {
@@ -54,7 +54,7 @@ const props = defineProps({
   },
 });
 const contentsPurified = computed(() =>
-  DOMPurify.sanitize(props.post?.description, {
+  DOMPurify.sanitize(props.post?.contents, {
     USE_PROFILES: { html: true },
   })
 );
