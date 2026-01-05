@@ -172,7 +172,9 @@ function onClickPost() {
             "
           />
         </template>
-        <pre v-if="debug">{{ { rawPosts } }}</pre>
+        <pre v-if="debug && parsedPosts.some((post) => post.error)">{{
+          { rawPosts }
+        }}</pre>
       </section>
       <ErrorMessage :error="loadPostsError" v-if="loadPostsError" />
     </div>
