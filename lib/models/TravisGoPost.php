@@ -26,7 +26,7 @@ class TravisGoPost extends SORM {
     public const EDITABLE_FIELDS = [
         'start_time' => 'float',
         'end_time' => 'float',
-        'description' => 'html-string',
+        'description' => 'string',
         'post_type' => 'int',
         'video_id' => 'string',
         'video_type' => 'string'
