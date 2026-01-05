@@ -180,9 +180,12 @@ function onClickPost() {
             "
           />
         </template>
-        <pre v-if="debug && parsedPosts.some((post) => post.error)">{{
-          { rawPosts }
-        }}</pre>
+        <pre
+          style="white-space: pre-wrap"
+          v-if="debug && parsedPosts.some((post) => post.error)"
+        >
+          {{ { rawPosts } }}
+        </pre>
       </section>
       <ErrorMessage
         v-if="loadPostsError"
