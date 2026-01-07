@@ -1,7 +1,12 @@
 <template>
   <div class="travis-go-post" :data-post-type="post.post_type">
     <h4 class="travis-go-post-heading">
-      [{{ formatVideoTimestamp(post.start_time) }}
+      [<a
+        class="video-timestamp"
+        href="javascript:undefined"
+        @click="onClickTimestamp"
+        >{{ formatVideoTimestamp(post.start_time) }}</a
+      >
       <span class="post-type">{{ post.post_type }}</span>
       <span> </span>
       <a :href="userUrl">@{{ userFormattedName }}</a
@@ -33,6 +38,7 @@
     grid-area: contents;
     margin-bottom: 0;
   }
+  .video-timestamp,
   .post-type {
     margin-right: 0.25em;
   }
@@ -42,7 +48,7 @@
 </style>
 
 <script setup lang="ts">
-import { computed, defineProps, PropType } from 'vue';
+import { computed, defineProps, defineEmits, PropType } from 'vue';
 import { TravisGoPostProps } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 import { store } from '@/store';
@@ -74,4 +80,17 @@ const userUrl = computed<string>(() => {
     return '';
   }
 });
+
+const emit = defineEmits({
+  clickTimestamp(payload: number) {
+    return true;
+  },
+});
+
+function onClickTimestamp() {
+  if (!props.post) {
+    throw new Error('Prop "post" is missing');
+  }
+  emit('clickTimestamp', props.post.start_time);
+}
 </script>

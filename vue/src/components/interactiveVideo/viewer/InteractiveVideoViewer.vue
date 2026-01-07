@@ -26,6 +26,14 @@ const props = defineProps({
 
 const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 
+const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
+  undefined
+);
+
+function onClickPostTimestamp(time: number) {
+  videoPlayer.value!.player!.currentTime(time);
+}
+
 function loadCurrentUser() {
   store.dispatch('users/loadById', { id: window.STUDIP.USER_ID });
 }
@@ -132,7 +140,7 @@ function onClickPost() {
 <template>
   <div v-if="task.travisGoSettings.enabled" class="travis-go-main">
     <div class="travis-go-left-column">
-      <VideoPlayer :task="task" />
+      <VideoPlayer :task="task" ref="videoPlayer" />
       <div class="annotation-controls">
         <button class="button date">{{ $gettext('Start') }}</button>
         <button class="button date">{{ $gettext('End') }}</button>
@@ -189,6 +197,7 @@ function onClickPost() {
           <TravisGoPost
             v-if="post.success"
             :post="post.data"
+            @clickTimestamp="onClickPostTimestamp"
             :class="{
               odd: index % 2 === 0,
             }"
@@ -227,7 +236,7 @@ function onClickPost() {
       />
     </div>
   </div>
-  <VideoPlayer v-else :task="task" />
+  <VideoPlayer v-else :task="task" ref="videoPlayer" />
 </template>
 
 <style scoped lang="scss">
