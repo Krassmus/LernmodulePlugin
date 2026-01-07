@@ -54,3 +54,10 @@ export interface InstalledLanguage {
   picture: string;
   selected: boolean;
 }
+
+export interface User {
+  attributes: {
+    'formatted-name': string;
+    username: string;
+  };
+}

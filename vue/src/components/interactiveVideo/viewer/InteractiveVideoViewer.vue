@@ -15,6 +15,7 @@ import ErrorMessage from '@/components/ErrorMessage.vue';
 import { SafeParseReturnType } from 'zod';
 import { v4 } from 'uuid';
 import strings from '@/components/interactiveVideo/strings';
+import { User } from '@/php-integration';
 
 const props = defineProps({
   task: {
@@ -63,9 +64,30 @@ const parsedPosts = computed<ParsedPost[]>(() => {
   }[];
   return raw.map((rawVal) => travisGoPostSchema.safeParse(rawVal.attributes));
 });
-const rawPosts = computed(
-  () => store.getters['lernmodule-plugin/travis-go-posts/all']
-);
+const participantsIds = computed<string[]>(() => {
+  const ids = parsedPosts.value.flatMap((post) => {
+    if (post.success) {
+      return [post.data.mk_user_id];
+    } else {
+      return [];
+    }
+  });
+  return [...new Set(ids)];
+});
+function urlForUserId(id: string): string {
+  const user = getUserById(id);
+  if (user) {
+    return window.STUDIP.URLHelper.getURL('dispatch.php/profile', {
+      username: user.attributes.username,
+    });
+  } else {
+    return '';
+  }
+}
+function getUserById(id: string): User | undefined {
+  return store.getters['users/byId']({ id });
+}
+
 onMounted(() => {
   loadPosts();
   loadCurrentUser();
@@ -139,8 +161,9 @@ function onClickPost() {
         v-if="createPostError"
       />
       <div class="travis-go-participants-list">
-        <a>@Anna</a>
-        <a>@Kevin</a>
+        <a v-for="id in participantsIds" :key="id" :href="urlForUserId(id)">
+          {{ getUserById(id)?.attributes['formatted-name'] }}
+        </a>
       </div>
     </div>
     <div class="travis-go-right-column">
@@ -240,9 +263,6 @@ function onClickPost() {
   gap: 10px;
   padding: 10px;
   align-items: center;
-  a {
-    color: black;
-  }
 }
 .search-bar {
   display: flex;
