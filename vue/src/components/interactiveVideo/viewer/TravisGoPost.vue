@@ -47,6 +47,7 @@ import { TravisGoPostProps } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 import { store } from '@/store';
 import DOMPurify from 'dompurify';
+import { User } from '@/php-integration';
 const props = defineProps({
   post: {
     type: Object as PropType<TravisGoPostProps>,
@@ -58,15 +59,19 @@ const contentsPurified = computed(() =>
     USE_PROFILES: { html: true },
   })
 );
-const user = computed(() =>
+const user = computed<User | undefined>(() =>
   store.getters['users/byId']({ id: props.post?.mk_user_id })
 );
-const userFormattedName = computed(
+const userFormattedName = computed<string | undefined>(
   () => user.value?.attributes?.['formatted-name']
 );
 
-const userUrl = computed(() => {
+const userUrl = computed<string>(() => {
   const username = user.value?.attributes?.['username'];
-  return window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username });
+  if (username) {
+    return window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username });
+  } else {
+    return '';
+  }
 });
 </script>
