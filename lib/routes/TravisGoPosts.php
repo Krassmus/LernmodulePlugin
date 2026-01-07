@@ -72,6 +72,11 @@ final class TravisGoPosts extends SormCRUDController
 
     }
 
+    protected function getDefaultOrder(): string
+    {
+        return 'order by start_time asc';
+    }
+
     protected function getAuthority(): ?SORMAuthority
     {
         return new TravisGoPostAuthority();
