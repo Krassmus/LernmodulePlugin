@@ -8,6 +8,7 @@
         >{{ formatVideoTimestamp(post.start_time) }}</a
       >
       <span class="post-type">{{ post.post_type }}</span>
+      <span> </span>
       <a :href="userUrl">@{{ userFormattedName }}</a
       >]
     </h4>
@@ -40,9 +41,6 @@
   .video-timestamp,
   .post-type {
     margin-right: 0.25em;
-  }
-  .post-type {
-    text-transform: uppercase;
   }
   margin: 0;
   padding: 5px;
