@@ -16,6 +16,7 @@ import { SafeParseReturnType } from 'zod';
 import { v4 } from 'uuid';
 import strings from '@/components/interactiveVideo/strings';
 import { User } from '@/php-integration';
+import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 
 const props = defineProps({
   task: {
@@ -32,6 +33,19 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
 
 function onClickPostTimestamp(time: number) {
   videoPlayer.value!.player!.currentTime(time);
+}
+
+const currentTime = ref(0);
+function onTimeUpdate(time: number) {
+  currentTime.value = time;
+}
+const startTimeInput = ref<number | undefined>();
+function onClickStart() {
+  startTimeInput.value = currentTime.value;
+}
+const endTimeInput = ref<number | undefined>();
+function onClickEnd() {
+  endTimeInput.value = currentTime.value;
 }
 
 function loadCurrentUser() {
@@ -131,7 +145,8 @@ function onClickPost() {
     attributes: {
       contents: postWysiwygInput.value,
       post_type: postTypeInput.value,
-      start_time: 0, // TODO Implement start/end time inputs.
+      start_time: startTimeInput.value ?? 0, // TODO Implement start/end time inputs.
+      end_time: endTimeInput.value ?? null, // TODO Implement start/end time inputs.
       video_id: '24', // TODO plumb video id and type into task or editor store or something.
       video_type: 'cw_blocks', // TODO plumb video type (cw_blocks or lernmodule_module)
     },
@@ -152,10 +167,24 @@ function onClickPost() {
 <template>
   <div v-if="task.travisGoSettings.enabled" class="travis-go-main">
     <div class="travis-go-left-column">
-      <VideoPlayer :task="task" ref="videoPlayer" />
+      <VideoPlayer @timeupdate="onTimeUpdate" :task="task" ref="videoPlayer" />
       <div class="annotation-controls">
-        <button class="button date">{{ $gettext('Start') }}</button>
-        <button class="button date">{{ $gettext('End') }}</button>
+        <button class="button date" @click="onClickStart">
+          <template v-if="startTimeInput">
+            {{ formatVideoTimestamp(startTimeInput) }}
+          </template>
+          <template v-else>
+            {{ $gettext('Start') }}
+          </template>
+        </button>
+        <button class="button date" @click="onClickEnd">
+          <template v-if="endTimeInput">
+            {{ formatVideoTimestamp(endTimeInput) }}
+          </template>
+          <template v-else>
+            {{ $gettext('End') }}
+          </template>
+        </button>
         <select v-model="postTypeInput">
           <option value="meta">Meta</option>
           <option value="image">Image</option>
@@ -248,7 +277,12 @@ function onClickPost() {
       />
     </div>
   </div>
-  <VideoPlayer v-else :task="task" ref="videoPlayer" />
+  <VideoPlayer
+    v-else
+    @timeupdate="onTimeUpdate"
+    :task="task"
+    ref="videoPlayer"
+  />
 </template>
 
 <style scoped lang="scss">
