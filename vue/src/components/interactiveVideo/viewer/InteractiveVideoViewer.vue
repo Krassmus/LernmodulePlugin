@@ -70,7 +70,19 @@ const parsedPosts = computed<ParsedPost[]>(() => {
   const raw = rawPosts.value as {
     attributes: unknown[];
   }[];
-  return raw.map((rawVal) => travisGoPostSchema.safeParse(rawVal.attributes));
+  return raw
+    .map((rawVal) => travisGoPostSchema.safeParse(rawVal.attributes))
+    .toSorted((a, b) => {
+      if (a.success && !b.success) {
+        return -1;
+      } else if (!a.success && b.success) {
+        return 1;
+      } else if (a.success && b.success) {
+        return a.data.start_time - b.data.start_time;
+      } else {
+        return 0;
+      }
+    });
 });
 const participantsIds = computed<string[]>(() => {
   const ids = parsedPosts.value.flatMap((post) => {
