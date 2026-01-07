@@ -53,6 +53,9 @@ function loadPosts() {
   /* eslint-disable-next-line no-debugger */
   // debugger;
 }
+const rawPosts = computed(
+  () => store.getters['lernmodule-plugin/travis-go-posts/all']
+);
 type ParsedPost = SafeParseReturnType<TravisGoPostProps, TravisGoPostProps>;
 const parsedPosts = computed<ParsedPost[]>(() => {
   const raw = rawPosts.value as {
