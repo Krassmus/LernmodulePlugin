@@ -1,7 +1,8 @@
 // Format video timestamp for timeline axis. e.g. 1m30s becomes 00;01;30;00
 export function formatVideoTimestamp(
   timestampSeconds: number,
-  showCentiseconds: boolean = true
+  showCentiseconds: boolean = true,
+  separator: string = ';'
 ): string {
   let hours = 0,
     minutes = 0,
@@ -26,11 +27,11 @@ export function formatVideoTimestamp(
       maximumFractionDigits: 0,
     });
   }
-  const short = `${twoDigits(hours)};${twoDigits(minutes)};${twoDigits(
-    seconds
-  )}`;
+  const short = `${twoDigits(hours)}${separator}${twoDigits(
+    minutes
+  )}${separator}${twoDigits(seconds)}`;
   if (showCentiseconds) {
-    const long = short.concat(`;${twoDigits(centiseconds)}`);
+    const long = short.concat(`${separator}${twoDigits(centiseconds)}`);
     return long;
   } else {
     return short;

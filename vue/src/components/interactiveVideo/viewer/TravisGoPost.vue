@@ -1,11 +1,21 @@
 <template>
   <div class="travis-go-post" :data-post-type="post.post_type">
     <h4 class="travis-go-post-heading">
-      [<a
-        class="video-timestamp"
-        href="javascript:undefined"
-        @click="onClickTimestamp"
-        >{{ formatVideoTimestamp(post.start_time) }}</a
+      [<span class="video-timestamp"
+        ><a
+          href="javascript:undefined"
+          @click="onClickTimestamp(post.start_time)"
+          >{{ formatVideoTimestamp(post.start_time, false, ':') }}</a
+        >
+        <span v-if="post.end_time">
+          —
+          <a
+            href="javascript:undefined"
+            @click="onClickTimestamp(post.end_time)"
+          >
+            {{ formatVideoTimestamp(post.end_time, false, ':') }}
+          </a></span
+        ></span
       >
       <span class="post-type">{{ post.post_type }}</span>
       <span> </span>
@@ -87,10 +97,10 @@ const emit = defineEmits({
   },
 });
 
-function onClickTimestamp() {
+function onClickTimestamp(time: number) {
   if (!props.post) {
     throw new Error('Prop "post" is missing');
   }
-  emit('clickTimestamp', props.post.start_time);
+  emit('clickTimestamp', time);
 }
 </script>

@@ -191,7 +191,7 @@ function onClickPost() {
       <div class="annotation-controls">
         <button class="button date time-input" @click="onClickStartTime">
           <template v-if="startTimeInput">
-            {{ formatVideoTimestamp(startTimeInput, false) }}
+            {{ formatVideoTimestamp(startTimeInput, false, ':') }}
             <button class="small-button trash" @click.stop="clearStartTime" />
           </template>
           <template v-else>
@@ -200,7 +200,7 @@ function onClickPost() {
         </button>
         <button class="button date time-input" @click="onClickEndTime">
           <template v-if="endTimeInput">
-            {{ formatVideoTimestamp(endTimeInput, false) }}
+            {{ formatVideoTimestamp(endTimeInput, false, ':') }}
             <button class="small-button trash" @click.stop="clearEndTime" />
           </template>
           <template v-else>
