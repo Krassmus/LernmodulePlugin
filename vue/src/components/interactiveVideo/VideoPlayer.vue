@@ -28,7 +28,10 @@ import OverlayInteraction from '@/components/interactiveVideo/interactions/Overl
 import { OverlayInteraction as OverlayInteractionType } from '@/models/InteractiveVideoTask';
 import { mapActions, mapGetters } from 'vuex';
 import { fileRefsSchema } from '@/routes/jsonApi';
-import { DragState } from '@/components/interactiveVideo/editor/events';
+import {
+  DragState,
+  VideoMetadata,
+} from '@/components/interactiveVideo/editor/events';
 
 type LoadedStudipFileVideo = StudipFileVideo & {
   download_url: string;
@@ -52,6 +55,14 @@ export default defineComponent({
     task: {
       type: Object as PropType<InteractiveVideoTask>,
       required: true,
+    },
+  },
+  emits: {
+    timeupdate(time: number) {
+      return true;
+    },
+    metadataChange(payload: VideoMetadata) {
+      return true;
     },
   },
   data() {
@@ -309,7 +320,7 @@ export default defineComponent({
           this.player!.play();
         }
         this.$emit('metadataChange', {
-          length: this.player!.duration(),
+          length: this.player!.duration() ?? 1,
         });
       });
       this.player.on('playing', () => {
