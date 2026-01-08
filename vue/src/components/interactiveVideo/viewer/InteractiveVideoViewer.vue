@@ -32,6 +32,10 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
 );
 
 function onClickPostTimestamp(time: number) {
+  seekVideo(time);
+}
+
+function seekVideo(time: number) {
   videoPlayer.value!.player!.currentTime(time);
 }
 
@@ -39,13 +43,29 @@ const currentTime = ref(0);
 function onTimeUpdate(time: number) {
   currentTime.value = time;
 }
+
 const startTimeInput = ref<number | undefined>();
-function onClickStart() {
-  startTimeInput.value = currentTime.value;
+function onClickStartTime() {
+  if (startTimeInput.value) {
+    seekVideo(startTimeInput.value);
+  } else {
+    startTimeInput.value = currentTime.value;
+  }
 }
+function clearStartTime() {
+  startTimeInput.value = undefined;
+}
+
 const endTimeInput = ref<number | undefined>();
-function onClickEnd() {
-  endTimeInput.value = currentTime.value;
+function onClickEndTime() {
+  if (endTimeInput.value) {
+    seekVideo(endTimeInput.value);
+  } else {
+    endTimeInput.value = currentTime.value;
+  }
+}
+function clearEndTime() {
+  endTimeInput.value = undefined;
 }
 
 function loadCurrentUser() {
@@ -169,23 +189,25 @@ function onClickPost() {
     <div class="travis-go-left-column">
       <VideoPlayer @timeupdate="onTimeUpdate" :task="task" ref="videoPlayer" />
       <div class="annotation-controls">
-        <button class="button date" @click="onClickStart">
+        <button class="button date time-input" @click="onClickStartTime">
           <template v-if="startTimeInput">
-            {{ formatVideoTimestamp(startTimeInput) }}
+            {{ formatVideoTimestamp(startTimeInput, false) }}
+            <button class="small-button trash" @click.stop="clearStartTime" />
           </template>
           <template v-else>
             {{ $gettext('Start') }}
           </template>
         </button>
-        <button class="button date" @click="onClickEnd">
+        <button class="button date time-input" @click="onClickEndTime">
           <template v-if="endTimeInput">
-            {{ formatVideoTimestamp(endTimeInput) }}
+            {{ formatVideoTimestamp(endTimeInput, false) }}
+            <button class="small-button trash" @click.stop="clearEndTime" />
           </template>
           <template v-else>
             {{ $gettext('End') }}
           </template>
         </button>
-        <select v-model="postTypeInput">
+        <select class="post-type-input" v-model="postTypeInput">
           <option value="meta">Meta</option>
           <option value="image">Image</option>
           <option value="audio">Audio</option>
@@ -304,6 +326,25 @@ function onClickPost() {
   }
   > .travis-go-right-column {
     flex: 1;
+  }
+
+  .annotation-controls {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    gap: 0.5em;
+    > * {
+      margin: 0;
+    }
+    button.time-input {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .post-type-input {
+      align-self: stretch;
+    }
   }
 }
 
