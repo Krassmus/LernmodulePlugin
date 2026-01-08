@@ -217,7 +217,7 @@ const travisGoPostEditableKeys = {
   video_id: z.string(),
   video_type: z.enum(['lernmodule_module', 'cw_blocks']),
   start_time: z.coerce.number(),
-  end_time: z.coerce.number().optional(),
+  end_time: z.coerce.number().nullable(),
   contents: z.string(),
   post_type: travisGoPostTypeSchema,
 };
