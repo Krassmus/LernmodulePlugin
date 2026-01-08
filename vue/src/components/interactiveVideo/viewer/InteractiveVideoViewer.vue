@@ -326,6 +326,7 @@ function onClickPost() {
   }
   > .travis-go-right-column {
     flex: 1;
+    min-width: calc(min(300px, 100%));
   }
 
   .annotation-controls {

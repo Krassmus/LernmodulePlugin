@@ -56,6 +56,17 @@
   padding: 5px;
 }
 </style>
+<style lang="scss">
+/* Prevent large images from messing up the page layout. */
+.travis-go-post-contents {
+  overflow: hidden;
+  img {
+    object-fit: contain;
+    width: auto;
+    max-height: 20vh;
+  }
+}
+</style>
 
 <script setup lang="ts">
 import { computed, defineProps, defineEmits, PropType } from 'vue';
