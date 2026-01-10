@@ -5,8 +5,8 @@ import {
   TravisGoSettings,
 } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
-import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
-import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
+import TabsComponent from '@/components/studip/TabsComponent.vue';
+import TabComponent from '@/components/studip/TabComponent.vue';
 import AddInteractions from '@/components/interactiveVideo/editor/AddInteractions.vue';
 import SelectVideo from '@/components/interactiveVideo/editor/SelectVideo.vue';
 import ConfigureTravisGo from '@/components/interactiveVideo/editor/ConfigureTravisGo.vue';

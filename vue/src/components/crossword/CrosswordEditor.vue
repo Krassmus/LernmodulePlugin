@@ -212,8 +212,8 @@ import {
 import { CrosswordTask, Word, Direction } from '@/models/CrosswordTask';
 import { cloneDeep } from 'lodash';
 import { $gettext } from '@/language/gettext';
-import TabComponent from '@/components/courseware-components-ported-to-vue3/TabComponent.vue';
-import TabsComponent from '@/components/courseware-components-ported-to-vue3/TabsComponent.vue';
+import TabComponent from '@/components/studip/TabComponent.vue';
+import TabsComponent from '@/components/studip/TabsComponent.vue';
 import produce from 'immer';
 import { v4 } from 'uuid';
 import draggable from 'vuedraggable';

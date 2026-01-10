@@ -5,9 +5,7 @@ import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask, Video } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
-import FilePicker, {
-  FilePickerFile,
-} from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
+import FilePicker, { FilePickerFile } from '@/components/studip/FilePicker.vue';
 import { FileRef, fileRefsSchema } from '@/routes/jsonApi';
 import { fileDetailsUrl, fileIdToUrl } from '@/models/TaskDefinition';
 import { mapActions, mapGetters } from 'vuex';
