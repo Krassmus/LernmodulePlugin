@@ -41,12 +41,13 @@ class TravisGoPostAuthority implements SORMAuthority
     public function mayEdit(?User $user, SORM $sorm): bool
     {
         // TODO: Implement mayEdit() method.
-        return true;
+        return false;
     }
 
-    public function mayDelete(?User $user, SORM $sorm): bool
+    public function mayDelete(?User $user, TravisGoPost|SORM $sorm): bool
     {
         // TODO: Implement mayDelete() method.
-        return true;
+        return false;
+        return $user && $sorm->mk_user_id === $user->id;
     }
 }

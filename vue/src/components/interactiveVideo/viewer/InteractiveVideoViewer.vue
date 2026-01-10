@@ -3,6 +3,7 @@ import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
+  printInteractionType,
   TravisGoPostProps,
   travisGoPostSchema,
   TravisGoPostType,
@@ -17,6 +18,7 @@ import { v4 } from 'uuid';
 import strings from '@/components/interactiveVideo/strings';
 import { User } from '@/php-integration';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
+import { $gettext } from '@/language/gettext';
 
 const props = defineProps({
   task: {
@@ -33,6 +35,26 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
 
 function onClickPostTimestamp(time: number) {
   seekVideo(time);
+}
+async function deletePost(id: string) {
+  const prompt = $gettext('Post löschen');
+  const confirmed = window.confirm(prompt);
+  if (!confirmed) {
+    console.info('Delete prompt canceled by user');
+    return;
+  }
+  try {
+    await store.dispatch('lernmodule-plugin/travis-go-posts/delete', {
+      id,
+    });
+    window.STUDIP.Report.success($gettext('Der Post wurde gelöscht.'));
+  } catch (error: unknown) {
+    window.STUDIP.Report.error(
+      $gettext('Der Post konnte nicht gelöscht werden.'),
+      [JSON.stringify(error, null, 2)]
+    );
+    console.error(error);
+  }
 }
 
 function seekVideo(time: number) {
@@ -261,6 +283,7 @@ function onClickPost() {
             v-if="post.success"
             :post="post.data"
             @clickTimestamp="onClickPostTimestamp"
+            @deletePost="deletePost"
             :class="{
               odd: index % 2 === 0,
             }"

@@ -42,6 +42,10 @@ declare global {
         LERNMODULE_PREVIEW: boolean;
         LERNMODULE_LAZYLOADING: boolean;
       };
+      Report: {
+        success(message: string): void;
+        error(message: string, errors: unknown[]): void;
+      };
     };
     // TODO use correct types for jQuery
     $: any;

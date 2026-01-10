@@ -21,6 +21,13 @@
       <span> </span>
       <a :href="userUrl">@{{ userFormattedName }}</a
       >]
+      <StudipActionMenu
+        :title="$gettext('Aktionen')"
+        :items="menuItems"
+        :collapseAt="true"
+        class="travis-go-post-action-menu"
+        @deletePost="deletePost()"
+      />
     </h4>
     <p class="travis-go-post-contents" v-html="contentsPurified"></p>
   </div>
@@ -75,10 +82,21 @@ import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoT
 import { store } from '@/store';
 import DOMPurify from 'dompurify';
 import { User } from '@/php-integration';
+import StudipActionMenu from '@/components/studip/StudipActionMenu.vue';
+import { LinkAction } from '@/components/studip/interfaces';
+import { $gettext } from '@/language/gettext';
 const props = defineProps({
   post: {
     type: Object as PropType<TravisGoPostProps>,
     required: true,
+  },
+});
+const emit = defineEmits({
+  clickTimestamp(payload: number) {
+    return true;
+  },
+  deletePost(postId: string) {
+    return true;
   },
 });
 const contentsPurified = computed(() =>
@@ -102,11 +120,20 @@ const userUrl = computed<string>(() => {
   }
 });
 
-const emit = defineEmits({
-  clickTimestamp(payload: number) {
-    return true;
+const menuItems: LinkAction[] = [
+  {
+    action_id: '1',
+    label: $gettext('Löschen'),
+    icon: 'trash',
+    emit: 'deletePost',
   },
-});
+];
+function deletePost() {
+  if (!props.post) {
+    throw new Error('Prop "post" is missing');
+  }
+  emit('deletePost', props.post.id);
+}
 
 function onClickTimestamp(time: number) {
   if (!props.post) {
