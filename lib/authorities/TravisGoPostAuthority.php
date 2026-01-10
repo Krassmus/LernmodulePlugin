@@ -46,8 +46,6 @@ class TravisGoPostAuthority implements SORMAuthority
 
     public function mayDelete(?User $user, TravisGoPost|SORM $sorm): bool
     {
-        // TODO: Implement mayDelete() method.
-        return false;
         return $user && $sorm->mk_user_id === $user->id;
     }
 }
