@@ -176,7 +176,7 @@ const createPostError = ref<string | undefined>();
 function onClickSearch() {}
 
 async function createPost(post: { attributes: CreatePostRequest }) {
-  return store.dispatch('lernmodule-plugin/travis-go-posts/create', post);
+  return await store.dispatch('lernmodule-plugin/travis-go-posts/create', post);
 }
 function onClickPost() {
   console.log('onClickPost');
@@ -197,10 +197,15 @@ function onClickPost() {
       console.log('result of create post', result);
       postWysiwygInput.value = '';
       createPostError.value = undefined;
+      window.STUDIP.Report.success($gettext('Der Post wurde gepostet.'));
     })
     .catch((error) => {
       console.error('error', error);
       createPostError.value = error;
+      window.STUDIP.Report.error(
+        $gettext('Der Post konnte nicht gepostet werden.'),
+        [JSON.stringify(error, null, 2)]
+      );
     });
   return res;
 }
