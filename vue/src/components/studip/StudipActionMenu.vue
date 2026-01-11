@@ -23,14 +23,13 @@
             aria-disabled="true"
             v-bind="item.attributes"
           >
-            <!--            <studip-icon-->
-            <!--              v-if="item.icon"-->
-            <!--              :shape="item.icon"-->
-            <!--              role="inactive"-->
-            <!--              class="action-menu-item-icon"-->
-            <!--            />-->
-            <!--            <span v-else class="action-menu-no-icon"></span>-->
-            <span class="action-menu-no-icon"></span>
+            <studip-icon
+              v-if="item.icon"
+              :shape="item.icon"
+              role="inactive"
+              class="action-menu-item-icon"
+            />
+            <span v-else class="action-menu-no-icon"></span>
 
             {{ item.label }}
           </label>
@@ -39,13 +38,12 @@
             v-bind="item.attributes"
             v-on="linkEvents(item)"
           >
-            <!--            <studip-icon-->
-            <!--              v-if="item.icon"-->
-            <!--              :shape="item.icon"-->
-            <!--              class="action-menu-item-icon"-->
-            <!--            />-->
-            <!--            <span v-else class="action-menu-no-icon"></span>-->
-            <span class="action-menu-no-icon"></span>
+            <studip-icon
+              v-if="item.icon"
+              :shape="item.icon"
+              class="action-menu-item-icon"
+            />
+            <span v-else class="action-menu-no-icon"></span>
 
             {{ item.label }}
           </a>
@@ -55,12 +53,12 @@
             v-on="linkEvents(item)"
             tabindex="0"
           >
-            <!--            <studip-icon-->
-            <!--              :shape="item.icon"-->
-            <!--              :name="item.name"-->
-            <!--              class="action-menu-item-icon"-->
-            <!--              v-bind="item.attributes"-->
-            <!--            />-->
+            <studip-icon
+              :shape="item.icon"
+              :name="item.name"
+              class="action-menu-item-icon"
+              v-bind="item.attributes"
+            />
             {{ item.label }}
           </label>
           <template v-else>
@@ -85,19 +83,19 @@
         aria-disabled="true"
         v-bind="item.attributes"
       >
-        <!--        <studip-icon-->
-        <!--          :shape="item.icon"-->
-        <!--          :title="item.label"-->
-        <!--          role="inactive"-->
-        <!--          class="action-menu-item-icon"-->
-        <!--        />-->
+        <studip-icon
+          :shape="item.icon"
+          :title="item.label"
+          role="inactive"
+          class="action-menu-item-icon"
+        />
       </label>
       <a v-else :key="item.id" v-bind="item.attributes" v-on="linkEvents(item)">
-        <!--        <studip-icon-->
-        <!--          :shape="item.icon"-->
-        <!--          :title="item.label"-->
-        <!--          class="action-menu-item-icon"-->
-        <!--        />-->
+        <studip-icon
+          :shape="item.icon"
+          :title="item.label"
+          class="action-menu-item-icon"
+        />
       </a>
     </template>
   </div>
@@ -105,10 +103,11 @@
 
 <script>
 import { $gettext } from '@/language/gettext';
+import StudipIcon from '@/components/studip/StudipIcon.vue';
 
 export default {
   name: 'studip-action-menu',
-  components: {},
+  components: { StudipIcon },
   props: {
     items: Array,
     collapseAt: {
