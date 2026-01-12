@@ -57,6 +57,7 @@
               type="text"
               :placeholder="$gettext('Schreibe einen Kommentar...')"
               v-model="commentEditorInput"
+              ref="commentEditorInputElement"
             />
             <button type="submit">{{ $gettext('Abschicken') }}</button>
           </form>
@@ -141,7 +142,14 @@
 </style>
 
 <script setup lang="ts">
-import { computed, defineProps, defineEmits, PropType, ref } from 'vue';
+import {
+  computed,
+  defineProps,
+  defineEmits,
+  PropType,
+  ref,
+  nextTick,
+} from 'vue';
 import {
   CreateCommentRequest,
   travisGoCommentJsonApiSchema,
@@ -251,7 +259,7 @@ const menuItems: LinkAction[] = [
   {
     action_id: '2',
     label: $gettext('Kommentieren'),
-    icon: '',
+    icon: 'comment',
     emit: 'commentPost',
   },
 ];
@@ -261,8 +269,10 @@ function deletePost() {
   }
   emit('deletePost', props.post.id);
 }
+const commentEditorInputElement = ref<HTMLInputElement | undefined>();
 function commentPost() {
   isCommenting.value = true;
+  nextTick(() => commentEditorInputElement.value?.focus());
 }
 
 function onClickTimestamp(time: number) {
