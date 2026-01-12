@@ -19,7 +19,7 @@
       >
       <span class="post-type">{{ post.post_type }}</span>
       <span> </span>
-      <a :href="userUrl">@{{ userFormattedName }}</a
+      <a :href="postAuthorUrl">@{{ postAuthorFormattedName }}</a
       >]
       <StudipActionMenu
         :title="$gettext('Aktionen')"
@@ -36,7 +36,13 @@
           <fieldset class="collapsable">
             <legend>{{ $gettext('Kommentare') }}</legend>
             <div class="travis-go-comments-list">
-              <p class="travis-go-comment">This is a comment</p>
+              <p
+                class="travis-go-comment"
+                v-for="comment in comments"
+                :key="comment.id"
+              >
+                @{{ commentAuthorName(comment) }} {{ comment.contents }}
+              </p>
             </div>
             <pre>{{ JSON.stringify(comments, null, 2) }}</pre>
           </fieldset>
@@ -156,15 +162,19 @@ const contentsPurified = computed(() =>
     USE_PROFILES: { html: true },
   })
 );
-const user = computed<User | undefined>(() =>
-  store.getters['users/byId']({ id: props.post?.mk_user_id })
+
+function userById(id: string): User | undefined {
+  return store.getters['users/byId']({ id });
+}
+const postAuthor = computed<User | undefined>(() =>
+  userById(props.post?.mk_user_id)
 );
-const userFormattedName = computed<string | undefined>(
-  () => user.value?.attributes?.['formatted-name']
+const postAuthorFormattedName = computed<string | undefined>(
+  () => postAuthor.value?.attributes?.['formatted-name']
 );
 
-const userUrl = computed<string>(() => {
-  const username = user.value?.attributes?.['username'];
+const postAuthorUrl = computed<string>(() => {
+  const username = postAuthor.value?.attributes?.['username'];
   if (username) {
     return window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username });
   } else {
@@ -185,6 +195,12 @@ const comments = computed<TravisGoCommentProps[]>(() => {
     }
   );
 });
+function commentAuthorName(comment: TravisGoCommentProps): string {
+  return (
+    userById(comment.mk_user_id)?.attributes['formatted-name'] ??
+    $gettext('Unbekannt')
+  );
+}
 
 const commentEditorInput = ref<string>('');
 async function submitComment() {
