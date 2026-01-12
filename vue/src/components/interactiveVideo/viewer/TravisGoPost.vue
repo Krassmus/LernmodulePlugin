@@ -41,10 +41,12 @@
                 v-for="comment in comments"
                 :key="comment.id"
               >
-                @{{ commentAuthorName(comment) }} {{ comment.contents }}
+                <span class="travis-go-comment-author"
+                  >@{{ commentAuthorName(comment) }}</span
+                >
+                {{ comment.contents }}
               </p>
             </div>
-            <pre>{{ JSON.stringify(comments, null, 2) }}</pre>
           </fieldset>
           <form class="comment-editor" @submit.prevent="submitComment">
             <input
@@ -91,14 +93,20 @@
         border: none;
         padding-left: 0;
         padding-top: 0;
-        margin-bottom: 0;
+        padding-bottom: 0;
+        margin-bottom: 0.5em;
         margin-left: -5px;
         font-size: unset;
       }
     }
     .travis-go-comments-list {
       border-left: 3px solid #899ab9;
-      padding: 10px 10px 10px 26px;
+      padding: 0 10px 0 26px;
+      margin-top: 0.5em;
+      margin-bottom: 10px;
+    }
+    .travis-go-comment-author {
+      font-weight: 700;
     }
     .comment-editor {
       display: flex;
