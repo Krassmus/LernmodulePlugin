@@ -29,7 +29,19 @@
         @deletePost="deletePost()"
       />
     </h4>
-    <p class="travis-go-post-contents" v-html="contentsPurified"></p>
+    <div class="travis-go-post-contents-container">
+      <p class="travis-go-post-contents" v-html="contentsPurified"></p>
+      <section class="travis-go-comments">
+        <form class="default">
+          <fieldset class="collapsable">
+            <legend>{{ $gettext('Kommentare') }}</legend>
+            <div class="travis-go-comments-list">
+              <p class="travis-go-comment">This is a comment</p>
+            </div>
+          </fieldset>
+        </form>
+      </section>
+    </div>
   </div>
 </template>
 <style scoped lang="scss">
@@ -51,8 +63,27 @@
     margin-top: 0;
     margin-bottom: 0;
   }
-  .travis-go-post-contents {
+  .travis-go-post-contents-container {
     grid-area: contents;
+    form.default {
+      fieldset {
+        padding: 0;
+        margin: 0;
+      }
+      legend {
+        padding-left: 0;
+        padding-top: 0;
+        margin-bottom: 0;
+        margin-left: -5px;
+        font-size: unset;
+      }
+    }
+    .travis-go-comments-list {
+      border-left: 3px solid #899ab9;
+      padding: 10px 10px 10px 26px;
+    }
+  }
+  .travis-go-post-contents {
     margin-bottom: 0;
   }
   .video-timestamp,
