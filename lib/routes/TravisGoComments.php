@@ -3,11 +3,11 @@
 namespace LernmodulePlugin\routes;
 
 use JsonApi\Errors\AuthorizationFailedException;
+use LernmodulePlugin\authorities\TravisGoCommentAuthority;
 use LernmodulePlugin\SORM;
 use LernmodulePlugin\SORMAuthority;
 use LernmodulePlugin\SormCRUDController;
-use lib\authorities\TravisGoCommentAuthority;
-use lib\models\TravisGoComment;
+use LernmodulePlugin\models\TravisGoComment;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class TravisGoComments extends SormCRUDController

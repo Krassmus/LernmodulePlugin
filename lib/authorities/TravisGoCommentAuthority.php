@@ -2,11 +2,10 @@
 
 namespace LernmodulePlugin\authorities;
 
-use LernmodulePlugin\authorities\TravisGoPostAuthority;
 use LernmodulePlugin\models\TravisGoPost;
 use LernmodulePlugin\SORM;
 use LernmodulePlugin\SORMAuthority;
-use lib\models\TravisGoComment;
+use LernmodulePlugin\models\TravisGoComment;
 use User;
 
 class TravisGoCommentAuthority implements SORMAuthority
