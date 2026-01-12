@@ -66,7 +66,9 @@
               v-model="commentEditorInput"
               ref="commentEditorInputElement"
             />
-            <button type="submit">{{ $gettext('Abschicken') }}</button>
+            <button class="button accept send-comment-button" type="submit">
+              {{ $gettext('Abschicken') }}
+            </button>
           </form>
         </form>
       </section>
@@ -136,7 +138,11 @@
     }
     .comment-editor {
       display: flex;
-      gap: 0.5em;
+      gap: 10px;
+      button.send-comment-button {
+        margin: 0;
+        min-width: fit-content;
+      }
     }
   }
   .travis-go-post-contents {
