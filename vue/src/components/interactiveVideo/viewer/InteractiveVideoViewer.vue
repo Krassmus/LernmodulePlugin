@@ -3,6 +3,7 @@ import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
+  TravisGoCommentProps,
   TravisGoPostProps,
   travisGoPostSchema,
   TravisGoPostType,
@@ -34,6 +35,26 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
 
 function onClickPostTimestamp(time: number) {
   seekVideo(time);
+}
+async function deleteComment(comment: TravisGoCommentProps) {
+  const prompt = $gettext('Kommentar löschen');
+  const confirmed = window.confirm(prompt);
+  if (!confirmed) {
+    console.info('Delete prompt canceled by user');
+    return;
+  }
+  try {
+    await store.dispatch('lernmodule-plugin/travis-go-comments/delete', {
+      id: comment.id,
+    });
+    window.STUDIP.Report.success($gettext('Der Kommentar wurde gelöscht.'));
+  } catch (error: unknown) {
+    window.STUDIP.Report.error(
+      $gettext('Der Kommentar konnte nicht gelöscht werden.'),
+      [JSON.stringify(error, null, 2)]
+    );
+    console.error(error);
+  }
 }
 async function deletePost(id: string) {
   const prompt = $gettext('Post löschen');
@@ -288,6 +309,7 @@ function onClickPost() {
             :post="post.data"
             @clickTimestamp="onClickPostTimestamp"
             @deletePost="deletePost"
+            @deleteComment="deleteComment"
             :class="{
               odd: index % 2 === 0,
             }"

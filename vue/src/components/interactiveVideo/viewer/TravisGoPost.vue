@@ -23,7 +23,7 @@
       >]
       <StudipActionMenu
         :title="$gettext('Aktionen')"
-        :items="menuItems"
+        :items="postActionMenuItems"
         :collapseAt="true"
         class="travis-go-post-action-menu"
         @deletePost="deletePost()"
@@ -49,6 +49,13 @@
                   >@{{ commentAuthorName(comment) }}</span
                 >
                 {{ comment.contents }}
+                <StudipActionMenu
+                  :title="$gettext('Aktionen')"
+                  :items="commentActionMenuItems"
+                  :collapseAt="true"
+                  class="travis-go-comment-action-menu"
+                  @deleteComment="deleteComment(comment)"
+                />
               </p>
             </div>
           </fieldset>
@@ -109,9 +116,23 @@
       padding: 0 10px 0 26px;
       margin-top: 0.5em;
       margin-bottom: 10px;
-    }
-    .travis-go-comment-author {
-      font-weight: 700;
+
+      .travis-go-comment {
+        .travis-go-comment-author {
+          font-weight: 700;
+        }
+        /* We use opacity, not visibility or display: none, so the buttons can
+           be accessed via tab */
+        .travis-go-comment-action-menu {
+          opacity: 0;
+        }
+        &:hover,
+        &:focus-within {
+          .travis-go-comment-action-menu {
+            opacity: 1;
+          }
+        }
+      }
     }
     .comment-editor {
       display: flex;
@@ -174,6 +195,9 @@ const emit = defineEmits({
     return true;
   },
   deletePost(postId: string) {
+    return true;
+  },
+  deleteComment(comment: TravisGoCommentProps) {
     return true;
   },
 });
@@ -249,7 +273,7 @@ async function createComment(post: { attributes: CreateCommentRequest }) {
 }
 const isCommenting = ref(false);
 
-const menuItems: LinkAction[] = [
+const postActionMenuItems: LinkAction[] = [
   {
     action_id: '1',
     label: $gettext('Löschen'),
@@ -263,11 +287,22 @@ const menuItems: LinkAction[] = [
     emit: 'commentPost',
   },
 ];
+const commentActionMenuItems: LinkAction[] = [
+  {
+    action_id: '1',
+    label: $gettext('Löschen'),
+    icon: 'trash',
+    emit: 'deleteComment',
+  },
+];
 function deletePost() {
   if (!props.post) {
     throw new Error('Prop "post" is missing');
   }
   emit('deletePost', props.post.id);
+}
+function deleteComment(comment: TravisGoCommentProps) {
+  emit('deleteComment', comment);
 }
 const commentEditorInputElement = ref<HTMLInputElement | undefined>();
 function commentPost() {
