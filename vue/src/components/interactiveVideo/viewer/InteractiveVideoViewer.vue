@@ -306,10 +306,7 @@ function onClickPost() {
             "
           />
         </template>
-        <pre
-          style="white-space: pre-wrap"
-          v-if="debug && parsedPosts.some((post) => post.error)"
-        >
+        <pre style="white-space: pre-wrap" v-if="debug">
           {{ { rawPosts } }}
         </pre>
       </section>

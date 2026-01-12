@@ -15,6 +15,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
     public function __construct()
     {
         parent::__construct();
+        SimpleORMap::expireTableScheme();
         if (UpdateInformation::isCollecting()) {
             $data = Request::getArray("page_info");
             if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {
