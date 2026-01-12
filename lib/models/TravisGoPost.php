@@ -33,6 +33,10 @@ class TravisGoPost extends SORM {
             'class_name' => User::class,
             'foreign_key' => 'mk_user_id',
         ];
+        $config['has_many']['comments'] = [
+            'class_name' => TravisGoComment::class,
+            'assoc_foreign_key' => 'post_id',
+        ];
         $config['registered_callbacks']['before_store'][] = function (TravisGoPost $post) {
             $user = User::findCurrent();
             if ($post->isNew()) {

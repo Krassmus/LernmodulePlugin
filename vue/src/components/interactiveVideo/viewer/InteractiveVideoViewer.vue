@@ -105,7 +105,7 @@ function loadPosts() {
         video_type: 'cw_blocks',
       },
       options: {
-        include: 'user',
+        include: 'user,comments',
         'fields[users]': 'formatted-name,username',
       },
     })

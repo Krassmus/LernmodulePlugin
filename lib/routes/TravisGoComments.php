@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class TravisGoComments extends SormCRUDController
 {
 
+    protected $allowedIncludePaths = ['user', 'post'];
     protected $allowedFilteringParameters = ['post_id'];
 
     protected function getSORMClassName(): string

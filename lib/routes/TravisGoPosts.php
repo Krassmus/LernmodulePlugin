@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class TravisGoPosts extends SormCRUDController
 {
 
-    protected $allowedIncludePaths = ['user'];
+    protected $allowedIncludePaths = ['user', 'comments'];
     protected $allowedFilteringParameters = ['video_id', 'video_type'];
 
     protected function getSORMClassName(): string
