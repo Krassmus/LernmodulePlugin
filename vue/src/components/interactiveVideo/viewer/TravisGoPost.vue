@@ -72,18 +72,23 @@
                 />
               </p>
             </div>
+            <!--  Wrapped in a div so the form will be hidden when the enclosing
+                  fieldset is collapsed - otherwise the css rule display: flex
+                  will override the fieldset's rule '> * { display: none }' -->
+            <div>
+              <form class="comment-editor" @submit.prevent="submitComment">
+                <input
+                  type="text"
+                  :placeholder="$gettext('Schreibe einen Kommentar...')"
+                  v-model="commentEditorInput"
+                  ref="commentEditorInputElement"
+                />
+                <button class="button accept send-comment-button" type="submit">
+                  {{ $gettext('Abschicken') }}
+                </button>
+              </form>
+            </div>
           </fieldset>
-          <form class="comment-editor" @submit.prevent="submitComment">
-            <input
-              type="text"
-              :placeholder="$gettext('Schreibe einen Kommentar...')"
-              v-model="commentEditorInput"
-              ref="commentEditorInputElement"
-            />
-            <button class="button accept send-comment-button" type="submit">
-              {{ $gettext('Abschicken') }}
-            </button>
-          </form>
         </form>
       </section>
     </div>
@@ -327,7 +332,16 @@ function deleteComment(comment: TravisGoCommentProps) {
 const commentEditorInputElement = ref<HTMLInputElement | undefined>();
 function commentPost() {
   isCommenting.value = true;
-  nextTick(() => commentEditorInputElement.value?.focus());
+  nextTick(() => {
+    const inputEl = commentEditorInputElement.value as HTMLElement;
+    // If the input is inside of a collapsed <fieldset>, then the <fieldset>
+    // should be un-collapsed so that the user can see the input field.
+    const collapsedParents = [
+      ...document.querySelectorAll('fieldset.collapsable.collapsed'),
+    ].filter((element) => element.contains(inputEl));
+    collapsedParents.forEach((parent) => parent.classList.remove('collapsed'));
+    inputEl.focus();
+  });
 }
 
 function onClickTimestamp(time: number) {
