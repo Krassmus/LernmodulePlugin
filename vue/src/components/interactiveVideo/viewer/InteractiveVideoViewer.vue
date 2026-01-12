@@ -391,6 +391,7 @@ function onClickPost() {
     }
     .post-type-input {
       align-self: stretch;
+      height: auto;
     }
   }
 }
