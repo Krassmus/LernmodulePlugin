@@ -7,7 +7,7 @@ use User;
 /**
  * @property string $id
  * @property string $video_id
- * @property string $video_type
+ * @property TravisGoVideoType $video_type
  * @property string $mk_user_id
  * @property string $mkdate
  * @property string $chdate
@@ -24,7 +24,7 @@ class TravisGoPost extends SORM {
         'contents' => 'string',
         'post_type' => 'TravisGoPostType',
         'video_id' => 'string',
-        'video_type' => 'string'
+        'video_type' => 'TravisGoVideoType'
     ];
 
     protected static function configure($config = []): void {

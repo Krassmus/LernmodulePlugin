@@ -16,7 +16,7 @@ class AddTravisGoFeature extends Migration
           create table if not exists lernmodule_travis_go_posts (
             id int(11) unsigned not null auto_increment,
             video_id char(32) not null, /* corresponds to lernmodule_module.module_id or cw_blocks.id */
-            video_type varchar(255) not null, /* either lernmodule_module or cw_blocks */
+            video_type ENUM('cw_blocks', 'lernmodule_module') not null default 'cw_blocks',
             mk_user_id char(32) not null,
             mkdate int(11) unsigned not null,
             chdate int(11) unsigned not null,
