@@ -3,7 +3,6 @@ import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
-  printInteractionType,
   TravisGoPostProps,
   travisGoPostSchema,
   TravisGoPostType,
@@ -243,7 +242,7 @@ function onClickPost() {
       </div>
       <StudipWysiwyg insertHtmlComment v-model="postWysiwygInput" />
       <button @click="onClickPost" class="button">
-        {{ $gettext('Kommentar posten') }}
+        {{ $gettext('Post abschicken') }}
       </button>
       <ErrorMessage
         style="max-height: unset"

@@ -233,3 +233,21 @@ export type TravisGoPostProps = z.infer<typeof travisGoPostSchema>;
 
 export const createPostRequestSchema = z.object(travisGoPostEditableKeys);
 export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
+
+const travisGoCommentEditableKeys = {
+  post_id: z.string(),
+  contents: z.string(),
+};
+export const travisGoCommentSchema = z.object({
+  id: z.string(),
+  mk_user_id: z.string(),
+  mkdate: z.string().datetime({ offset: true }),
+  chdate: z.string().datetime({ offset: true }),
+  ...travisGoCommentEditableKeys,
+});
+export type TravisGoCommentProps = z.infer<typeof travisGoCommentSchema>;
+export const travisGoCommentJsonApiSchema = z.object({
+  attributes: travisGoCommentSchema,
+});
+export const createCommentRequestSchema = z.object(travisGoCommentEditableKeys);
+export type CreateCommentRequest = z.infer<typeof createCommentRequestSchema>;
