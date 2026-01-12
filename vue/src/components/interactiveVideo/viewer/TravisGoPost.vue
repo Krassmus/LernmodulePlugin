@@ -37,8 +37,22 @@
         v-if="isCommenting || comments.length > 0"
       >
         <form class="default" @submit.prevent>
-          <fieldset class="collapsable">
-            <legend>{{ $gettext('Kommentare') }}</legend>
+          <fieldset class="collapsable collapsed">
+            <legend>
+              <template v-if="comments.length > 0">
+                {{
+                  $gettextInterpolate(
+                    $ngettext(
+                      '%{ length } Kommentare',
+                      '%{ length } Kommentar',
+                      comments.length
+                    ),
+                    { length: comments.length }
+                  )
+                }}
+              </template>
+              <template v-else>{{ $gettext('Kommentieren') }}</template>
+            </legend>
             <div class="travis-go-comments-list">
               <p
                 class="travis-go-comment"
@@ -189,7 +203,7 @@ import DOMPurify from 'dompurify';
 import { User } from '@/php-integration';
 import StudipActionMenu from '@/components/studip/StudipActionMenu.vue';
 import { LinkAction } from '@/components/studip/interfaces';
-import { $gettext } from '@/language/gettext';
+import { $gettext, $ngettext, $gettextInterpolate } from '@/language/gettext';
 const props = defineProps({
   post: {
     type: Object as PropType<TravisGoPostProps>,
