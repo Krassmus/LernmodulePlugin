@@ -27,11 +27,15 @@
         :collapseAt="true"
         class="travis-go-post-action-menu"
         @deletePost="deletePost()"
+        @commentPost="commentPost"
       />
     </h4>
     <div class="travis-go-post-contents-container">
       <p class="travis-go-post-contents" v-html="contentsPurified"></p>
-      <section class="travis-go-comments">
+      <section
+        class="travis-go-comments"
+        v-if="isCommenting || comments.length > 0"
+      >
         <form class="default" @submit.prevent>
           <fieldset class="collapsable">
             <legend>{{ $gettext('Kommentare') }}</legend>
@@ -235,6 +239,7 @@ async function createComment(post: { attributes: CreateCommentRequest }) {
     post
   );
 }
+const isCommenting = ref(false);
 
 const menuItems: LinkAction[] = [
   {
@@ -243,12 +248,21 @@ const menuItems: LinkAction[] = [
     icon: 'trash',
     emit: 'deletePost',
   },
+  {
+    action_id: '2',
+    label: $gettext('Kommentieren'),
+    icon: '',
+    emit: 'commentPost',
+  },
 ];
 function deletePost() {
   if (!props.post) {
     throw new Error('Prop "post" is missing');
   }
   emit('deletePost', props.post.id);
+}
+function commentPost() {
+  isCommenting.value = true;
 }
 
 function onClickTimestamp(time: number) {
