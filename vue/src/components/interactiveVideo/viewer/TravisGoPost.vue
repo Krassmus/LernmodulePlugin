@@ -69,8 +69,11 @@
       fieldset {
         padding: 0;
         margin: 0;
+        border: none;
       }
       legend {
+        background-color: unset;
+        border: none;
         padding-left: 0;
         padding-top: 0;
         margin-bottom: 0;
