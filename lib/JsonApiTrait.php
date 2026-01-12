@@ -2,8 +2,11 @@
 
 namespace LernmodulePlugin;
 
+use LernmodulePlugin\models\TravisGoComment;
 use LernmodulePlugin\models\TravisGoPost;
+use LernmodulePlugin\routes\TravisGoComments;
 use LernmodulePlugin\routes\TravisGoPosts;
+use LernmodulePlugin\schemas\TravisGoCommentSchema;
 use LernmodulePlugin\schemas\TravisGoPostSchema;
 use ReflectionClass;
 use ReflectionException;
@@ -17,6 +20,7 @@ trait JsonApiTrait
 
         $group->group('/lernmodule-plugin', function (RouteCollectorProxy $group) use ($trait): void {
             $trait->addSORMCrudPaths($group, TravisGoPosts::class);
+            $trait->addSORMCrudPaths($group, TravisGoComments::class);
         });
     }
 
@@ -31,6 +35,7 @@ trait JsonApiTrait
     {
         return [
             TravisGoPost::class => TravisGoPostSchema::class,
+            TravisGoComment::class => TravisGoCommentSchema::class,
         ];
     }
 

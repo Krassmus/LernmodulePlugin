@@ -26,6 +26,16 @@ class AddTravisGoFeature extends Migration
             post_type ENUM('meta', 'image', 'audio', 'text') not null default 'meta',
             primary key (id)
         )";
+        $query = "
+          create table if not exists lernmodule_travis_go_comments (
+            id int(11) unsigned not null auto_increment,
+            post_id int(11) not null, /* corresponds to lernmodule_travis_go_posts */
+            mk_user_id char(32) not null,
+            mkdate int(11) unsigned not null,
+            chdate int(11) unsigned not null,
+            contents text not null,
+            primary key (id)
+        )";
         $db->exec($query);
     }
 
@@ -33,6 +43,11 @@ class AddTravisGoFeature extends Migration
         $query = "
           drop table if exists
             lernmodule_travis_go_posts
+        ";
+        DBManager::get()->exec($query);
+        $query = "
+          drop table if exists
+            lernmodule_travis_go_comments
         ";
         DBManager::get()->exec($query);
     }
