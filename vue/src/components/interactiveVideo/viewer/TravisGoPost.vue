@@ -43,11 +43,11 @@
                 {{
                   $gettextInterpolate(
                     $ngettext(
-                      '%{ length } Kommentare',
-                      '%{ length } Kommentar',
+                      '%{ numberOfComments } Kommentar',
+                      '%{ numberOfComments } Kommentare',
                       comments.length
                     ),
-                    { length: comments.length }
+                    { numberOfComments: comments.length }
                   )
                 }}
               </template>
