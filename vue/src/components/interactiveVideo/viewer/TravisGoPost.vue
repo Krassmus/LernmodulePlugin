@@ -4,14 +4,14 @@
       [<span class="video-timestamp"
         ><a
           href="javascript:undefined"
-          @click="onClickTimestamp(post.start_time)"
+          @click.prevent="onClickTimestamp(post.start_time)"
           >{{ formatVideoTimestamp(post.start_time, false, ':') }}</a
         >
         <span v-if="post.end_time">
           —
           <a
             href="javascript:undefined"
-            @click="onClickTimestamp(post.end_time)"
+            @click.prevent="onClickTimestamp(post.end_time)"
           >
             {{ formatVideoTimestamp(post.end_time, false, ':') }}
           </a></span
