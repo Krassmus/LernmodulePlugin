@@ -30,6 +30,6 @@ class TravisGoCommentAuthority implements SORMAuthority
 
     public function mayDelete(?User $user, TravisGoPost|SORM $sorm): bool
     {
-        return $user && $sorm->mk_user_id === $user->id;
+        return $this->mayEdit($user, $sorm);
     }
 }
