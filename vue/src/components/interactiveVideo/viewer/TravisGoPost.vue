@@ -60,7 +60,7 @@
                 :key="comment.attributes.id"
               >
                 <span class="travis-go-comment-author"
-                  >@{{ commentAuthorName(comment.attributes) }}</span
+                  >@{{ commentAuthorName(comment) }}</span
                 >
                 {{ comment.attributes.contents }}
                 <StudipActionMenu
@@ -69,7 +69,7 @@
                   :items="commentActionMenuItems(comment)"
                   :collapseAt="true"
                   class="travis-go-comment-action-menu"
-                  @deleteComment="deleteComment(comment.attributes)"
+                  @deleteComment="deleteComment(comment.attributes.id)"
                 />
               </p>
             </div>
@@ -201,7 +201,6 @@ import {
   CreateCommentRequest,
   TravisGoCommentJsonApi,
   travisGoCommentJsonApiSchema,
-  TravisGoCommentAttributes,
   TravisGoPostJsonApi,
 } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
@@ -224,7 +223,7 @@ const emit = defineEmits({
   deletePost(postId: string) {
     return true;
   },
-  deleteComment(comment: TravisGoCommentAttributes) {
+  deleteComment(id: string) {
     return true;
   },
 });
@@ -269,9 +268,9 @@ const comments = computed<TravisGoCommentJsonApi[]>(() => {
     }
   );
 });
-function commentAuthorName(comment: TravisGoCommentAttributes): string {
+function commentAuthorName(comment: TravisGoCommentJsonApi): string {
   return (
-    userById(comment.mk_user_id)?.attributes['formatted-name'] ??
+    userById(comment.attributes.mk_user_id)?.attributes['formatted-name'] ??
     $gettext('Unbekannt')
   );
 }
@@ -336,8 +335,8 @@ function deletePost() {
   }
   emit('deletePost', props.post.attributes.id);
 }
-function deleteComment(comment: TravisGoCommentAttributes) {
-  emit('deleteComment', comment);
+function deleteComment(id: string) {
+  emit('deleteComment', id);
 }
 const commentEditorInputElement = ref<HTMLInputElement | undefined>();
 function commentPost() {

@@ -227,19 +227,14 @@ const travisGoPostEditableKeys = {
   post_type: travisGoPostTypeSchema,
 };
 
-export const travisGoPostAttributesSchema = z.object({
-  id: z.string(),
-  mk_user_id: z.string(),
-  mkdate: z.string().datetime({ offset: true }),
-  chdate: z.string().datetime({ offset: true }),
-  ...travisGoPostEditableKeys,
-});
-export type TravisGoPostAttributes = z.infer<
-  typeof travisGoPostAttributesSchema
->;
-
 export const travisGoPostJsonApiSchema = z.object({
-  attributes: travisGoPostAttributesSchema,
+  attributes: z.object({
+    id: z.string(),
+    mk_user_id: z.string(),
+    mkdate: z.string().datetime({ offset: true }),
+    chdate: z.string().datetime({ offset: true }),
+    ...travisGoPostEditableKeys,
+  }),
   meta: z.object({ permissions: permissionsSchema }),
 });
 export type TravisGoPostJsonApi = z.infer<typeof travisGoPostJsonApiSchema>;
@@ -251,18 +246,15 @@ const travisGoCommentEditableKeys = {
   post_id: z.string(),
   contents: z.string(),
 };
-export const travisGoCommentAttributesSchema = z.object({
-  id: z.string(),
-  mk_user_id: z.string(),
-  mkdate: z.string().datetime({ offset: true }),
-  chdate: z.string().datetime({ offset: true }),
-  ...travisGoCommentEditableKeys,
-});
-export type TravisGoCommentAttributes = z.infer<
-  typeof travisGoCommentAttributesSchema
->;
+
 export const travisGoCommentJsonApiSchema = z.object({
-  attributes: travisGoCommentAttributesSchema,
+  attributes: z.object({
+    id: z.string(),
+    mk_user_id: z.string(),
+    mkdate: z.string().datetime({ offset: true }),
+    chdate: z.string().datetime({ offset: true }),
+    ...travisGoCommentEditableKeys,
+  }),
   meta: z.object({ permissions: permissionsSchema }),
 });
 export type TravisGoCommentJsonApi = z.infer<
