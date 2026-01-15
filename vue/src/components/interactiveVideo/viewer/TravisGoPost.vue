@@ -1,29 +1,29 @@
 <template>
-  <div class="travis-go-post" :data-post-type="post.post_type">
+  <div class="travis-go-post" :data-post-type="post.attributes.post_type">
     <h4 class="travis-go-post-heading">
       [<span class="video-timestamp"
         ><a
           href="javascript:undefined"
-          @click.prevent="onClickTimestamp(post.start_time)"
-          >{{ formatVideoTimestamp(post.start_time, false, ':') }}</a
+          @click.prevent="onClickTimestamp(post.attributes.start_time)"
+          >{{ formatVideoTimestamp(post.attributes.start_time, false, ':') }}</a
         >
-        <span v-if="post.end_time">
+        <span v-if="post.attributes.end_time">
           —
           <a
             href="javascript:undefined"
-            @click.prevent="onClickTimestamp(post.end_time)"
+            @click.prevent="onClickTimestamp(post.attributes.end_time)"
           >
-            {{ formatVideoTimestamp(post.end_time, false, ':') }}
+            {{ formatVideoTimestamp(post.attributes.end_time, false, ':') }}
           </a></span
         ></span
       >
-      <span class="post-type">{{ post.post_type }}</span>
+      <span class="post-type">{{ post.attributes.post_type }}</span>
       <span> </span>
       <a :href="postAuthorUrl">@{{ postAuthorFormattedName }}</a
       >]
       <StudipActionMenu
         :title="$gettext('Aktionen')"
-        :items="postActionMenuItems"
+        :items="postActionMenuItems(props.post)"
         :collapseAt="true"
         class="travis-go-post-action-menu"
         @deletePost="deletePost()"
@@ -202,7 +202,7 @@ import {
   TravisGoCommentJsonApi,
   travisGoCommentJsonApiSchema,
   TravisGoCommentAttributes,
-  TravisGoPostProps,
+  TravisGoPostJsonApi,
 } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 import { store } from '@/store';
@@ -213,7 +213,7 @@ import { LinkAction } from '@/components/studip/interfaces';
 import { $gettext, $ngettext, $gettextInterpolate } from '@/language/gettext';
 const props = defineProps({
   post: {
-    type: Object as PropType<TravisGoPostProps>,
+    type: Object as PropType<TravisGoPostJsonApi>,
     required: true,
   },
 });
@@ -229,7 +229,7 @@ const emit = defineEmits({
   },
 });
 const contentsPurified = computed(() =>
-  DOMPurify.sanitize(props.post?.contents, {
+  DOMPurify.sanitize(props.post?.attributes.contents, {
     USE_PROFILES: { html: true },
   })
 );
@@ -238,7 +238,7 @@ function userById(id: string): User | undefined {
   return store.getters['users/byId']({ id });
 }
 const postAuthor = computed<User | undefined>(() =>
-  userById(props.post?.mk_user_id)
+  userById(props.post?.attributes.mk_user_id)
 );
 const postAuthorFormattedName = computed<string | undefined>(
   () => postAuthor.value?.attributes?.['formatted-name']
@@ -257,7 +257,10 @@ const comments = computed<TravisGoCommentJsonApi[]>(() => {
   return store.getters['lernmodule-plugin/travis-go-comments/all'].flatMap(
     (record: unknown) => {
       const parsed = travisGoCommentJsonApiSchema.safeParse(record);
-      if (parsed.success && parsed.data.attributes.post_id === props.post!.id) {
+      if (
+        parsed.success &&
+        parsed.data.attributes.post_id === props.post!.attributes.id
+      ) {
         return parsed.data;
       } else {
         // TODO Should we show an error for the comments that don't parse?
@@ -278,7 +281,7 @@ async function submitComment() {
   try {
     await createComment({
       attributes: {
-        post_id: props.post.id,
+        post_id: props.post.attributes.id,
         contents: commentEditorInput.value,
       },
     });
@@ -300,20 +303,23 @@ async function createComment(post: { attributes: CreateCommentRequest }) {
 }
 const isCommenting = ref(false);
 
-const postActionMenuItems: LinkAction[] = [
-  {
+function postActionMenuItems(post: TravisGoPostJsonApi): LinkAction[] {
+  const deleteAction = {
     action_id: '1',
     label: $gettext('Löschen'),
     icon: 'trash',
     emit: 'deletePost',
-  },
-  {
-    action_id: '2',
-    label: $gettext('Kommentieren'),
-    icon: 'comment',
-    emit: 'commentPost',
-  },
-];
+  };
+  return [
+    ...(post.meta.permissions.mayDelete ? [deleteAction] : []),
+    {
+      action_id: '2',
+      label: $gettext('Kommentieren'),
+      icon: 'comment',
+      emit: 'commentPost',
+    },
+  ];
+}
 
 function commentActionMenuItems(comment: TravisGoCommentJsonApi): LinkAction[] {
   const deleteAction = {
@@ -328,7 +334,7 @@ function deletePost() {
   if (!props.post) {
     throw new Error('Prop "post" is missing');
   }
-  emit('deletePost', props.post.id);
+  emit('deletePost', props.post.attributes.id);
 }
 function deleteComment(comment: TravisGoCommentAttributes) {
   emit('deleteComment', comment);

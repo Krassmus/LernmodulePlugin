@@ -206,6 +206,11 @@ export const resizeHandles = [
 ] as const;
 export type ResizeHandle = typeof resizeHandles[number];
 
+const permissionsSchema = z.object({
+  mayEdit: z.boolean(),
+  mayDelete: z.boolean(),
+});
+
 const travisGoPostTypeSchema = z.union([
   z.literal('meta'),
   z.literal('image'),
@@ -222,22 +227,26 @@ const travisGoPostEditableKeys = {
   post_type: travisGoPostTypeSchema,
 };
 
-export const travisGoPostSchema = z.object({
+export const travisGoPostAttributesSchema = z.object({
   id: z.string(),
   mk_user_id: z.string(),
   mkdate: z.string().datetime({ offset: true }),
   chdate: z.string().datetime({ offset: true }),
   ...travisGoPostEditableKeys,
 });
-export type TravisGoPostProps = z.infer<typeof travisGoPostSchema>;
+export type TravisGoPostAttributes = z.infer<
+  typeof travisGoPostAttributesSchema
+>;
+
+export const travisGoPostJsonApiSchema = z.object({
+  attributes: travisGoPostAttributesSchema,
+  meta: z.object({ permissions: permissionsSchema }),
+});
+export type TravisGoPostJsonApi = z.infer<typeof travisGoPostJsonApiSchema>;
 
 export const createPostRequestSchema = z.object(travisGoPostEditableKeys);
 export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
 
-const permissionsSchema = z.object({
-  mayEdit: z.boolean(),
-  mayDelete: z.boolean(),
-});
 const travisGoCommentEditableKeys = {
   post_id: z.string(),
   contents: z.string(),

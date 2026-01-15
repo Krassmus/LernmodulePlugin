@@ -4,8 +4,8 @@ import {
   CreatePostRequest,
   InteractiveVideoTask,
   TravisGoCommentAttributes,
-  TravisGoPostProps,
-  travisGoPostSchema,
+  TravisGoPostJsonApi,
+  travisGoPostJsonApiSchema,
   TravisGoPostType,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
@@ -141,20 +141,20 @@ function loadPosts() {
 const rawPosts = computed<unknown>(
   () => store.getters['lernmodule-plugin/travis-go-posts/all']
 );
-type ParsedPost = SafeParseReturnType<TravisGoPostProps, TravisGoPostProps>;
+type ParsedPost = SafeParseReturnType<TravisGoPostJsonApi, TravisGoPostJsonApi>;
 const parsedPosts = computed<ParsedPost[]>(() => {
   const raw = rawPosts.value as {
     attributes: unknown[];
   }[];
   return raw
-    .map((rawVal) => travisGoPostSchema.safeParse(rawVal.attributes))
+    .map((rawVal) => travisGoPostJsonApiSchema.safeParse(rawVal))
     .toSorted((a, b) => {
       if (a.success && !b.success) {
         return -1;
       } else if (!a.success && b.success) {
         return 1;
       } else if (a.success && b.success) {
-        return a.data.start_time - b.data.start_time;
+        return a.data.attributes.start_time - b.data.attributes.start_time;
       } else {
         return 0;
       }
@@ -163,7 +163,7 @@ const parsedPosts = computed<ParsedPost[]>(() => {
 const participantsIds = computed<string[]>(() => {
   const ids = parsedPosts.value.flatMap((post) => {
     if (post.success) {
-      return [post.data.mk_user_id];
+      return [post.data.attributes.mk_user_id];
     } else {
       return [];
     }
@@ -302,7 +302,7 @@ function onClickPost() {
       <section class="travis-go-posts">
         <template
           v-for="(post, index) in parsedPosts"
-          :key="post?.data?.id ?? v4()"
+          :key="post?.data?.attributes.id ?? v4()"
         >
           <TravisGoPost
             v-if="post.success"
