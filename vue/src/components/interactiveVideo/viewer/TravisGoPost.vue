@@ -23,10 +23,10 @@
       >]
       <StudipActionMenu
         :title="$gettext('Aktionen')"
-        :items="postActionMenuItems(props.post)"
+        :items="postActionMenuItems(post)"
         :collapseAt="true"
         class="travis-go-post-action-menu"
-        @deletePost="deletePost()"
+        @deletePost="deletePost(post.attributes.id)"
         @commentPost="commentPost"
       />
     </h4>
@@ -329,11 +329,8 @@ function commentActionMenuItems(comment: TravisGoComment): LinkAction[] {
   };
   return comment.meta.permissions.mayDelete ? [deleteAction] : [];
 }
-function deletePost() {
-  if (!props.post) {
-    throw new Error('Prop "post" is missing');
-  }
-  emit('deletePost', props.post.attributes.id);
+function deletePost(id: string) {
+  emit('deletePost', id);
 }
 function deleteComment(id: string) {
   emit('deleteComment', id);
@@ -354,9 +351,6 @@ function commentPost() {
 }
 
 function onClickTimestamp(time: number) {
-  if (!props.post) {
-    throw new Error('Prop "post" is missing');
-  }
   emit('clickTimestamp', time);
 }
 </script>
