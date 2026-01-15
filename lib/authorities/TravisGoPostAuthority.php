@@ -14,11 +14,6 @@ class TravisGoPostAuthority implements SORMAuthority
 
     public function mayCreate(?User $user, TravisGoPost|SORM $sorm): bool
     {
-        // TODO: Problem: This method is called before the getData() method.
-        //   Therefore, the SORM instance is an uninitialized one ('new TravisGoPost').
-        //   Therefore, we cannot check if the user has access to the video that they are
-        //   attempting to post under, as the attributes 'video_id' and 'video_type' will
-        //   not be available in this method.
         // Check if user has read access to the video that the post is associated with
         switch ($sorm->video_type) {
             case 'cw_blocks':
@@ -40,8 +35,7 @@ class TravisGoPostAuthority implements SORMAuthority
 
     public function mayEdit(?User $user, SORM $sorm): bool
     {
-        // TODO: Implement mayEdit() method.
-        return false;
+        return $this->mayDelete($user, $sorm);
     }
 
     public function mayDelete(?User $user, TravisGoPost|SORM $sorm): bool
