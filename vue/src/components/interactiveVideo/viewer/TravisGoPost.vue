@@ -57,18 +57,19 @@
               <p
                 class="travis-go-comment"
                 v-for="comment in comments"
-                :key="comment.id"
+                :key="comment.attributes.id"
               >
                 <span class="travis-go-comment-author"
-                  >@{{ commentAuthorName(comment) }}</span
+                  >@{{ commentAuthorName(comment.attributes) }}</span
                 >
-                {{ comment.contents }}
+                {{ comment.attributes.contents }}
                 <StudipActionMenu
+                  v-if="commentActionMenuItems(comment).length > 0"
                   :title="$gettext('Aktionen')"
-                  :items="commentActionMenuItems"
+                  :items="commentActionMenuItems(comment)"
                   :collapseAt="true"
                   class="travis-go-comment-action-menu"
-                  @deleteComment="deleteComment(comment)"
+                  @deleteComment="deleteComment(comment.attributes)"
                 />
               </p>
             </div>
@@ -198,8 +199,9 @@ import {
 } from 'vue';
 import {
   CreateCommentRequest,
+  TravisGoCommentJsonApi,
   travisGoCommentJsonApiSchema,
-  TravisGoCommentProps,
+  TravisGoCommentAttributes,
   TravisGoPostProps,
 } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
@@ -222,7 +224,7 @@ const emit = defineEmits({
   deletePost(postId: string) {
     return true;
   },
-  deleteComment(comment: TravisGoCommentProps) {
+  deleteComment(comment: TravisGoCommentAttributes) {
     return true;
   },
 });
@@ -251,12 +253,12 @@ const postAuthorUrl = computed<string>(() => {
   }
 });
 
-const comments = computed<TravisGoCommentProps[]>(() => {
+const comments = computed<TravisGoCommentJsonApi[]>(() => {
   return store.getters['lernmodule-plugin/travis-go-comments/all'].flatMap(
     (record: unknown) => {
       const parsed = travisGoCommentJsonApiSchema.safeParse(record);
       if (parsed.success && parsed.data.attributes.post_id === props.post!.id) {
-        return parsed.data.attributes;
+        return parsed.data;
       } else {
         // TODO Should we show an error for the comments that don't parse?
         return [];
@@ -264,7 +266,7 @@ const comments = computed<TravisGoCommentProps[]>(() => {
     }
   );
 });
-function commentAuthorName(comment: TravisGoCommentProps): string {
+function commentAuthorName(comment: TravisGoCommentAttributes): string {
   return (
     userById(comment.mk_user_id)?.attributes['formatted-name'] ??
     $gettext('Unbekannt')
@@ -312,21 +314,23 @@ const postActionMenuItems: LinkAction[] = [
     emit: 'commentPost',
   },
 ];
-const commentActionMenuItems: LinkAction[] = [
-  {
+
+function commentActionMenuItems(comment: TravisGoCommentJsonApi): LinkAction[] {
+  const deleteAction = {
     action_id: '1',
     label: $gettext('Löschen'),
     icon: 'trash',
     emit: 'deleteComment',
-  },
-];
+  };
+  return comment.meta.permissions.mayDelete ? [deleteAction] : [];
+}
 function deletePost() {
   if (!props.post) {
     throw new Error('Prop "post" is missing');
   }
   emit('deletePost', props.post.id);
 }
-function deleteComment(comment: TravisGoCommentProps) {
+function deleteComment(comment: TravisGoCommentAttributes) {
   emit('deleteComment', comment);
 }
 const commentEditorInputElement = ref<HTMLInputElement | undefined>();

@@ -3,7 +3,7 @@ import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
-  TravisGoCommentProps,
+  TravisGoCommentAttributes,
   TravisGoPostProps,
   travisGoPostSchema,
   TravisGoPostType,
@@ -36,7 +36,7 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
 function onClickPostTimestamp(time: number) {
   seekVideo(time);
 }
-async function deleteComment(comment: TravisGoCommentProps) {
+async function deleteComment(comment: TravisGoCommentAttributes) {
   const prompt = $gettext('Kommentar löschen');
   const confirmed = window.confirm(prompt);
   if (!confirmed) {
