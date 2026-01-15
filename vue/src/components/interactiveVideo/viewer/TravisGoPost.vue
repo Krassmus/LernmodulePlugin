@@ -199,9 +199,9 @@ import {
 } from 'vue';
 import {
   CreateCommentRequest,
-  TravisGoCommentJsonApi,
-  travisGoCommentJsonApiSchema,
-  TravisGoPostJsonApi,
+  TravisGoComment,
+  travisGoCommentSchema,
+  TravisGoPost,
 } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 import { store } from '@/store';
@@ -212,7 +212,7 @@ import { LinkAction } from '@/components/studip/interfaces';
 import { $gettext, $ngettext, $gettextInterpolate } from '@/language/gettext';
 const props = defineProps({
   post: {
-    type: Object as PropType<TravisGoPostJsonApi>,
+    type: Object as PropType<TravisGoPost>,
     required: true,
   },
 });
@@ -252,10 +252,10 @@ const postAuthorUrl = computed<string>(() => {
   }
 });
 
-const comments = computed<TravisGoCommentJsonApi[]>(() => {
+const comments = computed<TravisGoComment[]>(() => {
   return store.getters['lernmodule-plugin/travis-go-comments/all'].flatMap(
     (record: unknown) => {
-      const parsed = travisGoCommentJsonApiSchema.safeParse(record);
+      const parsed = travisGoCommentSchema.safeParse(record);
       if (
         parsed.success &&
         parsed.data.attributes.post_id === props.post!.attributes.id
@@ -268,7 +268,7 @@ const comments = computed<TravisGoCommentJsonApi[]>(() => {
     }
   );
 });
-function commentAuthorName(comment: TravisGoCommentJsonApi): string {
+function commentAuthorName(comment: TravisGoComment): string {
   return (
     userById(comment.attributes.mk_user_id)?.attributes['formatted-name'] ??
     $gettext('Unbekannt')
@@ -302,7 +302,7 @@ async function createComment(post: { attributes: CreateCommentRequest }) {
 }
 const isCommenting = ref(false);
 
-function postActionMenuItems(post: TravisGoPostJsonApi): LinkAction[] {
+function postActionMenuItems(post: TravisGoPost): LinkAction[] {
   const deleteAction = {
     action_id: '1',
     label: $gettext('Löschen'),
@@ -320,7 +320,7 @@ function postActionMenuItems(post: TravisGoPostJsonApi): LinkAction[] {
   ];
 }
 
-function commentActionMenuItems(comment: TravisGoCommentJsonApi): LinkAction[] {
+function commentActionMenuItems(comment: TravisGoComment): LinkAction[] {
   const deleteAction = {
     action_id: '1',
     label: $gettext('Löschen'),

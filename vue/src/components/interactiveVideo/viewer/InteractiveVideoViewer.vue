@@ -3,13 +3,13 @@ import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
-  TravisGoPostJsonApi,
-  travisGoPostJsonApiSchema,
+  TravisGoPost,
+  travisGoPostSchema,
   TravisGoPostType,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
-import TravisGoPost from '@/components/interactiveVideo/viewer/TravisGoPost.vue';
+import TravisGoPostComponent from '@/components/interactiveVideo/viewer/TravisGoPost.vue';
 import { store } from '@/store';
 import ErrorMessage from '@/components/ErrorMessage.vue';
 import { SafeParseReturnType } from 'zod';
@@ -140,13 +140,13 @@ function loadPosts() {
 const rawPosts = computed<unknown>(
   () => store.getters['lernmodule-plugin/travis-go-posts/all']
 );
-type ParsedPost = SafeParseReturnType<TravisGoPostJsonApi, TravisGoPostJsonApi>;
+type ParsedPost = SafeParseReturnType<TravisGoPost, TravisGoPost>;
 const parsedPosts = computed<ParsedPost[]>(() => {
   const raw = rawPosts.value as {
     attributes: unknown[];
   }[];
   return raw
-    .map((rawVal) => travisGoPostJsonApiSchema.safeParse(rawVal))
+    .map((rawVal) => travisGoPostSchema.safeParse(rawVal))
     .toSorted((a, b) => {
       if (a.success && !b.success) {
         return -1;
@@ -303,7 +303,7 @@ function onClickPost() {
           v-for="(post, index) in parsedPosts"
           :key="post?.data?.attributes.id ?? v4()"
         >
-          <TravisGoPost
+          <TravisGoPostComponent
             v-if="post.success"
             :post="post.data"
             @clickTimestamp="onClickPostTimestamp"

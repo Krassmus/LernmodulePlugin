@@ -227,7 +227,7 @@ const travisGoPostEditableKeys = {
   post_type: travisGoPostTypeSchema,
 };
 
-export const travisGoPostJsonApiSchema = z.object({
+export const travisGoPostSchema = z.object({
   attributes: z.object({
     id: z.string(),
     mk_user_id: z.string(),
@@ -237,7 +237,7 @@ export const travisGoPostJsonApiSchema = z.object({
   }),
   meta: z.object({ permissions: permissionsSchema }),
 });
-export type TravisGoPostJsonApi = z.infer<typeof travisGoPostJsonApiSchema>;
+export type TravisGoPost = z.infer<typeof travisGoPostSchema>;
 
 export const createPostRequestSchema = z.object(travisGoPostEditableKeys);
 export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
@@ -247,7 +247,7 @@ const travisGoCommentEditableKeys = {
   contents: z.string(),
 };
 
-export const travisGoCommentJsonApiSchema = z.object({
+export const travisGoCommentSchema = z.object({
   attributes: z.object({
     id: z.string(),
     mk_user_id: z.string(),
@@ -257,9 +257,7 @@ export const travisGoCommentJsonApiSchema = z.object({
   }),
   meta: z.object({ permissions: permissionsSchema }),
 });
-export type TravisGoCommentJsonApi = z.infer<
-  typeof travisGoCommentJsonApiSchema
->;
+export type TravisGoComment = z.infer<typeof travisGoCommentSchema>;
 
 export const createCommentRequestSchema = z.object(travisGoCommentEditableKeys);
 export type CreateCommentRequest = z.infer<typeof createCommentRequestSchema>;
