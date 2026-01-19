@@ -16,21 +16,7 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
     {
         parent::__construct();
         SimpleORMap::expireTableScheme();
-        if (UpdateInformation::isCollecting()) {
-            $data = Request::getArray("page_info");
-            if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {
-                $attempt = new LernmodulAttempt($data['Lernmodule']['attempt_id']);
-                if ($attempt['user_id'] === $GLOBALS['user']->id) {
-                    if ($data['Lernmodule']['customData']) {
-                        $attempt['customData'] = $data['Lernmodule']['customData'];
-                    }
-                    if (!$attempt['successful']) {
-                        $attempt['chdate'] = time();
-                    }
-                    $attempt->store();
-                }
-            }
-        }
+        $this->handleUpdateInformation();
         if ($GLOBALS['perm']->have_perm("root") && Navigation::hasItem('/admin/locations')) {
             $nav = new Navigation(
                 dgettext("lernmoduleplugin","H5P-Bibliotheken"),
@@ -39,6 +25,27 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
             Navigation::addItem("/admin/locations/h5p", $nav);
         }
         NotificationCenter::addObserver($this, "removeLernmoduleFromDeletedCourse", "CourseDidDelete");
+    }
+
+    private function handleUpdateInformation(): void
+    {
+        if (!UpdateInformation::isCollecting()) {
+            return;
+        }
+        $data = Request::getArray("page_info");
+
+        if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {
+            $attempt = new LernmodulAttempt($data['Lernmodule']['attempt_id']);
+            if ($attempt['user_id'] === $GLOBALS['user']->id) {
+                if ($data['Lernmodule']['customData']) {
+                    $attempt['customData'] = $data['Lernmodule']['customData'];
+                }
+                if (!$attempt['successful']) {
+                    $attempt['chdate'] = time();
+                }
+                $attempt->store();
+            }
+        }
     }
 
     public function getTabNavigation($course_id)
