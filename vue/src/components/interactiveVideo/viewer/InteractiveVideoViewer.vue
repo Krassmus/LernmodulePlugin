@@ -10,7 +10,7 @@ import {
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import TravisGoPostComponent from '@/components/interactiveVideo/viewer/TravisGoPost.vue';
-import { store } from '@/store';
+import { store, taskEditorStore } from '@/store';
 import ErrorMessage from '@/components/ErrorMessage.vue';
 import { SafeParseReturnType } from 'zod';
 import { v4 } from 'uuid';
@@ -115,13 +115,15 @@ function loadCurrentUser() {
 
 const loadPostsError = ref<string | undefined>();
 function loadPosts() {
-  console.log(store);
+  console.log('TaskEditorStore in IVV.vue:', taskEditorStore);
+  if (!taskEditorStore.taskSaveLocation) {
+    throw new Error('taskEditorStore.taskSaveLocation is missing.');
+  }
   const x = store
     .dispatch('lernmodule-plugin/travis-go-posts/loadWhere', {
       filter: {
-        // TODO Plumb video_id and video_type
-        video_id: '24',
-        video_type: 'cw_blocks',
+        video_id: taskEditorStore.taskSaveLocation.id,
+        video_type: taskEditorStore.taskSaveLocation.type,
       },
       options: {
         include: 'user,comments',
@@ -202,14 +204,17 @@ function onClickPost() {
   if (!props.task) {
     throw new Error('task not provided');
   }
+  if (!taskEditorStore.taskSaveLocation) {
+    throw new Error('taskEditorStore.taskSaveLocation is missing.');
+  }
   const res = createPost({
     attributes: {
       contents: postWysiwygInput.value,
       post_type: postTypeInput.value,
       start_time: startTimeInput.value ?? 0, // TODO Implement start/end time inputs.
       end_time: endTimeInput.value ?? null, // TODO Implement start/end time inputs.
-      video_id: '24', // TODO plumb video id and type into task or editor store or something.
-      video_type: 'cw_blocks', // TODO plumb video type (cw_blocks or lernmodule_module)
+      video_id: taskEditorStore.taskSaveLocation.id,
+      video_type: taskEditorStore.taskSaveLocation.type,
     },
   })
     .then((result) => {
@@ -326,7 +331,7 @@ function onClickPost() {
             "
           />
         </template>
-        <pre style="white-space: pre-wrap" v-if="debug">
+        <pre style="white-space: pre-wrap" v-if="false && debug">
           {{ { rawPosts } }}
         </pre>
       </section>

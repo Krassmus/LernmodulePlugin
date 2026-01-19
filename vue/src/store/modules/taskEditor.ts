@@ -8,6 +8,7 @@ import { isArray, isEqual } from 'lodash';
 import { saveTask, SaveTaskResponse } from '@/routes/lernmodule';
 import { setAutoFreeze } from 'immer';
 import { formatInvalidTaskDefinitionErrorMessage } from '@/functions';
+import { InitializeMessage } from '@/models/CoursewareBlockIframeMessages';
 
 // Prevent immer from freezing objects.  This behavior causes trouble when we
 // attempt to use v-model with an object produced by immer, because v-model
@@ -31,6 +32,16 @@ interface UndoRedoState {
   undoBatch: unknown;
 }
 
+type TaskSaveLocation =
+  | {
+      type: 'cw_blocks';
+      id: string; // Corresponds to cw_blocks.id database column
+    }
+  | {
+      type: 'lernmodule_module';
+      id: string; // Corresponds to lernmodule_module.module_id database column
+    };
+
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
@@ -45,6 +56,7 @@ export class TaskEditorModule extends VuexModule {
   serverInfotext: string = '';
   moduleName: string = '';
   infotext: string = '';
+  taskSaveLocation: TaskSaveLocation | null = null;
   undoRedoStack: UndoRedoState[] = [
     {
       taskDefinition: newTask('FillInTheBlanks'),
@@ -126,12 +138,26 @@ export class TaskEditorModule extends VuexModule {
 
   // Initialize the editor store to a state usable for courseware
   @Mutation
-  initializeCourseware(task_json: TaskDefinition) {
-    console.info('initializeCourseware()', task_json);
-    this.serverTaskDefinition = task_json;
+  initializeCourseware(payload: {
+    initializeMessage: InitializeMessage;
+    task_json: TaskDefinition;
+  }) {
+    console.info('initializeCourseware()', payload);
+    this.serverTaskDefinition = payload.task_json;
     this.undoRedoStack = [
       { taskDefinition: this.serverTaskDefinition, undoBatch: {} },
     ];
+    console.info('Setting taskSaveLocation');
+    this.taskSaveLocation = {
+      type: 'cw_blocks',
+      id: payload.initializeMessage.block.id,
+    };
+    console.info(
+      'Set taskSaveLocation',
+      this.taskSaveLocation,
+      'TaskEditorStore: ',
+      this
+    );
   }
 
   // Initialize the editor store to a state usable for the non-courseware version
@@ -168,6 +194,10 @@ export class TaskEditorModule extends VuexModule {
     this.serverInfotext = window.STUDIP.LernmoduleVueJS.infotext;
     this.moduleName = window.STUDIP.LernmoduleVueJS.module.name;
     this.infotext = window.STUDIP.LernmoduleVueJS.infotext;
+    this.taskSaveLocation = {
+      type: 'lernmodule_module',
+      id: window.STUDIP.LernmoduleVueJS.module.module_id,
+    };
   }
 
   @Mutation

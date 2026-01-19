@@ -89,13 +89,20 @@ function initializeApp(initializeMessage: InitializeMessage) {
       return;
     }
 
-    taskEditorStore.initializeCourseware(existingTaskDefinition);
+    taskEditorStore.initializeCourseware({
+      initializeMessage,
+      task_json: existingTaskDefinition,
+    });
   } else {
     const newTaskDefinition = newTask(
       initializeMessage.block.attributes.payload.task_type
     );
-    taskEditorStore.initializeCourseware(newTaskDefinition);
+    taskEditorStore.initializeCourseware({
+      initializeMessage,
+      task_json: newTaskDefinition,
+    });
   }
+  console.log('taskEditorStore in courseware-main.ts', taskEditorStore);
   coursewareBlockStore.setContext(initializeMessage.context);
   const app = createApp(CoursewareBlock);
   app.directive('model-undoable', modelUndoable);
