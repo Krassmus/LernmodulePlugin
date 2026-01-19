@@ -21,25 +21,24 @@ class TravisGoPostAuthority implements SORMAuthority
                 return $block && \JsonApi\Routes\Courseware\Authority::canShowBlock($user, $block);
             case 'lernmodule_module':
                 $modul = \Lernmodul::find($sorm->video_id);
-                throw new NotImplementedException('Permissions for lernmodule-plugin module are not yet implemented.');
+                return $modul && \Lernmodul::mayAccess($user, $modul);
             default:
                 throw new NotImplementedException("Invalid or unimplemented video type: '{$sorm->video_type}'");
-        };
+        }
     }
 
-    public function mayAccess(?User $user, SORM $sorm): bool
+    public function mayAccess(?User $user, TravisGoPost|SORM $sorm): bool
     {
-        // TODO: Implement mayAccess() method.
-        return true;
+        return $this->mayCreate($user, $sorm);
     }
 
-    public function mayEdit(?User $user, SORM $sorm): bool
+    public function mayEdit(?User $user, TravisGoPost|SORM $sorm): bool
     {
-        return $this->mayDelete($user, $sorm);
+        return $user && $sorm->mk_user_id === $user->id;
     }
 
     public function mayDelete(?User $user, TravisGoPost|SORM $sorm): bool
     {
-        return $user && $sorm->mk_user_id === $user->id;
+        return $this->mayEdit($user, $sorm);
     }
 }

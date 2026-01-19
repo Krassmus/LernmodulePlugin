@@ -69,6 +69,43 @@ class Lernmodul extends SimpleORMap
         parent::configure($config);
     }
 
+    /**
+     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
+     *  LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
+     *  multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
+     *  is supplied that belongs to 0 or multiple LernmodulCourses.
+     */
+    static public function mayAccess(?User $user, Lernmodul $sorm): bool {
+        return self::hasPermInLernmodulCourse('autor', $user, $sorm);
+    }
+
+    /**
+     * @param string $perm
+     * @param User|null $user
+     * @param Lernmodul $sorm
+     * @return bool True iff user has the given permission in the course corresponding to this Lernmodul.
+     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
+     * LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
+     * multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
+     * is supplied that belongs to 0 or multiple LernmodulCourses.
+     */
+    static protected function hasPermInLernmodulCourse(string $perm, ?User $user, Lernmodul $sorm) {
+        $courses = LernmodulCourse::findBySQL(
+            "module_id = ?",
+            [$sorm->module_id]);
+        if (count($courses) === 0) {
+            throw new AccessDeniedException('The given Lernmodul does not belong to a course, ' .
+            'so permission cannot be determined.');
+        } else if (count($courses) > 1) {
+            throw new AccessDeniedException('The given Lernmodul belongs to multiple courses, ' .
+            'so permission cannot be determined.');
+        }
+        $course = $courses[0];
+        $user_id = $user ? $user->id : false;
+        return Seminar_Perm::get()->have_studip_perm($perm, $course->seminar_id, $user_id);
+    }
+
+
     public function courseConnection($course_id)
     {
         return new LernmodulCourse(array($this->getId(), $course_id));
