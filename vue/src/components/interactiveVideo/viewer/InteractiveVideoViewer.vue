@@ -115,7 +115,6 @@ function loadCurrentUser() {
 
 const loadPostsError = ref<string | undefined>();
 function loadPosts() {
-  console.log('TaskEditorStore in IVV.vue:', taskEditorStore);
   if (!taskEditorStore.taskSaveLocation) {
     throw new Error('taskEditorStore.taskSaveLocation is missing.');
   }
@@ -135,7 +134,6 @@ function loadPosts() {
       loadPostsError.value = error;
       console.error('error', error);
     });
-  console.log(x);
   /* eslint-disable-next-line no-debugger */
   // debugger;
 }

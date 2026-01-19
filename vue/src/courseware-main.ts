@@ -102,7 +102,6 @@ function initializeApp(initializeMessage: InitializeMessage) {
       task_json: newTaskDefinition,
     });
   }
-  console.log('taskEditorStore in courseware-main.ts', taskEditorStore);
   coursewareBlockStore.setContext(initializeMessage.context);
   const app = createApp(CoursewareBlock);
   app.directive('model-undoable', modelUndoable);

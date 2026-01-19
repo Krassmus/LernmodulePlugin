@@ -147,17 +147,10 @@ export class TaskEditorModule extends VuexModule {
     this.undoRedoStack = [
       { taskDefinition: this.serverTaskDefinition, undoBatch: {} },
     ];
-    console.info('Setting taskSaveLocation');
     this.taskSaveLocation = {
       type: 'cw_blocks',
       id: payload.initializeMessage.block.id,
     };
-    console.info(
-      'Set taskSaveLocation',
-      this.taskSaveLocation,
-      'TaskEditorStore: ',
-      this
-    );
   }
 
   // Initialize the editor store to a state usable for the non-courseware version
