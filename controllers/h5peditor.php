@@ -1088,7 +1088,6 @@ class H5peditorController extends PluginController
             return;
         } elseif ($cmd === "files") {
             //upload files ...
-            $_FILES['file'];
             $mod = H5pLernmodul::find(Request::get("module_id"));
             if (!$mod) {
                 throw new Exception(_("Modul existiert nicht. Kann Datei nicht hochladen."));

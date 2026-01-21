@@ -1,5 +1,7 @@
 <?php
 
+use Grading\Instance;
+
 class H5pController extends PluginController
 {
 
@@ -154,7 +156,7 @@ class H5pController extends PluginController
         if (!$GLOBALS['perm']->have_perm("root")) {
             throw new AccessDeniedException();
         }
-        list($name, $version) = explode("-", Request::get("lib"));
+        [$name, $version] = explode("-", Request::get("lib"));
         $version = explode(".", $version);
 
         $lib = H5PLib::findOneBySQL("name = :name AND major_version = :major_version AND minor_version = :minor_version", [
@@ -184,7 +186,7 @@ class H5pController extends PluginController
             throw new AccessDeniedException();
         }
         if (Request::get("lib")) {
-            list($name, $version) = explode("-", Request::get("lib"));
+            [$name, $version] = explode("-", Request::get("lib"));
             $version = explode(".", $version);
 
             $lib = H5PLib::findOneBySQL("name = :name AND major_version = :major_version AND minor_version = :minor_version", [
@@ -198,7 +200,7 @@ class H5pController extends PluginController
             }
         } elseif (count(Request::getArray("libs"))) {
             foreach (Request::getArray("libs") as $libdata) {
-                list($name, $version) = explode("-", $libdata);
+                [$name, $version] = explode("-", $libdata);
                 $version = explode(".", $version);
 
                 $lib = H5PLib::findOneBySQL("name = :name AND major_version = :major_version AND minor_version = :minor_version", [
@@ -396,22 +398,19 @@ class H5pController extends PluginController
         $this->attempt['successful'] = 1;
         $this->attempt['customdata']['points']['score'] = Request::get("score");
         $this->attempt->store();
-        $module_id = Request::option("contentId");
         $score = Request::get("score");
         $max_score = Request::get("maxScore");
-        $opened_time = Request::int("opened");
-        $finished_time = Request::int("finished");
-        $time = Request::get("time");
 
-        if (Context::get()->id) {
+
+        if (Context::get() && Context::get()->id) {
             $course_connection = $this->attempt->modul->courseConnection(Context::get()->id);
             if ($course_connection['gradebook_definition']) {
-                $instance = \Grading\Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
+                $instance = Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
                     'user_id' => $GLOBALS['user']->id,
                     'definition_id' => $course_connection['gradebook_definition']
                 ));
                 if (!$instance) {
-                    $instance = new \Grading\Instance();
+                    $instance = new Instance();
                     $instance['user_id'] = $GLOBALS['user']->id;
                     $instance['definition_id'] = $course_connection['gradebook_definition'];
                     $instance['rawgrade'] = $max_score / $score;
@@ -436,17 +435,17 @@ class H5pController extends PluginController
         $answer = json_decode(Request::get("data"), true);
         $customdata = $this->attempt['customdata'] ? $this->attempt['customdata']->getArrayCopy() : array();
         $customdata['h5pstate'] = $answer;
-        if ($answer['finished']) {
+        if (!empty($answer['finished'])) {
             $this->attempt['successful'] = 1;
             if (Context::get()->id) {
                 $course_connection = $this->attempt->modul->courseConnection(Context::get()->id);
                 if ($course_connection['gradebook_definition']) {
-                    $instance = \Grading\Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
+                    $instance = Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
                         'user_id' => $GLOBALS['user']->id,
                         'definition_id' => $course_connection['gradebook_definition']
                     ));
                     if (!$instance) {
-                        $instance = new \Grading\Instance();
+                        $instance = new Instance();
                         $instance['user_id'] = $GLOBALS['user']->id;
                         $instance['definition_id'] = $course_connection['gradebook_definition'];
                         $instance['rawgrade'] = 1;
