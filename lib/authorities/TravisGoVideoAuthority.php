@@ -14,7 +14,6 @@ use User;
 class TravisGoVideoAuthority
 {
     public static function mayAccess(?User $user, string $video_id, string $video_type): bool {
-
         // Check if user has read access to the video that is either in Courseware or Lernmodule.
         switch ($video_type) {
             case 'cw_blocks':
@@ -23,6 +22,19 @@ class TravisGoVideoAuthority
             case 'lernmodule_module':
                 $modul = \Lernmodul::find($video_id);
                 return $modul && \Lernmodul::mayAccess($user, $modul);
+            default:
+                throw new NotImplementedException("Invalid or unimplemented video type: '{$video_type}'");
+        }
+    }
+
+    public static function mayEdit(?User $user, string $video_id, string $video_type): bool {
+        switch ($video_type) {
+            case 'cw_blocks':
+                $block = Block::find($video_id);
+                return $block && \JsonApi\Routes\Courseware\Authority::canUpdateBlock($user, $block);
+            case 'lernmodule_module':
+                $modul = \Lernmodul::find($video_id);
+                return $modul && \Lernmodul::mayEdit($user, $modul);
             default:
                 throw new NotImplementedException("Invalid or unimplemented video type: '{$video_type}'");
         }

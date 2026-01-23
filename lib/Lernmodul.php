@@ -80,6 +80,16 @@ class Lernmodul extends SimpleORMap
     }
 
     /**
+     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
+     *  LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
+     *  multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
+     *  is supplied that belongs to 0 or multiple LernmodulCourses.
+     */
+    public static function mayEdit(?User $user, Lernmodul $sorm) {
+        return self::hasPermInLernmodulCourse('tutor', $user, $sorm);
+    }
+
+    /**
      * @param string $perm
      * @param User|null $user
      * @param Lernmodul $sorm
