@@ -234,8 +234,8 @@ function onClickPost() {
     attributes: {
       contents: postWysiwygInput.value,
       post_type: postTypeInput.value,
-      start_time: startTimeInput.value ?? 0, // TODO Implement start/end time inputs.
-      end_time: endTimeInput.value ?? null, // TODO Implement start/end time inputs.
+      start_time: startTimeInput.value ?? 0,
+      end_time: endTimeInput.value ?? null,
       video_id: taskEditorStore.taskSaveLocation.id,
       video_type: taskEditorStore.taskSaveLocation.type,
     },
