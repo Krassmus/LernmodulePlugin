@@ -36,6 +36,13 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
 function onClickPostTimestamp(time: number) {
   seekVideo(time);
 }
+function searchPostAuthor(post: TravisGoPost) {
+  const author = getUserById(post.attributes.mk_user_id);
+  if (!author) {
+    throw new Error('Post author is unknown');
+  }
+  searchInput.value = author.attributes.username;
+}
 async function deleteComment(id: string) {
   const prompt = $gettext('Kommentar löschen');
   const confirmed = window.confirm(prompt);
@@ -384,6 +391,7 @@ function onClickPost() {
             @clickTimestamp="onClickPostTimestamp"
             @deletePost="deletePost"
             @deleteComment="deleteComment"
+            @clickPostAuthorName="searchPostAuthor(post)"
             :class="{
               odd: index % 2 === 0,
             }"

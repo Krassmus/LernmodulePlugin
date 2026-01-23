@@ -19,7 +19,8 @@
       >
       <span class="post-type">{{ post.attributes.post_type }}</span>
       <span> </span>
-      <a :href="postAuthorUrl">@{{ postAuthorFormattedName }}</a
+      <a href="#" @click.prevent="$emit('clickPostAuthorName')"
+        >@{{ postAuthorFormattedName }}</a
       >]
       <StudipActionMenu
         :title="$gettext('Aktionen')"
@@ -234,6 +235,9 @@ const emit = defineEmits({
   deleteComment(id: string) {
     return true;
   },
+  clickPostAuthorName() {
+    return true;
+  },
 });
 const contentsPurified = computed(() =>
   DOMPurify.sanitize(props.post?.attributes.contents, {
@@ -293,7 +297,7 @@ async function createComment(post: { attributes: CreateCommentRequest }) {
 }
 const isCommenting = ref(false);
 
-function postActionMenuItems(post: TravisGoPost): LinkAction[] {
+function postActionMenuItems(): LinkAction[] {
   const deleteAction = {
     action_id: '1',
     label: $gettext('Löschen'),
@@ -301,12 +305,19 @@ function postActionMenuItems(post: TravisGoPost): LinkAction[] {
     emit: 'deletePost',
   };
   return [
-    ...(post.meta.permissions.mayDelete ? [deleteAction] : []),
+    ...(props.post.meta.permissions.mayDelete ? [deleteAction] : []),
     {
       action_id: '2',
       label: $gettext('Kommentieren'),
       icon: 'comment',
       emit: 'commentPost',
+    },
+    {
+      action_id: '3',
+      type: 'link',
+      label: $gettext('Nutzerprofil öffnen'),
+      icon: 'share',
+      url: postAuthorUrl.value,
     },
   ];
 }

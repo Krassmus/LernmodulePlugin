@@ -4,4 +4,6 @@ export interface LinkAction {
   icon: string;
   emit?: string;
   emitArguments?: any[];
+  url?: string;
+  type?: string;
 }
