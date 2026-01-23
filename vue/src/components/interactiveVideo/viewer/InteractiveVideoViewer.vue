@@ -3,6 +3,7 @@ import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
+  travisGoCommentSchema,
   TravisGoPost,
   travisGoPostSchema,
   TravisGoPostType,
@@ -125,7 +126,7 @@ function loadPosts() {
         video_type: taskEditorStore.taskSaveLocation.type,
       },
       options: {
-        include: 'user,comments',
+        include: 'user,comments,comments.user',
         'fields[users]': 'formatted-name,username',
       },
     })
@@ -159,15 +160,39 @@ const parsedPosts = computed<ParsedPost[]>(() => {
       }
     });
 });
+
 const participantsIds = computed<string[]>(() => {
-  const ids = parsedPosts.value.flatMap((post) => {
+  const postUserIds = parsedPosts.value.flatMap((post) => {
     if (post.success) {
       return [post.data.attributes.mk_user_id];
     } else {
       return [];
     }
   });
-  return [...new Set(ids)];
+  // Sorry, I know this code is written in a difficult-to-read functional style
+  // and could use some refactoring.
+  // Get all the comments from the store, parse them to a usable data type,
+  // check which comments belong to the posts in this video, and give us the
+  // user ids of the users who made the comments.
+  const commentUserIds = store.getters[
+    'lernmodule-plugin/travis-go-comments/all'
+  ].flatMap((record: unknown) => {
+    const parsedComment = travisGoCommentSchema.safeParse(record);
+    if (
+      parsedComment.success &&
+      parsedPosts.value.some(
+        (post) =>
+          post.success &&
+          post.data.attributes.id === parsedComment.data.attributes.post_id
+      )
+    ) {
+      return parsedComment.data.attributes.mk_user_id;
+    } else {
+      return [];
+    }
+  });
+  // Use Set to remove duplicates
+  return [...new Set(postUserIds.concat(commentUserIds))];
 });
 function urlForUserId(id: string): string {
   const user = getUserById(id);
