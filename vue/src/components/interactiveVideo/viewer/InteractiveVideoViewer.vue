@@ -180,11 +180,28 @@ function postMatchesSearch(post: TravisGoPost, query: string): boolean {
       author?.attributes['formatted-name'] ?? '',
     ];
     const canonicalQuery = canonicalize(query);
-    return texts.some((text) => canonicalize(text).includes(canonicalQuery));
+    const comments = commentsForPost(post);
+    return (
+      texts.some((text) => canonicalize(text).includes(canonicalQuery)) ||
+      comments.some((comment) => commentMatchesSearch(comment, canonicalQuery))
+    );
   }
-  function canonicalize(str: string): string {
-    return str.toLowerCase().replaceAll(/[.,/#!$%^&@*;:{}=\-_`~()]/g, '');
-  }
+}
+function commentMatchesSearch(
+  comment: TravisGoComment,
+  canonicalQuery: string
+): boolean {
+  const author = getUserById(comment.attributes.mk_user_id);
+  const texts = [
+    comment.attributes.contents,
+    author?.attributes.username ?? '',
+    author?.attributes['formatted-name'] ?? '',
+  ];
+  return texts.some((text) => canonicalize(text).includes(canonicalQuery));
+}
+
+function canonicalize(str: string): string {
+  return str.toLowerCase().replaceAll(/[.,/#!$%^&@*;:{}=\-_`~()]/g, '');
 }
 
 const parsedComments = computed<TravisGoComment[]>(() => {
@@ -199,6 +216,13 @@ const parsedComments = computed<TravisGoComment[]>(() => {
     }
   );
 });
+
+function commentsForPost(post: TravisGoPost): TravisGoComment[] {
+  return parsedComments.value.filter(
+    (comment) => comment.attributes.post_id === post.attributes.id
+  );
+}
+
 const participantsIds = computed<string[]>(() => {
   const postUserIds = parsedPosts.value.map((post) => {
     return post.attributes.mk_user_id;
