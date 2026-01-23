@@ -276,7 +276,6 @@ async function submitComment() {
         contents: commentEditorInput.value,
       },
     });
-    window.STUDIP.Report.success($gettext('Dein Kommentar wurde abgeschickt.'));
     commentEditorInput.value = '';
   } catch (error: unknown) {
     window.STUDIP.Report.error(

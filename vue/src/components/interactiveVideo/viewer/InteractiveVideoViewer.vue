@@ -288,7 +288,6 @@ function onClickPost() {
       console.log('result of create post', result);
       postWysiwygInput.value = '';
       createPostError.value = undefined;
-      window.STUDIP.Report.success($gettext('Der Post wurde gepostet.'));
     })
     .catch((error) => {
       console.error('error', error);
