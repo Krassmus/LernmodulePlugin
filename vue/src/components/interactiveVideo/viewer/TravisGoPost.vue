@@ -3,14 +3,14 @@
     <h4 class="travis-go-post-heading">
       [<span class="video-timestamp"
         ><a
-          href="javascript:undefined"
+          href="#"
           @click.prevent="onClickTimestamp(post.attributes.start_time)"
           >{{ formatVideoTimestamp(post.attributes.start_time, false, ':') }}</a
         >
         <span v-if="post.attributes.end_time">
           —
           <a
-            href="javascript:undefined"
+            href="#"
             @click.prevent="onClickTimestamp(post.attributes.end_time)"
           >
             {{ formatVideoTimestamp(post.attributes.end_time, false, ':') }}
