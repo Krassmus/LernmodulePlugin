@@ -69,7 +69,7 @@ final class TravisGoComments extends SormCRUDController
 
     protected function getDefaultOrder(): string
     {
-        return '';
+        return 'order by mkdate asc';
     }
 
     protected function getAuthority(): ?SORMAuthority
