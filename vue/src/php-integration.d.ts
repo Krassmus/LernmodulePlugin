@@ -15,6 +15,8 @@ declare global {
         ) => string;
       };
       wysiwyg: {
+        hasHtmlMarker(text: string): boolean;
+        markAsHtml(text: string): string;
         replace: (element: Element) => void;
         // TODO Use correct type for ckeditor5 editor instance
         getEditor: (
