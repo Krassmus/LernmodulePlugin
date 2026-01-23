@@ -3,6 +3,7 @@ import { computed, defineProps, onMounted, PropType, ref } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
+  TravisGoComment,
   travisGoCommentSchema,
   TravisGoPost,
   travisGoPostSchema,
@@ -13,8 +14,7 @@ import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 import TravisGoPostComponent from '@/components/interactiveVideo/viewer/TravisGoPost.vue';
 import { store, taskEditorStore } from '@/store';
 import ErrorMessage from '@/components/ErrorMessage.vue';
-import { SafeParseReturnType } from 'zod';
-import { v4 } from 'uuid';
+import { SafeParseError } from 'zod';
 import strings from '@/components/interactiveVideo/strings';
 import { User } from '@/php-integration';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
@@ -138,47 +138,44 @@ function loadPosts() {
   /* eslint-disable-next-line no-debugger */
   // debugger;
 }
-const rawPosts = computed<unknown>(
+const rawPosts = computed<unknown[]>(
   () => store.getters['lernmodule-plugin/travis-go-posts/all']
 );
-type ParsedPost = SafeParseReturnType<TravisGoPost, TravisGoPost>;
-const parsedPosts = computed<ParsedPost[]>(() => {
-  const raw = rawPosts.value as {
-    attributes: unknown[];
-  }[];
-  return raw
-    .map((rawVal) => travisGoPostSchema.safeParse(rawVal))
-    .toSorted((a, b) => {
-      if (a.success && !b.success) {
-        return -1;
-      } else if (!a.success && b.success) {
-        return 1;
-      } else if (a.success && b.success) {
-        return a.data.attributes.start_time - b.data.attributes.start_time;
-      } else {
-        return 0;
-      }
-    });
+type ParsedPosts = [TravisGoPost[], SafeParseError<TravisGoPost>[]];
+const postParseResults = computed<ParsedPosts>(() => {
+  const errors: SafeParseError<TravisGoPost>[] = [];
+  const successes: TravisGoPost[] = [];
+  for (let rawVal of rawPosts.value) {
+    const parsed = travisGoPostSchema.safeParse(rawVal);
+    if (parsed.success) {
+      successes.push(parsed.data);
+    } else {
+      errors.push(parsed);
+    }
+  }
+  return [successes, errors];
 });
+const parsedPosts = computed<TravisGoPost[]>(() => postParseResults.value[0]);
+const erroredPosts = computed<SafeParseError<TravisGoPost>[]>(
+  () => postParseResults.value[1]
+);
 
 // Posts that match the search entered by the user
-const filteredPosts = computed<ParsedPost[]>(() => {
-  return parsedPosts.value.filter((post) =>
-    postMatchesSearch(post, searchInput.value)
-  );
+const filteredAndSortedPosts = computed<TravisGoPost[]>(() => {
+  return parsedPosts.value
+    .filter((post) => postMatchesSearch(post, searchInput.value))
+    .toSorted((a, b) => a.attributes.start_time - b.attributes.start_time);
 });
 
 // True iff post matches the given search query string
-function postMatchesSearch(post: ParsedPost, query: string): boolean {
+function postMatchesSearch(post: TravisGoPost, query: string): boolean {
   if (!query) {
     return true;
-  } else if (!post.success) {
-    return false;
   } else {
-    const author = getUserById(post.data.attributes.mk_user_id);
+    const author = getUserById(post.attributes.mk_user_id);
     const texts = [
-      post.data.attributes.contents,
-      post.data.attributes.post_type,
+      post.attributes.contents,
+      post.attributes.post_type,
       author?.attributes.username ?? '',
       author?.attributes['formatted-name'] ?? '',
     ];
@@ -189,39 +186,34 @@ function postMatchesSearch(post: ParsedPost, query: string): boolean {
     return str.toLowerCase().replaceAll(/[.,/#!$%^&@*;:{}=\-_`~()]/g, '');
   }
 }
+
+const parsedComments = computed<TravisGoComment[]>(() => {
+  return store.getters['lernmodule-plugin/travis-go-comments/all'].flatMap(
+    (record: unknown) => {
+      const parsedComment = travisGoCommentSchema.safeParse(record);
+      if (parsedComment.success) {
+        return parsedComment.data;
+      } else {
+        return [];
+      }
+    }
+  );
+});
 const participantsIds = computed<string[]>(() => {
-  const postUserIds = parsedPosts.value.flatMap((post) => {
-    if (post.success) {
-      return [post.data.attributes.mk_user_id];
-    } else {
-      return [];
-    }
+  const postUserIds = parsedPosts.value.map((post) => {
+    return post.attributes.mk_user_id;
   });
-  // Sorry, I know this code is written in a difficult-to-read functional style
-  // and could use some refactoring.
-  // Get all the comments from the store, parse them to a usable data type,
-  // check which comments belong to the posts in this video, and give us the
-  // user ids of the users who made the comments.
-  const commentUserIds = store.getters[
-    'lernmodule-plugin/travis-go-comments/all'
-  ].flatMap((record: unknown) => {
-    const parsedComment = travisGoCommentSchema.safeParse(record);
-    if (
-      parsedComment.success &&
+  const commentUserIds = parsedComments.value
+    .filter((comment) =>
       parsedPosts.value.some(
-        (post) =>
-          post.success &&
-          post.data.attributes.id === parsedComment.data.attributes.post_id
+        (post) => post.attributes.id === comment.attributes.post_id
       )
-    ) {
-      return parsedComment.data.attributes.mk_user_id;
-    } else {
-      return [];
-    }
-  });
+    )
+    .map((comment) => comment.attributes.mk_user_id);
   // Use Set to remove duplicates
   return [...new Set(postUserIds.concat(commentUserIds))];
 });
+
 function urlForUserId(id: string): string {
   const user = getUserById(id);
   if (user) {
@@ -356,30 +348,17 @@ function onClickPost() {
       </section>
       <section class="travis-go-posts">
         <template
-          v-for="(post, index) in filteredPosts"
-          :key="post?.data?.attributes.id ?? v4()"
+          v-for="(post, index) in filteredAndSortedPosts"
+          :key="post.attributes.id"
         >
           <TravisGoPostComponent
-            v-if="post.success"
-            :post="post.data"
+            :post="post"
             @clickTimestamp="onClickPostTimestamp"
             @deletePost="deletePost"
             @deleteComment="deleteComment"
             :class="{
               odd: index % 2 === 0,
             }"
-          />
-          <ErrorMessage
-            v-else
-            class="travis-go-post"
-            :class="{
-              odd: index % 2 === 0,
-            }"
-            :error="
-              debug
-                ? `${strings.postCouldNotBeParsedError} Error: ${post.error}`
-                : strings.postCouldNotBeParsedError
-            "
           />
         </template>
         <pre style="white-space: pre-wrap" v-if="false && debug">
@@ -398,6 +377,10 @@ function onClickPost() {
             : strings.couldNotLoadPostsError
         "
       />
+      <ErrorMessage
+        v-if="erroredPosts.length > 0"
+        :error="`${erroredPosts.length} post(s) could not be loaded`"
+      ></ErrorMessage>
     </div>
   </div>
   <VideoPlayer
