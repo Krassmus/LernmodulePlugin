@@ -19,7 +19,7 @@
       >
       <span class="post-type">{{ post.attributes.post_type }}</span>
       <span> </span>
-      <a href="#" @click.prevent="$emit('clickPostAuthorName')"
+      <a href="#" @click.prevent="$emit('clickPostAuthorName', post)"
         >@{{ postAuthorFormattedName }}</a
       >]
       <StudipActionMenu
@@ -60,8 +60,11 @@
                 v-for="comment in comments"
                 :key="comment.attributes.id"
               >
-                <span class="travis-go-comment-author"
-                  >@{{ commentAuthorName(comment) }}</span
+                <a
+                  class="travis-go-comment-author"
+                  href="#"
+                  @click.prevent="$emit('clickCommentAuthorName', comment)"
+                  >@{{ commentAuthorName(comment) }}</a
                 >
                 {{ comment.attributes.contents }}
                 <StudipActionMenu
@@ -235,7 +238,10 @@ const emit = defineEmits({
   deleteComment(id: string) {
     return true;
   },
-  clickPostAuthorName() {
+  clickPostAuthorName(post: TravisGoPost) {
+    return true;
+  },
+  clickCommentAuthorName(comment: TravisGoComment) {
     return true;
   },
 });
@@ -255,13 +261,17 @@ const postAuthorFormattedName = computed<string | undefined>(
   () => postAuthor.value?.attributes?.['formatted-name']
 );
 
-const postAuthorUrl = computed<string>(() => {
-  const username = postAuthor.value?.attributes?.['username'];
+function userUrl(user: User | undefined): string {
+  const username = user?.attributes?.['username'];
   if (username) {
     return window.STUDIP.URLHelper.getURL('dispatch.php/profile', { username });
   } else {
     return '';
   }
+}
+
+const postAuthorUrl = computed<string>(() => {
+  return userUrl(postAuthor.value);
 });
 
 function commentAuthorName(comment: TravisGoComment): string {
@@ -329,7 +339,16 @@ function commentActionMenuItems(comment: TravisGoComment): LinkAction[] {
     icon: 'trash',
     emit: 'deleteComment',
   };
-  return comment.meta.permissions.mayDelete ? [deleteAction] : [];
+  return [
+    ...(comment.meta.permissions.mayDelete ? [deleteAction] : []),
+    {
+      action_id: '2',
+      type: 'link',
+      label: $gettext('Nutzerprofil öffnen'),
+      icon: 'share',
+      url: userUrl(userById(comment.attributes.mk_user_id)),
+    },
+  ];
 }
 function deletePost(id: string) {
   emit('deletePost', id);

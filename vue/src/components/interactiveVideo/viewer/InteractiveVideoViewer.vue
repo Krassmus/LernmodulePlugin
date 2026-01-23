@@ -36,12 +36,19 @@ const videoPlayer = ref<InstanceType<typeof VideoPlayer> | undefined>(
 function onClickPostTimestamp(time: number) {
   seekVideo(time);
 }
-function searchPostAuthor(post: TravisGoPost) {
-  const author = getUserById(post.attributes.mk_user_id);
-  if (!author) {
-    throw new Error('Post author is unknown');
+
+function searchUserComments(userId: string) {
+  const user = getUserById(userId);
+  if (!user) {
+    throw new Error('User not found by id ' + userId);
   }
-  searchInput.value = author.attributes.username;
+  searchInput.value = '@' + user.attributes.username;
+}
+function searchPostAuthor(post: TravisGoPost) {
+  searchUserComments(post.attributes.mk_user_id);
+}
+function searchCommentAuthor(comment: TravisGoComment) {
+  searchUserComments(comment.attributes.mk_user_id);
 }
 async function deleteComment(id: string) {
   const prompt = $gettext('Kommentar löschen');
@@ -391,7 +398,8 @@ function onClickPost() {
             @clickTimestamp="onClickPostTimestamp"
             @deletePost="deletePost"
             @deleteComment="deleteComment"
-            @clickPostAuthorName="searchPostAuthor(post)"
+            @clickPostAuthorName="searchPostAuthor"
+            @clickCommentAuthorName="searchCommentAuthor"
             :class="{
               odd: index % 2 === 0,
             }"
