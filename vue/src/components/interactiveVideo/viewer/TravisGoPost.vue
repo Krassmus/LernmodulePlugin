@@ -84,7 +84,11 @@
                   v-model="commentEditorInput"
                   ref="commentEditorInputElement"
                 />
-                <button class="button accept send-comment-button" type="submit">
+                <button
+                  class="button accept send-comment-button"
+                  type="submit"
+                  :disabled="commentEditorInput.trim().length === 0"
+                >
                   {{ $gettext('Abschicken') }}
                 </button>
               </form>
