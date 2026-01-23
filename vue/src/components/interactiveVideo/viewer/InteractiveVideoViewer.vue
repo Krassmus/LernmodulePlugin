@@ -161,6 +161,34 @@ const parsedPosts = computed<ParsedPost[]>(() => {
     });
 });
 
+// Posts that match the search entered by the user
+const filteredPosts = computed<ParsedPost[]>(() => {
+  return parsedPosts.value.filter((post) =>
+    postMatchesSearch(post, searchInput.value)
+  );
+});
+
+// True iff post matches the given search query string
+function postMatchesSearch(post: ParsedPost, query: string): boolean {
+  if (!query) {
+    return true;
+  } else if (!post.success) {
+    return false;
+  } else {
+    const author = getUserById(post.data.attributes.mk_user_id);
+    const texts = [
+      post.data.attributes.contents,
+      post.data.attributes.post_type,
+      author?.attributes.username ?? '',
+      author?.attributes['formatted-name'] ?? '',
+    ];
+    const canonicalQuery = canonicalize(query);
+    return texts.some((text) => canonicalize(text).includes(canonicalQuery));
+  }
+  function canonicalize(str: string): string {
+    return str.toLowerCase().replaceAll(/[.,/#!$%^&@*;:{}=\-_`~()]/g, '');
+  }
+}
 const participantsIds = computed<string[]>(() => {
   const postUserIds = parsedPosts.value.flatMap((post) => {
     if (post.success) {
@@ -328,7 +356,7 @@ function onClickPost() {
       </section>
       <section class="travis-go-posts">
         <template
-          v-for="(post, index) in parsedPosts"
+          v-for="(post, index) in filteredPosts"
           :key="post?.data?.attributes.id ?? v4()"
         >
           <TravisGoPostComponent
