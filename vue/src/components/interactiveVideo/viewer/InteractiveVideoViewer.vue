@@ -333,7 +333,11 @@ function onClickPost() {
         </select>
       </div>
       <StudipWysiwyg insertHtmlComment v-model="postWysiwygInput" />
-      <button @click="onClickPost" class="button">
+      <button
+        @click="onClickPost"
+        class="button"
+        :disabled="postWysiwygInput.trim().length === 0"
+      >
         {{ $gettext('Post abschicken') }}
       </button>
       <ErrorMessage
