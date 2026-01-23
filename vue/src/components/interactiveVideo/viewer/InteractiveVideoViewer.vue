@@ -377,6 +377,7 @@ function onClickPost() {
         >
           <TravisGoPostComponent
             :post="post"
+            :comments="commentsForPost(post)"
             @clickTimestamp="onClickPostTimestamp"
             @deletePost="deletePost"
             @deleteComment="deleteComment"

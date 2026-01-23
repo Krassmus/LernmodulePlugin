@@ -215,6 +215,10 @@ const props = defineProps({
     type: Object as PropType<TravisGoPost>,
     required: true,
   },
+  comments: {
+    type: Object as PropType<TravisGoComment[]>,
+    required: true,
+  },
 });
 const emit = defineEmits({
   clickTimestamp(payload: number) {
@@ -252,22 +256,6 @@ const postAuthorUrl = computed<string>(() => {
   }
 });
 
-const comments = computed<TravisGoComment[]>(() => {
-  return store.getters['lernmodule-plugin/travis-go-comments/all'].flatMap(
-    (record: unknown) => {
-      const parsed = travisGoCommentSchema.safeParse(record);
-      if (
-        parsed.success &&
-        parsed.data.attributes.post_id === props.post!.attributes.id
-      ) {
-        return parsed.data;
-      } else {
-        // TODO Should we show an error for the comments that don't parse?
-        return [];
-      }
-    }
-  );
-});
 function commentAuthorName(comment: TravisGoComment): string {
   return (
     userById(comment.attributes.mk_user_id)?.attributes['formatted-name'] ??
