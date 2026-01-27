@@ -282,6 +282,21 @@ function commentAuthorName(comment: TravisGoComment): string {
 }
 
 const commentEditorInput = ref<string>('');
+const commentEditorInputElement = ref<HTMLInputElement | undefined>();
+const isCommenting = ref(false);
+function startCommentingPost() {
+  isCommenting.value = true;
+  nextTick(() => {
+    const inputEl = commentEditorInputElement.value as HTMLElement;
+    // If the input is inside of a collapsed <fieldset>, then the <fieldset>
+    // should be un-collapsed so that the user can see the input field.
+    const collapsedParents = [
+      ...document.querySelectorAll('fieldset.collapsable.collapsed'),
+    ].filter((element) => element.contains(inputEl));
+    collapsedParents.forEach((parent) => parent.classList.remove('collapsed'));
+    inputEl.focus();
+  });
+}
 async function submitComment() {
   try {
     await createComment({
@@ -305,7 +320,6 @@ async function createComment(post: CreateCommentRequest) {
     post
   );
 }
-const isCommenting = ref(false);
 
 function postActionMenuItems(): LinkAction[] {
   const deleteAction = {
@@ -355,20 +369,6 @@ function deletePost(id: string) {
 }
 function deleteComment(id: string) {
   emit('deleteComment', id);
-}
-const commentEditorInputElement = ref<HTMLInputElement | undefined>();
-function startCommentingPost() {
-  isCommenting.value = true;
-  nextTick(() => {
-    const inputEl = commentEditorInputElement.value as HTMLElement;
-    // If the input is inside of a collapsed <fieldset>, then the <fieldset>
-    // should be un-collapsed so that the user can see the input field.
-    const collapsedParents = [
-      ...document.querySelectorAll('fieldset.collapsable.collapsed'),
-    ].filter((element) => element.contains(inputEl));
-    collapsedParents.forEach((parent) => parent.classList.remove('collapsed'));
-    inputEl.focus();
-  });
 }
 
 function onClickTimestamp(time: number) {
