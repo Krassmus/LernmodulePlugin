@@ -24,7 +24,7 @@
       >]
       <StudipActionMenu
         :title="$gettext('Aktionen')"
-        :items="postActionMenuItems(post)"
+        :items="postActionMenuItems()"
         :collapseAt="true"
         class="travis-go-post-action-menu"
         @deletePost="deletePost(post.attributes.id)"
@@ -309,7 +309,7 @@ async function submitComment() {
   } catch (error: unknown) {
     window.STUDIP.Report.error(
       $gettext('Dein Kommentar konnte nicht abgeschickt werden.'),
-      [error]
+      [JSON.stringify(error, null, 2)]
     );
     console.error(error);
   }
