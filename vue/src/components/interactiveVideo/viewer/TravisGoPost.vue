@@ -299,7 +299,7 @@ async function submitComment() {
     console.error(error);
   }
 }
-async function createComment(post: { attributes: CreateCommentRequest }) {
+async function createComment(post: CreateCommentRequest) {
   return await store.dispatch(
     'lernmodule-plugin/travis-go-comments/create',
     post

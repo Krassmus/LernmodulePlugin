@@ -259,5 +259,7 @@ export const travisGoCommentSchema = z.object({
 });
 export type TravisGoComment = z.infer<typeof travisGoCommentSchema>;
 
-export const createCommentRequestSchema = z.object(travisGoCommentEditableKeys);
+export const createCommentRequestSchema = z.object({
+  attributes: z.object(travisGoCommentEditableKeys),
+});
 export type CreateCommentRequest = z.infer<typeof createCommentRequestSchema>;
