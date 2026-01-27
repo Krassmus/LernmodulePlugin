@@ -323,7 +323,7 @@ function onClickPost() {
         <button class="button date time-input" @click="onClickStartTime">
           <template v-if="startTimeInput">
             {{ formatVideoTimestamp(startTimeInput, false, ':') }}
-            <button class="small-button trash" @click.stop="clearStartTime" />
+            <button class="small-button cancel" @click.stop="clearStartTime" />
           </template>
           <template v-else>
             {{ $gettext('Start') }}
@@ -332,7 +332,7 @@ function onClickPost() {
         <button class="button date time-input" @click="onClickEndTime">
           <template v-if="endTimeInput">
             {{ formatVideoTimestamp(endTimeInput, false, ':') }}
-            <button class="small-button trash" @click.stop="clearEndTime" />
+            <button class="small-button cancel" @click.stop="clearEndTime" />
           </template>
           <template v-else>
             {{ $gettext('End') }}
