@@ -74,6 +74,7 @@
                   :collapseAt="true"
                   class="travis-go-comment-action-menu"
                   @deleteComment="deleteComment(comment.attributes.id)"
+                  @startEditingComment="startEditingComment(comment)"
                 />
               </p>
             </div>
@@ -81,7 +82,12 @@
                   fieldset is collapsed - otherwise the css rule display: flex
                   will override the fieldset's rule '> * { display: none }' -->
             <div>
-              <form class="comment-editor" @submit.prevent="submitComment">
+              <form
+                class="comment-editor"
+                @submit.prevent="
+                  isEditingComment ? submitEditedComment() : submitComment()
+                "
+              >
                 <input
                   type="text"
                   :placeholder="$gettext('Schreibe einen Kommentar...')"
@@ -89,11 +95,22 @@
                   ref="commentEditorInputElement"
                 />
                 <button
+                  v-if="isEditingComment"
+                  class="button cancel cancel-editing-comment-button"
+                  @click="cancelEditingComment"
+                >
+                  {{ $gettext('Zurücksetzen') }}
+                </button>
+                <button
                   class="button accept send-comment-button"
                   type="submit"
                   :disabled="commentEditorInput.trim().length === 0"
                 >
-                  {{ $gettext('Abschicken') }}
+                  {{
+                    isEditingComment
+                      ? $gettext('Aktualisieren')
+                      : $gettext('Abschicken')
+                  }}
                 </button>
               </form>
             </div>
@@ -210,6 +227,7 @@ import {
   TravisGoComment,
   travisGoCommentSchema,
   TravisGoPost,
+  UpdateCommentRequest,
 } from '@/models/InteractiveVideoTask';
 import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 import { store } from '@/store';
@@ -321,6 +339,49 @@ async function createComment(post: CreateCommentRequest) {
   );
 }
 
+const editedCommentId = ref<string | undefined>();
+const isEditingComment = computed<boolean>(
+  () => editedCommentId.value !== undefined
+);
+function startEditingComment(comment: TravisGoComment) {
+  editedCommentId.value = comment.attributes.id;
+  commentEditorInput.value = comment.attributes.contents;
+}
+function cancelEditingComment() {
+  editedCommentId.value = undefined;
+  commentEditorInput.value = '';
+}
+async function submitEditedComment() {
+  try {
+    if (!editedCommentId.value) {
+      throw new Error(
+        $gettext('Das bearbeitete Comment ID ist undefined oder leer.')
+      );
+    }
+    await updateComment({
+      attributes: {
+        id: editedCommentId.value,
+        contents: commentEditorInput.value,
+      },
+    });
+    editedCommentId.value = undefined;
+    commentEditorInput.value = '';
+  } catch (error: unknown) {
+    window.STUDIP.Report.error(
+      $gettext('Dein Kommentar konnte nicht abgeschickt werden.'),
+      [JSON.stringify(error, null, 2)]
+    );
+    console.error(error);
+  }
+}
+
+async function updateComment(comment: UpdateCommentRequest) {
+  return await store.dispatch(
+    `lernmodule-plugin/travis-go-comments/${comment.attributes.id}/update`,
+    comment
+  );
+}
+
 function postActionMenuItems(): LinkAction[] {
   const deleteAction = {
     action_id: '1',
@@ -353,10 +414,17 @@ function commentActionMenuItems(comment: TravisGoComment): LinkAction[] {
     icon: 'trash',
     emit: 'deleteComment',
   };
+  const startEditingAction = {
+    action_id: '2',
+    label: $gettext('Bearbeiten'),
+    icon: 'edit',
+    emit: 'startEditingComment',
+  };
   return [
     ...(comment.meta.permissions.mayDelete ? [deleteAction] : []),
+    ...(comment.meta.permissions.mayEdit ? [startEditingAction] : []),
     {
-      action_id: '2',
+      action_id: '3',
       type: 'link',
       label: $gettext('Nutzerprofil öffnen'),
       icon: 'share',
