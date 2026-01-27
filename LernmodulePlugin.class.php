@@ -4,7 +4,6 @@ require_once __DIR__ . '/bootstrap.inc.php';
 
 use LernmodulePlugin\JsonApiTrait;
 use JsonApi\Contracts\JsonApiPlugin;
-use LernmodulePlugin\models\TravisGoPost;
 
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
     $GLOBALS['FILESYSTEM_UTF8'] = true;
@@ -51,50 +50,6 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
                 $attempt->store();
             }
         }
-
-        $travisGo = $pageInfo['Lernmodule']['travisGo'];
-        if (isset($travisGo)) {
-            if (!is_array($travisGo) || !is_array($travisGo['videos'])) {
-                UpdateInformation::setInformation('LernmodulePlugin.travisGo', [
-                    'error' => 'Must set Lernmodule.travisGo.videos parameter'
-                ]);
-                return;
-            }
-            $videos = null;
-            try {
-                $videos = $this->validateTravisGoParams($travisGo['videos']);
-            } catch (InvalidArgumentException $exception) {
-                UpdateInformation::setInformation('LernmodulePlugin.travisGo', [
-                    'error' => 'Lernmodule.travisGo.videos parameter must be an array of tuples' .
-                        ' of (video_id, video_type)'
-                ]);
-                return;
-            }
-            $posts = TravisGoPost::findAndMapBySQL(
-                function (TravisGoPost $post): string {
-                    return ['id' => $post->id];
-                },
-                "(video_id, video_type) IN ( :videos ) AND chdate >= :time ORDER BY mkdate ASC",
-                ['videos' => $videos, 'time' => UpdateInformation::getTimestamp()]
-            );
-            if (count($posts)) {
-                UpdateInformation::setInformation('LernmodulePlugin.travisGo', [
-                    'posts' => $posts
-                ]);
-            }
-        }
-    }
-
-    private function validateTravisGoParams(array $videos): array
-    {
-        $res = [];
-        foreach ($videos as $video) {
-            if (!isset($video['video_id']) || !isset($video['video_type'])) {
-                throw new InvalidArgumentException();
-            }
-            $res[] = ['video_id' => $video['video_id'], 'video_type' => $video['video_type']];
-        }
-        return $res;
     }
 
     public function getTabNavigation($course_id)
