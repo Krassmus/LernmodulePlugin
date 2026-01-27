@@ -28,7 +28,7 @@
         :collapseAt="true"
         class="travis-go-post-action-menu"
         @deletePost="deletePost(post.attributes.id)"
-        @commentPost="commentPost"
+        @startCommentingPost="startCommentingPost"
       />
     </h4>
     <div class="travis-go-post-contents-container">
@@ -320,7 +320,7 @@ function postActionMenuItems(): LinkAction[] {
       action_id: '2',
       label: $gettext('Kommentieren'),
       icon: 'comment',
-      emit: 'commentPost',
+      emit: 'startCommentingPost',
     },
     {
       action_id: '3',
@@ -357,7 +357,7 @@ function deleteComment(id: string) {
   emit('deleteComment', id);
 }
 const commentEditorInputElement = ref<HTMLInputElement | undefined>();
-function commentPost() {
+function startCommentingPost() {
   isCommenting.value = true;
   nextTick(() => {
     const inputEl = commentEditorInputElement.value as HTMLElement;
