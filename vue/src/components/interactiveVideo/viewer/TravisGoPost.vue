@@ -184,7 +184,8 @@
     .comment-editor {
       display: flex;
       gap: 10px;
-      button.send-comment-button {
+      button.send-comment-button,
+      button.cancel-editing-comment-button {
         margin: 0;
         min-width: fit-content;
       }
