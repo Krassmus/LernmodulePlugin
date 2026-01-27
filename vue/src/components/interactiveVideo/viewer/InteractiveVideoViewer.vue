@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineProps, onMounted, PropType, ref } from 'vue';
+import { computed, defineProps, onMounted, PropType, ref, watch } from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
@@ -230,6 +230,25 @@ const parsedComments = computed<TravisGoComment[]>(() => {
     }
   );
 });
+const erroredComments = computed<unknown[]>(() => {
+  return store.getters['lernmodule-plugin/travis-go-comments/all'].flatMap(
+    (record: unknown) => {
+      const parsedComment = travisGoCommentSchema.safeParse(record);
+      if (!parsedComment.success) {
+        return { record, error: parsedComment.error };
+      } else {
+        return [];
+      }
+    }
+  );
+});
+watch(
+  () => erroredComments.value,
+  () => {
+    console.error(`${erroredComments.value} Comment(s) could not be loaded`);
+    console.error(erroredComments.value);
+  }
+);
 
 function commentsForPost(post: TravisGoPost): TravisGoComment[] {
   return parsedComments.value.filter(
@@ -424,6 +443,10 @@ function onClickPost() {
       <ErrorMessage
         v-if="erroredPosts.length > 0"
         :error="`${erroredPosts.length} post(s) could not be loaded`"
+      ></ErrorMessage>
+      <ErrorMessage
+        v-if="erroredComments.length > 0"
+        :error="`${erroredComments.length} comment(s) could not be loaded`"
       ></ErrorMessage>
     </div>
   </div>
