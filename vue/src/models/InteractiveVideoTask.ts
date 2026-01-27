@@ -265,8 +265,8 @@ export const createCommentRequestSchema = z.object({
 export type CreateCommentRequest = z.infer<typeof createCommentRequestSchema>;
 
 export const updateCommentRequestSchema = z.object({
+  id: z.string(),
   attributes: z.object({
-    id: z.string(),
     contents: z.string(),
   }),
 });

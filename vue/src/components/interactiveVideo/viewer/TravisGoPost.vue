@@ -359,8 +359,8 @@ async function submitEditedComment() {
       );
     }
     await updateComment({
+      id: editedCommentId.value,
       attributes: {
-        id: editedCommentId.value,
         contents: commentEditorInput.value,
       },
     });
@@ -377,7 +377,7 @@ async function submitEditedComment() {
 
 async function updateComment(comment: UpdateCommentRequest) {
   return await store.dispatch(
-    `lernmodule-plugin/travis-go-comments/${comment.attributes.id}/update`,
+    'lernmodule-plugin/travis-go-comments/update',
     comment
   );
 }
