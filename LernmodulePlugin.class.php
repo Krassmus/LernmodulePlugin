@@ -27,22 +27,18 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
         NotificationCenter::addObserver($this, "removeLernmoduleFromDeletedCourse", "CourseDidDelete");
     }
 
-    /**
-     * Hook into Stud.IP's "JSUpdater" feature for supplying info in real time to connected clients.
-     * @return void
-     */
     private function handleUpdateInformation(): void
     {
         if (!UpdateInformation::isCollecting()) {
             return;
         }
-        $pageInfo = Request::getArray("page_info");
+        $data = Request::getArray("page_info");
 
-        if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($pageInfo['Lernmodule'])) {
-            $attempt = new LernmodulAttempt($pageInfo['Lernmodule']['attempt_id']);
+        if (mb_stripos(Request::get("page"), "plugins.php/lernmoduleplugin") !== false && isset($data['Lernmodule'])) {
+            $attempt = new LernmodulAttempt($data['Lernmodule']['attempt_id']);
             if ($attempt['user_id'] === $GLOBALS['user']->id) {
-                if ($pageInfo['Lernmodule']['customData']) {
-                    $attempt['customData'] = $pageInfo['Lernmodule']['customData'];
+                if ($data['Lernmodule']['customData']) {
+                    $attempt['customData'] = $data['Lernmodule']['customData'];
                 }
                 if (!$attempt['successful']) {
                     $attempt['chdate'] = time();
