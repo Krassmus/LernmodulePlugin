@@ -377,6 +377,15 @@ async function submitEditedComment() {
 }
 
 async function updateComment(comment: UpdateCommentRequest) {
+  // TODO
+  // We have a problem in Reststate-Vuex.
+  // The server gives us the full record with all the fields,
+  // but after the update is performed, Reststate Vuex
+  // saves only the fields that we provided.
+  // This means if we do an incomplete update, the record is
+  // suddenly missing fields.
+  // eslint-disable-next-line no-debugger
+  debugger;
   return await store.dispatch(
     'lernmodule-plugin/travis-go-comments/update',
     comment
