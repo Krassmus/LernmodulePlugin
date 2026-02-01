@@ -97,6 +97,7 @@
                 />
                 <button
                   v-if="isEditingComment"
+                  type="button"
                   class="button cancel cancel-editing-comment-button"
                   @click="cancelEditingComment"
                 >
