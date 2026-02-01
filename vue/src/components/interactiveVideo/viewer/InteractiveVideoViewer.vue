@@ -245,6 +245,9 @@ const erroredComments = computed<unknown[]>(() => {
 watch(
   () => erroredComments.value,
   () => {
+    if (erroredComments.value.length === 0) {
+      return;
+    }
     console.error(`${erroredComments.value} Comment(s) could not be loaded`);
     console.error(erroredComments.value);
   }
