@@ -323,6 +323,8 @@ function onClickPost() {
     .then((result) => {
       console.log('result of create post', result);
       postWysiwygInput.value = '';
+      startTimeInput.value = undefined;
+      endTimeInput.value = undefined;
       createPostError.value = undefined;
     })
     .catch((error) => {
