@@ -8,6 +8,7 @@ import {
   TravisGoPost,
   travisGoPostSchema,
   TravisGoPostType,
+  UpdatePostRequest,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
@@ -70,6 +71,28 @@ async function deleteComment(id: string) {
     console.error(error);
   }
 }
+
+const editedPostId = ref<string | undefined>();
+function startEditingPost(post: TravisGoPost): void {
+  if (
+    postWysiwygInput.value !== '' ||
+    startTimeInput.value !== undefined ||
+    endTimeInput.value !== undefined
+  ) {
+    const confirmed = confirm(
+      $gettext('Die Inhalte des Post-Editors werden gelöscht werden.')
+    );
+    if (!confirmed) {
+      return;
+    }
+  }
+  editedPostId.value = post.attributes.id;
+  postWysiwygInput.value = post.attributes.contents;
+  postTypeInput.value = post.attributes.post_type;
+  startTimeInput.value = post.attributes.start_time;
+  endTimeInput.value = post.attributes.end_time;
+}
+
 async function deletePost(id: string) {
   const prompt = $gettext('Post löschen');
   const confirmed = window.confirm(prompt);
@@ -302,8 +325,11 @@ function onClickSearch() {}
 async function createPost(post: { attributes: CreatePostRequest }) {
   return await store.dispatch('lernmodule-plugin/travis-go-posts/create', post);
 }
-function onClickPost() {
-  console.log('onClickPost');
+async function updatePost(post: UpdatePostRequest) {
+  return await store.dispatch('lernmodule-plugin/travis-go-posts/update', post);
+}
+function submitNewPost() {
+  console.log('submitNewPost');
   if (!props.task) {
     throw new Error('task not provided');
   }
@@ -332,6 +358,45 @@ function onClickPost() {
       createPostError.value = error;
       window.STUDIP.Report.error(
         $gettext('Der Post konnte nicht gepostet werden.'),
+        [JSON.stringify(error, null, 2)]
+      );
+    });
+  return res;
+}
+
+function submitEditedPost() {
+  console.log('submitNewPost');
+  if (!props.task) {
+    throw new Error('task not provided');
+  }
+  if (!taskEditorStore.taskSaveLocation) {
+    throw new Error('taskEditorStore.taskSaveLocation is missing.');
+  }
+  if (editedPostId.value === undefined) {
+    throw new Error('editedPostId is undefined');
+  }
+  const res = updatePost({
+    id: editedPostId.value,
+    attributes: {
+      contents: postWysiwygInput.value,
+      post_type: postTypeInput.value,
+      start_time: startTimeInput.value ?? 0,
+      end_time: endTimeInput.value ?? null,
+    },
+  })
+    .then((result) => {
+      console.log('result of update post', result);
+      editedPostId.value = '';
+      postWysiwygInput.value = '';
+      startTimeInput.value = undefined;
+      endTimeInput.value = undefined;
+      createPostError.value = undefined;
+    })
+    .catch((error) => {
+      console.error('error', error);
+      createPostError.value = error;
+      window.STUDIP.Report.error(
+        $gettext('Der Post konnte nicht geupdated werden.'),
         [JSON.stringify(error, null, 2)]
       );
     });
@@ -371,11 +436,17 @@ function onClickPost() {
       </div>
       <StudipWysiwyg insertHtmlComment v-model="postWysiwygInput" />
       <button
-        @click="onClickPost"
+        @click="
+          editedPostId !== undefined ? submitEditedPost() : submitNewPost()
+        "
         class="button"
         :disabled="postWysiwygInput.trim().length === 0"
       >
-        {{ $gettext('Post abschicken') }}
+        {{
+          editedPostId !== undefined
+            ? $gettext('Post updaten')
+            : $gettext('Post abschicken')
+        }}
       </button>
       <ErrorMessage
         style="max-height: unset"
@@ -420,6 +491,7 @@ function onClickPost() {
             :post="post"
             :comments="commentsForPost(post)"
             @clickTimestamp="onClickPostTimestamp"
+            @startEditingPost="startEditingPost"
             @deletePost="deletePost"
             @deleteComment="deleteComment"
             @clickPostAuthorName="searchPostAuthor"

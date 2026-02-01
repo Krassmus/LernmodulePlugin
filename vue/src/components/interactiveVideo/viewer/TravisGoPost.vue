@@ -28,6 +28,7 @@
         :collapseAt="true"
         class="travis-go-post-action-menu"
         @deletePost="deletePost(post.attributes.id)"
+        @startEditingPost="startEditingPost(post)"
         @startCommentingPost="startCommentingPost"
       />
     </h4>
@@ -251,6 +252,9 @@ const emit = defineEmits({
   clickTimestamp(payload: number) {
     return true;
   },
+  startEditingPost(post: TravisGoPost) {
+    return true;
+  },
   deletePost(postId: string) {
     return true;
   },
@@ -385,16 +389,23 @@ async function updateComment(comment: UpdateCommentRequest) {
 }
 
 function postActionMenuItems(): LinkAction[] {
-  const deleteAction = {
+  const deletePostAction = {
     action_id: '1',
     label: $gettext('Löschen'),
     icon: 'trash',
     emit: 'deletePost',
   };
+  const startEditingPostAction = {
+    action_id: '2',
+    label: $gettext('Bearbeiten'),
+    icon: 'edit',
+    emit: 'startEditingPost',
+  };
   return [
-    ...(props.post.meta.permissions.mayDelete ? [deleteAction] : []),
+    ...(props.post.meta.permissions.mayDelete ? [deletePostAction] : []),
+    ...(props.post.meta.permissions.mayEdit ? [startEditingPostAction] : []),
     {
-      action_id: '2',
+      action_id: '3',
       label: $gettext('Kommentieren'),
       icon: 'comment',
       emit: 'startCommentingPost',
@@ -436,6 +447,9 @@ function commentActionMenuItems(comment: TravisGoComment): LinkAction[] {
 }
 function deletePost(id: string) {
   emit('deletePost', id);
+}
+function startEditingPost(post: TravisGoPost) {
+  emit('startEditingPost', post);
 }
 function deleteComment(id: string) {
   emit('deleteComment', id);

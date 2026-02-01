@@ -241,6 +241,17 @@ export type TravisGoPost = z.infer<typeof travisGoPostSchema>;
 
 export const createPostRequestSchema = z.object(travisGoPostEditableKeys);
 export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
+export const updatePostRequestSchema = z.object({
+  id: z.string(),
+  attributes: z.object({
+    start_time: z.coerce.number(),
+    end_time: z.coerce.number().nullable(),
+    contents: z.string(),
+    post_type: travisGoPostTypeSchema,
+  }),
+});
+
+export type UpdatePostRequest = z.infer<typeof updatePostRequestSchema>;
 
 const travisGoCommentEditableKeys = {
   post_id: z.string(),
