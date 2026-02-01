@@ -386,7 +386,7 @@ function submitEditedPost() {
   })
     .then((result) => {
       console.log('result of update post', result);
-      editedPostId.value = '';
+      editedPostId.value = undefined;
       postWysiwygInput.value = '';
       startTimeInput.value = undefined;
       endTimeInput.value = undefined;
