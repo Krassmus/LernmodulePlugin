@@ -333,7 +333,7 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
       },
 
       update({ commit, dispatch, getters }, record) {
-        return client.update(record).then(() => {
+        return client.update(record).then(({ data: newRecord }) => {
           const oldRecord = getters.byId({ id: record.id });
 
           // remove old relationships first
@@ -365,12 +365,12 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
           }
 
           // save entity
-          commit('STORE_RECORD', record);
+          commit('STORE_RECORD', newRecord);
 
           // set new relationships
-          if (record.relationships) {
-            for (const relationship of Object.keys(record.relationships)) {
-              const relationshipObject = record.relationships[relationship];
+          if (newRecord.relationships) {
+            for (const relationship of Object.keys(newRecord.relationships)) {
+              const relationshipObject = newRecord.relationships[relationship];
               const { data } = relationshipObject;
               const isNonEmptyArray =
                 Array.isArray(data) && Boolean(data.length);
@@ -378,7 +378,7 @@ const resourceModule = ({ name: resourceName, httpClient }) => {
 
               if (isNonEmptyArray || isObject) {
                 const paramsToStore = {
-                  parent: getResourceIdentifier(record),
+                  parent: getResourceIdentifier(newRecord),
                   relationship,
                 };
                 const type = getRelationshipType(relationshipObject);
