@@ -347,6 +347,7 @@ const isEditingComment = computed<boolean>(
 function startEditingComment(comment: TravisGoComment) {
   editedCommentId.value = comment.attributes.id;
   commentEditorInput.value = comment.attributes.contents;
+  commentEditorInputElement.value!.focus();
 }
 function cancelEditingComment() {
   editedCommentId.value = undefined;
