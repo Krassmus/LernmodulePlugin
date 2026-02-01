@@ -4,8 +4,7 @@ import { TaskEditorModule } from '@/store/modules/taskEditor';
 import { CoursewareBlockModule } from '@/store/modules/coursewareBlock';
 import { RequestQueueModule } from '@/store/modules/requestQueue';
 import { httpClient } from '@/routes/jsonApi';
-const reststateVuex = require('@elan-ev/reststate-vuex');
-const mapResourceModules = reststateVuex.mapResourceModules;
+import { mapResourceModules } from '@/reststate-vuex/reststate-vuex.js';
 
 export const store = createStore({
   modules: {

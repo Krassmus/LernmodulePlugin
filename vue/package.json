@@ -9,14 +9,8 @@
     "gettext:extract": "vue-gettext-extract",
     "gettext:compile": "vue-gettext-compile"
   },
-  "overrides": {
-    "@elan-ev/reststate-vuex": {
-      "vuex": "$vuex"
-    }
-  },
   "dependencies": {
     "@blex41/word-search": "^1.2.0",
-    "@elan-ev/reststate-vuex": "^1.0.6",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.7",
     "core-js": "^3.8.3",
