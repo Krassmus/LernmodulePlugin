@@ -367,7 +367,9 @@ const postWysiwygInputElement = ref<
 >();
 const postTypeInput = ref<TravisGoPostType>('text');
 const createPostError = ref<string | undefined>();
-function onClickSearch() {}
+function cancelSearch() {
+  searchInput.value = '';
+}
 
 async function createPost(post: { attributes: CreatePostRequest }) {
   return await store.dispatch('lernmodule-plugin/travis-go-posts/create', post);
@@ -528,8 +530,19 @@ function submitEditedPost() {
     </div>
     <div class="travis-go-right-column">
       <nav class="search-bar">
-        <input type="text" v-model="searchInput" />
-        <button class="button h5p-search" @click="onClickSearch" />
+        <input
+          type="text"
+          role="searchbox"
+          :placeholder="$gettext('Suche')"
+          v-model="searchInput"
+        />
+        <button
+          v-if="searchInput !== ''"
+          class="button h5p-search cancel"
+          :title="$gettext('Suche zurücksetzen')"
+          @click="cancelSearch"
+        ></button>
+        <button class="button h5p-search" />
       </nav>
       <section class="project-title-and-description">
         <h3>{{ $gettext('Projekttitel') }}</h3>
