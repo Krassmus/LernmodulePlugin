@@ -133,7 +133,6 @@ function resetPostEditor() {
   startTimeInput.value = undefined;
   endTimeInput.value = undefined;
 }
-function confirmClearingEditorContents(): boolean {}
 
 async function deletePost(id: string) {
   const prompt = $gettext('Post löschen');
