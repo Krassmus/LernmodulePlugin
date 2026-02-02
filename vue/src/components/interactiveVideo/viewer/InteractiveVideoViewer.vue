@@ -88,7 +88,7 @@ function startEditingPost(post: TravisGoPost): void {
     endTimeInput.value !== undefined
   ) {
     const confirmed = confirm(
-      $gettext('Die Inhalte des Post-Editors werden gelöscht werden.')
+      $gettext('Die Inhalte des Post-Editors werden gelöscht.')
     );
     if (!confirmed) {
       return;
@@ -113,6 +113,27 @@ function startEditingPost(post: TravisGoPost): void {
     });
   });
 }
+
+function resetPostEditor() {
+  if (
+    postWysiwygInput.value !== '' ||
+    startTimeInput.value !== undefined ||
+    endTimeInput.value !== undefined
+  ) {
+    const confirmed = confirm(
+      $gettext('Die Inhalte des Post-Editors werden gelöscht werden.')
+    );
+    if (!confirmed) {
+      return;
+    }
+  }
+  editedPostId.value = undefined;
+  postWysiwygInput.value = '';
+  postTypeInput.value = 'text';
+  startTimeInput.value = undefined;
+  endTimeInput.value = undefined;
+}
+function confirmClearingEditorContents(): boolean {}
 
 async function deletePost(id: string) {
   const prompt = $gettext('Post löschen');
@@ -463,6 +484,14 @@ function submitEditedPost() {
         v-model="postWysiwygInput"
         ref="postWysiwygInputElement"
       />
+      <button
+        v-if="editedPostId !== undefined"
+        @click="resetPostEditor"
+        type="button"
+        class="button"
+      >
+        {{ $gettext('Zurücksetzen') }}
+      </button>
       <button
         @click="
           editedPostId !== undefined ? submitEditedPost() : submitNewPost()
