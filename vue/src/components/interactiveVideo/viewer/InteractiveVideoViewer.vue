@@ -279,7 +279,10 @@ function commentMatchesSearch(
 }
 
 function canonicalize(str: string): string {
-  return str.toLowerCase().replaceAll(/[.,/#!$%^&@*;:{}=\-_`~()]/g, '');
+  return str
+    .toLowerCase()
+    .replaceAll(/[.,/#!$%^&@*;:{}=\-_`~()]/g, '')
+    .trim();
 }
 
 const parsedComments = computed<TravisGoComment[]>(() => {
