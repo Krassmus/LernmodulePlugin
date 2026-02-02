@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { computed, defineProps, onMounted, PropType, ref, watch } from 'vue';
+import {
+  computed,
+  defineProps,
+  nextTick,
+  onMounted,
+  PropType,
+  ref,
+  watch,
+} from 'vue';
 import {
   CreatePostRequest,
   InteractiveVideoTask,
@@ -90,7 +98,20 @@ function startEditingPost(post: TravisGoPost): void {
   postWysiwygInput.value = post.attributes.contents;
   postTypeInput.value = post.attributes.post_type;
   startTimeInput.value = post.attributes.start_time;
-  endTimeInput.value = post.attributes.end_time;
+  endTimeInput.value = post.attributes.end_time ?? undefined;
+  // Focus the wysiwyg text area.
+  nextTick(() => {
+    // Use nextTick to allow for the editor contents to be updated.
+    const wysiwygEl = postWysiwygInputElement.value!.$el;
+    const editor = window.STUDIP.wysiwyg.getEditor(wysiwygEl);
+    editor!.editing!.view.focus();
+    // Put the cursor at the end.
+    editor!.model.change((writer) => {
+      writer.setSelection(
+        writer.createPositionAt(editor!.model.document.getRoot()!, 'end')
+      );
+    });
+  });
 }
 
 async function deletePost(id: string) {
@@ -318,6 +339,9 @@ onMounted(() => {
 
 const searchInput = ref<string>('');
 const postWysiwygInput = ref<string>('');
+const postWysiwygInputElement = ref<
+  InstanceType<typeof StudipWysiwyg> | undefined
+>();
 const postTypeInput = ref<TravisGoPostType>('text');
 const createPostError = ref<string | undefined>();
 function onClickSearch() {}
@@ -434,7 +458,11 @@ function submitEditedPost() {
           <option value="text">Text</option>
         </select>
       </div>
-      <StudipWysiwyg insertHtmlComment v-model="postWysiwygInput" />
+      <StudipWysiwyg
+        insertHtmlComment
+        v-model="postWysiwygInput"
+        ref="postWysiwygInputElement"
+      />
       <button
         @click="
           editedPostId !== undefined ? submitEditedPost() : submitNewPost()
