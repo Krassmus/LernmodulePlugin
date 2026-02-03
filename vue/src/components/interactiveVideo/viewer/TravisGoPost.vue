@@ -17,7 +17,12 @@
           </a></span
         ></span
       >
-      <span class="post-type">{{ post.attributes.post_type }}</span>
+      <a
+        href="#"
+        @click.prevent="$emit('clickPostType', post)"
+        class="post-type"
+        >{{ post.attributes.post_type }}</a
+      >
       <span> </span>
       <a href="#" @click.prevent="$emit('clickPostAuthorName', post)"
         >@{{ postAuthorFormattedName }}</a
@@ -263,6 +268,9 @@ const emit = defineEmits({
     return true;
   },
   clickPostAuthorName(post: TravisGoPost) {
+    return true;
+  },
+  clickPostType(post: TravisGoPost) {
     return true;
   },
   clickCommentAuthorName(comment: TravisGoComment) {

@@ -56,6 +56,9 @@ function searchUserComments(userId: string) {
 function searchPostAuthor(post: TravisGoPost) {
   searchUserComments(post.attributes.mk_user_id);
 }
+function searchPostType(post: TravisGoPost) {
+  searchInput.value = post.attributes.post_type;
+}
 function searchCommentAuthor(comment: TravisGoComment) {
   searchUserComments(comment.attributes.mk_user_id);
 }
@@ -166,10 +169,16 @@ function onTimeUpdate(time: number) {
 
 const startTimeInput = ref<number | undefined>();
 function onClickStartTime() {
-  if (startTimeInput.value) {
+  if (startTimeInput.value !== undefined) {
     seekVideo(startTimeInput.value);
   } else {
     startTimeInput.value = currentTime.value;
+    if (
+      endTimeInput.value !== undefined &&
+      endTimeInput.value < startTimeInput.value
+    ) {
+      endTimeInput.value = undefined;
+    }
   }
 }
 function clearStartTime() {
@@ -182,6 +191,12 @@ function onClickEndTime() {
     seekVideo(endTimeInput.value);
   } else {
     endTimeInput.value = currentTime.value;
+    if (
+      startTimeInput.value !== undefined &&
+      endTimeInput.value < startTimeInput.value
+    ) {
+      startTimeInput.value = undefined;
+    }
   }
 }
 function clearEndTime() {
@@ -365,8 +380,22 @@ const postWysiwygInput = ref<string>('');
 const postWysiwygInputElement = ref<
   InstanceType<typeof StudipWysiwyg> | undefined
 >();
-const postTypeInput = ref<TravisGoPostType>('text');
+const postTypeInput = ref<TravisGoPostType>('image');
 const createPostError = ref<string | undefined>();
+interface WysiwygFocusEvent {
+  event: unknown;
+  name: unknown;
+  value: boolean;
+}
+function onFocusPostWysiwyg(evt: WysiwygFocusEvent) {
+  if (!evt.value) {
+    return;
+  }
+  if (startTimeInput.value === undefined) {
+    startTimeInput.value = currentTime.value;
+  }
+}
+
 function cancelSearch() {
   searchInput.value = '';
 }
@@ -459,7 +488,7 @@ function submitEditedPost() {
       <VideoPlayer @timeupdate="onTimeUpdate" :task="task" ref="videoPlayer" />
       <div class="annotation-controls">
         <button class="button date time-input" @click="onClickStartTime">
-          <template v-if="startTimeInput">
+          <template v-if="startTimeInput !== undefined">
             {{ formatVideoTimestamp(startTimeInput, false, ':') }}
             <button class="small-button cancel" @click.stop="clearStartTime" />
           </template>
@@ -468,7 +497,7 @@ function submitEditedPost() {
           </template>
         </button>
         <button class="button date time-input" @click="onClickEndTime">
-          <template v-if="endTimeInput">
+          <template v-if="endTimeInput !== undefined">
             {{ formatVideoTimestamp(endTimeInput, false, ':') }}
             <button class="small-button cancel" @click.stop="clearEndTime" />
           </template>
@@ -477,16 +506,21 @@ function submitEditedPost() {
           </template>
         </button>
         <select class="post-type-input" v-model="postTypeInput">
-          <option value="meta">Meta</option>
-          <option value="image">Image</option>
+          <option value="image">{{ $gettext('Bild') }}</option>
           <option value="audio">Audio</option>
           <option value="text">Text</option>
+          <option value="meta">Meta</option>
         </select>
+        <div
+          class="tooltip tooltip-icon"
+          :data-tooltip="strings.postTypeTooltip"
+        />
       </div>
       <StudipWysiwyg
         insertHtmlComment
         v-model="postWysiwygInput"
         ref="postWysiwygInputElement"
+        @focus="onFocusPostWysiwyg"
       />
       <button
         v-if="editedPostId !== undefined"
@@ -567,6 +601,7 @@ function submitEditedPost() {
             @deletePost="deletePost"
             @deleteComment="deleteComment"
             @clickPostAuthorName="searchPostAuthor"
+            @clickPostType="searchPostType"
             @clickCommentAuthorName="searchCommentAuthor"
             :class="{
               odd: index % 2 === 0,
@@ -642,6 +677,8 @@ function submitEditedPost() {
       display: flex;
       align-items: center;
       gap: 0.5em;
+      /* Fixed height it doesn't change height when the 'X' button is visible */
+      height: 2.5em;
     }
     .post-type-input {
       align-self: stretch;
