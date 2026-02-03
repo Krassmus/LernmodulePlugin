@@ -4,20 +4,12 @@
   It is called editor.php, but applies for the "read" mode in Courseware as well.
   (Sorry for the confusing file name -Ann) -->
 
-<!--  Hide all of Stud.IP's layout elements and remove extraneous padding.-->
+<!--  Remove extraneous padding from Stud.IP and ensure that the courseware content
+uses the full width of its iframe. .-->
 <style>
-    #barBottomContainer, #flex-header, .secondary-navigation, #layout-sidebar, #layout_footer, #page_title_container, #skip_link_navigation, #main-header, #sidebar, #main-footer, #scroll-to-top {
-        display: none !important;
-    }
-
-    #layout_wrapper, #layout_content, #layout_container {
-        padding: 0 !important;
-    }
     #content-wrapper {
         padding: 0 !important;
         margin: 0 !important;
-        grid-column: 1/3 !important;
-        grid-row: 1/3 !important;
         width: 100% !important;
     }
 </style>

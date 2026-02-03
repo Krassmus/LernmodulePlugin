@@ -16,5 +16,9 @@ class CoursewareController extends PluginController
         if (\StudipVersion::newerThan('6.0')) {
             PageLayout::addStylesheet("courseware.css");
         }
+
+        PageLayout::disableHeader();
+        PageLayout::disableSidebar();
+        PageLayout::disableFooter();
     }
 }

@@ -72,11 +72,18 @@
       @clickInteraction="(i: Interaction) => selectInteraction(i.id)"
       @deleteInteraction="deleteInteraction"
     />
-    <SelectedInteractionProperties
-      v-if="selectedInteraction"
-      ref="selectedInteractionProperties"
-      :selectedInteraction="selectedInteraction"
-    />
+    <!-- :key is needed to prevent a bug where if you first selected one overlay,
+      then clicked on another one to select it, there would be two WYSIWYG editors
+      open in the 'selected interaction properties' dialog, and a new one would be
+      added each time you clicked from one overlay to the other. -->
+    <KeepAlive>
+      <SelectedInteractionProperties
+        v-if="selectedInteraction"
+        ref="selectedInteractionProperties"
+        :selectedInteraction="selectedInteraction"
+        :key="selectedInteraction.id"
+      />
+    </KeepAlive>
   </div>
 </template>
 
@@ -117,21 +124,27 @@ import {
 import type {
   Interaction,
   InteractiveVideoTask,
+  LmbTaskInteraction,
   OverlayInteraction,
 } from '@/models/InteractiveVideoTask';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
-import VideoTimeline from '@/components/interactiveVideo/VideoTimeline.vue';
-import SelectedInteractionProperties from '@/components/interactiveVideo/SelectedInteractionProperties.vue';
-import { VideoMetadata } from '@/components/interactiveVideo/events';
+import VideoTimeline from '@/components/interactiveVideo/editor/VideoTimeline.vue';
+import SelectedInteractionProperties from '@/components/interactiveVideo/editor/SelectedInteractionProperties.vue';
+import {
+  DragState,
+  TimelineDragState,
+  VideoMetadata,
+} from '@/components/interactiveVideo/editor/events';
 import {
   iconForTaskType,
   newTask,
   printTaskType,
   TaskDefinition,
+  TaskDefinitionMinusInteractiveVideo,
 } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
-import { interactiveVideoEditorStateSymbol } from '@/components/interactiveVideo/interactiveVideoEditorState';
-import { $gettext } from '../../language/gettext';
+import { interactiveVideoEditorStateSymbol } from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
+import { $gettext } from '@/language/gettext';
 import { printInteractionType } from '@/models/InteractiveVideoTask';
 import {
   TaskEditorState,
@@ -139,6 +152,7 @@ import {
 } from '@/components/taskEditorState';
 import produce from 'immer';
 import { isEqual } from 'lodash';
+import strings from '@/components/interactiveVideo/strings';
 
 const props = defineProps({
   taskDefinition: {
@@ -179,6 +193,7 @@ provide(interactiveVideoEditorStateSymbol, {
   resizeOverlay,
   deleteInteraction,
   dragInteractionTimeline,
+  resizeInteractionTimeline,
 });
 
 /**
@@ -195,7 +210,7 @@ provide(taskEditorStateSymbol, {
 const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
 
 function performEditForEditedLmbInteraction(payload: {
-  newTaskDefinition: TaskDefinition;
+  newTaskDefinition: TaskDefinitionMinusInteractiveVideo;
   undoBatch: unknown;
 }): void {
   // Apply the new task definition for the edited interaction.
@@ -239,7 +254,7 @@ const selectedInteraction = computed((): Interaction | undefined =>
   )
 );
 
-function selectInteraction(selectionId: string) {
+function selectInteraction(selectionId: string | undefined) {
   selectedInteractionId.value = selectionId;
 }
 function editInteraction(id: string) {
@@ -259,7 +274,6 @@ function onTimeUpdate(time: number) {
   currentTime.value = time;
 }
 function onTimelineSeek(time: number) {
-  console.log('onTImelineSeek', time);
   videoPlayer.value!.player!.currentTime(time);
 }
 function onClickZoomIn() {
@@ -288,16 +302,23 @@ function insertOverlay() {
     content_wysiwyg: $gettext('Einblendung'),
     pauseWhenVisible: true,
   };
-  // TODO make undoable ?
-  // eslint-disable-next-line vue/no-mutating-props
-  props.taskDefinition.interactions.push(interaction);
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        draft.interactions.push(interaction);
+      }
+    ),
+  });
   selectedInteractionId.value = interaction.id;
 }
 
 function insertLmbTaskInteraction(type: TaskDefinition['task_type']) {
-  console.log('insertLmbTaskInteraction', type);
-  const task = newTask(type);
-  const interaction: Interaction = {
+  if (type === 'InteractiveVideo') {
+    throw new Error(strings.forbiddenToNestInteractiveVideos);
+  }
+  const task = newTask(type) as TaskDefinitionMinusInteractiveVideo;
+  const interaction: LmbTaskInteraction = {
     type: 'lmbTask',
     id: v4(),
     taskDefinition: task,
@@ -307,9 +328,14 @@ function insertLmbTaskInteraction(type: TaskDefinition['task_type']) {
     y: 0.5,
     pauseWhenVisible: true,
   };
-  // TODO make undoable ?
-  // eslint-disable-next-line vue/no-mutating-props
-  props.taskDefinition.interactions.push(interaction);
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        draft.interactions.push(interaction);
+      }
+    ),
+  });
   selectedInteractionId.value = interaction.id;
 }
 function deleteInteraction(id: string) {
@@ -317,6 +343,9 @@ function deleteInteraction(id: string) {
   const interaction = props.taskDefinition.interactions.find(
     (i) => i.id === id
   );
+  if (!interaction) {
+    throw new Error(strings.interactionNotFoundError);
+  }
   const prompt = $gettext('%{ interaction } löschen', {
     interaction: printInteractionType(interaction),
   });
@@ -326,50 +355,113 @@ function deleteInteraction(id: string) {
     return;
   }
   const index = props.taskDefinition.interactions.findIndex((i) => i.id === id);
-  // TODO make undoable... Don't want to delete a whole task permanently with no undo
-  // eslint-disable-next-line vue/no-mutating-props
-  props.taskDefinition.interactions.splice(index, 1);
-}
-function dragInteraction(id: string, xFraction: number, yFraction: number) {
-  const interaction = props.taskDefinition?.interactions.find(
-    (i) => i.id === id
-  );
-  if (!interaction) {
-    throw new Error(`Interaction with id ${id} not found`);
+  if (index === -1) {
+    throw new Error(strings.interactionNotFoundError);
   }
-  // TODO make undoable ?
-  interaction.x = xFraction;
-  interaction.y = yFraction;
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        draft.interactions.splice(index, 1);
+      }
+    ),
+  });
+}
+function dragInteraction(
+  id: string,
+  xFraction: number,
+  yFraction: number,
+  // Used in order to batch actions for undo/redo.  Each time you click, drag,
+  // and let go, that should result in a new state in the undo/redo history.
+  dragState: DragState
+) {
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        const interaction = draft.interactions.find((i) => i.id === id);
+        if (!interaction) {
+          throw new Error(`Interaction with id ${id} not found`);
+        }
+        interaction.x = xFraction;
+        interaction.y = yFraction;
+      }
+    ),
+    undoBatch: dragState,
+  });
 }
 function resizeOverlay(
   id: string,
   x: number,
   y: number,
   width: number,
-  height: number
+  height: number,
+  dragState: DragState
 ) {
-  const interaction = props.taskDefinition?.interactions.find(
-    (i) => i.id === id
-  );
-  if (!interaction) {
-    throw new Error(`Interaction with id ${id} not found`);
-  }
-  // TODO make undoable ?
-  interaction.x = x;
-  interaction.y = y;
-  interaction.width = width;
-  interaction.height = height;
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        const interaction = draft.interactions.find((i) => i.id === id);
+        if (!interaction) {
+          throw new Error(`Interaction with id ${id} not found`);
+        }
+        if (interaction.type !== 'overlay') {
+          throw new Error(strings.notAnOverlayError);
+        }
+        interaction.x = x;
+        interaction.y = y;
+        interaction.width = width;
+        interaction.height = height;
+      }
+    ),
+    undoBatch: dragState,
+  });
 }
-function dragInteractionTimeline(id: string, startTime: number) {
-  const interaction = props.taskDefinition?.interactions.find(
-    (i) => i.id === id
-  );
-  if (!interaction) {
-    throw new Error(`Interaction with id ${id} not found`);
-  }
-  // TODO make undoable ?
-  const duration = interaction.endTime - interaction.startTime;
-  interaction.endTime = startTime + duration;
-  interaction.startTime = startTime;
+function dragInteractionTimeline(
+  id: string,
+  startTime: number,
+  dragState: TimelineDragState
+) {
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        const interaction = draft.interactions.find((i) => i.id === id);
+        if (!interaction) {
+          throw new Error(`Interaction with id ${id} not found`);
+        }
+        const duration = interaction.endTime - interaction.startTime;
+        interaction.endTime = startTime + duration;
+        interaction.startTime = startTime;
+      }
+    ),
+    undoBatch: dragState,
+  });
+}
+
+function resizeInteractionTimeline(
+  id: string,
+  type: 'start' | 'end',
+  time: number,
+  dragState: TimelineDragState
+) {
+  taskEditor!.performEdit({
+    newTaskDefinition: produce(
+      props.taskDefinition,
+      (draft: InteractiveVideoTask) => {
+        const interaction = draft.interactions.find((i) => i.id === id);
+        if (!interaction) {
+          throw new Error(`Interaction with id ${id} not found`);
+        }
+        if (type === 'start') {
+          interaction.startTime = time;
+        } else {
+          interaction.endTime = time;
+        }
+      }
+    ),
+    undoBatch: dragState,
+  });
 }
 </script>

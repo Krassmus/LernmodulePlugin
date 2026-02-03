@@ -3,7 +3,7 @@ import { defineComponent, inject, PropType } from 'vue';
 import {
   InteractiveVideoEditorState,
   interactiveVideoEditorStateSymbol,
-} from '@/components/interactiveVideo/interactiveVideoEditorState';
+} from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
 import { OverlayInteraction } from '@/models/InteractiveVideoTask';
 import { $gettext } from '@/language/gettext';
 
@@ -35,8 +35,9 @@ export default defineComponent({
   },
   setup() {
     return {
-      editor: inject<InteractiveVideoEditorState>(
-        interactiveVideoEditorStateSymbol
+      editor: inject<InteractiveVideoEditorState | undefined>(
+        interactiveVideoEditorStateSymbol,
+        undefined
       ),
     };
   },

@@ -11,8 +11,8 @@ import FindTheHotspotsEditor from '@/components/findTheHotspots/FindTheHotspotsE
 import FindTheHotspotsViewer from '@/components/findTheHotspots/FindTheHotspotsViewer.vue';
 import FindTheWordsEditor from '@/components/findTheWords/FindTheWordsEditor.vue';
 import FindTheWordsViewer from '@/components/findTheWords/FindTheWordsViewer.vue';
-import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
-import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
+import InteractiveVideoEditor from '@/components/interactiveVideo/editor/InteractiveVideoEditor.vue';
+import InteractiveVideoViewer from '@/components/interactiveVideo/viewer/InteractiveVideoViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
@@ -24,6 +24,7 @@ import QuestionViewer from '@/components/QuestionViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
 import SequencingViewer from '@/components/SequencingViewer.vue';
 import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
+import { crosswordTaskSchema } from '@/models/CrosswordTask';
 import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
 import { imageFileSchema, feedbackSchema, Feedback } from '@/models/common';
 
@@ -70,18 +71,6 @@ export type LernmoduleMultimediaElement = z.infer<
   typeof multimediaElementSchema
 >;
 export type MultimediaElementType = LernmoduleMultimediaElement['type'];
-
-export const crosswordTaskSchema = z.object({
-  task_type: z.literal('Crossword'),
-  words: z.string(),
-  strings: z.object({
-    checkButton: z.string().default(''),
-    retryButton: z.string(),
-    solutionsButton: z.string(),
-    resultMessage: z.string(),
-  }),
-});
-export type CrosswordTask = z.infer<typeof crosswordTaskSchema>;
 
 export const dragTheWordsTaskSchema = z.object({
   task_type: z.literal('DragTheWords'),
@@ -292,6 +281,9 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
     sequencingTaskSchema,
   ]
 );
+export type TaskDefinitionMinusInteractiveVideo = z.infer<
+  typeof taskDefinitionSchemaMinusInteractiveVideo
+>;
 
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
@@ -323,12 +315,54 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'Crossword':
       return {
         task_type: 'Crossword',
-        words: 'Apfel, Banane, Orange',
+        words: [
+          {
+            uuid: v4(),
+            hint: 'Frucht mit gleichnamiger Farbe.',
+            solution: 'Orange',
+            x: 4,
+            y: 1,
+            direction: 'across',
+          },
+          {
+            uuid: v4(),
+            hint: 'Krummes Obst mit gelber Schale.',
+            solution: 'Banane',
+            x: 6,
+            y: 0,
+            direction: 'down',
+          },
+          {
+            uuid: v4(),
+            hint: 'Kleine rote Steinfrucht mit Stiel.',
+            solution: 'Kirsche',
+            x: 0,
+            y: 5,
+            direction: 'across',
+          },
+          {
+            uuid: v4(),
+            hint: 'Unsinn / Milchprodukt.',
+            solution: 'Quark',
+            x: 4,
+            y: 3,
+            direction: 'across',
+          },
+          {
+            uuid: v4(),
+            hint: 'Erworben.',
+            solution: 'Gekauft',
+            x: 8,
+            y: 1,
+            direction: 'down',
+          },
+        ],
+        colorEmptyCells: false,
         strings: {
           checkButton: 'Überprüfen',
           retryButton: 'Erneut versuchen',
           solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Wörter gefunden.',
+          resultMessage: ':correct von :total Felder richtig ausgefüllt.',
         },
       };
     case 'DragTheWords':
@@ -361,6 +395,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         autoplay: false,
         startAt: 0,
         disableNavigation: 'not disabled',
+        travisGoSettings: {
+          enabled: false,
+          projectTitle: $gettext('Projekttitel'),
+          projectDescription: $gettext('Projektbeschreibung'),
+        },
       };
     case 'FillInTheBlanks':
       return {

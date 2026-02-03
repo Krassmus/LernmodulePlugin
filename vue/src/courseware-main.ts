@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { taskEditorStore, store, coursewareBlockStore } from '@/store';
 import { modelUndoable } from '@/directives/vModelUndoable';
 import { $gettext, gettextPlugin } from '@/language/gettext';
-import './assets/global.css';
+import './assets/global.scss';
 import { isString } from 'lodash';
 import { newTask, taskDefinitionSchema } from '@/models/TaskDefinition';
 import CoursewareBlock from '@/components/CoursewareBlock.vue';
@@ -89,12 +89,18 @@ function initializeApp(initializeMessage: InitializeMessage) {
       return;
     }
 
-    taskEditorStore.initializeCourseware(existingTaskDefinition);
+    taskEditorStore.initializeCourseware({
+      initializeMessage,
+      task_json: existingTaskDefinition,
+    });
   } else {
     const newTaskDefinition = newTask(
       initializeMessage.block.attributes.payload.task_type
     );
-    taskEditorStore.initializeCourseware(newTaskDefinition);
+    taskEditorStore.initializeCourseware({
+      initializeMessage,
+      task_json: newTaskDefinition,
+    });
   }
   coursewareBlockStore.setContext(initializeMessage.context);
   const app = createApp(CoursewareBlock);

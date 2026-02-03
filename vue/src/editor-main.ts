@@ -3,7 +3,7 @@ import LernmoduleEditor from '@/components/LernmoduleEditor.vue';
 import { taskEditorStore, store } from '@/store';
 import { modelUndoable } from '@/directives/vModelUndoable';
 import { gettextPlugin } from '@/language/gettext';
-import './assets/global.css';
+import './assets/global.scss';
 import ErrorMessage from '@/components/ErrorMessage.vue';
 import { disableDrag } from '@/directives/vDisableDrag';
 

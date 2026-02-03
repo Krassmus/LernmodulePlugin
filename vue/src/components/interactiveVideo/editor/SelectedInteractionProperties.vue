@@ -117,11 +117,11 @@ import {
   showViewerAboveEditor,
   viewerForTaskType,
 } from '@/models/TaskDefinition';
-import { $gettext } from '../../language/gettext';
+import { $gettext } from '@/language/gettext';
 import {
   InteractiveVideoEditorState,
   interactiveVideoEditorStateSymbol,
-} from '@/components/interactiveVideo/interactiveVideoEditorState';
+} from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
 import StudipWysiwyg from '@/components/StudipWysiwyg.vue';
 

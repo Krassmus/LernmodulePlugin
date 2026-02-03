@@ -9,21 +9,16 @@
     "gettext:extract": "vue-gettext-extract",
     "gettext:compile": "vue-gettext-compile"
   },
-  "overrides": {
-    "@elan-ev/reststate-vuex": {
-      "vuex": "$vuex"
-    }
-  },
   "dependencies": {
-    "@elan-ev/reststate-vuex": "^1.0.6",
+    "@blex41/word-search": "^1.2.0",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.7",
-    "@blex41/word-search": "^1.2.0",
     "core-js": "^3.8.3",
     "d3-drag": "^3.0.0",
     "d3-selection": "^3.0.0",
     "d3-zoom": "^3.0.0",
     "damerau-levenshtein-js": "^1.1.8",
+    "dompurify": "^3.3.1",
     "immer": "^9.0.21",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2",
@@ -32,6 +27,7 @@
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue3-gettext": "^2.5.0-alpha.1",
+    "vuedraggable": "^4.1.0",
     "vuex": "^4.0.2",
     "vuex-module-decorators": "^2.0.0",
     "zod": "^3.21.4"
