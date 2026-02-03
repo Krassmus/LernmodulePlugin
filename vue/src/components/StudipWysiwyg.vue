@@ -76,7 +76,6 @@ export default defineComponent({
         ckeditor.ui.focusTracker.on(
           'change:isFocused',
           (event, name, value) => {
-            console.log('emitting isFocused change');
             this.$emit('focus', { event, name, value });
           }
         );

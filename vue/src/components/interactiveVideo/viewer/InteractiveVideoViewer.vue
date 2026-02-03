@@ -373,21 +373,11 @@ interface WysiwygFocusEvent {
   value: boolean;
 }
 function onFocusPostWysiwyg(evt: WysiwygFocusEvent) {
-  console.log('onFocuspostWysiwyg', evt);
   if (!evt.value) {
-    console.log('value is not true, returning early');
     return;
   }
   if (startTimeInput.value === undefined) {
-    console.log(
-      'startTimeInput not set, setting start time',
-      startTimeInput.value,
-      'to current time:',
-      currentTime.value
-    );
     startTimeInput.value = currentTime.value;
-  } else {
-    console.log('startTimeInput found, doing nothing', startTimeInput.value);
   }
 }
 
