@@ -25,7 +25,6 @@ final class TravisGoPosts extends SormCRUDController
 
     protected function getData(Request $request, array $args, ?SORM $current = null): array
     {
-        // TODO: Implement getData() method.
         $data = [];
         foreach (TravisGoPost::EDITABLE_FIELDS as $field => $type) {
             $data[$field] = match ($type) {

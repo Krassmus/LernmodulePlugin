@@ -87,10 +87,6 @@ abstract class SormCRUDController extends JsonApiController
 
     protected function performCreate(Request $request, Response $response, array $args): SORM
     {
-        // Attempt to get authorization working.
-        // This is probably wrong - I think it might break assumptions contained in the hooks contract.
-        // But somehow you need to get the data into the object before you check
-        // if it is authorized or not.
         $sorm = $this->requireObject($this->getSORMClass(), null);
         $data = $this->getData($request, $args);
         foreach ($data as $key => $value) {
