@@ -557,7 +557,12 @@ function submitEditedPost() {
         v-if="createPostError"
       />
       <div class="travis-go-participants-list">
-        <a v-for="id in participantsIds" :key="id" :href="urlForUserId(id)">
+        <a
+          v-for="id in participantsIds"
+          :key="id"
+          href="#"
+          @click.prevent="searchUserComments(id)"
+        >
           {{ getUserById(id)?.attributes['formatted-name'] }}
         </a>
       </div>
