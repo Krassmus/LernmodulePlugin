@@ -445,8 +445,8 @@ function onPointerdownCanvas(event: PointerEvent) {
 }
 
 function getCellUnderCursor(event: PointerEvent) {
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
-  const rect = canvas.getBoundingClientRect();
+  const canvas = canvasRef.value;
+  const rect = canvas!.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   const cellX = Math.max(
@@ -714,8 +714,8 @@ function fillCell(xCell: number, yCell: number, fillStyle: string) {
     return;
   }
 
-  const canvas = document.getElementById('c') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d');
+  const canvas = canvasRef.value;
+  const ctx = canvas!.getContext('2d');
 
   if (ctx) {
     ctx.fillStyle = fillStyle;
