@@ -170,6 +170,9 @@ function onClickStartTime() {
     seekVideo(startTimeInput.value);
   } else {
     startTimeInput.value = currentTime.value;
+    if (endTimeInput.value && endTimeInput.value < startTimeInput.value) {
+      endTimeInput.value = undefined;
+    }
   }
 }
 function clearStartTime() {
@@ -182,6 +185,9 @@ function onClickEndTime() {
     seekVideo(endTimeInput.value);
   } else {
     endTimeInput.value = currentTime.value;
+    if (startTimeInput.value && endTimeInput.value < startTimeInput.value) {
+      startTimeInput.value = undefined;
+    }
   }
 }
 function clearEndTime() {
