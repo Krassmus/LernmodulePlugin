@@ -26,6 +26,7 @@ class AddTravisGoFeature extends Migration
             post_type ENUM('meta', 'image', 'audio', 'text') not null default 'meta',
             primary key (id)
         )";
+        $db->exec($query);
         $query = "
           create table if not exists lernmodule_travis_go_comments (
             id int(11) unsigned not null auto_increment,
