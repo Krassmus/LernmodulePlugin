@@ -6,7 +6,10 @@ import {
   PropType,
   StyleValue,
 } from 'vue';
-import { VideoMetadata } from '@/components/interactiveVideo/events';
+import {
+  TimelineDragState,
+  VideoMetadata,
+} from '@/components/interactiveVideo/editor/events';
 import { throttle } from 'lodash';
 import {
   iconForInteraction,
@@ -14,36 +17,16 @@ import {
   InteractiveVideoTask,
   printInteractionType,
 } from '@/models/InteractiveVideoTask';
-import { $gettext } from '../../language/gettext';
+import { $gettext } from '@/language/gettext';
 import {
   InteractiveVideoEditorState,
   interactiveVideoEditorStateSymbol,
-} from '@/components/interactiveVideo/interactiveVideoEditorState';
+} from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
 import getEmValueFromElement from '@/components/interactiveVideo/getEmValueFromElement';
 import { select } from 'd3-selection';
 import { D3DragEvent, drag } from 'd3-drag';
+import { formatVideoTimestamp } from '@/components/interactiveVideo/formatVideoTimestamp';
 
-type DragState =
-  | { type: 'timeMarker' }
-  | { type: 'panTimeline' }
-  | {
-      type: 'interaction';
-      id: string;
-      mouseStartPos: [number, number]; // clientX, clientY
-      interactionStartTime: number; // Seconds
-      interactionDuration: number; // Seconds
-    }
-  | {
-      type: 'interactionStart';
-      id: string;
-      time: number; // Seconds
-    }
-  | {
-      type: 'interactionEnd';
-      id: string;
-      time: number; // Seconds
-    }
-  | undefined;
 export default defineComponent({
   name: 'VideoTimeline',
   setup() {
@@ -73,7 +56,7 @@ export default defineComponent({
   },
   data() {
     return {
-      dragState: undefined as DragState,
+      dragState: undefined as TimelineDragState,
       zoomTransform: { t: 0, k: 1 },
       viewportWidthEm: 1,
     };
@@ -226,35 +209,7 @@ export default defineComponent({
       const widthInEm = this.pixelsToEm(rect.width);
       this.viewportWidthEm = widthInEm;
     },
-    // Format video timestamp for timeline axis. e.g. 1m30s becomes 00;01;30;00
-    formatVideoTimestamp(timestampSeconds: number): string {
-      let hours = 0,
-        minutes = 0,
-        seconds = 0,
-        centiseconds = 0;
-      while (timestampSeconds >= 3600) {
-        hours++;
-        timestampSeconds -= 3600;
-      }
-      while (timestampSeconds >= 60) {
-        minutes++;
-        timestampSeconds -= 60;
-      }
-      while (timestampSeconds >= 1) {
-        seconds++;
-        timestampSeconds -= 1;
-      }
-      centiseconds = Math.floor(timestampSeconds * 100);
-      function twoDigits(n: number): string {
-        return n.toLocaleString('de-DE', {
-          minimumIntegerDigits: 2,
-          maximumFractionDigits: 0,
-        });
-      }
-      return `${twoDigits(hours)};${twoDigits(minutes)};${twoDigits(
-        seconds
-      )};${twoDigits(centiseconds)}`;
-    },
+    formatVideoTimestamp,
     pixelsToSeconds(pixels: number): number {
       const rect = (
         this.$refs.timelineAxis as HTMLElement
@@ -290,11 +245,9 @@ export default defineComponent({
       };
     },
     onClickInteraction(interaction: Interaction) {
-      console.log('onClickInteraction');
       this.$emit('clickInteraction', interaction);
     },
     onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
-      console.log('onPointerDownInteraction');
       if (event.button !== 0) {
         // Prevent unintentionally selecting interaction when dragging to
         // scroll around in the timeline
@@ -328,11 +281,14 @@ export default defineComponent({
           this.videoMetadata.length - this.dragState.interactionDuration;
         const secondsClamped = Math.max(0, Math.min(maxTime, seconds));
         const id = this.dragState.id;
-        this.editor?.dragInteractionTimeline(id, secondsClamped);
+        this.editor!.dragInteractionTimeline(
+          id,
+          secondsClamped,
+          this.dragState
+        );
       }
     },
     onPointerUpInteraction(event: PointerEvent, interaction: Interaction) {
-      console.log('onPointerUpInteraction');
       this.dragState = undefined;
       (event.target as HTMLElement).releasePointerCapture(event.pointerId);
     },
@@ -363,8 +319,12 @@ export default defineComponent({
           0,
           Math.min(interaction.endTime - 1, this.dragState.time)
         );
-        // TODO make undoable
-        interaction.startTime = timeClamped;
+        this.editor!.resizeInteractionTimeline(
+          interaction.id,
+          'start',
+          timeClamped,
+          this.dragState
+        );
       }
     },
     onPointerMoveInteractionEnd(ev: PointerEvent, interaction: Interaction) {
@@ -378,8 +338,12 @@ export default defineComponent({
           interaction.startTime + 1,
           Math.min(this.videoMetadata.length, this.dragState.time)
         );
-        // TODO make undoable
-        interaction.endTime = secondsClamped;
+        this.editor!.resizeInteractionTimeline(
+          interaction.id,
+          'end',
+          secondsClamped,
+          this.dragState
+        );
       }
     },
     onPointerUpInteractionStart(ev: PointerEvent, interaction: Interaction) {
@@ -395,7 +359,6 @@ export default defineComponent({
       this.$emit('timelineSeek', time);
     },
     onDragStartTimeMarker(e: DragEvent) {
-      console.log('dragstart time marker');
       this.dragState = { type: 'timeMarker' };
     },
     onDragOverTimeline(e: DragEvent) {

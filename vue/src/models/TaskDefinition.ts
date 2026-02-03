@@ -11,8 +11,8 @@ import FindTheHotspotsEditor from '@/components/findTheHotspots/FindTheHotspotsE
 import FindTheHotspotsViewer from '@/components/findTheHotspots/FindTheHotspotsViewer.vue';
 import FindTheWordsEditor from '@/components/findTheWords/FindTheWordsEditor.vue';
 import FindTheWordsViewer from '@/components/findTheWords/FindTheWordsViewer.vue';
-import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
-import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
+import InteractiveVideoEditor from '@/components/interactiveVideo/editor/InteractiveVideoEditor.vue';
+import InteractiveVideoViewer from '@/components/interactiveVideo/viewer/InteractiveVideoViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
 import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
@@ -281,6 +281,9 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
     sequencingTaskSchema,
   ]
 );
+export type TaskDefinitionMinusInteractiveVideo = z.infer<
+  typeof taskDefinitionSchemaMinusInteractiveVideo
+>;
 
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
@@ -392,6 +395,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         autoplay: false,
         startAt: 0,
         disableNavigation: 'not disabled',
+        travisGoSettings: {
+          enabled: false,
+          projectTitle: $gettext('Projekttitel'),
+          projectDescription: $gettext('Projektbeschreibung'),
+        },
       };
     case 'FillInTheBlanks':
       return {

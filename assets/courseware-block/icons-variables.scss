@@ -1,3 +1,10 @@
+// This file is to be compiled by Stud.IP, providing us the ability to use Stud.IP's
+// built in SCSS utilities to include icons etc.
+// We haven't found a good way to do that inside of our Vue/Webpack project at the
+// time of writing.
+// We have also copied / reimplemented some of Stud.IP's SCSS here in order to make it
+// available on previous versions of Stud.IP that this plugin supports.
+
 .button-with-empty-icon {
   white-space: nowrap;
 
@@ -96,6 +103,17 @@
   @include button-with-icon(zoom-out, clickable, info_alt);
 }
 
+.button.date {
+    @include button-with-icon(date, clickable, info_alt);
+}
+
+// Separate class needed to use the 'search' icon while avoiding the
+// weird CSS rules added to .button.search in Stud.IP 6.x
+.button.h5p-search {
+    @include button-with-icon(search, clickable, info_alt)
+}
+
+// A button which is just an icon without text.
 .small-button.edit {
   @include button-with-icon(edit, clickable, info_alt);
   &::before {
@@ -110,10 +128,109 @@
   }
 }
 
-// A button which is just an icon without text.
 .small-button.trash {
   @include button-with-icon(trash, clickable, info_alt);
   &::before {
     margin: unset; // Remove the margin set by button-with-icon
   }
+}
+
+.small-button.cancel {
+    @include button-with-icon(decline, clickable, info_alt);
+    &::before {
+        margin: unset; // Remove the margin set by button-with-icon
+    }
+}
+
+@function icon-path($icon, $role: clickable) {
+    $icon: unquote($icon);
+    $role: unquote($role);
+
+    $color: 'blue';
+    @if $role == info {
+        $color: 'black';
+    } @else if $role == accept or $role == status-green {
+        $color: 'green';
+    } @else if $role == inactive {
+        $color: 'grey';
+    } @else if $role == new or $role == attention or $role == status-red {
+        $color: 'red';
+    } @else if $role == info_alt or $role == info-alt {
+        $color: 'white';
+    } @else if $role == status-yellow {
+        $color: 'yellow';
+    }
+
+    @return "#{$icon-path}/#{$color}/#{$icon}.svg";
+}
+
+@mixin icon($position, $icon, $role: clickable, $size: var(--icon-size-default), $padding: 0, $inline: false, $align: text-top) {
+    $position: $position;
+    $svg: icon-path($icon, $role);
+
+    @if $inline {
+        $size: var(--icon-size-inline);
+    }
+
+    @if $position == before or $position == after {
+        &::#{$position} {
+            content: '';
+            display: inline-block;
+            height: $size;
+            width: $size;
+            background-color: currentColor;
+            mask: url("#{$svg}") no-repeat center / contain;
+            vertical-align: $align;
+
+
+            @if $position == before {
+                margin-right: $padding;
+            } @else {
+                margin-left: $padding;
+            }
+        }
+    }
+}
+
+$image-path: "../../../../../assets/images" !default;
+$icon-path: "#{$image-path}/icons" !default;
+
+// Variables missing in Stud.IP 5.4
+:root {
+    @if( not global-variable-exists(icon-size-default)) {
+        --icon-size-default: 20px;
+    }
+    @if( not global-variable-exists(icon-size-inline)) {
+        --icon-size-inline: 16px;
+    }
+    @if( not global-variable-exists(icon-size-button)) {
+        --icon-size-button: 16px;
+    }
+    @if( not global-variable-exists(color--gray-6)) {
+        --color--gray-6: #ededed;
+    }
+
+    --icon-size-inline-h5p: 1em;
+}
+
+.travis-go-participants-list {
+    @include icon(before, own-license, info, var(--icon-size-button));
+}
+
+.travis-go-post {
+    &[data-post-type='image'] {
+        @include icon(before, picture, info, var(--icon-size-inline-h5p));
+    }
+    &[data-post-type='meta'] {
+        @include icon(before, exclaim-circle, info, var(--icon-size-inline-h5p));
+    }
+    &[data-post-type='text'] {
+        @include icon(before, file-text, info, var(--icon-size-inline-h5p));
+    }
+    &[data-post-type='audio'] {
+        @include icon(before, audio, info, var(--icon-size-inline-h5p));
+    }
+    &[data-post-type='unknown'] {
+        @include icon(before, question, info, var(--icon-size-inline-h5p));
+    }
 }

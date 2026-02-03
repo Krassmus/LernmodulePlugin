@@ -25,7 +25,7 @@ the Stud.IP core 5.4, rewritten in Typescript / Vue 3, removing its dependency
 </template>
 
 <script lang="ts">
-import FolderPicker from '@/components/courseware-components-ported-to-vue3/FolderPicker.vue';
+import FolderPicker from '@/components/studip/FolderPicker.vue';
 import { mapActions, mapGetters } from 'vuex';
 import { defineComponent } from 'vue';
 import { $gettext } from '../../language/gettext';

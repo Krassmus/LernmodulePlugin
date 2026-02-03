@@ -3,17 +3,18 @@ import { defineComponent, inject, PropType } from 'vue';
 import {
   InteractiveVideoEditorState,
   interactiveVideoEditorStateSymbol,
-} from '@/components/interactiveVideo/interactiveVideoEditorState';
+} from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
 import { Interaction, LmbTaskInteraction } from '@/models/InteractiveVideoTask';
-import { iconForTaskType, printTaskType } from '../../../models/TaskDefinition';
+import { iconForTaskType, printTaskType } from '@/models/TaskDefinition';
 
 export default defineComponent({
   name: 'LmbTaskInteraction',
   methods: { iconForTaskType, printTaskType },
   setup() {
     return {
-      editor: inject<InteractiveVideoEditorState>(
-        interactiveVideoEditorStateSymbol
+      editor: inject<InteractiveVideoEditorState | undefined>(
+        interactiveVideoEditorStateSymbol,
+        undefined
       ),
     };
   },

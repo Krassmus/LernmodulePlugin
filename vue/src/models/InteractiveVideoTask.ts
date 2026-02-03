@@ -146,6 +146,13 @@ const videoSchema = z.union([
 ]);
 export type Video = z.infer<typeof videoSchema>;
 
+export const travisGoSettingsSchema = z.object({
+  enabled: z.boolean(),
+  projectTitle: z.string(),
+  projectDescription: z.string(),
+});
+export type TravisGoSettings = z.infer<typeof travisGoSettingsSchema>;
+
 export const interactiveVideoTaskSchema = z.object({
   task_type: z.literal('InteractiveVideo'),
   video: videoSchema,
@@ -159,6 +166,13 @@ export const interactiveVideoTaskSchema = z.object({
     ])
     .default('not disabled'),
   interactions: z.array(interactiveVideoInteractionSchema),
+  travisGoSettings: travisGoSettingsSchema.optional().default(
+    (): TravisGoSettings => ({
+      enabled: false,
+      projectTitle: '',
+      projectDescription: '',
+    })
+  ),
 });
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
 
@@ -191,3 +205,80 @@ export const resizeHandles = [
   'bottom-left',
 ] as const;
 export type ResizeHandle = typeof resizeHandles[number];
+
+const permissionsSchema = z.object({
+  mayEdit: z.boolean(),
+  mayDelete: z.boolean(),
+});
+
+const travisGoPostTypeSchema = z.union([
+  z.literal('meta'),
+  z.literal('image'),
+  z.literal('audio'),
+  z.literal('text'),
+]);
+export type TravisGoPostType = z.infer<typeof travisGoPostTypeSchema>;
+const travisGoPostEditableKeys = {
+  video_id: z.string(),
+  video_type: z.enum(['lernmodule_module', 'cw_blocks']),
+  start_time: z.coerce.number(),
+  end_time: z.coerce.number().nullable(),
+  contents: z.string(),
+  post_type: travisGoPostTypeSchema,
+};
+
+export const travisGoPostSchema = z.object({
+  attributes: z.object({
+    id: z.string(),
+    mk_user_id: z.string(),
+    mkdate: z.string().datetime({ offset: true }),
+    chdate: z.string().datetime({ offset: true }),
+    ...travisGoPostEditableKeys,
+  }),
+  meta: z.object({ permissions: permissionsSchema }),
+});
+export type TravisGoPost = z.infer<typeof travisGoPostSchema>;
+
+export const createPostRequestSchema = z.object(travisGoPostEditableKeys);
+export type CreatePostRequest = z.infer<typeof createPostRequestSchema>;
+export const updatePostRequestSchema = z.object({
+  id: z.string(),
+  attributes: z.object({
+    start_time: z.coerce.number(),
+    end_time: z.coerce.number().nullable(),
+    contents: z.string(),
+    post_type: travisGoPostTypeSchema,
+  }),
+});
+
+export type UpdatePostRequest = z.infer<typeof updatePostRequestSchema>;
+
+const travisGoCommentEditableKeys = {
+  post_id: z.string(),
+  contents: z.string(),
+};
+
+export const travisGoCommentSchema = z.object({
+  attributes: z.object({
+    id: z.string(),
+    mk_user_id: z.string(),
+    mkdate: z.string().datetime({ offset: true }),
+    chdate: z.string().datetime({ offset: true }),
+    ...travisGoCommentEditableKeys,
+  }),
+  meta: z.object({ permissions: permissionsSchema }),
+});
+export type TravisGoComment = z.infer<typeof travisGoCommentSchema>;
+
+export const createCommentRequestSchema = z.object({
+  attributes: z.object(travisGoCommentEditableKeys),
+});
+export type CreateCommentRequest = z.infer<typeof createCommentRequestSchema>;
+
+export const updateCommentRequestSchema = z.object({
+  id: z.string(),
+  attributes: z.object({
+    contents: z.string(),
+  }),
+});
+export type UpdateCommentRequest = z.infer<typeof updateCommentRequestSchema>;

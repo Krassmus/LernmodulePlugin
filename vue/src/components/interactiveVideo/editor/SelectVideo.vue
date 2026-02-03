@@ -1,40 +1,19 @@
-<!-- Allow us to mutate the prop 'taskDefinition' as much as we want-->
-<!-- eslint-disable vue/no-mutating-props -->
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType } from 'vue';
 import VideoPlayer from '@/components/interactiveVideo/VideoPlayer.vue';
 import { $gettext } from '@/language/gettext';
 import { InteractiveVideoTask, Video } from '@/models/InteractiveVideoTask';
 import FileUpload from '@/components/FileUpload.vue';
 import VideoTimeInput from '@/components/interactiveVideo/VideoTimeInput.vue';
-import FilePicker, {
-  FilePickerFile,
-} from '@/components/courseware-components-ported-to-vue3/FilePicker.vue';
+import FilePicker, { FilePickerFile } from '@/components/studip/FilePicker.vue';
 import { FileRef, fileRefsSchema } from '@/routes/jsonApi';
 import { fileDetailsUrl, fileIdToUrl } from '@/models/TaskDefinition';
 import { mapActions, mapGetters } from 'vuex';
-
-function formatSecondsToHhMmSs(time: number): string {
-  let hours = 0,
-    minutes = 0,
-    seconds = 0;
-  while (time > 3600) {
-    time -= 3600;
-    hours += 1;
-  }
-  while (time > 60) {
-    time -= 60;
-    minutes += 1;
-  }
-  seconds = time;
-  function twoDigits(n: number): string {
-    return n.toLocaleString('de-DE', {
-      minimumIntegerDigits: 2,
-      maximumFractionDigits: 0,
-    });
-  }
-  return `${twoDigits(hours)}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
-}
+import {
+  TaskEditorState,
+  taskEditorStateSymbol,
+} from '@/components/taskEditorState';
+import { cloneDeep } from 'lodash';
 
 export default defineComponent({
   name: 'SelectVideo',
@@ -44,8 +23,14 @@ export default defineComponent({
       required: true,
     },
   },
+  setup() {
+    return {
+      taskEditor: inject<TaskEditorState>(taskEditorStateSymbol),
+    };
+  },
   data() {
     return {
+      modelTaskDefinition: cloneDeep(this.taskDefinition),
       youtubeUrlInput: '',
       startPositionInputError: undefined as Error | undefined,
       currentTime: 0,
@@ -55,6 +40,13 @@ export default defineComponent({
     };
   },
   watch: {
+    // Synchronize state taskDefinition -> modelTaskDefinition.
+    taskDefinition: {
+      immediate: true,
+      handler: function (): void {
+        this.modelTaskDefinition = cloneDeep(this.taskDefinition);
+      },
+    },
     'taskDefinition.video': {
       immediate: true,
       handler: async function (value: Video) {
@@ -97,43 +89,55 @@ export default defineComponent({
     ...mapActions({
       loadFileRef: 'file-refs/loadById',
     }),
+    // Synchronize state modelTaskDefinition -> taskDefinition.
+    updateTaskDefinition(undoBatch?: unknown) {
+      this.taskEditor!.performEdit({
+        newTaskDefinition: cloneDeep(this.modelTaskDefinition),
+        undoBatch: undoBatch ?? {},
+      });
+    },
     onTimeUpdate(time: number) {
       this.currentTime = time;
     },
     onClickUseCurrentTime() {
-      this.taskDefinition.startAt = this.currentTime;
+      this.modelTaskDefinition.startAt = this.currentTime;
+      this.updateTaskDefinition('inputStartAt');
     },
     updateCurrentFile(file: FilePickerFile) {
       this.selectedFile = file;
       this.selectedFileId = file.id;
     },
     onSaveYoutubeVideo() {
-      this.taskDefinition.video = {
+      this.modelTaskDefinition.video = {
         type: 'youtube',
         url: this.youtubeUrlInput,
       };
+      this.updateTaskDefinition();
     },
     onSaveUploadedFile() {
       if (!this.selectedFile) {
-        return;
+        throw new Error('No selected file');
       }
-      this.taskDefinition.video = {
+      this.modelTaskDefinition.video = {
         v: 2,
         type: 'studipFileReference',
         file_id: this.selectedFile.id,
       };
+      this.updateTaskDefinition();
     },
     deleteVideo() {
-      this.taskDefinition.video = {
+      this.modelTaskDefinition.video = {
         type: 'none',
       };
+      this.updateTaskDefinition();
     },
     onUploadStudipVideo(file: FileRef) {
-      this.taskDefinition.video = {
+      this.modelTaskDefinition.video = {
         v: 2,
         type: 'studipFileReference',
         file_id: file.id,
       };
+      this.updateTaskDefinition();
       this.selectedFile = {
         id: file.id,
         name: file.attributes.name,
@@ -262,8 +266,11 @@ export default defineComponent({
     <fieldset>
       <legend>{{ $gettext('Einstellungen') }}</legend>
       <label>
-        <!-- eslint-disable vue/no-mutating-props -->
-        <input type="checkbox" v-model="taskDefinition.autoplay" />
+        <input
+          type="checkbox"
+          v-model="modelTaskDefinition.autoplay"
+          @input="updateTaskDefinition"
+        />
         {{ $gettext('Automatisch abspielen') }}
       </label>
       <div class="start-at-setting">
@@ -273,7 +280,8 @@ export default defineComponent({
             <VideoTimeInput
               :class="{ invalid: !!startPositionInputError }"
               :aria-invalid="!!startPositionInputError"
-              v-model="taskDefinition.startAt"
+              v-model="modelTaskDefinition.startAt"
+              @input="updateTaskDefinition('inputStartAt')"
               @update:error="(error) => (startPositionInputError = error)"
             />
           </label>
@@ -288,7 +296,10 @@ export default defineComponent({
       <label v-if="false">
         <!-- hidden until 'disable navigation' feature is ready -->
         {{ $gettext('Navigation deaktivieren') }}
-        <select v-model="taskDefinition.disableNavigation">
+        <select
+          v-model="modelTaskDefinition.disableNavigation"
+          @input="updateTaskDefinition"
+        >
           <option :value="'not disabled'">
             {{ $gettext('Nicht deaktiviert') }}
           </option>
