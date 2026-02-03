@@ -73,6 +73,13 @@ export default defineComponent({
           let data = this.getAdjustedCkeditorData();
           this.$emit('update:modelValue', data);
         });
+        ckeditor.ui.focusTracker.on(
+          'change:isFocused',
+          (event, name, value) => {
+            console.log('emitting isFocused change');
+            this.$emit('focus', { event, name, value });
+          }
+        );
         ckeditor.editing.view.document.on(
           'enter',
           (evt, data) => {

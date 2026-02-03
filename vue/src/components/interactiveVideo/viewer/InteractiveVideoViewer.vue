@@ -367,6 +367,30 @@ const postWysiwygInputElement = ref<
 >();
 const postTypeInput = ref<TravisGoPostType>('text');
 const createPostError = ref<string | undefined>();
+interface WysiwygFocusEvent {
+  event: unknown;
+  name: unknown;
+  value: boolean;
+}
+function onFocusPostWysiwyg(evt: WysiwygFocusEvent) {
+  console.log('onFocuspostWysiwyg', evt);
+  if (!evt.value) {
+    console.log('value is not true, returning early');
+    return;
+  }
+  if (startTimeInput.value === undefined) {
+    console.log(
+      'startTimeInput not set, setting start time',
+      startTimeInput.value,
+      'to current time:',
+      currentTime.value
+    );
+    startTimeInput.value = currentTime.value;
+  } else {
+    console.log('startTimeInput found, doing nothing', startTimeInput.value);
+  }
+}
+
 function cancelSearch() {
   searchInput.value = '';
 }
@@ -459,7 +483,7 @@ function submitEditedPost() {
       <VideoPlayer @timeupdate="onTimeUpdate" :task="task" ref="videoPlayer" />
       <div class="annotation-controls">
         <button class="button date time-input" @click="onClickStartTime">
-          <template v-if="startTimeInput">
+          <template v-if="startTimeInput !== undefined">
             {{ formatVideoTimestamp(startTimeInput, false, ':') }}
             <button class="small-button cancel" @click.stop="clearStartTime" />
           </template>
@@ -468,7 +492,7 @@ function submitEditedPost() {
           </template>
         </button>
         <button class="button date time-input" @click="onClickEndTime">
-          <template v-if="endTimeInput">
+          <template v-if="endTimeInput !== undefined">
             {{ formatVideoTimestamp(endTimeInput, false, ':') }}
             <button class="small-button cancel" @click.stop="clearEndTime" />
           </template>
@@ -487,6 +511,7 @@ function submitEditedPost() {
         insertHtmlComment
         v-model="postWysiwygInput"
         ref="postWysiwygInputElement"
+        @focus="onFocusPostWysiwyg"
       />
       <button
         v-if="editedPostId !== undefined"
