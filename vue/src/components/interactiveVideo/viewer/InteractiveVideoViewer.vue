@@ -371,7 +371,7 @@ const postWysiwygInput = ref<string>('');
 const postWysiwygInputElement = ref<
   InstanceType<typeof StudipWysiwyg> | undefined
 >();
-const postTypeInput = ref<TravisGoPostType>('text');
+const postTypeInput = ref<TravisGoPostType>('image');
 const createPostError = ref<string | undefined>();
 interface WysiwygFocusEvent {
   event: unknown;
@@ -497,11 +497,15 @@ function submitEditedPost() {
           </template>
         </button>
         <select class="post-type-input" v-model="postTypeInput">
-          <option value="meta">Meta</option>
-          <option value="image">Image</option>
+          <option value="image">{{ $gettext('Bild') }}</option>
           <option value="audio">Audio</option>
           <option value="text">Text</option>
+          <option value="meta">Meta</option>
         </select>
+        <div
+          class="tooltip tooltip-icon"
+          :data-tooltip="strings.postTypeTooltip"
+        />
       </div>
       <StudipWysiwyg
         insertHtmlComment

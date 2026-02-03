@@ -18,5 +18,6 @@ const strings = {
     'Die Posts unter dem Video konnten nicht geladen werden.'
   ),
   couldNotSendPostError: $gettext('Ihr Post konnte nicht gepostet werden.'),
+  postTypeTooltip: $gettext('Fokus, worauf sich der Post im Video bezieht'),
 } as const;
 export default strings;
