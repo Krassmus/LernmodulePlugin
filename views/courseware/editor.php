@@ -11,6 +11,7 @@ uses the full width of its iframe. .-->
         padding: 0 !important;
         margin: 0 !important;
         width: 100% !important;
+        overflow-x: clip;
     }
 </style>
 
