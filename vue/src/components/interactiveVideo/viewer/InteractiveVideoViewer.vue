@@ -169,11 +169,14 @@ function onTimeUpdate(time: number) {
 
 const startTimeInput = ref<number | undefined>();
 function onClickStartTime() {
-  if (startTimeInput.value) {
+  if (startTimeInput.value !== undefined) {
     seekVideo(startTimeInput.value);
   } else {
     startTimeInput.value = currentTime.value;
-    if (endTimeInput.value && endTimeInput.value < startTimeInput.value) {
+    if (
+      endTimeInput.value !== undefined &&
+      endTimeInput.value < startTimeInput.value
+    ) {
       endTimeInput.value = undefined;
     }
   }
@@ -188,7 +191,10 @@ function onClickEndTime() {
     seekVideo(endTimeInput.value);
   } else {
     endTimeInput.value = currentTime.value;
-    if (startTimeInput.value && endTimeInput.value < startTimeInput.value) {
+    if (
+      startTimeInput.value !== undefined &&
+      endTimeInput.value < startTimeInput.value
+    ) {
       startTimeInput.value = undefined;
     }
   }
