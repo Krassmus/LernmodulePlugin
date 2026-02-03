@@ -56,6 +56,9 @@ function searchUserComments(userId: string) {
 function searchPostAuthor(post: TravisGoPost) {
   searchUserComments(post.attributes.mk_user_id);
 }
+function searchPostType(post: TravisGoPost) {
+  searchInput.value = post.attributes.post_type;
+}
 function searchCommentAuthor(comment: TravisGoComment) {
   searchUserComments(comment.attributes.mk_user_id);
 }
@@ -592,6 +595,7 @@ function submitEditedPost() {
             @deletePost="deletePost"
             @deleteComment="deleteComment"
             @clickPostAuthorName="searchPostAuthor"
+            @clickPostType="searchPostType"
             @clickCommentAuthorName="searchCommentAuthor"
             :class="{
               odd: index % 2 === 0,
