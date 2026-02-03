@@ -121,7 +121,7 @@ function resetPostEditor() {
     endTimeInput.value !== undefined
   ) {
     const confirmed = confirm(
-      $gettext('Die Inhalte des Post-Editors werden gelöscht werden.')
+      $gettext('Die Inhalte des Post-Editors werden gelöscht.')
     );
     if (!confirmed) {
       return;
