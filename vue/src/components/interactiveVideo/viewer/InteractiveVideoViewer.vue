@@ -671,6 +671,8 @@ function submitEditedPost() {
       display: flex;
       align-items: center;
       gap: 0.5em;
+      /* Fixed height it doesn't change height when the 'X' button is visible */
+      height: 2.5em;
     }
     .post-type-input {
       align-self: stretch;
