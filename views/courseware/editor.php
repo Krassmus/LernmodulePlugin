@@ -13,6 +13,14 @@ uses the full width of its iframe. .-->
         width: 100% !important;
         overflow-x: clip;
     }
+    html {
+        /* Fix off-by-one error leading to right border of LMB blocks disappearing */
+        width: round(down, 100%, 1px);
+    }
+    #app {
+        /* Compensate for off-by-one error in iframeResizer making the iframe 1px too short. */
+        padding-bottom: 1px;
+    }
 </style>
 
 <!-- Make all links open in a new tab, unless otherwise specified.
