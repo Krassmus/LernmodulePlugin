@@ -1,6 +1,7 @@
 <?php
 
 use Courseware\CoursewarePlugin;
+use lib\CoursewareBlocks\CrosswordBlock;
 use lib\CoursewareBlocks\DragTheWordsBlock;
 use lib\CoursewareBlocks\FillInTheBlanksBlock;
 use lib\CoursewareBlocks\FindTheHotspotsBlock;
@@ -21,6 +22,7 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements SystemPlu
 
         require_once __DIR__ . '/lib/CoursewareBlocks/JsonSchemaTrait.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/LernmoduleBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/CrosswordBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/DragTheWordsBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/FindTheHotspotsBlock.php';
@@ -114,6 +116,9 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements SystemPlu
      */
     public function registerBlockTypes(array $otherBlockTypes): array
     {
+        if (Config::get()->LERNMODULE_PREVIEW) {
+            $otherBlockTypes[] = CrosswordBlock::class;
+        }
         $otherBlockTypes[] = DragTheWordsBlock::class;
         $otherBlockTypes[] = FillInTheBlanksBlock::class;
         $otherBlockTypes[] = FindTheHotspotsBlock::class;
