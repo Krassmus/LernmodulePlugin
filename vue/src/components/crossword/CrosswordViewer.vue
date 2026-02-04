@@ -1,6 +1,6 @@
 <template>
   <div class="stud5p-task">
-    <template v-if="props.task?.words.length > 0">
+    <template v-if="task.words.length > 0">
       <div class="canvas-and-hints-list-container">
         <div ref="canvasWrapperRef" class="canvas-wrapper">
           <!-- tabindex="0" is needed to make the canvas focusable and the keydown listener to work -->
@@ -17,7 +17,7 @@
         </div>
         <div class="hint-list">
           <div
-            v-for="word in props.task?.words"
+            v-for="word in task.words"
             :key="word.uuid"
             @click="onClickHint(word)"
             class="hint"
@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
 const gridSize = computed(() => {
   let size = 0;
 
-  words.value.forEach((word) => {
+  props.task.words.forEach((word) => {
     if (word.direction === 'across') {
       if (word.x + word.solution.length > size) {
         size = word.x + word.solution.length;
@@ -154,13 +154,6 @@ const cellSize = computed(() =>
 const fontSize = computed(() =>
   cellSize.value > 0 ? Math.floor(cellSize.value / 2) : 0
 );
-
-const words = computed(() => {
-  if (props.task?.words) {
-    return props.task.words;
-  }
-  return [];
-});
 
 const maxScore = computed(() => {
   let maxScore = 0;
@@ -297,7 +290,7 @@ function initializeGrids() {
   );
 
   // Create a path for each word based on it's starting coordinates and direction
-  placedWords.value = words.value.map((word) => ({
+  placedWords.value = props.task.words.map((word) => ({
     ...word,
     path: createWordPath(word),
   }));
@@ -370,7 +363,7 @@ function drawGrid() {
           cellSize.value,
           cellSize.value
         );
-      } else if (props.task?.colorEmptyCells) {
+      } else if (props.task.colorEmptyCells) {
         ctx.fillStyle = 'rgba(129,129,129,0.1)';
         ctx.fillRect(
           x * cellSize.value,
