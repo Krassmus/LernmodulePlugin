@@ -74,6 +74,7 @@
 import {
   computed,
   defineProps,
+  nextTick,
   onBeforeUnmount,
   onMounted,
   PropType,
@@ -83,7 +84,7 @@ import {
 import { CrosswordTask, Word } from '@/models/CrosswordTask';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
-import { throttle } from 'lodash';
+import { debounce, throttle } from 'lodash';
 
 const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 
@@ -127,7 +128,18 @@ onMounted(() => {
 onBeforeUnmount(() => {
   canvasObserver.disconnect();
 });
-const observationHook = throttle(updateCanvasSize, 100);
+
+/**
+ * Wrapped in debounce in order to prevent errors in dev mode,
+ * "ResizeObserver loop completed with undelivered notifications".
+ */
+const observationHook = debounce(
+  throttle(function onResizeCanvasWrapper() {
+    updateCanvasSize();
+    nextTick(() => drawGrid());
+  }, 100),
+  0
+);
 
 // Computed properties
 const gridSize = computed(() => {
@@ -262,14 +274,6 @@ function updateCanvasSize() {
   const newCanvasSize = Math.floor(
     Math.min(wrapper.clientWidth, wrapper.clientHeight)
   );
-  console.log(
-    'wrapper clientWidth and clientHeight:',
-    wrapper.clientWidth,
-    wrapper.clientHeight,
-    'CanvasSize new value: ',
-    newCanvasSize
-  );
-
   canvasSize.value = newCanvasSize;
 }
 
