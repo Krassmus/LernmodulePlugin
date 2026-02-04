@@ -780,32 +780,35 @@ function fillCell(cell: Cell, fillStyle: string) {
 <style scoped lang="scss">
 .canvas-and-hints-list-container {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
+  gap: 0.5em;
   align-items: stretch; /** makes children match containers height **/
 }
 
 .canvas-wrapper {
-  flex: 1 1 auto;
+  flex: 1;
   aspect-ratio: 1;
   display: flex;
   align-items: stretch;
   justify-content: center;
-  min-width: 0;
+  min-width: calc(min(300px, 100%));
   min-height: 0;
   canvas.crossword-canvas {
-    border: 1px solid #ddd;
+    border: 1px solid #ededed;
     outline: none;
   }
 }
 
 .hint-list {
-  flex: 0 0 clamp(16rem, 20vw, 28rem);
+  min-width: calc(min(200px, 100%));
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.75em;
   background: #f5f5f5;
   padding-left: 0.5em;
-  border: 1px solid #ccc;
+  border: 1px solid #ededed;
   overflow: scroll;
 }
 
