@@ -9,10 +9,9 @@
             tabindex="0"
             :width="canvasSize"
             :height="canvasSize"
-            :style="{ width: canvasSize + 'px', height: canvasSize + 'px' }"
             @pointerdown.stop="onPointerDownCanvas($event)"
             @keydown.stop="onKeyDownCanvas($event)"
-            class="canvas"
+            class="crossword-canvas"
           />
         </div>
         <div class="hint-list">
@@ -84,6 +83,7 @@ import {
 import { CrosswordTask, Word } from '@/models/CrosswordTask';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
+import { throttle } from 'lodash';
 
 const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 
@@ -116,19 +116,18 @@ const canvasSize = ref(0);
 
 // Lifecycle Hooks
 
+let canvasObserver: ResizeObserver;
 onMounted(() => {
   initializeGrids();
   updateCanvasSize();
   drawGrid();
-  window.addEventListener('resize', onWindowResize);
+  canvasObserver = new ResizeObserver(observationHook);
+  canvasObserver.observe(canvasWrapperRef.value!);
 });
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onWindowResize);
+  canvasObserver.disconnect();
 });
-function onWindowResize() {
-  console.log('onWindowResize()');
-  updateCanvasSize();
-}
+const observationHook = throttle(updateCanvasSize, 100);
 
 // Computed properties
 const gridSize = computed(() => {
@@ -774,7 +773,7 @@ function fillCell(cell: Cell, fillStyle: string) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .canvas-and-hints-list-container {
   display: flex;
   flex-direction: row;
@@ -783,16 +782,16 @@ function fillCell(cell: Cell, fillStyle: string) {
 
 .canvas-wrapper {
   flex: 1 1 auto;
+  aspect-ratio: 1;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   min-width: 0;
   min-height: 0;
-}
-
-.canvas {
-  border: 1px solid #ddd;
-  outline: none;
+  canvas.crossword-canvas {
+    border: 1px solid #ddd;
+    outline: none;
+  }
 }
 
 .hint-list {
