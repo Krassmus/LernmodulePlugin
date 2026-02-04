@@ -260,9 +260,18 @@ function updateCanvasSize() {
   console.log('updateCanvasSize');
   const wrapper = canvasWrapperRef.value;
   if (!wrapper) return;
-  canvasSize.value = Math.floor(
+  const newCanvasSize = Math.floor(
     Math.min(wrapper.clientWidth, wrapper.clientHeight)
   );
+  console.log(
+    'wrapper clientWidth and clientHeight:',
+    wrapper.clientWidth,
+    wrapper.clientHeight,
+    'CanvasSize new value: ',
+    newCanvasSize
+  );
+
+  canvasSize.value = newCanvasSize;
 }
 
 function onClickCheck(): void {
@@ -767,7 +776,6 @@ function fillCell(cell: Cell, fillStyle: string) {
 
 <style scoped>
 .canvas-and-hints-list-container {
-  height: 60dvh;
   display: flex;
   flex-direction: row;
   align-items: stretch; /** makes children match containers height **/
