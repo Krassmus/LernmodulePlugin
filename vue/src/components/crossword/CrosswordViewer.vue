@@ -120,11 +120,15 @@ onMounted(() => {
   initializeGrids();
   updateCanvasSize();
   drawGrid();
-  window.addEventListener('resize', updateCanvasSize);
+  window.addEventListener('resize', onWindowResize);
 });
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateCanvasSize);
+  window.removeEventListener('resize', onWindowResize);
 });
+function onWindowResize() {
+  console.log('onWindowResize()');
+  updateCanvasSize();
+}
 
 // Computed properties
 const gridSize = computed(() => {
@@ -200,6 +204,7 @@ const showCheckButton = computed(() => {
 watch(
   () => props.task,
   () => {
+    console.log('watcher for props.task');
     initializeGrids();
     if (canvasRef.value) {
       if (canvasRef.value.getContext('2d')) {
@@ -216,6 +221,7 @@ watch(
 watch(
   () => userInputGrid.value,
   () => {
+    console.log('watcher for userInputGrid');
     drawGrid();
   },
   { deep: true }
@@ -224,6 +230,7 @@ watch(
 watch(
   () => selectedCell.value,
   () => {
+    console.log('watcher for selectedCell');
     drawGrid();
     if (debug) {
       console.log(
@@ -239,6 +246,7 @@ watch(
 watch(
   () => selectedWord.value,
   () => {
+    console.log('watcher for selectedWord');
     drawGrid();
     if (debug) {
       console.log('selected word:', selectedWord.value?.solution);
@@ -249,6 +257,7 @@ watch(
 
 // Functions
 function updateCanvasSize() {
+  console.log('updateCanvasSize');
   const wrapper = canvasWrapperRef.value;
   if (!wrapper) return;
   canvasSize.value = Math.floor(
