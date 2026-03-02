@@ -120,7 +120,7 @@
         <TabComponent
           :title="$gettext('Einstellungen')"
           icon="settings"
-          class="tab-component"
+          class="tab-component settings-tab"
         >
           <h3>{{ $gettext('Allgemein') }}</h3>
           <label>
@@ -382,6 +382,9 @@ function onChangeDirection(uuid: string, event: Event) {
 <style scoped>
 .tab-component {
   padding: 0.5em;
+}
+.settings-tab {
+  padding: calc(0.5em + 10px);
 }
 
 .word-list-and-word-details-container {
