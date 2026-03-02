@@ -6,6 +6,13 @@
 .stud5p-task {
   font: 16px Lato, sans-serif;
   line-height: 1.625; /* 16px x 1.625 = 26px */
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.45em;
+  }
+  p {
+    margin-bottom: 0.45em;
+  }
 }
 
 /* Replace the border between toolbar and WYSIWYG textarea that is missing
@@ -80,3 +87,4 @@ button.add-blank {
     margin-right: 0.5em;
     margin-top: 0;
 }
+
