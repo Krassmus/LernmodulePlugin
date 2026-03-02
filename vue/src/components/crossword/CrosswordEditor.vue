@@ -375,6 +375,7 @@ function onChangeDirection(uuid: string, event: Event) {
 
 .word-list-and-word-details-container {
   display: flex;
+  gap: 0.5em;
   justify-content: space-between;
 }
 
