@@ -389,7 +389,7 @@ function onChangeDirection(uuid: string, event: Event) {
   padding: 1em;
   align-items: center;
   cursor: grab;
-  border: 1px solid #ccc;
+  border: 1px solid #ededed;
 }
 
 .selected-word {
