@@ -378,8 +378,11 @@ function onChangeDirection(uuid: string, event: Event) {
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  .add-word-button {
-    align-self: center;
+
+  .word-details {
+    padding: 10px;
+    border: 1px solid #ededed;
+    width: 400px;
   }
 }
 
@@ -387,30 +390,26 @@ function onChangeDirection(uuid: string, event: Event) {
   display: flex;
   flex-direction: column;
   padding: 10px;
-}
+  .add-word-button {
+    align-self: center;
+  }
+  .word-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
 
-.word-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
+    .word {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      align-items: center;
+      cursor: grab;
+      border: 1px solid #ededed;
+    }
 
-.word {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  align-items: center;
-  cursor: grab;
-  border: 1px solid #ededed;
-}
-
-.selected-word {
-  background: rgba(140, 180, 255, 0.13);
-}
-
-.word-details {
-  padding: 10px;
-  border: 1px solid #ededed;
-  width: 400px;
+    .selected-word {
+      background: rgba(140, 180, 255, 0.13);
+    }
+  }
 }
 </style>
