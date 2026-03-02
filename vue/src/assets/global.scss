@@ -4,6 +4,11 @@
 }
 
 .stud5p-task {
+  /**
+    My reasoning for using h3 is that we are generally inside of Courseware
+    (main level), inside of a certain task (second level), so the headings that
+    I use are h3 or smaller.
+  **/
   h3 {
     margin-top: 0;
     margin-bottom: 0.45em;
