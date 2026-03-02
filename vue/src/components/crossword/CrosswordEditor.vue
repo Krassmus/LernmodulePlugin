@@ -21,6 +21,7 @@
                   <div
                     class="word"
                     @click="onClickWord(element.uuid)"
+                    @focusin="onFocusInWord(element.uuid)"
                     :class="{
                       'selected-word': selectedWord?.uuid === element.uuid,
                     }"
@@ -300,6 +301,12 @@ function addWord(): void {
 }
 
 function onClickWord(uuid: string): void {
+  selectedWord.value = modelTaskDefinition.value.words.find(
+    (word) => word.uuid === uuid
+  );
+}
+
+function onFocusInWord(uuid: string): void {
   selectedWord.value = modelTaskDefinition.value.words.find(
     (word) => word.uuid === uuid
   );
