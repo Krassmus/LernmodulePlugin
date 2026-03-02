@@ -9,6 +9,7 @@
         >
           <div class="word-list-and-word-details-container">
             <div class="word-list-container">
+              <h3>Wörter</h3>
               <draggable
                 v-model="wordList"
                 item-key="uuid"
@@ -45,7 +46,11 @@
                   </div>
                 </template>
               </draggable>
-              <button type="button" class="button add" @click="addWord">
+              <button
+                type="button"
+                class="button add add-word-button"
+                @click="addWord"
+              >
                 {{ $gettext('Neues Wort hinzufügen') }}
               </button>
             </div>
@@ -373,14 +378,16 @@ function onChangeDirection(uuid: string, event: Event) {
 
 .word-list-and-word-details-container {
   display: flex;
-  gap: 0.5em;
+  gap: 1em;
   justify-content: space-between;
+  .add-word-button {
+    align-self: center;
+  }
 }
 
 .word-list-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .word-list {
