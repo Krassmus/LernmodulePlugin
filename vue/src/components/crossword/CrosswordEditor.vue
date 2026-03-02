@@ -55,63 +55,61 @@
               </button>
             </div>
             <div class="word-details">
-              <fieldset>
-                <legend>{{ $gettext('Wort bearbeiten') }}</legend>
+              <h3>{{ $gettext('Wort bearbeiten') }}</h3>
 
-                <template v-if="selectedWord">
-                  <label>
-                    {{ $gettext('Richtung') }}
-                    <select
-                      v-model="selectedWord.direction"
-                      @change="onChangeDirection(selectedWord.uuid, $event)"
-                    >
-                      <option value="across">
-                        {{ $gettext('Waagerecht') }}
-                      </option>
-                      <option value="down">
-                        {{ $gettext('Senkrecht') }}
-                      </option>
-                    </select>
-                  </label>
-                  <label>
-                    {{ $gettext('Spalte') }}
-                    <input
-                      type="number"
-                      v-model.number="selectedWord.x"
-                      min="0"
-                      max="100"
-                      step="1"
-                      @input="
-                        onInputXCoordinate(selectedWord.uuid, selectedWord.x)
-                      "
-                      :placeholder="'x'"
-                    />
-                  </label>
-                  <label>
-                    {{ $gettext('Reihe') }}
-                    <input
-                      type="number"
-                      v-model.number="selectedWord.y"
-                      min="0"
-                      max="100"
-                      step="1"
-                      @input="
-                        onInputYCoordinate(selectedWord.uuid, selectedWord.y)
-                      "
-                      :placeholder="'y'"
-                    />
-                  </label>
-                </template>
-                <template v-else>
-                  <p>
-                    {{
-                      $gettext(
-                        'Bitte wählen Sie ein Wort aus, um es zu bearbeiten.'
-                      )
-                    }}
-                  </p>
-                </template>
-              </fieldset>
+              <template v-if="selectedWord">
+                <label>
+                  {{ $gettext('Richtung') }}
+                  <select
+                    v-model="selectedWord.direction"
+                    @change="onChangeDirection(selectedWord.uuid, $event)"
+                  >
+                    <option value="across">
+                      {{ $gettext('Waagerecht') }}
+                    </option>
+                    <option value="down">
+                      {{ $gettext('Senkrecht') }}
+                    </option>
+                  </select>
+                </label>
+                <label>
+                  {{ $gettext('Spalte') }}
+                  <input
+                    type="number"
+                    v-model.number="selectedWord.x"
+                    min="0"
+                    max="100"
+                    step="1"
+                    @input="
+                      onInputXCoordinate(selectedWord.uuid, selectedWord.x)
+                    "
+                    :placeholder="'x'"
+                  />
+                </label>
+                <label>
+                  {{ $gettext('Reihe') }}
+                  <input
+                    type="number"
+                    v-model.number="selectedWord.y"
+                    min="0"
+                    max="100"
+                    step="1"
+                    @input="
+                      onInputYCoordinate(selectedWord.uuid, selectedWord.y)
+                    "
+                    :placeholder="'y'"
+                  />
+                </label>
+              </template>
+              <template v-else>
+                <p>
+                  {{
+                    $gettext(
+                      'Bitte wählen Sie ein Wort aus, um es zu bearbeiten.'
+                    )
+                  }}
+                </p>
+              </template>
             </div>
           </div>
         </TabComponent>
@@ -378,7 +376,7 @@ function onChangeDirection(uuid: string, event: Event) {
 
 .word-list-and-word-details-container {
   display: flex;
-  gap: 1em;
+  gap: 10px;
   justify-content: space-between;
   .add-word-button {
     align-self: center;
@@ -388,6 +386,7 @@ function onChangeDirection(uuid: string, event: Event) {
 .word-list-container {
   display: flex;
   flex-direction: column;
+  padding: 10px;
 }
 
 .word-list {
@@ -398,8 +397,8 @@ function onChangeDirection(uuid: string, event: Event) {
 
 .word {
   display: flex;
-  gap: 1em;
-  padding: 1em;
+  gap: 10px;
+  padding: 10px;
   align-items: center;
   cursor: grab;
   border: 1px solid #ededed;
@@ -410,6 +409,8 @@ function onChangeDirection(uuid: string, event: Event) {
 }
 
 .word-details {
+  padding: 10px;
+  border: 1px solid #ededed;
   width: 400px;
 }
 </style>
