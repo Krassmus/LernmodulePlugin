@@ -376,13 +376,19 @@ function onChangeDirection(uuid: string, event: Event) {
 
 .word-list-and-word-details-container {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: space-between;
 
-  .word-details {
+  > .word-list-container {
+    flex: 1;
+    min-width: calc(min(400px, 100%));
+  }
+  > .word-details {
+    flex: 1;
+    min-width: calc(min(200px, 100%));
     padding: 10px;
     border: 1px solid #ededed;
-    width: 400px;
   }
 }
 
