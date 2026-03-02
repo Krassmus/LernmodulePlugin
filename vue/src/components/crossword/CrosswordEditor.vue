@@ -25,6 +25,9 @@
                       'selected-word': selectedWord?.uuid === element.uuid,
                     }"
                   >
+                    <a class="drag-link">
+                      <span class="drag-handle" />
+                    </a>
                     <input
                       type="text"
                       v-model="element.hint"
