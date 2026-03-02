@@ -48,8 +48,7 @@
                     </div>
                   </template>
                 </draggable>
-
-                <button type="button" class="button" @click="addWord">
+                <button type="button" class="button add" @click="addWord">
                   {{ $gettext('Neues Wort hinzufügen') }}
                 </button>
               </div>
@@ -375,6 +374,9 @@ function onChangeDirection(uuid: string, event: Event) {
 }
 
 .word-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .word-list {
