@@ -177,6 +177,13 @@
             </label>
           </TabComponent>
           <TabComponent
+            class="tab-component"
+            :title="$gettext('Vorschau')"
+            icon="visibility-visible"
+          >
+            <CrosswordViewer :task="taskDefinition" />
+          </TabComponent>
+          <TabComponent
             v-if="debug"
             :title="'Task Definition (debug)'"
             icon="visibility-visible"
@@ -211,6 +218,7 @@ import TabsComponent from '@/components/studip/TabsComponent.vue';
 import produce from 'immer';
 import { v4 } from 'uuid';
 import draggable from 'vuedraggable';
+import CrosswordViewer from '@/components/crossword/CrosswordViewer.vue';
 
 const taskEditor = inject<TaskEditorState>(taskEditorStateSymbol);
 
