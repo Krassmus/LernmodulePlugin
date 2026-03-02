@@ -119,6 +119,7 @@
             icon="settings"
             class="tab-component"
           >
+            <h3>{{ $gettext('Allgemein') }}</h3>
             <label>
               {{ $gettext('Leere Felder einfärben:') }}
               <input
@@ -127,12 +128,7 @@
                 type="checkbox"
               />
             </label>
-          </TabComponent>
-          <TabComponent
-            :title="$gettext('Beschriftungen')"
-            icon=""
-            class="tab-component"
-          >
+            <h3>{{ $gettext('Beschriftungen') }}</h3>
             <label>
               {{ $gettext('Text für Überprüfen-Button:') }}
               <input
@@ -165,8 +161,7 @@
                 type="text"
               />
             </label>
-          </TabComponent>
-          <TabComponent :title="$gettext('Feedback')" class="tab-component">
+            <h3>{{ $gettext('Feedback') }}</h3>
             <label>
               {{
                 $gettext(
