@@ -1,205 +1,201 @@
 <template>
   <div class="stud5p-task">
     <form class="default" @submit.prevent>
-      <fieldset>
-        <legend>{{ $gettext('Crossword') }}</legend>
-
-        <TabsComponent>
-          <TabComponent
-            :title="$gettext('Wörter eingeben')"
-            icon="content"
-            class="tab-component"
-          >
-            <div class="word-list-and-word-details-container">
-              <div class="word-list-container">
-                <draggable
-                  v-model="wordList"
-                  item-key="uuid"
-                  class="word-list"
-                  :filter="'input,button'"
-                  :preventOnFilter="false"
-                >
-                  <template #item="{ element }">
-                    <div
-                      class="word"
-                      @click="onClickWord(element.uuid)"
-                      :class="{
-                        'selected-word': selectedWord?.uuid === element.uuid,
-                      }"
-                    >
-                      <input
-                        type="text"
-                        v-model="element.hint"
-                        @input="onInputHint(element.uuid, element.hint)"
-                        :placeholder="$gettext('Hinweis')"
-                      />
-                      <input
-                        type="text"
-                        v-model="element.solution"
-                        @input="onInputSolution(element.uuid, element.solution)"
-                        :placeholder="$gettext('Lösung')"
-                      />
-                      <button
-                        type="button"
-                        class="small-button trash"
-                        @click="deleteWord(element.uuid)"
-                        :title="$gettext('Dieses Wort löschen')"
-                      />
-                    </div>
-                  </template>
-                </draggable>
-                <button type="button" class="button add" @click="addWord">
-                  {{ $gettext('Neues Wort hinzufügen') }}
-                </button>
-              </div>
-              <div class="word-details">
-                <fieldset>
-                  <legend>{{ $gettext('Wort bearbeiten') }}</legend>
-
-                  <template v-if="selectedWord">
-                    <label>
-                      {{ $gettext('Richtung') }}
-                      <select
-                        v-model="selectedWord.direction"
-                        @change="onChangeDirection(selectedWord.uuid, $event)"
-                      >
-                        <option value="across">
-                          {{ $gettext('Waagerecht') }}
-                        </option>
-                        <option value="down">
-                          {{ $gettext('Senkrecht') }}
-                        </option>
-                      </select>
-                    </label>
-                    <label>
-                      {{ $gettext('Spalte') }}
-                      <input
-                        type="number"
-                        v-model.number="selectedWord.x"
-                        min="0"
-                        max="100"
-                        step="1"
-                        @input="
-                          onInputXCoordinate(selectedWord.uuid, selectedWord.x)
-                        "
-                        :placeholder="'x'"
-                      />
-                    </label>
-                    <label>
-                      {{ $gettext('Reihe') }}
-                      <input
-                        type="number"
-                        v-model.number="selectedWord.y"
-                        min="0"
-                        max="100"
-                        step="1"
-                        @input="
-                          onInputYCoordinate(selectedWord.uuid, selectedWord.y)
-                        "
-                        :placeholder="'y'"
-                      />
-                    </label>
-                  </template>
-                  <template v-else>
-                    <p>
-                      {{
-                        $gettext(
-                          'Bitte wählen Sie ein Wort aus, um es zu bearbeiten.'
-                        )
-                      }}
-                    </p>
-                  </template>
-                </fieldset>
-              </div>
+      <TabsComponent>
+        <TabComponent
+          :title="$gettext('Wörter eingeben')"
+          icon="content"
+          class="tab-component"
+        >
+          <div class="word-list-and-word-details-container">
+            <div class="word-list-container">
+              <draggable
+                v-model="wordList"
+                item-key="uuid"
+                class="word-list"
+                :filter="'input,button'"
+                :preventOnFilter="false"
+              >
+                <template #item="{ element }">
+                  <div
+                    class="word"
+                    @click="onClickWord(element.uuid)"
+                    :class="{
+                      'selected-word': selectedWord?.uuid === element.uuid,
+                    }"
+                  >
+                    <input
+                      type="text"
+                      v-model="element.hint"
+                      @input="onInputHint(element.uuid, element.hint)"
+                      :placeholder="$gettext('Hinweis')"
+                    />
+                    <input
+                      type="text"
+                      v-model="element.solution"
+                      @input="onInputSolution(element.uuid, element.solution)"
+                      :placeholder="$gettext('Lösung')"
+                    />
+                    <button
+                      type="button"
+                      class="small-button trash"
+                      @click="deleteWord(element.uuid)"
+                      :title="$gettext('Dieses Wort löschen')"
+                    />
+                  </div>
+                </template>
+              </draggable>
+              <button type="button" class="button add" @click="addWord">
+                {{ $gettext('Neues Wort hinzufügen') }}
+              </button>
             </div>
-          </TabComponent>
-          <TabComponent
-            :title="$gettext('Einstellungen')"
-            icon="settings"
-            class="tab-component"
-          >
-            <h3>{{ $gettext('Allgemein') }}</h3>
-            <label>
-              {{ $gettext('Leere Felder einfärben:') }}
-              <input
-                v-model="modelTaskDefinition.colorEmptyCells"
-                @change="updateTaskDefinition('taskDefinition.colorEmptyCells')"
-                type="checkbox"
-              />
-            </label>
-            <h3>{{ $gettext('Beschriftungen') }}</h3>
-            <label>
-              {{ $gettext('Text für Überprüfen-Button:') }}
-              <input
-                v-model="modelTaskDefinition.strings.checkButton"
-                @input="
-                  updateTaskDefinition('taskDefinition.strings.checkButton')
-                "
-                type="text"
-              />
-            </label>
+            <div class="word-details">
+              <fieldset>
+                <legend>{{ $gettext('Wort bearbeiten') }}</legend>
 
-            <label>
-              {{ $gettext('Text für Wiederholen-Button:') }}
-              <input
-                v-model="modelTaskDefinition.strings.retryButton"
-                @input="
-                  updateTaskDefinition('taskDefinition.strings.retryButton')
-                "
-                type="text"
-              />
-            </label>
+                <template v-if="selectedWord">
+                  <label>
+                    {{ $gettext('Richtung') }}
+                    <select
+                      v-model="selectedWord.direction"
+                      @change="onChangeDirection(selectedWord.uuid, $event)"
+                    >
+                      <option value="across">
+                        {{ $gettext('Waagerecht') }}
+                      </option>
+                      <option value="down">
+                        {{ $gettext('Senkrecht') }}
+                      </option>
+                    </select>
+                  </label>
+                  <label>
+                    {{ $gettext('Spalte') }}
+                    <input
+                      type="number"
+                      v-model.number="selectedWord.x"
+                      min="0"
+                      max="100"
+                      step="1"
+                      @input="
+                        onInputXCoordinate(selectedWord.uuid, selectedWord.x)
+                      "
+                      :placeholder="'x'"
+                    />
+                  </label>
+                  <label>
+                    {{ $gettext('Reihe') }}
+                    <input
+                      type="number"
+                      v-model.number="selectedWord.y"
+                      min="0"
+                      max="100"
+                      step="1"
+                      @input="
+                        onInputYCoordinate(selectedWord.uuid, selectedWord.y)
+                      "
+                      :placeholder="'y'"
+                    />
+                  </label>
+                </template>
+                <template v-else>
+                  <p>
+                    {{
+                      $gettext(
+                        'Bitte wählen Sie ein Wort aus, um es zu bearbeiten.'
+                      )
+                    }}
+                  </p>
+                </template>
+              </fieldset>
+            </div>
+          </div>
+        </TabComponent>
+        <TabComponent
+          :title="$gettext('Einstellungen')"
+          icon="settings"
+          class="tab-component"
+        >
+          <h3>{{ $gettext('Allgemein') }}</h3>
+          <label>
+            {{ $gettext('Leere Felder einfärben:') }}
+            <input
+              v-model="modelTaskDefinition.colorEmptyCells"
+              @change="updateTaskDefinition('taskDefinition.colorEmptyCells')"
+              type="checkbox"
+            />
+          </label>
+          <h3>{{ $gettext('Beschriftungen') }}</h3>
+          <label>
+            {{ $gettext('Text für Überprüfen-Button:') }}
+            <input
+              v-model="modelTaskDefinition.strings.checkButton"
+              @input="
+                updateTaskDefinition('taskDefinition.strings.checkButton')
+              "
+              type="text"
+            />
+          </label>
 
-            <label>
-              {{ $gettext('Text für Lösungen-Button:') }}
-              <input
-                v-model="modelTaskDefinition.strings.solutionsButton"
-                @input="
-                  updateTaskDefinition('taskDefinition.strings.solutionsButton')
-                "
-                type="text"
-              />
-            </label>
-            <h3>{{ $gettext('Feedback') }}</h3>
-            <label>
-              {{
-                $gettext(
-                  'Ergebnismitteilung (mögliche Variablen :correct und :total):'
-                )
-              }}
-              <input
-                v-model="modelTaskDefinition.strings.resultMessage"
-                @input="
-                  updateTaskDefinition('taskDefinition.strings.resultMessage')
-                "
-                type="text"
-              />
-            </label>
-          </TabComponent>
-          <TabComponent
-            class="tab-component"
-            :title="$gettext('Vorschau')"
-            icon="visibility-visible"
+          <label>
+            {{ $gettext('Text für Wiederholen-Button:') }}
+            <input
+              v-model="modelTaskDefinition.strings.retryButton"
+              @input="
+                updateTaskDefinition('taskDefinition.strings.retryButton')
+              "
+              type="text"
+            />
+          </label>
+
+          <label>
+            {{ $gettext('Text für Lösungen-Button:') }}
+            <input
+              v-model="modelTaskDefinition.strings.solutionsButton"
+              @input="
+                updateTaskDefinition('taskDefinition.strings.solutionsButton')
+              "
+              type="text"
+            />
+          </label>
+          <h3>{{ $gettext('Feedback') }}</h3>
+          <label>
+            {{
+              $gettext(
+                'Ergebnismitteilung (mögliche Variablen :correct und :total):'
+              )
+            }}
+            <input
+              v-model="modelTaskDefinition.strings.resultMessage"
+              @input="
+                updateTaskDefinition('taskDefinition.strings.resultMessage')
+              "
+              type="text"
+            />
+          </label>
+        </TabComponent>
+        <TabComponent
+          class="tab-component"
+          :title="$gettext('Vorschau')"
+          icon="visibility-visible"
+        >
+          <CrosswordViewer :task="taskDefinition" />
+        </TabComponent>
+        <TabComponent
+          v-if="debug"
+          :title="'Task Definition (debug)'"
+          icon="visibility-visible"
+        >
+          <pre
+            v-if="debug && true"
+            :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
+            >{{
+              {
+                taskDefinition,
+              }
+            }}</pre
           >
-            <CrosswordViewer :task="taskDefinition" />
-          </TabComponent>
-          <TabComponent
-            v-if="debug"
-            :title="'Task Definition (debug)'"
-            icon="visibility-visible"
-          >
-            <pre
-              v-if="debug && true"
-              :style="{ flexBasis: '50%', flexGrow: 0, flexShrink: 0 }"
-              >{{
-                {
-                  taskDefinition,
-                }
-              }}</pre
-            >
-          </TabComponent>
-        </TabsComponent>
-      </fieldset>
+        </TabComponent>
+      </TabsComponent>
     </form>
   </div>
 </template>
