@@ -47,7 +47,7 @@ export default defineComponent({
     class="lernmodule-viewer"
   />
   <template v-if="showEditingUI">
-    <template v-if="debug">
+    <template v-if="debug && false">
       <!--   TODO Design UI for undo/redo and enable them after all task editors
               have been adjusted to make undo/redo work. -->
       <button @click="undo" :disabled="!canUndo">undo</button>
