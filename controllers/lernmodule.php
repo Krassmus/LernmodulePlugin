@@ -585,17 +585,16 @@ class LernmoduleController extends PluginController
 
                 $connection['block_id'] = $this->blocks[count($this->blocks) - 1]->getId();
                 $connection->store();
+                PageLayout::postSuccess(_("Lernmodul wurde verschoben."));
             } elseif (Request::submitted('copy')) {
                 $lernmodule = Lernmodul::createCopyFromModule($this->module);
 
                 $connection = $lernmodule->courseConnection(Request::option("seminar_id"));
                 $connection['block_id'] = $this->blocks[count($this->blocks) - 1]->getId();
                 $connection->store();
+                PageLayout::postSuccess(_("Lernmodul wurde kopiert."));
             }
 
-
-
-            PageLayout::postSuccess(_("Lernmodul wurde verschoben."));
             $this->redirect(PluginEngine::getURL($this->plugin, array('cid' => Request::option("seminar_id")), "lernmodule/overview"));
             return;
         }
