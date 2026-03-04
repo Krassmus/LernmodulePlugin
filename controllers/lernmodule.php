@@ -598,46 +598,28 @@ class LernmoduleController extends PluginController
             $this->redirect(PluginEngine::getURL($this->plugin, array('cid' => Request::option("seminar_id")), "lernmodule/overview"));
             return;
         }
+        // Admins get a QuickSearch, but normal teachers (Dozent) get an ordinary <select> with all of the
+        // Courses that they belong to already filled out and sorted by semester, making this feature a bit more
+        // discoverable for them.
         if (!$GLOBALS['perm']->have_perm("admin")) {
-            $statement = DBManager::get()->prepare("
-                SELECT seminare.*
-                FROM seminare
-                    INNER JOIN seminar_user ON (seminar_user.Seminar_id = seminare.Seminar_id)
-                WHERE seminar_user.user_id = :user_id
-                    AND seminar_user.status IN ('tutor', 'dozent')
-                ORDER BY seminare.start_time + seminare.duration_time DESC, seminare.name ASC
-            ");
-            $statement->execute(array('user_id' => $GLOBALS['user']->id));
+            $courses = Course::findByUser($GLOBALS['user']->id, ['tutor', 'dozent']);
             $this->semcourses = [];
-            $firstsemester_id = null;
-            foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $coursedata) {
-                $course = Course::buildExisting($coursedata);
-                if ($course['duration_time'] >= 0) {
-                    $semester = Semester::findByTimestamp($course['start_time'] + $course['duration_time']);
-                    if ($firstsemester_id === null) {
-                        $firstsemester_id = $semester->getId();
-                    }
-                    if (!isset($this->semcourses[$semester->getId()])) {
-                        $this->semcourses[$semester->getId()] = [
-                            'semester' => $semester,
-                            'courses' => []
-                        ];
-                    }
-                    $this->semcourses[$semester->getId()]['courses'][] = $course;
-                } else {
-                    if ($firstsemester_id === null) {
-                        $semester = Semester::findCurrent();
-                        $this->semcourses[$semester->getId()] = [
-                            'semester' => $semester,
-                            'courses' => []
-                        ];
-                        $firstsemester_id = $semester->getId();
-                    }
-                    $this->semcourses[$firstsemester_id]['courses'][] = $course;
+            foreach ($courses as $course) {
+                $semester = $course->getStartSemester();
+                if (!isset($this->semcourses[$semester->getId()])) {
+                    $this->semcourses[$semester->getId()] = [
+                        'semester' => $semester,
+                        'courses' => []
+                    ];
                 }
+                $this->semcourses[$semester->getId()]['courses'][] = $course;
             }
+            // Sort semesters in chronological order
+            usort($this->semcourses, function ($a, $b) {
+                return $a['semester']['beginn'] - $b['semester']['beginn'];
+            });
+            // Sort the courses within each semester by name
             foreach ($this->semcourses as $index => $semcourse) {
-                //now sort for name:
                 $courses = $semcourse['courses'];
                 usort($courses, function ($a, $b) {
                     return strcasecmp($a['name'], $b['name']);
