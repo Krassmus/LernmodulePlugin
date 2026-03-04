@@ -41,7 +41,7 @@
         }
     };
 
-    <? if ($module['customdata']['end_file']) : ?>
+    <? if (!empty($module['customdata']['end_file'])) : ?>
     var end_file_found = false;
     window.setInterval(function () {
         if (!end_file_found) {
