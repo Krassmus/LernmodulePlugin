@@ -436,7 +436,7 @@ class H5pController extends PluginController
         $answer = json_decode(Request::get("data"), true);
         $customdata = $this->attempt['customdata'] ? $this->attempt['customdata']->getArrayCopy() : array();
         $customdata['h5pstate'] = $answer;
-        if ($answer['finished']) {
+        if (!empty($answer['finished'])) {
             $this->attempt['successful'] = 1;
             if (Context::get()->id) {
                 $course_connection = $this->attempt->modul->courseConnection(Context::get()->id);
