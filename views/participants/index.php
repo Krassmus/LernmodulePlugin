@@ -1,4 +1,9 @@
 <?
+/**
+ * @var ParticipantsController $controller
+ * @var array $students
+ * @var array $module
+ */
 $student_data = array();
 foreach ($students as $student) {
     $data = $student->toArray();
