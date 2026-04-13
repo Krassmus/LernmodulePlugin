@@ -47,7 +47,7 @@ usort($student_data, function ($data1, $data2) {
                     </a>
                 </td>
                 <td>
-                    <? if ($student['solved'] > 0 && $student['solved'] >= count($module)) : ?>
+                    <? if ($controller->canViewEvaluation($student['user_id']) && $student['solved'] > 0 && $student['solved'] >= count($module)) : ?>
                         <?= Icon::create("crown", "status-yellow")->asImg(20, array('class' => "text-bottom", 'title' => dgettext("lernmoduleplugin","Besser geht es nicht!"))) ?>
                     <? endif ?>
                     <?= $student['solved'] ?>
