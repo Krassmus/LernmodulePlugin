@@ -222,7 +222,7 @@ class LernmoduleController extends PluginController
 
     public function evaluation_action($module_id = null)
     {
-        PageLayout::addScript("jquery/jquery.tablesorter-2.22.5.js");
+        PageLayout::addScript($this->plugin->getPluginURL()."/vendor/tablesorter-2.22.5/package/dist/js/jquery.tablesorter.min.js");
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id ?: null);
         if ($this->module['type'] && !$this->module->isNew()) {
