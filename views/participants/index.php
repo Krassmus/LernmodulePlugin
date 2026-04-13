@@ -31,9 +31,7 @@ usort($student_data, function ($data1, $data2) {
         <? foreach ($student_data as $student) : ?>
             <tr>
                 <td>
-                    <? $link = (Context::getId() && Config::get()->LERNMODUL_PARTICIPANT_EVALUATION && $GLOBALS['perm']->have_studip_perm(Config::get()->LERNMODUL_PARTICIPANT_EVALUATION, Context::getId()))
-                        ? PluginEngine::getLink($plugin, array(), "participants/evaluation/".$student['user_id'])
-                        : URLHelper::getLink("dispatch.php/profile", array('username' => $student['username'])) ?>
+                    <? $link = $controller->linkForStudent($student) ?>
                     <a href="<?= $link ?>">
                     <div style="width: 50px; height: 50px; background-size: 100% auto; background-image: url('<?= Avatar::getAvatar($student['user_id'])->getURL(Avatar::MEDIUM) ?>'); background-position:  center center; background-repeat: no-repeat;"></div>
                     </a>

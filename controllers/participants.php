@@ -33,7 +33,7 @@ class ParticipantsController extends PluginController
      */
     public function linkForStudent($student): string
     {
-        if ($this->canViewEvaluation()) {
+        if ($this->canViewEvaluation($student['user_id'])) {
             return PluginEngine::getLink($this->plugin, [], "participants/evaluation/" . $student['user_id']);
         } else {
             return URLHelper::getLink("dispatch.php/profile", ['username' => $student['username']]);
@@ -43,20 +43,27 @@ class ParticipantsController extends PluginController
     public function evaluation_action($user_id)
     {
         PageLayout::setTitle(_("Auswertung"));
-        if (!$this->canViewEvaluation()) {
+        if (!$this->canViewEvaluation($user_id)) {
             throw new AccessDeniedException();
         }
         $this->user_id = $user_id;
         $this->attempts = LernmodulAttempt::findByUserAndCourse($this->user_id, Context::get()->id);
     }
 
-    public function canViewEvaluation(): bool
+    /**
+     * @param $student_id
+     * @return bool if the current user can view the evaluation for the given student.
+     * Users can view their own evaluation. Dozents (or whatever minimum status is configured
+     * in LERNMODUL_PARTICIPANT_EVALUATION) can view the evaluation of all students in the class
+     */
+    public function canViewEvaluation($student_id): bool
     {
-        return Config::get()->LERNMODUL_PARTICIPANT_EVALUATION
-            && $GLOBALS['perm']->have_studip_perm(
-                Config::get()->LERNMODUL_PARTICIPANT_EVALUATION,
-                Context::get()->id
-            );
+        return (Context::getId() &&
+                Config::get()->LERNMODUL_PARTICIPANT_EVALUATION &&
+                $GLOBALS['perm']->have_studip_perm(
+                    Config::get()->LERNMODUL_PARTICIPANT_EVALUATION,
+                    Context::getId()))
+            || (User::findCurrent()->id == $student_id);
     }
 
 }
