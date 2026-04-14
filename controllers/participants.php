@@ -40,7 +40,7 @@ class ParticipantsController extends PluginController
 
     /**
      * Return the 'href' attribute for a given row of the Participants table.
-     * It should link to the student's 'Evaluation' page.
+     * It should link to the student's 'Fortschritt' (Progress) page.
      */
     public function linkForStudent($student): string
     {
@@ -50,7 +50,7 @@ class ParticipantsController extends PluginController
     public function evaluation_action($user_id)
     {
         $cid = Context::getId();
-        if (!isset($cid) || !ProgressAuthority::canViewEvaluation($cid, $user_id)) {
+        if (!isset($cid) || !ProgressAuthority::canViewProgress($cid, $user_id)) {
             throw new AccessDeniedException();
         }
         PageLayout::setTitle(_("Auswertung"));

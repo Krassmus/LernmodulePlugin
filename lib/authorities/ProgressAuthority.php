@@ -12,7 +12,7 @@ class ProgressAuthority {
      * Users can view their own progress. Dozents (or whatever minimum status is configured
      * in LERNMODUL_PARTICIPANT_EVALUATION) can view the progress of all students in the class
      */
-    public static function canViewEvaluation($context_id, $student_id): bool
+    public static function canViewProgress($context_id, $student_id): bool
     {
         return static::canViewAllStudentsProgress($context_id) ||
             User::findCurrent()->id == $student_id;
