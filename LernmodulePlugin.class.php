@@ -4,6 +4,7 @@ require_once __DIR__ . '/bootstrap.inc.php';
 
 use LernmodulePlugin\JsonApiTrait;
 use JsonApi\Contracts\JsonApiPlugin;
+use LernmodulePlugin\ProgressAuthority;
 
 if (!isset($GLOBALS['FILESYSTEM_UTF8'])) {
     $GLOBALS['FILESYSTEM_UTF8'] = true;
@@ -51,8 +52,21 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
         $tab->setImage(
             Icon::create("learnmodule", "info_alt")
         );
-        $tab->addSubNavigation("overview", new Navigation($tabname, PluginEngine::getURL($this, array(), "lernmodule/overview")));
-        $tab->addSubNavigation("participants", new Navigation(dgettext("lernmoduleplugin","Teilnehmende"), PluginEngine::getURL($this, array(), "participants")));
+        $tab->addSubNavigation("overview",
+            new Navigation(
+                $tabname,
+                PluginEngine::getURL($this, array(), "lernmodule/overview")));
+        if (ProgressAuthority::canViewAllStudentsProgress($course_id)) {
+            $tab->addSubNavigation("participants",
+                new Navigation(
+                    dgettext("lernmoduleplugin","Teilnehmende"),
+                    PluginEngine::getURL($this, array(), "participants")));
+        } else {
+            $tab->addSubNavigation("progress",
+                new Navigation(
+                    dgettext("lernmoduleplugin","Fortschritt"),
+                    PluginEngine::getURL($this, array(), "participants/evaluation/" . User::findCurrent()->id)));
+        }
         return array('lernmodule' => $tab);
     }
 
