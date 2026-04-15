@@ -69,9 +69,8 @@ msgstr "3. Configure Travis Go"
 
 #: src/components/FeedbackEditor.vue:18 src/components/FeedbackEditor.vue:19
 #: src/components/FeedbackEditor.vue:24
-#, fuzzy
 msgid "Ab Prozent"
-msgstr "Percentage"
+msgstr "Starting at percentage"
 
 #: src/components/CoursewareBlock.vue:15 src/components/CoursewareBlock.vue:16
 #: src/components/CoursewareBlock.vue:21 src/components/CoursewareBlock.vue:24
@@ -104,9 +103,8 @@ msgstr "Actions"
 #: src/components/interactiveVideo/viewer/TravisGoPost.vue:79
 #: src/components/interactiveVideo/viewer/TravisGoPost.vue:82
 #: src/components/interactiveVideo/viewer/TravisGoPost.vue:99
-#, fuzzy
 msgid "Aktualisieren"
-msgstr "Pause"
+msgstr "Update"
 
 #: src/components/interactiveVideo/editor/SelectVideo.vue:117
 #: src/components/interactiveVideo/editor/SelectVideo.vue:122
@@ -149,9 +147,8 @@ msgid "Anhalten"
 msgstr "Stop"
 
 #: src/components/QuestionEditor.vue:25 src/components/QuestionEditor.vue:26
-#, fuzzy
 msgid "Antwort löschen"
-msgstr "Delete card"
+msgstr "Delete answer"
 
 #: src/components/DragTheWordsEditor.vue:32
 #: src/components/DragTheWordsEditor.vue:33
@@ -162,7 +159,6 @@ msgstr "Sort answers alphabetically"
 
 #: src/components/QuestionEditor.vue:112 src/components/QuestionEditor.vue:116
 #: src/components/QuestionEditor.vue:75 src/components/QuestionEditor.vue:76
-#, fuzzy
 msgid "Antworten in zufälliger Reihenfolge anzeigen"
 msgstr "Show answers in a random order"
 
@@ -270,7 +266,6 @@ msgstr "Image"
 #: src/components/SequencingEditorCard.vue:11
 #: src/components/SequencingEditorCard.vue:12
 #: src/components/SequencingEditorCard.vue:15
-#, fuzzy
 msgid "Bild löschen"
 msgstr "Delete image"
 
@@ -294,9 +289,8 @@ msgstr "Delete image"
 #: src/components/SequencingEditorCard.vue:15
 #: src/components/SequencingEditorCard.vue:16
 #: src/components/SequencingEditorCard.vue:23
-#, fuzzy
 msgid "Bildbeschreibung"
-msgstr "Task description"
+msgstr "Image description"
 
 #: src/components/crossword/CrosswordEditor.vue:111
 #: src/components/crossword/CrosswordEditor.vue:57
@@ -330,7 +324,6 @@ msgid "Das eingegebene Wert muss größer als 0 sein."
 msgstr "The value entered must be greater than 0."
 
 #: src/components/FileUpload.vue:73
-#, fuzzy
 msgid ""
 "Das Stammverzeichnis des Benutzers konnte nicht gefunden werden. Es können "
 "keine Dateien hochgeladen werden."
@@ -431,9 +424,8 @@ msgid "Die Inhalte des Post-Editors werden gelöscht."
 msgstr "The contents of the post editor will be deleted."
 
 #: src/components/interactiveVideo/strings.ts:17
-#, fuzzy
 msgid "Die Posts unter dem Video konnten nicht geladen werden."
-msgstr "No folder is selected. The file can't be uploaded."
+msgstr "The posts under the video could not be loaded."
 
 #: src/components/interactiveVideo/VideoTimeInput.vue:102
 msgid ""
@@ -450,18 +442,16 @@ msgstr ""
 "Error: "
 
 #: src/components/findTheHotspots/ImageWithHotspots.vue:84
-#, fuzzy
 msgid "Diesen Hotspot löschen"
-msgstr "Delete card"
+msgstr "Delete this hotspot"
 
 #: src/components/interactiveVideo/strings.ts:14
 msgid "Dieser Post konnte nicht geladen werden."
 msgstr "This post could not be loaded."
 
 #: src/components/crossword/CrosswordEditor.vue:48
-#, fuzzy
 msgid "Dieses Wort löschen"
-msgstr "Delete video"
+msgstr "Delete this word"
 
 #: src/components/DragTheWordsEditor.vue:4
 #: src/components/DragTheWordsEditor.vue:5
@@ -528,7 +518,6 @@ msgstr "Settings"
 
 #: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:20
 #: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:21
-#, fuzzy
 msgid "End"
 msgstr "End"
 
@@ -558,18 +547,16 @@ msgstr "Result message (possible variables :correct and :total):"
 
 #: src/components/MemoryEditor.vue:126 src/components/MemoryEditor.vue:78
 #: src/components/MemoryEditor.vue:79
-#, fuzzy
 msgid "Ergebnismitteilung:"
-msgstr "Notification"
+msgstr "Feedback notification:"
 
 #: src/components/findTheWords/FindTheWordsEditor.vue:281
 msgid "Es dürfen maximal 20 Wörter eingegeben werden."
 msgstr "Up to 20 words can be entered."
 
 #: src/components/ErrorMessage.vue:2 src/components/ErrorMessage.vue:3
-#, fuzzy
 msgid "Es ist ein Fehler aufgetreten!"
-msgstr "An error occurred while saving."
+msgstr "An error occurred!"
 
 #: src/components/interactiveVideo/strings.ts:4
 msgid ""
@@ -613,9 +600,8 @@ msgstr "Feedback when a hotspot that has already been found is clicked again:"
 #: src/components/QuestionEditor.vue:37 src/components/QuestionEditor.vue:38
 #: src/components/QuestionEditor.vue:44 src/components/QuestionEditor.vue:62
 #: src/components/QuestionEditor.vue:66
-#, fuzzy
 msgid "Feedback, wenn ausgewählt:"
-msgstr "Feedback when selected"
+msgstr "Feedback when selected:"
 
 #: src/components/findTheHotspots/FindTheHotspotsEditor.vue:171
 #: src/components/findTheHotspots/FindTheHotspotsEditor.vue:175
@@ -627,24 +613,21 @@ msgstr "Feedback when an empty area is clicked:"
 #: src/components/QuestionEditor.vue:48 src/components/QuestionEditor.vue:49
 #: src/components/QuestionEditor.vue:55 src/components/QuestionEditor.vue:73
 #: src/components/QuestionEditor.vue:81
-#, fuzzy
 msgid "Feedback, wenn nicht ausgewählt:"
-msgstr "Feedback when not selected"
+msgstr "Feedback when not selected:"
 
 #: src/components/findTheHotspots/ImageWithHotspots.vue:34
 #: src/components/findTheHotspots/ImageWithHotspots.vue:35
 #: src/components/findTheHotspots/ImageWithHotspots.vue:71
 #: src/components/findTheHotspots/ImageWithHotspots.vue:88
-#, fuzzy
 msgid "Feedback:"
-msgstr "Feedback"
+msgstr "Feedback:"
 
 #: src/components/findTheWords/FindTheWordsEditor.vue:11
 #: src/components/findTheWords/FindTheWordsEditor.vue:12
 #: src/components/findTheWords/FindTheWordsEditor.vue:16
-#, fuzzy
 msgid "Feldgröße:"
-msgstr "Zoom in"
+msgstr "Puzzle size:"
 
 #: src/components/FillInTheBlanksEditor.vue:4
 #: src/components/FillInTheBlanksEditor.vue:5
@@ -665,14 +648,12 @@ msgstr "Fill In The Blanks"
 #: src/components/LernmoduleEditor.vue:51
 #: src/components/LernmoduleEditor.vue:64
 #: src/components/LernmoduleEditor.vue:68
-#, fuzzy
 msgid "Find the Hotspots"
-msgstr "Find the Hotspot"
+msgstr "Find the Hotspots"
 
 #: src/models/TaskDefinition.ts:690
-#, fuzzy
 msgid "Find The Hotspots"
-msgstr "Find The Hotspot"
+msgstr "Find The Hotspots"
 
 #: src/components/findTheWords/FindTheWordsEditor.vue:4
 #: src/components/findTheWords/FindTheWordsEditor.vue:5
@@ -680,7 +661,6 @@ msgstr "Find The Hotspot"
 #: src/components/LernmoduleEditor.vue:54
 #: src/components/LernmoduleEditor.vue:67
 #: src/components/LernmoduleEditor.vue:71
-#, fuzzy
 msgid "Find the Words"
 msgstr "Find The Words"
 
@@ -748,7 +728,6 @@ msgid "Grunddaten"
 msgstr "Basic data"
 
 #: src/components/crossword/CrosswordEditor.vue:36
-#, fuzzy
 msgid "Hinweis"
 msgstr "Hint"
 
@@ -765,15 +744,13 @@ msgstr "Hint and feedback"
 #: src/components/FillInTheBlanksEditor.vue:131
 #: src/components/FillInTheBlanksEditor.vue:81
 #: src/components/FillInTheBlanksEditor.vue:82
-#, fuzzy
 msgid "Hinweis, wenn nicht alle Lücken ausgefüllt sind:"
 msgstr "Notification if not all gaps are filled in:"
 
 #: src/components/QuestionEditor.vue:28 src/components/QuestionEditor.vue:29
 #: src/components/QuestionEditor.vue:35 src/components/QuestionEditor.vue:53
-#, fuzzy
 msgid "Hinweis:"
-msgstr "Hint"
+msgstr "Hint:"
 
 #: src/components/interactiveVideo/editor/SelectVideo.vue:59
 #: src/components/interactiveVideo/editor/SelectVideo.vue:79
@@ -829,14 +806,12 @@ msgid "Karte"
 msgstr "Card"
 
 #: src/components/PairingEditor.vue:30
-#, fuzzy
 msgid "Karte 1"
-msgstr "Card A"
+msgstr "Card 1"
 
 #: src/components/PairingEditor.vue:36
-#, fuzzy
 msgid "Karte 2"
-msgstr "Card A"
+msgstr "Card 2"
 
 #: src/components/MemoryEditor.vue:19 src/components/MemoryEditor.vue:21
 #: src/components/MemoryEditor.vue:22 src/components/MemoryEditor.vue:32
@@ -865,14 +840,12 @@ msgstr "No folder is selected. The file can't be uploaded."
 #: src/components/SequencingEditor.vue:30
 #: src/components/SequencingEditor.vue:44
 #: src/components/SequencingEditor.vue:48
-#, fuzzy
 msgid "Keine Karte ausgewählt"
 msgstr "No card is selected for editing."
 
 #: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:66
-#, fuzzy
 msgid "Kommentar löschen"
-msgstr "Delete card"
+msgstr "Delete comment"
 
 #: src/components/interactiveVideo/viewer/TravisGoPost.vue:32
 #: src/components/interactiveVideo/viewer/TravisGoPost.vue:33
@@ -933,9 +906,8 @@ msgstr "Solution"
 #: src/components/SequencingEditor.vue:50
 #: src/components/SequencingEditor.vue:68
 #: src/components/SequencingEditor.vue:76
-#, fuzzy
 msgid "Lösungen anzeigen erlauben"
-msgstr "Solutions can be viewed"
+msgstr "Allow students to view solutions"
 
 #: src/components/DragTheWordsEditor.vue:50
 #: src/components/DragTheWordsEditor.vue:51
@@ -945,9 +917,8 @@ msgstr "Solutions can be viewed"
 #: src/components/FillInTheBlanksEditor.vue:50
 #: src/components/FillInTheBlanksEditor.vue:57
 #: src/components/FillInTheBlanksEditor.vue:75
-#, fuzzy
 msgid "Lösungen nur anzeigen, wenn alle Lücken ausgefüllt sind"
-msgstr "Notification if not all gaps are filled in:"
+msgstr "Only show solutions after all gaps are filled"
 
 #: src/components/DragTheWordsEditor.vue:8
 #: src/components/DragTheWordsEditor.vue:9
@@ -980,7 +951,6 @@ msgid "Mark The Words"
 msgstr "Mark The Words"
 
 #: src/components/MarkTheWordsEditor.vue:220
-#, fuzzy
 msgid ""
 "Markieren Sie ein Wort als Lösung, indem Sie ein Sternchen (*) vor und "
 "hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den "
@@ -1012,9 +982,8 @@ msgstr "Allow multiple attempts"
 
 #: src/components/QuestionEditor.vue:107 src/components/QuestionEditor.vue:70
 #: src/components/QuestionEditor.vue:71
-#, fuzzy
 msgid "Mehrfachauswahl erlauben"
-msgstr "Allow multiple attempts"
+msgstr "Allow multiple answers to be selected at once"
 
 #: src/components/LernmoduleEditor.vue:60
 #: src/components/LernmoduleEditor.vue:61
@@ -1065,9 +1034,8 @@ msgstr "New range"
 #: src/components/findTheHotspots/FindTheHotspotsEditor.vue:29
 #: src/components/findTheHotspots/FindTheHotspotsEditor.vue:30
 #: src/components/findTheHotspots/FindTheHotspotsEditor.vue:77
-#, fuzzy
 msgid "Neues Bild hochladen"
-msgstr "Upload new video"
+msgstr "Upload new image"
 
 #: src/components/interactiveVideo/editor/SelectVideo.vue:16
 #: src/components/interactiveVideo/editor/SelectVideo.vue:17
@@ -1078,7 +1046,6 @@ msgstr "Upload new video"
 #: src/components/crossword/CrosswordEditor.vue:24
 #: src/components/crossword/CrosswordEditor.vue:28
 #: src/components/crossword/CrosswordEditor.vue:54
-#, fuzzy
 msgid "Neues Wort hinzufügen"
 msgstr "Add word"
 
@@ -1107,9 +1074,8 @@ msgid "Paar"
 msgstr "Pair"
 
 #: src/components/PairingEditor.vue:45
-#, fuzzy
 msgid "Paar löschen"
-msgstr "Delete card"
+msgstr "Delete pair"
 
 #: src/components/LernmoduleEditor.vue:61
 #: src/components/LernmoduleEditor.vue:62
@@ -1120,7 +1086,6 @@ msgid "Pairing"
 msgstr "Pairing"
 
 #: src/components/AudioElement.vue:32
-#, fuzzy
 msgid "Pause"
 msgstr "Pause"
 
@@ -1140,7 +1105,6 @@ msgid "Post abschicken"
 msgstr "Send post"
 
 #: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:141
-#, fuzzy
 msgid "Post löschen"
 msgstr "Delete card"
 
@@ -1160,9 +1124,8 @@ msgstr "Update post"
 #: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:71
 #: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:97
 #: src/models/TaskDefinition.ts:401
-#, fuzzy
 msgid "Projektbeschreibung"
-msgstr "Task description"
+msgstr "Project description"
 
 #: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:13
 #: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:8
@@ -1184,15 +1147,13 @@ msgid "Question"
 msgstr "Question"
 
 #: src/components/findTheHotspots/FindTheHotspotsEditor.vue:16
-#, fuzzy
 msgid "Rechteckigen Hotspot hinzufügen"
-msgstr "2. Add interactions"
+msgstr "Add rectangular hotspot"
 
 #: src/components/FillInTheBlanksEditor.vue:26
 #: src/components/FillInTheBlanksEditor.vue:27
 #: src/components/FillInTheBlanksEditor.vue:34
 #: src/components/FillInTheBlanksEditor.vue:38
-#, fuzzy
 msgid "Rechtschreib- und Tippfehler ignorieren"
 msgstr "Ignore spelling mistakes and typos"
 
@@ -1226,9 +1187,8 @@ msgid "Rückseite einer Memory Karte."
 msgstr "The back of a Memory card."
 
 #: src/components/findTheHotspots/FindTheHotspotsEditor.vue:40
-#, fuzzy
 msgid "Runden Hotspot hinzufügen"
-msgstr "Add word"
+msgstr "Add round hotspot"
 
 #: src/components/interactiveVideo/VideoPlayer.vue:105
 #: src/components/interactiveVideo/VideoPlayer.vue:109
@@ -1254,9 +1214,8 @@ msgstr "Vertical"
 #: src/components/LernmoduleEditor.vue:77
 #: src/components/LernmoduleEditor.vue:84 src/components/SequencingEditor.vue:4
 #: src/components/SequencingEditor.vue:5 src/models/TaskDefinition.ts:702
-#, fuzzy
 msgid "Sequencing"
-msgstr "Image Sequencing"
+msgstr "Sequencing"
 
 #: src/components/crossword/CrosswordEditor.vue:42
 #: src/components/crossword/CrosswordEditor.vue:43
@@ -1305,9 +1264,8 @@ msgstr "Text"
 #: src/components/SequencingEditor.vue:67
 #: src/components/SequencingEditor.vue:68
 #: src/components/SequencingEditor.vue:98
-#, fuzzy
 msgid "Text für Fortsetzen-Button:"
-msgstr "Text in the button:"
+msgstr "Text for continue button:"
 
 #: src/components/crossword/CrosswordEditor.vue:142
 #: src/components/crossword/CrosswordEditor.vue:158
@@ -1333,9 +1291,8 @@ msgstr "Text in the button:"
 #: src/components/SequencingEditor.vue:121
 #: src/components/SequencingEditor.vue:74
 #: src/components/SequencingEditor.vue:75
-#, fuzzy
 msgid "Text für Lösungen-Button:"
-msgstr "Text in the button:"
+msgstr "Text for solutions button:"
 
 #: src/components/crossword/CrosswordEditor.vue:128
 #: src/components/crossword/CrosswordEditor.vue:136
@@ -1401,9 +1358,8 @@ msgstr "Text for button to restart the task:"
 #: src/components/findTheWords/FindTheWordsEditor.vue:101
 #: src/components/findTheWords/FindTheWordsEditor.vue:162
 #: src/components/findTheWords/FindTheWordsEditor.vue:174
-#, fuzzy
 msgid "Text für Zeitanzeige:"
-msgstr "Text in the button:"
+msgstr "Text for time display:"
 
 #: src/components/LernmoduleEditor.vue:29
 #: src/components/LernmoduleEditor.vue:30
@@ -1440,7 +1396,6 @@ msgstr "Apply"
 
 #: src/components/DragTheWordsEditor.vue:214
 #: src/components/FillInTheBlanksEditor.vue:208
-#, fuzzy
 msgid ""
 "Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das "
 "korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button "
@@ -1452,7 +1407,6 @@ msgstr ""
 "tooltip with a colon (:)."
 
 #: src/components/MemoryViewer.vue:45
-#, fuzzy
 msgid "Umgedrehte Karten:"
 msgstr "Cards turned over: "
 
@@ -1564,9 +1518,8 @@ msgstr "Saving..."
 #: src/components/crossword/CrosswordEditor.vue:28
 #: src/components/crossword/CrosswordEditor.vue:32
 #: src/components/crossword/CrosswordEditor.vue:62
-#, fuzzy
 msgid "Wort bearbeiten"
-msgstr "Edit"
+msgstr "Edit word"
 
 #: src/components/findTheWords/FindTheWordsEditor.vue:275
 msgid "Wörter dürfen nicht länger als 20 Zeichen sein."
@@ -1586,9 +1539,8 @@ msgstr "Show list of words"
 #: src/components/findTheWords/FindTheWordsEditor.vue:37
 #: src/components/findTheWords/FindTheWordsEditor.vue:62
 #: src/components/findTheWords/FindTheWordsEditor.vue:66
-#, fuzzy
 msgid "Wortrichtungen"
-msgstr "Add word"
+msgstr "Word directions"
 
 #: src/components/interactiveVideo/editor/SelectVideo.vue:39
 #: src/components/interactiveVideo/editor/SelectVideo.vue:40
@@ -1630,9 +1582,8 @@ msgstr "Jump to %{ interaction }"
 
 #: src/components/findTheWords/FindTheWordsEditor.vue:6
 #: src/components/findTheWords/FindTheWordsEditor.vue:7
-#, fuzzy
 msgid "Zu findende Wörter:"
-msgstr "Dragging of words"
+msgstr "Words to look for:"
 
 #: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:33
 #: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:34
@@ -1657,17 +1608,15 @@ msgstr "Reset to A - Z"
 #: src/components/MemoryEditorCard.vue:21
 #: src/components/MemoryEditorCard.vue:22
 #: src/components/MemoryEditorCard.vue:35
-#, fuzzy
 msgid "Zweites Bild"
-msgstr "The image"
+msgstr "Second image"
 
 #: src/components/MemoryEditorCard.vue:40
 #: src/components/MemoryEditorCard.vue:41
 #: src/components/MemoryEditorCard.vue:54
 #: src/components/MemoryEditorCard.vue:71
-#, fuzzy
 msgid "Zweites Bild hinzufügen"
-msgstr "Add image"
+msgstr "Add second image"
 
 #: src/components/LernmoduleEditor.vue:17
 #: src/components/LernmoduleEditor.vue:18
@@ -1684,7 +1633,6 @@ msgid "Wiederherstellen"
 msgstr "Redo"
 
 #: src/components/MemoryEditor.vue:25
-#, fuzzy
 msgctxt "Karte im Memory Spiel"
 msgid "Karte löschen"
 msgstr "Delete card"
