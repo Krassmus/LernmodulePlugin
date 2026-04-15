@@ -132,7 +132,7 @@
                         }
                         ?></td>
                     <td>
-                        <?= date("j.n.Y G:i", $line['studip_mkdate'])." ".dgettext("lernmoduleplugin","Uhr") ?>
+                        <?= date("j.n.Y G:i", $line['studip_mkdate']) ?>
                     </td>
                     <? foreach ($resultrows as $rowname) : ?>
                         <td><?= htmlReady($line[$rowname]) ?></td>

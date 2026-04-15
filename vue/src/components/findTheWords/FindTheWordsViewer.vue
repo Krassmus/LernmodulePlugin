@@ -779,6 +779,7 @@ function getDirection(
 .canvas-and-word-list-container {
   display: flex;
   flex-direction: row;
+  gap: 0.5em;
   align-items: flex-start;
   justify-content: center;
 }

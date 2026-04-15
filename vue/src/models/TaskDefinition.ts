@@ -712,6 +712,7 @@ export function showViewerAboveEditor(
 ): boolean {
   switch (type) {
     case 'InteractiveVideo':
+    case 'Crossword':
       return false;
     default:
       return true;

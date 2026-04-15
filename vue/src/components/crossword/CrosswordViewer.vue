@@ -1,6 +1,6 @@
 <template>
   <div class="stud5p-task">
-    <template v-if="props.task?.words.length > 0">
+    <template v-if="task.words.length > 0">
       <div class="canvas-and-hints-list-container">
         <div ref="canvasWrapperRef" class="canvas-wrapper">
           <!-- tabindex="0" is needed to make the canvas focusable and the keydown listener to work -->
@@ -9,15 +9,14 @@
             tabindex="0"
             :width="canvasSize"
             :height="canvasSize"
-            :style="{ width: canvasSize + 'px', height: canvasSize + 'px' }"
             @pointerdown.stop="onPointerDownCanvas($event)"
             @keydown.stop="onKeyDownCanvas($event)"
-            class="canvas"
+            class="crossword-canvas"
           />
         </div>
         <div class="hint-list">
           <div
-            v-for="word in props.task?.words"
+            v-for="word in task.words"
             :key="word.uuid"
             @click="onClickHint(word)"
             class="hint"
@@ -75,6 +74,7 @@
 import {
   computed,
   defineProps,
+  nextTick,
   onBeforeUnmount,
   onMounted,
   PropType,
@@ -84,6 +84,7 @@ import {
 import { CrosswordTask, Word } from '@/models/CrosswordTask';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
+import { debounce, throttle } from 'lodash';
 
 const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 
@@ -116,21 +117,35 @@ const canvasSize = ref(0);
 
 // Lifecycle Hooks
 
+let canvasObserver: ResizeObserver;
 onMounted(() => {
   initializeGrids();
   updateCanvasSize();
   drawGrid();
-  window.addEventListener('resize', updateCanvasSize);
+  canvasObserver = new ResizeObserver(observationHook);
+  canvasObserver.observe(canvasWrapperRef.value!);
 });
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateCanvasSize);
+  canvasObserver.disconnect();
 });
+
+/**
+ * Wrapped in debounce in order to prevent errors in dev mode,
+ * "ResizeObserver loop completed with undelivered notifications".
+ */
+const observationHook = debounce(
+  throttle(function onResizeCanvasWrapper() {
+    updateCanvasSize();
+    nextTick(() => drawGrid());
+  }, 100),
+  0
+);
 
 // Computed properties
 const gridSize = computed(() => {
   let size = 0;
 
-  words.value.forEach((word) => {
+  props.task.words.forEach((word) => {
     if (word.direction === 'across') {
       if (word.x + word.solution.length > size) {
         size = word.x + word.solution.length;
@@ -154,13 +169,6 @@ const cellSize = computed(() =>
 const fontSize = computed(() =>
   cellSize.value > 0 ? Math.floor(cellSize.value / 2) : 0
 );
-
-const words = computed(() => {
-  if (props.task?.words) {
-    return props.task.words;
-  }
-  return [];
-});
 
 const maxScore = computed(() => {
   let maxScore = 0;
@@ -207,6 +215,7 @@ const showCheckButton = computed(() => {
 watch(
   () => props.task,
   () => {
+    console.log('watcher for props.task');
     initializeGrids();
     if (canvasRef.value) {
       if (canvasRef.value.getContext('2d')) {
@@ -223,6 +232,7 @@ watch(
 watch(
   () => userInputGrid.value,
   () => {
+    console.log('watcher for userInputGrid');
     drawGrid();
   },
   { deep: true }
@@ -231,6 +241,7 @@ watch(
 watch(
   () => selectedCell.value,
   () => {
+    console.log('watcher for selectedCell');
     drawGrid();
     if (debug) {
       console.log(
@@ -246,6 +257,7 @@ watch(
 watch(
   () => selectedWord.value,
   () => {
+    console.log('watcher for selectedWord');
     drawGrid();
     if (debug) {
       console.log('selected word:', selectedWord.value?.solution);
@@ -256,11 +268,13 @@ watch(
 
 // Functions
 function updateCanvasSize() {
+  console.log('updateCanvasSize');
   const wrapper = canvasWrapperRef.value;
   if (!wrapper) return;
-  canvasSize.value = Math.floor(
+  const newCanvasSize = Math.floor(
     Math.min(wrapper.clientWidth, wrapper.clientHeight)
   );
+  canvasSize.value = newCanvasSize;
 }
 
 function onClickCheck(): void {
@@ -297,7 +311,7 @@ function initializeGrids() {
   );
 
   // Create a path for each word based on it's starting coordinates and direction
-  placedWords.value = words.value.map((word) => ({
+  placedWords.value = props.task.words.map((word) => ({
     ...word,
     path: createWordPath(word),
   }));
@@ -370,7 +384,7 @@ function drawGrid() {
           cellSize.value,
           cellSize.value
         );
-      } else if (props.task?.colorEmptyCells) {
+      } else if (props.task.colorEmptyCells) {
         ctx.fillStyle = 'rgba(129,129,129,0.1)';
         ctx.fillRect(
           x * cellSize.value,
@@ -763,36 +777,38 @@ function fillCell(cell: Cell, fillStyle: string) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .canvas-and-hints-list-container {
-  height: 60dvh;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
+  gap: 0.5em;
   align-items: stretch; /** makes children match containers height **/
 }
 
 .canvas-wrapper {
-  flex: 1 1 auto;
+  flex: 1;
+  aspect-ratio: 1;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  min-width: 0;
+  min-width: calc(min(300px, 100%));
   min-height: 0;
-}
-
-.canvas {
-  border: 1px solid #ddd;
-  outline: none;
+  canvas.crossword-canvas {
+    border: 1px solid #ededed;
+    outline: none;
+  }
 }
 
 .hint-list {
-  flex: 0 0 clamp(16rem, 20vw, 28rem);
+  min-width: calc(min(200px, 100%));
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.75em;
   background: #f5f5f5;
   padding-left: 0.5em;
-  border: 1px solid #ccc;
+  border: 1px solid #ededed;
   overflow: scroll;
 }
 

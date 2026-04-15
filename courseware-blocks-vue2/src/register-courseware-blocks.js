@@ -4,6 +4,7 @@ import LernmoduleCoursewareBlockBase from '@/components/LernmoduleCoursewareBloc
 // to this array so that a corresponding vue 2 component will be registered in
 // the Courseware.
 const taskTypes = [
+  'Crossword',
   'DragTheWords',
   'FillInTheBlanks',
   'FindTheHotspots',

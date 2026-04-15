@@ -1736,7 +1736,7 @@ var iframeResizer_default = /*#__PURE__*/__webpack_require__.n(iframeResizer);
 // When adding a Courseware block for a new task type, you must add its name
 // to this array so that a corresponding vue 2 component will be registered in
 // the Courseware.
-const taskTypes = ['DragTheWords', 'FillInTheBlanks', 'FindTheHotspots', 'FindTheWords', 'LmbInteractiveVideo', 'MarkTheWords', 'Memory', 'Pairing', 'Question', 'Sequencing'];
+const taskTypes = ['Crossword', 'DragTheWords', 'FillInTheBlanks', 'FindTheHotspots', 'FindTheWords', 'LmbInteractiveVideo', 'MarkTheWords', 'Memory', 'Pairing', 'Question', 'Sequencing'];
 const debug = window.STUDIP.LernmoduleCoursewareBlocksPlugin.debug;
 if (debug) {
   console.log('Hello :) Adding event handler to add Lernmodule blocks in Courseware...');

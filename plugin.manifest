@@ -13,3 +13,4 @@ screenshots.screenshot1.png = In einer schicken Übersicht sieht man die Lernmod
 screenshots.screenshot2.png = So sieht es aus, wenn man das konkrete Lernmodul durcharbeitet. Es wird direkt in Stud.IP angezeigt. Man kann mit dem Button "Vollbild", das Modul auf den ganzen Bildschirm ausweiten.
 category = Inhalte und Aufgabenstellungen
 keywords = H5P-Lernmodule zum Hochladen oder selbst erstellen durch eigenen Editor; HTML-Lernmodule zum Hochladen oder Verlinken (als URL)
+localedomain=lernmoduleplugin

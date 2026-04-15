@@ -483,7 +483,7 @@ function submitEditedPost() {
 </script>
 
 <template>
-  <div v-if="task.travisGoSettings.enabled" class="travis-go-main">
+  <div v-if="task.travisGoSettings.enabled" class="travis-go-main stud5p-task">
     <div class="travis-go-left-column">
       <VideoPlayer @timeupdate="onTimeUpdate" :task="task" ref="videoPlayer" />
       <div class="annotation-controls">
@@ -649,13 +649,6 @@ function submitEditedPost() {
 
 <style scoped lang="scss">
 .travis-go-main {
-  h3 {
-    margin-top: 0;
-    margin-bottom: 0.45em;
-  }
-  p {
-    margin-bottom: 0.45em;
-  }
   display: flex;
   flex-wrap: wrap;
 
