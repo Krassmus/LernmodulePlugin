@@ -106,8 +106,6 @@ class LernmodulePlugin extends StudIPPlugin implements StandardPlugin, JsonApiPl
     public function perform($unconsumed_path)
     {
         $this->addStylesheet("assets/lernmodule.scss");
-        bindtextdomain("lernmoduleplugin", $this->getPluginPath()."/locale");
-        bind_textdomain_codeset("lernmoduleplugin", 'UTF-8');
         parent::perform($unconsumed_path);
     }
 
