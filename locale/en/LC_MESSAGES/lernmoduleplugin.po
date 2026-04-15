@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-15 15:45+0200\n"
 "PO-Revision-Date: 2026-04-15 14:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: Ann Yanich <ann@yanich.de>\n"
 "Language-Team: English <https://weblate.studip.de/projects/rasmusfuhse-"
 "lernmoduleplugin/php/en/>\n"
 "Language: en\n"
@@ -772,6 +772,8 @@ msgid ""
 "Include this script on your website if you want dynamic sizing of the "
 "embedded content:"
 msgstr ""
+"Include this script on your website if you want dynamic sizing of the "
+"embedded content:"
 
 #: ../controllers/h5peditor.php:126 ../controllers/h5p.php:295
 msgid "Rights of use"
@@ -788,7 +790,7 @@ msgstr "Title"
 
 #: ../controllers/h5peditor.php:129 ../controllers/h5p.php:298
 msgid "Author"
-msgstr ""
+msgstr "Author"
 
 #: ../controllers/h5peditor.php:130 ../controllers/h5p.php:299
 msgid "Jahr"
@@ -805,7 +807,7 @@ msgstr "License"
 
 #: ../controllers/h5peditor.php:133 ../controllers/h5p.php:302
 msgid "Thumbnail"
-msgstr ""
+msgstr "Thumbnail"
 
 #: ../controllers/h5peditor.php:134 ../controllers/h5p.php:303
 msgid "No copyright information available for this content."
