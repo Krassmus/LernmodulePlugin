@@ -18,7 +18,7 @@
                     <?= htmlReady($attempt->modul['name']) ?>
                 </td>
                 <td data-timestamp="<?= htmlReady($attempt['mkdate']) ?>">
-                    <?= date("j.n.Y G:i", $attempt['mkdate'])." ".dgettext("lernmoduleplugin","Uhr") ?>
+                    <?= date("j.n.Y G:i", $attempt['mkdate']) ?>
                 </td>
                 <td>
                     <?

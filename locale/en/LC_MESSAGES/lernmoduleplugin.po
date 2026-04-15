@@ -497,11 +497,6 @@ msgstr "%s minutes"
 msgid "%s Stunden"
 msgstr "%s hours"
 
-#: ../views/lernmodule/evaluation.php:135
-#: ../views/participants/evaluation.php:21
-msgid "Uhr"
-msgstr "o'clock"
-
 #: ../views/lernmodule/evaluation.php:166 ../views/lernmodule/edit.php:231
 #: ../views/lernmodule/view.php:64 ../views/vuejseditor/edit.php:40
 msgid "Lernmodul herunterladen"
