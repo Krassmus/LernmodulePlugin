@@ -62,16 +62,14 @@ msgid "LMB - Drag The Words"
 msgstr "LMB - Drag The Words"
 
 #: ../lib/CoursewareBlocks/DragTheWordsBlock.php:28
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, bei der die richtigen Wörter in die passenden Lücken eines "
 "Textes gezogen werden sollen."
 msgstr "An assignment where words should be placed into gaps in a text."
 
 #: ../lib/CoursewareBlocks/FindTheHotspotsBlock.php:21
-#, fuzzy
 msgid "LMB - Find The Hotspots"
-msgstr "LMB - Fill In The Blanks"
+msgstr "LMB - Find The Hotspots"
 
 #: ../lib/CoursewareBlocks/FindTheHotspotsBlock.php:28
 msgid ""
@@ -102,12 +100,10 @@ msgid "Das klassische Memory Spiel."
 msgstr "The classic game of Memory."
 
 #: ../lib/CoursewareBlocks/PairingBlock.php:20
-#, fuzzy
 msgid "LMB - Pairing"
-msgstr "LMB - Image Pairing"
+msgstr "LMB - Pairing"
 
 #: ../lib/CoursewareBlocks/PairingBlock.php:27
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, wo Paare von Inhalten (Bilder, Texte oder Audio) zu "
 "einander gematcht werden sollen."
@@ -118,7 +114,6 @@ msgid "LMB - Sequencing"
 msgstr "LMB - Sequencing"
 
 #: ../lib/CoursewareBlocks/SequencingBlock.php:27
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, in welcher Bilder in die richtige Reihenfolge gebracht "
 "werden sollen."
@@ -129,15 +124,13 @@ msgid "LMB - Fill In The Blanks"
 msgstr "LMB - Fill In The Blanks"
 
 #: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:27
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, bei der die Lücken in einem Text ausgefüllt werden sollen."
 msgstr "An assignment where the gaps in a text should be filled in."
 
 #: ../lib/CoursewareBlocks/FindTheWordsBlock.php:20
-#, fuzzy
 msgid "LMB - Find The Words"
-msgstr "LMB - Drag The Words"
+msgstr "LMB - Find The Words"
 
 #: ../lib/CoursewareBlocks/FindTheWordsBlock.php:27
 msgid ""
@@ -154,7 +147,6 @@ msgid "LMB - Mark The Words"
 msgstr "LMB - Mark The Words"
 
 #: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:28
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, bei der die gesuchten Wörter im Text gefunden und markiert "
 "werden sollen."
@@ -165,7 +157,6 @@ msgid "LMB - Frage"
 msgstr "LMB - Question"
 
 #: ../lib/CoursewareBlocks/QuestionBlock.php:27
-#, fuzzy
 msgid ""
 "Eine Lernaufgabe, bei der eine Frage durch die Auswahl einer oder mehrerer "
 "korrekter Antworten beantwortet werden soll."
@@ -732,7 +723,6 @@ msgid "Lernmodul konnte nicht gespeichert werden. Daten unvollständig."
 msgstr "Learning module could not be saved. Data incomplete."
 
 #: ../controllers/h5peditor.php:92 ../controllers/vuejseditor.php:47
-#, fuzzy
 msgid "Neues Lernmodul erstellen"
 msgstr "Create learning module"
 
@@ -1265,9 +1255,8 @@ msgid "Lernmodul wurde verschoben."
 msgstr "Learning module was moved."
 
 #: ../controllers/lernmodule.php:595
-#, fuzzy
 msgid "Lernmodul wurde kopiert."
-msgstr "Learning module saved successfully"
+msgstr "The learning module was copied."
 
 #: ../controllers/participants.php:27 ../LernmodulePlugin.class.php:62
 msgid "Teilnehmende"
