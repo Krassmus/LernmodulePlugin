@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-15 15:45+0200\n"
-"PO-Revision-Date: 2026-04-15 14:26+0000\n"
+"PO-Revision-Date: 2026-04-15 14:34+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
 "Language-Team: English <https://weblate.studip.de/projects/rasmusfuhse-"
 "lernmoduleplugin/php/en/>\n"
@@ -78,6 +78,8 @@ msgid ""
 "Eine Lernaufgabe, bei der durch Klicken auf ein Bild bestimmte Bereiche, "
 "sogenannte Hotspots, gefunden werden sollen."
 msgstr ""
+"An assignment where a student should locate and click on certain areas of an "
+"image, known as hotspots."
 
 #: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:20
 msgid "LMB - Interactive Video"
@@ -97,7 +99,7 @@ msgstr "LMB - Memory"
 
 #: ../lib/CoursewareBlocks/MemoryBlock.php:27
 msgid "Das klassische Memory Spiel."
-msgstr ""
+msgstr "The classic game of Memory."
 
 #: ../lib/CoursewareBlocks/PairingBlock.php:20
 #, fuzzy
@@ -113,7 +115,7 @@ msgstr "An assignment where pairs of images should be matched together."
 
 #: ../lib/CoursewareBlocks/SequencingBlock.php:20
 msgid "LMB - Sequencing"
-msgstr ""
+msgstr "LMB - Sequencing"
 
 #: ../lib/CoursewareBlocks/SequencingBlock.php:27
 #, fuzzy
@@ -143,6 +145,9 @@ msgid ""
 "einem Gitter dargestellt werden, und Lernende diese Wörter finden und "
 "auswählen sollen."
 msgstr ""
+"An assignment where an author enters a list of words that are to be "
+"displayed in a grid. Students should find and select the words hidden in the "
+"grid."
 
 #: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:21
 msgid "LMB - Mark The Words"
@@ -168,7 +173,7 @@ msgstr "An assignment where a multiple choice question should be answered."
 
 #: ../lib/CoursewareBlocks/CrosswordBlock.php:19
 msgid "LMB - Crossword"
-msgstr ""
+msgstr "LMB - Crossword"
 
 #: ../lib/CoursewareBlocks/CrosswordBlock.php:26
 msgid ""
@@ -176,6 +181,8 @@ msgid ""
 "einem Kreuzworträtsel dargestellt werden, und Lernende dieses "
 "Kreuzworträtsel lösen sollen."
 msgstr ""
+"An assignment where the author can enter a list of words that will be turned "
+"into a crossword puzzle which students should solve."
 
 #: ../lib/H5pLernmodul.php:78 ../lib/H5pLernmodul.php:96
 #: ../lib/VuejsLernmodul.php:144 ../lib/VuejsLernmodul.php:155
@@ -707,7 +714,7 @@ msgstr "It can't be any better!"
 
 #: ../views/vuejseditor/edit.php:48
 msgid "Vorschau"
-msgstr ""
+msgstr "Preview"
 
 #: ../controllers/html.php:32
 msgid "Werte wurden gespeichert."
@@ -1273,7 +1280,7 @@ msgstr "Participants"
 
 #: ../LernmodulePlugin.class.php:67
 msgid "Fortschritt"
-msgstr ""
+msgstr "Progress"
 
 #: ../LernmodulePlugin.class.php:86
 #, php-format
