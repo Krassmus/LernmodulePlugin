@@ -56,37 +56,41 @@ class VuejseditorController extends PluginController
         }
     }
 
+    /**
+     * @throws InvalidSecurityTokenException
+     * @throws AccessDeniedException
+     */
     public function save_action()
     {
         CSRFProtection::verifySecurityToken();
         if (!Request::isPost()) {
-            throw new Exception("POST-only route");
+            throw new InvalidArgumentException("POST-only route");
         }
         $module_id = Request::option('module_id');
+        if (!isset($module_id)) {
+            throw new InvalidArgumentException(_("'module_id' fehlt"));
+        }
+        $this->mod = VuejsLernmodul::find($module_id);
+        if (!$this->mod || !Lernmodul::mayEdit(User::findCurrent(), $this->mod)) {
+            throw new AccessDeniedException();
+        }
         $task_definition = Request::get('task_definition');
         $name = Request::get('name');
         $infotext = Request::get('infotext');
-        if (!isset($module_id)) {
-            throw new Exception(_("'module_id' fehlt"));
-        }
         if (!isset($task_definition)) {
-            throw new Exception(_("'task_definition' fehlt"));
+            throw new InvalidArgumentException(_("'task_definition' fehlt"));
         }
         if (!isset($name)) {
-            throw new Exception(_("'name' fehlt"));
+            throw new InvalidArgumentException(_("'name' fehlt"));
         }
         if (!isset($infotext)) {
-            throw new Exception(_("'infotext' fehlt"));
-        }
-        $this->mod = VuejsLernmodul::find($module_id);
-        if (!$this->mod) {
-            throw new Exception(_("Lernmodul nicht gefunden."));
+            throw new InvalidArgumentException(_("'infotext' fehlt"));
         }
         $connection = $this->mod->courseConnection(Context::get()->id);
         if ($connection->isNew()) {
             $block = LernmodulBlock::find(Request::option("block_id"));
             if (!$block) {
-                throw new Exception(_('Block nicht gefunden.'));
+                throw new InvalidArgumentException(_('Block nicht gefunden.'));
             }
             $connection['block_id'] = Request::option("block_id");
             $connection['position'] = count($block->coursemodules) + 0;
