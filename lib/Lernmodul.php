@@ -314,9 +314,14 @@ class Lernmodul extends SimpleORMap
         ));
     }
 
-    public function isWritable()
+    public function isWritable(): bool
     {
         return self::mayEdit(User::findCurrent(), $this);
+    }
+
+    public function isReadable(): bool
+    {
+        return self::mayAccess(User::findCurrent(), $this);
     }
 
     public function getDownloadURL() {

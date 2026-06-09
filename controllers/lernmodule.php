@@ -333,6 +333,9 @@ class LernmoduleController extends PluginController
     public function download_action($module_id)
     {
         $this->module = Lernmodul::find($module_id);
+        if (!$this->module || !$this->module->isReadable()) {
+            throw new AccessDeniedException();
+        }
         $filename = $this->module->getExportFile();
 
         header('Content-Type: application/zip');

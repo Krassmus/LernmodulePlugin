@@ -472,7 +472,10 @@ class H5pController extends PluginController
 
 
     public function download_action($module_id) {
-        $this->mod = new H5pLernmodul($module_id);
+        $this->mod = H5pLernmodul::find($module_id);
+        if (!$this->mod || $this->mod->isReadable()) {
+            throw new AccessDeniedException();
+        }
 
         $archive = $this->mod->getExportFile();
 
