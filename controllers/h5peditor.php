@@ -1093,7 +1093,7 @@ class H5peditorController extends PluginController
         } elseif ($cmd === "files") {
             //upload files ...
             $mod = H5pLernmodul::find(Request::get("module_id"));
-            if (!$mod || !Lernmodul::mayEdit(User::findCurrent(), $mod)) {
+            if (!$mod || !$mod->isWritable()) {
                 throw new AccessDeniedException();
             }
 
