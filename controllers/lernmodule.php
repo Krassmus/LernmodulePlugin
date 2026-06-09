@@ -264,13 +264,16 @@ class LernmoduleController extends PluginController
         }
     }
 
-    public function delete_action($module_id)
+    /**
+     * @throws AccessDeniedException
+     */
+    public function delete_action($module_id): void
     {
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
+        Navigation::activateItem("/course/lernmodule/overview");
+        $this->module = Lernmodul::find($module_id);
+        if (!$this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
-        Navigation::activateItem("/course/lernmodule/overview");
-        $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {
             $this->module->delete();
             PageLayout::postMessage(MessageBox::success(dgettext("lernmoduleplugin","Lernmodul gelöscht.")));
