@@ -508,9 +508,15 @@ class LernmoduleController extends PluginController
         PageLayout::setTitle(_("Quelle des Lernmoduls auswählen"));
     }
 
+    /**
+     * @throws AccessDeniedException
+     */
     public function publish_action($module_id)
     {
         $this->module = Lernmodul::find($module_id);
+        if (!$this->module || !$this->module->isWritable()) {
+            throw new AccessDeniedException();
+        }
         if (!class_exists("LernMarktplatz")) {
             throw new Exception("Lernmarktplatz ist nicht aktiviert.");
         }
