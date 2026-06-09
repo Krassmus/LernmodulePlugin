@@ -60,7 +60,7 @@ class VuejseditorController extends PluginController
      * @throws InvalidSecurityTokenException
      * @throws AccessDeniedException
      */
-    public function save_action()
+    public function save_action(): void
     {
         CSRFProtection::verifySecurityToken();
         if (!Request::isPost()) {
@@ -71,7 +71,7 @@ class VuejseditorController extends PluginController
             throw new InvalidArgumentException(_("'module_id' fehlt"));
         }
         $this->mod = VuejsLernmodul::find($module_id);
-        if (!$this->mod || !Lernmodul::mayEdit(User::findCurrent(), $this->mod)) {
+        if (!$this->mod || !$this->mod->isWritable()) {
             throw new AccessDeniedException();
         }
         $task_definition = Request::get('task_definition');
