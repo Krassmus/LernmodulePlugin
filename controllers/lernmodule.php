@@ -118,13 +118,25 @@ class LernmoduleController extends PluginController
         }
     }
 
+    /**
+     * @throws AccessDeniedException
+     */
     public function edit_action($module_id = null)
     {
+        if ($module_id) {
+            $this->module = Lernmodul::find($module_id);
+            if (!$this->module || !$this->module->isWritable()) {
+                throw new AccessDeniedException();
+            }
+        } else {
+            $this->module = new Lernmodul();
+        }
+
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
             throw new AccessDeniedException();
         }
+
         Navigation::activateItem("/course/lernmodule/overview");
-        $this->module = new Lernmodul($module_id ?: null);
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         if ($this->module['type'] && !$this->module->isNew()) {
             $class = $this->module->getClass();
