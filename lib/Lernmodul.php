@@ -314,11 +314,17 @@ class Lernmodul extends SimpleORMap
         ));
     }
 
+    /**
+     * @return bool True iff the currently authenticated user has write permission for this Lernmodul
+     */
     public function isWritable(): bool
     {
         return self::mayEdit(User::findCurrent(), $this);
     }
 
+    /**
+     * @return bool True iff the currently authenticated user has read permission for this Lernmodul
+     */
     public function isReadable(): bool
     {
         return self::mayAccess(User::findCurrent(), $this);
