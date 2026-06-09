@@ -208,16 +208,17 @@ class LernmoduleController extends PluginController
             throw new AccessDeniedException();
         }
         $this->module = new Lernmodul($module_id);
-        $relative_path = '';
-        if (!empty($_FILES['logo'])) {
-            $relative_path = "logo";
-            $end = substr($_FILES['logo']['name'], strrpos($_FILES['logo']['name'], ".") + 1);
-            $relative_path .= ".".$end;
-            move_uploaded_file($_FILES['logo']['tmp_name'], $this->module->getPath() . "/" . $relative_path);
-            $this->module['image'] = $relative_path;
+        $path = $this->module->getPath();
+        if (!empty($_FILES['logo']) && $_FILES['logo']['size']) {
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            mkdir($path."/images");
+            copy($_FILES['logo']['tmp_name'], $path."/images/logo.jpg");
+            $this->module['image'] = "images/logo.jpg";
             $this->module->store();
         }
-        $this->render_text($this->module->getDataURL() . "/" . $relative_path);
+        $this->render_text($this->module->getDataURL() . "/images/logo.jpg");
     }
 
     public function evaluation_action($module_id = null)
