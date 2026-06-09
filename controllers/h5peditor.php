@@ -922,10 +922,6 @@ class H5peditorController extends PluginController
         return $settings;
     }
 
-    /**
-     * @throws AccessDeniedException
-     * @throws \Trails\Exceptions\DoubleRenderError
-     */
     public function ajax_action() {
         $cmd = Request::get("cmd");
         if ($cmd === "libraries" && Request::get("machineName")) {
@@ -1025,7 +1021,7 @@ class H5peditorController extends PluginController
             );
             $this->render_json($output);
             return;
-        } elseif (count(Request::getArray("libraries")) > 0) {
+        } elseif(count(Request::getArray("libraries")) > 0) {
             $libs = array();
             foreach (Request::getArray("libraries") as $library_name) {
                 list($machineName, $version) = explode(" ", $library_name);
@@ -1092,34 +1088,38 @@ class H5peditorController extends PluginController
             return;
         } elseif ($cmd === "files") {
             //upload files ...
+            $_FILES['file'];
             $mod = H5pLernmodul::find(Request::get("module_id"));
-            if (!$mod || !Lernmodul::mayEdit(User::findCurrent(), $mod)) {
-                throw new AccessDeniedException();
+            if (!$mod) {
+                throw new Exception(_("Modul existiert nicht. Kann Datei nicht hochladen."));
             }
 
-            $moduleAssetsPath = $mod->getPath() . '/content/assets/';
-            if (!file_exists($moduleAssetsPath)) {
-                mkdir($moduleAssetsPath, 0700, true);
+            $path = $mod->getPath();
+            if (!file_exists($path)) {
+                mkdir($path);
             }
-            chmod($mod->getPath(), 0700);
-            chmod($mod->getPath() . '/content', 0700);
-            chmod($moduleAssetsPath, 0700);
 
-            $name = $_FILES['file']['name'];
-            if (!$name) {
-                throw new InvalidArgumentException('file[name] cannot be empty');
+            if (!file_exists($path."/content")) {
+                mkdir($path."/content");
             }
-            $extension = pathinfo($name, PATHINFO_EXTENSION);
-            if (!in_array($extension, ['gif', 'jpeg', 'jpg', 'png'])) {
-                throw new InvalidArgumentException('file extension must be image');
+            $path .= "/content";
+            if (!file_exists($path."/assets")) {
+                mkdir($path."/assets");
             }
-            $filename = pathinfo($name, PATHINFO_FILENAME);
+            $path .= "/assets/";
+            $name = $_FILES['file']['name'] ?: "image.png";
+            $ending = strpos($name, ".") !== false
+                ? substr($name, strrpos($name, ".") + 1)
+                : "";
+            $filename = strpos($name, ".") !== false
+                ? substr($name, 0, strrpos($name, "."))
+                : $name;
 
             $i = "";
-            while (file_exists($moduleAssetsPath . $filename . ($i ? " (" . $i . ")" : "") . ($extension ? "." . $extension : ""))) {
+            while (file_exists($path.$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : ""))) {
                 $i++;
             }
-            $newfilepath = $moduleAssetsPath . $filename . ($i ? " (" . $i . ")" : "") . ($extension ? "." . $extension : "");
+            $newfilepath = $path.$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : "");
 
             if ($_FILES['file']['tmp_name'] && file_exists($_FILES['file']['tmp_name']) && filesize($_FILES['file']['tmp_name'])) {
                 move_uploaded_file($_FILES['file']['tmp_name'], $newfilepath);
@@ -1134,7 +1134,7 @@ class H5peditorController extends PluginController
                 'width' => $image_size[0],
                 'height' => $image_size[1],
                 'mime' => $_FILES['file']['type'],
-                'path' => "assets/".$filename.($i ? " (".$i.")" : "").($extension ? "." . $extension : ""),
+                'path' => "assets/".$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : ""),
                 'exists' => file_exists($newfilepath),
                 'oldpath' => $_FILES['file']['tmp_name'],
                 'newpath' => $newfilepath
