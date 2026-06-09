@@ -537,9 +537,16 @@ class LernmoduleController extends PluginController
         $this->redirect(URLHelper::getURL("plugins.php/lernmarktplatz/mymaterial/edit"));
     }
 
+    /**
+     * @throws AccessDeniedException
+     * @throws Exception
+     */
     public function after_marketplace_deployment_action()
     {
         $this->module = Lernmodul::find(Request::option("module_id"));
+        if (!$this->module || !$this->module->isWritable()) {
+            throw new AccessDeniedException();
+        }
         if (!class_exists("LernMarktplatz")) {
             throw new Exception("Lernmarktplatz ist nicht aktiviert.");
         }
@@ -547,11 +554,7 @@ class LernmoduleController extends PluginController
             $this->module['material_id'] = Request::get("material_id");
             $this->module->store();
         }
-        if (Request::get("url")) {
-            $this->redirect(Request::get("url"));
-        } else {
-            $this->redirect(PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->module->getId()));
-        }
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->module->getId()));
     }
 
     public function move_action($module_id)
