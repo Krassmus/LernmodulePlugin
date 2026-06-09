@@ -84,9 +84,15 @@ class LernmoduleController extends PluginController
         }
     }
 
+    /**
+     * @throws AccessDeniedException
+     */
     public function view_action($module_id)
     {
-        $this->mod = new Lernmodul($module_id);
+        $this->mod = Lernmodul::find($module_id);
+        if (!$this->mod || !$this->mod->isReadable()) {
+            throw new AccessDeniedException();
+        }
         PageLayout::setTitle($this->mod['name']);
         if (Context::get()->id) {
             Navigation::activateItem("/course/lernmodule/overview");
