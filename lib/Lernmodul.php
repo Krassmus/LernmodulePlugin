@@ -69,50 +69,32 @@ class Lernmodul extends SimpleORMap
         parent::configure($config);
     }
 
-    /**
-     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
-     *  LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
-     *  multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
-     *  is supplied that belongs to 0 or multiple LernmodulCourses.
-     */
     static public function mayAccess(?User $user, Lernmodul $sorm): bool {
-        return self::hasPermInLernmodulCourse('autor', $user, $sorm);
+        return self::hasPermInLernmodulSeminar('autor', $user, $sorm);
     }
 
-    /**
-     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
-     *  LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
-     *  multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
-     *  is supplied that belongs to 0 or multiple LernmodulCourses.
-     */
     public static function mayEdit(?User $user, Lernmodul $sorm) {
-        return self::hasPermInLernmodulCourse('tutor', $user, $sorm);
+        return self::hasPermInLernmodulSeminar('tutor', $user, $sorm);
     }
 
     /**
      * @param string $perm
      * @param User|null $user
      * @param Lernmodul $sorm
-     * @return bool True iff user has the given permission in the course corresponding to this Lernmodul.
-     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
-     * LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
-     * multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
-     * is supplied that belongs to 0 or multiple LernmodulCourses.
+     * @return bool True iff user has the given permission in at least one of the seminars where this Lernmodul is used.
      */
-    static protected function hasPermInLernmodulCourse(string $perm, ?User $user, Lernmodul $sorm) {
+    static protected function hasPermInLernmodulSeminar(string $perm, ?User $user, Lernmodul $sorm): bool
+    {
+        $user_id = $user ? $user->id : false;
         $courses = LernmodulCourse::findBySQL(
             "module_id = ?",
             [$sorm->module_id]);
-        if (count($courses) === 0) {
-            throw new AccessDeniedException('The given Lernmodul does not belong to a course, ' .
-            'so permission cannot be determined.');
-        } else if (count($courses) > 1) {
-            throw new AccessDeniedException('The given Lernmodul belongs to multiple courses, ' .
-            'so permission cannot be determined.');
+        foreach ($courses as $course) {
+            if (Seminar_Perm::get()->have_studip_perm($perm, $course->seminar_id, $user_id)) {
+                return true;
+            }
         }
-        $course = $courses[0];
-        $user_id = $user ? $user->id : false;
-        return Seminar_Perm::get()->have_studip_perm($perm, $course->seminar_id, $user_id);
+        return false;
     }
 
 
@@ -334,22 +316,7 @@ class Lernmodul extends SimpleORMap
 
     public function isWritable()
     {
-        if ($GLOBALS['perm']->have_perm("admin")) {
-            return true;
-        }
-        $statement = DBManager::get()->prepare("
-            SELECT 1
-            FROM lernmodule_courses
-                INNER JOIN seminar_user ON (lernmodule_courses.seminar_id = seminar_user.Seminar_id AND (seminar_user.status IN ('tutor', 'dozent')))
-            WHERE seminar_user.user_id = :user_id
-                AND lernmodule_courses.module_id = :module_id
-            LIMIT 1
-        ");
-        $statement->execute(array(
-            'module_id' => $this->getId(),
-            'user_id' => $GLOBALS['user']->id
-        ));
-        return (bool) $statement->fetch();
+        return self::mayEdit(User::findCurrent(), $this);
     }
 
     public function getDownloadURL() {
