@@ -2,7 +2,7 @@
 <html lang="<?php print $lang; ?>" class="h5p-iframe">
 <head>
     <meta charset="utf-8">
-    <title><?php print $content['title']; ?></title>
+    <title><?= htmlReady($content['title']) ?></title>
     <? foreach ($scripts as $script): ?>
         <script src="<?= $script ?>"></script>
     <? endforeach ?>
