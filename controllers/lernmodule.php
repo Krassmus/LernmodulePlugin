@@ -210,10 +210,10 @@ class LernmoduleController extends PluginController
 
     public function add_logo_action($module_id)
     {
-        if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+        $this->module = Lernmodul::find($module_id);
+        if (!$this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
-        $this->module = new Lernmodul($module_id);
         $path = $this->module->getPath();
         if (!empty($_FILES['logo']) && $_FILES['logo']['size']) {
             if (!file_exists($path)) {
