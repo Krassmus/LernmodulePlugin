@@ -5,13 +5,24 @@ use Studip\ZipArchive;
 class Lernmodul extends SimpleORMap
 {
 
+    /**
+     * @return string The name of the class corresponding to the type of this Lernmodul.
+     */
+    public function getClass(): string {
+        $allowList = ['vuejs', 'vanillalm', 'h5p', 'html'];
+        if (!in_array($this['type'], $allowList)) {
+            throw new InvalidArgumentException();
+        }
+        return ucfirst($this['type']) . "Lernmodul";
+    }
+
     static public function find($module_id)
     {
         $module = parent::find($module_id);
         if (!$module) {
             return $module;
         }
-        $class = ucfirst($module['type'])."Lernmodul";
+        $class = $module->getClass();
         if (class_exists($class)) {
             return $class::buildExisting($module->toRawArray());
         } else {
@@ -39,7 +50,7 @@ class Lernmodul extends SimpleORMap
 
     static public function createCopyFromModule(Lernmodul $module)
     {
-        $class = ucfirst($module['type'])."Lernmodul";
+        $class = $module->getClass();
         $lernmodul = new $class();
         $lernmodul->setData($module->toRawArray());
         $lernmodul->setId($lernmodul->getNewId());
@@ -174,7 +185,7 @@ class Lernmodul extends SimpleORMap
             $this['url'] = null;
             $this->store();
 
-            $class = ucfirst($this['type'])."Lernmodul";
+            $class = $this->getClass();
             $module = new $class($this->getId());
             $module->afterInstall();
         } else {

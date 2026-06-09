@@ -100,7 +100,7 @@ class LernmoduleController extends PluginController
             $this->set_layout(null);
         }
 
-        $class = ucfirst($this->mod['type'])."Lernmodul";
+        $class = $this->mod->getClass();
         $this->mod = $class::buildExisting($this->mod->toArray());
         $isVuejsModule = $this->mod['type'] === 'vuejs'; // Vue.js Lernmodule don't have urls/paths.
         if (!$isVuejsModule && !$this->mod['url'] && !file_exists($this->mod->getPath())) {
@@ -127,7 +127,7 @@ class LernmoduleController extends PluginController
         $this->module = new Lernmodul($module_id ?: null);
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         if ($this->module['type'] && !$this->module->isNew()) {
-            $class = ucfirst($this->module['type'])."Lernmodul";
+            $class = $this->module->getClass();
             $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
         }
         $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id)
@@ -233,7 +233,7 @@ class LernmoduleController extends PluginController
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id ?: null);
         if ($this->module['type'] && !$this->module->isNew()) {
-            $class = ucfirst($this->module['type'])."Lernmodul";
+            $class = $this->module->getClass();
             $this->module = $class::buildExisting($this->module->toRawArray());
         }
         $this->attempts = LernmodulAttempt::findbyCourseAndModule($this->course_id, $this->module->getId());
@@ -576,7 +576,7 @@ class LernmoduleController extends PluginController
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         PageLayout::setTitle(_("Lernmodul verschieben in andere Veranstaltung"));
         if ($this->module['type'] && !$this->module->isNew()) {
-            $class = ucfirst($this->module['type'])."Lernmodul";
+            $class = $this->module->getClass();
             $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
         }
         if (Request::isPost() && Request::option("seminar_id") && $GLOBALS['perm']->have_studip_perm("tutor", Request::option("seminar_id"))) {
