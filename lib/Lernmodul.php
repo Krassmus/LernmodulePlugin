@@ -295,26 +295,6 @@ class Lernmodul extends SimpleORMap
     }
 
     /**
-     * unused
-     * @param $course_id
-     */
-    public function addToCourse($course_id)
-    {
-        if (!$this->getId()) {
-            $this->setId($this->getNewId());
-        }
-        $statement = DBManager::get()->prepare("
-            INSERT IGNORE INTO lernmodule_courses
-            SET seminar_id = :course_id,
-                module_id = :module_id
-        ");
-        $statement->execute(array(
-            'course_id' => $course_id,
-            'module_id' => $this->getId()
-        ));
-    }
-
-    /**
      * @return bool True iff the currently authenticated user has write permission for this Lernmodul
      */
     public function isWritable(): bool
