@@ -371,11 +371,23 @@ class LernmoduleController extends PluginController
 
     public function gameinvitation_action()
     {
+        $module_id = Request::option('module_id');
+        $seminar_id = Request::option('seminar_id');
+        if (!$module_id || !$seminar_id) {
+            throw new AccessDeniedException();
+        }
+        $module = Lernmodul::find($module_id);
+        if (!$module || !$module->isWritable()) {
+            throw new AccessDeniedException();
+        }
+        if (!Seminar_Perm::get()->have_studip_perm('autor', $seminar_id)) {
+            throw new AccessDeniedException();
+        }
         if (Request::isPost()) {
             $game = new LernmodulGame();
             $game['user_id'] = $GLOBALS['user']->id;
-            $game['seminar_id'] = Request::option("seminar_id");
-            $game['module_id'] = Request::option("module_id");
+            $game['seminar_id'] = $seminar_id;
+            $game['module_id'] = $module_id;
             $game['max_players'] = Request::int("max") + 1;
             $game['parameter'] = Request::getArray("parameter");
             $game['closed'] = 0;
