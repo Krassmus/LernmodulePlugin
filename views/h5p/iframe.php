@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="<?php print $lang; ?>" class="h5p-iframe">
+<html lang="<?= htmlReady($lang) ?>" class="h5p-iframe">
 <head>
     <meta charset="utf-8">
     <title><?= htmlReady($content['title']) ?></title>
@@ -14,7 +14,6 @@
             display: none;
         }
     </style>
-    <?php if (!empty($additional_embed_head_tags)): print implode("\n", $additional_embed_head_tags); endif; ?>
 </head>
 <body>
 <div class="h5p-content" data-content-id="<?= htmlReady($content['id']) ?>"></div>
