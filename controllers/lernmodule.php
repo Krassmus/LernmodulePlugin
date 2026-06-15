@@ -16,6 +16,9 @@ class LernmoduleController extends PluginController
 
     public function overview_action()
     {
+        if (!Seminar_Perm::get()->have_studip_perm('autor', $this->course_id)) {
+            throw new AccessDeniedException();
+        }
         Navigation::activateItem("/course/lernmodule/overview");
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         Lernmodul::deleteBySQL("draft = '1' AND mkdate < UNIX_TIMESTAMP() - 86400");
@@ -29,10 +32,11 @@ class LernmoduleController extends PluginController
             $this->blocks[] = $block;
         }
 
-
         if (Request::option("quit")) {
             $attendance = new LernmodulGameAttendance(Request::option("quit"));
-            if ($attendance['user_id'] === $GLOBALS['user']->id) {
+            if ($attendance['user_id'] !== User::findCurrent()->id) {
+                throw new AccessDeniedException();
+            } else {
                 $attendance->delete();
                 $this->redirect("lernmodule/overview");
                 return;
@@ -111,9 +115,8 @@ class LernmoduleController extends PluginController
         $this->attempt = LernmodulAttempt::getByModule($this->mod->getId());
         if (Request::option("attendance")) {
             $this->game_attendence = new LernmodulGameAttendance(Request::option("attendance"));
-            if ($GLOBALS['user']->id !== $this->game_attendence['user_id']) {
-                PageLayout::postError(dgettext("lernmoduleplugin","IDs passen nicht zusammen. Beitritt verweigert."));
-                $this->redirect("lernmodule/overview");
+            if ($this->game_attendance['user_id'] !== User::findCurrent()->id) {
+                throw new AccessDeniedException();
             }
         }
     }
@@ -596,7 +599,7 @@ class LernmoduleController extends PluginController
             throw new AccessDeniedException();
         }
         $this->module = Lernmodul::find($module_id);
-        if (!$this->module->isWritable()) {
+        if (!$this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
         Navigation::activateItem("/course/lernmodule/overview");
