@@ -223,7 +223,7 @@ class H5pController extends PluginController
     public function iframe_action($module_id)
     {
         $this->set_layout(null);
-        $this->mod = new H5pLernmodul($module_id);
+        $this->mod = H5pLernmodul::find($module_id);
         if (!$this->mod || !$this->mod->isReadable()) {
             throw new AccessDeniedException();
         }
