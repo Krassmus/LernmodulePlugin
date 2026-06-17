@@ -50,7 +50,7 @@ usort($student_data, function ($data1, $data2) {
                     <? if ($student['solved'] > 0 && $student['solved'] >= count($module)) : ?>
                         <?= Icon::create("crown", "status-yellow")->asImg(20, array('class' => "text-bottom", 'title' => dgettext("lernmoduleplugin","Besser geht es nicht!"))) ?>
                     <? endif ?>
-                    <?= $student['solved'] ?>
+                    <?= htmlReady($student['solved']) ?>
                 </td>
             </tr>
         <? endforeach ?>

@@ -38,8 +38,8 @@ if (!empty($_POST))
 			$value = htmlspecialchars( (string)$value );
 ?>
 		<tr>
-			<th style="vertical-align: top"><?php echo htmlspecialchars( (string)$key ); ?></th>
-			<td><pre class="samples"><?php echo $value; ?></pre></td>
+			<th style="vertical-align: top"><?= htmlReady( (string)$key ); ?></th>
+			<td><pre class="samples"><?= htmlReady($value) ?></pre></td>
 		</tr>
 	<?php
 	}
