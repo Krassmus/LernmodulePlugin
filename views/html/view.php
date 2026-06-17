@@ -98,7 +98,7 @@
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
-                        "id": '<?= $GLOBALS['user']->id ?>',
+                        "id": '<?= htmlReady($GLOBALS['user']->id) ?>',
                         "name": '<?= htmlReady($GLOBALS['user']->getFullName()) ?>',
                         "email": '<?= htmlReady(get_visible_email($GLOBALS['user']->id)) ?>',
                         "avatar": '<?= htmlReady(Visibility::verify('picture', $GLOBALS['user']->id, "nobody")
