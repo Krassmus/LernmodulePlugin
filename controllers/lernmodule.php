@@ -386,9 +386,7 @@ class LernmoduleController extends PluginController
 
     public function blubber_action()
     {
-        if (Request::submitted("save") && Request::isPost()) {
 
-        }
     }
 
     public function admin_action()
