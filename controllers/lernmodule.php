@@ -479,6 +479,13 @@ class LernmoduleController extends PluginController
         }
         foreach (Request::getArray("order") as $position => $module_id) {
             $coursemodule = LernmodulCourse::find([$module_id, $course_id]);
+            if ($coursemodule) {
+                // Check permissions for Lernmodul
+                $lernmodul = $coursemodule->module;
+                if ($lernmodul instanceof Lernmodul && !$lernmodul->isWritable()) {
+                    throw new AccessDeniedException();
+                }
+            }
             if (!$coursemodule) {
                 $coursemodule = new LernmodulCourse();
                 $coursemodule['module_id'] = $module_id;
