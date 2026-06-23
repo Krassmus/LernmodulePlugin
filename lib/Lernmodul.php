@@ -116,7 +116,7 @@ class Lernmodul extends SimpleORMap
 
 
 
-    public function copyModule($path, $filename = null)
+    public function copyModule($path, string $filename = null)
     {
         if (file_exists($this->getPath())) {
             $success = rmdirr($this->getPath());
@@ -159,7 +159,9 @@ class Lernmodul extends SimpleORMap
         } else {
             // Es wurde kein Zip hochgeladen, oder die Zip-Datei konnte nicht extrahiert werden.
             // Wir gehen mal davon aus, dass ein PDF oder ein anderes Dokument hochgeladen wurde.
-            rename($path, $this->getPath() . "/" . ($filename ?: "index.html"));
+            $filenameSanitized = $filename ? pathinfo($filename, PATHINFO_FILENAME) : 'index.html';
+            $toPath = $this->getPath() . "/" . $filenameSanitized;
+            rename($path, $toPath);
         }
 
         foreach ($this->scanForFiletypes(array("php", "php3", "php1", "php2", "phtml", "asp", "pl", "py"), null, true) as $php_file) {
