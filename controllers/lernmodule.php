@@ -170,11 +170,6 @@ class LernmoduleController extends PluginController
             $this->module->setData($data);
             if ($this->module['url'] && !$this->module['image']) {
                 $this->module['type'] = "html";
-                $og = OpenGraphURL::fromURL($this->module['url']);
-                $og->fetch();
-                if ($og['image']) {
-                    $this->module['image'] = $og['image'];
-                }
             }
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module->store();
