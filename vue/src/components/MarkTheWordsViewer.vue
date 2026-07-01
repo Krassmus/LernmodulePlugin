@@ -93,6 +93,7 @@ import { defineComponent, PropType } from 'vue';
 import { MarkTheWordsTask } from '@/models/TaskDefinition';
 import { v4 as uuidv4 } from 'uuid';
 import FeedbackElement from '@/components/FeedbackElement.vue';
+import { formatResultMessage } from '@/functions';
 
 type Uuid = string;
 
@@ -343,14 +344,11 @@ export default defineComponent({
     },
 
     resultMessage(): string {
-      let resultMessage = this.task.strings.resultMessage.replace(
-        ':correct',
-        this.score.toString()
+      return formatResultMessage(
+        this.task.strings.resultMessage,
+        this.score,
+        this.maxScore
       );
-
-      resultMessage = resultMessage.replace(':total', this.maxScore.toString());
-
-      return resultMessage;
     },
 
     allAnswersAreCorrect(): boolean {

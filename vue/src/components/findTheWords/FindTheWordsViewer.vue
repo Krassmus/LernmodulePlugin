@@ -98,6 +98,7 @@ import FeedbackElement from '@/components/FeedbackElement.vue';
 import { FindTheWordsTask } from '@/models/TaskDefinition';
 import { v4 } from 'uuid';
 import { $gettext } from '@/language/gettext';
+import { formatResultMessage } from '@/functions';
 
 const WordSearch = require('@blex41/word-search');
 
@@ -220,13 +221,11 @@ const taskCompleted = computed(() => {
 });
 
 const resultMessage = computed(() => {
-  let result = props.task.strings.resultMessage.replace(
-    ':correct',
-    score.value.toString()
+  return formatResultMessage(
+    props.task.strings.resultMessage,
+    score.value,
+    maxScore.value
   );
-  result = result.replace(':total', maxScore.value.toString());
-
-  return result;
 });
 
 const showCheckButton = computed(() => {
