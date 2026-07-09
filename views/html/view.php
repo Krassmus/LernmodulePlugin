@@ -98,7 +98,7 @@
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
-                        "id": '<?= $GLOBALS['user']->id ?>',
+                        "id": '<?= htmlReady($GLOBALS['user']->id) ?>',
                         "name": '<?= htmlReady($GLOBALS['user']->getFullName()) ?>',
                         "email": '<?= htmlReady(get_visible_email($GLOBALS['user']->id)) ?>',
                         "avatar": '<?= htmlReady(Visibility::verify('picture', $GLOBALS['user']->id, "nobody")
@@ -195,7 +195,7 @@
     }
     ?>
         src="<?= htmlReady($url) ?>"
-    <?= $module['sandbox'] && (!$module['url'] || (parse_url($url, PHP_URL_HOST) === $_SERVER['SERVER_NAME'])) ? " sandbox=\"". implode(" ", $sandbox)."\"" : "" ?>
+        sandbox
         style="width: 100%; height: 90vh; border: none; min-height: 721px;"
         id="lernmodule_iframe"
 ></iframe>

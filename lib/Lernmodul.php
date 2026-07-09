@@ -5,13 +5,24 @@ use Studip\ZipArchive;
 class Lernmodul extends SimpleORMap
 {
 
+    /**
+     * @return string The name of the class corresponding to the type of this Lernmodul.
+     */
+    public function getClass(): string {
+        $allowList = ['vuejs', 'vanillalm', 'h5p', 'html'];
+        if (!in_array($this['type'], $allowList)) {
+            throw new InvalidArgumentException();
+        }
+        return ucfirst($this['type']) . "Lernmodul";
+    }
+
     static public function find($module_id)
     {
         $module = parent::find($module_id);
         if (!$module) {
             return $module;
         }
-        $class = ucfirst($module['type'])."Lernmodul";
+        $class = $module->getClass();
         if (class_exists($class)) {
             return $class::buildExisting($module->toRawArray());
         } else {
@@ -39,7 +50,7 @@ class Lernmodul extends SimpleORMap
 
     static public function createCopyFromModule(Lernmodul $module)
     {
-        $class = ucfirst($module['type'])."Lernmodul";
+        $class = $module->getClass();
         $lernmodul = new $class();
         $lernmodul->setData($module->toRawArray());
         $lernmodul->setId($lernmodul->getNewId());
@@ -69,50 +80,32 @@ class Lernmodul extends SimpleORMap
         parent::configure($config);
     }
 
-    /**
-     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
-     *  LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
-     *  multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
-     *  is supplied that belongs to 0 or multiple LernmodulCourses.
-     */
     static public function mayAccess(?User $user, Lernmodul $sorm): bool {
-        return self::hasPermInLernmodulCourse('autor', $user, $sorm);
+        return self::hasPermInLernmodulSeminar('autor', $user, $sorm);
     }
 
-    /**
-     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
-     *  LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
-     *  multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
-     *  is supplied that belongs to 0 or multiple LernmodulCourses.
-     */
     public static function mayEdit(?User $user, Lernmodul $sorm) {
-        return self::hasPermInLernmodulCourse('tutor', $user, $sorm);
+        return self::hasPermInLernmodulSeminar('tutor', $user, $sorm);
     }
 
     /**
      * @param string $perm
      * @param User|null $user
      * @param Lernmodul $sorm
-     * @return bool True iff user has the given permission in the course corresponding to this Lernmodul.
-     * @throws AccessDeniedException The 'Lernmodul' class claims to have a "has_many" relation to
-     * LernmodulCourse, but I have been unable to find a scenario in which a Lernmodul is assigned to
-     * multiple instances of LernmodulCourse. To be safe, this method throws an exception if a Lernmodul
-     * is supplied that belongs to 0 or multiple LernmodulCourses.
+     * @return bool True iff user has the given permission in at least one of the seminars where this Lernmodul is used.
      */
-    static protected function hasPermInLernmodulCourse(string $perm, ?User $user, Lernmodul $sorm) {
+    static protected function hasPermInLernmodulSeminar(string $perm, ?User $user, Lernmodul $sorm): bool
+    {
+        $user_id = $user ? $user->id : false;
         $courses = LernmodulCourse::findBySQL(
             "module_id = ?",
             [$sorm->module_id]);
-        if (count($courses) === 0) {
-            throw new AccessDeniedException('The given Lernmodul does not belong to a course, ' .
-            'so permission cannot be determined.');
-        } else if (count($courses) > 1) {
-            throw new AccessDeniedException('The given Lernmodul belongs to multiple courses, ' .
-            'so permission cannot be determined.');
+        foreach ($courses as $course) {
+            if (Seminar_Perm::get()->have_studip_perm($perm, $course->seminar_id, $user_id)) {
+                return true;
+            }
         }
-        $course = $courses[0];
-        $user_id = $user ? $user->id : false;
-        return Seminar_Perm::get()->have_studip_perm($perm, $course->seminar_id, $user_id);
+        return false;
     }
 
 
@@ -123,7 +116,7 @@ class Lernmodul extends SimpleORMap
 
 
 
-    public function copyModule($path, $filename = null)
+    public function copyModule($path, string $filename = null)
     {
         if (file_exists($this->getPath())) {
             $success = rmdirr($this->getPath());
@@ -166,7 +159,9 @@ class Lernmodul extends SimpleORMap
         } else {
             // Es wurde kein Zip hochgeladen, oder die Zip-Datei konnte nicht extrahiert werden.
             // Wir gehen mal davon aus, dass ein PDF oder ein anderes Dokument hochgeladen wurde.
-            rename($path, $this->getPath() . "/" . ($filename ?: "index.html"));
+            $filenameSanitized = $filename ? pathinfo($filename, PATHINFO_FILENAME) : 'index.html';
+            $toPath = $this->getPath() . "/" . $filenameSanitized;
+            rename($path, $toPath);
         }
 
         foreach ($this->scanForFiletypes(array("php", "php3", "php1", "php2", "phtml", "asp", "pl", "py"), null, true) as $php_file) {
@@ -192,7 +187,7 @@ class Lernmodul extends SimpleORMap
             $this['url'] = null;
             $this->store();
 
-            $class = ucfirst($this['type'])."Lernmodul";
+            $class = $this->getClass();
             $module = new $class($this->getId());
             $module->afterInstall();
         } else {
@@ -313,43 +308,19 @@ class Lernmodul extends SimpleORMap
     }
 
     /**
-     * unused
-     * @param $course_id
+     * @return bool True iff the currently authenticated user has write permission for this Lernmodul
      */
-    public function addToCourse($course_id)
+    public function isWritable(): bool
     {
-        if (!$this->getId()) {
-            $this->setId($this->getNewId());
-        }
-        $statement = DBManager::get()->prepare("
-            INSERT IGNORE INTO lernmodule_courses
-            SET seminar_id = :course_id,
-                module_id = :module_id
-        ");
-        $statement->execute(array(
-            'course_id' => $course_id,
-            'module_id' => $this->getId()
-        ));
+        return self::mayEdit(User::findCurrent(), $this);
     }
 
-    public function isWritable()
+    /**
+     * @return bool True iff the currently authenticated user has read permission for this Lernmodul
+     */
+    public function isReadable(): bool
     {
-        if ($GLOBALS['perm']->have_perm("admin")) {
-            return true;
-        }
-        $statement = DBManager::get()->prepare("
-            SELECT 1
-            FROM lernmodule_courses
-                INNER JOIN seminar_user ON (lernmodule_courses.seminar_id = seminar_user.Seminar_id AND (seminar_user.status IN ('tutor', 'dozent')))
-            WHERE seminar_user.user_id = :user_id
-                AND lernmodule_courses.module_id = :module_id
-            LIMIT 1
-        ");
-        $statement->execute(array(
-            'module_id' => $this->getId(),
-            'user_id' => $GLOBALS['user']->id
-        ));
-        return (bool) $statement->fetch();
+        return self::mayAccess(User::findCurrent(), $this);
     }
 
     public function getDownloadURL() {

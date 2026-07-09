@@ -13,10 +13,18 @@ class HtmlController extends PluginController
     }
 
     public function set_configs_action() {
+        $module_id = Request::option("module_id");
+        if (!$module_id) {
+            throw new AccessDeniedException();
+        }
+        $module = Lernmodul::find($module_id);
+        if (!$module || !$module->isWritable()) {
+            throw new AccessDeniedException();
+        }
         if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
         }
-        $this->lernmodulcourse = new LernmodulCourse(array(Request::option("module_id"), Context::get()->id));
+        $this->lernmodulcourse = new LernmodulCourse(array($module_id, Context::get()->id));
         if ($this->lernmodulcourse->isNew()) {
             throw new Exception("Kein gültiges Modul.");
         }
@@ -36,7 +44,7 @@ class HtmlController extends PluginController
     public function get_url_action($module_id)
     {
         $this->module = Lernmodul::find($module_id);
-        if (!$this->module->isWritable()) {
+        if ($this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
         PageLayout::setTitle(dgettext("lernmoduleplugin","Direktlink zum Lernmodul"));

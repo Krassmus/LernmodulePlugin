@@ -2,7 +2,10 @@
 
 class H5peditorController extends PluginController
 {
-    public function edit_action($module_id = null)
+    /**
+     * @throws AccessDeniedException
+     */
+    public function edit_action($module_id = null): void
     {
         if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
@@ -17,6 +20,9 @@ class H5peditorController extends PluginController
         }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = H5pLernmodul::find($module_id);
+        if (!$this->mod || !$this->mod->isWritable()) {
+            throw new AccessDeniedException();
+        }
         if (Request::isPost()) {
             list($machineName, $version) = explode(" ", Request::get("library"));
             list($majorVersion, $minorVersion) = explode(".", $version);
@@ -922,6 +928,10 @@ class H5peditorController extends PluginController
         return $settings;
     }
 
+    /**
+     * @throws AccessDeniedException
+     * @throws \Trails\Exceptions\DoubleRenderError
+     */
     public function ajax_action() {
         $cmd = Request::get("cmd");
         if ($cmd === "libraries" && Request::get("machineName")) {
@@ -1021,7 +1031,7 @@ class H5peditorController extends PluginController
             );
             $this->render_json($output);
             return;
-        } elseif(count(Request::getArray("libraries")) > 0) {
+        } elseif (count(Request::getArray("libraries")) > 0) {
             $libs = array();
             foreach (Request::getArray("libraries") as $library_name) {
                 list($machineName, $version) = explode(" ", $library_name);
@@ -1088,38 +1098,34 @@ class H5peditorController extends PluginController
             return;
         } elseif ($cmd === "files") {
             //upload files ...
-            $_FILES['file'];
             $mod = H5pLernmodul::find(Request::get("module_id"));
-            if (!$mod) {
-                throw new Exception(_("Modul existiert nicht. Kann Datei nicht hochladen."));
+            if (!$mod || !$mod->isWritable()) {
+                throw new AccessDeniedException();
             }
 
-            $path = $mod->getPath();
-            if (!file_exists($path)) {
-                mkdir($path);
+            $moduleAssetsPath = $mod->getPath() . '/content/assets/';
+            if (!file_exists($moduleAssetsPath)) {
+                mkdir($moduleAssetsPath, 0700, true);
             }
+            chmod($mod->getPath(), 0700);
+            chmod($mod->getPath() . '/content', 0700);
+            chmod($moduleAssetsPath, 0700);
 
-            if (!file_exists($path."/content")) {
-                mkdir($path."/content");
+            $name = $_FILES['file']['name'];
+            if (!$name) {
+                throw new InvalidArgumentException('file[name] cannot be empty');
             }
-            $path .= "/content";
-            if (!file_exists($path."/assets")) {
-                mkdir($path."/assets");
+            $extension = pathinfo($name, PATHINFO_EXTENSION);
+            if (!in_array($extension, ['gif', 'jpeg', 'jpg', 'png'])) {
+                throw new InvalidArgumentException('file extension must be image');
             }
-            $path .= "/assets/";
-            $name = $_FILES['file']['name'] ?: "image.png";
-            $ending = strpos($name, ".") !== false
-                ? substr($name, strrpos($name, ".") + 1)
-                : "";
-            $filename = strpos($name, ".") !== false
-                ? substr($name, 0, strrpos($name, "."))
-                : $name;
+            $filename = pathinfo($name, PATHINFO_FILENAME);
 
             $i = "";
-            while (file_exists($path.$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : ""))) {
+            while (file_exists($moduleAssetsPath . $filename . ($i ? " (" . $i . ")" : "") . ($extension ? "." . $extension : ""))) {
                 $i++;
             }
-            $newfilepath = $path.$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : "");
+            $newfilepath = $moduleAssetsPath . $filename . ($i ? " (" . $i . ")" : "") . ($extension ? "." . $extension : "");
 
             if ($_FILES['file']['tmp_name'] && file_exists($_FILES['file']['tmp_name']) && filesize($_FILES['file']['tmp_name'])) {
                 move_uploaded_file($_FILES['file']['tmp_name'], $newfilepath);
@@ -1134,7 +1140,7 @@ class H5peditorController extends PluginController
                 'width' => $image_size[0],
                 'height' => $image_size[1],
                 'mime' => $_FILES['file']['type'],
-                'path' => "assets/".$filename.($i ? " (".$i.")" : "").($ending ? ".".$ending : ""),
+                'path' => "assets/".$filename.($i ? " (".$i.")" : "").($extension ? "." . $extension : ""),
                 'exists' => file_exists($newfilepath),
                 'oldpath' => $_FILES['file']['tmp_name'],
                 'newpath' => $newfilepath
