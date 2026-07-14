@@ -1,6 +1,6 @@
 <form class="default" method="post" action="<?= PluginEngine::getLink($plugin, array(), "html/set_configs") ?>" data-dialog>
 
-    <input type="hidden" name="module_id" value="<?= $lernmodulcourse['module_id'] ?>">
+    <input type="hidden" name="module_id" value="<?= htmlReady($lernmodulcourse['module_id']) ?>">
     <table class="default">
     <? foreach (Request::getArray("configs") as $name => $value) : ?>
         <tr>

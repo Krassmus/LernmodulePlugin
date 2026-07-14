@@ -85,6 +85,7 @@ import { CrosswordTask, Word } from '@/models/CrosswordTask';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 import { debounce, throttle } from 'lodash';
+import { formatResultMessage } from '@/functions';
 
 const debug = window.STUDIP.LernmoduleVueJS.LERNMODULE_DEBUG;
 
@@ -198,13 +199,11 @@ const score = computed(() => {
 });
 
 const resultMessage = computed(() => {
-  let result = props.task.strings.resultMessage.replace(
-    ':correct',
-    score.value.toString()
+  return formatResultMessage(
+    props.task.strings.resultMessage,
+    score.value,
+    maxScore.value
   );
-  result = result.replace(':total', maxScore.value.toString());
-
-  return result;
 });
 
 const showCheckButton = computed(() => {

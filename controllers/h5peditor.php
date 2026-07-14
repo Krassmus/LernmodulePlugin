@@ -2,7 +2,10 @@
 
 class H5peditorController extends PluginController
 {
-    public function edit_action($module_id = null)
+    /**
+     * @throws AccessDeniedException
+     */
+    public function edit_action($module_id = null): void
     {
         if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
             throw new AccessDeniedException();
@@ -17,6 +20,9 @@ class H5peditorController extends PluginController
         }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = H5pLernmodul::find($module_id);
+        if (!$this->mod || !$this->mod->isWritable()) {
+            throw new AccessDeniedException();
+        }
         if (Request::isPost()) {
             list($machineName, $version) = explode(" ", Request::get("library"));
             list($majorVersion, $minorVersion) = explode(".", $version);
@@ -1093,7 +1099,7 @@ class H5peditorController extends PluginController
         } elseif ($cmd === "files") {
             //upload files ...
             $mod = H5pLernmodul::find(Request::get("module_id"));
-            if (!$mod || !Lernmodul::mayEdit(User::findCurrent(), $mod)) {
+            if (!$mod || !$mod->isWritable()) {
                 throw new AccessDeniedException();
             }
 

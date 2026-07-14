@@ -27,6 +27,9 @@ class VuejseditorController extends PluginController
         }
         Navigation::activateItem("/course/lernmodule/overview");
         $this->mod = VuejsLernmodul::find($module_id);
+        if (!$this->mod || !$this->mod->isWritable()) {
+            throw new AccessDeniedException();
+        }
         $this->block_id = Request::get('block_id');
         $connection = $this->mod->courseConnection(Context::get()->id);
         $this->javascript_global_variables = [
@@ -60,7 +63,7 @@ class VuejseditorController extends PluginController
      * @throws InvalidSecurityTokenException
      * @throws AccessDeniedException
      */
-    public function save_action()
+    public function save_action(): void
     {
         CSRFProtection::verifySecurityToken();
         if (!Request::isPost()) {
@@ -71,7 +74,7 @@ class VuejseditorController extends PluginController
             throw new InvalidArgumentException(_("'module_id' fehlt"));
         }
         $this->mod = VuejsLernmodul::find($module_id);
-        if (!$this->mod || !Lernmodul::mayEdit(User::findCurrent(), $this->mod)) {
+        if (!$this->mod || !$this->mod->isWritable()) {
             throw new AccessDeniedException();
         }
         $task_definition = Request::get('task_definition');
@@ -85,6 +88,9 @@ class VuejseditorController extends PluginController
         }
         if (!isset($infotext)) {
             throw new InvalidArgumentException(_("'infotext' fehlt"));
+        }
+        if (!Seminar_Perm::get()->have_studip_perm('tutor', Context::getId())) {
+            throw new AccessDeniedException();
         }
         $connection = $this->mod->courseConnection(Context::get()->id);
         if ($connection->isNew()) {

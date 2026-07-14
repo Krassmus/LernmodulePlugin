@@ -138,6 +138,7 @@ import { defineComponent, PropType } from 'vue';
 import { QuestionAnswer, QuestionTask } from '@/models/TaskDefinition';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
+import { formatResultMessage } from '@/functions';
 
 export default defineComponent({
   name: 'QuestionViewer',
@@ -280,18 +281,11 @@ export default defineComponent({
 
     resultMessage(): string {
       if (!this.task.strings.resultMessage) return '';
-
-      let resultMessage = this.task.strings.resultMessage.replace(
-        ':correct',
-        this.points.toString()
+      return formatResultMessage(
+        this.task.strings.resultMessage,
+        this.points,
+        this.maxPoints
       );
-
-      resultMessage = resultMessage.replace(
-        ':total',
-        this.maxPoints.toString()
-      );
-
-      return resultMessage;
     },
   },
 });
