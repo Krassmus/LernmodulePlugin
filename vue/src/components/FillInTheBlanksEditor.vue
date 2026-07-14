@@ -251,7 +251,6 @@ export default defineComponent({
 
     updateTaskDefinition(undoBatch?: unknown) {
       // Synchronize state modelTaskDefinition -> taskDefinition.
-      console.log('update task definition');
       this.taskEditor!.performEdit({
         newTaskDefinition: cloneDeep(this.modelTaskDefinition),
         undoBatch: undoBatch ?? {},

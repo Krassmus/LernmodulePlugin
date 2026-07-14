@@ -266,7 +266,6 @@ watch(
 
 function updateTaskDefinition(undoBatch?: unknown): void {
   // Synchronize state modelTaskDefinition -> taskDefinition.
-  console.log('update task definition');
   taskEditor!.performEdit({
     newTaskDefinition: cloneDeep(modelTaskDefinition.value),
     undoBatch: undoBatch ?? {},
