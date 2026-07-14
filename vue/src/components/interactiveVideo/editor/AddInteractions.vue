@@ -182,7 +182,6 @@ const taskTypes: Array<TaskDefinition['task_type']> = [
   'Memory',
   'Pairing',
   'Question',
-  'Sequencing',
 ];
 
 provide(interactiveVideoEditorStateSymbol, {
