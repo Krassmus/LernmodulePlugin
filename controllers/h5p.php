@@ -228,7 +228,7 @@ class H5pController extends PluginController
             throw new AccessDeniedException();
         }
         $this->attempt = new LernmodulAttempt(Request::get("a"));
-        if (!$this->attempt['user_id'] !== User::findCurrent()->id) {
+        if ($this->attempt['user_id'] !== User::findCurrent()->id) {
             throw new AccessDeniedException();
         }
         if (!$this->mod->isAllowed()) {
