@@ -295,7 +295,7 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         $this->attempt = new LernmodulAttempt($attempt_id);
-        if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
+        if (!empty($this->attempt['user_id']) && $this->attempt['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException();
         }
         if (Request::isPost()) {
