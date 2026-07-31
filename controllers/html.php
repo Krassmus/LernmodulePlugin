@@ -44,7 +44,7 @@ class HtmlController extends PluginController
     public function get_url_action($module_id)
     {
         $this->module = Lernmodul::find($module_id);
-        if ($this->module || !$this->module->isWritable()) {
+        if (!$this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
         PageLayout::setTitle(dgettext("lernmoduleplugin","Direktlink zum Lernmodul"));
