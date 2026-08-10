@@ -11,11 +11,24 @@ class VuejseditorController extends PluginController
             throw new AccessDeniedException();
         }
         if (!$module_id) {
+            // Create module
             $this->mod = new VuejsLernmodul();
             $this->mod['draft'] = 1;
             $this->mod['type'] = "vuejs";
             $this->mod['name'] = "Neues Stud.IP H5P-Lernmodul";
             $this->mod->store();
+
+            // Create course connection
+            $connection = $this->mod->courseConnection(Context::get()->id);
+            $block = LernmodulBlock::find(Request::option("block_id"));
+            if (!$block || !$block->isWritable()) {
+                throw new AccessDeniedException();
+            }
+            $connection['block_id'] = Request::option("block_id");
+            $connection['position'] = count($block->coursemodules) + 0;
+            $connection->store();
+
+            // Redirect to editor
             $this->redirect(
                 PluginEngine::getURL(
                     $this->plugin,

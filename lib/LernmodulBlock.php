@@ -11,4 +11,16 @@ class LernmodulBlock extends SimpleORMap {
 
         parent::configure($config);
     }
+
+    /**
+     * @return bool True iff the currently authenticated user has write permission for this Block
+     */
+    public function isWritable(): bool
+    {
+        $user = User::findCurrent();
+        if (!$user) {
+            return false;
+        }
+        return Seminar_Perm::get()->have_studip_perm('tutor', $this->seminar_id, $user->id);
+    }
 }
