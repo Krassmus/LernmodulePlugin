@@ -1,6 +1,8 @@
 import { v4 } from 'uuid';
 import { z } from 'zod';
 import { $gettext } from '@/language/gettext';
+import CoursePresentationViewer from '@/components/coursePresentation/CoursePresentationViewer.vue';
+import CoursePresentationEditor from '@/components/coursePresentation/CoursePresentationEditor.vue';
 import CrosswordEditor from '@/components/crossword/CrosswordEditor.vue';
 import CrosswordViewer from '@/components/crossword/CrosswordViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
@@ -566,6 +568,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
 
 export function viewerForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
+    case 'CoursePresentation':
+      return CoursePresentationViewer;
     case 'Crossword':
       return CrosswordViewer;
     case 'DragTheWords':
@@ -595,6 +599,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
 
 export function editorForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
+    case 'CoursePresentation':
+      return CoursePresentationEditor;
     case 'Crossword':
       return CrosswordEditor;
     case 'DragTheWords':
