@@ -27,7 +27,7 @@ const overlaySchema_v1 = z.object({
   x: z.number(), // Position, as a fraction of video width, between 0 and 1
   y: z.number(), // Position, as a fraction of video height, between 0 and 1
   width: z.number(), // Width, as a fraction of video width, between 0 and 1
-  height: z.number(), // Height, as a fraction of video width, between 0 and 1
+  height: z.number(), // Height, as a fraction of video height, between 0 and 1
   text: z.string(), // Sanitized HTML from Wysiwyg editor
   pauseWhenVisible: z.boolean().optional().default(true),
 });
@@ -175,6 +175,24 @@ export const interactiveVideoTaskSchema = z.object({
   ),
 });
 export type InteractiveVideoTask = z.infer<typeof interactiveVideoTaskSchema>;
+
+export function newInteractiveVideoTask(): InteractiveVideoTask {
+  return {
+    task_type: 'InteractiveVideo',
+    interactions: [],
+    video: {
+      type: 'none',
+    },
+    autoplay: false,
+    startAt: 0,
+    disableNavigation: 'not disabled',
+    travisGoSettings: {
+      enabled: false,
+      projectTitle: $gettext('Projekttitel'),
+      projectDescription: $gettext('Projektbeschreibung'),
+    },
+  };
+}
 
 export function printInteractionType(interaction: Interaction): string {
   switch (interaction.type) {

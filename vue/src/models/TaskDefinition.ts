@@ -23,10 +23,17 @@ import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
 import SequencingViewer from '@/components/SequencingViewer.vue';
-import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
-import { crosswordTaskSchema } from '@/models/CrosswordTask';
+import {
+  interactiveVideoTaskSchema,
+  newInteractiveVideoTask,
+} from '@/models/InteractiveVideoTask';
+import { crosswordTaskSchema, newCrosswordTask } from '@/models/CrosswordTask';
 import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
-import { imageFileSchema, feedbackSchema, Feedback } from '@/models/common';
+import { Feedback, feedbackSchema, imageFileSchema } from '@/models/common';
+import {
+  coursePresentationTaskSchema,
+  newCoursePresentationTask,
+} from '@/models/CoursePresentationTask';
 
 /**
  * @return The Stud.IP download URL for the file with the given ID, or '' if id is ''
@@ -257,6 +264,7 @@ export const taskDefinitionSchema = z.discriminatedUnion('task_type', [
   pairingTaskSchema,
   questionTaskSchema,
   sequencingTaskSchema,
+  coursePresentationTaskSchema,
 ]);
 export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 
@@ -279,6 +287,7 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
     pairingTaskSchema,
     questionTaskSchema,
     sequencingTaskSchema,
+    coursePresentationTaskSchema,
   ]
 );
 export type TaskDefinitionMinusInteractiveVideo = z.infer<
@@ -313,58 +322,7 @@ function defaultFeedback(): Feedback[] {
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
   switch (type) {
     case 'Crossword':
-      return {
-        task_type: 'Crossword',
-        words: [
-          {
-            uuid: v4(),
-            hint: 'Frucht mit gleichnamiger Farbe.',
-            solution: 'Orange',
-            x: 4,
-            y: 1,
-            direction: 'across',
-          },
-          {
-            uuid: v4(),
-            hint: 'Krummes Obst mit gelber Schale.',
-            solution: 'Banane',
-            x: 6,
-            y: 0,
-            direction: 'down',
-          },
-          {
-            uuid: v4(),
-            hint: 'Kleine rote Steinfrucht mit Stiel.',
-            solution: 'Kirsche',
-            x: 0,
-            y: 5,
-            direction: 'across',
-          },
-          {
-            uuid: v4(),
-            hint: 'Unsinn / Milchprodukt.',
-            solution: 'Quark',
-            x: 4,
-            y: 3,
-            direction: 'across',
-          },
-          {
-            uuid: v4(),
-            hint: 'Erworben.',
-            solution: 'Gekauft',
-            x: 8,
-            y: 1,
-            direction: 'down',
-          },
-        ],
-        colorEmptyCells: false,
-        strings: {
-          checkButton: 'Überprüfen',
-          retryButton: 'Erneut versuchen',
-          solutionsButton: 'Lösungen anzeigen',
-          resultMessage: ':correct von :total Felder richtig ausgefüllt.',
-        },
-      };
+      return newCrosswordTask();
     case 'DragTheWords':
       return {
         task_type: 'DragTheWords',
@@ -386,21 +344,7 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         feedback: defaultFeedback(),
       };
     case 'InteractiveVideo':
-      return {
-        task_type: 'InteractiveVideo',
-        interactions: [],
-        video: {
-          type: 'none',
-        },
-        autoplay: false,
-        startAt: 0,
-        disableNavigation: 'not disabled',
-        travisGoSettings: {
-          enabled: false,
-          projectTitle: $gettext('Projekttitel'),
-          projectDescription: $gettext('Projektbeschreibung'),
-        },
-      };
+      return newInteractiveVideoTask();
     case 'FillInTheBlanks':
       return {
         task_type: 'FillInTheBlanks',
@@ -613,6 +557,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         },
         feedback: defaultFeedback(),
       };
+    case 'CoursePresentation':
+      return newCoursePresentationTask();
     default:
       throw new Error('Unimplemented type: ' + type);
   }
@@ -700,6 +646,8 @@ export function printTaskType(type: TaskDefinition['task_type']): string {
       return $gettext('Question');
     case 'Sequencing':
       return $gettext('Sequencing');
+    case 'CoursePresentation':
+      return $gettext('Course Presentation');
   }
 }
 
@@ -713,6 +661,7 @@ export function showViewerAboveEditor(
   switch (type) {
     case 'InteractiveVideo':
     case 'Crossword':
+    case 'CoursePresentation':
       return false;
     default:
       return true;

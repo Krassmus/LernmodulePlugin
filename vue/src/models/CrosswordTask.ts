@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { v4 } from 'uuid';
 
 export const Direction = z.enum(['across', 'down']);
 
@@ -24,3 +25,57 @@ export const crosswordTaskSchema = z.object({
   }),
 });
 export type CrosswordTask = z.infer<typeof crosswordTaskSchema>;
+export function newCrosswordTask(): CrosswordTask {
+  return {
+    task_type: 'Crossword',
+    words: [
+      {
+        uuid: v4(),
+        hint: 'Frucht mit gleichnamiger Farbe.',
+        solution: 'Orange',
+        x: 4,
+        y: 1,
+        direction: 'across',
+      },
+      {
+        uuid: v4(),
+        hint: 'Krummes Obst mit gelber Schale.',
+        solution: 'Banane',
+        x: 6,
+        y: 0,
+        direction: 'down',
+      },
+      {
+        uuid: v4(),
+        hint: 'Kleine rote Steinfrucht mit Stiel.',
+        solution: 'Kirsche',
+        x: 0,
+        y: 5,
+        direction: 'across',
+      },
+      {
+        uuid: v4(),
+        hint: 'Unsinn / Milchprodukt.',
+        solution: 'Quark',
+        x: 4,
+        y: 3,
+        direction: 'across',
+      },
+      {
+        uuid: v4(),
+        hint: 'Erworben.',
+        solution: 'Gekauft',
+        x: 8,
+        y: 1,
+        direction: 'down',
+      },
+    ],
+    colorEmptyCells: false,
+    strings: {
+      checkButton: 'Überprüfen',
+      retryButton: 'Erneut versuchen',
+      solutionsButton: 'Lösungen anzeigen',
+      resultMessage: ':correct von :total Felder richtig ausgefüllt.',
+    },
+  };
+}
