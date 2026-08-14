@@ -503,7 +503,6 @@ class H5pController extends PluginController
             throw new AccessDeniedException();
         }
         PageLayout::setTitle(dgettext("lernmoduleplugin","Direktlink zum Lernmodul"));
-        $this->attempt = LernmodulAttempt::getByModule($this->module->getId());
     }
 
 }
