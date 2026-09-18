@@ -357,13 +357,22 @@ class LernmoduleController extends PluginController
         }
         $filename = $this->module->getExportFile();
 
-        header('Content-Type: application/zip');
-        header("Content-Disposition: attachment; filename=\"".$this->module['name'].".zip\"");
-        header('Content-Length: ' . filesize($filename));
-        header('Pragma: public');
+        try {
+            // Stream the ZIP instead of loading it into memory; active
+            // output buffers would otherwise still collect the whole file.
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
 
-        echo file_get_contents($filename);
-        unlink($filename);
+            header('Content-Type: application/zip');
+            header("Content-Disposition: attachment; filename=\"".addcslashes($this->module['name'], '"\\').".zip\"");
+            header('Content-Length: ' . filesize($filename));
+            header('Pragma: public');
+
+            readfile($filename);
+        } finally {
+            @unlink($filename);
+        }
         die();
     }
 
