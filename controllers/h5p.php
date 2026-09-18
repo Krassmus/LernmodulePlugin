@@ -481,18 +481,28 @@ class H5pController extends PluginController
 
 
     public function download_action($module_id) {
-        $this->mod = H5pLernmodul::find($module_id);
-        if (!$this->mod || !$this->mod->isReadable()) {
+        $this->module = H5pLernmodul::find($module_id);
+        if (!$this->module || !$this->module->isReadable()) {
             throw new AccessDeniedException();
         }
+        $filename = $this->module->getExportFile();
 
-        $archive = $this->mod->getExportFile();
+        try {
+            // Stream the ZIP instead of loading it into memory; active
+            // output buffers would otherwise still collect the whole file.
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
 
-        header("Content-Type: application/h5p");
-        header("Content-Disposition: attachment; filename=\"".$this->mod['name'].".h5p\"");
-        header("Content-Length: ".filesize($archive));
-        echo file_get_contents($archive);
-        unlink($archive);
+            header('Content-Type: application/zip');
+            header("Content-Disposition: attachment; filename=\"".addcslashes($this->module['name'], '"\\').".h5p\"");
+            header('Content-Length: ' . filesize($filename));
+            header('Pragma: public');
+
+            readfile($filename);
+        } finally {
+            @unlink($filename);
+        }
         die();
     }
 
