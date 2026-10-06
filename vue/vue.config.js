@@ -10,6 +10,20 @@ module.exports = defineConfig({
   configureWebpack: {
     devtool: 'source-map',
   },
+  css: {
+    loaderOptions: {
+      css: {
+        // options here will be passed to css-loader
+        // Prevent resolving of url(). This allows us to put URLs to Stud.IP
+        // assets without breaking our CI (since our CI environment currently
+        // does not include a Stud.IP core installation with the assets we
+        // would like to import). It also stops us from bundling an unnecessary
+        // copy of each Stud.IP asset that we reference by url.
+        // See https://stackoverflow.com/a/68453585/7359454
+        url: false,
+      },
+    },
+  },
   pages: {
     editor: 'src/editor-main.ts',
     viewer: 'src/viewer-main.ts',

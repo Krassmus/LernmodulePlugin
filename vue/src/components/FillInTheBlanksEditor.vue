@@ -5,12 +5,7 @@
         <legend>{{ $gettext('Fill in the Blanks') }}</legend>
 
         <div class="fill-in-the-blanks-editor-top-panel">
-          <button
-            @click="addBlank"
-            class="button"
-            type="button"
-            style="margin-right: 0.1em"
-          >
+          <button @click="addBlank" class="button add-blank" type="button">
             {{ $gettext('Lücke hinzufügen') }}
           </button>
           <div class="tooltip tooltip-icon" :data-tooltip="instructions" />
@@ -256,7 +251,6 @@ export default defineComponent({
 
     updateTaskDefinition(undoBatch?: unknown) {
       // Synchronize state modelTaskDefinition -> taskDefinition.
-      console.log('update task definition');
       this.taskEditor!.performEdit({
         newTaskDefinition: cloneDeep(this.modelTaskDefinition),
         undoBatch: undoBatch ?? {},

@@ -216,12 +216,21 @@ class H5pController extends PluginController
     }
 
 
-
+    /**
+     * @throws AccessDeniedException
+     * @throws \Trails\Exceptions\DoubleRenderError
+     */
     public function iframe_action($module_id)
     {
         $this->set_layout(null);
-        $this->mod = new H5pLernmodul($module_id);
+        $this->mod = H5pLernmodul::find($module_id);
+        if (!$this->mod || !$this->mod->isReadable()) {
+            throw new AccessDeniedException();
+        }
         $this->attempt = new LernmodulAttempt(Request::get("a"));
+        if (!empty($this->attempt['user_id']) && $this->attempt['user_id'] !== User::findCurrent()->id) {
+            throw new AccessDeniedException();
+        }
         if (!$this->mod->isAllowed()) {
             $libs = array();
             foreach (H5PLib::findMany($this->mod->findUnallowedLibraries()) as $lib) {
@@ -436,7 +445,7 @@ class H5pController extends PluginController
         $answer = json_decode(Request::get("data"), true);
         $customdata = $this->attempt['customdata'] ? $this->attempt['customdata']->getArrayCopy() : array();
         $customdata['h5pstate'] = $answer;
-        if ($answer['finished']) {
+        if (!empty($answer['finished'])) {
             $this->attempt['successful'] = 1;
             if (Context::get()->id) {
                 $course_connection = $this->attempt->modul->courseConnection(Context::get()->id);
@@ -472,7 +481,10 @@ class H5pController extends PluginController
 
 
     public function download_action($module_id) {
-        $this->mod = new H5pLernmodul($module_id);
+        $this->mod = H5pLernmodul::find($module_id);
+        if (!$this->mod || $this->mod->isReadable()) {
+            throw new AccessDeniedException();
+        }
 
         $archive = $this->mod->getExportFile();
 
@@ -487,7 +499,7 @@ class H5pController extends PluginController
     public function get_url_action($module_id)
     {
         $this->module = Lernmodul::find($module_id);
-        if (!$this->module->isWritable()) {
+        if (!$this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
         PageLayout::setTitle(dgettext("lernmoduleplugin","Direktlink zum Lernmodul"));

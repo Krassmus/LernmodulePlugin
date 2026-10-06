@@ -18,17 +18,17 @@
                     <?= htmlReady($attempt->modul['name']) ?>
                 </td>
                 <td data-timestamp="<?= htmlReady($attempt['mkdate']) ?>">
-                    <?= date("j.n.Y G:i", $attempt['mkdate'])." ".dgettext("lernmoduleplugin","Uhr") ?>
+                    <?= date("j.n.Y G:i", $attempt['mkdate']) ?>
                 </td>
                 <td>
                     <?
                         $duration = $attempt['chdate'] - $attempt['mkdate'];
                         if ($duration <= 90) {
-                            echo $duration." ".dgettext("lernmoduleplugin","Sekunden");
+                            echo htmlReady($duration." ".dgettext("lernmoduleplugin","Sekunden"));
                         } elseif ($duration < 60 * 90) {
-                            echo floor($duration / 60)." ".dgettext("lernmoduleplugin","Minuten");
+                            echo htmlReady(floor($duration / 60)." ".dgettext("lernmoduleplugin","Minuten"));
                         } else {
-                            echo floor($duration / (60 * 60))." ".dgettext("lernmoduleplugin","Stunden");
+                            echo htmlReady(floor($duration / (60 * 60))." ".dgettext("lernmoduleplugin","Stunden"));
                         }
                     ?>
                 </td>

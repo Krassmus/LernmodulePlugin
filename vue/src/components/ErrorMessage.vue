@@ -16,7 +16,7 @@ export default defineComponent({
 <template>
   <div class="error-message">
     <p>{{ $gettext('Es ist ein Fehler aufgetreten!') }}</p>
-    <p>{{ this.error }}</p>
+    <p>{{ error }}</p>
   </div>
 </template>
 

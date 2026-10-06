@@ -44,7 +44,7 @@
         }
     };
 
-    <? if ($module['customdata']['end_file']) : ?>
+    <? if (!empty($module['customdata']['end_file'])) : ?>
     var end_file_found = false;
     window.setInterval(function () {
         if (!end_file_found) {
@@ -101,7 +101,7 @@
                     document.getElementById("lernmodule_iframe").contentWindow.postMessage(JSON.stringify({
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
-                        "id": '<?= $GLOBALS['user']->id ?>',
+                        "id": '<?= htmlReady($GLOBALS['user']->id) ?>',
                         "name": '<?= htmlReady($GLOBALS['user']->getFullName()) ?>',
                         "email": '<?= htmlReady(get_visible_email($GLOBALS['user']->id)) ?>',
                         "avatar": '<?= htmlReady(Visibility::verify('picture', $GLOBALS['user']->id, "nobody")

@@ -57,6 +57,8 @@ export default defineComponent({
           setTimeout(() => {
             this.starVisible = true;
           }, 350);
+        } else {
+          this.starVisible = false;
         }
       },
     },

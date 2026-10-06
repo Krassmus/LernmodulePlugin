@@ -15,6 +15,8 @@ declare global {
         ) => string;
       };
       wysiwyg: {
+        hasHtmlMarker(text: string): boolean;
+        markAsHtml(text: string): string;
         replace: (element: Element) => void;
         // TODO Use correct type for ckeditor5 editor instance
         getEditor: (
@@ -42,6 +44,10 @@ declare global {
         LERNMODULE_PREVIEW: boolean;
         LERNMODULE_LAZYLOADING: boolean;
       };
+      Report: {
+        success(message: string): void;
+        error(message: string, errors: unknown[]): void;
+      };
     };
     // TODO use correct types for jQuery
     $: any;
@@ -53,4 +59,11 @@ export interface InstalledLanguage {
   path: string;
   picture: string;
   selected: boolean;
+}
+
+export interface User {
+  attributes: {
+    'formatted-name': string;
+    username: string;
+  };
 }

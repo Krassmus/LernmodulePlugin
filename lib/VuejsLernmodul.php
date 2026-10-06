@@ -311,6 +311,7 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
      * @param string $key a key in the array
      * @return bool true iff the value stored under key should be treated as
      * wysiwyg html during import/export
+     * TODO #41 refactor this whole thing... https://gitlab.uni-oldenburg.de/it-dienste/stud.ip/plugins/lernmodule/-/issues/41
      */
     private static function is_wysiwyg_html($array, $key, $value): bool {
         if (str_ends_with($key, '_wysiwyg')) {
@@ -321,8 +322,11 @@ class VuejsLernmodul extends Lernmodul implements CustomLernmodul
             // the key 'template'. Rather than change the data schema, which
             // would force us to write a lot of migration boilerplate and refactor
             // a lot of Vue code, we just special-case them here.
-            return $key === 'template' &&
-                in_array($array['task_type'], ['DragTheWords', 'MarkTheWords', 'FillInTheBlanks']);
+            // The task type 'Question' also does that by mistake. see TODO #41..
+            return ($key === 'template' &&
+                    in_array($array['task_type'], ['DragTheWords', 'MarkTheWords', 'FillInTheBlanks'])) ||
+                ($key === 'question' &&
+                    $array['task_type'] === 'Question');
         }
     }
 

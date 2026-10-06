@@ -73,6 +73,12 @@ export default defineComponent({
           let data = this.getAdjustedCkeditorData();
           this.$emit('update:modelValue', data);
         });
+        ckeditor.ui.focusTracker.on(
+          'change:isFocused',
+          (event: unknown, name: unknown, value: boolean) => {
+            this.$emit('focus', { event, name, value });
+          }
+        );
         ckeditor.editing.view.document.on(
           'enter',
           (evt, data) => {
@@ -125,10 +131,8 @@ export default defineComponent({
          raw HTML that should be inserted as-is into a PHP page when formatted
          using htmlReady.
          */
-        // This regex is the one used in Markup.class.php to recognize HTML
-        const regex = /^\s*<!--\s*HTML.*?-->/i;
-        if (!regex.test(data)) {
-          data = '<!--HTML-->'.concat(data);
+        if (!window.STUDIP.wysiwyg.hasHtmlMarker(data)) {
+          data = window.STUDIP.wysiwyg.markAsHtml(data);
         }
       }
       return data;

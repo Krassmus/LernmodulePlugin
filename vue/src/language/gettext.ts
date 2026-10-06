@@ -31,4 +31,19 @@ const $npgettext = memoize(gettextPlugin.$npgettext, (...args) =>
   JSON.stringify(args)
 );
 
-export { gettextPlugin, $gettext, $pgettext, $npgettext };
+const $ngettext = memoize(gettextPlugin.$ngettext, (...args) =>
+  JSON.stringify(args)
+);
+
+const $gettextInterpolate = memoize(gettextPlugin.interpolate, (...args) =>
+  JSON.stringify(args)
+);
+
+export {
+  gettextPlugin,
+  $gettext,
+  $pgettext,
+  $npgettext,
+  $ngettext,
+  $gettextInterpolate,
+};

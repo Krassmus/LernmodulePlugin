@@ -17,7 +17,7 @@ import {
 import {
   InteractiveVideoEditorState,
   interactiveVideoEditorStateSymbol,
-} from '@/components/interactiveVideo/interactiveVideoEditorState';
+} from '@/components/interactiveVideo/editor/interactiveVideoEditorState';
 import LmbTaskInteraction from '@/components/interactiveVideo/interactions/LmbTaskInteraction.vue';
 import { printTaskType, viewerForTaskType } from '@/models/TaskDefinition';
 import { $gettext } from '../../language/gettext';
@@ -28,23 +28,10 @@ import OverlayInteraction from '@/components/interactiveVideo/interactions/Overl
 import { OverlayInteraction as OverlayInteractionType } from '@/models/InteractiveVideoTask';
 import { mapActions, mapGetters } from 'vuex';
 import { fileRefsSchema } from '@/routes/jsonApi';
-
-type DragState =
-  | {
-      type: 'dragInteraction';
-      interactionId: string;
-      mouseStartPos: [number, number]; // clientX, clientY
-      interactionStartPos: [number, number]; // fraction x, fraction y
-    }
-  | {
-      type: 'resizeInteraction';
-      interactionId: string;
-      mouseStartPos: [number, number]; // clientX, clientY
-      interactionStartPos: [number, number]; // fraction x, fraction y
-      interactionStartSize: [number, number]; // fraction x, fraction y
-      handle: string;
-    }
-  | undefined;
+import {
+  DragState,
+  VideoMetadata,
+} from '@/components/interactiveVideo/editor/events';
 
 type LoadedStudipFileVideo = StudipFileVideo & {
   download_url: string;
@@ -58,8 +45,9 @@ export default defineComponent({
   components: { OverlayInteraction, LmbTaskInteraction },
   setup() {
     return {
-      editor: inject<InteractiveVideoEditorState>(
-        interactiveVideoEditorStateSymbol
+      editor: inject<InteractiveVideoEditorState | undefined>(
+        interactiveVideoEditorStateSymbol,
+        undefined
       ),
     };
   },
@@ -67,6 +55,14 @@ export default defineComponent({
     task: {
       type: Object as PropType<InteractiveVideoTask>,
       required: true,
+    },
+  },
+  emits: {
+    timeupdate(time: number) {
+      return true;
+    },
+    metadataChange(payload: VideoMetadata) {
+      return true;
     },
   },
   data() {
@@ -85,7 +81,8 @@ export default defineComponent({
         xOffsetPixels: 0,
       },
       progressBarObserver: undefined as ResizeObserver | undefined,
-      videoInfo: Promise.resolve({ type: 'none' }) as Promise<VideoInfo>,
+      videoInfoPromise: Promise.resolve({ type: 'none' }) as Promise<VideoInfo>,
+      errorLoadingVideo: undefined as unknown,
     };
   },
   computed: {
@@ -137,9 +134,14 @@ export default defineComponent({
     'task.video': {
       handler(video: Video) {
         console.log('video prop changed', video);
-        this.videoInfo = this.loadVideoInfo(video);
-        this.videoInfo.then((videoInfo) => {
+        this.videoInfoPromise = this.loadVideoInfo(video);
+        this.videoInfoPromise.catch((error: unknown) => {
+          console.error('Error while loading video.', error);
+          this.errorLoadingVideo = error;
+        });
+        this.videoInfoPromise.then((videoInfo) => {
           this.initializePlayer(videoInfo);
+          this.errorLoadingVideo = undefined; // Clear error
         });
       },
       immediate: true,
@@ -318,7 +320,7 @@ export default defineComponent({
           this.player!.play();
         }
         this.$emit('metadataChange', {
-          length: this.player!.duration(),
+          length: this.player!.duration() ?? 1,
         });
       });
       this.player.on('playing', () => {
@@ -389,7 +391,6 @@ export default defineComponent({
       handle: ResizeHandle;
       interaction: OverlayInteractionType;
     }) {
-      console.log('onPointerDownResizeHandle');
       if (!this.editor) {
         return;
       }
@@ -410,7 +411,6 @@ export default defineComponent({
       handle: ResizeHandle;
       interaction: Interaction;
     }) {
-      console.log('onPointerUpResizeHandle');
       this.dragState = undefined;
       (payload.event.target as HTMLElement).releasePointerCapture(
         payload.event.pointerId
@@ -542,13 +542,13 @@ export default defineComponent({
           filteredX,
           filteredY,
           filteredWidth,
-          filteredHeight
+          filteredHeight,
+          this.dragState
         );
         popperInstance?.update();
       }
     },
     onPointerDownInteraction(event: PointerEvent, interaction: Interaction) {
-      console.log('onPointerDownInteraction');
       if (!this.editor) {
         return;
       }
@@ -562,7 +562,6 @@ export default defineComponent({
       (event.target as HTMLElement).setPointerCapture(event.pointerId);
     },
     onPointerUpInteraction(event: PointerEvent, interaction: Interaction) {
-      console.log('onPointerUpInteraction');
       this.dragState = undefined;
       (event.target as HTMLElement).releasePointerCapture(event.pointerId);
     },
@@ -593,7 +592,12 @@ export default defineComponent({
         const clampedYFraction = Math.min(maxY, Math.max(minY, yFraction));
 
         const id = this.dragState.interactionId;
-        this.editor?.dragInteraction(id, clampedXFraction, clampedYFraction);
+        this.editor?.dragInteraction(
+          id,
+          clampedXFraction,
+          clampedYFraction,
+          this.dragState
+        );
         popperInstance?.update();
       }
     },
@@ -646,6 +650,10 @@ export default defineComponent({
 </script>
 
 <template>
+  <p v-if="errorLoadingVideo">
+    {{ $gettext('Das Video konnte nicht geladen werden. Grund: ') }}
+    <span style="white-space: pre">{{ errorLoadingVideo }}</span>
+  </p>
   <div
     class="video-player-root"
     ref="root"
@@ -687,13 +695,16 @@ export default defineComponent({
       <button
         type="button"
         class="small-button edit"
-        @click="editInteraction(selectedInteraction)"
+        @click="selectedInteraction && editInteraction(selectedInteraction)"
         :title="$gettext('Bearbeiten')"
       ></button>
       <button
         type="button"
         class="small-button trash"
-        @click="editor?.deleteInteraction(selectedInteractionId)"
+        @click="
+          selectedInteractionId &&
+            editor?.deleteInteraction(selectedInteractionId)
+        "
         :title="$gettext('Löschen')"
       ></button>
       <div class="arrow" data-popper-arrow></div>

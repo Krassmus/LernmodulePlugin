@@ -5,12 +5,7 @@
         <legend>{{ $gettext('Mark the Words') }}</legend>
 
         <div class="h5pEditorTopPanel">
-          <button
-            @click="addSolution"
-            class="button"
-            type="button"
-            style="margin-right: 0.1em"
-          >
+          <button @click="addSolution" class="button add-blank" type="button">
             {{ $gettext('Richtiges Wort markieren') }}
           </button>
 

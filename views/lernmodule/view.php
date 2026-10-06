@@ -2,7 +2,7 @@
     <div class="lernmodule_infotext"><?= formatReady($course_connection['infotext']) ?></div>
 <? endif ?>
 
-<input type="hidden" id="attempt_id" value="<?= $attempt->getId() ?>">
+<input type="hidden" id="attempt_id" value="<?= htmlReady($attempt->getId()) ?>">
 
 <?
 $template = $mod->getViewerTemplate($attempt, $game_attendence ?? null);

@@ -95,6 +95,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { isEqual } from 'lodash';
 import { $gettext } from '@/language/gettext';
 import FeedbackElement from '@/components/FeedbackElement.vue';
+import { formatResultMessage } from '@/functions';
 
 type FillInTheBlanksElement = Blank | StaticText;
 
@@ -479,17 +480,11 @@ export default defineComponent({
     },
 
     resultMessage(): string {
-      let resultMessage = this.task.strings.resultMessage.replace(
-        ':correct',
-        this.correctAnswers.toString()
+      return formatResultMessage(
+        this.task.strings.resultMessage,
+        this.correctAnswers,
+        this.blanks.length
       );
-
-      resultMessage = resultMessage.replace(
-        ':total',
-        this.blanks.length.toString()
-      );
-
-      return resultMessage;
     },
 
     feedbackSortedByScore(): Feedback[] {

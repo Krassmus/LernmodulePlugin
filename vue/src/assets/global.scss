@@ -1,0 +1,93 @@
+#stud5p-app {
+  max-width: 1095px;
+  box-sizing: border-box;
+}
+
+.stud5p-task {
+  /**
+    My reasoning for using h3 is that we are generally inside of Courseware
+    (main level), inside of a certain task (second level), so the headings that
+    I use are h3 or smaller.
+  **/
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.45em;
+  }
+  p {
+    margin-bottom: 0.45em;
+  }
+}
+
+/* Replace the border between toolbar and WYSIWYG textarea that is missing
+when the CKEditor4 plugin 'studip-floatbar' is disabled. - Ann
+*/
+.cke_top {
+  border-bottom: 2px solid #c5c7ca !important;
+}
+
+.setting-disabled {
+  opacity: 50%;
+}
+
+.lernmodule_infotext {
+  max-width: 1095px;
+  box-sizing: border-box;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.75em;
+  font-family: Lato, sans-serif;
+}
+
+.feedback-and-button-container {
+  padding-top: 1em;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1em;
+}
+
+.button-panel {
+  display: flex;
+  gap: 0.5em;
+}
+
+.stud5p-message {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #1a73d9;
+}
+
+.stud5p-button {
+  padding: 0.25em 1em; /* vertical, horizontal */
+  border-radius: 2em;
+  background: rgb(26, 115, 217);
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+
+.stud5p-button:hover {
+  background: rgb(19, 86, 163);
+}
+
+.stud5p-solution {
+  color: #255c41;
+  font-weight: bold;
+  font-size: 16px;
+  border: 1px #255c41 dashed;
+  background-color: #d4f6e6;
+  padding: 0.15em;
+  border-radius: 0.25em;
+  margin-left: 0.25em;
+}
+
+.no-select {
+  user-select: none;
+}
+
+button.add-blank {
+    margin-right: 0.5em;
+    margin-top: 0;
+}
+

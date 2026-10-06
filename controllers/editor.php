@@ -14,9 +14,15 @@ class EditorController extends PluginController
         }
     }
 
+    /**
+     * @throws AccessDeniedException
+     */
     public function metadata_action($module_id = null) {
         if (Request::isPost() && Request::get("name")) {
             $this->module = new Lernmodul($module_id ?: null);
+            if ($module_id && !$this->module->isWritable()) {
+                throw new AccessDeniedException();
+            }
             $this->module['name'] = Request::get("name");
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module['type'] = "html";
@@ -37,6 +43,9 @@ class EditorController extends PluginController
 
                 $this->module->init();
             }
+            if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::getId())) {
+                throw new AccessDeniedException();
+            }
             $connection = $this->module->courseConnection(Context::getId());
             $connection['module_id'] = $this->module->getId();
             $connection['seminar_id'] = Context::getId();
@@ -46,17 +55,6 @@ class EditorController extends PluginController
             $this->redirect("editor/block/".$this->module->getId());
         }
 
-    }
-
-    public function block_action($module_id, $block_id = null) {
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
-            throw new AccessDeniedException();
-        }
-        $this->module = new VanillalmLernmodul($module_id);
-        $this->module->init();
-        if (!$block_id) {
-
-        }
     }
 
 }

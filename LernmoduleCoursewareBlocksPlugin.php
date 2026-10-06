@@ -1,23 +1,38 @@
 <?php
 
 use Courseware\CoursewarePlugin;
+use lib\CoursewareBlocks\CrosswordBlock;
+use lib\CoursewareBlocks\DragTheWordsBlock;
+use lib\CoursewareBlocks\FillInTheBlanksBlock;
+use lib\CoursewareBlocks\FindTheHotspotsBlock;
+use lib\CoursewareBlocks\FindTheWordsBlock;
+use lib\CoursewareBlocks\InteractiveVideoBlock;
+use lib\CoursewareBlocks\MarkTheWordsBlock;
+use lib\CoursewareBlocks\MemoryBlock;
+use lib\CoursewareBlocks\PairingBlock;
+use lib\CoursewareBlocks\QuestionBlock;
+use lib\CoursewareBlocks\SequencingBlock;
 
-class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPlugin,
+class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements SystemPlugin,
                                                                        CoursewarePlugin
 {
     public function __construct()
     {
         parent::__construct();
 
-        require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
-        require_once __DIR__ . '/lib/CoursewareBlocks/QuestionBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/JsonSchemaTrait.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/LernmoduleBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/CrosswordBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/DragTheWordsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/FillInTheBlanksBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/FindTheHotspotsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/FindTheWordsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/InteractiveVideoBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/MarkTheWordsBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/MemoryBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/PairingBlock.php';
-        require_once __DIR__ . '/lib/CoursewareBlocks/FindTheHotspotsBlock.php';
+        require_once __DIR__ . '/lib/CoursewareBlocks/QuestionBlock.php';
         require_once __DIR__ . '/lib/CoursewareBlocks/SequencingBlock.php';
-        require_once __DIR__ . '/lib/CoursewareBlocks/InteractiveVideoBlock.php';
         // TODO Consider using cache-busting hashes so the latest version of
         //   the JS/CSS will always be loaded.  Currently, the webpack build
         //   does not do this.
@@ -33,11 +48,13 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
             $url = $this->getPluginUrl() . $jsRelativePath . '/' . $jsFile;
             PageLayout::addScript($url, ['type' => 'module']);
         }
-        $cssFiles = array_filter(scandir($jsDir), function ($filename) {
+        $cssRelativePath = '/courseware-blocks-vue2/assets';
+        $cssDir = $this->getPluginPath() . $cssRelativePath;
+        $cssFiles = array_filter(scandir($cssDir), function ($filename) {
             return str_ends_with($filename, '.css');
         });
         foreach ($cssFiles as $cssFile) {
-            $url = $this->getPluginUrl() . $jsRelativePath . '/' . $cssFile;
+            $url = $this->getPluginUrl() . $cssRelativePath . '/' . $cssFile;
             PageLayout::addStylesheet($url);
         }
 
@@ -46,32 +63,45 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
         $template = $factory->open('courseware/set_global_variables');
         $template->set_attribute('plugin', $this);
         $script = $template->render();
-        \PageLayout::addBodyElements($script);
+        PageLayout::addBodyElements($script);
 
         // Add CSS to set the correct icons for the blocks in the block adder
-        $this->addBlockIconCSS('mark-the-words', 'tan3');
-        $this->addBlockIconCSS('drag-the-words', 'tan3');
-        $this->addBlockIconCSS('question', 'question');
-        $this->addBlockIconCSS('fill-in-the-blanks', 'file-office');
-        $this->addBlockIconCSS('memory', 'content2');
-        $this->addBlockIconCSS('find-the-hotspots', 'content2');
+        $this->addBlockIconsCSS();
         $this->addStylesheet('assets/courseware-block/icons-variables.scss');
     }
 
     /**
-     * @param $blockType
-     * @param $iconName
-     * Add a CSS rule to the page to set the icon for the given block type in
-     * the Courseware block picker.
+     * @return void
+     *
+     * Add CSS rules to the page to set the icons for the blocks in the Courseware block picker.
      */
-    function addBlockIconCSS($blockType, $iconName) {
-        $baseCssSelector = '.cw-blockadder-item-list .cw-blockadder-item-wrapper .cw-blockadder-item';
-        $icon = Icon::create($iconName);
-        \PageLayout::addStyle(
-            $baseCssSelector . '.cw-blockadder-item-' . $blockType . ' {
-            background-image:url(' . $icon->asImagePath() . ')
-        }'
-        );
+    function addBlockIconsCSS() {
+        // Sorry. You have to update the icons in two places: Here and in the scss file for 6.0+.
+        // And also once more in taskDefinition.ts::iconForTask(). "My bad" :D
+        if (StudipVersion::olderThan('6.0')) {
+            $blockIconsMap = [
+                'drag-the-words' => 'edit',
+                'fill-in-the-blanks' => 'file-office',
+                'find-the-hotspots' => 'block-imagemap2',
+                'find-the-words' => 'block-imagemap2',
+                'lmb-interactive-video' => 'file-video',
+                'mark-the-words' => 'guestbook',
+                'memory' => 'tan3',
+                'pairing' => 'copy',
+                'question' => 'question',
+                'sequencing' => 'picture'];
+            $baseCssSelector = '.cw-blockadder-item-list .cw-blockadder-item-wrapper .cw-blockadder-item';
+            foreach ($blockIconsMap as $blockType => $iconName) {
+                $icon = Icon::create($iconName);
+                PageLayout::addStyle(
+                    $baseCssSelector . '.cw-blockadder-item-' . $blockType . ' {
+                                background-image:url(' . $icon->asImagePath() . ')
+                            }'
+                );
+            }
+        } else {
+            $this->addStylesheet('assets/courseware-block/block-adder-icons.scss');
+        }
     }
 
     /**
@@ -86,17 +116,19 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements \SystemPl
      */
     public function registerBlockTypes(array $otherBlockTypes): array
     {
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FillInTheBlanksBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\QuestionBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\DragTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MarkTheWordsBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\InteractiveVideoBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\MemoryBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\PairingBlock::class;
-        $otherBlockTypes[] = \CoursewareLernmoduleBlocks\SequencingBlock::class;
         if (Config::get()->LERNMODULE_PREVIEW) {
-            $otherBlockTypes[] = \CoursewareLernmoduleBlocks\FindTheHotspotsBlock::class;
+            $otherBlockTypes[] = CrosswordBlock::class;
         }
+        $otherBlockTypes[] = DragTheWordsBlock::class;
+        $otherBlockTypes[] = FillInTheBlanksBlock::class;
+        $otherBlockTypes[] = FindTheHotspotsBlock::class;
+        $otherBlockTypes[] = FindTheWordsBlock::class;
+        $otherBlockTypes[] = InteractiveVideoBlock::class;
+        $otherBlockTypes[] = MarkTheWordsBlock::class;
+        $otherBlockTypes[] = MemoryBlock::class;
+        $otherBlockTypes[] = PairingBlock::class;
+        $otherBlockTypes[] = QuestionBlock::class;
+        $otherBlockTypes[] = SequencingBlock::class;
 
         return $otherBlockTypes;
     }

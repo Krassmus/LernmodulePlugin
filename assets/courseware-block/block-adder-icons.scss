@@ -1,0 +1,20 @@
+$blockadder-items: (
+    'drag-the-words': 'edit',
+    'fill-in-the-blanks': 'file-office',
+    'find-the-hotspots': 'block-imagemap2',
+    'find-the-words': 'block-imagemap2',
+    'lmb-interactive-video': 'file-video',
+    'mark-the-words': 'guestbook',
+    'memory': 'tan3',
+    'pairing': 'copy',
+    'question': 'question',
+    'sequencing': 'picture'
+);
+
+.cw-blockadder-item-list .cw-blockadder-item-wrapper .cw-blockadder-item {
+    @each $item, $icon in $blockadder-items {
+        &.cw-blockadder-item-#{$item} {
+            @include icon(before, $icon, $size: 48px);
+        }
+    }
+}

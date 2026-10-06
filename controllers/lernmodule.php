@@ -16,6 +16,9 @@ class LernmoduleController extends PluginController
 
     public function overview_action()
     {
+        if (!Seminar_Perm::get()->have_studip_perm('autor', $this->course_id)) {
+            throw new AccessDeniedException();
+        }
         Navigation::activateItem("/course/lernmodule/overview");
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         Lernmodul::deleteBySQL("draft = '1' AND mkdate < UNIX_TIMESTAMP() - 86400");
@@ -29,10 +32,11 @@ class LernmoduleController extends PluginController
             $this->blocks[] = $block;
         }
 
-
         if (Request::option("quit")) {
             $attendance = new LernmodulGameAttendance(Request::option("quit"));
-            if ($attendance['user_id'] === $GLOBALS['user']->id) {
+            if ($attendance['user_id'] !== User::findCurrent()->id) {
+                throw new AccessDeniedException();
+            } else {
                 $attendance->delete();
                 $this->redirect("lernmodule/overview");
                 return;
@@ -84,9 +88,15 @@ class LernmoduleController extends PluginController
         }
     }
 
+    /**
+     * @throws AccessDeniedException
+     */
     public function view_action($module_id)
     {
-        $this->mod = new Lernmodul($module_id);
+        $this->mod = Lernmodul::find($module_id);
+        if (!$this->mod || !$this->mod->isReadable()) {
+            throw new AccessDeniedException();
+        }
         PageLayout::setTitle($this->mod['name']);
         if (Context::get()->id) {
             Navigation::activateItem("/course/lernmodule/overview");
@@ -94,7 +104,7 @@ class LernmoduleController extends PluginController
             $this->set_layout(null);
         }
 
-        $class = ucfirst($this->mod['type'])."Lernmodul";
+        $class = $this->mod->getClass();
         $this->mod = $class::buildExisting($this->mod->toArray());
         $isVuejsModule = $this->mod['type'] === 'vuejs'; // Vue.js Lernmodule don't have urls/paths.
         if (!$isVuejsModule && !$this->mod['url'] && !file_exists($this->mod->getPath())) {
@@ -105,23 +115,34 @@ class LernmoduleController extends PluginController
         $this->attempt = LernmodulAttempt::getByModule($this->mod->getId());
         if (Request::option("attendance")) {
             $this->game_attendence = new LernmodulGameAttendance(Request::option("attendance"));
-            if ($GLOBALS['user']->id !== $this->game_attendence['user_id']) {
-                PageLayout::postError(dgettext("lernmoduleplugin","IDs passen nicht zusammen. Beitritt verweigert."));
-                $this->redirect("lernmodule/overview");
+            if ($this->game_attendance['user_id'] !== User::findCurrent()->id) {
+                throw new AccessDeniedException();
             }
         }
     }
 
+    /**
+     * @throws AccessDeniedException
+     */
     public function edit_action($module_id = null)
     {
+        if ($module_id) {
+            $this->module = Lernmodul::find($module_id);
+            if (!$this->module || !$this->module->isWritable()) {
+                throw new AccessDeniedException();
+            }
+        } else {
+            $this->module = new Lernmodul();
+        }
+
         if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
             throw new AccessDeniedException();
         }
+
         Navigation::activateItem("/course/lernmodule/overview");
-        $this->module = new Lernmodul($module_id ?: null);
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         if ($this->module['type'] && !$this->module->isNew()) {
-            $class = ucfirst($this->module['type'])."Lernmodul";
+            $class = $this->module->getClass();
             $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
         }
         $this->lernmodule = Lernmodul::findBySQL("INNER JOIN lernmodule_courses USING (module_id)
@@ -149,11 +170,6 @@ class LernmoduleController extends PluginController
             $this->module->setData($data);
             if ($this->module['url'] && !$this->module['image']) {
                 $this->module['type'] = "html";
-                $og = OpenGraphURL::fromURL($this->module['url']);
-                $og->fetch();
-                if ($og['image']) {
-                    $this->module['image'] = $og['image'];
-                }
             }
             $this->module['user_id'] = $GLOBALS['user']->id;
             $this->module->store();
@@ -204,29 +220,30 @@ class LernmoduleController extends PluginController
 
     public function add_logo_action($module_id)
     {
-        if (!Context::get()->id || !$GLOBALS['perm']->have_studip_perm("tutor", Context::get()->id)) {
+        $this->module = Lernmodul::find($module_id);
+        if (!$this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
-        $this->module = new Lernmodul($module_id);
-        $relative_path = '';
-        if (!empty($_FILES['logo'])) {
-            $relative_path = "logo";
-            $end = substr($_FILES['logo']['name'], strrpos($_FILES['logo']['name'], ".") + 1);
-            $relative_path .= ".".$end;
-            move_uploaded_file($_FILES['logo']['tmp_name'], $this->module->getPath() . "/" . $relative_path);
-            $this->module['image'] = $relative_path;
+        $path = $this->module->getPath();
+        if (!empty($_FILES['logo']) && $_FILES['logo']['size']) {
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            mkdir($path."/images");
+            copy($_FILES['logo']['tmp_name'], $path."/images/logo.jpg");
+            $this->module['image'] = "images/logo.jpg";
             $this->module->store();
         }
-        $this->render_text($this->module->getDataURL() . "/" . $relative_path);
+        $this->render_text($this->module->getDataURL() . "/images/logo.jpg");
     }
 
     public function evaluation_action($module_id = null)
     {
-        PageLayout::addScript("jquery/jquery.tablesorter-2.22.5.js");
+        PageLayout::addScript($this->plugin->getPluginURL()."/vendor/tablesorter-2.22.5/package/dist/js/jquery.tablesorter.min.js");
         Navigation::activateItem("/course/lernmodule/overview");
         $this->module = new Lernmodul($module_id ?: null);
         if ($this->module['type'] && !$this->module->isNew()) {
-            $class = ucfirst($this->module['type'])."Lernmodul";
+            $class = $this->module->getClass();
             $this->module = $class::buildExisting($this->module->toRawArray());
         }
         $this->attempts = LernmodulAttempt::findbyCourseAndModule($this->course_id, $this->module->getId());
@@ -257,13 +274,16 @@ class LernmoduleController extends PluginController
         }
     }
 
-    public function delete_action($module_id)
+    /**
+     * @throws AccessDeniedException
+     */
+    public function delete_action($module_id): void
     {
-        if (!$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {
+        Navigation::activateItem("/course/lernmodule/overview");
+        $this->module = Lernmodul::find($module_id);
+        if (!$this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
-        Navigation::activateItem("/course/lernmodule/overview");
-        $this->module = new Lernmodul($module_id);
         if (Request::isPost()) {
             $this->module->delete();
             PageLayout::postMessage(MessageBox::success(dgettext("lernmoduleplugin","Lernmodul gelöscht.")));
@@ -275,7 +295,7 @@ class LernmoduleController extends PluginController
     {
         Navigation::activateItem("/course/lernmodule/overview");
         $this->attempt = new LernmodulAttempt($attempt_id);
-        if ($this->attempt['user_id'] !== $GLOBALS['user']->id) {
+        if (!empty($this->attempt['user_id']) && $this->attempt['user_id'] !== $GLOBALS['user']->id) {
             throw new AccessDeniedException();
         }
         if (Request::isPost()) {
@@ -332,6 +352,9 @@ class LernmoduleController extends PluginController
     public function download_action($module_id)
     {
         $this->module = Lernmodul::find($module_id);
+        if (!$this->module || !$this->module->isReadable()) {
+            throw new AccessDeniedException();
+        }
         $filename = $this->module->getExportFile();
 
         header('Content-Type: application/zip');
@@ -346,11 +369,23 @@ class LernmoduleController extends PluginController
 
     public function gameinvitation_action()
     {
+        $module_id = Request::option('module_id');
+        $seminar_id = Request::option('seminar_id');
+        if (!$module_id || !$seminar_id) {
+            throw new AccessDeniedException();
+        }
+        $module = Lernmodul::find($module_id);
+        if (!$module || !$module->isWritable()) {
+            throw new AccessDeniedException();
+        }
+        if (!Seminar_Perm::get()->have_studip_perm('autor', $seminar_id)) {
+            throw new AccessDeniedException();
+        }
         if (Request::isPost()) {
             $game = new LernmodulGame();
             $game['user_id'] = $GLOBALS['user']->id;
-            $game['seminar_id'] = Request::option("seminar_id");
-            $game['module_id'] = Request::option("module_id");
+            $game['seminar_id'] = $seminar_id;
+            $game['module_id'] = $module_id;
             $game['max_players'] = Request::int("max") + 1;
             $game['parameter'] = Request::getArray("parameter");
             $game['closed'] = 0;
@@ -439,6 +474,13 @@ class LernmoduleController extends PluginController
         }
         foreach (Request::getArray("order") as $position => $module_id) {
             $coursemodule = LernmodulCourse::find([$module_id, $course_id]);
+            if ($coursemodule) {
+                // Check permissions for Lernmodul
+                $lernmodul = $coursemodule->module;
+                if ($lernmodul instanceof Lernmodul && !$lernmodul->isWritable()) {
+                    throw new AccessDeniedException();
+                }
+            }
             if (!$coursemodule) {
                 $coursemodule = new LernmodulCourse();
                 $coursemodule['module_id'] = $module_id;
@@ -498,9 +540,15 @@ class LernmoduleController extends PluginController
         PageLayout::setTitle(_("Quelle des Lernmoduls auswählen"));
     }
 
+    /**
+     * @throws AccessDeniedException
+     */
     public function publish_action($module_id)
     {
         $this->module = Lernmodul::find($module_id);
+        if (!$this->module || !$this->module->isWritable()) {
+            throw new AccessDeniedException();
+        }
         if (!class_exists("LernMarktplatz")) {
             throw new Exception("Lernmarktplatz ist nicht aktiviert.");
         }
@@ -527,9 +575,16 @@ class LernmoduleController extends PluginController
         $this->redirect(URLHelper::getURL("plugins.php/lernmarktplatz/mymaterial/edit"));
     }
 
+    /**
+     * @throws AccessDeniedException
+     * @throws Exception
+     */
     public function after_marketplace_deployment_action()
     {
         $this->module = Lernmodul::find(Request::option("module_id"));
+        if (!$this->module || !$this->module->isWritable()) {
+            throw new AccessDeniedException();
+        }
         if (!class_exists("LernMarktplatz")) {
             throw new Exception("Lernmarktplatz ist nicht aktiviert.");
         }
@@ -537,11 +592,7 @@ class LernmoduleController extends PluginController
             $this->module['material_id'] = Request::get("material_id");
             $this->module->store();
         }
-        if (Request::get("url")) {
-            $this->redirect(Request::get("url"));
-        } else {
-            $this->redirect(PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->module->getId()));
-        }
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), "lernmodule/view/".$this->module->getId()));
     }
 
     public function move_action($module_id)
@@ -550,14 +601,14 @@ class LernmoduleController extends PluginController
             throw new AccessDeniedException();
         }
         $this->module = Lernmodul::find($module_id);
-        if (!$this->module->isWritable()) {
+        if (!$this->module || !$this->module->isWritable()) {
             throw new AccessDeniedException();
         }
         Navigation::activateItem("/course/lernmodule/overview");
         PageLayout::addScript($this->plugin->getPluginURL()."/assets/lernmoduleplugin.js");
         PageLayout::setTitle(_("Lernmodul verschieben in andere Veranstaltung"));
         if ($this->module['type'] && !$this->module->isNew()) {
-            $class = ucfirst($this->module['type'])."Lernmodul";
+            $class = $this->module->getClass();
             $this->module = $class::buildExisting($this->module->toArray()); //toRawArray
         }
         if (Request::isPost() && Request::option("seminar_id") && $GLOBALS['perm']->have_studip_perm("tutor", Request::option("seminar_id"))) {
@@ -585,60 +636,41 @@ class LernmoduleController extends PluginController
 
                 $connection['block_id'] = $this->blocks[count($this->blocks) - 1]->getId();
                 $connection->store();
+                PageLayout::postSuccess(_("Lernmodul wurde verschoben."));
             } elseif (Request::submitted('copy')) {
                 $lernmodule = Lernmodul::createCopyFromModule($this->module);
 
                 $connection = $lernmodule->courseConnection(Request::option("seminar_id"));
                 $connection['block_id'] = $this->blocks[count($this->blocks) - 1]->getId();
                 $connection->store();
+                PageLayout::postSuccess(_("Lernmodul wurde kopiert."));
             }
 
-
-
-            PageLayout::postSuccess(_("Lernmodul wurde verschoben."));
             $this->redirect(PluginEngine::getURL($this->plugin, array('cid' => Request::option("seminar_id")), "lernmodule/overview"));
             return;
         }
+        // Admins get a QuickSearch, but normal teachers (Dozent) get an ordinary <select> with all of the
+        // Courses that they belong to already filled out and sorted by semester, making this feature a bit more
+        // discoverable for them.
         if (!$GLOBALS['perm']->have_perm("admin")) {
-            $statement = DBManager::get()->prepare("
-                SELECT seminare.*
-                FROM seminare
-                    INNER JOIN seminar_user ON (seminar_user.Seminar_id = seminare.Seminar_id)
-                WHERE seminar_user.user_id = :user_id
-                    AND seminar_user.status IN ('tutor', 'dozent')
-                ORDER BY seminare.start_time + seminare.duration_time DESC, seminare.name ASC
-            ");
-            $statement->execute(array('user_id' => $GLOBALS['user']->id));
+            $courses = Course::findByUser($GLOBALS['user']->id, ['tutor', 'dozent']);
             $this->semcourses = [];
-            $firstsemester_id = null;
-            foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $coursedata) {
-                $course = Course::buildExisting($coursedata);
-                if ($course['duration_time'] >= 0) {
-                    $semester = Semester::findByTimestamp($course['start_time'] + $course['duration_time']);
-                    if ($firstsemester_id === null) {
-                        $firstsemester_id = $semester->getId();
-                    }
-                    if (!isset($this->semcourses[$semester->getId()])) {
-                        $this->semcourses[$semester->getId()] = [
-                            'semester' => $semester,
-                            'courses' => []
-                        ];
-                    }
-                    $this->semcourses[$semester->getId()]['courses'][] = $course;
-                } else {
-                    if ($firstsemester_id === null) {
-                        $semester = Semester::findCurrent();
-                        $this->semcourses[$semester->getId()] = [
-                            'semester' => $semester,
-                            'courses' => []
-                        ];
-                        $firstsemester_id = $semester->getId();
-                    }
-                    $this->semcourses[$firstsemester_id]['courses'][] = $course;
+            foreach ($courses as $course) {
+                $semester = $course->getStartSemester();
+                if (!isset($this->semcourses[$semester->getId()])) {
+                    $this->semcourses[$semester->getId()] = [
+                        'semester' => $semester,
+                        'courses' => []
+                    ];
                 }
+                $this->semcourses[$semester->getId()]['courses'][] = $course;
             }
+            // Sort semesters in chronological order
+            usort($this->semcourses, function ($a, $b) {
+                return $a['semester']['beginn'] - $b['semester']['beginn'];
+            });
+            // Sort the courses within each semester by name
             foreach ($this->semcourses as $index => $semcourse) {
-                //now sort for name:
                 $courses = $semcourse['courses'];
                 usort($courses, function ($a, $b) {
                     return strcasecmp($a['name'], $b['name']);

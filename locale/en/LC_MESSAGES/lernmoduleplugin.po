@@ -7,105 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-07 13:59+0200\n"
-"PO-Revision-Date: 2024-05-07 12:15+0000\n"
+"POT-Creation-Date: 2026-04-15 15:45+0200\n"
+"PO-Revision-Date: 2026-04-15 14:34+0000\n"
 "Last-Translator: Ann Yanich <ann@yanich.de>\n"
-"Language-Team: English <https://weblate.uni-vechta.de/projects/"
-"rasmusfuhse-lernmoduleplugin/php/en/>\n"
+"Language-Team: English <https://weblate.studip.de/projects/rasmusfuhse-"
+"lernmoduleplugin/php/en/>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3.1\n"
-
-#: ../lib/CoursewareBlocks/PairingBlock.php:23
-msgid "LMB - Image Pairing"
-msgstr "LMB - Image Pairing"
-
-#: ../lib/CoursewareBlocks/PairingBlock.php:30
-msgid ""
-"Eine Lernaufgabe, wo Paare von Bildern zu einander gematcht werden sollen."
-msgstr "An assignment where pairs of images should be matched together."
-
-#: ../lib/CoursewareBlocks/DragTheWordsBlock.php:23
-msgid "LMB - Drag The Words"
-msgstr "LMB - Drag The Words"
-
-#: ../lib/CoursewareBlocks/DragTheWordsBlock.php:30
-msgid ""
-"Eine Lernaufgabe, wo Wörter in die Lücken in einem Text gezogen werden "
-"sollen."
-msgstr "An assignment where words should be placed into gaps in a text."
-
-#: ../lib/CoursewareBlocks/MemoryBlock.php:23
-msgid "LMB - Memory"
-msgstr "LMB - Memory"
-
-#: ../lib/CoursewareBlocks/MemoryBlock.php:30
-msgid "TODO"
-msgstr "TODO"
-
-#: ../lib/CoursewareBlocks/QuestionBlock.php:23
-msgid "LMB - Frage"
-msgstr "LMB - Question"
-
-#: ../lib/CoursewareBlocks/QuestionBlock.php:30
-msgid ""
-"Eine Lernaufgabe, wo eine Multiple-Choice-Frage beantwortet werden soll."
-msgstr "An assignment where a multiple choice question should be answered."
-
-#: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:23
-msgid "LMB - Interactive Video"
-msgstr "LMB - Interactive Video"
-
-#: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:30
-msgid ""
-"Spielt ein mit Interaktionen angereichertes Video ab.  Andere LMB-Aufgaben "
-"können zu bestimmten Zeitpunkten im Video eingespielt werden."
-msgstr ""
-"Plays a video that has been enhanced with interactive elements. Other LMB "
-"tasks can be inserted at specific times in the video."
-
-#: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:23
-msgid "LMB - Mark The Words"
-msgstr "LMB - Mark The Words"
-
-#: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:30
-msgid ""
-"Eine Lernaufgabe, wo bestimmte Wörter in einem Text markiert werden sollen."
-msgstr "An assignment where certain words in a text should be marked."
-
-#: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:23
-msgid "LMB - Fill In The Blanks"
-msgstr "LMB - Fill In The Blanks"
-
-#: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:30
-msgid ""
-"Eine Lernaufgabe, wo die Lücken in einem Lückentext ausgefüllt werden sollen."
-msgstr "An assignment where the gaps in a text should be filled in."
-
-#: ../lib/VuejsLernmodul.php:132
-msgid "WYSIWYG-Ordner für hochgeladene Dateien konnte nicht erstellt werden!"
-msgstr "The WYSIWYG folder for uploaded files could not be created."
-
-#: ../lib/VuejsLernmodul.php:144 ../lib/VuejsLernmodul.php:155
-#: ../lib/H5pLernmodul.php:78 ../lib/H5pLernmodul.php:96
-msgid "Im Editor bearbeiten"
-msgstr "Edit module in editor"
-
-#: ../lib/H5pLernmodul.php:89 ../lib/HtmlLernmodul.php:46
-#: ../controllers/h5peditor.php:117 ../controllers/h5p.php:286
-msgid "Vollbild"
-msgstr "Fullscreen"
-
-#: ../lib/H5pLernmodul.php:101 ../lib/HtmlLernmodul.php:69
-msgid "URL kopieren"
-msgstr "Copy URL"
-
-#: ../lib/H5pLernmodul.php:116 ../controllers/h5p.php:230
-msgid "Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."
-msgstr "This H5P module uses libraries that are not shared yet."
+"X-Generator: Weblate 5.16\n"
 
 #: ../lib/LernmodulAdmission/LernmodulAdmission.class.php:15
 msgid "Sie befinden sich nicht innerhalb des Anmeldezeitraums."
@@ -145,17 +57,287 @@ msgstr ""
 msgid "Bitte geben Sie das Modul ein."
 msgstr "Enter the module please."
 
+#: ../lib/CoursewareBlocks/DragTheWordsBlock.php:21
+msgid "LMB - Drag The Words"
+msgstr "LMB - Drag The Words"
+
+#: ../lib/CoursewareBlocks/DragTheWordsBlock.php:28
+msgid ""
+"Eine Lernaufgabe, bei der die richtigen Wörter in die passenden Lücken eines "
+"Textes gezogen werden sollen."
+msgstr "An assignment where words should be placed into gaps in a text."
+
+#: ../lib/CoursewareBlocks/FindTheHotspotsBlock.php:21
+msgid "LMB - Find The Hotspots"
+msgstr "LMB - Find The Hotspots"
+
+#: ../lib/CoursewareBlocks/FindTheHotspotsBlock.php:28
+msgid ""
+"Eine Lernaufgabe, bei der durch Klicken auf ein Bild bestimmte Bereiche, "
+"sogenannte Hotspots, gefunden werden sollen."
+msgstr ""
+"An assignment where a student should locate and click on certain areas of an "
+"image, known as hotspots."
+
+#: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:20
+msgid "LMB - Interactive Video"
+msgstr "LMB - Interactive Video"
+
+#: ../lib/CoursewareBlocks/InteractiveVideoBlock.php:27
+msgid ""
+"Spielt ein mit Interaktionen angereichertes Video ab.  Andere LMB-Aufgaben "
+"können zu bestimmten Zeitpunkten im Video eingespielt werden."
+msgstr ""
+"Plays a video that has been enhanced with interactive elements. Other LMB "
+"tasks can be inserted at specific times in the video."
+
+#: ../lib/CoursewareBlocks/MemoryBlock.php:20
+msgid "LMB - Memory"
+msgstr "LMB - Memory"
+
+#: ../lib/CoursewareBlocks/MemoryBlock.php:27
+msgid "Das klassische Memory Spiel."
+msgstr "The classic game of Memory."
+
+#: ../lib/CoursewareBlocks/PairingBlock.php:20
+msgid "LMB - Pairing"
+msgstr "LMB - Pairing"
+
+#: ../lib/CoursewareBlocks/PairingBlock.php:27
+msgid ""
+"Eine Lernaufgabe, wo Paare von Inhalten (Bilder, Texte oder Audio) zu "
+"einander gematcht werden sollen."
+msgstr "An assignment where pairs of images should be matched together."
+
+#: ../lib/CoursewareBlocks/SequencingBlock.php:20
+msgid "LMB - Sequencing"
+msgstr "LMB - Sequencing"
+
+#: ../lib/CoursewareBlocks/SequencingBlock.php:27
+msgid ""
+"Eine Lernaufgabe, in welcher Bilder in die richtige Reihenfolge gebracht "
+"werden sollen."
+msgstr "An assignment where pairs of images should be matched together."
+
+#: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:20
+msgid "LMB - Fill In The Blanks"
+msgstr "LMB - Fill In The Blanks"
+
+#: ../lib/CoursewareBlocks/FillInTheBlanksBlock.php:27
+msgid ""
+"Eine Lernaufgabe, bei der die Lücken in einem Text ausgefüllt werden sollen."
+msgstr "An assignment where the gaps in a text should be filled in."
+
+#: ../lib/CoursewareBlocks/FindTheWordsBlock.php:20
+msgid "LMB - Find The Words"
+msgstr "LMB - Find The Words"
+
+#: ../lib/CoursewareBlocks/FindTheWordsBlock.php:27
+msgid ""
+"Eine Lernaufgabe, bei der Autoren eine Liste von Wörtern erstellen, die in "
+"einem Gitter dargestellt werden, und Lernende diese Wörter finden und "
+"auswählen sollen."
+msgstr ""
+"An assignment where an author enters a list of words that are to be "
+"displayed in a grid. Students should find and select the words hidden in the "
+"grid."
+
+#: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:21
+msgid "LMB - Mark The Words"
+msgstr "LMB - Mark The Words"
+
+#: ../lib/CoursewareBlocks/MarkTheWordsBlock.php:28
+msgid ""
+"Eine Lernaufgabe, bei der die gesuchten Wörter im Text gefunden und markiert "
+"werden sollen."
+msgstr "An assignment where certain words in a text should be marked."
+
+#: ../lib/CoursewareBlocks/QuestionBlock.php:20
+msgid "LMB - Frage"
+msgstr "LMB - Question"
+
+#: ../lib/CoursewareBlocks/QuestionBlock.php:27
+msgid ""
+"Eine Lernaufgabe, bei der eine Frage durch die Auswahl einer oder mehrerer "
+"korrekter Antworten beantwortet werden soll."
+msgstr "An assignment where a multiple choice question should be answered."
+
+#: ../lib/CoursewareBlocks/CrosswordBlock.php:19
+msgid "LMB - Crossword"
+msgstr "LMB - Crossword"
+
+#: ../lib/CoursewareBlocks/CrosswordBlock.php:26
+msgid ""
+"Eine Lernaufgabe, bei der Autoren eine Liste von Wörtern erstellen, die in "
+"einem Kreuzworträtsel dargestellt werden, und Lernende dieses "
+"Kreuzworträtsel lösen sollen."
+msgstr ""
+"An assignment where the author can enter a list of words that will be turned "
+"into a crossword puzzle which students should solve."
+
+#: ../lib/H5pLernmodul.php:78 ../lib/H5pLernmodul.php:96
+#: ../lib/VuejsLernmodul.php:144 ../lib/VuejsLernmodul.php:155
+msgid "Im Editor bearbeiten"
+msgstr "Edit module in editor"
+
+#: ../lib/H5pLernmodul.php:89 ../lib/HtmlLernmodul.php:46
+#: ../controllers/h5peditor.php:117 ../controllers/h5p.php:286
+msgid "Vollbild"
+msgstr "Fullscreen"
+
+#: ../lib/H5pLernmodul.php:101 ../lib/HtmlLernmodul.php:69
+msgid "URL kopieren"
+msgstr "Copy URL"
+
+#: ../lib/H5pLernmodul.php:116 ../controllers/h5p.php:230
+msgid "Dieses H5P-Modul benutzt Bibliotheken, die noch nicht freigegeben sind."
+msgstr "This H5P module uses libraries that are not shared yet."
+
 #: ../lib/HtmlLernmodul.php:59
 msgid "Konfigurieren"
 msgstr "Configure"
 
-#: ../lib/Lernmodul.php:87
+#: ../lib/VuejsLernmodul.php:132
+msgid "WYSIWYG-Ordner für hochgeladene Dateien konnte nicht erstellt werden!"
+msgstr "The WYSIWYG folder for uploaded files could not be created."
+
+#: ../lib/Lernmodul.php:134
 msgid "Konnte im Dateisystem keinen Ordner für das Lernmodul anlegen."
 msgstr "Could not create a folder in the filesystem for this learning module."
 
-#: ../lib/Lernmodul.php:152
+#: ../lib/Lernmodul.php:199
 msgid "Verzeichnis konnte nicht angelegt werden."
 msgstr "Could not create directory."
+
+#: ../views/admission/configure.php:2
+msgid "Studierende müssen folgendes Lernmodul absolviert haben:"
+msgstr "Students have to complete the following learning module"
+
+#: ../views/editor/metadata.php:6
+msgid "Name des Lernmoduls"
+msgstr "Name of learning module"
+
+#: ../views/editor/metadata.php:7
+msgid "..."
+msgstr "..."
+
+#: ../views/editor/metadata.php:11
+msgid "Logo-Bild"
+msgstr "Logo image"
+
+#: ../views/editor/metadata.php:15 ../views/h5p/add_library.php:35
+#: ../views/h5peditor/edit.php:22 ../views/html/set_configs.php:18
+#: ../views/lernmodule/admin.php:56 ../views/lernmodule/blubber.php:9
+#: ../views/lernmodule/edit.php:210
+msgid "Speichern"
+msgstr "Save"
+
+#: ../views/h5p/add_library.php:7
+msgid "Bibliotheken hochladen"
+msgstr "Upload libraries"
+
+#: ../views/h5p/add_library.php:12
+#, php-format
+msgid "H5P-Lernmodul oder ZIP mit Bibliotheken auswählen (maximal %s MB)"
+msgstr "Select H5P learning module or ZIP with libraries (maximum %s MB)"
+
+#: ../views/h5p/add_library.php:17
+msgid "Gefundene Bibliotheken gleich aktivieren"
+msgstr "Active found libraries immediately"
+
+#: ../views/h5p/add_library.php:22
+msgid "Bibliotheken in Editor erlauben"
+msgstr "Allow libs in editor"
+
+#: ../views/h5p/add_library.php:26
+msgid "Bestehende Bibliotheken überschreiben"
+msgstr "Overwrite existing libraries"
+
+#: ../views/h5p/add_library.php:28
+msgid "Immer"
+msgstr "Always"
+
+#: ../views/h5p/add_library.php:29
+msgid "Nur die nicht aktivierten"
+msgstr "Only the non-activated"
+
+#: ../views/h5p/add_library.php:30
+msgid "Nur, wenn die Patch-Version höher ist"
+msgstr "Only if the patch version is higher"
+
+#: ../views/h5p/admin_libraries.php:2
+msgid "Wirklich alle ausgewählen Bibliotheken löschen?"
+msgstr "Do you really want to delete all selected libraries?"
+
+#: ../views/h5p/admin_libraries.php:11
+msgid "Bibliothek"
+msgstr "Library"
+
+#: ../views/h5p/admin_libraries.php:12
+msgid "Version"
+msgstr "Version"
+
+#: ../views/h5p/admin_libraries.php:13
+msgid "Benutzt von"
+msgstr "Used by"
+
+#: ../views/h5p/admin_libraries.php:14
+msgid ""
+"Viele H5P-Module melden leider nicht an Stud.IP, wenn der Nutzer sie "
+"erfolgreich absolviert hat. Mit dieser Option an, speichert Stud.IP das "
+"selbstständig nach 30 Sekunden."
+msgstr ""
+"Unfortunately, many H5P modules do not report to Stud.IP if the user has "
+"successfully completed them. With this option on, Stud.IP saves the "
+"automatically after 30 seconds."
+
+#: ../views/h5p/admin_libraries.php:14
+msgid "Auto-Rückmeldung"
+msgstr "Auto reply"
+
+#: ../views/h5p/admin_libraries.php:15
+msgid "Aktiv"
+msgstr "Active"
+
+#: ../views/h5p/admin_libraries.php:16
+msgid "Aktiv im Editor"
+msgstr "Active in editor"
+
+#: ../views/h5p/admin_libraries.php:17
+msgid "Aktion"
+msgstr "Action"
+
+#: ../views/h5p/admin_libraries.php:27
+msgid "Patch Version: "
+msgstr "Patch Version: "
+
+#: ../views/h5p/admin_libraries.php:56
+msgid "Wirklich diese Bibliothek löschen?"
+msgstr "Do you really want to delete this library?"
+
+#: ../views/h5p/admin_libraries.php:66
+msgid "Ausgewählte Löschen"
+msgstr "Delete selected"
+
+#: ../views/h5p/admin_libraries.php:78
+msgid "Bibliotheken hinzufügen"
+msgstr "Add library"
+
+#: ../views/h5p/admin_libraries.php:84
+msgid "Alle Bibliotheken exportieren"
+msgstr "Export all libraries"
+
+#: ../views/h5p/get_url.php:4 ../views/html/get_url.php:4
+msgid "URL"
+msgstr "URL"
+
+#: ../views/h5peditor/edit.php:19
+msgid "Warte auf Javascript"
+msgstr "Wait for Javascript"
+
+#: ../views/h5peditor/edit.php:22
+msgid "Erstellen"
+msgstr "Create"
 
 #: ../views/html/edit.php:5
 msgid "Im abgesicherten Modus abspielen"
@@ -173,10 +355,10 @@ msgstr "End file (.html)"
 msgid "Keine"
 msgstr "None"
 
-#: ../views/html/evaluation.php:4 ../views/vuejseditor/edit.php:49
-#: ../views/lernmodule/view.php:89 ../views/lernmodule/edit.php:259
-#: ../views/lernmodule/evaluation.php:61 ../views/lernmodule/evaluation.php:189
-#: ../controllers/participants.php:45
+#: ../views/html/evaluation.php:4 ../views/lernmodule/evaluation.php:61
+#: ../views/lernmodule/evaluation.php:189 ../views/lernmodule/edit.php:259
+#: ../views/lernmodule/view.php:91 ../views/vuejseditor/edit.php:54
+#: ../controllers/participants.php:56
 msgid "Auswertung"
 msgstr "Assessment"
 
@@ -188,115 +370,132 @@ msgstr "Minimum value"
 msgid "Höchstwert"
 msgstr "Maximal value"
 
-#: ../views/html/set_configs.php:18 ../views/h5peditor/edit.php:22
-#: ../views/lernmodule/edit.php:210 ../views/lernmodule/blubber.php:9
-#: ../views/lernmodule/admin.php:56 ../views/h5p/add_library.php:35
-#: ../views/editor/metadata.php:15
-msgid "Speichern"
-msgstr "Save"
+#: ../views/lernmodule/_lernmodul_kachel.php:15
+msgid "Erfolgreich abgeschlossen"
+msgstr "Completed succussfully"
 
-#: ../views/html/get_url.php:4 ../views/h5p/get_url.php:4
-msgid "URL"
-msgstr "URL"
+#: ../views/lernmodule/_lernmodul_kachel.php:39
+#, php-format
+msgid "Dieses Modul wird erst ab %s Uhr verfügbar sein."
+msgstr "This module will be available at %s o'clock."
 
-#: ../views/vuejseditor/edit.php:35 ../views/lernmodule/view.php:49
-msgid "Abspieloptionen bearbeiten"
-msgstr "Playback options"
+#: ../views/lernmodule/_lernmodul_kachel.php:47
+msgid ""
+"Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module "
+"durcharbeiten."
+msgstr "Activate this module by completing the other modules."
 
-#: ../views/h5peditor/edit.php:19
-msgid "Warte auf Javascript"
-msgstr "Wait for Javascript"
+#: ../views/lernmodule/admin.php:6
+msgid "Einstellungen der Veranstaltung"
+msgstr "Course settings"
 
-#: ../views/h5peditor/edit.php:22
-msgid "Erstellen"
-msgstr "Create"
+#: ../views/lernmodule/admin.php:8
+msgid "Name des Reiters"
+msgstr "Name of tab"
 
-#: ../views/participants/index.php:26 ../views/lernmodule/evaluation.php:110
+#: ../views/lernmodule/admin.php:12 ../LernmodulePlugin.class.php:47
+#: ../LernmodulePlugin.class.php:75 ../LernmodulePlugin.class.php:90
+#: ../LernmodulePlugin.class.php:122 ../LernmodulePlugin.class.php:193
+#: ../LernmodulePlugin.class.php:194
+msgid "Lernmodule"
+msgstr "Learning modules"
+
+#: ../views/lernmodule/admin.php:18
+msgid "Einspaltiges Layout"
+msgstr "Single column layout"
+
+#: ../views/lernmodule/admin.php:25
+msgid "Darstellungsblöcke"
+msgstr "Display blocks"
+
+#: ../views/lernmodule/admin.php:31
+msgid "Titel des Blocks"
+msgstr "Title of block"
+
+#: ../views/lernmodule/admin.php:35
+msgid "Block ohne Titel"
+msgstr "Block without title"
+
+#: ../views/lernmodule/admin.php:38
+msgid "Informationstext"
+msgstr "Information text"
+
+#: ../views/lernmodule/admin.php:43
+msgid "Wirklich den ganzen Block und die Inhalte löschen?"
+msgstr "Really delete the whole block and the contents?"
+
+#: ../views/lernmodule/admin.php:45
+msgid "Block und Inhalte darin löschen"
+msgstr "Delete block and its content"
+
+#: ../views/lernmodule/admin.php:49
+msgid "Neuen Darstellungsblock hinzufügen"
+msgstr "Add new display block"
+
+#: ../views/lernmodule/admin.php:57
+msgid "Block hinzufügen"
+msgstr "Add block"
+
+#: ../views/lernmodule/blubber.php:5
+msgid "Wollen Sie folgendes Blubbern?"
+msgstr "Do you want to blubber this?"
+
+#: ../views/lernmodule/blubber.php:10
+msgid "Nicht mehr nachfragen"
+msgstr "Don't ask me again"
+
+#: ../views/lernmodule/evaluation.php:63
+msgid "Dauer des Lernmoduls"
+msgstr "Duration of learning module"
+
+#: ../views/lernmodule/evaluation.php:94
+msgid ""
+"Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen "
+"Durchläufe, orange die nicht erfolgreichen."
+msgstr ""
+"Time of attempts in seconds or minutes. Successful attempts are blue, not "
+"successful ones orange."
+
+#: ../views/lernmodule/evaluation.php:110 ../views/participants/index.php:31
 msgid "Name"
 msgstr "Name"
 
-#: ../views/participants/index.php:27
-msgid "Absolvierte Lernmodule"
-msgstr "Completed learning modules"
-
-#: ../views/participants/index.php:48
-msgid "Besser geht es nicht!"
-msgstr "It can't be any better!"
-
-#: ../views/participants/evaluation.php:3
-msgid "Auswertung von "
-msgstr "Assessment of "
-
-#: ../views/participants/evaluation.php:7
-msgid "Modul"
-msgstr "Module"
-
-#: ../views/participants/evaluation.php:8
-msgid "Beginn"
-msgstr "Begin"
-
-#: ../views/participants/evaluation.php:9
 #: ../views/lernmodule/evaluation.php:111
+#: ../views/participants/evaluation.php:9
 msgid "Dauer"
 msgstr "Duration"
 
-#: ../views/participants/evaluation.php:10
-msgid "Erfolg"
-msgstr "Success"
+#: ../views/lernmodule/evaluation.php:112 ../controllers/h5peditor.php:798
+msgid "Datum"
+msgstr "Date"
 
-#: ../views/participants/evaluation.php:21
-#: ../views/lernmodule/evaluation.php:135
-msgid "Uhr"
-msgstr "o'clock"
+#: ../views/lernmodule/evaluation.php:124
+msgid "Anonym"
+msgstr "Anonymous"
 
-#: ../views/participants/evaluation.php:27
-msgid "Sekunden"
-msgstr "seconds"
+#: ../views/lernmodule/evaluation.php:127
+#, php-format
+msgid "%s Sekunden"
+msgstr "%s seconds"
 
-#: ../views/participants/evaluation.php:29
-msgid "Minuten"
-msgstr "minutes"
+#: ../views/lernmodule/evaluation.php:129
+#, php-format
+msgid "%s Minuten"
+msgstr "%s minutes"
 
-#: ../views/participants/evaluation.php:31
-msgid "Stunden"
-msgstr "hours"
+#: ../views/lernmodule/evaluation.php:131
+#, php-format
+msgid "%s Stunden"
+msgstr "%s hours"
 
-#: ../views/participants/evaluation.php:43
-msgid "Noch keine Module absolviert."
-msgstr "No modules completed yet."
-
-#: ../views/lernmodule/add.php:11
-msgid "Stud.IP H5P Editor"
-msgstr "Stud.IP H5P Editor"
-
-#: ../views/lernmodule/add.php:16 ../controllers/h5peditor.php:762
-msgid "Editor"
-msgstr "Editor"
-
-#: ../views/lernmodule/add.php:22
-msgid "Webadresse"
-msgstr "Web address"
-
-#: ../views/lernmodule/add.php:27
-msgid "Hochladen"
-msgstr "Upload"
-
-#: ../views/lernmodule/add.php:33
-msgid "OER-Campus"
-msgstr "OER Campus"
-
-#: ../views/lernmodule/view.php:55 ../views/lernmodule/edit.php:244
-msgid "Lernmodul in Veranstaltung verschieben oder kopieren"
-msgstr "Move or copy learning module to course"
-
-#: ../views/lernmodule/view.php:62 ../views/lernmodule/edit.php:231
-#: ../views/lernmodule/evaluation.php:166
+#: ../views/lernmodule/evaluation.php:166 ../views/lernmodule/edit.php:231
+#: ../views/lernmodule/view.php:64 ../views/vuejseditor/edit.php:40
 msgid "Lernmodul herunterladen"
 msgstr "Download learning module"
 
-#: ../views/lernmodule/view.php:68 ../views/lernmodule/edit.php:237
-msgid "Auf Lernmarktplatz veröffentlichen"
-msgstr "Publish on learning market space"
+#: ../views/lernmodule/evaluation.php:173
+msgid "Bearbeiten"
+msgstr "Edit"
 
 #: ../views/lernmodule/overview.php:2
 msgid "Es sind noch keine Lernmodule vorhanden."
@@ -318,17 +517,25 @@ msgstr "Configure area"
 msgid "Lernmodul hinzufügen"
 msgstr "Add learning module"
 
-#: ../views/lernmodule/move.php:7 ../views/lernmodule/move.php:12
-msgid "Veranstaltung auswählen"
-msgstr "Select course"
+#: ../views/lernmodule/add.php:11
+msgid "Stud.IP H5P Editor"
+msgstr "Stud.IP H5P Editor"
 
-#: ../views/lernmodule/move.php:28
-msgid "Verschieben"
-msgstr "Move"
+#: ../views/lernmodule/add.php:16 ../controllers/h5peditor.php:762
+msgid "Editor"
+msgstr "Editor"
 
-#: ../views/lernmodule/move.php:29
-msgid "Kopieren"
-msgstr "Copy"
+#: ../views/lernmodule/add.php:22
+msgid "Webadresse"
+msgstr "Web address"
+
+#: ../views/lernmodule/add.php:27
+msgid "Hochladen"
+msgstr "Upload"
+
+#: ../views/lernmodule/add.php:33
+msgid "OER-Campus"
+msgstr "OER Campus"
 
 #: ../views/lernmodule/edit.php:7
 msgid "Lernmodul hochladen und bearbeiten"
@@ -427,229 +634,85 @@ msgstr "Do you really want to delete?"
 msgid "Abbrechen"
 msgstr "Cancel"
 
-#: ../views/lernmodule/_lernmodul_kachel.php:15
-msgid "Erfolgreich abgeschlossen"
-msgstr "Completed succussfully"
+#: ../views/lernmodule/edit.php:237 ../views/lernmodule/view.php:70
+msgid "Auf Lernmarktplatz veröffentlichen"
+msgstr "Publish on learning market space"
 
-#: ../views/lernmodule/_lernmodul_kachel.php:39
-#, php-format
-msgid "Dieses Modul wird erst ab %s Uhr verfügbar sein."
-msgstr "This module will be available at %s o'clock."
+#: ../views/lernmodule/edit.php:244 ../views/lernmodule/view.php:57
+msgid "Lernmodul in Veranstaltung verschieben oder kopieren"
+msgstr "Move or copy learning module to course"
 
-#: ../views/lernmodule/_lernmodul_kachel.php:47
-msgid ""
-"Aktivieren Sie dieses Modul dadurch, dass Sie die anderen Module "
-"durcharbeiten."
-msgstr "Activate this module by completing the other modules."
+#: ../views/lernmodule/view.php:51 ../views/vuejseditor/edit.php:35
+msgid "Abspieloptionen bearbeiten"
+msgstr "Playback options"
 
-#: ../views/lernmodule/blubber.php:5
-msgid "Wollen Sie folgendes Blubbern?"
-msgstr "Do you want to blubber this?"
+#: ../views/lernmodule/move.php:7 ../views/lernmodule/move.php:12
+msgid "Veranstaltung auswählen"
+msgstr "Select course"
 
-#: ../views/lernmodule/blubber.php:10
-msgid "Nicht mehr nachfragen"
-msgstr "Don't ask me again"
+#: ../views/lernmodule/move.php:28
+msgid "Verschieben"
+msgstr "Move"
 
-#: ../views/lernmodule/admin.php:6
-msgid "Einstellungen der Veranstaltung"
-msgstr "Course settings"
+#: ../views/lernmodule/move.php:29
+msgid "Kopieren"
+msgstr "Copy"
 
-#: ../views/lernmodule/admin.php:8
-msgid "Name des Reiters"
-msgstr "Name of tab"
+#: ../views/participants/evaluation.php:3
+msgid "Auswertung von "
+msgstr "Assessment of "
 
-#: ../views/lernmodule/admin.php:12 ../LernmodulePlugin.class.php:42
-#: ../LernmodulePlugin.class.php:57 ../LernmodulePlugin.class.php:72
-#: ../LernmodulePlugin.class.php:104 ../LernmodulePlugin.class.php:175
-#: ../LernmodulePlugin.class.php:176
-msgid "Lernmodule"
-msgstr "Learning modules"
+#: ../views/participants/evaluation.php:7
+msgid "Modul"
+msgstr "Module"
 
-#: ../views/lernmodule/admin.php:18
-msgid "Einspaltiges Layout"
-msgstr "Single column layout"
+#: ../views/participants/evaluation.php:8
+msgid "Beginn"
+msgstr "Begin"
 
-#: ../views/lernmodule/admin.php:25
-msgid "Darstellungsblöcke"
-msgstr "Display blocks"
+#: ../views/participants/evaluation.php:10
+msgid "Erfolg"
+msgstr "Success"
 
-#: ../views/lernmodule/admin.php:31
-msgid "Titel des Blocks"
-msgstr "Title of block"
+#: ../views/participants/evaluation.php:27
+msgid "Sekunden"
+msgstr "seconds"
 
-#: ../views/lernmodule/admin.php:35
-msgid "Block ohne Titel"
-msgstr "Block without title"
+#: ../views/participants/evaluation.php:29
+msgid "Minuten"
+msgstr "minutes"
 
-#: ../views/lernmodule/admin.php:38
-msgid "Informationstext"
-msgstr "Information text"
+#: ../views/participants/evaluation.php:31
+msgid "Stunden"
+msgstr "hours"
 
-#: ../views/lernmodule/admin.php:43
-msgid "Wirklich den ganzen Block und die Inhalte löschen?"
-msgstr "Really delete the whole block and the contents?"
+#: ../views/participants/evaluation.php:43
+msgid "Noch keine Module absolviert."
+msgstr "No modules completed yet."
 
-#: ../views/lernmodule/admin.php:45
-msgid "Block und Inhalte darin löschen"
-msgstr "Delete block and its content"
+#: ../views/participants/index.php:32
+msgid "Absolvierte Lernmodule"
+msgstr "Completed learning modules"
 
-#: ../views/lernmodule/admin.php:49
-msgid "Neuen Darstellungsblock hinzufügen"
-msgstr "Add new display block"
+#: ../views/participants/index.php:51
+msgid "Besser geht es nicht!"
+msgstr "It can't be any better!"
 
-#: ../views/lernmodule/admin.php:57
-msgid "Block hinzufügen"
-msgstr "Add block"
+#: ../views/vuejseditor/edit.php:48
+msgid "Vorschau"
+msgstr "Preview"
 
-#: ../views/lernmodule/evaluation.php:63
-msgid "Dauer des Lernmoduls"
-msgstr "Duration of learning module"
+#: ../controllers/html.php:32
+msgid "Werte wurden gespeichert."
+msgstr "Values stored"
 
-#: ../views/lernmodule/evaluation.php:94
-msgid ""
-"Zeit der Durchläufe in Sekunden bzw. Minuten. Blau sind die erfolgreichen "
-"Durchläufe, orange die nicht erfolgreichen."
-msgstr ""
-"Time of attempts in seconds or minutes. Successful attempts are blue, not "
-"successful ones orange."
+#: ../controllers/html.php:42 ../controllers/h5p.php:493
+msgid "Direktlink zum Lernmodul"
+msgstr "Direct link to learning module"
 
-#: ../views/lernmodule/evaluation.php:112 ../controllers/h5peditor.php:798
-msgid "Datum"
-msgstr "Date"
-
-#: ../views/lernmodule/evaluation.php:124
-msgid "Anonym"
-msgstr "Anonymous"
-
-#: ../views/lernmodule/evaluation.php:127
-#, php-format
-msgid "%s Sekunden"
-msgstr "%s seconds"
-
-#: ../views/lernmodule/evaluation.php:129
-#, php-format
-msgid "%s Minuten"
-msgstr "%s minutes"
-
-#: ../views/lernmodule/evaluation.php:131
-#, php-format
-msgid "%s Stunden"
-msgstr "%s hours"
-
-#: ../views/lernmodule/evaluation.php:173
-msgid "Bearbeiten"
-msgstr "Edit"
-
-#: ../views/h5p/admin_libraries.php:2
-msgid "Wirklich alle ausgewählen Bibliotheken löschen?"
-msgstr "Do you really want to delete all selected libraries?"
-
-#: ../views/h5p/admin_libraries.php:11
-msgid "Bibliothek"
-msgstr "Library"
-
-#: ../views/h5p/admin_libraries.php:12
-msgid "Version"
-msgstr "Version"
-
-#: ../views/h5p/admin_libraries.php:13
-msgid "Benutzt von"
-msgstr "Used by"
-
-#: ../views/h5p/admin_libraries.php:14
-msgid ""
-"Viele H5P-Module melden leider nicht an Stud.IP, wenn der Nutzer sie "
-"erfolgreich absolviert hat. Mit dieser Option an, speichert Stud.IP das "
-"selbstständig nach 30 Sekunden."
-msgstr ""
-"Unfortunately, many H5P modules do not report to Stud.IP if the user has "
-"successfully completed them. With this option on, Stud.IP saves the "
-"automatically after 30 seconds."
-
-#: ../views/h5p/admin_libraries.php:14
-msgid "Auto-Rückmeldung"
-msgstr "Auto reply"
-
-#: ../views/h5p/admin_libraries.php:15
-msgid "Aktiv"
-msgstr "Active"
-
-#: ../views/h5p/admin_libraries.php:16
-msgid "Aktiv im Editor"
-msgstr "Active in editor"
-
-#: ../views/h5p/admin_libraries.php:17
-msgid "Aktion"
-msgstr "Action"
-
-#: ../views/h5p/admin_libraries.php:27
-msgid "Patch Version: "
-msgstr "Patch Version: "
-
-#: ../views/h5p/admin_libraries.php:56
-msgid "Wirklich diese Bibliothek löschen?"
-msgstr "Do you really want to delete this library?"
-
-#: ../views/h5p/admin_libraries.php:66
-msgid "Ausgewählte Löschen"
-msgstr "Delete selected"
-
-#: ../views/h5p/admin_libraries.php:78
-msgid "Bibliotheken hinzufügen"
-msgstr "Add library"
-
-#: ../views/h5p/admin_libraries.php:84
-msgid "Alle Bibliotheken exportieren"
-msgstr "Export all libraries"
-
-#: ../views/h5p/add_library.php:7
-msgid "Bibliotheken hochladen"
-msgstr "Upload libraries"
-
-#: ../views/h5p/add_library.php:12
-#, php-format
-msgid "H5P-Lernmodul oder ZIP mit Bibliotheken auswählen (maximal %s MB)"
-msgstr "Select H5P learning module or ZIP with libraries (maximum %s MB)"
-
-#: ../views/h5p/add_library.php:17
-msgid "Gefundene Bibliotheken gleich aktivieren"
-msgstr "Active found libraries immediately"
-
-#: ../views/h5p/add_library.php:22
-msgid "Bibliotheken in Editor erlauben"
-msgstr "Allow libs in editor"
-
-#: ../views/h5p/add_library.php:26
-msgid "Bestehende Bibliotheken überschreiben"
-msgstr "Overwrite existing libraries"
-
-#: ../views/h5p/add_library.php:28
-msgid "Immer"
-msgstr "Always"
-
-#: ../views/h5p/add_library.php:29
-msgid "Nur die nicht aktivierten"
-msgstr "Only the non-activated"
-
-#: ../views/h5p/add_library.php:30
-msgid "Nur, wenn die Patch-Version höher ist"
-msgstr "Only if the patch version is higher"
-
-#: ../views/editor/metadata.php:6
-msgid "Name des Lernmoduls"
-msgstr "Name of learning module"
-
-#: ../views/editor/metadata.php:7
-msgid "..."
-msgstr "..."
-
-#: ../views/editor/metadata.php:11
-msgid "Logo-Bild"
-msgstr "Logo image"
-
-#: ../views/admission/configure.php:2
-msgid "Studierende müssen folgendes Lernmodul absolviert haben:"
-msgstr "Students have to complete the following learning module"
+#: ../controllers/editor.php:45
+msgid "Lernmodul wurde erstellt und ist bereit zum Bearbeiten."
+msgstr "Learning module was created and is ready to be edited."
 
 #: ../controllers/h5peditor.php:37
 msgid "Lernmodul wurde gespeichert"
@@ -659,13 +722,12 @@ msgstr "Learning module saved successfully"
 msgid "Lernmodul konnte nicht gespeichert werden. Daten unvollständig."
 msgstr "Learning module could not be saved. Data incomplete."
 
-#: ../controllers/h5peditor.php:92 ../controllers/vuejseditor.php:45
-#, fuzzy
+#: ../controllers/h5peditor.php:92 ../controllers/vuejseditor.php:47
 msgid "Neues Lernmodul erstellen"
 msgstr "Create learning module"
 
-#: ../controllers/h5peditor.php:94 ../controllers/lernmodule.php:138
-#: ../controllers/vuejseditor.php:47
+#: ../controllers/h5peditor.php:94 ../controllers/vuejseditor.php:49
+#: ../controllers/lernmodule.php:138
 msgid "Lernmodul bearbeiten"
 msgstr "Edit learning module"
 
@@ -702,6 +764,8 @@ msgid ""
 "Include this script on your website if you want dynamic sizing of the "
 "embedded content:"
 msgstr ""
+"Include this script on your website if you want dynamic sizing of the "
+"embedded content:"
 
 #: ../controllers/h5peditor.php:126 ../controllers/h5p.php:295
 msgid "Rights of use"
@@ -718,7 +782,7 @@ msgstr "Title"
 
 #: ../controllers/h5peditor.php:129 ../controllers/h5p.php:298
 msgid "Author"
-msgstr ""
+msgstr "Author"
 
 #: ../controllers/h5peditor.php:130 ../controllers/h5p.php:299
 msgid "Jahr"
@@ -735,7 +799,7 @@ msgstr "License"
 
 #: ../controllers/h5peditor.php:133 ../controllers/h5p.php:302
 msgid "Thumbnail"
-msgstr ""
+msgstr "Thumbnail"
 
 #: ../controllers/h5peditor.php:134 ../controllers/h5p.php:303
 msgid "No copyright information available for this content."
@@ -1074,7 +1138,31 @@ msgstr "Are you sure you want to delete this content?"
 msgid "Modul existiert nicht. Kann Datei nicht hochladen."
 msgstr "Module does not exist. Cannot upload file."
 
-#: ../controllers/h5p.php:18 ../LernmodulePlugin.class.php:31
+#: ../controllers/vuejseditor.php:70
+msgid "'module_id' fehlt"
+msgstr "'module_id' is missing"
+
+#: ../controllers/vuejseditor.php:73
+msgid "'task_definition' fehlt"
+msgstr "'task_definition' is missing"
+
+#: ../controllers/vuejseditor.php:76
+msgid "'name' fehlt"
+msgstr "'name' is missing"
+
+#: ../controllers/vuejseditor.php:79
+msgid "'infotext' fehlt"
+msgstr "'infotext' is missing"
+
+#: ../controllers/vuejseditor.php:83
+msgid "Lernmodul nicht gefunden."
+msgstr "Could not find learning module."
+
+#: ../controllers/vuejseditor.php:89
+msgid "Block nicht gefunden."
+msgstr "Block not found."
+
+#: ../controllers/h5p.php:18 ../LernmodulePlugin.class.php:36
 msgid "H5P-Bibliotheken"
 msgstr "H5P libraries"
 
@@ -1095,18 +1183,6 @@ msgstr "H5P library was deleted."
 #: ../controllers/h5p.php:213
 msgid "H5P-Bibliotheken wurden gelöscht."
 msgstr "H5P libraries were deleted."
-
-#: ../controllers/h5p.php:493 ../controllers/html.php:42
-msgid "Direktlink zum Lernmodul"
-msgstr "Direct link to learning module"
-
-#: ../controllers/participants.php:18
-msgid "Teilnehmende"
-msgstr "Participants"
-
-#: ../controllers/editor.php:45
-msgid "Lernmodul wurde erstellt und ist bereit zum Bearbeiten."
-msgstr "Learning module was created and is ready to be edited."
 
 #: ../controllers/lernmodule.php:59
 #, php-format
@@ -1150,72 +1226,52 @@ msgstr "Filesize exceeded."
 msgid "Konnte Lernmodul nicht speichern."
 msgstr "Could not save learning module."
 
-#: ../controllers/lernmodule.php:185
+#: ../controllers/lernmodule.php:188
 msgid "Lernmodul erfolgreich gespeichert."
 msgstr "Learning module saved succussfully."
 
-#: ../controllers/lernmodule.php:266
+#: ../controllers/lernmodule.php:269
 msgid "Lernmodul gelöscht."
 msgstr "Learning module deleted."
 
-#: ../controllers/lernmodule.php:378
+#: ../controllers/lernmodule.php:406
 msgid "Block wurde gelöscht."
 msgstr "Block has been deleted."
 
-#: ../controllers/lernmodule.php:400
+#: ../controllers/lernmodule.php:428
 msgid "Einstellungen wurden gespeichert."
 msgstr "Settings saved."
 
-#: ../controllers/lernmodule.php:470
+#: ../controllers/lernmodule.php:498
 msgid "Quelle des Lernmoduls auswählen"
 msgstr "Select the source of the learning module"
 
-#: ../controllers/lernmodule.php:530
+#: ../controllers/lernmodule.php:558
 msgid "Lernmodul verschieben in andere Veranstaltung"
 msgstr "Move learning module to another course"
 
-#: ../controllers/lernmodule.php:570
+#: ../controllers/lernmodule.php:588
 msgid "Lernmodul wurde verschoben."
 msgstr "Learning module was moved."
 
-#: ../controllers/vuejseditor.php:62
-msgid "'module_id' fehlt"
-msgstr "'module_id' is missing"
+#: ../controllers/lernmodule.php:595
+msgid "Lernmodul wurde kopiert."
+msgstr "The learning module was copied."
 
-#: ../controllers/vuejseditor.php:65
-msgid "'task_definition' fehlt"
-msgstr "'task_definition' is missing"
-
-#: ../controllers/vuejseditor.php:68
-msgid "'name' fehlt"
-msgstr "'name' is missing"
-
-#: ../controllers/vuejseditor.php:71
-msgid "'infotext' fehlt"
-msgstr "'infotext' is missing"
-
-#: ../controllers/vuejseditor.php:75
-msgid "Lernmodul nicht gefunden."
-msgstr "Could not find learning module."
-
-#: ../controllers/vuejseditor.php:81
-msgid "Block nicht gefunden."
-msgstr "Block not found."
-
-#: ../controllers/html.php:32
-msgid "Werte wurden gespeichert."
-msgstr "Values stored"
-
-#: ../LernmodulePlugin.class.php:51
-msgid "Teilnehmer"
+#: ../controllers/participants.php:27 ../LernmodulePlugin.class.php:62
+msgid "Teilnehmende"
 msgstr "Participants"
 
-#: ../LernmodulePlugin.class.php:68
+#: ../LernmodulePlugin.class.php:67
+msgid "Fortschritt"
+msgstr "Progress"
+
+#: ../LernmodulePlugin.class.php:86
 #, php-format
 msgid "%s neue Lernmodule"
 msgstr "%s new learning modules"
 
-#: ../LernmodulePlugin.class.php:177
+#: ../LernmodulePlugin.class.php:195
 msgid ""
 "Ein Ort, um Lernmodule zu erstellen, hochzuladen oder zu verlinken. Es "
 "können Abhängigkeiten zwischen Lernmodulen definiert werden, sodass "
@@ -1232,17 +1288,23 @@ msgstr ""
 "date. Learning modules can be grouped into presentation blocks, each of "
 "which has an introductory text. The order is determined by drag & drop."
 
-#: ../LernmodulePlugin.class.php:178
+#: ../LernmodulePlugin.class.php:196
 msgid "Lernmodule in Stud.IP"
 msgstr "Learning Modules in Stud.IP"
 
-#: ../LernmodulePlugin.class.php:179
+#: ../LernmodulePlugin.class.php:197
 msgid ""
 "H5P-Lernmodule zum Hochladen oder selbst erstellen durch eigenen Editor; "
 "HTML-Lernmodule zum Hochladen oder Verlinken (als URL)"
 msgstr ""
 "H5P learning modules to upload or create yourself using your own editor; "
 "HTML learning modules to upload or link (as URL);"
+
+#~ msgid "TODO"
+#~ msgstr "TODO"
+
+#~ msgid "Teilnehmer"
+#~ msgstr "Participants"
 
 #~ msgid "Lückentext (H5P)"
 #~ msgstr "Cloze text (H5P)"

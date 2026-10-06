@@ -4,6 +4,7 @@
     :class="{
       debug: debug,
     }"
+    ref="wrapper"
   >
     <div class="image-and-hotspots-container" ref="root">
       <!--  In the editor, hotspots are visible. In the viewer, they should be
@@ -241,13 +242,13 @@ export default defineComponent({
       if (this.editor) {
         this.editor?.selectHotspot(undefined);
       } else if (this.viewer) {
-        // Get the click coordinates relative to the background image
-        const rootRect = (
-          this.$refs.root as HTMLElement
+        // Get the click coordinates relative to the wrapper element
+        const wrapperRect = (
+          this.$refs.wrapper as HTMLElement
         ).getBoundingClientRect();
 
-        let clickX = event.clientX - rootRect.left;
-        let clickY = event.clientY - rootRect.top;
+        let clickX = event.clientX - wrapperRect.left;
+        let clickY = event.clientY - wrapperRect.top;
 
         this.viewer.clickBackground(clickX, clickY);
       }
@@ -258,13 +259,13 @@ export default defineComponent({
       if (this.editor) {
         this.editor?.selectHotspot(hotspot.uuid);
       } else if (this.viewer) {
-        // Get the click coordinates relative to the background image
-        const rootRect = (
-          this.$refs.root as HTMLElement
+        // Get the click coordinates relative to the wrapper element
+        const wrapperRect = (
+          this.$refs.wrapper as HTMLElement
         ).getBoundingClientRect();
 
-        let clickX = event.clientX - rootRect.left;
-        let clickY = event.clientY - rootRect.top;
+        let clickX = event.clientX - wrapperRect.left;
+        let clickY = event.clientY - wrapperRect.top;
 
         this.viewer.clickHotspot(hotspot.uuid, clickX, clickY);
       }

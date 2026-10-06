@@ -1,27 +1,30 @@
 import { v4 } from 'uuid';
 import { z } from 'zod';
 import { $gettext } from '@/language/gettext';
-import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
+import CrosswordEditor from '@/components/crossword/CrosswordEditor.vue';
+import CrosswordViewer from '@/components/crossword/CrosswordViewer.vue';
 import DragTheWordsEditor from '@/components/DragTheWordsEditor.vue';
-import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
+import DragTheWordsViewer from '@/components/DragTheWordsViewer.vue';
 import FillInTheBlanksEditor from '@/components/FillInTheBlanksEditor.vue';
+import FillInTheBlanksViewer from '@/components/FillInTheBlanksViewer.vue';
 import FindTheHotspotsEditor from '@/components/findTheHotspots/FindTheHotspotsEditor.vue';
 import FindTheHotspotsViewer from '@/components/findTheHotspots/FindTheHotspotsViewer.vue';
-import FindTheWordsEditor from '@/components/FindTheWordsEditor.vue';
-import FindTheWordsViewer from '@/components/FindTheWordsViewer.vue';
-import InteractiveVideoEditor from '@/components/interactiveVideo/InteractiveVideoEditor.vue';
-import InteractiveVideoViewer from '@/components/interactiveVideo/InteractiveVideoViewer.vue';
-import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
-import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
+import FindTheWordsEditor from '@/components/findTheWords/FindTheWordsEditor.vue';
+import FindTheWordsViewer from '@/components/findTheWords/FindTheWordsViewer.vue';
+import InteractiveVideoEditor from '@/components/interactiveVideo/editor/InteractiveVideoEditor.vue';
+import InteractiveVideoViewer from '@/components/interactiveVideo/viewer/InteractiveVideoViewer.vue';
 import MarkTheWordsEditor from '@/components/MarkTheWordsEditor.vue';
+import MarkTheWordsViewer from '@/components/MarkTheWordsViewer.vue';
 import MemoryEditor from '@/components/MemoryEditor.vue';
 import MemoryViewer from '@/components/MemoryViewer.vue';
-import PairingViewer from '@/components/PairingViewer.vue';
 import PairingEditor from '@/components/PairingEditor.vue';
+import PairingViewer from '@/components/PairingViewer.vue';
 import QuestionEditor from '@/components/QuestionEditor.vue';
 import QuestionViewer from '@/components/QuestionViewer.vue';
-import SequencingViewer from '@/components/SequencingViewer.vue';
 import SequencingEditor from '@/components/SequencingEditor.vue';
+import SequencingViewer from '@/components/SequencingViewer.vue';
+import { interactiveVideoTaskSchema } from '@/models/InteractiveVideoTask';
+import { crosswordTaskSchema } from '@/models/CrosswordTask';
 import { findTheHotspotsTaskSchema } from '@/models/FindTheHotspotsTask';
 import { imageFileSchema, feedbackSchema, Feedback } from '@/models/common';
 
@@ -91,7 +94,30 @@ export type DragTheWordsTask = z.infer<typeof dragTheWordsTaskSchema>;
 
 export const findTheWordsTaskSchema = z.object({
   task_type: z.literal('FindTheWords'),
-  words: z.array(z.string()),
+  words: z.string(),
+  size: z.number().optional().default(12),
+  alphabet: z.string(),
+  showWordList: z.boolean().default(true),
+  directions: z
+    .object({
+      n: z.boolean(),
+      ne: z.boolean(),
+      e: z.boolean(),
+      se: z.boolean(),
+      s: z.boolean(),
+      sw: z.boolean(),
+      w: z.boolean(),
+      nw: z.boolean(),
+    })
+    .optional(),
+  strings: z.object({
+    checkButton: z.string().default(''),
+    retryButton: z.string(),
+    solutionsButton: z.string(),
+    resultMessage: z.string(),
+    wordListTitle: z.string().default('Wörter'),
+    timer: z.string(),
+  }),
 });
 export type FindTheWordsTask = z.infer<typeof findTheWordsTaskSchema>;
 
@@ -220,6 +246,7 @@ export const sequencingTaskSchema = z.object({
 export type SequencingTask = z.infer<typeof sequencingTaskSchema>;
 
 export const taskDefinitionSchema = z.discriminatedUnion('task_type', [
+  crosswordTaskSchema,
   dragTheWordsTaskSchema,
   fillInTheBlanksTaskSchema,
   findTheHotspotsTaskSchema,
@@ -242,6 +269,7 @@ export type TaskDefinition = z.infer<typeof taskDefinitionSchema>;
 export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
   'task_type',
   [
+    crosswordTaskSchema,
     dragTheWordsTaskSchema,
     fillInTheBlanksTaskSchema,
     findTheHotspotsTaskSchema,
@@ -253,15 +281,19 @@ export const taskDefinitionSchemaMinusInteractiveVideo = z.discriminatedUnion(
     sequencingTaskSchema,
   ]
 );
+export type TaskDefinitionMinusInteractiveVideo = z.infer<
+  typeof taskDefinitionSchemaMinusInteractiveVideo
+>;
 
 // Here, a bit of boilerplate is required to create a schema for the union of
 // all possible 'task_type' values
 export const taskTypeSchema = z.union([
+  crosswordTaskSchema.shape.task_type,
   dragTheWordsTaskSchema.shape.task_type,
-  interactiveVideoTaskSchema.shape.task_type,
   fillInTheBlanksTaskSchema.shape.task_type,
   findTheHotspotsTaskSchema.shape.task_type,
   findTheWordsTaskSchema.shape.task_type,
+  interactiveVideoTaskSchema.shape.task_type,
   markTheWordsTaskSchema.shape.task_type,
   memoryTaskSchema.shape.task_type,
   pairingTaskSchema.shape.task_type,
@@ -280,6 +312,59 @@ function defaultFeedback(): Feedback[] {
 
 export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
   switch (type) {
+    case 'Crossword':
+      return {
+        task_type: 'Crossword',
+        words: [
+          {
+            uuid: v4(),
+            hint: 'Frucht mit gleichnamiger Farbe.',
+            solution: 'Orange',
+            x: 4,
+            y: 1,
+            direction: 'across',
+          },
+          {
+            uuid: v4(),
+            hint: 'Krummes Obst mit gelber Schale.',
+            solution: 'Banane',
+            x: 6,
+            y: 0,
+            direction: 'down',
+          },
+          {
+            uuid: v4(),
+            hint: 'Kleine rote Steinfrucht mit Stiel.',
+            solution: 'Kirsche',
+            x: 0,
+            y: 5,
+            direction: 'across',
+          },
+          {
+            uuid: v4(),
+            hint: 'Unsinn / Milchprodukt.',
+            solution: 'Quark',
+            x: 4,
+            y: 3,
+            direction: 'across',
+          },
+          {
+            uuid: v4(),
+            hint: 'Erworben.',
+            solution: 'Gekauft',
+            x: 8,
+            y: 1,
+            direction: 'down',
+          },
+        ],
+        colorEmptyCells: false,
+        strings: {
+          checkButton: 'Überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Felder richtig ausgefüllt.',
+        },
+      };
     case 'DragTheWords':
       return {
         task_type: 'DragTheWords',
@@ -310,6 +395,11 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
         autoplay: false,
         startAt: 0,
         disableNavigation: 'not disabled',
+        travisGoSettings: {
+          enabled: false,
+          projectTitle: $gettext('Projekttitel'),
+          projectDescription: $gettext('Projektbeschreibung'),
+        },
       };
     case 'FillInTheBlanks':
       return {
@@ -352,7 +442,28 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
     case 'FindTheWords':
       return {
         task_type: 'FindTheWords',
-        words: ['apple', 'banana', 'orange'],
+        words: 'Apfel, Banane, Orange',
+        size: 12,
+        alphabet: 'abcdefghijklmnopqrstuvwxyz',
+        showWordList: true,
+        directions: {
+          n: false,
+          ne: true,
+          e: true,
+          se: true,
+          s: true,
+          sw: false,
+          w: false,
+          nw: false,
+        },
+        strings: {
+          checkButton: 'Überprüfen',
+          retryButton: 'Erneut versuchen',
+          solutionsButton: 'Lösungen anzeigen',
+          resultMessage: ':correct von :total Wörter gefunden.',
+          wordListTitle: 'Wörter',
+          timer: 'Zeit:',
+        },
       };
     case 'MarkTheWords':
       return {
@@ -509,6 +620,8 @@ export function newTask(type: TaskDefinition['task_type']): TaskDefinition {
 
 export function viewerForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
+    case 'Crossword':
+      return CrosswordViewer;
     case 'DragTheWords':
       return DragTheWordsViewer;
     case 'InteractiveVideo':
@@ -536,6 +649,8 @@ export function viewerForTaskType(type: TaskDefinition['task_type']) {
 
 export function editorForTaskType(type: TaskDefinition['task_type']) {
   switch (type) {
+    case 'Crossword':
+      return CrosswordEditor;
     case 'DragTheWords':
       return DragTheWordsEditor;
     case 'InteractiveVideo':
@@ -563,6 +678,8 @@ export function editorForTaskType(type: TaskDefinition['task_type']) {
 
 export function printTaskType(type: TaskDefinition['task_type']): string {
   switch (type) {
+    case 'Crossword':
+      return $gettext('Crossword');
     case 'DragTheWords':
       return $gettext('Drag The Words');
     case 'InteractiveVideo':
@@ -595,6 +712,7 @@ export function showViewerAboveEditor(
 ): boolean {
   switch (type) {
     case 'InteractiveVideo':
+    case 'Crossword':
       return false;
     default:
       return true;
@@ -606,21 +724,21 @@ export function iconForTaskType(type: TaskDefinition['task_type']): string {
     case 'DragTheWords':
       return 'tan3';
     case 'InteractiveVideo':
-      break;
+      return 'file-video';
     case 'FillInTheBlanks':
       return 'file-office';
     case 'FindTheWords':
-      break;
+      return 'tan3';
     case 'MarkTheWords':
       return 'tan3';
     case 'Memory':
-      break;
+      return 'tan3';
     case 'Pairing':
-      break;
+      return 'copy';
     case 'Question':
       return 'question';
     case 'Sequencing':
-      break;
+      return 'picture';
   }
   return 'question';
 }

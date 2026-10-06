@@ -2,6 +2,11 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:4
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:5
+msgid "\"Travis Go\"-Funktionalität enablen"
+msgstr ""
+
 #: src/components/MemoryViewer.vue:38
 #: src/components/MemoryViewer.vue:39
 #: src/components/MemoryViewer.vue:54
@@ -9,20 +14,29 @@ msgstr ""
 msgid "%{ amountOfPairsSolved } von %{ totalAmountOfPairs }"
 msgstr ""
 
-#: src/components/interactiveVideo/AddInteractions.vue:315
+#: src/components/interactiveVideo/editor/AddInteractions.vue:349
 msgid "%{ interaction } löschen"
 msgstr ""
 
-#: src/components/interactiveVideo/AddInteractions.vue:11
-#: src/components/interactiveVideo/AddInteractions.vue:12
-#: src/components/interactiveVideo/AddInteractions.vue:13
-#: src/components/interactiveVideo/AddInteractions.vue:17
-#: src/components/interactiveVideo/AddInteractions.vue:18
-#: src/components/interactiveVideo/AddInteractions.vue:30
-#: src/components/interactiveVideo/AddInteractions.vue:6
-#: src/components/interactiveVideo/AddInteractions.vue:7
+#: src/components/interactiveVideo/editor/AddInteractions.vue:11
+#: src/components/interactiveVideo/editor/AddInteractions.vue:12
+#: src/components/interactiveVideo/editor/AddInteractions.vue:13
+#: src/components/interactiveVideo/editor/AddInteractions.vue:17
+#: src/components/interactiveVideo/editor/AddInteractions.vue:18
+#: src/components/interactiveVideo/editor/AddInteractions.vue:30
+#: src/components/interactiveVideo/editor/AddInteractions.vue:6
+#: src/components/interactiveVideo/editor/AddInteractions.vue:7
 msgid "%{ interactionType } einfügen"
 msgstr ""
+
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:23
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:24
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:49
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:52
+msgid "%{ numberOfComments } Kommentar"
+msgid_plural "%{ numberOfComments } Kommentare"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/components/MemoryViewer.vue:23
 #: src/components/MemoryViewer.vue:24
@@ -31,12 +45,20 @@ msgstr ""
 msgid "%{ time } Sekunden"
 msgstr ""
 
-#: src/components/interactiveVideo/InteractiveVideoEditor.vue:3
+#: src/components/studip/StudipActionMenu.vue:174
+msgid "%{title} für %{context}"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/InteractiveVideoEditor.vue:3
 msgid "1. Video auswählen"
 msgstr ""
 
-#: src/components/interactiveVideo/InteractiveVideoEditor.vue:7
+#: src/components/interactiveVideo/editor/InteractiveVideoEditor.vue:7
 msgid "2. Interaktionen hinzufügen"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/InteractiveVideoEditor.vue:13
+msgid "3. Travis Go konfigurieren"
 msgstr ""
 
 #: src/components/FeedbackEditor.vue:18
@@ -52,28 +74,68 @@ msgstr ""
 msgid "Abbrechen"
 msgstr ""
 
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:100
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:115
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:54
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:55
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:80
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:83
+msgid "Abschicken"
+msgstr ""
+
 #: src/components/AudioElement.vue:26
-#: src/components/interactiveVideo/AddInteractions.vue:52
+#: src/components/interactiveVideo/editor/AddInteractions.vue:52
 msgid "Abspielen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:118
-#: src/components/interactiveVideo/SelectVideo.vue:123
-#: src/components/interactiveVideo/SelectVideo.vue:128
-#: src/components/interactiveVideo/SelectVideo.vue:42
-#: src/components/interactiveVideo/SelectVideo.vue:92
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:31
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:78
+#: src/components/studip/StudipActionMenu.vue:123
+msgid "Aktionen"
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:114
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:53
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:54
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:79
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:82
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:99
+msgid "Aktualisieren"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectVideo.vue:117
+#: src/components/interactiveVideo/editor/SelectVideo.vue:122
+#: src/components/interactiveVideo/editor/SelectVideo.vue:126
+#: src/components/interactiveVideo/editor/SelectVideo.vue:132
+#: src/components/interactiveVideo/editor/SelectVideo.vue:41
+#: src/components/interactiveVideo/editor/SelectVideo.vue:91
 msgid "Aktuelle Position setzen"
 msgstr ""
 
-#: src/components/DragTheWordsViewer.vue:568
-#: src/components/FillInTheBlanksViewer.vue:499
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:19
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:20
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:23
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:59
+msgid "Alle Hotspots entfernen"
+msgstr ""
+
+#: src/components/DragTheWordsViewer.vue:569
+#: src/components/FillInTheBlanksViewer.vue:504
 msgid "Alle Lücken müssen ausgefüllt sein, um Lösungen anzuzeigen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:114
-#: src/components/interactiveVideo/SelectVideo.vue:119
-#: src/components/interactiveVideo/SelectVideo.vue:38
-#: src/components/interactiveVideo/SelectVideo.vue:88
+#: src/components/crossword/CrosswordEditor.vue:121
+#: src/components/crossword/CrosswordEditor.vue:125
+#: src/components/crossword/CrosswordEditor.vue:67
+#: src/components/crossword/CrosswordEditor.vue:68
+msgid "Allgemein"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectVideo.vue:113
+#: src/components/interactiveVideo/editor/SelectVideo.vue:118
+#: src/components/interactiveVideo/editor/SelectVideo.vue:122
+#: src/components/interactiveVideo/editor/SelectVideo.vue:37
+#: src/components/interactiveVideo/editor/SelectVideo.vue:87
 msgid "Anfangen um"
 msgstr ""
 
@@ -81,21 +143,36 @@ msgstr ""
 msgid "Anhalten"
 msgstr ""
 
-#: src/components/QuestionEditor.vue:24
 #: src/components/QuestionEditor.vue:25
+#: src/components/QuestionEditor.vue:26
 msgid "Antwort löschen"
 msgstr ""
 
 #: src/components/DragTheWordsEditor.vue:32
 #: src/components/DragTheWordsEditor.vue:33
 #: src/components/DragTheWordsEditor.vue:47
+#: src/components/DragTheWordsEditor.vue:51
 msgid "Antworten alphabetisch sortieren"
 msgstr ""
 
-#: src/components/QuestionEditor.vue:59
-#: src/components/QuestionEditor.vue:60
-#: src/components/QuestionEditor.vue:90
+#: src/components/QuestionEditor.vue:112
+#: src/components/QuestionEditor.vue:116
+#: src/components/QuestionEditor.vue:75
+#: src/components/QuestionEditor.vue:76
 msgid "Antworten in zufälliger Reihenfolge anzeigen"
+msgstr ""
+
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:112
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:51
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:52
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:99
+msgid "Anzahl erlaubter Klicks begrenzen auf: "
+msgstr ""
+
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:39
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:40
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:87
+msgid "Anzahl zu findender Hotspots begrenzen auf:"
 msgstr ""
 
 #: src/components/LernmoduleEditor.vue:33
@@ -114,18 +191,20 @@ msgstr ""
 msgid "Aufgedeckte Paare:"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:109
-#: src/components/interactiveVideo/SelectVideo.vue:114
-#: src/components/interactiveVideo/SelectVideo.vue:33
-#: src/components/interactiveVideo/SelectVideo.vue:83
+#: src/components/interactiveVideo/editor/SelectVideo.vue:108
+#: src/components/interactiveVideo/editor/SelectVideo.vue:113
+#: src/components/interactiveVideo/editor/SelectVideo.vue:32
+#: src/components/interactiveVideo/editor/SelectVideo.vue:82
 msgid "Automatisch abspielen"
 msgstr ""
 
-#: src/components/interactiveVideo/VideoPlayer.vue:44
+#: src/components/interactiveVideo/VideoPlayer.vue:48
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:409
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:441
 msgid "Bearbeiten"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:171
+#: src/components/LernmoduleEditor.vue:187
 msgid "Beim Speichern ist ein Fehler aufgetreten."
 msgstr ""
 
@@ -133,38 +212,54 @@ msgstr ""
 msgid "Benutzerdefiniertes Feedback für beliebige Punktebereiche:"
 msgstr ""
 
-#: src/components/DragTheWordsEditor.vue:54
-#: src/components/DragTheWordsEditor.vue:55
-#: src/components/DragTheWordsEditor.vue:79
-#: src/components/FillInTheBlanksEditor.vue:53
-#: src/components/FillInTheBlanksEditor.vue:54
-#: src/components/FillInTheBlanksEditor.vue:75
+#: src/components/crossword/CrosswordEditor.vue:126
+#: src/components/crossword/CrosswordEditor.vue:134
+#: src/components/crossword/CrosswordEditor.vue:72
+#: src/components/crossword/CrosswordEditor.vue:73
+#: src/components/DragTheWordsEditor.vue:56
+#: src/components/DragTheWordsEditor.vue:57
+#: src/components/DragTheWordsEditor.vue:94
+#: src/components/FillInTheBlanksEditor.vue:55
+#: src/components/FillInTheBlanksEditor.vue:56
+#: src/components/FillInTheBlanksEditor.vue:90
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:145
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:72
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:73
+#: src/components/findTheWords/FindTheWordsEditor.vue:142
+#: src/components/findTheWords/FindTheWordsEditor.vue:80
+#: src/components/findTheWords/FindTheWordsEditor.vue:81
 #: src/components/MarkTheWordsEditor.vue:32
 #: src/components/MarkTheWordsEditor.vue:33
-#: src/components/MarkTheWordsEditor.vue:47
-#: src/components/MemoryEditor.vue:63
-#: src/components/MemoryEditor.vue:64
-#: src/components/MemoryEditor.vue:96
+#: src/components/MarkTheWordsEditor.vue:48
+#: src/components/MemoryEditor.vue:107
+#: src/components/MemoryEditor.vue:66
+#: src/components/MemoryEditor.vue:67
 #: src/components/PairingEditor.vue:42
 #: src/components/PairingEditor.vue:43
-#: src/components/PairingEditor.vue:70
-#: src/components/QuestionEditor.vue:108
-#: src/components/QuestionEditor.vue:74
-#: src/components/QuestionEditor.vue:75
+#: src/components/PairingEditor.vue:75
+#: src/components/QuestionEditor.vue:143
+#: src/components/QuestionEditor.vue:90
+#: src/components/QuestionEditor.vue:91
 #: src/components/SequencingEditor.vue:54
 #: src/components/SequencingEditor.vue:55
-#: src/components/SequencingEditor.vue:76
+#: src/components/SequencingEditor.vue:85
 msgid "Beschriftungen"
 msgstr ""
 
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:24
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:25
 #: src/components/PairingEditorCard.vue:8
 #: src/components/PairingEditorCard.vue:9
-#: src/components/SequencingEditor.vue:211
+#: src/components/SequencingEditor.vue:255
 #: src/components/SequencingEditorCard.vue:4
 #: src/components/SequencingEditorCard.vue:5
 msgid "Bild"
 msgstr ""
 
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:22
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:23
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:26
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:66
 #: src/components/MemoryEditorCard.vue:11
 #: src/components/MemoryEditorCard.vue:12
 #: src/components/MemoryEditorCard.vue:15
@@ -179,12 +274,13 @@ msgstr ""
 msgid "Bild löschen"
 msgstr ""
 
-#: src/components/MemoryEditor.vue:54
-#: src/components/MemoryEditor.vue:55
-#: src/components/MemoryEditor.vue:75
-#: src/components/MemoryEditor.vue:76
-#: src/components/MemoryEditor.vue:79
-#: src/components/MemoryEditor.vue:83
+#: src/components/MemoryEditor.vue:57
+#: src/components/MemoryEditor.vue:58
+#: src/components/MemoryEditor.vue:78
+#: src/components/MemoryEditor.vue:84
+#: src/components/MemoryEditor.vue:86
+#: src/components/MemoryEditor.vue:90
+#: src/components/MemoryEditor.vue:94
 msgid "Bild Löschen"
 msgstr ""
 
@@ -204,8 +300,35 @@ msgstr ""
 msgid "Bildbeschreibung"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:194
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:208
+#: src/components/crossword/CrosswordEditor.vue:111
+#: src/components/crossword/CrosswordEditor.vue:57
+#: src/components/crossword/CrosswordEditor.vue:58
+#: src/components/crossword/CrosswordEditor.vue:62
+#: src/components/crossword/CrosswordEditor.vue:92
+msgid "Bitte wählen Sie ein Wort aus, um es zu bearbeiten."
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:22
+#: src/components/findTheWords/FindTheWordsEditor.vue:23
+#: src/components/findTheWords/FindTheWordsEditor.vue:34
+#: src/components/findTheWords/FindTheWordsEditor.vue:43
+msgid "Buchstaben der Lösungswörter"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:43
+#: src/components/LernmoduleEditor.vue:44
+#: src/components/LernmoduleEditor.vue:57
+#: src/components/LernmoduleEditor.vue:61
+#: src/models/TaskDefinition.ts:682
+msgid "Crossword"
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:373
+msgid "Das bearbeitete Comment ID ist undefined oder leer."
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:207
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:221
 msgid "Das eingegebene Wert muss größer als 0 sein."
 msgstr ""
 
@@ -213,9 +336,14 @@ msgstr ""
 msgid "Das Stammverzeichnis des Benutzers konnte nicht gefunden werden. Es können keine Dateien hochgeladen werden."
 msgstr ""
 
-#: src/components/courseware-components-ported-to-vue3/FilePicker.vue:5
-#: src/components/courseware-components-ported-to-vue3/FilePicker.vue:6
-#: src/components/courseware-components-ported-to-vue3/FilePicker.vue:7
+#: src/components/interactiveVideo/VideoPlayer.vue:2
+#: src/components/interactiveVideo/VideoPlayer.vue:3
+msgid "Das Video konnte nicht geladen werden. Grund: "
+msgstr ""
+
+#: src/components/studip/FilePicker.vue:5
+#: src/components/studip/FilePicker.vue:6
+#: src/components/studip/FilePicker.vue:7
 msgid "Datei"
 msgstr ""
 
@@ -224,13 +352,87 @@ msgstr ""
 msgid "Datei wird hochgeladen"
 msgstr ""
 
-#: src/components/courseware-components-ported-to-vue3/FolderPicker.vue:109
+#: src/components/studip/FolderPicker.vue:106
 msgid "Dateibereich dieser Veranstaltung"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:197
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:211
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:343
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:386
+msgid "Dein Kommentar konnte nicht abgeschickt werden."
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:79
+msgid "Der Kommentar konnte nicht gelöscht werden."
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:76
+msgid "Der Kommentar wurde gelöscht."
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:154
+msgid "Der Post konnte nicht gelöscht werden."
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:438
+msgid "Der Post konnte nicht gepostet werden."
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:477
+msgid "Der Post konnte nicht geupdated werden."
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:151
+msgid "Der Post wurde gelöscht."
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:210
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:224
 msgid "Der Startpunkt muss vor dem Endpunkt sein."
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:123
+#: src/components/findTheWords/FindTheWordsEditor.vue:69
+#: src/components/findTheWords/FindTheWordsEditor.vue:70
+#: src/components/findTheWords/FindTheWordsEditor.vue:95
+#: src/components/findTheWords/FindTheWordsEditor.vue:99
+msgid "Diagonal nach oben links"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:105
+#: src/components/findTheWords/FindTheWordsEditor.vue:59
+#: src/components/findTheWords/FindTheWordsEditor.vue:60
+#: src/components/findTheWords/FindTheWordsEditor.vue:85
+#: src/components/findTheWords/FindTheWordsEditor.vue:89
+msgid "Diagonal nach oben rechts"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:100
+#: src/components/findTheWords/FindTheWordsEditor.vue:104
+#: src/components/findTheWords/FindTheWordsEditor.vue:132
+#: src/components/findTheWords/FindTheWordsEditor.vue:74
+#: src/components/findTheWords/FindTheWordsEditor.vue:75
+msgid "Diagonal nach unten links"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:114
+#: src/components/findTheWords/FindTheWordsEditor.vue:64
+#: src/components/findTheWords/FindTheWordsEditor.vue:65
+#: src/components/findTheWords/FindTheWordsEditor.vue:90
+#: src/components/findTheWords/FindTheWordsEditor.vue:94
+msgid "Diagonal nach unten rechts"
+msgstr ""
+
+#: src/components/interactiveVideo/strings.ts:8
+msgid "Die ausgeführte Aktion ist nur für Overlay-Elemente gültig."
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:127
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:94
+msgid "Die Inhalte des Post-Editors werden gelöscht."
+msgstr ""
+
+#: src/components/interactiveVideo/strings.ts:17
+msgid "Die Posts unter dem Video konnten nicht geladen werden."
 msgstr ""
 
 #: src/components/interactiveVideo/VideoTimeInput.vue:102
@@ -241,89 +443,123 @@ msgstr ""
 msgid "Diese Aufgabe konnte nicht geladen werden. Beim Einlesen von task_json ist ein Fehler aufgetreten. Fehler: "
 msgstr ""
 
+#: src/components/findTheHotspots/ImageWithHotspots.vue:84
+msgid "Diesen Hotspot löschen"
+msgstr ""
+
+#: src/components/interactiveVideo/strings.ts:14
+msgid "Dieser Post konnte nicht geladen werden."
+msgstr ""
+
+#: src/components/crossword/CrosswordEditor.vue:48
+msgid "Dieses Wort löschen"
+msgstr ""
+
 #: src/components/DragTheWordsEditor.vue:4
 #: src/components/DragTheWordsEditor.vue:5
-#: src/components/LernmoduleEditor.vue:42
-#: src/components/LernmoduleEditor.vue:43
-#: src/components/LernmoduleEditor.vue:56
-#: src/components/LernmoduleEditor.vue:60
+#: src/components/LernmoduleEditor.vue:45
+#: src/components/LernmoduleEditor.vue:46
+#: src/components/LernmoduleEditor.vue:59
+#: src/components/LernmoduleEditor.vue:63
 msgid "Drag the Words"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:576
+#: src/models/TaskDefinition.ts:684
 msgid "Drag The Words"
 msgstr ""
 
-#: src/components/FeedbackElement.vue:10
-#: src/components/FeedbackElement.vue:11
-#: src/components/FeedbackElement.vue:15
-#: src/components/FeedbackElement.vue:22
+#: src/components/FeedbackElement.vue:13
+#: src/components/FeedbackElement.vue:6
+#: src/components/FeedbackElement.vue:7
 msgid "Ein goldener Stern, der den Abschluss der Aufgabe mit perfekter Leistung anzeigt"
 msgstr ""
 
-#: src/components/interactiveVideo/AddInteractions.vue:14
-#: src/components/interactiveVideo/AddInteractions.vue:18
-#: src/components/interactiveVideo/AddInteractions.vue:283
-#: src/components/interactiveVideo/AddInteractions.vue:7
-#: src/components/interactiveVideo/AddInteractions.vue:8
+#: src/components/interactiveVideo/editor/AddInteractions.vue:14
+#: src/components/interactiveVideo/editor/AddInteractions.vue:18
+#: src/components/interactiveVideo/editor/AddInteractions.vue:302
+#: src/components/interactiveVideo/editor/AddInteractions.vue:7
+#: src/components/interactiveVideo/editor/AddInteractions.vue:8
 #: src/components/interactiveVideo/interactions/OverlayInteraction.vue:4
 #: src/components/interactiveVideo/interactions/OverlayInteraction.vue:8
-#: src/models/InteractiveVideoTask.ts:170
+#: src/models/InteractiveVideoTask.ts:184
 msgid "Einblendung"
 msgstr ""
 
+#: src/components/crossword/CrosswordEditor.vue:121
 #: src/components/DragTheWordsEditor.vue:23
 #: src/components/DragTheWordsEditor.vue:24
 #: src/components/DragTheWordsEditor.vue:38
 #: src/components/FillInTheBlanksEditor.vue:17
 #: src/components/FillInTheBlanksEditor.vue:18
-#: src/components/FillInTheBlanksEditor.vue:29
-#: src/components/FindTheWordsEditor.vue:11
-#: src/components/FindTheWordsEditor.vue:12
-#: src/components/FindTheWordsEditor.vue:17
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:10
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:9
-#: src/components/interactiveVideo/SelectVideo.vue:105
-#: src/components/interactiveVideo/SelectVideo.vue:110
-#: src/components/interactiveVideo/SelectVideo.vue:29
-#: src/components/interactiveVideo/SelectVideo.vue:79
+#: src/components/FillInTheBlanksEditor.vue:25
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:34
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:35
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:82
+#: src/components/findTheWords/FindTheWordsEditor.vue:28
+#: src/components/findTheWords/FindTheWordsEditor.vue:29
+#: src/components/findTheWords/FindTheWordsEditor.vue:54
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:10
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:9
+#: src/components/interactiveVideo/editor/SelectVideo.vue:105
+#: src/components/interactiveVideo/editor/SelectVideo.vue:110
+#: src/components/interactiveVideo/editor/SelectVideo.vue:29
+#: src/components/interactiveVideo/editor/SelectVideo.vue:79
 #: src/components/MarkTheWordsEditor.vue:18
 #: src/components/MarkTheWordsEditor.vue:19
-#: src/components/MarkTheWordsEditor.vue:30
+#: src/components/MarkTheWordsEditor.vue:26
 #: src/components/MemoryEditor.vue:37
 #: src/components/MemoryEditor.vue:38
 #: src/components/MemoryEditor.vue:58
 #: src/components/PairingEditor.vue:28
 #: src/components/PairingEditor.vue:29
 #: src/components/PairingEditor.vue:53
-#: src/components/QuestionEditor.vue:50
-#: src/components/QuestionEditor.vue:51
-#: src/components/QuestionEditor.vue:81
+#: src/components/QuestionEditor.vue:103
+#: src/components/QuestionEditor.vue:66
+#: src/components/QuestionEditor.vue:67
 #: src/components/SequencingEditor.vue:35
 #: src/components/SequencingEditor.vue:36
 #: src/components/SequencingEditor.vue:54
 msgid "Einstellungen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:22
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:23
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:33
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:20
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:21
+msgid "End"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:22
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:23
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:33
 msgid "Ende"
 msgstr ""
 
-#: src/components/FeedbackEditor.vue:107
+#: src/components/FeedbackEditor.vue:135
 msgid "Entferne den Feedback-Bereich, der ab %{ percentage }% anfängt."
 msgstr ""
 
+#: src/components/crossword/CrosswordEditor.vue:150
+#: src/components/crossword/CrosswordEditor.vue:170
+#: src/components/crossword/CrosswordEditor.vue:96
+#: src/components/crossword/CrosswordEditor.vue:97
 #: src/components/FeedbackEditor.vue:6
 #: src/components/FeedbackEditor.vue:7
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:161
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:84
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:85
+#: src/components/findTheWords/FindTheWordsEditor.vue:109
+#: src/components/findTheWords/FindTheWordsEditor.vue:110
+#: src/components/findTheWords/FindTheWordsEditor.vue:187
 msgid "Ergebnismitteilung (mögliche Variablen :correct und :total):"
 msgstr ""
 
-#: src/components/MemoryEditor.vue:112
-#: src/components/MemoryEditor.vue:75
-#: src/components/MemoryEditor.vue:76
+#: src/components/MemoryEditor.vue:126
+#: src/components/MemoryEditor.vue:78
+#: src/components/MemoryEditor.vue:79
 msgid "Ergebnismitteilung:"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:281
+msgid "Es dürfen maximal 20 Wörter eingegeben werden."
 msgstr ""
 
 #: src/components/ErrorMessage.vue:2
@@ -331,77 +567,163 @@ msgstr ""
 msgid "Es ist ein Fehler aufgetreten!"
 msgstr ""
 
+#: src/components/interactiveVideo/strings.ts:4
+msgid "Es ist nicht erlaubt, ein Interactive Video in ein anderes Interactive Video einzufügen."
+msgstr ""
+
+#: src/components/interactiveVideo/strings.ts:11
+msgid "Es wurde keine Interaktion mit der angegebenen ID gefunden."
+msgstr ""
+
+#: src/components/crossword/CrosswordEditor.vue:147
+#: src/components/crossword/CrosswordEditor.vue:167
+#: src/components/crossword/CrosswordEditor.vue:93
+#: src/components/crossword/CrosswordEditor.vue:94
 #: src/components/FeedbackEditor.vue:2
 #: src/components/FeedbackEditor.vue:3
-#: src/components/MemoryEditor.vue:109
-#: src/components/MemoryEditor.vue:72
-#: src/components/MemoryEditor.vue:73
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:157
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:80
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:81
+#: src/components/findTheWords/FindTheWordsEditor.vue:106
+#: src/components/findTheWords/FindTheWordsEditor.vue:107
+#: src/components/findTheWords/FindTheWordsEditor.vue:184
+#: src/components/MemoryEditor.vue:123
+#: src/components/MemoryEditor.vue:75
+#: src/components/MemoryEditor.vue:76
 msgid "Feedback"
 msgstr ""
 
-#: src/components/QuestionEditor.vue:33
-#: src/components/QuestionEditor.vue:34
-#: src/components/QuestionEditor.vue:39
-#: src/components/QuestionEditor.vue:52
-#: src/components/QuestionEditor.vue:56
+#: src/components/findTheHotspots/ImageWithHotspots.vue:93
+msgid "Feedback bei Klick auf diesen Hotspot"
+msgstr ""
+
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:104
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:105
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:181
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:189
+msgid "Feedback, wenn auf einen bereits gefundenen Hotspot geklickt wurde:"
+msgstr ""
+
+#: src/components/QuestionEditor.vue:37
+#: src/components/QuestionEditor.vue:38
+#: src/components/QuestionEditor.vue:44
+#: src/components/QuestionEditor.vue:62
+#: src/components/QuestionEditor.vue:66
 msgid "Feedback, wenn ausgewählt:"
 msgstr ""
 
-#: src/components/QuestionEditor.vue:38
-#: src/components/QuestionEditor.vue:39
-#: src/components/QuestionEditor.vue:44
-#: src/components/QuestionEditor.vue:57
-#: src/components/QuestionEditor.vue:65
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:171
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:175
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:94
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:95
+msgid "Feedback, wenn in den leeren Bereich geklickt wurde:"
+msgstr ""
+
+#: src/components/QuestionEditor.vue:48
+#: src/components/QuestionEditor.vue:49
+#: src/components/QuestionEditor.vue:55
+#: src/components/QuestionEditor.vue:73
+#: src/components/QuestionEditor.vue:81
 msgid "Feedback, wenn nicht ausgewählt:"
+msgstr ""
+
+#: src/components/findTheHotspots/ImageWithHotspots.vue:34
+#: src/components/findTheHotspots/ImageWithHotspots.vue:35
+#: src/components/findTheHotspots/ImageWithHotspots.vue:71
+#: src/components/findTheHotspots/ImageWithHotspots.vue:88
+msgid "Feedback:"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:11
+#: src/components/findTheWords/FindTheWordsEditor.vue:12
+#: src/components/findTheWords/FindTheWordsEditor.vue:16
+msgid "Feldgröße:"
 msgstr ""
 
 #: src/components/FillInTheBlanksEditor.vue:4
 #: src/components/FillInTheBlanksEditor.vue:5
-#: src/components/LernmoduleEditor.vue:44
-#: src/components/LernmoduleEditor.vue:45
-#: src/components/LernmoduleEditor.vue:58
-#: src/components/LernmoduleEditor.vue:62
+#: src/components/LernmoduleEditor.vue:47
+#: src/components/LernmoduleEditor.vue:48
+#: src/components/LernmoduleEditor.vue:61
+#: src/components/LernmoduleEditor.vue:65
 msgid "Fill in the Blanks"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:580
+#: src/models/TaskDefinition.ts:688
 msgid "Fill In The Blanks"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:582
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:4
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:5
+#: src/components/LernmoduleEditor.vue:50
+#: src/components/LernmoduleEditor.vue:51
+#: src/components/LernmoduleEditor.vue:64
+#: src/components/LernmoduleEditor.vue:68
+msgid "Find the Hotspots"
+msgstr ""
+
+#: src/models/TaskDefinition.ts:690
 msgid "Find The Hotspots"
 msgstr ""
 
-#: src/components/FindTheWordsEditor.vue:3
-#: src/components/FindTheWordsEditor.vue:4
+#: src/components/findTheWords/FindTheWordsEditor.vue:4
+#: src/components/findTheWords/FindTheWordsEditor.vue:5
+#: src/components/LernmoduleEditor.vue:53
+#: src/components/LernmoduleEditor.vue:54
+#: src/components/LernmoduleEditor.vue:67
+#: src/components/LernmoduleEditor.vue:71
 msgid "Find the Words"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:584
+#: src/models/TaskDefinition.ts:692
 msgid "Find The Words"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:231
+#: src/components/interactiveVideo/strings.ts:21
+msgid "Fokus, worauf sich der Post im Video bezieht"
+msgstr ""
+
+#: src/models/TaskDefinition.ts:240
 msgid "Fortsetzen"
 msgstr ""
 
 #: src/components/SequencingEditor.vue:44
 #: src/components/SequencingEditor.vue:45
 #: src/components/SequencingEditor.vue:63
+#: src/components/SequencingEditor.vue:67
 msgid "Fortsetzen des aktuellen Spielstands erlauben"
 msgstr ""
 
-#: src/components/DragTheWordsEditor.vue:179
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:116
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:141
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:68
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:69
+msgid "Fügen Sie mindestens einen korrekten Hotspot hinzu."
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsViewer.vue:42
+#: src/components/findTheWords/FindTheWordsViewer.vue:43
+#: src/components/findTheWords/FindTheWordsViewer.vue:79
+msgid "Fügen Sie Wörter hinzu um ein Find the Words Rätsel zu erstellen."
+msgstr ""
+
+#: src/components/crossword/CrosswordViewer.vue:17
+#: src/components/crossword/CrosswordViewer.vue:18
+#: src/components/crossword/CrosswordViewer.vue:32
+msgid "Fügen Sie Wörter hinzu um ein Kreuzworträtsel zu erstellen."
+msgstr ""
+
+#: src/components/DragTheWordsEditor.vue:220
 msgid "Geben Sie falsche Antworten als Distraktoren ein. Verwenden Sie das gleiche Sternchen (*)-Schema wie im Text."
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:166
+#: src/components/LernmoduleEditor.vue:182
 msgid "Gespeichert"
 msgstr ""
 
 #: src/components/FillInTheBlanksEditor.vue:21
 #: src/components/FillInTheBlanksEditor.vue:22
-#: src/components/FillInTheBlanksEditor.vue:33
+#: src/components/FillInTheBlanksEditor.vue:29
 msgid "Groß- und Kleinschreibung beachten"
 msgstr ""
 
@@ -411,36 +733,59 @@ msgstr ""
 msgid "Grunddaten"
 msgstr ""
 
+#: src/components/crossword/CrosswordEditor.vue:36
+msgid "Hinweis"
+msgstr ""
+
 #: src/components/QuestionEditor.vue:25
 #: src/components/QuestionEditor.vue:26
-#: src/components/QuestionEditor.vue:31
-#: src/components/QuestionEditor.vue:44
+#: src/components/QuestionEditor.vue:32
+#: src/components/QuestionEditor.vue:50
 msgid "Hinweis und Feedback"
 msgstr ""
 
-#: src/components/DragTheWordsEditor.vue:101
-#: src/components/DragTheWordsEditor.vue:111
-#: src/components/DragTheWordsEditor.vue:76
-#: src/components/DragTheWordsEditor.vue:77
-#: src/components/FillInTheBlanksEditor.vue:107
-#: src/components/FillInTheBlanksEditor.vue:75
-#: src/components/FillInTheBlanksEditor.vue:76
-#: src/components/FillInTheBlanksEditor.vue:97
+#: src/components/DragTheWordsEditor.vue:120
+#: src/components/DragTheWordsEditor.vue:137
+#: src/components/DragTheWordsEditor.vue:82
+#: src/components/DragTheWordsEditor.vue:83
+#: src/components/FillInTheBlanksEditor.vue:116
+#: src/components/FillInTheBlanksEditor.vue:131
+#: src/components/FillInTheBlanksEditor.vue:81
+#: src/components/FillInTheBlanksEditor.vue:82
 msgid "Hinweis, wenn nicht alle Lücken ausgefüllt sind:"
 msgstr ""
 
 #: src/components/QuestionEditor.vue:28
 #: src/components/QuestionEditor.vue:29
-#: src/components/QuestionEditor.vue:34
-#: src/components/QuestionEditor.vue:47
+#: src/components/QuestionEditor.vue:35
+#: src/components/QuestionEditor.vue:53
 msgid "Hinweis:"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:59
-#: src/components/interactiveVideo/SelectVideo.vue:79
-#: src/components/interactiveVideo/SelectVideo.vue:85
-#: src/components/interactiveVideo/SelectVideo.vue:9
+#: src/components/interactiveVideo/editor/SelectVideo.vue:59
+#: src/components/interactiveVideo/editor/SelectVideo.vue:79
+#: src/components/interactiveVideo/editor/SelectVideo.vue:85
+#: src/components/interactiveVideo/editor/SelectVideo.vue:9
 msgid "Hochgeladenes Video: "
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:44
+#: src/components/findTheWords/FindTheWordsEditor.vue:45
+#: src/components/findTheWords/FindTheWordsEditor.vue:70
+#: src/components/findTheWords/FindTheWordsEditor.vue:74
+#: src/components/findTheWords/FindTheWordsEditor.vue:78
+msgid "Horizontal nach links"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:39
+#: src/components/findTheWords/FindTheWordsEditor.vue:40
+#: src/components/findTheWords/FindTheWordsEditor.vue:65
+#: src/components/findTheWords/FindTheWordsEditor.vue:69
+msgid "Horizontal nach rechts"
+msgstr ""
+
+#: src/components/interactiveVideo/strings.ts:20
+msgid "Ihr Post konnte nicht gepostet werden."
 msgstr ""
 
 #: src/components/PairingEditorCard.vue:35
@@ -449,19 +794,18 @@ msgstr ""
 msgid "Inhalt"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:578
+#: src/models/TaskDefinition.ts:686
 msgid "Interactive Video"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:3
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:4
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:3
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:4
 msgid "Interaktion"
 msgstr ""
 
 #: src/components/DragTheWordsEditor.vue:16
 #: src/components/DragTheWordsEditor.vue:17
-#: src/components/DragTheWordsEditor.vue:22
-#: src/components/DragTheWordsEditor.vue:28
+#: src/components/DragTheWordsEditor.vue:24
 msgid "Irreführende Antworten"
 msgstr ""
 
@@ -498,6 +842,7 @@ msgstr ""
 #: src/components/MemoryEditor.vue:46
 #: src/components/MemoryEditor.vue:47
 #: src/components/MemoryEditor.vue:67
+#: src/components/MemoryEditor.vue:71
 msgid "Karten in einem Quadrat positionieren"
 msgstr ""
 
@@ -515,45 +860,85 @@ msgstr ""
 msgid "Keine Karte ausgewählt"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:4
-#: src/components/interactiveVideo/SelectVideo.vue:5
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:66
+msgid "Kommentar löschen"
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:32
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:33
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:418
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:58
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:61
+msgid "Kommentieren"
+msgstr ""
+
+#: src/components/findTheHotspots/ImageWithHotspots.vue:29
+#: src/components/findTheHotspots/ImageWithHotspots.vue:30
+#: src/components/findTheHotspots/ImageWithHotspots.vue:66
+#: src/components/findTheHotspots/ImageWithHotspots.vue:73
+msgid "Korrekt"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectVideo.vue:4
+#: src/components/interactiveVideo/editor/SelectVideo.vue:5
 msgid "Lade ein Video hoch oder füge einen Link zu einem Youtube-Video ein."
 msgstr ""
 
-#: src/components/interactiveVideo/VideoPlayer.vue:50
-#: src/components/interactiveVideo/VideoTimeline.vue:76
+#: src/components/crossword/CrosswordEditor.vue:123
+#: src/components/crossword/CrosswordEditor.vue:127
+#: src/components/crossword/CrosswordEditor.vue:69
+#: src/components/crossword/CrosswordEditor.vue:70
+msgid "Leere Felder einfärben:"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/VideoTimeline.vue:76
+#: src/components/interactiveVideo/VideoPlayer.vue:21
+#: src/components/interactiveVideo/VideoPlayer.vue:22
+#: src/components/interactiveVideo/VideoPlayer.vue:57
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:403
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:435
 msgid "Löschen"
+msgstr ""
+
+#: src/components/crossword/CrosswordEditor.vue:42
+msgid "Lösung"
 msgstr ""
 
 #: src/components/DragTheWordsEditor.vue:42
 #: src/components/DragTheWordsEditor.vue:43
 #: src/components/DragTheWordsEditor.vue:57
+#: src/components/DragTheWordsEditor.vue:69
 #: src/components/FillInTheBlanksEditor.vue:41
 #: src/components/FillInTheBlanksEditor.vue:42
-#: src/components/FillInTheBlanksEditor.vue:53
+#: src/components/FillInTheBlanksEditor.vue:49
+#: src/components/FillInTheBlanksEditor.vue:65
 #: src/components/MarkTheWordsEditor.vue:27
 #: src/components/MarkTheWordsEditor.vue:28
+#: src/components/MarkTheWordsEditor.vue:35
 #: src/components/MarkTheWordsEditor.vue:39
 #: src/components/PairingEditor.vue:37
 #: src/components/PairingEditor.vue:38
 #: src/components/PairingEditor.vue:62
-#: src/components/QuestionEditor.vue:100
-#: src/components/QuestionEditor.vue:69
-#: src/components/QuestionEditor.vue:70
+#: src/components/PairingEditor.vue:66
+#: src/components/QuestionEditor.vue:122
+#: src/components/QuestionEditor.vue:134
+#: src/components/QuestionEditor.vue:85
+#: src/components/QuestionEditor.vue:86
 #: src/components/SequencingEditor.vue:49
 #: src/components/SequencingEditor.vue:50
 #: src/components/SequencingEditor.vue:68
+#: src/components/SequencingEditor.vue:76
 msgid "Lösungen anzeigen erlauben"
 msgstr ""
 
-#: src/components/DragTheWordsEditor.vue:48
-#: src/components/DragTheWordsEditor.vue:49
-#: src/components/DragTheWordsEditor.vue:63
-#: src/components/DragTheWordsEditor.vue:67
-#: src/components/FillInTheBlanksEditor.vue:47
-#: src/components/FillInTheBlanksEditor.vue:48
-#: src/components/FillInTheBlanksEditor.vue:59
-#: src/components/FillInTheBlanksEditor.vue:63
+#: src/components/DragTheWordsEditor.vue:50
+#: src/components/DragTheWordsEditor.vue:51
+#: src/components/DragTheWordsEditor.vue:65
+#: src/components/DragTheWordsEditor.vue:79
+#: src/components/FillInTheBlanksEditor.vue:49
+#: src/components/FillInTheBlanksEditor.vue:50
+#: src/components/FillInTheBlanksEditor.vue:57
+#: src/components/FillInTheBlanksEditor.vue:75
 msgid "Lösungen nur anzeigen, wenn alle Lücken ausgefüllt sind"
 msgstr ""
 
@@ -569,65 +954,73 @@ msgstr ""
 #: src/components/DragTheWordsEditor.vue:42
 #: src/components/FillInTheBlanksEditor.vue:31
 #: src/components/FillInTheBlanksEditor.vue:32
-#: src/components/FillInTheBlanksEditor.vue:43
+#: src/components/FillInTheBlanksEditor.vue:39
+#: src/components/FillInTheBlanksEditor.vue:47
 msgid "Lücken automatisch prüfen"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:46
-#: src/components/LernmoduleEditor.vue:47
+#: src/components/LernmoduleEditor.vue:59
 #: src/components/LernmoduleEditor.vue:60
-#: src/components/LernmoduleEditor.vue:64
+#: src/components/LernmoduleEditor.vue:73
+#: src/components/LernmoduleEditor.vue:80
 #: src/components/MarkTheWordsEditor.vue:4
 #: src/components/MarkTheWordsEditor.vue:5
 msgid "Mark the Words"
 msgstr ""
 
-#: src/models/TaskDefinition.ts:586
+#: src/models/TaskDefinition.ts:694
 msgid "Mark The Words"
 msgstr ""
 
-#: src/components/MarkTheWordsEditor.vue:167
+#: src/components/MarkTheWordsEditor.vue:220
 msgid "Markieren Sie ein Wort als Lösung, indem Sie ein Sternchen (*) vor und hinter dem Wort setzen oder markieren Sie ein Wort und klicken Sie den „Richtiges Wort markieren“–Button."
 msgstr ""
 
 #: src/components/DragTheWordsEditor.vue:37
 #: src/components/DragTheWordsEditor.vue:38
 #: src/components/DragTheWordsEditor.vue:52
+#: src/components/DragTheWordsEditor.vue:60
 #: src/components/FillInTheBlanksEditor.vue:36
 #: src/components/FillInTheBlanksEditor.vue:37
-#: src/components/FillInTheBlanksEditor.vue:48
+#: src/components/FillInTheBlanksEditor.vue:44
+#: src/components/FillInTheBlanksEditor.vue:56
 #: src/components/MarkTheWordsEditor.vue:22
 #: src/components/MarkTheWordsEditor.vue:23
-#: src/components/MarkTheWordsEditor.vue:34
+#: src/components/MarkTheWordsEditor.vue:30
 #: src/components/MemoryEditor.vue:41
 #: src/components/MemoryEditor.vue:42
 #: src/components/MemoryEditor.vue:62
 #: src/components/PairingEditor.vue:32
 #: src/components/PairingEditor.vue:33
 #: src/components/PairingEditor.vue:57
-#: src/components/QuestionEditor.vue:64
-#: src/components/QuestionEditor.vue:65
-#: src/components/QuestionEditor.vue:95
+#: src/components/QuestionEditor.vue:117
+#: src/components/QuestionEditor.vue:125
+#: src/components/QuestionEditor.vue:80
+#: src/components/QuestionEditor.vue:81
 #: src/components/SequencingEditor.vue:39
 #: src/components/SequencingEditor.vue:40
 #: src/components/SequencingEditor.vue:58
 msgid "Mehrere Versuche erlauben"
 msgstr ""
 
-#: src/components/QuestionEditor.vue:54
-#: src/components/QuestionEditor.vue:55
-#: src/components/QuestionEditor.vue:85
+#: src/components/QuestionEditor.vue:107
+#: src/components/QuestionEditor.vue:70
+#: src/components/QuestionEditor.vue:71
 msgid "Mehrfachauswahl erlauben"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:47
-#: src/components/LernmoduleEditor.vue:48
+#: src/components/LernmoduleEditor.vue:60
 #: src/components/LernmoduleEditor.vue:61
-#: src/components/LernmoduleEditor.vue:65
+#: src/components/LernmoduleEditor.vue:74
+#: src/components/LernmoduleEditor.vue:81
 #: src/components/MemoryEditor.vue:4
 #: src/components/MemoryEditor.vue:5
-#: src/models/TaskDefinition.ts:588
+#: src/models/TaskDefinition.ts:696
 msgid "Memory"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:326
+msgid "Minimum %{ characters } da ein Wort mit %{ characters } Zeichen existiert"
 msgstr ""
 
 #: src/components/FeedbackEditor.vue:27
@@ -637,7 +1030,7 @@ msgstr ""
 msgid "Mitteilung"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:164
+#: src/components/LernmoduleEditor.vue:180
 msgid "Modifiziert"
 msgstr ""
 
@@ -645,18 +1038,18 @@ msgstr ""
 msgid "Moved %1 to position %2."
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:101
-#: src/components/interactiveVideo/SelectVideo.vue:127
-#: src/components/interactiveVideo/SelectVideo.vue:132
-#: src/components/interactiveVideo/SelectVideo.vue:137
-#: src/components/interactiveVideo/SelectVideo.vue:51
+#: src/components/interactiveVideo/editor/SelectVideo.vue:100
+#: src/components/interactiveVideo/editor/SelectVideo.vue:126
+#: src/components/interactiveVideo/editor/SelectVideo.vue:131
+#: src/components/interactiveVideo/editor/SelectVideo.vue:141
+#: src/components/interactiveVideo/editor/SelectVideo.vue:50
 msgid "Navigation deaktivieren"
 msgstr ""
 
-#: src/components/QuestionEditor.vue:178
-#: src/components/QuestionEditor.vue:45
-#: src/components/QuestionEditor.vue:46
-#: src/components/QuestionEditor.vue:76
+#: src/components/QuestionEditor.vue:300
+#: src/components/QuestionEditor.vue:61
+#: src/components/QuestionEditor.vue:62
+#: src/components/QuestionEditor.vue:98
 msgid "Neue Antwort"
 msgstr ""
 
@@ -666,25 +1059,44 @@ msgstr ""
 msgid "Neuer Bereich"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:16
-#: src/components/interactiveVideo/SelectVideo.vue:17
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:29
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:30
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:77
+msgid "Neues Bild hochladen"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectVideo.vue:16
+#: src/components/interactiveVideo/editor/SelectVideo.vue:17
 msgid "Neues Video hochladen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:104
-#: src/components/interactiveVideo/SelectVideo.vue:130
-#: src/components/interactiveVideo/SelectVideo.vue:135
-#: src/components/interactiveVideo/SelectVideo.vue:140
-#: src/components/interactiveVideo/SelectVideo.vue:54
+#: src/components/crossword/CrosswordEditor.vue:23
+#: src/components/crossword/CrosswordEditor.vue:24
+#: src/components/crossword/CrosswordEditor.vue:28
+#: src/components/crossword/CrosswordEditor.vue:54
+msgid "Neues Wort hinzufügen"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectVideo.vue:103
+#: src/components/interactiveVideo/editor/SelectVideo.vue:129
+#: src/components/interactiveVideo/editor/SelectVideo.vue:134
+#: src/components/interactiveVideo/editor/SelectVideo.vue:144
+#: src/components/interactiveVideo/editor/SelectVideo.vue:147
+#: src/components/interactiveVideo/editor/SelectVideo.vue:53
 msgid "Nicht deaktiviert"
 msgstr ""
 
-#: src/components/courseware-components-ported-to-vue3/FilePicker.vue:2
-#: src/components/courseware-components-ported-to-vue3/FilePicker.vue:3
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:425
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:451
+msgid "Nutzerprofil öffnen"
+msgstr ""
+
+#: src/components/studip/FilePicker.vue:2
+#: src/components/studip/FilePicker.vue:3
 msgid "Ordner-Filter"
 msgstr ""
 
-#: src/components/MemoryEditor.vue:260
+#: src/components/MemoryEditor.vue:312
 #: src/components/PairingEditor.vue:15
 #: src/components/PairingEditor.vue:16
 #: src/components/PairingEditor.vue:27
@@ -695,13 +1107,13 @@ msgstr ""
 msgid "Paar löschen"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:48
-#: src/components/LernmoduleEditor.vue:49
+#: src/components/LernmoduleEditor.vue:61
 #: src/components/LernmoduleEditor.vue:62
-#: src/components/LernmoduleEditor.vue:66
+#: src/components/LernmoduleEditor.vue:75
+#: src/components/LernmoduleEditor.vue:82
 #: src/components/PairingEditor.vue:4
 #: src/components/PairingEditor.vue:5
-#: src/models/TaskDefinition.ts:590
+#: src/models/TaskDefinition.ts:698
 msgid "Pairing"
 msgstr ""
 
@@ -709,28 +1121,82 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: src/components/interactiveVideo/AddInteractions.vue:58
+#: src/components/interactiveVideo/editor/AddInteractions.vue:58
 msgid "Pausieren"
 msgstr ""
 
-#: src/components/courseware-components-ported-to-vue3/FolderPicker.vue:110
+#: src/components/studip/FolderPicker.vue:107
 msgid "Persönlicher Dateibereich"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:49
-#: src/components/LernmoduleEditor.vue:50
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:41
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:42
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:45
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:53
+msgid "Post abschicken"
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:141
+msgid "Post löschen"
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:40
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:41
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:44
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:52
+msgid "Post updaten"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:12
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:13
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:17
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:21
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:107
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:70
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:71
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:97
+#: src/models/TaskDefinition.ts:401
+msgid "Projektbeschreibung"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:13
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:8
+#: src/components/interactiveVideo/editor/ConfigureTravisGo.vue:9
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:103
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:66
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:67
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:93
+#: src/models/TaskDefinition.ts:400
+msgid "Projekttitel"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:62
 #: src/components/LernmoduleEditor.vue:63
-#: src/components/LernmoduleEditor.vue:67
+#: src/components/LernmoduleEditor.vue:76
+#: src/components/LernmoduleEditor.vue:83
 #: src/components/QuestionEditor.vue:4
 #: src/components/QuestionEditor.vue:5
-#: src/models/TaskDefinition.ts:592
+#: src/models/TaskDefinition.ts:700
 msgid "Question"
+msgstr ""
+
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:16
+msgid "Rechteckigen Hotspot hinzufügen"
 msgstr ""
 
 #: src/components/FillInTheBlanksEditor.vue:26
 #: src/components/FillInTheBlanksEditor.vue:27
+#: src/components/FillInTheBlanksEditor.vue:34
 #: src/components/FillInTheBlanksEditor.vue:38
 msgid "Rechtschreib- und Tippfehler ignorieren"
+msgstr ""
+
+#: src/components/crossword/CrosswordEditor.vue:48
+#: src/components/crossword/CrosswordEditor.vue:49
+#: src/components/crossword/CrosswordEditor.vue:53
+#: src/components/crossword/CrosswordEditor.vue:83
+#: src/components/crossword/CrosswordEditor.vue:94
+msgid "Reihe"
 msgstr ""
 
 #: src/components/MarkTheWordsEditor.vue:8
@@ -738,9 +1204,17 @@ msgstr ""
 msgid "Richtiges Wort markieren"
 msgstr ""
 
+#: src/components/crossword/CrosswordEditor.vue:31
+#: src/components/crossword/CrosswordEditor.vue:32
+#: src/components/crossword/CrosswordEditor.vue:36
+#: src/components/crossword/CrosswordEditor.vue:66
+msgid "Richtung"
+msgstr ""
+
 #: src/components/MemoryEditor.vue:49
 #: src/components/MemoryEditor.vue:50
 #: src/components/MemoryEditor.vue:70
+#: src/components/MemoryEditor.vue:78
 msgid "Rückseite"
 msgstr ""
 
@@ -748,21 +1222,45 @@ msgstr ""
 msgid "Rückseite einer Memory Karte."
 msgstr ""
 
-#: src/components/interactiveVideo/VideoPlayer.vue:102
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:40
+msgid "Runden Hotspot hinzufügen"
+msgstr ""
+
 #: src/components/interactiveVideo/VideoPlayer.vue:105
-#: src/components/interactiveVideo/VideoPlayer.vue:37
-#: src/components/interactiveVideo/VideoPlayer.vue:98
+#: src/components/interactiveVideo/VideoPlayer.vue:109
+#: src/components/interactiveVideo/VideoPlayer.vue:112
+#: src/components/interactiveVideo/VideoPlayer.vue:44
 msgid "Schließen"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:50
-#: src/components/LernmoduleEditor.vue:51
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:99
+msgid "Schreibe einen Kommentar..."
+msgstr ""
+
+#: src/components/crossword/CrosswordEditor.vue:37
+#: src/components/crossword/CrosswordEditor.vue:38
+#: src/components/crossword/CrosswordEditor.vue:42
+#: src/components/crossword/CrosswordEditor.vue:72
+#: src/components/crossword/CrosswordEditor.vue:75
+msgid "Senkrecht"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:63
 #: src/components/LernmoduleEditor.vue:64
-#: src/components/LernmoduleEditor.vue:68
+#: src/components/LernmoduleEditor.vue:77
+#: src/components/LernmoduleEditor.vue:84
 #: src/components/SequencingEditor.vue:4
 #: src/components/SequencingEditor.vue:5
-#: src/models/TaskDefinition.ts:594
+#: src/models/TaskDefinition.ts:702
 msgid "Sequencing"
+msgstr ""
+
+#: src/components/crossword/CrosswordEditor.vue:42
+#: src/components/crossword/CrosswordEditor.vue:43
+#: src/components/crossword/CrosswordEditor.vue:47
+#: src/components/crossword/CrosswordEditor.vue:77
+#: src/components/crossword/CrosswordEditor.vue:80
+msgid "Spalte"
 msgstr ""
 
 #: src/components/CoursewareBlock.vue:12
@@ -770,23 +1268,33 @@ msgstr ""
 #: src/components/CoursewareBlock.vue:18
 #: src/components/CoursewareBlock.vue:21
 #: src/components/LernmoduleEditor.vue:11
-#: src/components/LernmoduleEditor.vue:59
 #: src/components/LernmoduleEditor.vue:6
-#: src/components/LernmoduleEditor.vue:60
 #: src/components/LernmoduleEditor.vue:7
-#: src/components/LernmoduleEditor.vue:77
-#: src/components/LernmoduleEditor.vue:80
+#: src/components/LernmoduleEditor.vue:72
+#: src/components/LernmoduleEditor.vue:73
+#: src/components/LernmoduleEditor.vue:93
+#: src/components/LernmoduleEditor.vue:96
 msgid "Speichern"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:13
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:14
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:13
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:14
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:11
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:12
 msgid "Start"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:13
-#: src/components/interactiveVideo/SelectVideo.vue:14
+#: src/components/interactiveVideo/editor/SelectVideo.vue:13
+#: src/components/interactiveVideo/editor/SelectVideo.vue:14
 msgid "Stud.IP-Video"
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:91
+msgid "Suche"
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:97
+msgid "Suche zurücksetzen"
 msgstr ""
 
 #: src/components/PairingEditorCard.vue:11
@@ -794,91 +1302,131 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
+#: src/components/SequencingEditor.vue:109
 #: src/components/SequencingEditor.vue:67
 #: src/components/SequencingEditor.vue:68
-#: src/components/SequencingEditor.vue:89
-#: src/components/SequencingEditor.vue:93
+#: src/components/SequencingEditor.vue:98
 msgid "Text für Fortsetzen-Button:"
 msgstr ""
 
-#: src/components/DragTheWordsEditor.vue:100
-#: src/components/DragTheWordsEditor.vue:67
-#: src/components/DragTheWordsEditor.vue:68
-#: src/components/DragTheWordsEditor.vue:92
-#: src/components/FillInTheBlanksEditor.vue:66
-#: src/components/FillInTheBlanksEditor.vue:67
-#: src/components/FillInTheBlanksEditor.vue:88
-#: src/components/FillInTheBlanksEditor.vue:96
-#: src/components/MarkTheWordsEditor.vue:45
-#: src/components/MarkTheWordsEditor.vue:46
-#: src/components/MarkTheWordsEditor.vue:60
-#: src/components/MarkTheWordsEditor.vue:64
-#: src/components/PairingEditor.vue:55
-#: src/components/PairingEditor.vue:56
-#: src/components/PairingEditor.vue:83
-#: src/components/PairingEditor.vue:87
-#: src/components/QuestionEditor.vue:121
-#: src/components/QuestionEditor.vue:125
-#: src/components/QuestionEditor.vue:87
-#: src/components/QuestionEditor.vue:88
-#: src/components/SequencingEditor.vue:102
-#: src/components/SequencingEditor.vue:72
-#: src/components/SequencingEditor.vue:73
-#: src/components/SequencingEditor.vue:94
+#: src/components/crossword/CrosswordEditor.vue:142
+#: src/components/crossword/CrosswordEditor.vue:158
+#: src/components/crossword/CrosswordEditor.vue:88
+#: src/components/crossword/CrosswordEditor.vue:89
+#: src/components/DragTheWordsEditor.vue:109
+#: src/components/DragTheWordsEditor.vue:121
+#: src/components/DragTheWordsEditor.vue:71
+#: src/components/DragTheWordsEditor.vue:72
+#: src/components/FillInTheBlanksEditor.vue:105
+#: src/components/FillInTheBlanksEditor.vue:115
+#: src/components/FillInTheBlanksEditor.vue:70
+#: src/components/FillInTheBlanksEditor.vue:71
+#: src/components/MarkTheWordsEditor.vue:47
+#: src/components/MarkTheWordsEditor.vue:48
+#: src/components/MarkTheWordsEditor.vue:63
+#: src/components/MarkTheWordsEditor.vue:72
+#: src/components/PairingEditor.vue:57
+#: src/components/PairingEditor.vue:58
+#: src/components/PairingEditor.vue:90
+#: src/components/PairingEditor.vue:99
+#: src/components/QuestionEditor.vue:105
+#: src/components/QuestionEditor.vue:106
+#: src/components/QuestionEditor.vue:158
+#: src/components/QuestionEditor.vue:167
+#: src/components/SequencingEditor.vue:105
+#: src/components/SequencingEditor.vue:121
+#: src/components/SequencingEditor.vue:74
+#: src/components/SequencingEditor.vue:75
 msgid "Text für Lösungen-Button:"
 msgstr ""
 
-#: src/components/DragTheWordsEditor.vue:57
-#: src/components/DragTheWordsEditor.vue:58
-#: src/components/DragTheWordsEditor.vue:82
-#: src/components/FillInTheBlanksEditor.vue:56
-#: src/components/FillInTheBlanksEditor.vue:57
-#: src/components/FillInTheBlanksEditor.vue:78
+#: src/components/crossword/CrosswordEditor.vue:128
+#: src/components/crossword/CrosswordEditor.vue:136
+#: src/components/crossword/CrosswordEditor.vue:74
+#: src/components/crossword/CrosswordEditor.vue:75
+#: src/components/DragTheWordsEditor.vue:59
+#: src/components/DragTheWordsEditor.vue:60
+#: src/components/DragTheWordsEditor.vue:97
+#: src/components/FillInTheBlanksEditor.vue:58
+#: src/components/FillInTheBlanksEditor.vue:59
+#: src/components/FillInTheBlanksEditor.vue:93
+#: src/components/findTheWords/FindTheWordsEditor.vue:152
+#: src/components/findTheWords/FindTheWordsEditor.vue:156
+#: src/components/findTheWords/FindTheWordsEditor.vue:90
+#: src/components/findTheWords/FindTheWordsEditor.vue:91
 #: src/components/MarkTheWordsEditor.vue:35
 #: src/components/MarkTheWordsEditor.vue:36
-#: src/components/MarkTheWordsEditor.vue:50
+#: src/components/MarkTheWordsEditor.vue:51
 #: src/components/PairingEditor.vue:45
 #: src/components/PairingEditor.vue:46
-#: src/components/PairingEditor.vue:73
-#: src/components/QuestionEditor.vue:111
-#: src/components/QuestionEditor.vue:77
-#: src/components/QuestionEditor.vue:78
+#: src/components/PairingEditor.vue:78
+#: src/components/QuestionEditor.vue:146
+#: src/components/QuestionEditor.vue:93
+#: src/components/QuestionEditor.vue:94
 #: src/components/SequencingEditor.vue:57
 #: src/components/SequencingEditor.vue:58
-#: src/components/SequencingEditor.vue:79
+#: src/components/SequencingEditor.vue:88
 msgid "Text für Überprüfen-Button:"
 msgstr ""
 
-#: src/components/DragTheWordsEditor.vue:62
-#: src/components/DragTheWordsEditor.vue:63
-#: src/components/DragTheWordsEditor.vue:87
-#: src/components/DragTheWordsEditor.vue:91
-#: src/components/FillInTheBlanksEditor.vue:61
-#: src/components/FillInTheBlanksEditor.vue:62
-#: src/components/FillInTheBlanksEditor.vue:83
-#: src/components/FillInTheBlanksEditor.vue:87
+#: src/components/crossword/CrosswordEditor.vue:135
+#: src/components/crossword/CrosswordEditor.vue:147
+#: src/components/crossword/CrosswordEditor.vue:81
+#: src/components/crossword/CrosswordEditor.vue:82
+#: src/components/DragTheWordsEditor.vue:102
+#: src/components/DragTheWordsEditor.vue:109
+#: src/components/DragTheWordsEditor.vue:64
+#: src/components/DragTheWordsEditor.vue:65
+#: src/components/FillInTheBlanksEditor.vue:103
+#: src/components/FillInTheBlanksEditor.vue:63
+#: src/components/FillInTheBlanksEditor.vue:64
+#: src/components/FillInTheBlanksEditor.vue:98
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:148
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:75
+#: src/components/findTheHotspots/FindTheHotspotsEditor.vue:76
+#: src/components/findTheWords/FindTheWordsEditor.vue:157
+#: src/components/findTheWords/FindTheWordsEditor.vue:165
+#: src/components/findTheWords/FindTheWordsEditor.vue:95
+#: src/components/findTheWords/FindTheWordsEditor.vue:96
 #: src/components/MarkTheWordsEditor.vue:40
 #: src/components/MarkTheWordsEditor.vue:41
-#: src/components/MarkTheWordsEditor.vue:55
-#: src/components/MemoryEditor.vue:66
-#: src/components/MemoryEditor.vue:67
-#: src/components/MemoryEditor.vue:99
+#: src/components/MarkTheWordsEditor.vue:56
+#: src/components/MarkTheWordsEditor.vue:60
+#: src/components/MemoryEditor.vue:110
+#: src/components/MemoryEditor.vue:69
+#: src/components/MemoryEditor.vue:70
 #: src/components/PairingEditor.vue:50
 #: src/components/PairingEditor.vue:51
-#: src/components/PairingEditor.vue:78
-#: src/components/QuestionEditor.vue:116
-#: src/components/QuestionEditor.vue:82
-#: src/components/QuestionEditor.vue:83
+#: src/components/PairingEditor.vue:83
+#: src/components/PairingEditor.vue:87
+#: src/components/QuestionEditor.vue:151
+#: src/components/QuestionEditor.vue:155
+#: src/components/QuestionEditor.vue:98
+#: src/components/QuestionEditor.vue:99
 #: src/components/SequencingEditor.vue:62
 #: src/components/SequencingEditor.vue:63
-#: src/components/SequencingEditor.vue:84
+#: src/components/SequencingEditor.vue:93
+#: src/components/SequencingEditor.vue:97
 msgid "Text für Wiederholen-Button:"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:100
+#: src/components/findTheWords/FindTheWordsEditor.vue:101
+#: src/components/findTheWords/FindTheWordsEditor.vue:162
+#: src/components/findTheWords/FindTheWordsEditor.vue:174
+msgid "Text für Zeitanzeige:"
 msgstr ""
 
 #: src/components/LernmoduleEditor.vue:29
 #: src/components/LernmoduleEditor.vue:30
 #: src/components/LernmoduleEditor.vue:37
 msgid "Titel"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:145
+#: src/components/findTheWords/FindTheWordsEditor.vue:83
+#: src/components/findTheWords/FindTheWordsEditor.vue:84
+msgid "Titel der Wortliste:"
 msgstr ""
 
 #: src/components/FeedbackEditor.vue:33
@@ -895,18 +1443,18 @@ msgstr ""
 msgid "Typ"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:25
-#: src/components/interactiveVideo/SelectVideo.vue:26
-#: src/components/interactiveVideo/SelectVideo.vue:33
-#: src/components/interactiveVideo/SelectVideo.vue:44
-#: src/components/interactiveVideo/SelectVideo.vue:45
-#: src/components/interactiveVideo/SelectVideo.vue:56
-#: src/components/interactiveVideo/SelectVideo.vue:60
+#: src/components/interactiveVideo/editor/SelectVideo.vue:25
+#: src/components/interactiveVideo/editor/SelectVideo.vue:26
+#: src/components/interactiveVideo/editor/SelectVideo.vue:33
+#: src/components/interactiveVideo/editor/SelectVideo.vue:44
+#: src/components/interactiveVideo/editor/SelectVideo.vue:45
+#: src/components/interactiveVideo/editor/SelectVideo.vue:56
+#: src/components/interactiveVideo/editor/SelectVideo.vue:60
 msgid "Übernehmen"
 msgstr ""
 
-#: src/components/DragTheWordsEditor.vue:173
-#: src/components/FillInTheBlanksEditor.vue:166
+#: src/components/DragTheWordsEditor.vue:214
+#: src/components/FillInTheBlanksEditor.vue:208
 msgid "Um eine Lücke zu erstellen, setzen Sie ein Sternchen (*) vor und hinter das korrekte Wort oder markieren Sie das Wort und klicken Sie auf den Button „Lücke hinzufügen“. Sie können auch einen Tooltip hinzufügen, indem Sie einen Doppelpunkt (:) vor den Tooltip-Text schreiben."
 msgstr ""
 
@@ -914,112 +1462,199 @@ msgstr ""
 msgid "Umgedrehte Karten:"
 msgstr ""
 
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:312
+msgid "Unbekannt"
+msgstr ""
+
 #: src/components/PairingEditorCard.vue:126
-#: src/components/SequencingEditorCard.vue:148
+#: src/components/SequencingEditorCard.vue:157
 msgid "Ungültiges MultimediaElementType: "
 msgstr ""
 
-#: src/components/interactiveVideo/AddInteractions.vue:40
+#: src/components/interactiveVideo/editor/AddInteractions.vue:40
 msgid "Vergrößern"
 msgstr ""
 
-#: src/components/interactiveVideo/AddInteractions.vue:46
+#: src/components/interactiveVideo/editor/AddInteractions.vue:46
 msgid "Verkleinern"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:21
-#: src/components/interactiveVideo/SelectVideo.vue:71
-#: src/components/interactiveVideo/SelectVideo.vue:91
-#: src/components/interactiveVideo/SelectVideo.vue:97
+#: src/components/findTheWords/FindTheWordsEditor.vue:54
+#: src/components/findTheWords/FindTheWordsEditor.vue:55
+#: src/components/findTheWords/FindTheWordsEditor.vue:80
+#: src/components/findTheWords/FindTheWordsEditor.vue:84
+#: src/components/findTheWords/FindTheWordsEditor.vue:96
+msgid "Vertikal nach oben"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:49
+#: src/components/findTheWords/FindTheWordsEditor.vue:50
+#: src/components/findTheWords/FindTheWordsEditor.vue:75
+#: src/components/findTheWords/FindTheWordsEditor.vue:79
+#: src/components/findTheWords/FindTheWordsEditor.vue:87
+msgid "Vertikal nach unten"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectVideo.vue:21
+#: src/components/interactiveVideo/editor/SelectVideo.vue:71
+#: src/components/interactiveVideo/editor/SelectVideo.vue:91
+#: src/components/interactiveVideo/editor/SelectVideo.vue:97
 msgid "Video löschen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:35
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:36
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:56
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:35
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:36
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:56
 msgid "Video pausieren"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:20
-#: src/components/interactiveVideo/SelectVideo.vue:21
-#: src/components/interactiveVideo/SelectVideo.vue:24
+#: src/components/interactiveVideo/editor/SelectVideo.vue:20
+#: src/components/interactiveVideo/editor/SelectVideo.vue:21
+#: src/components/interactiveVideo/editor/SelectVideo.vue:24
 msgid "Vorhandenes Video auswählen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:57
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:58
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:84
-#: src/components/interactiveVideo/SelectedInteractionProperties.vue:88
-#: src/components/interactiveVideo/VideoPlayer.vue:37
-#: src/components/LernmoduleEditor.vue:73
-#: src/components/LernmoduleEditor.vue:74
-#: src/components/LernmoduleEditor.vue:91
-#: src/components/LernmoduleEditor.vue:98
+#: src/components/crossword/CrosswordEditor.vue:185
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:60
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:61
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:87
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:89
+#: src/components/interactiveVideo/editor/SelectedInteractionProperties.vue:93
+#: src/components/interactiveVideo/VideoPlayer.vue:41
+#: src/components/LernmoduleEditor.vue:107
+#: src/components/LernmoduleEditor.vue:114
+#: src/components/LernmoduleEditor.vue:86
+#: src/components/LernmoduleEditor.vue:87
 msgid "Vorschau"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:62
-#: src/components/LernmoduleEditor.vue:63
-#: src/components/LernmoduleEditor.vue:80
-#: src/components/LernmoduleEditor.vue:83
-#: src/components/LernmoduleEditor.vue:87
+#: src/components/LernmoduleEditor.vue:103
+#: src/components/LernmoduleEditor.vue:75
+#: src/components/LernmoduleEditor.vue:76
+#: src/components/LernmoduleEditor.vue:96
+#: src/components/LernmoduleEditor.vue:99
 msgid "Vorschau zurücksetzen"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:107
-#: src/components/interactiveVideo/SelectVideo.vue:133
-#: src/components/interactiveVideo/SelectVideo.vue:138
-#: src/components/interactiveVideo/SelectVideo.vue:143
-#: src/components/interactiveVideo/SelectVideo.vue:57
+#: src/components/interactiveVideo/editor/SelectVideo.vue:106
+#: src/components/interactiveVideo/editor/SelectVideo.vue:132
+#: src/components/interactiveVideo/editor/SelectVideo.vue:137
+#: src/components/interactiveVideo/editor/SelectVideo.vue:147
+#: src/components/interactiveVideo/editor/SelectVideo.vue:150
+#: src/components/interactiveVideo/editor/SelectVideo.vue:56
 msgid "Vorspulen deaktiviert"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:110
-#: src/components/interactiveVideo/SelectVideo.vue:136
-#: src/components/interactiveVideo/SelectVideo.vue:141
-#: src/components/interactiveVideo/SelectVideo.vue:146
-#: src/components/interactiveVideo/SelectVideo.vue:60
+#: src/components/interactiveVideo/editor/SelectVideo.vue:109
+#: src/components/interactiveVideo/editor/SelectVideo.vue:135
+#: src/components/interactiveVideo/editor/SelectVideo.vue:140
+#: src/components/interactiveVideo/editor/SelectVideo.vue:150
+#: src/components/interactiveVideo/editor/SelectVideo.vue:153
+#: src/components/interactiveVideo/editor/SelectVideo.vue:59
 msgid "Vorspulen und Rückspulen deaktiviert"
 msgstr ""
 
-#: src/components/LernmoduleEditor.vue:169
+#: src/components/crossword/CrosswordEditor.vue:34
+#: src/components/crossword/CrosswordEditor.vue:35
+#: src/components/crossword/CrosswordEditor.vue:39
+#: src/components/crossword/CrosswordEditor.vue:69
+#: src/components/crossword/CrosswordEditor.vue:72
+msgid "Waagerecht"
+msgstr ""
+
+#: src/components/LernmoduleEditor.vue:185
 msgid "Wird gespeichert..."
 msgstr ""
 
-#: src/components/FindTheWordsEditor.vue:8
-msgid "Wort hinzufügen"
+#: src/components/crossword/CrosswordEditor.vue:27
+#: src/components/crossword/CrosswordEditor.vue:28
+#: src/components/crossword/CrosswordEditor.vue:32
+#: src/components/crossword/CrosswordEditor.vue:62
+msgid "Wort bearbeiten"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:39
-#: src/components/interactiveVideo/SelectVideo.vue:40
-#: src/components/interactiveVideo/SelectVideo.vue:51
+#: src/components/findTheWords/FindTheWordsEditor.vue:275
+msgid "Wörter dürfen nicht länger als 20 Zeichen sein."
+msgstr ""
+
+#: src/components/crossword/CrosswordEditor.vue:6
+msgid "Wörter eingeben"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:32
+#: src/components/findTheWords/FindTheWordsEditor.vue:33
+#: src/components/findTheWords/FindTheWordsEditor.vue:58
+msgid "Wortliste anzeigen"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:36
+#: src/components/findTheWords/FindTheWordsEditor.vue:37
+#: src/components/findTheWords/FindTheWordsEditor.vue:62
+#: src/components/findTheWords/FindTheWordsEditor.vue:66
+msgid "Wortrichtungen"
+msgstr ""
+
+#: src/components/interactiveVideo/editor/SelectVideo.vue:39
+#: src/components/interactiveVideo/editor/SelectVideo.vue:40
+#: src/components/interactiveVideo/editor/SelectVideo.vue:51
 msgid "Youtube-URL"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:36
-#: src/components/interactiveVideo/SelectVideo.vue:37
-#: src/components/interactiveVideo/SelectVideo.vue:48
+#: src/components/interactiveVideo/editor/SelectVideo.vue:36
+#: src/components/interactiveVideo/editor/SelectVideo.vue:37
+#: src/components/interactiveVideo/editor/SelectVideo.vue:48
 msgid "Youtube-Video"
 msgstr ""
 
-#: src/components/interactiveVideo/SelectVideo.vue:4
-#: src/components/interactiveVideo/SelectVideo.vue:54
-#: src/components/interactiveVideo/SelectVideo.vue:74
-#: src/components/interactiveVideo/SelectVideo.vue:79
+#: src/components/interactiveVideo/editor/SelectVideo.vue:4
+#: src/components/interactiveVideo/editor/SelectVideo.vue:54
+#: src/components/interactiveVideo/editor/SelectVideo.vue:74
+#: src/components/interactiveVideo/editor/SelectVideo.vue:79
 msgid "Youtube-Video: "
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:16
+#: src/components/findTheWords/FindTheWordsEditor.vue:17
+#: src/components/findTheWords/FindTheWordsEditor.vue:28
+msgid "Zeichen, mit denen die Tafel aufgefüllt wird:"
 msgstr ""
 
 #: src/components/MemoryViewer.vue:31
 msgid "Zeit:"
 msgstr ""
 
-#: src/components/interactiveVideo/VideoPlayer.vue:20
-#: src/components/interactiveVideo/VideoPlayer.vue:5
-#: src/components/interactiveVideo/VideoPlayer.vue:6
-#: src/components/interactiveVideo/VideoTimeline.vue:15
-#: src/components/interactiveVideo/VideoTimeline.vue:16
-#: src/components/interactiveVideo/VideoTimeline.vue:30
+#: src/components/interactiveVideo/editor/VideoTimeline.vue:15
+#: src/components/interactiveVideo/editor/VideoTimeline.vue:16
+#: src/components/interactiveVideo/editor/VideoTimeline.vue:30
+#: src/components/interactiveVideo/VideoPlayer.vue:10
+#: src/components/interactiveVideo/VideoPlayer.vue:24
+#: src/components/interactiveVideo/VideoPlayer.vue:9
 msgid "Zu %{ interaction } springen"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:6
+#: src/components/findTheWords/FindTheWordsEditor.vue:7
+msgid "Zu findende Wörter:"
+msgstr ""
+
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:33
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:34
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:37
+#: src/components/interactiveVideo/viewer/InteractiveVideoViewer.vue:42
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:104
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:48
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:49
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:74
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:77
+#: src/components/interactiveVideo/viewer/TravisGoPost.vue:94
+msgid "Zurücksetzen"
+msgstr ""
+
+#: src/components/findTheWords/FindTheWordsEditor.vue:19
+#: src/components/findTheWords/FindTheWordsEditor.vue:20
+#: src/components/findTheWords/FindTheWordsEditor.vue:31
+#: src/components/findTheWords/FindTheWordsEditor.vue:35
+msgid "Zurücksetzen auf A - Z"
 msgstr ""
 
 #: src/components/MemoryEditorCard.vue:21

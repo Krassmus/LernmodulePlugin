@@ -57,6 +57,7 @@ import { FindTheHotspotsTask } from '@/models/FindTheHotspotsTask';
 import ImageWithHotspots from '@/components/findTheHotspots/ImageWithHotspots.vue';
 import FeedbackElement from '@/components/FeedbackElement.vue';
 import { findTheHotspotsViewerStateSymbol } from '@/components/findTheHotspots/findTheHotspotsViewerState';
+import { formatResultMessage } from '@/functions';
 
 const props = defineProps({
   task: {
@@ -112,13 +113,11 @@ const editable = computed(() =>
 );
 
 const resultMessage = computed(() => {
-  let result = props.task.strings.resultMessage.replace(
-    ':correct',
-    points.value.toString()
+  return formatResultMessage(
+    props.task.strings.resultMessage,
+    points.value,
+    maxPoints.value
   );
-  result = result.replace(':total', maxPoints.value.toString());
-
-  return result;
 });
 
 const feedback = computed(() => {

@@ -54,6 +54,7 @@ export type Context = z.infer<typeof contextSchema>;
 const initializeCoursewareBlockMessageSchema = z.object({
   type: z.literal('InitializeCoursewareBlock'),
   block: z.object({
+    id: z.string(),
     attributes: z.object({
       payload: coursewareBlockPayloadSchema,
     }),
