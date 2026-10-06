@@ -182,6 +182,14 @@ VanillaLM = {
             //Now the request is sent to the LMS and we wait for a response ...
         });
     },
+    /**
+     * Invites other persons into a game. The maximum number of persons into this game is max. All the
+     * parameters are defined by the learning-module.
+     * @param max
+     * @param parameter
+     * @param callable
+     * @returns {*}
+     */
     invite: function (max, parameter, callable) {
         var session = JSON.parse(VanillaLM.storage.getItem("VanillaLM.sessionStorage") || "{}");
         VanillaLM.state = Object.assign(session, VanillaLM.state);
@@ -227,6 +235,10 @@ VanillaLM = {
             //Now the request is sent to the LMS and we wait for a response ...
         });
     },
+    /**
+     * Posts a message to the timeline of the user. Like a blubber-message or a facebook posting.
+     * @param message
+     */
     postTimelineMessage: function (message) {
         var opener = window.opener || window.parent;
         opener.postMessage(JSON.stringify({
@@ -318,9 +330,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         //set styles to CSS custom attributes (CSS variables):
         var root = document.querySelector(':root');
         root.style.setProperty("--vanillalm-color", style["color"]);
-        root.style.setProperty("--vanillalm-background-color", style["background-color"]);
+        if (style["background-color"]) {
+            root.style.setProperty("--vanillalm-background-color", style["background-color"]);
+        }
         root.style.setProperty("--vanillalm-font-family", style["font-family"]);
         root.style.setProperty("--vanillalm-link-color", style["color_a"]);
         //root.style.setProperty("--vanillalm-link-color-hover", style["color_a_hover"]); //adly it's not possible to retrieve the hover-color with JS.
+    }).catch(function () {
+        //no answer. nothing to set, the CSS fallbacks apply
     });
 });
