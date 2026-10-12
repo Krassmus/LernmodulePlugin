@@ -38,21 +38,29 @@ class LernmoduleCoursewareBlocksPlugin extends StudIPPlugin implements SystemPlu
         //   does not do this.
         $jsRelativePath = '/courseware-blocks-vue2/dist';
         $jsDir = $this->getPluginPath() . $jsRelativePath;
-        $jsFiles = array_filter(scandir($jsDir), function ($filename) {
-            // The webpack build of the courseware blocks generates both a minified and a
-            // non-minified version of the script that registers the blocks' vue2 components
-            return str_ends_with($filename, '.js')
-                && !str_ends_with($filename, '.min.js');
-        });
+        $scan = scandir($jsDir);
+        $jsFiles = [];
+        if (is_array($scan)) {
+            $jsFiles = array_filter($scan, function ($filename) {
+                // The webpack build of the courseware blocks generates both a minified and a
+                // non-minified version of the script that registers the blocks' vue2 components
+                return str_ends_with($filename, '.js')
+                    && !str_ends_with($filename, '.min.js');
+            });
+        }
         foreach ($jsFiles as $jsFile) {
             $url = $this->getPluginUrl() . $jsRelativePath . '/' . $jsFile;
             PageLayout::addScript($url, ['type' => 'module']);
         }
+
         $cssRelativePath = '/courseware-blocks-vue2/assets';
         $cssDir = $this->getPluginPath() . $cssRelativePath;
-        $cssFiles = array_filter(scandir($cssDir), function ($filename) {
-            return str_ends_with($filename, '.css');
-        });
+        $scan = scandir($cssDir);
+        if (is_array($scan)) {
+            $cssFiles = array_filter($scan, function ($filename) {
+                return str_ends_with($filename, '.css');
+            });
+        }
         foreach ($cssFiles as $cssFile) {
             $url = $this->getPluginUrl() . $cssRelativePath . '/' . $cssFile;
             PageLayout::addStylesheet($url);

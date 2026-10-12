@@ -8,6 +8,9 @@
     "allow-presentation",
     trim(Config::get()->LERNMODUL_DATA_URL) ? "allow-same-origin" : "", //if LERNMODUL_DATA_URL is set we assume that it leads to a subdomain or different domain at all and thus we don't need this flag anymore.
     "allow-scripts",
+    "fullscreen",
+    "autoplay",
+    "downloads"
     //"allow-top-navigation",
 ) ?>
 
@@ -121,7 +124,7 @@
                         "secret": '<?= $framesecret ?>',
                         "request_id": message.request_id,
                         "color": jQuery("body").css("color"),
-                        "background-color": jQuery("#layout_content").css("background-color"),
+                        "background-color": jQuery("body").css("background-color"),
                         "font-family": jQuery("body").css("font-family"),
                         "primary-color": jQuery("body").css("background-color"),
                         "secondary-color": jQuery("#barBottomContainer").css("background-color")
