@@ -320,8 +320,11 @@ class LernmoduleController extends PluginController
             $this->attempt->customdata = $message;
             $this->attempt->store();
 
-            $course_connection = new LernmodulCourse([$this->attempt['module_id'], Context::getId()]);
-            if ($course_connection['gradebook_definition']) {
+            $course_connection = LernmodulCourse::findOneBySQL('module_id = ? AND seminar_id = ?', [
+                $this->attempt['module_id'],
+                Context::getId()
+            ]);
+            if ($course_connection && $course_connection['gradebook_definition']) {
                 $instance = \Grading\Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
                     'user_id' => $GLOBALS['user']->id,
                     'definition_id' => $course_connection['gradebook_definition']
