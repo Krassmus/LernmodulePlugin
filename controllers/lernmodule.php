@@ -312,7 +312,7 @@ class LernmoduleController extends PluginController
             $message['properties'] = array_merge((array)($old_message['properties'] ?? []), (array)($message['properties'] ?? []));
             if (!empty($old_message['points'])) {
                 foreach ((array)$old_message['points'] as $class => $value) {
-                    if ($message['points'][$class] < $value) {
+                    if (empty($message['points']) || $message['points'][$class] < $value) {
                         $message['points'][$class] = $value;
                     }
                 }
