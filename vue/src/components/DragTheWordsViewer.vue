@@ -336,10 +336,6 @@ export default defineComponent({
         return '';
       }
 
-      if (this.task.instantFeedback) {
-        this.submittedAnswers = { ...this.userInputs };
-      }
-
       if (this.userInputs?.[blank.uuid]) {
         if (this.submittedAnswerIsCorrect(blank)) {
           return 'correct disabled';
@@ -379,6 +375,18 @@ export default defineComponent({
     removePTags(text: string) {
       // Remove all opening and closing <p> tags
       return text.replace(/<\/?p>/g, '');
+    },
+  },
+  watch: {
+    userInputs: {
+      deep: true,
+      handler: function (_value: unknown) {
+        console.log('watcher for userInputs');
+        if (this.task.instantFeedback) {
+          console.log('automatically submitting answers');
+          this.submittedAnswers = { ...this.userInputs };
+        }
+      },
     },
   },
   computed: {

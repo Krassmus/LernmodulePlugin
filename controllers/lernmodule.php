@@ -301,7 +301,7 @@ class LernmoduleController extends PluginController
         if (Request::isPost()) {
             $this->attempt['chdate'] = time();
             $message = Request::getArray("message");
-            if (Request::get('success') || $message['success']) {
+            if (Request::get('success') || !empty($message['success'])) {
                 $this->attempt['successful'] = 1;
                 echo "ok";
             }
@@ -312,7 +312,7 @@ class LernmoduleController extends PluginController
             $message['properties'] = array_merge((array)($old_message['properties'] ?? []), (array)($message['properties'] ?? []));
             if (!empty($old_message['points'])) {
                 foreach ((array)$old_message['points'] as $class => $value) {
-                    if ($message['points'][$class] < $value) {
+                    if (empty($message['points']) || $message['points'][$class] < $value) {
                         $message['points'][$class] = $value;
                     }
                 }
@@ -320,8 +320,11 @@ class LernmoduleController extends PluginController
             $this->attempt->customdata = $message;
             $this->attempt->store();
 
-            $course_connection = new LernmodulCourse([$this->attempt['module_id'], Context::getId()]);
-            if ($course_connection['gradebook_definition']) {
+            $course_connection = LernmodulCourse::findOneBySQL('module_id = ? AND seminar_id = ?', [
+                $this->attempt['module_id'],
+                Context::getId()
+            ]);
+            if ($course_connection && $course_connection['gradebook_definition']) {
                 $instance = \Grading\Instance::findOneBySQL("user_id = :user_id AND definition_id = :definition_id", array(
                     'user_id' => $GLOBALS['user']->id,
                     'definition_id' => $course_connection['gradebook_definition']
